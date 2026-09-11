@@ -7,7 +7,6 @@ fixes = [
     # G5 retired: superseded by patch_pool_random.py (bl to cave). Kept as note.
     # (0x121851C, 'ldr r5,[r4,#0x10]' -> 'bl 0xB42F10: Range(52,57) into r5'),
 ]
-]
 reverts = [
     (0x121A08C, '0a0000e3', '0400a0e1', 'revert G3 (dead func)'),
     (0x1219380, '0110a0e3', '0510a0e1', 'revert G4 (wrong pool)'),

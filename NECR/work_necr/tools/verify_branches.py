@@ -5,12 +5,22 @@ v10: all gate bodies moved to FARM (verified-free zero-run); C1/C2 restored.
 Any future cave MUST pass the freeness gate at the bottom (no literal xrefs,
 no relocs, zero bytes in vanilla).
 """
+import os
 import struct
+import sys
 
-SO = 'D:/安卓逆向/NECR/work_necr/src/lib/armeabi-v7a/libil2cpp.so'
-VAN = 'D:/安卓逆向/NECR/work_necr/trial/libil2cpp.so'
+DEFAULT_SO = 'D:/安卓逆向/NECR/work_necr/src/lib/armeabi-v7a/libil2cpp.so'
+DEFAULT_VAN = 'D:/安卓逆向/NECR/work_necr/trial/libil2cpp.so'
+SO = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SO
+VAN = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_VAN
+if not os.path.isfile(SO) or not os.path.isfile(VAN):
+    raise FileNotFoundError(f'verify inputs missing: target={SO!r}, vanilla={VAN!r}')
 d = open(SO, 'rb').read()
 van = open(VAN, 'rb').read()
+if len(d) != len(van):
+    raise ValueError(f'SO size mismatch: target={len(d)} vanilla={len(van)}')
+print('target:', SO)
+print('vanilla:', VAN)
 
 TRAMP = 0x1B3B7F4
 TIERED = 0x1B3B834

@@ -23,3 +23,4 @@
 | v14 pending | necr_menu_v14.apk (11 switches) | libil2cpp_gated.so (see apk) | v13 + M19 MIX4-ON minimal; awaiting test | PENDING |
 | v15 pending | necr_menu_v15.apk (11 switches) | libil2cpp_gated.so (see apk) | v14 + M20 player-only GOD; awaiting test | PENDING |
 | v16 pending | necr_menu_v16.apk (11 switches) | libil2cpp_gated.so (see apk) | v15 + M21 dual-flag GOD; awaiting test | PENDING |
+| v17 pending | necr_menu_v17.apk (11 switches) | libil2cpp_gated.so (72a78056) | v16 + G-GUARD gacha dispatch null-guard; awaiting test | PENDING |
