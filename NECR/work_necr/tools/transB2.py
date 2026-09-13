@@ -5,7 +5,9 @@
 Parses Il2Cpp v29 header (Offset/Size pairs), walks the stringLiteral table
 {int32 length; uint32 offset} -> stringLiteralData blob. Replaces ONLY entries
 whose FULL content equals the KO bytes (short KO that are substrings of other
-words are never touched). Same-or-shorter bytes, NUL-padded in place.
+words are never touched). Same-or-shorter bytes, SPACE-padded in place
+(NUL pad breaks Unity native rich-text scan: embedded \0 leaks tags and
+truncates composed strings; transB3 scenes already space-pad).
 Usage: transB2.py <tsv> <in_meta> <out_meta>
 Report -> D:/tmp/transB2_report.txt (UTF-8) + console summary (ASCII-safe).
 """
@@ -13,12 +15,20 @@ import struct
 import sys
 
 tsv, src, dst = sys.argv[1], sys.argv[2], sys.argv[3]
+
+
+def unesc(s):
+    return (s.replace('\\\\', '\0').replace('\\n', '\n')
+             .replace('\\r', '\r').replace('\\t', '\t').replace('\0', '\\'))
+
+
 pairs = []
 for ln in open(tsv, encoding='utf-8'):
     ln = ln.rstrip('\n')
     if not ln or ln.startswith('#') or '\t' not in ln:
         continue
     ko, cn = ln.split('\t', 1)
+    ko, cn = unesc(ko), unesc(cn)
     if cn:
         pairs.append((ko.encode('utf-8'), cn.encode('utf-8')))
 
@@ -45,7 +55,7 @@ for i in range(n):
         if len(new) > len(cur):
             over.append((cur, new))
         else:
-            meta[sldo + of:sldo + of + ln] = new + b'\x00' * (ln - len(new))
+            meta[sldo + of:sldo + of + ln] = new + b' ' * (ln - len(new))
             rep += 1
 
 missing = [ko for ko in want if ko not in matched]

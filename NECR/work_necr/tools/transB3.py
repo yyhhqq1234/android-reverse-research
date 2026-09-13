@@ -4,8 +4,10 @@
 
 Unity serialized strings = int32LE(len) + UTF-8 bytes (+ align pad).
 Replaces ONLY whole entries (prefix == len(KO)), so short KO that are
-substrings of longer words can never match. New entry: int32LE(len(CN)) +
-CN + zero-fill to the SAME total size (file size/alignment unchanged).
+substrings of longer words can never match. IRON RULE (device-proven):
+the length FIELD is NEVER rewritten (Unity validates consumed bytes
+against it; rewriting shortens the account and can OOM the loader).
+New content = CN + ASCII-space pad to len(KO); total size unchanged.
 Operates on build-tree Data dir; sharedassets splits are concatenated and
 re-sliced at recorded boundaries. Idempotent (CN entries don't match KO).
 Usage: transB3.py <tsv> <data_dir>
@@ -16,12 +18,20 @@ import struct
 import sys
 
 tsv, datadir = sys.argv[1], sys.argv[2]
+
+
+def unesc(s):
+    return (s.replace('\\\\', '\0').replace('\\n', '\n')
+             .replace('\\r', '\r').replace('\\t', '\t').replace('\0', '\\'))
+
+
 pairs = []
 for ln in open(tsv, encoding='utf-8'):
     ln = ln.rstrip('\n')
     if not ln or ln.startswith('#') or '\t' not in ln:
         continue
     ko, cn = ln.split('\t', 1)
+    ko, cn = unesc(ko), unesc(cn)
     if cn:
         pairs.append((ko.encode('utf-8'), cn.encode('utf-8')))
 want = {}
@@ -45,7 +55,7 @@ def patch_blob(b):
             if p < 0:
                 break
             fill = L - len(new)
-            b[p:p + 4 + L] = struct.pack('<i', len(new)) + new + b'\x00' * fill
+            b[p:p + 4 + L] = struct.pack('<i', L) + new + b' ' * fill
             rep += 1
             start = p + 4 + L
     for raw, new in pairs:
@@ -58,14 +68,15 @@ def patch_blob(b):
 
 def files_matching(prefix):
     return sorted(n for n in os.listdir(datadir)
-                  if n == prefix or n.startswith(prefix + '.split'))
+                  if '.bak' not in n
+                  and (n == prefix or n.startswith(prefix + '.split')))
 
 
 report = []
 total_rep, total_over = 0, []
 # 1) split groups (sharedassetsN)
 groups = sorted(set(n.split('.split')[0] for n in os.listdir(datadir)
-                    if '.split' in n and n.startswith('sharedassets')))
+                    if '.bak' not in n and '.split' in n and n.startswith('sharedassets')))
 for g in groups:
     parts = files_matching(g)
     blobs = [open(os.path.join(datadir, p), 'rb').read() for p in parts]
@@ -83,7 +94,7 @@ for g in groups:
     total_over += over
 # 2) single files (level*, *.resource, others with game text)
 singles = sorted(n for n in os.listdir(datadir)
-                 if (n.startswith('level') or n.endswith('.resource'))
+                 if '.bak' not in n and (n.startswith('level') or n.endswith('.resource'))
                  and os.path.isfile(os.path.join(datadir, n)))
 for s in singles:
     p = os.path.join(datadir, s)
