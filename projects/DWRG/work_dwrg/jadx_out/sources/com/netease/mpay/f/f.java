@@ -1,0 +1,43 @@
+package com.netease.mpay.f;
+
+import android.app.Activity;
+import com.dodola.rocoo.Hack;
+import com.netease.mpay.dd;
+import com.netease.mpay.f.a.d;
+
+/* loaded from: classes.dex */
+public class f extends com.netease.mpay.f.a.d {
+    private String a;
+    private String b;
+    private dd.a j;
+
+    public f(Activity activity, String str, String str2, String str3, String str4, dd.a aVar, com.netease.mpay.f.a.b bVar) {
+        super(activity, str, str2, bVar);
+        this.a = str3;
+        this.b = str4;
+        this.j = aVar;
+        super.c();
+        if (Boolean.FALSE.booleanValue()) {
+            System.out.println(Hack.class);
+        }
+    }
+
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // com.netease.mpay.f.a.d
+    /* renamed from: a, reason: merged with bridge method [inline-methods] */
+    public com.netease.mpay.server.response.l b(d.C0045d c0045d) {
+        com.netease.mpay.server.a.ax azVar;
+        switch (g.a[this.j.ordinal()]) {
+            case 1:
+                azVar = new com.netease.mpay.server.a.bm(this.d, c0045d.a().j, this.a, this.b);
+                break;
+            case 2:
+                azVar = new com.netease.mpay.server.a.az(this.d, c0045d.a().j, this.a, this.b);
+                break;
+            default:
+                azVar = null;
+                break;
+        }
+        return azVar == null ? new com.netease.mpay.server.response.l() : (com.netease.mpay.server.response.l) new com.netease.mpay.server.d(this.c, this.d, this.e).a(azVar);
+    }
+}

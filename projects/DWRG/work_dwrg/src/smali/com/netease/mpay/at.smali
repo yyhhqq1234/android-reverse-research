@@ -1,0 +1,173 @@
+.class Lcom/netease/mpay/at;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Landroid/content/DialogInterface$OnClickListener;
+
+
+# instance fields
+.field final synthetic a:Lcom/netease/mpay/al;
+
+
+# direct methods
+.method constructor <init>(Lcom/netease/mpay/al;)V
+    .locals 2
+
+    iput-object p1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Ljava/lang/System;->out:Ljava/io/PrintStream;
+
+    const-class v1, Lcom/dodola/rocoo/Hack;
+
+    invoke-virtual {v0, v1}, Ljava/io/PrintStream;->println(Ljava/lang/Object;)V
+
+    :cond_0
+    return-void
+.end method
+
+
+# virtual methods
+.method public onClick(Landroid/content/DialogInterface;I)V
+    .locals 8
+
+    const/4 v3, 0x0
+
+    iget-object v0, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v0}, Lcom/netease/mpay/al;->l(Lcom/netease/mpay/al;)Lcom/netease/mpay/e/b;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/netease/mpay/e/b;->c()Lcom/netease/mpay/e/c/k;
+
+    move-result-object v0
+
+    iget-object v1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v1}, Lcom/netease/mpay/al;->a(Lcom/netease/mpay/al;)Lcom/netease/mpay/b/d;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/netease/mpay/b/d;->b()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Lcom/netease/mpay/e/c/k;->b(Ljava/lang/String;)Lcom/netease/mpay/e/b/o;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    iget-object v1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v1}, Lcom/netease/mpay/al;->l(Lcom/netease/mpay/al;)Lcom/netease/mpay/e/b;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/netease/mpay/e/b;->c()Lcom/netease/mpay/e/c/k;
+
+    move-result-object v1
+
+    iget-object v2, v0, Lcom/netease/mpay/e/b/o;->c:Ljava/lang/String;
+
+    iget-object v0, v0, Lcom/netease/mpay/e/b/o;->d:Ljava/lang/String;
+
+    invoke-virtual {v1, v2, v0}, Lcom/netease/mpay/e/c/k;->b(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    :cond_0
+    iget-object v0, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v0}, Lcom/netease/mpay/al;->a(Lcom/netease/mpay/al;)Lcom/netease/mpay/b/d;
+
+    move-result-object v0
+
+    iget-object v0, v0, Lcom/netease/mpay/b/d;->e:Lcom/netease/mpay/AuthenticationCallback;
+
+    if-eqz v0, :cond_1
+
+    iget-object v0, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v0}, Lcom/netease/mpay/al;->a(Lcom/netease/mpay/al;)Lcom/netease/mpay/b/d;
+
+    move-result-object v0
+
+    iget-object v0, v0, Lcom/netease/mpay/b/d;->e:Lcom/netease/mpay/AuthenticationCallback;
+
+    iget-object v1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v1}, Lcom/netease/mpay/al;->m(Lcom/netease/mpay/al;)Lcom/netease/mpay/e/b/o;
+
+    move-result-object v1
+
+    iget-object v1, v1, Lcom/netease/mpay/e/b/o;->c:Ljava/lang/String;
+
+    invoke-interface {v0, v1}, Lcom/netease/mpay/AuthenticationCallback;->onLogout(Ljava/lang/String;)V
+
+    :cond_1
+    invoke-static {}, Lcom/netease/mpay/hi;->a()Lcom/netease/mpay/hi;
+
+    move-result-object v0
+
+    iget-object v1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    iget-object v1, v1, Lcom/netease/mpay/al;->a:Landroid/support/v4/app/FragmentActivity;
+
+    iget-object v2, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v2}, Lcom/netease/mpay/al;->a(Lcom/netease/mpay/al;)Lcom/netease/mpay/b/d;
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Lcom/netease/mpay/b/d;->d()Lcom/netease/mpay/b/a$a;
+
+    move-result-object v2
+
+    const/4 v5, 0x1
+
+    iget-object v4, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-static {v4}, Lcom/netease/mpay/al;->a(Lcom/netease/mpay/al;)Lcom/netease/mpay/b/d;
+
+    move-result-object v4
+
+    iget-object v6, v4, Lcom/netease/mpay/b/d;->e:Lcom/netease/mpay/AuthenticationCallback;
+
+    invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v7
+
+    move v4, v3
+
+    invoke-virtual/range {v0 .. v7}, Lcom/netease/mpay/hi;->a(Landroid/app/Activity;Lcom/netease/mpay/b/a$a;ZZZLcom/netease/mpay/AuthenticationCallback;Ljava/lang/Integer;)V
+
+    iget-object v0, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    invoke-virtual {v0}, Lcom/netease/mpay/al;->m()Z
+
+    move-result v0
+
+    if-nez v0, :cond_2
+
+    new-instance v0, Lcom/netease/mpay/b/ap;
+
+    invoke-direct {v0}, Lcom/netease/mpay/b/ap;-><init>()V
+
+    iget-object v1, p0, Lcom/netease/mpay/at;->a:Lcom/netease/mpay/al;
+
+    iget-object v1, v1, Lcom/netease/mpay/al;->a:Landroid/support/v4/app/FragmentActivity;
+
+    invoke-virtual {v0, v1}, Lcom/netease/mpay/b/ap;->a(Landroid/app/Activity;)V
+
+    :cond_2
+    return-void
+.end method

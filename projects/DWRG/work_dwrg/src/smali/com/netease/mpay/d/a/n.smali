@@ -1,0 +1,104 @@
+.class Lcom/netease/mpay/d/a/n;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Lcom/netease/mpay/f/au$a;
+
+
+# instance fields
+.field final synthetic a:Lcom/netease/mpay/d/a/f;
+
+
+# direct methods
+.method constructor <init>(Lcom/netease/mpay/d/a/f;)V
+    .locals 2
+
+    iput-object p1, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Ljava/lang/System;->out:Ljava/io/PrintStream;
+
+    const-class v1, Lcom/dodola/rocoo/Hack;
+
+    invoke-virtual {v0, v1}, Ljava/io/PrintStream;->println(Ljava/lang/Object;)V
+
+    :cond_0
+    return-void
+.end method
+
+
+# virtual methods
+.method public a(Lcom/netease/mpay/f/a/b$a;Ljava/lang/String;)V
+    .locals 1
+
+    sget-object v0, Lcom/netease/mpay/f/a/b$a;->h:Lcom/netease/mpay/f/a/b$a;
+
+    if-ne v0, p1, :cond_0
+
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->d(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/a/k;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->d(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/a/k;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/netease/mpay/d/a/a/k;->f()V
+
+    :cond_0
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->a(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/f$d;
+
+    move-result-object v0
+
+    invoke-interface {v0, p2}, Lcom/netease/mpay/d/a/f$d;->a(Ljava/lang/String;)V
+
+    return-void
+.end method
+
+.method public a(Ljava/lang/String;Lcom/netease/mpay/server/response/m;)V
+    .locals 1
+
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->d(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/a/k;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_0
+
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->d(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/a/k;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/netease/mpay/d/a/a/k;->e()V
+
+    :cond_0
+    iget-object v0, p0, Lcom/netease/mpay/d/a/n;->a:Lcom/netease/mpay/d/a/f;
+
+    invoke-static {v0}, Lcom/netease/mpay/d/a/f;->a(Lcom/netease/mpay/d/a/f;)Lcom/netease/mpay/d/a/f$d;
+
+    move-result-object v0
+
+    invoke-interface {v0, p1, p2}, Lcom/netease/mpay/d/a/f$d;->a(Ljava/lang/String;Lcom/netease/mpay/server/response/m;)V
+
+    return-void
+.end method

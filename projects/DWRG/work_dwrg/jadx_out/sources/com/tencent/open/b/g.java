@@ -1,0 +1,493 @@
+package com.tencent.open.b;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.os.SystemClock;
+import android.text.TextUtils;
+import com.tencent.connect.common.Constants;
+import com.tencent.open.utils.h;
+import com.tencent.open.utils.i;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.TimeZone;
+import java.util.concurrent.Executor;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/* compiled from: ProGuard */
+/* loaded from: classes.dex */
+public class g {
+    protected static g a;
+    protected HandlerThread e;
+    protected Handler f;
+    protected Random b = new Random();
+    protected List<Serializable> d = Collections.synchronizedList(new ArrayList());
+    protected List<Serializable> c = Collections.synchronizedList(new ArrayList());
+    protected Executor g = h.b();
+    protected Executor h = h.b();
+
+    public static synchronized g a() {
+        g gVar;
+        synchronized (g.class) {
+            if (a == null) {
+                a = new g();
+            }
+            gVar = a;
+        }
+        return gVar;
+    }
+
+    private g() {
+        this.e = null;
+        if (this.e == null) {
+            this.e = new HandlerThread("opensdk.report.handlerthread", 10);
+            this.e.start();
+        }
+        if (this.e.isAlive() && this.e.getLooper() != null) {
+            this.f = new Handler(this.e.getLooper()) { // from class: com.tencent.open.b.g.1
+                @Override // android.os.Handler
+                public void handleMessage(Message message) {
+                    switch (message.what) {
+                        case 1000:
+                            g.this.b();
+                            break;
+                        case 1001:
+                            g.this.e();
+                            break;
+                    }
+                    super.handleMessage(message);
+                }
+            };
+        }
+    }
+
+    public void a(final Bundle bundle, String str, final boolean z) {
+        if (bundle != null) {
+            com.tencent.open.a.f.a("openSDK_LOG.ReportManager", "-->reportVia, bundle: " + bundle.toString());
+            if (a("report_via", str) || z) {
+                this.g.execute(new Runnable() { // from class: com.tencent.open.b.g.2
+                    @Override // java.lang.Runnable
+                    public void run() {
+                        try {
+                            Bundle bundle2 = new Bundle();
+                            bundle2.putString("uin", Constants.DEFAULT_UIN);
+                            bundle2.putString("imei", c.b(com.tencent.open.utils.d.a()));
+                            bundle2.putString("imsi", c.c(com.tencent.open.utils.d.a()));
+                            bundle2.putString("android_id", c.d(com.tencent.open.utils.d.a()));
+                            bundle2.putString("mac", c.a());
+                            bundle2.putString("platform", "1");
+                            bundle2.putString("os_ver", Build.VERSION.RELEASE);
+                            bundle2.putString("position", i.c(com.tencent.open.utils.d.a()));
+                            bundle2.putString("network", a.a(com.tencent.open.utils.d.a()));
+                            bundle2.putString("language", c.b());
+                            bundle2.putString("resolution", c.a(com.tencent.open.utils.d.a()));
+                            bundle2.putString("apn", a.b(com.tencent.open.utils.d.a()));
+                            bundle2.putString("model_name", Build.MODEL);
+                            bundle2.putString("timezone", TimeZone.getDefault().getID());
+                            bundle2.putString("sdk_ver", Constants.SDK_VERSION);
+                            bundle2.putString("qz_ver", i.d(com.tencent.open.utils.d.a(), Constants.PACKAGE_QZONE));
+                            bundle2.putString("qq_ver", i.c(com.tencent.open.utils.d.a(), "com.tencent.mobileqq"));
+                            bundle2.putString("qua", i.e(com.tencent.open.utils.d.a(), com.tencent.open.utils.d.b()));
+                            bundle2.putString("packagename", com.tencent.open.utils.d.b());
+                            bundle2.putString("app_ver", i.d(com.tencent.open.utils.d.a(), com.tencent.open.utils.d.b()));
+                            if (bundle != null) {
+                                bundle2.putAll(bundle);
+                            }
+                            g.this.d.add(new b(bundle2));
+                            int size = g.this.d.size();
+                            int a2 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Agent_ReportTimeInterval");
+                            if (a2 == 0) {
+                                a2 = 10000;
+                            }
+                            if (!g.this.a("report_via", size) && !z) {
+                                if (!g.this.f.hasMessages(1001)) {
+                                    Message obtain = Message.obtain();
+                                    obtain.what = 1001;
+                                    g.this.f.sendMessageDelayed(obtain, a2);
+                                    return;
+                                }
+                                return;
+                            }
+                            g.this.e();
+                            g.this.f.removeMessages(1001);
+                        } catch (Exception e) {
+                            com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "--> reporVia, exception in sub thread.", e);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public void a(String str, long j, long j2, long j3, int i) {
+        a(str, j, j2, j3, i, "", false);
+    }
+
+    public void a(final String str, final long j, final long j2, final long j3, final int i, final String str2, final boolean z) {
+        com.tencent.open.a.f.a("openSDK_LOG.ReportManager", "-->reportCgi, command: " + str + " | startTime: " + j + " | reqSize:" + j2 + " | rspSize: " + j3 + " | responseCode: " + i + " | detail: " + str2);
+        if (a("report_cgi", "" + i) || z) {
+            this.h.execute(new Runnable() { // from class: com.tencent.open.b.g.3
+                @Override // java.lang.Runnable
+                public void run() {
+                    int i2 = 1;
+                    try {
+                        long elapsedRealtime = SystemClock.elapsedRealtime() - j;
+                        Bundle bundle = new Bundle();
+                        String a2 = a.a(com.tencent.open.utils.d.a());
+                        bundle.putString("apn", a2);
+                        bundle.putString("appid", "1000067");
+                        bundle.putString("commandid", str);
+                        bundle.putString("detail", str2);
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("network=").append(a2).append('&');
+                        sb.append("sdcard=").append(Environment.getExternalStorageState().equals("mounted") ? 1 : 0).append('&');
+                        sb.append("wifi=").append(a.e(com.tencent.open.utils.d.a()));
+                        bundle.putString("deviceInfo", sb.toString());
+                        int a3 = 100 / g.this.a(i);
+                        if (a3 > 0) {
+                            i2 = a3 > 100 ? 100 : a3;
+                        }
+                        bundle.putString("frequency", i2 + "");
+                        bundle.putString("reqSize", j2 + "");
+                        bundle.putString("resultCode", i + "");
+                        bundle.putString("rspSize", j3 + "");
+                        bundle.putString("timeCost", elapsedRealtime + "");
+                        bundle.putString("uin", Constants.DEFAULT_UIN);
+                        g.this.c.add(new b(bundle));
+                        int size = g.this.c.size();
+                        int a4 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Agent_ReportTimeInterval");
+                        if (a4 == 0) {
+                            a4 = 10000;
+                        }
+                        if (g.this.a("report_cgi", size) || z) {
+                            g.this.b();
+                            g.this.f.removeMessages(1000);
+                        } else if (!g.this.f.hasMessages(1000)) {
+                            Message obtain = Message.obtain();
+                            obtain.what = 1000;
+                            g.this.f.sendMessageDelayed(obtain, a4);
+                        }
+                    } catch (Exception e) {
+                        com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "--> reportCGI, exception in sub thread.", e);
+                    }
+                }
+            });
+        }
+    }
+
+    protected void b() {
+        this.h.execute(new Runnable() { // from class: com.tencent.open.b.g.4
+            /* JADX WARN: Removed duplicated region for block: B:30:0x00c9 A[SYNTHETIC] */
+            /* JADX WARN: Removed duplicated region for block: B:32:? A[LOOP:0: B:12:0x0036->B:32:?, LOOP_END, SYNTHETIC] */
+            @Override // java.lang.Runnable
+            /*
+                Code decompiled incorrectly, please refer to instructions dump.
+                To view partially-correct add '--show-bad-code' argument
+            */
+            public void run() {
+                /*
+                    r8 = this;
+                    r1 = 0
+                    com.tencent.open.b.g r0 = com.tencent.open.b.g.this     // Catch: java.lang.Exception -> Lb2
+                    android.os.Bundle r4 = r0.c()     // Catch: java.lang.Exception -> Lb2
+                    if (r4 != 0) goto La
+                L9:
+                    return
+                La:
+                    android.content.Context r0 = com.tencent.open.utils.d.a()     // Catch: java.lang.Exception -> Lb2
+                    r2 = 0
+                    com.tencent.open.utils.e r0 = com.tencent.open.utils.e.a(r0, r2)     // Catch: java.lang.Exception -> Lb2
+                    java.lang.String r2 = "Common_HttpRetryCount"
+                    int r0 = r0.a(r2)     // Catch: java.lang.Exception -> Lb2
+                    if (r0 != 0) goto Lbc
+                    r0 = 3
+                    r3 = r0
+                L1d:
+                    java.lang.String r0 = "openSDK_LOG.ReportManager"
+                    java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch: java.lang.Exception -> Lb2
+                    r2.<init>()     // Catch: java.lang.Exception -> Lb2
+                    java.lang.String r5 = "-->doReportCgi, retryCount: "
+                    java.lang.StringBuilder r2 = r2.append(r5)     // Catch: java.lang.Exception -> Lb2
+                    java.lang.StringBuilder r2 = r2.append(r3)     // Catch: java.lang.Exception -> Lb2
+                    java.lang.String r2 = r2.toString()     // Catch: java.lang.Exception -> Lb2
+                    com.tencent.open.a.f.b(r0, r2)     // Catch: java.lang.Exception -> Lb2
+                    r0 = r1
+                L36:
+                    int r0 = r0 + 1
+                    android.content.Context r2 = com.tencent.open.utils.d.a()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r5 = 0
+                    java.lang.String r6 = "http://wspeed.qq.com/w.cgi"
+                    org.apache.http.client.HttpClient r2 = com.tencent.open.utils.HttpUtils.getHttpClient(r2, r5, r6)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    org.apache.http.client.methods.HttpPost r5 = new org.apache.http.client.methods.HttpPost     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r6 = "http://wspeed.qq.com/w.cgi"
+                    r5.<init>(r6)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r6 = "Accept-Encoding"
+                    java.lang.String r7 = "gzip"
+                    r5.addHeader(r6, r7)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r6 = "Content-Type"
+                    java.lang.String r7 = "application/x-www-form-urlencoded"
+                    r5.setHeader(r6, r7)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r6 = com.tencent.open.utils.HttpUtils.encodeUrl(r4)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    byte[] r6 = com.tencent.open.utils.i.i(r6)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    org.apache.http.entity.ByteArrayEntity r7 = new org.apache.http.entity.ByteArrayEntity     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r7.<init>(r6)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r5.setEntity(r7)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    org.apache.http.HttpResponse r2 = r2.execute(r5)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    org.apache.http.StatusLine r2 = r2.getStatusLine()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    int r2 = r2.getStatusCode()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r5 = "openSDK_LOG.ReportManager"
+                    java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r6.<init>()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r7 = "-->doReportCgi, statusCode: "
+                    java.lang.StringBuilder r6 = r6.append(r7)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.StringBuilder r6 = r6.append(r2)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r6 = r6.toString()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    com.tencent.open.a.f.b(r5, r6)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r5 = 200(0xc8, float:2.8E-43)
+                    if (r2 != r5) goto L9a
+                    com.tencent.open.b.f r2 = com.tencent.open.b.f.a()     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    java.lang.String r5 = "report_cgi"
+                    r2.b(r5)     // Catch: org.apache.http.conn.ConnectTimeoutException -> Lbf java.net.SocketTimeoutException -> Lca java.lang.Exception -> Ld3
+                    r1 = 1
+                L9a:
+                    if (r1 != 0) goto La9
+                    com.tencent.open.b.f r0 = com.tencent.open.b.f.a()     // Catch: java.lang.Exception -> Lb2
+                    java.lang.String r1 = "report_cgi"
+                    com.tencent.open.b.g r2 = com.tencent.open.b.g.this     // Catch: java.lang.Exception -> Lb2
+                    java.util.List<java.io.Serializable> r2 = r2.c     // Catch: java.lang.Exception -> Lb2
+                    r0.a(r1, r2)     // Catch: java.lang.Exception -> Lb2
+                La9:
+                    com.tencent.open.b.g r0 = com.tencent.open.b.g.this     // Catch: java.lang.Exception -> Lb2
+                    java.util.List<java.io.Serializable> r0 = r0.c     // Catch: java.lang.Exception -> Lb2
+                    r0.clear()     // Catch: java.lang.Exception -> Lb2
+                    goto L9
+                Lb2:
+                    r0 = move-exception
+                    java.lang.String r1 = "openSDK_LOG.ReportManager"
+                    java.lang.String r2 = "-->doReportCgi, doupload exception out."
+                    com.tencent.open.a.f.b(r1, r2, r0)
+                    goto L9
+                Lbc:
+                    r3 = r0
+                    goto L1d
+                Lbf:
+                    r2 = move-exception
+                    java.lang.String r5 = "openSDK_LOG.ReportManager"
+                    java.lang.String r6 = "-->doReportCgi, doupload exception"
+                    com.tencent.open.a.f.b(r5, r6, r2)     // Catch: java.lang.Exception -> Lb2
+                Lc7:
+                    if (r0 < r3) goto L36
+                    goto L9a
+                Lca:
+                    r2 = move-exception
+                    java.lang.String r5 = "openSDK_LOG.ReportManager"
+                    java.lang.String r6 = "-->doReportCgi, doupload exception"
+                    com.tencent.open.a.f.b(r5, r6, r2)     // Catch: java.lang.Exception -> Lb2
+                    goto Lc7
+                Ld3:
+                    r0 = move-exception
+                    java.lang.String r2 = "openSDK_LOG.ReportManager"
+                    java.lang.String r3 = "-->doReportCgi, doupload exception"
+                    com.tencent.open.a.f.b(r2, r3, r0)     // Catch: java.lang.Exception -> Lb2
+                    goto L9a
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.tencent.open.b.g.AnonymousClass4.run():void");
+            }
+        });
+    }
+
+    protected boolean a(String str, String str2) {
+        int i;
+        boolean z = false;
+        com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->availableFrequency, report: " + str + " | ext: " + str2);
+        if (!TextUtils.isEmpty(str)) {
+            if (str.equals("report_cgi")) {
+                try {
+                    int a2 = a(Integer.parseInt(str2));
+                    z = this.b.nextInt(100) < a2;
+                    i = a2;
+                } catch (Exception e) {
+                }
+            } else if (str.equals("report_via")) {
+                int a3 = e.a(str2);
+                if (this.b.nextInt(100) < a3) {
+                    z = true;
+                    i = a3;
+                } else {
+                    i = a3;
+                }
+            } else {
+                i = 100;
+            }
+            com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->availableFrequency, result: " + z + " | frequency: " + i);
+        }
+        return z;
+    }
+
+    protected boolean a(String str, int i) {
+        int i2 = 5;
+        if (str.equals("report_cgi")) {
+            int a2 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Common_CGIReportMaxcount");
+            if (a2 != 0) {
+                i2 = a2;
+            }
+        } else if (str.equals("report_via")) {
+            int a3 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Agent_ReportBatchCount");
+            if (a3 != 0) {
+                i2 = a3;
+            }
+        } else {
+            i2 = 0;
+        }
+        com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->availableCount, report: " + str + " | dataSize: " + i + " | maxcount: " + i2);
+        return i >= i2;
+    }
+
+    protected int a(int i) {
+        if (i == 0) {
+            int a2 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Common_CGIReportFrequencySuccess");
+            if (a2 == 0) {
+                return 10;
+            }
+            return a2;
+        }
+        int a3 = com.tencent.open.utils.e.a(com.tencent.open.utils.d.a(), (String) null).a("Common_CGIReportFrequencyFailed");
+        if (a3 == 0) {
+            return 100;
+        }
+        return a3;
+    }
+
+    protected Bundle c() {
+        if (this.c.size() == 0) {
+            return null;
+        }
+        b bVar = (b) this.c.get(0);
+        if (bVar == null) {
+            com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareCgiData, the 0th cgireportitem is null.");
+            return null;
+        }
+        String str = bVar.a.get("appid");
+        List<Serializable> a2 = f.a().a("report_cgi");
+        if (a2 != null) {
+            this.c.addAll(a2);
+        }
+        com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareCgiData, mCgiList size: " + this.c.size());
+        if (this.c.size() == 0) {
+            return null;
+        }
+        Bundle bundle = new Bundle();
+        try {
+            bundle.putString("appid", str);
+            bundle.putString("releaseversion", Constants.SDK_VERSION_REPORT);
+            bundle.putString(com.alipay.sdk.packet.d.n, Build.DEVICE);
+            bundle.putString("qua", Constants.SDK_QUA);
+            bundle.putString("key", "apn,frequency,commandid,resultcode,tmcost,reqsize,rspsize,detail,touin,deviceinfo");
+            for (int i = 0; i < this.c.size(); i++) {
+                b bVar2 = (b) this.c.get(i);
+                bundle.putString(i + "_1", bVar2.a.get("apn"));
+                bundle.putString(i + "_2", bVar2.a.get("frequency"));
+                bundle.putString(i + "_3", bVar2.a.get("commandid"));
+                bundle.putString(i + "_4", bVar2.a.get("resultCode"));
+                bundle.putString(i + "_5", bVar2.a.get("timeCost"));
+                bundle.putString(i + "_6", bVar2.a.get("reqSize"));
+                bundle.putString(i + "_7", bVar2.a.get("rspSize"));
+                bundle.putString(i + "_8", bVar2.a.get("detail"));
+                bundle.putString(i + "_9", bVar2.a.get("uin"));
+                bundle.putString(i + "_10", c.e(com.tencent.open.utils.d.a()) + com.alipay.sdk.sys.a.b + bVar2.a.get("deviceInfo"));
+            }
+            com.tencent.open.a.f.a("openSDK_LOG.ReportManager", "-->prepareCgiData, end. params: " + bundle.toString());
+            return bundle;
+        } catch (Exception e) {
+            com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareCgiData, exception.", e);
+            return null;
+        }
+    }
+
+    protected Bundle d() {
+        List<Serializable> a2 = f.a().a("report_via");
+        if (a2 != null) {
+            this.d.addAll(a2);
+        }
+        com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareViaData, mViaList size: " + this.d.size());
+        if (this.d.size() == 0) {
+            return null;
+        }
+        JSONArray jSONArray = new JSONArray();
+        for (Serializable serializable : this.d) {
+            JSONObject jSONObject = new JSONObject();
+            b bVar = (b) serializable;
+            for (String str : bVar.a.keySet()) {
+                try {
+                    String str2 = bVar.a.get(str);
+                    if (str2 == null) {
+                        str2 = "";
+                    }
+                    jSONObject.put(str, str2);
+                } catch (JSONException e) {
+                    com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareViaData, put bundle to json array exception", e);
+                }
+            }
+            jSONArray.put(jSONObject);
+        }
+        com.tencent.open.a.f.a("openSDK_LOG.ReportManager", "-->prepareViaData, JSONArray array: " + jSONArray.toString());
+        Bundle bundle = new Bundle();
+        JSONObject jSONObject2 = new JSONObject();
+        try {
+            jSONObject2.put("data", jSONArray);
+            bundle.putString("data", jSONObject2.toString());
+            return bundle;
+        } catch (JSONException e2) {
+            com.tencent.open.a.f.b("openSDK_LOG.ReportManager", "-->prepareViaData, put bundle to json array exception", e2);
+            return null;
+        }
+    }
+
+    protected void e() {
+        this.g.execute(new Runnable() { // from class: com.tencent.open.b.g.5
+            /* JADX WARN: Removed duplicated region for block: B:27:0x0079 A[Catch: Exception -> 0x00a5, TryCatch #6 {Exception -> 0x00a5, blocks: (B:2:0x0000, B:6:0x000b, B:25:0x006c, B:27:0x0079, B:28:0x0082, B:30:0x011c, B:54:0x00b4, B:57:0x00c4, B:50:0x00d6, B:61:0x010d, B:10:0x0038, B:13:0x004a, B:15:0x0052, B:17:0x005c, B:19:0x005e), top: B:1:0x0000, inners: #11, #10, #9 }] */
+            /* JADX WARN: Removed duplicated region for block: B:30:0x011c A[Catch: Exception -> 0x00a5, TRY_LEAVE, TryCatch #6 {Exception -> 0x00a5, blocks: (B:2:0x0000, B:6:0x000b, B:25:0x006c, B:27:0x0079, B:28:0x0082, B:30:0x011c, B:54:0x00b4, B:57:0x00c4, B:50:0x00d6, B:61:0x010d, B:10:0x0038, B:13:0x004a, B:15:0x0052, B:17:0x005c, B:19:0x005e), top: B:1:0x0000, inners: #11, #10, #9 }] */
+            @Override // java.lang.Runnable
+            /*
+                Code decompiled incorrectly, please refer to instructions dump.
+                To view partially-correct add '--show-bad-code' argument
+            */
+            public void run() {
+                /*
+                    Method dump skipped, instructions count: 307
+                    To view this dump add '--comments-level debug' option
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.tencent.open.b.g.AnonymousClass5.run():void");
+            }
+        });
+    }
+
+    public void a(final String str, final String str2, final Bundle bundle, final boolean z) {
+        h.a(new Runnable() { // from class: com.tencent.open.b.g.6
+            /* JADX WARN: Removed duplicated region for block: B:27:0x00ac A[Catch: Exception -> 0x00b5, TRY_ENTER, TRY_LEAVE, TryCatch #6 {Exception -> 0x00b5, blocks: (B:3:0x0002, B:5:0x0006, B:8:0x000e, B:11:0x0016, B:13:0x0043, B:14:0x0048, B:16:0x0056, B:17:0x006a, B:27:0x00ac, B:29:0x0114, B:50:0x010c, B:38:0x0103, B:46:0x00f8, B:54:0x00c2, B:56:0x00d0, B:57:0x00e5), top: B:2:0x0002 }] */
+            /* JADX WARN: Removed duplicated region for block: B:29:0x0114 A[Catch: Exception -> 0x00b5, TRY_LEAVE, TryCatch #6 {Exception -> 0x00b5, blocks: (B:3:0x0002, B:5:0x0006, B:8:0x000e, B:11:0x0016, B:13:0x0043, B:14:0x0048, B:16:0x0056, B:17:0x006a, B:27:0x00ac, B:29:0x0114, B:50:0x010c, B:38:0x0103, B:46:0x00f8, B:54:0x00c2, B:56:0x00d0, B:57:0x00e5), top: B:2:0x0002 }] */
+            /* JADX WARN: Removed duplicated region for block: B:41:0x0101 A[SYNTHETIC] */
+            /* JADX WARN: Removed duplicated region for block: B:43:? A[LOOP:0: B:19:0x0079->B:43:?, LOOP_END, SYNTHETIC] */
+            @Override // java.lang.Runnable
+            /*
+                Code decompiled incorrectly, please refer to instructions dump.
+                To view partially-correct add '--show-bad-code' argument
+            */
+            public void run() {
+                /*
+                    Method dump skipped, instructions count: 297
+                    To view this dump add '--comments-level debug' option
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.tencent.open.b.g.AnonymousClass6.run():void");
+            }
+        });
+    }
+}

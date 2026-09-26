@@ -1,0 +1,88 @@
+.class Lcom/netease/mpay/f/bl;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Lcom/netease/mpay/f/a/b;
+
+
+# instance fields
+.field final synthetic a:Lcom/netease/mpay/f/bk;
+
+
+# direct methods
+.method constructor <init>(Lcom/netease/mpay/f/bk;)V
+    .locals 2
+
+    iput-object p1, p0, Lcom/netease/mpay/f/bl;->a:Lcom/netease/mpay/f/bk;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Ljava/lang/System;->out:Ljava/io/PrintStream;
+
+    const-class v1, Lcom/dodola/rocoo/Hack;
+
+    invoke-virtual {v0, v1}, Ljava/io/PrintStream;->println(Ljava/lang/Object;)V
+
+    :cond_0
+    return-void
+.end method
+
+
+# virtual methods
+.method public a(Lcom/netease/mpay/f/a/b$a;Ljava/lang/String;)V
+    .locals 1
+
+    iget-object v0, p0, Lcom/netease/mpay/f/bl;->a:Lcom/netease/mpay/f/bk;
+
+    invoke-static {v0, p2}, Lcom/netease/mpay/f/bk;->a(Lcom/netease/mpay/f/bk;Ljava/lang/String;)V
+
+    return-void
+.end method
+
+.method public a(Lcom/netease/mpay/server/response/ae;)V
+    .locals 2
+
+    iget-object v0, p0, Lcom/netease/mpay/f/bl;->a:Lcom/netease/mpay/f/bk;
+
+    iget-object v0, v0, Lcom/netease/mpay/f/bk;->f:Lcom/netease/mpay/widget/e;
+
+    if-eqz v0, :cond_0
+
+    iget-object v0, p0, Lcom/netease/mpay/f/bl;->a:Lcom/netease/mpay/f/bk;
+
+    iget-object v0, v0, Lcom/netease/mpay/f/bk;->f:Lcom/netease/mpay/widget/e;
+
+    invoke-virtual {v0}, Lcom/netease/mpay/widget/e;->dismiss()V
+
+    :cond_0
+    if-eqz p1, :cond_1
+
+    iget-object v0, p0, Lcom/netease/mpay/f/bl;->a:Lcom/netease/mpay/f/bk;
+
+    iget-object v0, v0, Lcom/netease/mpay/f/bk;->g:Lcom/netease/mpay/f/bj$a;
+
+    iget-object v1, p1, Lcom/netease/mpay/server/response/ae;->a:Ljava/lang/String;
+
+    invoke-interface {v0, v1}, Lcom/netease/mpay/f/bj$a;->a(Ljava/lang/String;)V
+
+    :cond_1
+    return-void
+.end method
+
+.method public bridge synthetic a(Ljava/lang/Object;)V
+    .locals 0
+
+    check-cast p1, Lcom/netease/mpay/server/response/ae;
+
+    invoke-virtual {p0, p1}, Lcom/netease/mpay/f/bl;->a(Lcom/netease/mpay/server/response/ae;)V
+
+    return-void
+.end method

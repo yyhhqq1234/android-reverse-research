@@ -1,0 +1,15 @@
+package io.netty.util.internal.logging;
+
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.logging.LogFactory;
+
+/* loaded from: classes.dex */
+public class CommonsLoggerFactory extends InternalLoggerFactory {
+    Map<String, InternalLogger> loggerMap = new HashMap();
+
+    @Override // io.netty.util.internal.logging.InternalLoggerFactory
+    public InternalLogger newInstance(String name) {
+        return new CommonsLogger(LogFactory.getLog(name), name);
+    }
+}

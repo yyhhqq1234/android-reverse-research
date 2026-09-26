@@ -1,0 +1,100 @@
+.class Lcom/netease/mpay/widget/ai;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Landroid/view/animation/Animation$AnimationListener;
+
+
+# instance fields
+.field final synthetic a:Lcom/netease/mpay/widget/MessageBar;
+
+
+# direct methods
+.method constructor <init>(Lcom/netease/mpay/widget/MessageBar;)V
+    .locals 2
+
+    iput-object p1, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Ljava/lang/System;->out:Ljava/io/PrintStream;
+
+    const-class v1, Lcom/dodola/rocoo/Hack;
+
+    invoke-virtual {v0, v1}, Ljava/io/PrintStream;->println(Ljava/lang/Object;)V
+
+    :cond_0
+    return-void
+.end method
+
+
+# virtual methods
+.method public onAnimationEnd(Landroid/view/animation/Animation;)V
+    .locals 2
+
+    iget-object v0, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    invoke-static {v0}, Lcom/netease/mpay/widget/MessageBar;->a(Lcom/netease/mpay/widget/MessageBar;)Ljava/util/LinkedList;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/util/LinkedList;->poll()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/netease/mpay/widget/MessageBar$Message;
+
+    if-eqz v0, :cond_0
+
+    iget-object v1, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    invoke-static {v1, v0}, Lcom/netease/mpay/widget/MessageBar;->a(Lcom/netease/mpay/widget/MessageBar;Lcom/netease/mpay/widget/MessageBar$Message;)V
+
+    :goto_0
+    return-void
+
+    :cond_0
+    iget-object v0, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/netease/mpay/widget/MessageBar;->b(Lcom/netease/mpay/widget/MessageBar;Lcom/netease/mpay/widget/MessageBar$Message;)Lcom/netease/mpay/widget/MessageBar$Message;
+
+    iget-object v0, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    invoke-static {v0}, Lcom/netease/mpay/widget/MessageBar;->b(Lcom/netease/mpay/widget/MessageBar;)Landroid/view/View;
+
+    move-result-object v0
+
+    const/16 v1, 0x8
+
+    invoke-virtual {v0, v1}, Landroid/view/View;->setVisibility(I)V
+
+    iget-object v0, p0, Lcom/netease/mpay/widget/ai;->a:Lcom/netease/mpay/widget/MessageBar;
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/netease/mpay/widget/MessageBar;->a(Lcom/netease/mpay/widget/MessageBar;Z)Z
+
+    goto :goto_0
+.end method
+
+.method public onAnimationRepeat(Landroid/view/animation/Animation;)V
+    .locals 0
+
+    return-void
+.end method
+
+.method public onAnimationStart(Landroid/view/animation/Animation;)V
+    .locals 0
+
+    return-void
+.end method

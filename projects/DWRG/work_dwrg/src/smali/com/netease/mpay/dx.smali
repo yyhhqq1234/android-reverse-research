@@ -1,0 +1,56 @@
+.class Lcom/netease/mpay/dx;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Ljava/lang/Runnable;
+
+
+# instance fields
+.field final synthetic a:Lcom/netease/mpay/e/b/o;
+
+.field final synthetic b:Lcom/netease/mpay/dw;
+
+
+# direct methods
+.method constructor <init>(Lcom/netease/mpay/dw;Lcom/netease/mpay/e/b/o;)V
+    .locals 2
+
+    iput-object p1, p0, Lcom/netease/mpay/dx;->b:Lcom/netease/mpay/dw;
+
+    iput-object p2, p0, Lcom/netease/mpay/dx;->a:Lcom/netease/mpay/e/b/o;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_0
+
+    sget-object v0, Ljava/lang/System;->out:Ljava/io/PrintStream;
+
+    const-class v1, Lcom/dodola/rocoo/Hack;
+
+    invoke-virtual {v0, v1}, Ljava/io/PrintStream;->println(Ljava/lang/Object;)V
+
+    :cond_0
+    return-void
+.end method
+
+
+# virtual methods
+.method public run()V
+    .locals 2
+
+    iget-object v0, p0, Lcom/netease/mpay/dx;->b:Lcom/netease/mpay/dw;
+
+    iget-object v0, v0, Lcom/netease/mpay/dw;->a:Lcom/netease/mpay/dp;
+
+    iget-object v1, p0, Lcom/netease/mpay/dx;->a:Lcom/netease/mpay/e/b/o;
+
+    invoke-static {v0, v1}, Lcom/netease/mpay/dp;->a(Lcom/netease/mpay/dp;Lcom/netease/mpay/e/b/o;)V
+
+    return-void
+.end method
