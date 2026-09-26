@@ -1,9 +1,10 @@
 # 安卓逆向项目集
 
-这是一个 Android 逆向分析与改包研究工作区，包含两个独立项目：
+这是一个 Android 逆向分析与改包研究工作区，包含三个独立项目：
 
 - **BREM（别惹恶魔）**：smali 层改包研究记录与说明。
-- **NECR（Necromancer）**：Unity IL2CPP / Android 壳分析、去壳实验与工具脚本记录。
+- **NECR（Necromancer）**：Unity IL2CPP / Android 壳分析、去壳实验记录（已完结封存，稳定版 v19 在用）。
+- **DWRG（第五人格测试版）**：NeoX 非 Unity 包解包与动态分析记录。
 
 ## 仓库边界
 
@@ -22,10 +23,11 @@
 
 ## 项目说明
 
-- BREM 说明：[`BREM/说明.txt`](BREM/说明.txt)
-- NECR 准备状态：[`NECR/work_necr/00_准备状态_必读.md`](NECR/work_necr/00_准备状态_必读.md)
-- NECR 分析报告：[`NECR/work_necr/NECR_IL2CPP改包报告.md`](NECR/work_necr/NECR_IL2CPP改包报告.md)
-- NECR 工具脚本：[`NECR/work_necr/tools/`](NECR/work_necr/tools/)
+- BREM 说明：[`projects/BREM/说明.txt`](projects/BREM/说明.txt)
+- NECR 准备状态：[`projects/NECR/work_necr/00_准备状态_必读.md`](projects/NECR/work_necr/00_准备状态_必读.md)
+- NECR 分析报告：[`projects/NECR/work_necr/NECR_IL2CPP改包报告.md`](projects/NECR/work_necr/NECR_IL2CPP改包报告.md)
+- NECR 工具脚本：[`projects/NECR/work_necr/tools/`](projects/NECR/work_necr/tools/)
+- DWRG 分析报告：[`projects/DWRG/work_dwrg/DWRG_REVERSE_REPORT.md`](projects/DWRG/work_dwrg/DWRG_REVERSE_REPORT.md)
 
 ## 许可
 
