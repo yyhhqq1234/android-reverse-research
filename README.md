@@ -5,10 +5,10 @@ Android 逆向分析与改包研究工作区。仓库收录五个项目的**分�
 | 项目 | 目标 | 技术栈 | 状态 |
 |---|---|---|---|
 | **WZRY** | 王者荣耀 离线测试版 `com.tencent.tmgp.sgameceg` | Unity Mono + native `libGameCore.so` | 活跃（数值/技能表改造已达成） |
-| **SUBR** | 自研 IL2CPP 靶标 `com.pro.game.FreeSurvivalUnknownBattle` | Unity IL2CPP（jadx/apktool/il2cpp dump） | 静态审计完成，改包链闭环 |
-| **DWRG** | 第五人格 | NeoX 非 Unity（npk / lua / 自研 VM） | 解包 + 离线组装 + 动态抓远端完成 |
-| **NECR** | Necromancer 死灵法师 | Unity IL2CPP + 360 DynCryptor 企业壳 | 已封存（稳定版 v19 在用） |
-| **BREM** | 别惹恶魔 | 纯 smali 改包 | 已完结（最终包可用） |
+| **SUBR** | 自研 IL2CPP 靶标 `com.pro.game.FreeSurvivalUnknownBattle` | Unity IL2CPP（jadx/apktool/il2cpp dump） | ✅ **已完结**（静态审计 + 改包链闭环，封存） |
+| **DWRG** | 第五人格 | NeoX 非 Unity（npk / lua / 自研 VM） | ✅ **已完结**（解包 + 离线组装 + 动态抓远端） |
+| **NECR** | Necromancer 死灵法师 | Unity IL2CPP + 360 DynCryptor 企业壳 | ✅ **已完结封存**（`release_stable` v19 在用，只做复现/验证） |
+| **BREM** | 别惹恶魔 | 纯 smali 改包 | ✅ **已完结**（最终包可用） |
 
 ## 目录结构
 
@@ -39,14 +39,15 @@ Android 逆向分析与改包研究工作区。仓库收录五个项目的**分�
 - 过程报告：`projects/WZRY/_unpacked/REPORT*.md`（含 v43 最终配置与全部死路记录）
 - 构建链：`Assembly-CSharp.mod.dll` → apktool 回编 → `zipalign -f 4` → `apksigner`（v1+v2）→ `adb install -r`
 
-### SUBR — IL2CPP 靶标
+### SUBR — IL2CPP 靶标（✅ 已完结，封存）
 
 - 反编译树：`projects/SUBR/jadx_out/`（15,533 个 `.java`）、`projects/SUBR/apktool_out/`（smali/xml）
 - IL2CPP 文本 dump：`projects/SUBR/il2cpp_dump/`（含大文件，>2 MB 部分仅存本机）
 - 改包模块：`projects/SUBR/esp_mod/`（`jni/hack.cpp`、`smali/ModBridge.smali`、构建脚本）
 - 入口：[`REPORT.md`](projects/SUBR/REPORT.md) · [`STATIC_AUDIT_20261003.md`](projects/SUBR/STATIC_AUDIT_20261003.md) · [`AUDIT_BOX_SKEL_AIM.md`](projects/SUBR/AUDIT_BOX_SKEL_AIM.md) · [`esp_mod/STATUS.md`](projects/SUBR/esp_mod/STATUS.md)
+- **完结状态**：静态审计与改包链（native 模块 → zip surgery → 对齐签名 → 装机验证）已闭环，项目封存，后续只做复现与验证。
 
-### DWRG — 第五人格
+### DWRG — 第五人格（✅ 已完结）
 
 - 总报告：[`DWRG_REVERSE_REPORT.md`](projects/DWRG/work_dwrg/DWRG_REVERSE_REPORT.md) · [`BC_FINAL_REPORT.md`](projects/DWRG/work_dwrg/BC_FINAL_REPORT.md)
 - 分线报告：`B1_Static_Patch.md`、`B2_Heartbeat_Result.md`、`B3_Offline_Soak.md`、`F3_Lib_Restore.md`、`F4_Remote_Verify.md`、`MIMIC_Reuse.md`
@@ -54,15 +55,16 @@ Android 逆向分析与改包研究工作区。仓库收录五个项目的**分�
 - 离线组装与绕过：`offline_assemble/`、`offline_bypass/`、`formal_core_*`（nxs3 变体、opcode 新表、脚本自洽、WPX/动静态）
 - 自研脚本：`c1_native/`、`c1_native_formal/`（Frida hook / 文件 / 网络 / 订单）
 
-### NECR — 死灵法师（已封存）
+### NECR — 死灵法师（✅ 已完结，封存）
 
 - 必读：[`00_准备状态_必读.md`](projects/NECR/work_necr/00_准备状态_必读.md)（工具链现状与"等用户动手"清单）
 - 改包报告：[`NECR_IL2CPP改包报告.md`](projects/NECR/work_necr/NECR_IL2CPP改包报告.md)（dump.cs 导读 + L0–L3 路线 + E1–E20 失败战报）
 - 翻译与版本：[`TRANS_NOTES.md`](projects/NECR/work_necr/TRANS_NOTES.md) · [`VERSIONS.md`](projects/NECR/work_necr/VERSIONS.md) · [`CLEANUP_20260926.md`](projects/NECR/work_necr/CLEANUP_20260926.md)
 - 崩溃证据：`projects/NECR/work_necr/logs/tombstone_*.txt`
 - 结论：360 企业版 DynCryptor 用运行期签名派生密钥，换签必死解密期；可行路线只剩 L0 动态改内存 / L1 存档直改 / L2 资源表 / L3 SO 补丁。
+- **完结状态**：项目已完结封存，后续只做复现与验证，不再开新改包线。
 
-### BREM — 别惹恶魔（已完结）
+### BREM — 别惹恶魔（✅ 已完结）
 
 - 改动说明：[`projects/BREM/说明.txt`](projects/BREM/说明.txt)（恶魔部署真 0 ms / 法术 1 ms 无怒气 / 闪退判空）
 - 解包文本：`projects/BREM/别惹恶魔/`（manifest、res/layout、smali 文本）

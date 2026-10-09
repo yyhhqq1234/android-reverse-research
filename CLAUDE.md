@@ -7,11 +7,11 @@
 
 安卓逆向 + 改包工作区，五个项目共用一套工具链：
 
-- `projects/BREM/`（别惹恶魔）：smali 层改包，已完结。最终成品 `projects/BREM/别惹恶魔_无冷却无消耗_安卓16_最终版.apk` 可直接用，不要再动。
-- `projects/NECR/`（Necromancer）：Unity IL2CPP + 360 DynCryptor 企业版壳，已完结封存（`release_stable` v19 在用，只做复现/验证，不开新改包）。
-- `projects/DWRG/`（第五人格测试版）：NeoX 非 Unity 包，解包已完成（`projects/DWRG/work_dwrg/`），待动态。
-- `projects/WZRY/`（王者荣耀离线测试版）：Unity Mono + `libGameCore.so`，战斗数值/技能表改造（活跃线），入口 `projects/WZRY/_unpacked/README-WZRY.md`。
-- `projects/SUBR/`（自研 IL2CPP 靶标）：jadx/apktool 反编译树 + `esp_mod/` JNI 模块，入口 `projects/SUBR/REPORT.md`。
+- `projects/BREM/`（别惹恶魔）：smali 层改包 —— ✅ **已完结**。最终成品 `projects/BREM/别惹恶魔_无冷却无消耗_安卓16_最终版.apk` 可直接用，不要再动。
+- `projects/NECR/`（Necromancer）：Unity IL2CPP + 360 DynCryptor 企业版壳 —— ✅ **已完结封存**（`release_stable` v19 在用，只做复现/验证，不开新改包）。
+- `projects/DWRG/`（第五人格测试版）：NeoX 非 Unity 包 —— ✅ **已完结**（解包 + 离线组装 + 动态抓远端，产物在 `projects/DWRG/work_dwrg/`）。
+- `projects/WZRY/`（王者荣耀离线测试版）：Unity Mono + `libGameCore.so`，战斗数值/技能表改造 —— 🔥 **活跃线**（当前唯一在开新线的项目），入口 `projects/WZRY/_unpacked/README-WZRY.md`。
+- `projects/SUBR/`（自研 IL2CPP 靶标）：jadx/apktool 反编译树 + `esp_mod/` JNI 模块 —— ✅ **已完结封存**（静态审计 + 改包链闭环，只做复现/验证），入口 `projects/SUBR/REPORT.md`。
 - 工具链（只用不用改）：`tools/platform-tools/`（adb）、`tools/build-tools-win/android-14/`（aapt2/d8/apksigner/zipalign）、`tools/jadx/`、`tools/jre/`；自研脚本统一在 `tools/_unified/scripts/`。
 
 子项目必读（按顺序）：
@@ -83,5 +83,6 @@ frida 注意：本机 pip 是 frida-tools 14.10.4 + frida-py 17.18.0，CLI 不�
 1. 读 `AGENTS.md` §4 任务路由，确认是 BREM / NECR / DWRG / 工具链哪一类。
 2. BREM：读 `projects/BREM/说明.txt`，小步改 + 回装验证，禁止覆盖最终版 APK。
 3. NECR：已完结封存，只做复现/验证（按 `00_准备状态_必读.md` → 改包报告 → `PATCHES.md` 顺序读，复用现有脚本，不开新改包）。
+3b. SUBR：已完结封存，只做复现/验证（读 `projects/SUBR/REPORT.md` + `esp_mod/STATUS.md`，复用 `esp_mod/` 构建链）。
 4. DWRG：读 `projects/DWRG/work_dwrg/DWRG_REVERSE_REPORT.md`，产物只写 `projects/DWRG/work_dwrg/`，动态前先 `adb devices`。
 5. 汇报按 `AGENTS.md` §5 DoD：成品（文件名/大小/签名/对齐/验证机型/回滚路径）或分析产物（路径/校验结果/下一步），失败给日志路径与复现步骤；涉及公开仓库时另按 §6 检查清单复核。

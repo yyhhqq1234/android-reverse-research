@@ -8,9 +8,11 @@
 
 | 项目 / 目录 | 说明 | 状态 |
 |---|---|---|
-| `projects/BREM/`（别惹恶魔） | 纯 smali 改包：恶魔部署真 0ms + 法术 1ms 无怒气 + 闪退判空修复 | ✅ 已完成，最终包可用 |
-| `projects/NECR/`（Necromancer 死灵法师） | Unity IL2CPP + 360 DynCryptor 企业版壳 | ✅ 已完结封存，`release_stable` v19 在用，只做复现/验证 |
-| `projects/DWRG/`（第五人格测试版） | NeoX 非 Unity 包：完全解包 + jadx + npk/hook 脚本 | ✅ 解包完成，待动态 |
+| `projects/BREM/`（别惹恶魔） | 纯 smali 改包：恶魔部署真 0ms + 法术 1ms 无怒气 + 闪退判空修复 | ✅ **已完结**，最终包可用 |
+| `projects/NECR/`（Necromancer 死灵法师） | Unity IL2CPP + 360 DynCryptor 企业版壳 | ✅ **已完结封存**，`release_stable` v19 在用，只做复现/验证 |
+| `projects/SUBR/`（自研 IL2CPP 靶标） | Unity IL2CPP：jadx/apktool 反编译树 + native 模块改包链 | ✅ **已完结封存**，静态审计 + 改包链闭环，只做复现/验证 |
+| `projects/DWRG/`（第五人格测试版） | NeoX 非 Unity 包：完全解包 + jadx + npk/hook + 离线组装 | ✅ **已完结**（解包 + 离线组装 + 动态抓远端） |
+| `projects/WZRY/`（王者荣耀离线测试版） | Unity Mono + `libGameCore.so`：战斗数值 / 技能表改造 | 🔥 **活跃线**（v43 首场即生效） |
 | `docs/` | 全检重建文档（01–06，≤6 个） | 事实底稿，只信代码与实测 |
 | `tools/installers/` | 本机散装安装器归档（MuMu/GG/launcher） | 仅本机，不进仓库 |
 | `tools/platform-tools/` | 官方 Android SDK Platform-Tools（adb/fastboot/sqlite3 等） | 基础设施，只用不用改 |
@@ -55,6 +57,23 @@
   - `release_stable` 已验证：P1 金币强制 9999、P2 钻石 ×1024、P3 IAP 全 PIC 绕过、P4 文本等长替换；签名 `repack/necr.keystore`（本地密钥，未随仓库发布）
 - 版本钉死（勿动）：frida-server 17.18.0 == PC frida 17.18.0（本机 pip 是 frida-tools 14.10.4 + frida-py 17.18.0，CLI 用 `python -m frida`）、Il2CppDumper 6.7.46、apktool 3.0.3、AssetStudioMod v0.19.0、BlackDex v3.2、Unity 2021.3.18f1（changeset `3129e69bc0c7`，备用 dex 合成参照）
 
+### 2.3 SUBR（自研 IL2CPP 靶标）— ✅ 已完结封存，只做复现/验证
+
+- 性质：操作者自建靶标 `com.pro.game.FreeSurvivalUnknownBattle`，非第三方商业包。
+- 产物：`projects/SUBR/jadx_out/`（15,533 `.java`）、`projects/SUBR/apktool_out/`（smali/xml）、`projects/SUBR/il2cpp_dump/`（大文件仅本机）、`projects/SUBR/esp_mod/`（`jni/hack.cpp`、`smali/ModBridge.smali`、构建+签名脚本）。
+- 结论：静态审计完成，改包链（native → zip surgery → zipalign → apksigner → 装机）闭环，项目封存。
+- 守则：只做复现/验证；改包链复用 `esp_mod/`，不新开改包线。
+
+### 2.4 已完成项目一览（封存，勿 regression）
+
+| 项目 | 完结时点 | 状态口径 |
+|---|---|---|
+| BREM | 最终版包可用 | 只做复现/验证，禁止覆盖最终版 APK |
+| NECR | `release_stable` v19 | 只做复现/验证，不开新改包 |
+| SUBR | 改包链闭环 | 只做复现/验证，复用 `esp_mod/` |
+| DWRG | 解包+离线组装+动态抓远端 | 只做复现/验证 |
+| WZRY | — | **活跃**，唯一在开新线的项目 |
+
 ## 3. 基础设施用法
 
 - ADB：`D:\APK-Reverse\tools\platform-tools\adb.exe`（v1.0.41 / 37.0.1），`ADB_INSTALL_REPORT.txt` 有来源与 SHA256。不要换第三方 adb。测试机固定 `adb connect 127.0.0.1:16384`，提权走 `adb root`（`su -c` 非交互静默失败）。
@@ -72,6 +91,8 @@
    - BREM 相关 → 复现/验证优先，读 `projects/BREM/说明.txt`，小步 smali 修改 + 回装验证。
    - NECR 相关 → 已完结封存，只做复现/验证（读 `00_准备状态_必读.md` + 改包报告 + `PATCHES.md`，复用现有脚本，不开新改包）。
    - DWRG 相关 → 读 `projects/DWRG/work_dwrg/DWRG_REVERSE_REPORT.md`，产物只写 `projects/DWRG/work_dwrg/`，动态前先 `adb devices`。
+   - SUBR 相关 → 已完结封存，只做复现/验证（读 `projects/SUBR/REPORT.md` + `STATIC_AUDIT_20261003.md` + `esp_mod/STATUS.md`，复用 `esp_mod/` 构建链，不开新改包）。
+   - WZRY 相关 → 活跃线，读 `projects/WZRY/_unpacked/README-WZRY.md` + `REPORT*.md`，改 `patcher/Program.cs` 后走 build-mod 链回装。
    - 工具链/环境问题 → 查 `ADB_INSTALL_REPORT.txt` 与版本钉死清单，不要擅自升级。
 5. **输出规范**：改包任务必须给出——改了哪个文件偏移/ smali 点位、原字节→补丁字节、签名方式（v1+v2）、zipalign 与否、安装验证结果；失败任务必须给出 tombstone/日志路径与复现步骤。
 6. **密钥与敏感信息**：本地测试签名用的 keystore / jks 与口令仅保存在本机，不上传、不改口令、不提交到外部仓库（公开仓库已通过 `.gitignore` 排除）。`assemble_unshelled.py` / `build_menu.py` 的签名口令走环境变量 `NECR_KEYSTORE_PASS`（默认 `CHANGE_ME` 占位），禁止把真实口令写回脚本或文档。
