@@ -10,6 +10,10 @@ static class Patcher
     static AssemblyDefinition FpA;
     static AssemblyDefinition MscA;
 
+    // ★ v44 减痕开关：false ⇒ 不生成逐帧/逐次诊断日志（SETHp / V30T / V35* / V39:CNT14 / V22S / ACT / V15:REFILL）。
+    //   行为零改动，只降 logcat 体积与每帧取数开销。需要取证时改回 true 重新构建即可。
+    static bool Verbose = false;
+
     static TypeDefinition Msc(string full) {
         var t = MscA.MainModule.Types.FirstOrDefault(x => x.FullName == full);
         if (t == null) throw new Exception("msc-miss " + full);
@@ -1313,7 +1317,8 @@ static class Patcher
                 // V13b 修正：原"把 actorHpTotal 赋值源替换为常量30000"是对**所有 actor**生效的，
                 //   导致小兵/野怪上限也变 30000。已撤除；血量上限改由 V14 的表改写 + V15 的补满负责。
                 Console.WriteLine("V13 actorHpTotal-source patch REMOVED (was global, broke minions)");
-                // 诊断: 入口打印 hp:hpTotal（保留）
+                // 诊断: 入口打印 hp:hpTotal —— ★ v44 减痕：默认不生成（每次 SetActorHp 都打，最高频）
+                if (Verbose) {
                 var pSet = mSetHp.Body.GetILProcessor();
                 var fSet = mSetHp.Body.Instructions[0];
                 pSet.InsertBefore(fSet, pSet.Create(OpCodes.Ldstr, "SETHp:"));
@@ -1326,6 +1331,7 @@ static class Patcher
                 pSet.InsertBefore(fSet, pSet.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                 pSet.InsertBefore(fSet, pSet.Create(OpCodes.Call, concat));
                 pSet.InsertBefore(fSet, pSet.Create(OpCodes.Call, mLog));
+                }
                 mSetHp.Body.MaxStackSize = System.Math.Max(mSetHp.Body.MaxStackSize, 16);
                 Console.WriteLine("V13 SetActorHp log only");
             } else Console.WriteLine("V13 SetActorHp NOT FOUND");
@@ -1408,11 +1414,13 @@ static class Patcher
                 ip.Append(ip.Create(OpCodes.Beq, lSkipCnt));
                 ip.Append(ip.Create(OpCodes.Ldloc, vCd));
                 ip.Append(ip.Create(OpCodes.Stsfld, rCntV39));
+                if (Verbose) {
                 ip.Append(ip.Create(OpCodes.Ldstr, "V39:CNT14="));
                 ip.Append(ip.Create(OpCodes.Ldloc, vCd));
                 ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                 ip.Append(ip.Create(OpCodes.Call, concat));
                 ip.Append(ip.Create(OpCodes.Call, mLog));
+                }
                 ip.Append(lSkipCnt);
                 var lReady38 = ip.Create(OpCodes.Nop);
                 ip.Append(ip.Create(OpCodes.Ldloc, vCd));
@@ -1477,7 +1485,7 @@ static class Patcher
                 ip.Append(ip.Create(OpCodes.Ldsfld, rLogV14));
                 ip.Append(ip.Create(OpCodes.Brtrue, lSkipHeroLog));
                 Action<int> logOff = (off) => {
-                    ip.Append(ip.Create(OpCodes.Ldstr, "V16O:"));
+                    ip.Append(ip.Create(OpCodes.Ldstr, "V45:"));   // v45 版本标记（每进程一次，logcat 认构建）
                     ip.Append(ip.Create(OpCodes.Ldc_I4, off));
                     ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                     ip.Append(ip.Create(OpCodes.Call, concat));
@@ -1536,7 +1544,8 @@ static class Patcher
                 writeAt(88, 3000);    // iBaseINT  → "法术攻击"
                 writeAt(92, 1000);    // iBaseDEF  → "物理防御"
                 writeAt(96, 1000);    // iBaseRES  → "法术防御"
-                writeAt(112, 5000);   // iBaseAtkSpd → 面板"攻速加成 50%"（实测单位=万分比：50→0.5%，5000→50%）
+                writeAt(112, 10000);  // iBaseAtkSpd → 面板"攻速加成 100%"（v45；实测量纲：5000→50%）
+                if (Verbose) {
                 ip.Append(ip.Create(OpCodes.Ldstr, "V30T:"));
                 ip.Append(ip.Create(OpCodes.Ldloc, vI));
                 ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
@@ -1550,6 +1559,7 @@ static class Patcher
                 ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                 ip.Append(ip.Create(OpCodes.Call, concat));
                 ip.Append(ip.Create(OpCodes.Call, mLog));
+                }
                 ip.Append(lSn);
                 ip.Append(ip.Create(OpCodes.Ldloc, vI));
                 ip.Append(ip.Create(OpCodes.Ldc_I4_1));
@@ -1580,9 +1590,11 @@ static class Patcher
                 writeAt(88, 4000);    // iBaseINT  原 0
                 writeAt(92, 1500);    // iBaseDEF  原 86
                 writeAt(96, 1500);    // iBaseRES  原 50
-                writeAt(112, 5000);   // iBaseAtkSpd（万分比 → 面板 50%）
+                writeAt(112, 20000);  // iBaseAtkSpd（v45；万分比 → 面板 200%）
+                if (Verbose) {
                 ip.Append(ip.Create(OpCodes.Ldstr, "V35:PUPPET225"));
                 ip.Append(ip.Create(OpCodes.Call, mLog));
+                }
                 ip.Append(ip.Create(OpCodes.Ldc_I4_0));
                 ip.Append(ip.Create(OpCodes.Stloc, vI));
                 ip.Append(ip.Create(OpCodes.Br, lPTop));
@@ -1624,11 +1636,13 @@ static class Patcher
                 ip.Append(ip.Create(OpCodes.Add));
                 ip.Append(ip.Create(OpCodes.Ldc_I4_0));
                 ip.Append(ip.Create(OpCodes.Stind_I4));         // iEnergyCost
+                if (Verbose) {
                 ip.Append(ip.Create(OpCodes.Ldstr, "V35:SK"));
                 ip.Append(ip.Create(OpCodes.Ldloc, vCd));
                 ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                 ip.Append(ip.Create(OpCodes.Call, concat));
                 ip.Append(ip.Create(OpCodes.Call, mLog));
+                }
                 ip.Append(lPNext);
                 ip.Append(ip.Create(OpCodes.Ldloc, vI));
                 ip.Append(ip.Create(OpCodes.Ldc_I4_1));
@@ -1665,6 +1679,7 @@ static class Patcher
                 var lSkipLog = ip.Create(OpCodes.Nop);
                 ip.Append(ip.Create(OpCodes.Ldsfld, rLogV14));
                 ip.Append(ip.Create(OpCodes.Brtrue, lSkipLog));
+                if (Verbose) {
                 ip.Append(ip.Create(OpCodes.Ldstr, "V22S:"));
                 ip.Append(ip.Create(OpCodes.Ldloc, vI));
                 ip.Append(ip.Create(OpCodes.Box, Mod.TypeSystem.Int32));
@@ -1687,6 +1702,7 @@ static class Patcher
                 appTag(168, ":SC=");    // iSelfSkillCombine  → skillCombine(21) 行号
                 appTag(172, ":TC=");    // iTargetSkillCombine
                 ip.Append(ip.Create(OpCodes.Call, mLog));
+                }
                 // V24 探针（12510 全行 128×int32）已完成取证：行内无伤害数值 → 已撤除，降噪
                 ip.Append(lSkipLog);
             }
@@ -1825,7 +1841,7 @@ static class Patcher
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldloc, vOld15));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ble, skip15));
                 // V17: 上限增长事件 = 该 actor 创建/升级 → 打印 cfgID（用来抓傀儡的 cfgID）
-                if (mHandle17 != null && mCfgId17 != null) {
+                if (Verbose && mHandle17 != null && mCfgId17 != null) {
                     p15.InsertBefore(ret15, p15.Create(OpCodes.Ldstr, "ACT:cfg="));
                     p15.InsertBefore(ret15, p15.Create(OpCodes.Ldarg_0));
                     p15.InsertBefore(ret15, p15.Create(OpCodes.Ldflda, fAp15));
@@ -1854,12 +1870,14 @@ static class Patcher
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldarg_0));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldfld, fTot15));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Stfld, fHp15));
+                if (Verbose) {
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldstr, "V15:REFILL:"));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldarg_0));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Ldfld, fTot15));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Box, Mod.TypeSystem.Int32));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Call, concat));
                 p15.InsertBefore(ret15, p15.Create(OpCodes.Call, mLog));
+                }
                 p15.InsertBefore(ret15, skip15);
                 mSetHp15.Body.MaxStackSize = System.Math.Max(mSetHp15.Body.MaxStackSize, 16);
                 Console.WriteLine("V15 refill-on-maxgrowth hooked");
@@ -1946,10 +1964,15 @@ static class Patcher
                 };
                 var lDone28 = p28.Create(OpCodes.Nop);
                 var lHost28 = p28.Create(OpCodes.Nop);
+                var lPuppet28 = p28.Create(OpCodes.Nop);   // ★ v45: 傀儡真身 cfgID=225 专用入口
                 // if (cfgId == 125) goto HOST
                 pushCfgId28();
                 ins28(p28.Create(OpCodes.Ldc_I4, 125));
                 ins28(p28.Create(OpCodes.Beq, lHost28));
+                // ★ v45: 傀儡真身 cfgID = 225（实测：傀儡面板 HP 1336 == 日志 ACT:cfg=225）→ 直进傀儡档
+                pushCfgId28();
+                ins28(p28.Create(OpCodes.Ldc_I4, 225));
+                ins28(p28.Create(OpCodes.Beq, lPuppet28));
                 // if (cfgId < 1100) goto DONE
                 pushCfgId28();
                 ins28(p28.Create(OpCodes.Ldc_I4, 1100));
@@ -1959,19 +1982,21 @@ static class Patcher
                 ins28(p28.Create(OpCodes.Ldc_I4, 1400));
                 ins28(p28.Create(OpCodes.Bgt, lDone28));
                 // ---- 傀儡档（安全字段先写，量纲未确认的字段最后写）----
+                ins28(lPuppet28);
                 tag28("V28PUPPET:");
-                wf28(fHp28, 80000);
-                if (fPLHp28 != null) wf28(fPLHp28, 3000);
-                wf28(fAd28, 8000);
-                if (fPLAd28 != null) wf28(fPLAd28, 800);
-                wf28(fAp28, 8000);
-                if (fPLAp28 != null) wf28(fPLAp28, 800);
-                wf28(fDef28, 3000);
-                if (fPLDef28 != null) wf28(fPLDef28, 300);
-                wf28(fRes28, 3000);
-                if (fPLRes28 != null) wf28(fPLRes28, 300);
+                // ★ v45: 与 hero 表 225 行保持同值（避免"钩子生效/不生效"两条路给出不同数值）
+                wf28(fHp28, 40000);
+                if (fPLHp28 != null) wf28(fPLHp28, 2000);
+                wf28(fAd28, 4000);
+                if (fPLAd28 != null) wf28(fPLAd28, 500);
+                wf28(fAp28, 4000);
+                if (fPLAp28 != null) wf28(fPLAp28, 500);
+                wf28(fDef28, 1500);
+                if (fPLDef28 != null) wf28(fPLDef28, 200);
+                wf28(fRes28, 1500);
+                if (fPLRes28 != null) wf28(fPLRes28, 200);
                 if (fMspd28 != null) wf28(fMspd28, 4000);
-                if (fAspd28 != null) wf28(fAspd28, 5000);   // 万分比      // 量纲未确认 → 放最后
+                if (fAspd28 != null) wf28(fAspd28, 20000);  // 万分比 → 面板 200%（v45）
                 ins28(p28.Create(OpCodes.Br, lDone28));
                 // ---- 本体档 ----
                 ins28(lHost28);
@@ -1987,7 +2012,7 @@ static class Patcher
                 wf28(fRes28, 1000);
                 if (fPLRes28 != null) wf28(fPLRes28, 200);
                 if (fMspd28 != null) wf28(fMspd28, 4000);
-                if (fAspd28 != null) wf28(fAspd28, 5000);   // 万分比
+                if (fAspd28 != null) wf28(fAspd28, 10000);  // 万分比 → 面板 100%（v45）
                 ins28(lDone28);
                 // ---- ★ V29 关键修正③：整段包 try/catch —— 任何异常都被吞掉，绝不阻断 actor 创建 ----
                 var lLeave28 = p28.Create(OpCodes.Leave, anchor28);
@@ -2218,7 +2243,7 @@ static class Patcher
                 w32(88, 3000);    // iBaseINT
                 w32(92, 1000);    // iBaseDEF
                 w32(96, 1000);    // iBaseRES
-                w32(112, 5000);   // iBaseAtkSpd（万分比）
+                w32(112, 10000);  // iBaseAtkSpd（万分比，v45 口径）
                 p32.InsertBefore(first32, p32.Create(OpCodes.Ldstr, "V36:PATCH125"));
                 p32.InsertBefore(first32, p32.Create(OpCodes.Call, mLog));
                 p32.InsertBefore(first32, lSkip32);
@@ -2280,6 +2305,20 @@ static class Patcher
                         else if (ii.Operand is FieldReference fr41 && fr41.Name == "actorPtr" && fAp41 == null) fAp41 = Mod.ImportReference(fr41);
                     }
             }
+            // ★ v45: 取 get_handle / get_ConfigId —— 用来在 V41 里区分 本体(cfgID 125) 与 傀儡(cfgID 225)
+            MethodReference mHandle41 = null, mCfgId41 = null;
+            {
+                var tAh41 = Mod.Types.FirstOrDefault(x => x.FullName == "Assets.Scripts.GameLogic.ActorHelper");
+                if (tAh41 != null) foreach (var mm in tAh41.Methods) {
+                    if (!mm.HasBody) continue;
+                    foreach (var ii in mm.Body.Instructions) {
+                        if (ii.Operand is MethodReference mr2) {
+                            if (mHandle41 == null && mr2.Name == "get_handle") mHandle41 = Mod.ImportReference(mr2);
+                            else if (mCfgId41 == null && mr2.Name == "get_ConfigId") mCfgId41 = Mod.ImportReference(mr2);
+                        }
+                    }
+                }
+            }
             FieldReference fArr41 = null;
             TypeReference tSt41 = null;
             FieldReference fType41 = null, fBase41 = null;
@@ -2294,17 +2333,21 @@ static class Patcher
                 }
             }
             Console.WriteLine("V41 refs vlc=" + (mVL41 != null) + " host=" + (mHost41 != null) + " ap=" + (fAp41 != null)
-                + " arr=" + (fArr41 != null) + " st=" + (tdSt41 != null) + " type=" + (fType41 != null) + " base=" + (fBase41 != null));
+                + " arr=" + (fArr41 != null) + " st=" + (tdSt41 != null) + " type=" + (fType41 != null) + " base=" + (fBase41 != null)
+                + " handle=" + (mHandle41 != null) + " cfg=" + (mCfgId41 != null));
             if (mVL41 != null && mVL41.HasBody && mHost41 != null && fAp41 != null && fArr41 != null
-                && fType41 != null && fBase41 != null && tSt41 != null) {
+                && fType41 != null && fBase41 != null && tSt41 != null && mHandle41 != null && mCfgId41 != null) {
                 mVL41.Body.InitLocals = true;
                 var p41 = mVL41.Body.GetILProcessor();
                 var vArr41 = new VariableDefinition(fArr41.FieldType);
                 var vLen41 = new VariableDefinition(Mod.TypeSystem.Int32);
                 var vI41 = new VariableDefinition(Mod.TypeSystem.Int32);
                 var vT41 = new VariableDefinition(Mod.TypeSystem.Int32);
+                var vCfg41 = new VariableDefinition(Mod.TypeSystem.Int32);
+                var vAs41 = new VariableDefinition(Mod.TypeSystem.Int32);
                 mVL41.Body.Variables.Add(vArr41); mVL41.Body.Variables.Add(vLen41);
                 mVL41.Body.Variables.Add(vI41); mVL41.Body.Variables.Add(vT41);
+                mVL41.Body.Variables.Add(vCfg41); mVL41.Body.Variables.Add(vAs41);
                 var first41 = mVL41.Body.Instructions[0];
                 var lTop41 = p41.Create(OpCodes.Nop);
                 var lNext41 = p41.Create(OpCodes.Nop);
@@ -2313,6 +2356,26 @@ static class Patcher
                 p41.InsertBefore(first41, p41.Create(OpCodes.Ldflda, fAp41));
                 p41.InsertBefore(first41, p41.Create(OpCodes.Call, mHost41));
                 p41.InsertBefore(first41, p41.Create(OpCodes.Brfalse, lDone41));
+                // ★ v45: 攻速按角色分档 —— 傀儡(cfgID 225)=20000(200%)，其余 host 演员(本体 125)=10000(100%)
+                {
+                    var lNotPup41 = p41.Create(OpCodes.Nop);
+                    var lAsDone41 = p41.Create(OpCodes.Nop);
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldarg_0));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldflda, fAp41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Call, mHandle41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Callvirt, mCfgId41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Stloc, vCfg41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vCfg41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldc_I4, 225));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Bne_Un, lNotPup41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldc_I4, 20000));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Stloc, vAs41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Br, lAsDone41));
+                    p41.InsertBefore(first41, lNotPup41);
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldc_I4, 10000));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Stloc, vAs41));
+                    p41.InsertBefore(first41, lAsDone41);
+                }
                 p41.InsertBefore(first41, p41.Create(OpCodes.Ldarg_0));
                 p41.InsertBefore(first41, p41.Create(OpCodes.Ldfld, fArr41));
                 p41.InsertBefore(first41, p41.Create(OpCodes.Stloc, vArr41));
@@ -2347,11 +2410,25 @@ static class Patcher
                     p41.InsertBefore(first41, p41.Create(OpCodes.Br, lNext41));
                     p41.InsertBefore(first41, lNo);
                 };
+                // ★ v45: 攻速档用局部变量（按角色分档），其余仍是常量
+                Action<int> case41L = (k) => {
+                    var lNoV = p41.Create(OpCodes.Nop);
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vT41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldc_I4, k));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Bne_Un, lNoV));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vArr41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vI41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldelema, tSt41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vAs41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Stfld, fBase41));
+                    p41.InsertBefore(first41, p41.Create(OpCodes.Br, lNext41));
+                    p41.InsertBefore(first41, lNoV);
+                };
                 case41(1, 3000);    // AD
                 case41(2, 3000);    // AP
                 case41(3, 1000);    // DEF
                 case41(4, 1000);    // RES
-                case41(18, 5000);   // 攻速（万分比 = 50%）
+                case41L(18);        // 攻速：本体 10000(100%) / 傀儡 20000(200%)（v45）
                 p41.InsertBefore(first41, lNext41);
                 p41.InsertBefore(first41, p41.Create(OpCodes.Ldloc, vI41));
                 p41.InsertBefore(first41, p41.Create(OpCodes.Ldc_I4_1));
@@ -2360,7 +2437,7 @@ static class Patcher
                 p41.InsertBefore(first41, p41.Create(OpCodes.Br, lTop41));
                 p41.InsertBefore(first41, lDone41);
                 mVL41.Body.MaxStackSize = System.Math.Max(mVL41.Body.MaxStackSize, 8);
-                Console.WriteLine("V41 ValueLinkerComponent.LateUpdate hooked (host actor prop override)");
+                Console.WriteLine("V41 ValueLinkerComponent.LateUpdate hooked (host actor prop override, aspd by cfgID: 125->10000 / 225->20000)");
             } else Console.WriteLine("V41 refs MISSING");
         }
 

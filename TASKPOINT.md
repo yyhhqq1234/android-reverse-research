@@ -84,6 +84,14 @@ WZRY 任务（本活跃线）：
 - [x] 接法A联调通过：脚本 v3 已搬 `tools/connect-ceserver.ps1` 全局化（不归属 NECR）+ `tools/installers/ceserver75/`（CE7.5 全套，`ceserver_x86_64` ELF 魔数 `7F454C46` 已验，扩展/Mono .so 已同推 `/data/local/tmp/`），[1/6]→[6/6] 全绿，PC 连 `127.0.0.1:52734` 即用；雷区×2：adb 成功信息走 stderr，`$ErrorActionPreference=Stop` 下会误杀（v3 函数内降级只认退出码）；push 回显红字为妆饰性噪音
 
 ## 7. 进行中 / 下一步（新对话先干这个）
+- **★★ v44 减痕版 + v45 攻速加强（2026-10-10 00:0x）—— 已装机，待用户进局确认**
+  - **交付**：`build/wzry-v44.apk`（减痕，行为零改动，SHA256 `75929168BD13…`）· `build/wzry-v45.apk`（减痕+攻速，SHA256 `2D84A81DBB02…`）；均 v1+v2+v3 verified、zipalign -p 4 通过。**当前装机 = v45**（`lastUpdateTime=2026-10-10 00:00:32`）。
+  - **v44 减痕**：补丁器新增 `static bool Verbose = false`，关闭后 `SETHp/V30T/V35*/V39:CNT14/V22S/ACT:cfg/V15:REFILL` 的诊断 IL **完全不生成**；`V39` 表就绪门逻辑保留（只去日志）。实测冷启动 80s：进程存活、crash 空、上述关键字 logcat **全 0**、只在首帧留一条 `V45:` 一次性 dump。
+  - **v45 攻速**（量纲=万分比）：本体 125 → **10000（100%）**；傀儡 225 → **20000（200%）**。三路同改：① 表（`Apply` 的 `writeAt(112,…)`，本体档 10000 / 傀儡档 20000）② 创建期 `BuildActorData`（V28/V29；**新增 cfgID==225 直跳入口 `lPuppet28`**，该傀儡档数值同时对齐表值 40000/4000/4000/1500/1500）③ 每帧 V41 `ValueLinkerComponent::LateUpdate`：新取 `get_handle().get_ConfigId()` → `225 ? 20000 : 10000` 写 `Type==18` 的 `BaseValue`（自检 `handle=True cfg=True`）。
+  - **判据**：进局面板 攻速 本体 100% / 傀儡 200%（其余项不变：攻击 3000 / 防御 1000 / 法抗 1000 / 生命 30000）；首场即生效。
+  - **回滚**：`projects\WZRY\wzry.apk`（vanilla 原包）或 `build\wzry-v43.apk`（上一版成品）。
+  - **报告**：`projects/WZRY/_unpacked/REPORT14-v44-v45.md`（含复现链、判据、死路记录）。
+  - **本轮事故（已修）**：PowerShell 批量改源码时 `$pairs` 退化成一维数组 → `$pr[0]` 取到字符串首字符 → `Program.cs` 被逐字符污染；`git checkout --` 回滚后改用二维数组 + **CRLF 归一化**（源文件 CRLF、here-string LF）重做，18+15 处替换全中，编译 0 错误。
 - **★ 项目状态收口（2026-10-09）—— SUBR / NECR 标记为已完结**
   - SUBR：静态审计 + 改包链（native → zip surgery → zipalign → apksigner → 装机）闭环 → **已完结封存**，只做复现/验证，复用 `esp_mod/`，不开新改包线。
   - NECR：`release_stable` v19 在用 → **已完结封存**，只做复现/验证，不开新改包。
