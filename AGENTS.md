@@ -2,7 +2,7 @@
 
 > 工作区根目录：`D:\APK-Reverse`（Windows，含中文路径）
 > 面向在此目录下协作的所有 Agent：进场先读本文件，再读 `CLAUDE.md` 与各子项目说明。
-> 公开仓库：<https://github.com/yyhhqq1234/android-reverse-research>（PUBLIC，仅文档+脚本，MIT；APK/密钥/二进制/产物一律不进仓库，详见 §6 与 `README.md`）。
+> 公开仓库：<https://github.com/yyhhqq1234/android-reverse-research>（PUBLIC，MIT；收"文本产物"——文档/脚本/反编译与解包树，**判据：文本 + 单文件 ≤ 2 MB**；APK/密钥/二进制/安装包一律不进仓库，详见 §6 与 `README.md`）。
 
 ## 1. 项目集一览
 
@@ -87,7 +87,7 @@
 ## 6. 公开仓库边界（必守）
 
 - 地址与许可：<https://github.com/yyhhqq1234/android-reverse-research>，PUBLIC，分支 `main`；自研文档/脚本按 MIT 发布，第三方工具与目标应用内容不授权、也不随仓库发布。
-- 只收：`README.md`、`LICENSE`、`.gitignore`、`AGENTS.md`、`CLAUDE.md`、`ADB_INSTALL_REPORT.txt`、`projects/BREM/说明.txt`、`projects/NECR/work_necr/00_准备状态_必读.md`、`projects/NECR/work_necr/NECR_IL2CPP改包报告.md`、`projects/NECR/work_necr/TRANS_NOTES.md`、`projects/NECR/work_necr/VERSIONS.md`、`projects/NECR/work_necr/tools/*.py/*.java/*.ps1`、`projects/NECR/work_necr/tools/il2cppdumper/*.py`、`tools/connect-ceserver.ps1`（全局 CE 脚本）、小体积翻译文本（`projects/NECR/work_necr/trans/batches/` + `trans/work/` 部分 `.txt`）。
-- 不收：`*.apk/*.aab/*.so/*.dex/*.jks/*.keystore/*.idsig/*.exe/*.dll/*.jar/*.xz/*.zip/*.dat/*.bin`；`projects/BREM/别惹恶魔/`、`projects/BREM/backup_original/`、`projects/NECR/Necromancer/`、`projects/NECR/work_necr/{src,build,repack,prod,trial,logs,deps,save,toolchain,release_stable,tools/_archive,tools/asmod}`；`tools/platform-tools/`、`tools/build-tools-win/`、`tools/jadx/`、`tools/jre/`、`tools/MuMu Player 12/`、`*.lnk`、`GameGuardian*.apk`、`tools/installers/`、`.agent-teams/`。
-- 发布前必查：`git status --short` 确认只动预期文本；`git grep -n "ks-pass"` 确认签名口令均为 `NECR_KEYSTORE_PASS` 占位、无硬编码真实口令；`git ls-tree -r --name-only HEAD` 无二进制/密钥；`gh repo view` 确认 `visibility: PUBLIC`。
+- 只收（**2026-10-09 起放宽为"文本全收"**）：根文档（`README.md`/`LICENSE`/`.gitignore`/`AGENTS.md`/`CLAUDE.md`/`ADB_INSTALL_REPORT.txt`/`TASKPOINT.md`）、`docs/`、`projects/**` 与 `tools/_unified/scripts/` 下的**文本产物**（`.md/.txt/.java/.smali/.py/.ps1/.bat/.js/.json/.xml/.h/.cpp/.cs/.log/.properties` 等），以及 `tools/connect-ceserver.ps1`。即：反编译树、解包树、审计报告、自研脚本均可入库，**判据是"文本 + 单文件 ≤ 2 MB"**。
+- 不收：`*.apk/*.aab/*.so/*.dex/*.jks/*.keystore/*.idsig/*.exe/*.dll/*.jar/*.xz/*.zip/*.dat/*.bin`、`*.pcap/*.wpk/*.npk/*.fsb/*.unity3d/*.resource/*.vdi/*.a/*.o/*.lib/*.class`、`*.png` 等素材与仿真磁盘；第三方发行树 `tools/{platform-tools,build-tools-win,jadx,jre,MuMu Player 12,installers,_unified/bin,_unified/jars}`、`projects/SUBR/tools/ndk`、`projects/NECR/work_necr/toolchain`；本地运行态 `.agent-teams/`、`storages/`、`configs/reverse-hybrid/`、`.dsh-kitty/`；以及任何 > 2 MB 的文本 dump（如 `il2cpp_dump/` 内大文件）。
+- 发布前必查：① `git status --short` 干净、`git ls-files -o --exclude-standard` 为空（本地无"该进没进"的文件）；② `git grep --text -nE "pass:android|pass:fjdirect|-storepass [A-Za-z]|BEGIN [A-Z ]*PRIVATE KEY|AKID[0-9A-Za-z]{12,}"` 无命中（口令一律走环境变量：`NECR_KEYSTORE_PASS`/`DWRG_KEYSTORE_PASS`/`SUBR_KEYSTORE_PASS`/`FJD_KEYSTORE_PASS`/`WZRY_KEYSTORE_PASS`）；③ `git ls-tree -r -l HEAD` 无二进制/密钥、无单文件 > 2 MB；④ `gh repo view` 确认 `visibility: PUBLIC`。注意 GitHub 侧有 **Push Protection**：命中真实凭据会直接拒推，需先脱敏再推。
 - 根目录说明：公开侧根目录有 `README.md` / `LICENSE` / `.gitignore` / `AGENTS.md` / `CLAUDE.md`；本机根目录另有工具链与模拟器目录，仅本机使用。

@@ -1,16 +1,18 @@
 # CLAUDE.md — 安卓逆向项目集
 
 > 工作区：`D:\APK-Reverse`（Windows + 中文路径）。本文件给 Claude / Claude Code 看：先读 `AGENTS.md`（协作协议与 DoD），再读本文件（实操命令与坑位），再读子项目文档。
-> 公开仓库：<https://github.com/yyhhqq1234/android-reverse-research>（PUBLIC，仅文档+脚本，MIT）。发布边界与检查清单以 `AGENTS.md` §6 为准。
+> 公开仓库：<https://github.com/yyhhqq1234/android-reverse-research>（PUBLIC，MIT；收"文本产物"——文档/脚本/反编译与解包树，判据：文本 + 单文件 ≤ 2 MB；APK/密钥/二进制不入库）。发布边界与检查清单以 `AGENTS.md` §6 为准。
 
 ## 1. 这是什么地方
 
-安卓逆向 + 改包工作区，三个游戏项目共用一套工具链：
+安卓逆向 + 改包工作区，五个项目共用一套工具链：
 
 - `projects/BREM/`（别惹恶魔）：smali 层改包，已完结。最终成品 `projects/BREM/别惹恶魔_无冷却无消耗_安卓16_最终版.apk` 可直接用，不要再动。
 - `projects/NECR/`（Necromancer）：Unity IL2CPP + 360 DynCryptor 企业版壳，已完结封存（`release_stable` v19 在用，只做复现/验证，不开新改包）。
 - `projects/DWRG/`（第五人格测试版）：NeoX 非 Unity 包，解包已完成（`projects/DWRG/work_dwrg/`），待动态。
-- 工具链（只用不用改）：`tools/platform-tools/`（adb）、`tools/build-tools-win/android-14/`（aapt2/d8/apksigner/zipalign）、`tools/jadx/`、`tools/jre/`。
+- `projects/WZRY/`（王者荣耀离线测试版）：Unity Mono + `libGameCore.so`，战斗数值/技能表改造（活跃线），入口 `projects/WZRY/_unpacked/README-WZRY.md`。
+- `projects/SUBR/`（自研 IL2CPP 靶标）：jadx/apktool 反编译树 + `esp_mod/` JNI 模块，入口 `projects/SUBR/REPORT.md`。
+- 工具链（只用不用改）：`tools/platform-tools/`（adb）、`tools/build-tools-win/android-14/`（aapt2/d8/apksigner/zipalign）、`tools/jadx/`、`tools/jre/`；自研脚本统一在 `tools/_unified/scripts/`。
 
 子项目必读（按顺序）：
 
@@ -36,18 +38,18 @@ D:\APK-Reverse\tools\platform-tools\adb.exe install "D:\APK-Reverse\projects\NEC
 D:\APK-Reverse\tools\platform-tools\adb.exe pull /sdcard/Download "D:\APK-Reverse\projects\NECR\work_necr\prod\"
 
 # 反编译 / 回编（示例，版本已钉死 apktool 3.0.3）
-java -jar "D:\APK-Reverse\projects\NECR\work_necr\tools\apktool.jar" d "D:\APK-Reverse\projects\NECR\Necromancer.apk" -o D:\tmp\necr_src
-java -jar "D:\APK-Reverse\projects\NECR\work_necr\tools\apktool.jar" b D:\tmp\necr_src -o D:\tmp\necr_repack.apk
+java -jar "D:\APK-Reverse\tools\jadx\..\apktool\apktool_3.0.3.jar" d "D:\APK-Reverse\projects\NECR\Necromancer.apk" -o D:\tmp\necr_src
+java -jar "D:\APK-Reverse\tools\jadx\..\apktool\apktool_3.0.3.jar" b D:\tmp\necr_src -o D:\tmp\necr_repack.apk
 
 # G1 校验门（内存 dump 自检）
-python "D:\APK-Reverse\projects\NECR\work_necr\tools\g1_gate.py" "D:\APK-Reverse\projects\NECR\work_necr\prod\"
+python "D:\APK-Reverse\tools\_unified\scripts\g1_gate.py" "D:\APK-Reverse\projects\NECR\work_necr\prod\"
 
 # 接法A（CE 做数值/dump，全局脚本）：6 步全自动，末端验活 127.0.0.1:52734
 powershell -ExecutionPolicy Bypass -File "D:\APK-Reverse\tools\connect-ceserver.ps1" -CeserverBin "D:\APK-Reverse\tools\installers\ceserver75\ceserver_x86_64"
 
 # 去壳组装 / IAP 补丁（按 PATCHES.md 来，不要改脚本内 SO 路径约定）
-python "D:\APK-Reverse\projects\NECR\work_necr\tools\assemble_unshelled.py" build/dex/classes.dex
-python "D:\APK-Reverse\projects\NECR\work_necr\tools\patch_iap.py"
+python "D:\APK-Reverse\tools\_unified\scripts\assemble_unshelled.py" build/dex/classes.dex
+python "D:\APK-Reverse\tools\_unified\scripts\patch_iap.py"
 
 # 签名对齐链（tools/build-tools-win/android-14）
 .\tools\build-tools-win\android-14\zipalign.exe -f 4 in.apk aligned.apk
@@ -72,8 +74,8 @@ frida 注意：本机 pip 是 frida-tools 14.10.4 + frida-py 17.18.0，CLI 不�
 - 360 壳：换签必死解密期（`memset` 写穿，见改包报告 §5），别再试“换签保壳”路线；要改就走 L0–L3 或 `assemble_unshelled.py` 去壳拼图。
 - BREM smali 经验：数值可能是硬编码（如 `dv/d*.orz` 的 n），改配置表无效时直接看源码层。
 - 模拟器分工：开机、点进主界面、装 GG 跑 dump 由用户做；Claude 只做 adb 命令 + `prod/` 落盘 + G1 门 + 对照分析。先 `adb devices`，别假设在线。
-- 密钥只做本地测试签名，不上传、不改口令；脚本口令走 `NECR_KEYSTORE_PASS`，禁止写回真实口令。
-- 公开仓库红线：只提交 `AGENTS.md` §6 白名单内的文档/脚本；提交前跑 `git status --short` + `git grep -n "ks-pass"`（须均为 `NECR_KEYSTORE_PASS` 占位）。
+- 密钥只做本地测试签名，不上传、不改口令；脚本口令一律走环境变量（`NECR_KEYSTORE_PASS`/`DWRG_KEYSTORE_PASS`/`SUBR_KEYSTORE_PASS`/`FJD_KEYSTORE_PASS`/`WZRY_KEYSTORE_PASS`），禁止写回真实口令。
+- 公开仓库红线：2026-10-09 起 §6 放宽为"文本全收"——文档/脚本/反编译树/解包树均可入库，**判据是文本 + 单文件 ≤ 2 MB**；APK/DEX/SO/密钥/第三方发行树/仿真磁盘/PNG 素材仍不入库。提交前跑 `git status --short` + `git ls-files -o --exclude-standard`（须为空），并确认无明文口令（一律环境变量占位）。
 - 产物归位：NECR 产物只写 `projects/NECR/work_necr/`（`prod/` 成品、`trial/` 对照、`logs/` 日志），报告更新到子目录 md，不散落根目录。公开侧根目录有 `README.md` / `LICENSE` / `.gitignore` / `AGENTS.md` / `CLAUDE.md`；本机根目录另有工具链与模拟器目录，仅本机使用。
 
 ## 5. 接活默认流程

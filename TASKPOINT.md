@@ -84,6 +84,15 @@ WZRY 任务（本活跃线）：
 - [x] 接法A联调通过：脚本 v3 已搬 `tools/connect-ceserver.ps1` 全局化（不归属 NECR）+ `tools/installers/ceserver75/`（CE7.5 全套，`ceserver_x86_64` ELF 魔数 `7F454C46` 已验，扩展/Mono .so 已同推 `/data/local/tmp/`），[1/6]→[6/6] 全绿，PC 连 `127.0.0.1:52734` 即用；雷区×2：adb 成功信息走 stderr，`$ErrorActionPreference=Stop` 下会误杀（v3 函数内降级只认退出码）；push 回显红字为妆饰性噪音
 
 ## 7. 进行中 / 下一步（新对话先干这个）
+- **★ 第二轮全量入库（2026-10-09 深夜）—— 本地"能上传的都上传"**
+  - 提交链：`d9797b0e` A（WZRY 解包树 11302）→ `251d39f3f` B（SUBR 树 28831）→ `3bb014c72` C（DWRG 树 7371）→ `aa0723ed3` E（NECR 余量 75）→ `cb6cef21f` F（自研脚本 268）→ `3aeb937f3`+`2621f2627` 口令清理。
+  - 判据统一为**"文本 + 单文件 ≤ 2 MB"**：远程 HEAD `75,076` 文件，`git ls-files -o --exclude-standard` = **0**（本地无遗留可上传文件）；`git ls-tree -r -l HEAD` 无 >2MB、无禁型。
+  - 本地留存（已 gitignore，共约 28,000 条）：APK/VPK/PNG/PCAP/VDI/SO 等二进制与安装包、第三方发行树（MuMu/jre/jadx/platform-tools/build-tools/_unified/bin,jars、NDK）、`.agent-teams`/`storages`/`configs/reverse-hybrid`/`.dsh-kitty` 运行态。
+  - **GitHub Push Protection 拦截并已处理**：`projects/WZRY/_unpacked/src-all/Assets.Scripts.GameSystem.CosCloudInfo.il.txt` 内含游戏硬编码 Tencent Cloud `SECRET_ID`/`SECRET_KEY` → 已替换为 `<REDACTED-…>` 并 amend 后重推。
+  - 口令清理（全改环境变量占位）：`tools/_unified/scripts/{build.ps1,build_probe.ps1}` → `FJD_KEYSTORE_PASS`；`build_offline_full.py` → `DWRG_KEYSTORE_PASS`；SUBR 三脚本 → `SUBR_KEYSTORE_PASS`；`TASKPOINT.md`/`B1_Static_Patch.md` 口令字面同步清除。
+  - 文档同步：`README.md` 重写（五项目 + 边界 + 脱敏 + 工具链表）；`AGENTS.md` §6 与头部、`CLAUDE.md` 头部/项目表/工具路径改为"文本全收 ≤2MB"新口径。
+  - 已从仓库移除：`.dsh-kitty/overrides.json`（本机工具路径配置，非研究内容）。
+  - `.gitignore` 收窄：`tools/_unified/` → `tools/_unified/{bin,jars}/`，让自研 `scripts/` 可以入库。
 - **★ 入库完成（本轮）—— 全量分批推送 `origin/main`**
   - 提交链：`da50cf9` 批次1（DWRG/NECR 产物归位）→ `f45152c` 批次2（SUBR 脚本+报告 102 件、WZRY manifest）→ `13a63c77` 批次3（SUBR jadx 反编译树 15533 `.java`）→ `c4242a82` 批次4（签名口令改 env 占位）。
   - 结果：`HEAD == origin/main`，工作树 clean；HEAD 树 27257 文件，**无 >2MB 文件**，无 `apk/so/dex/jks/keystore/zip/dat/bin` 等禁型（仅 3 个 ≤2MB 的 DWRG `pcap` 属历史留档）。
