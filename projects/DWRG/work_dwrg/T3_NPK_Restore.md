@@ -1,0 +1,46 @@
+# T3 测试版NPK脚本还原（2026-09-26复核）
+
+- 对象: `projects/DWRG/第五人格（测试版）.apk` 自有测试包，只读未动（T1哈希 `d1b3f51f…55dfb`沿用）
+- 三包尺寸（zipfile直读=`raw/assets`落盘一致）:
+  - `assets/script.npk` 7373248B / `work_dwrg/raw/assets/script.npk` 同尺寸
+  - `assets/Documents/script.npk` 4719768B / `work_dwrg/doc_script.npk` 同尺寸（`doc_filelist.txt` 2885B同`filelist.txt`）
+  - `assets/res.npk` 552085780B / `work_dwrg/raw/assets/res.npk` 同尺寸
+- NPK头（`<6I` magic/n/u1/eem/hm/eoff，`NXPK=0x4B50584E`，tail=0全包）:
+  - script: `magic=0x4b50584e n=1730 u1=0 eem=0 hm=1 eoff=7324808 tail=0`
+  - doc: `magic=0x4b50584e n=212 u1=0 eem=0 hm=1 eoff=4713832 tail=0`
+  - res: `magic=0x4b50584e n=12422 u1=0 eem=0 hm=1 eoff=551737964 tail=0 size=552085780`
+- 压缩/加密模式（`fl&0xFF, (fl>>16)&0xFF`）:
+  - script: `(0,0)=1729 (1,0)=1`；doc: `(0,0)=212`；res: `(1,0)=11998 (0,0)=424`
+  - `0=None 1=zlib 2=lz4`；`0=None 1=SimpleCrypt 2=RC4 3=AES 4=SimpleCryptEx`（`denpk2_npk.rs:28-42`）
+  - `denpk2_npk.rs:108-153` `SimpleCryptEx`解密+`zlib/lz4`解压已实现；其余加密抛`Unsupported encryption mode`
+- filelist映射（`work_dwrg/filelist.txt` 2885B 51行=`assets/filelist.txt`逐字节一致）:
+  - 格式 `path<TAB>md5`，已验 `neox.xml md5=68487ae6bd985ff0e700c3f7600996a5` 与`raw/assets/neox.xml`一致
+  - 关键行 `script.npk 2bfcae… / res.npk 392ef0… / Documents/script.npk e28324…`；`res/sound/*.fsb|*.fev`+`res/video/*.mp4`+`common_data/neox.xml/netease_data/ntshare_data/PlatformConfig.xml/user_data.xml`
+  - murmur3 `seed=0x9747B28C`（`denpk2_hash.rs:15`+`unpack_npk.py:StringID`）：`script.npk=0x193beae6 Documents/script.npk=0x03caa29b res.npk=0x30636ae1 redirect.nxs=0xf416002a`；`denpk2_main.rs:120-143`按`/`逐段+suffix翻转生成`hash_list`回查`blobs/<id>`，本次`script/doc` id与上述murmur明文均不对齐（`fb54f059`无命中），证实NPK id为截断/相对路径哈希，需`generate_filelist.py`从`extracted/*.pyc co_consts`重建`dat/strings.list`反查
+- script/doc关系：`script ids=1730 doc ids=212 overlap=210`；`fb54f059`仅script有，doc无；`doc e0=0x60141`与`script e1=0x60141`同id但`psz 1720 vs 1721`内容差1B（Documents覆盖层）；`npk2_out/*.bin=1730`与script `n`一致
+- denpk2链（`work_dwrg/denpk2_*.rs`）:
+  - `denpk2_main.rs:62-114`：`NpkIterator→unpack_data→NXS_MAGIC? nxs::unpack+RSA : PYC_HEADER[0:4]? →marshal::PyObject::read_root→opcode::map_opcode→extracted/<filename>.pyc`
+  - `denpk2_nxs.rs:9 NXS_MAGIC=NXS3 03 00 00 01`；`11-63` RSA公钥`MIGJAoGBAOZA…` PKCS1解`ephemeral u32`→`xor+ror19`流解密→`lz4_flex::decompress`
+  - `denpk2_npk.rs:155-211 NpkIterator`校验`magic/entry_offset+28*n`
+  - 本次三包`stored`条目头`1d04…`高熵（script e0 `1d047934…` doc e0 `1d048b8e…`），`npk2x.py`按`comp==1→zlib / comp==2→skip / NXS3?/marshal('c')?`统计得`script: raw-other=1729 marshal-c=1 NXS3=0`，证实`flags enc=0`之外另有`NXEncodeHook`层（`neox_readme.md:101`：`this+44→NXEncodeHook`解密，旧`unpack_npk.py:50-51 assert(comp==2,enc==0)`已失效）
+- marshal/Python版本：
+  - `libclient_strings.txt` 91137串含`2.7.3×20`+`python2.1路径`+`neox/python27 ClassSpecialMethodProtector`+`IScriptFileSystem_1.3`+`NXNpkLoaderCreator`+`marshal×23（bad marshal data…/NULL object…）`+`Opcode_9A/Can't handle opcode %x`
+  - `neox_readme.md:23-34` `engine/python27/Objects/classobject.c→2.7`+`2.7.3`，与本次一致；`marshal3.11`口径纠正为**Python2.7 marshal**（`py27dis.py:45-58`按`c+ac/nl/ss/fl+code/consts/names/varnames/freevars/cellvars/filename/name/fln/lnotab`解析2.7 code对象，非3.11）
+  - 唯一明文：`script e_fb54f059 psz=1172 rsz=2400 zlib→2400B`头`63 00…`=`marshal TYPE_CODE 'c'`，`co_filename=redirect.py`，内含`rotor/newrotor/asdf_dnt/asdf_dtt/asdf_dft/asdf_tmR/j2h56ogodh3ses/=dziaq.s`，即`redirect` rotor混淆模块；`zhit_1840.bin 2400B`与`npk_out/script_pyc_1840.bin 2400B`同体；`fb54f059.marshal.bin`已在`npk2_out`
+- opcode洗牌对照（`denpk2_opcode.rs:7 map_opcode + mod mapping::OPCODE_MAPPING`，但`mapping`文件缺失=本次未闭环）:
+  - `opcode27.py`为原版2.7表（`LOAD_CONST=100 STORE_FAST=125 LOAD_FAST=124 RETURN_VALUE=83 CALL_FUNCTION=131 COMPARE_OP=107 JUMP_ABSOLUTE=113`）
+  - redirect明文码段 `99 00 00 99 01 00 86 00 00 91…`：`0x99→opname<153>`（应为`LOAD_CONST`位），`0x86=MAKE_CLOSURE 0x91=EXTENDED_ARG`在原表语义不通，证实洗牌；`neox_readme.md:124-146` `NeoXPython vs原版pyc对照得映射+PyEval_EvalFrameEx逆新opcode（旧opcode组合，需修hasjrel/hasjabs跳转+lnotab）`为必经路径
+  - `py27dis.py:61-90`按原表dis直接错解redirect，需先经`map_opcode`还原；`neox_readme.md:148-166`另记三条失败路径（opcode模块缺失/NeoX编译新opcode不可复现/内存对象转储不可行）+`uncompyle6 py2.7→py3治中文docstring`+`Py_InitModule搜native注册函数`
+- res.npk对照：`e0 id=0x3b21 comp=1 zlib→59B <EquipList>…Value=0…`，证实res走标准`zlib`明文路，与script `stored+Hook加密`分叉
+- reports/glog WorldManager-Hall证据链：
+  - `reports.txt 5284B=extract_reports.py h1/h2/h3 @2118862/335884/1248374各3000B`：`WorldManager×8 Hall×24 release_logic×2 WorldDeduce×2`
+  - h2：`WorldManager.release_logic:228 be=HallEvent ← WorldBase.loading_tick:394(WorldCityHall) ← WorldCityBase._complete_loading:scene2 ← ming_finish:505 scene_id=10001 ← load_city_info:512 first_load=False/change_world=False ← WorldCityHall.init_scene_ex:78 ← WorldCityBase.init_scene_ex:165 ← init_main_unit:249 pid=7 unit_type=100 move_speed=12 cloth_id=701`+`effect\texture\baozha_40.tga/glow_039.spr`帧表
+  - h3：`WorldManager.release_logic:239 preload_world=WorldDeduce be=None ← ui_manager.tick:402 UILoading ← UILoading.tick:108 ← WorldCityHall.after_loading:125 ← WorldCityBase.after_loading:462 ← _after_loading:436`
+  - h1：`ISCHARGING/WIFI/LANDSCAPE/125GB/bundle=com.identityv.shrek156_1.5.6/rooted/Redmi/23117RK66C/time=2026-09-26 00:07:41 + WorldManagernge_world_preloaded:511 gw_type=14 show_scene=True ← WorldArticle.show:438 ← ui_manager.show_ui:329 UIArticle ← UIArticle.show:712 set_ui_mode:749 ARTICLE pose_ending ← update_char_article:1069 role_id_str=14`
+  - `glog.txt 94817B 1255行`：`FileLoader×11`顺序`res.npk→Documents/script.npk→script.npk`（` discrete优先/npk兜底 + Documents/res|script缺目录WARNING`，印证`neox_readme.md:83-85`）；`World×17 Hall×2 SCRIPT reload_mgr start→reload ui/UILoginWarn/PatchManager→success + EXP116_BEFORE_HIDE_HALL/EXP93_AA_HALL_HIDDEN/EXP08T loading_finish_city + game_init.py onKeyDownAndroid`
+  - `gensweep8.py TEXTS=WorldManager/HookUnit/co_filename/WorldDeduce/NpkImporter PATS=hookfn:ca71f114/killcivil:ca745ae4/hanguid:ca6fe514`；`gensweep9.py HookUnit.py/0x04f5fb40+kill_civil/hang_uid VA定位→sweep9.sh`；`mapsG/sweep*.sh/g*.bin/h*.bin/j*.bin/s*.bin`为内存取证底料
+- 路径记录：`npk_redir.py raw/assets/script.npk相对路径 cwd=DWRG时FileNotFound→改projects/DWRG/work_dwrg/前缀等价替代`；`glog.txt invalid UTF-8→read_bytes+decode(replace)替代`；`denpk2 mapping缺失→opcode27原表+redirect字节对照替代，未谎称已还原`；`aapt/apktool中文路径/adb无设备沿用T1结论`
+- 产物：本文件 `projects/DWRG/work_dwrg/T3_NPK_Restore.md`；只写`work_dwrg`，零越界；原包+`raw/jadx_out/npk2_out`未动；临时`_redir_dump.bin`已删
+- 下游：T4动态可用`FileLoader顺序+WorldManager:228/239+Hall:78/249+redirect rotor`做hook点（`Channel.login/NativeOnLogin/getToken`外加`release_logic/init_main_unit/UILoading.tick`）；正式版差分待`script.npk n/id/mode`对照
+
+当前:测试版NPK / 结果:projects/DWRG/work_dwrg/T3_NPK_Restore.md / 下一步:T4动态hook+正式版差分

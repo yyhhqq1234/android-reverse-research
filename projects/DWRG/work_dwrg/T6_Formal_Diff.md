@@ -1,0 +1,23 @@
+# T6 正式版差分深挖（测试→正式，实测为准）
+- 包体: 687172784B(SHA d1b3f51f) → 2012889355B(SHA 0683dd40)，×2.93；条目690→6073；包名com.identityv.shrek156→com.netease.dwrg；version 1.5.6→2026.0828.1653（code 262401653）；codename 6.0-2438415两版一致；targetSdk 30 / minSdk 21正式版实测
+- DEX 1→12（纠正任务“13”口径：正式版根目录classes.dex+classes2-12共12，无assets内dex；全dex035）：
+  - 测试主dex 6956048B method52951 class6230（+2小dex mpay456/unisdk177372后者坏checksum跳过）
+  - 正式12dex共53017408B method455427（classes.dex 6511524/m57039/c5345最大，classes11最小1339740）；multidex≈8.6倍方法数，T5的单dex hook面（Channel/Client/NativeInterface）在正式版须改为多dex定位
+- libclient 30M→175M（30806200→175206232，×5.69）：
+  - 架构断代：ELF32 ARM(machine40)→ELF64 AArch64(machine183)；ABI armeabi-v7a-only→arm64-v8a-only；测试版带gdbserver+8so，正式版75so共265MB
+  - NEEDED：测试libfmodex/fmodevent直链 → 正式libc++_shared+OpenSLES新增，fmod直链消失（改走插件/静态链可能，待dump确认）
+  - 字符串规模：91137→253134（×2.78）；HITS 3722→47410；neox命中942→12676；说明175M增量主体是引擎/中间件静态编译进libclient（cclive/pharos/ffmpeg系so仍独立，见T2 top20）
+  - Python：测试marshal×14/rotor soft（rotor.rotor/encryptmore/setkey）/NXS无3代头 → 正式marshal×27（bytes-invalid-ref/tuple-size等3.x措辞）/Python3.10-3.12 deprecation串（exec_module/find_spec）/NXS3头实锤（`NXS3\x03`）/rotor仅剩游戏语义残留（YawInterpolateSpeed/drive_actor）；结论：2.7.3→3.x已代换，T3的2.7.3 opcode映射不可复用于正式版
+  - SSL：两版均有`issuer check ok`+`continuing anyway`（各1处）；正式新增`certificate verify locations, continuing anyway`+`SSL: Unable`+OpenSSL 1.1.1l/3.x双串（测试仅OpenSSL 1.），pinning弱点面延续且信息更全，动态确认项转T7
+  - neox writer：测试`neox npk writer` → 正式`neox npk raw writer`+`binary cache`+`cclive module`，打包管线已换代
+- JNI 51→128（交集31；仅测试20；仅正式97；清单t6_jni_test/formal.txt）：
+  - 保留31：NXLog×4/NativeInterface传输与输入法/网络/补丁系（Patch/Rsync/PreparePatch）/PluginApp_Orientation/Cocos2dxBitmap
+  - 测试独有20 = 直连NativeInterface登录支付分享闭环：NativeOnLogin/Logout/InitSdk/LeaveSdk/GMBridgeTokenOverdue/OrderCheckDone/ShareEnd-ShareFinished/ScreenShot/WebViewCallback/WindowSizeChanged/CameraPreviewCapture/CodeScannerFinish/IsDarenUpdated/RegisterPushService/StopVideoCallBack + Cocos2dxHelper×3 → T4/T5 hook点（NativeOnLogin/GMBridgeTokenOverdue）在正式版无同名符号
+  - 正式独有97 = 插件化：PluginUniSDK_*约60（LoginDone/LogoutDone/FinishInit/OrderConsumeDone/VerifySuccess-Failure/QueryFriendList-Rank-Sku/ShareFinished/StartupDone/WebViewNativeCall…）、CCPlayer×12、PluginMedia×8、VideoPlayerBase-Windowed×8、NGPush、CrashHunter×3、NeoXClient_Resume、DualNetworkStateChanged、DashenLogToken、MagtFuncCall、MotionEvent、RequestPermissionsResult → 正式版登录/支付/分享/推送hook须改走PluginUniSDK_*，T7动态验证
+- neox→neox3：2090B单文件双loader（res+script discrete/npk混读，DebugPort17777）→3178B packages化（python3+builtin各priority1；60fps/1334×750/UseImGui False/RenderDoc False/UberShader False）
+  - filelist 2885B（51行？T3：51行MD5，res+script双npk映射）→89B（仅neox3.xml+user_data.xml两行）；旧映射失效
+  - script.npk 7373248（NXPK 0x06c2，n1730）+Documents/script.npk 4719768（n212）→ script.npk 1952B（NXPK 0x04，NXC3引导）+Lib.npk 3982804（NXPK 0x2454D）+res.npk 48125588（NXPK 0x07b4）；res.npk 552085780→48125588（×0.087，首包瘦身，余量转wpk远端）
+  - 远端包：首包仅builtin+python3；preload.json 40+包名（chr_*/scene/fx/shader/script…）+pkgmapping inroot默认+thd/builtin.thh3256/.thy14288（THFB二进制哈希表，非文本）；APK内实物wpk见T2 top（nxparticle_cache2/ui2各402MB等），全量以CDN为准，不在包内闭环
+- 路径记录：ELF program-header手解struct偏移两次错序（phnum 470/2673荒谬值）→弃用，改用ELF魔数+machine+size+strings/JNI/markers等价路径已闭环；thd按UTF8读码失败→记为THFB二进制；正式版175MB strings全量已落formal_libclient_strings.txt（12318706B）
+- 产物：本文件 + t6_jni_test.txt（51）/t6_jni_formal.txt（128）/t6_remote_pkgs.txt + 沿用T1/T2基线与formal strings；只写work_dwrg
+- 下游：T7正式版动态hook表改用PluginUniSDK_LoginDone/LogoutDone/VerifySuccess/OrderCheckDone+OrderConsumeDone；Python还原走Lib.npk+3.x marshal；res/wpk远端缺量须抓包补

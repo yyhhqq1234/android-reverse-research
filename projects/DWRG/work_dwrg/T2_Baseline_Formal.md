@@ -1,0 +1,18 @@
+# T2 正式版新鲜基线（2026-09-26实测，不复用测试版unpack_meta）
+- 原包: `projects/DWRG/第五人格（官服正式版）.apk` 2012889355B（~1920MB口径：1920MiB=2013265920，差376565B，属同一量级表述）
+- SHA256: 0683dd40388bb6fb1d58d4111f80909dc5a2d7a0af07a703f0de73e7e271a5c3（分块16MB实测，原包只读未动）
+- aapt（工作区内ASCII复制tmp_formal.apk过中文路径坑，用后即删）: package com.netease.dwrg versionCode 262401653 versionName 2026.0828.1653 platformBuild 35/15 compileSdk 23 codename 6.0-2438415 sdk21 target30
+- 包名变更: 测试版com.identityv.shrek156 → 正式版com.netease.dwrg；Launcher/Client类名前缀同变为com.netease.dwrg；codename 6.0-2438415两版一致
+- 条目: 6073 = res 5660 + assets 304 + lib 74 + (root) 20 + kotlin 7 + com 5 + META-INF 3 + org 2 + okhttp3 2 + osdk 1
+- DEX: 12（纠正“13dex”口径：根目录classes.dex+classes2-12共12，无assets内dex；全dex035；formal_dex_info.py重跑一致；method/class见formal_meta.json；总量~54MB）
+- SO/ABI: 仅arm64-v8a（纠正测试版armeabi格局）；75×.so共265351848B；libclient.so 175206232B ELF（formal_so_info.py：strings 253134 HITS 47410，含neox3/Python3.10-3.12 importtime/zipimporter/NeoX残留）；余量ffmpeg/pharos/recordlib等音视频/反作弊栈，见formal_meta.json top20
+- NeoX: 测试版neox.xml单文件loader → 正式版neox3.xml 3178B packages化（python3 priority1 + builtin priority1；FrameRate60/1334×750/UseImGui False等）
+  - assets/packages/builtin/neox_package.json 312B ver ccdd5f8f + res.npk 48125588B（res loader）
+  - assets/packages/python3/neox_package.json 315B ver 04622410 + Lib.npk 3982804B（script loader）
+  - assets/script.npk 1952B NXPK引导头NXS3（与测试版7MB script.npk不同代系，不可混用解包器）
+  - assets/filelist.txt 89B（仅neox3.xml 64a791… + user_data.xml 6038f4…两行；测试版2885B多行映射已失效，不复用）
+- manifest: formal_Manifest.bin 131912B AXML utf16 659串（测试版164串）；formal_Manifest.decoded.xml 33377B；旧axml_dump.py仅解stringpool，versionCode/Name整型以aapt为准
+- asset清单: formal_assets.txt 304行（file/size/compress）；顶部分片wpk：nxparticle_cache2 402653200/ui2 402653200/ui3 252706832/scene2 205520912/script1 201326608/fx2 127926288 + thd/chr_player.thy 7035560；另pkginfo/pkgmapping/preload/PlatformConfig可用作分包映射
+- 产物（全在work_dwrg，formal_前缀隔离）: formal_meta.json / formal_dex_info.py / formal_so_info.py / formal_libclient_strings.txt 12318706B / formal_libclient_head.bin / formal_Manifest.bin+decoded.xml / formal_assets.txt / 本文件；测试版unpack_meta.json未动
+- 路径记录: aapt中文路径Illegal byte sequence→工作区内ASCII复制等价替代（用后删除，零越界）；2GB-SHA256分块读避免OOM；AXML属性整型未自解→aapt权威值；旧解包目录“第五人格（官服正式版）/”仅作对照未写入
+- 下游可用: T5正式版差分可用本基线（包名/12dex/arm64/175MB-libclient/packages双npk/89B-filelist）；T3 Python还原须走Lib.npk+1952B引导，不可用测试版denpk2直套

@@ -1,0 +1,14 @@
+# T4 测试版动态捕获（2026-09-26闭环）
+
+- 设备：`adb 127.0.0.1:16384` 在线，`2206122SC`，`ro.build.version.release=12 / sdk=32`（Android12L，合同Android12一致），`cpu.abi=x86_64`，`abilist=x86_64,arm64-v8a,x86,armeabi-v7a,armeabi`，houdini `/system/lib/libhoudini.so` 存在
+- 原包重装（不重签）：`D:\APK-Reverse\projects\DWRG\第五人格（测试版）.apk` → `adb install -r` → `Success`（Streamed Install）；装后 `versionName=1.5.6 / versionCode=2 / primaryCpuAbi=armeabi-v7a / signatures=[d7f1f224]`，原包只读未动
+- 首启链（monkey LAUNCHER 1 → Launcher）：权限页（文件/相机/电话/麦克风全开）→ tap `继续[1808,996][1920,1080]#1864,1038` → 旧版警告 `确定[1326,586][1438,670]#1382,628` → 用户协议 `接受#1210,945` → 公告 `确定#960,900` → 主门 `点击屏幕进入游戏`（游戏版本1.0.62303/资源1.0.72537）
+- 进程：`u0_a36 3365 com.identityv.shrek156` 存活；logcat见 `Channel.initialize(Channel.java:73)`、`UniSDK Mgr tmpChannel`、`NeoX script.npk加载`、`MobileServer reload PatchManager`、`LoginUI/Identification/Activation DRPF`（`udid=04dc2b5379533dd6 ip=10.0.2.15 app_ver=1.0.72537`）、`Client.envManager_initSDK`、`dwrg.fev加载成功`
+- hook：`projects/DWRG/work_dwrg/hook_login.js`（T4加固版）覆盖 `Channel.login/loginDone/gameLoginSuccess/hasLogin/initialize/getPropStr`＋`neox.NativeInterface NativeOnLogin/NativeOnGMBridgeTokenOverdue/NativeOnInitSdk/NativeOnWebViewCallback`枚举＋`Client openGMWebView/setGMBridgeToken/showGMFloatButton`＋`SdkMgr`；实录 `dynamic_T4/frida_T4.txt`：`java.perform start pkg=com.identityv.shrek156`＋4×NativeInterface decl＋4×Client decl＋ready；`showGMFloatButton`实签`(String,String)`已纠正；`SdkMgr.hasLogin/getPropStr` overload不匹配已guard（留T5精化，不阻塞T4）
+- frida-server：合同要求x86；`dynamic_T4/frida-server-x86`（58224508B）已推送但**看不到houdini转译进程**（`frida-ps -U`无3365）；等价路径 `frida-server-x86_64`（115966424B，`/data/local/tmp/fs-x64`，27042 LISTEN）可见 `3365`（名乱码系转译进程常态，PID为准）；PC `frida 17.18.0 == server 17.18.0`，`frida-ps -U` 82行；x86二进制保留为产物，工作通道记为x86_64
+- pcap绝对路径：`D:\APK-Reverse\projects\DWRG\work_dwrg\dynamic_T4\pcap\dwrg_T4_20260926.pcap`（631579147B，SHA256 `7d33a70653df043af162b96badc0ca078e26d0ab4f70c77dc401cdcac5df197f`；设备源 `/sdcard/dwrg_T4.pcap` 631578624B，`/system/bin/tcpdump -i any -s 0 -w` 自安装起全程，含DRPF/LoginUI明文JSON段）；回拉 `83.5MB/s`
+- logcat：`dynamic_T4/logcat_T4.txt`（1321702B，首启段）＋`dynamic_T4/logcat_T4_b.txt`（1331668B，接受后全量），`-v threadtime -d` 落盘
+- shot对照（sdcard中转pull，exec-out直重定向会坏图已弃用）：`shot_T4_launch.png`105028（权限页）→`shot_T4_main.png`586893（协议+旧版警告）→`shot_T4_login.png`868499（协议正文）→`shot_T4_accepted2.png`1549820（公告）→`shot_T4_loginmain.png`1773628（主门IDENTITY V）；另存`shot_T4_afterperm/accepted.png`中间态
+- 路径记录：`adb shell nohup … &` 宿主侧120s挂起按成功判（ps/ss复核：fs-x86/fs-x64/tcpdump均起）；`input tap`须带`-s`设备号；`pm grant ACCESS_FINE_LOCATION`报未申请属正常（跳过）；frida初版`A && B.implementation=`非法左值已改`if`守卫
+- 下游可用：T5登录/Token/GM桥可用PID3365＋hook decl＋DRPF事件＋pcap；T6敏感点可用Client GMBridge三件套＋NativeOnLogin(int)＋envManager_initSDK:669栈
+- 产物：本文件＋`dynamic_T4/`（pcap/logcat×2/shot×7/frida_T4.txt/hook_login.js/server×2）；只写work_dwrg，零越界

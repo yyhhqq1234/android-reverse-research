@@ -1,0 +1,12 @@
+## F2 PluginUniSDK hook映射 (T4旧表 -> 正式版, 2026-09-26实测)
+- 静态锚: 正式包12dex中 `PluginUniSDK x4` 仅classes5.dex; `Lcom/netease/neox/PluginUniSDK;` + `NativeOnLoginDone/OrderConsumeDone/VerifySuccess/WebViewNativeCall/OnWebViewNativeCall` 同dex; `dwrg/Channel` 0命中 (144个dwrg类无Channel, 仅Client/Launcher/InputView等); `neox/PluginUniSDK x3`; Client.java `GM=0 Token=7` (GMBridge三件套消失)
+- jadx: `formal_dyn_/classes5.dex`(临,已删) -> `jadx5/.../PluginUniSDK.java` 59884B (临,已删); 方法行号: loginDone:399/logoutDone:442/orderCheckDone:446/orderConsumeDone:450/onShareFinished:498/startupDone:518/onSuccess:530/onFailure:534/OnWebViewNativeCall:538/ntCheckOrder:636/ntShare:772/ntConsume:788/ntOpenWebView:1020; native行号: LoginDone:91/LogoutDone:93/OrderCheckDone:97/OrderConsumeDone:99/ShareFinished:153/StartupDone:165/VerifyFailure:169/VerifySuccess:171/WebViewNativeCall:173/FinishInit:87/ContinueGame:68/ExitApp:81
+- T4->F2替换表:
+  - Channel.login/loginDone(int)/hasLogin/initialize/getPropStr -> PluginUniSDK.loginDone(int)/logoutDone(int)/finishInit(int) + decl枚举
+  - NativeInterface.NativeOnLogin/GMBridgeTokenOverdue/InitSdk/WebViewCallback -> PluginUniSDK.NativeOnLoginDone/LogoutDone/OrderCheckDone/OrderConsumeDone/VerifySuccess/Failure/ShareFinished/WebViewNativeCall/FinishInit/StartupDone (T6 60x表, t6_jni_formal.txt)
+  - Client.openGMWebView/showGMFloatButton/setGMBridgeToken -> 无对应 (Client GM=0), 改ntOpenWebView/ntShare/ntCheckOrder/ntConsume/ntVerifyOrder触发侧
+  - SdkMgr.hasLogin/getPropStr(overload mismatch T4遗留) -> SdkMgr.setLoginDone/LogoutDone/Verify/Share/Startup/WebViewListener(this,1) (PluginUniSDK:388-392) + OrderInfo.obj2Json打印
+- hook产物: `formal_dyn_hook_login.js` node --check exit=0; 覆盖LoginDone/LogoutDone/Verify/OrderConsume/Share/WebViewNativeCall + FinishInit/Startup/Continue/Exit + Query(Sku/Friend/Rank) + nt触发侧, 全guard, 首段Channel/NativeInterface存在性探针 (正式版预期absent)
+- 动态: logcat `formal_dyn_logcat.txt` 1446152B (`-v threadtime -d`, 7862行级, 含测试版houdini LaunchAPP/ChannelConfig基线); shot `formal_dyn_shot.png` 1775351B (screencap直存pull, 未用exec-out重定向); frida `formal_dyn_frida_check.txt` (PC17.18.0/server-x86_64/27042空闲, hook待正式包安装后挂载, 本轮语法+通道门已过)
+- 路径记录: jadx中文路径坑用work_dwrg内ASCII临件等价 (用后删, 零越界外); `frida-ls-devices`全枚举超时沿用F1端口探活; 正式包2GB未在本轮重装 (沿用F1 install预案, 下游T3/wireshark前执行)
+- 下游: 正式包安装后 `frida -H 127.0.0.1:27042 -l formal_dyn_hook_login.js -n com.netease.dwrg` 抓LoginDone/OrderConsume/Verify/Share/WebView全链

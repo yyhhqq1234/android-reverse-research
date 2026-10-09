@@ -1,0 +1,24 @@
+# T1 测试版基线重估（2026-09-26复核）
+- 原包: `projects/DWRG/第五人格（测试版）.apk` 687172784B
+- SHA256: d1b3f51ff2fb2a346c66e74af4b6d44b9f7c21ecd0fc1299a2b9c88c0b155dfb（复核一致，只读未动）
+- 包名: com.identityv.shrek156（manifest_strings.txt:83，fileprovider/com.google.c2dm/unisdk/mipush均同前缀）
+- versionName: 1.5.6 / build串: 6.0-2438415（manifest_strings:32/33；versionCode整型在AXML属性区，本次axml_dump.py仅解stringpool，记为未解出整型值，不影响基线）
+- 条目: 690（zipfile复核通过）= res 538 + assets 127 + lib 9 + (root) 7 + com 5 + META-INF 3 + okhttp3 1
+- DEX: 3条目（纠正“单dex”口径：主dex单 + assets内2小dex）
+  - classes.dex 6956048B dex035 method_ids 52951 class_defs 6230（dex_info.py重跑一致）
+  - assets/mpay-rocoofix.dex 456B / assets/unisdk_base.dex 177372B（jadx Bad checksum 0x382a5c3f vs 0x68c20008，该dex跳过，主dex不受影响）
+- SO/ABI: 仅 armeabi-v7a，无arm64-v8a/x86；8×.so + 1×gdbserver：
+  - libclient.so 30806200B ELF（is_elf True，strings 91137，HITS 3722，含neox npk writer/SSL issuer-verify/bwclient残留路径）
+  - AndroidCrashHandler 300496 / codescanner 9584 / fmodevent 382188 / fmodex 1107544 / netsecsdk-3.2.2 482876 / ntunisdk 13664 / weibosdkcore 25848 / gdbserver 409940（ELF可执行，非.so）
+  - so_info.py重跑一致，libclient_strings.txt 2661788B已落盘
+- neox.xml/filelist/npk（zipfile直读尺寸，stored）：
+  - assets/neox.xml 2090B（ppg3d/Python+Collision/res+script双loader/cocosui/python ThreadEnable/DebugPort 17777）
+  - assets/filelist.txt 2885B（9头 + 音频/视频/fsb/fev + Documents/script.npk e28324…，与work_dwrg/filelist.txt逐字节一致）
+  - assets/res.npk 552085780B / assets/script.npk 7373248B / assets/Documents/script.npk 4719768B（compress_size==file_size，未压缩存储）
+- manifest解码: work_dwrg/axml_dump.py → AXML utf8 164串；AndroidManifest.decoded.xml 6452B / .bin 21444B / manifest_strings.txt 4975B；Application com.netease.ntunisdk.application.NtSdkApplication；Launcher com.netease.dwrg.Launcher；权限CAMERA/RECORD_AUDIO/READ_PHONE_STATE/读写存储/定位/指纹/SYSTEM_ALERT_WINDOW
+- jadx_out复核: work_dwrg/jadx_out/sources 3550×.java；顶层android/com/im/io/okhttp3/okio/org；com/netease/dwrg关键类齐（Launcher/WelcomeView/Client/VideoPlayer/Channel/AlarmReceiver/PushNotificationReceiver/wxapi-yxapi-wbapi）；旧报告2284类/7 errors沿用，主classes.dex可读
+- raw解包: work_dwrg/raw/（assets/com/lib/META-INF/okhttp3/res/AndroidManifest.xml/classes.dex/ReadMe×4/resources.arsc）
+- 引擎判定: NeoX非Unity（neox.xml/script.npk/FMOD fsb+fev/cocos2d-x/bwclient残留/Users/netease/2016_demo1/NeoX…），签名META-INF Signflinger + Gradle 8.0.2沿用旧结论
+- 路径记录: aapt dump badging中文路径Illegal byte sequence→python zipfile等价替代；apktool全解风险→raw直解+jadx --no-res；unisdk_base checksum坏→记录跳过；adb无设备→动态待用户开机（本次未跑动态，不阻塞T1）
+- 产物: 本文件 + 沿用raw/decoded/jadx_out/strings/filelist；只写work_dwrg，零越界；原包+旧解包目录未动
+- 下游可用: T2 NeoX NPK/Python还原可用script.npk 7373248/Documents/script.npk 4719768 + filelist映射；T3动态可用包名/Launcher/Channel.login链；T4敏感点可用libclient SSL/Token/GM桥线索
