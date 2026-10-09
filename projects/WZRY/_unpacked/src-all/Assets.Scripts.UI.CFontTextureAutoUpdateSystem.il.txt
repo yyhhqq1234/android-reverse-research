@@ -1,0 +1,196 @@
+// TYPE Assets.Scripts.UI.CFontTextureAutoUpdateSystem  base=MonoSingleton`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean m_isForbidFontFix
+  FIELD System.Reflection.MethodInfo m_RebuildForFontFunc
+  FIELD ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode> m_FontUpdateList
+  FIELD System.Boolean m_needUpdateAllFonts
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode>::.ctor()
+   0006 stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   000B ldarg.0 
+   000C call System.Void MonoSingleton`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem>::.ctor()
+   0011 ret 
+== System.Void ClearFontUpdateList() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001d: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode>::get_Item(System.Int32)
+   0013 ldnull 
+   0014 stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_font
+   0019 ldloc.0 
+   001A ldc.i4.1 
+   001B add 
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   0024 callvirt System.Int32 ListViewBase::get_Count()
+   0029 blt IL_0007: ldarg.0
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   0034 callvirt System.Void ListViewBase::Clear()
+   0039 ldarg.0 
+   003A ldc.i4.0 
+   003B stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_needUpdateAllFonts
+   0040 ret 
+== System.Void InitForbidFlag() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.s 80
+   0002 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 brtrue IL_001a: ldarg.0
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_isForbidFontFix
+   0015 br IL_0021: ret
+   001A ldarg.0 
+   001B ldc.i4.1 
+   001C stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_isForbidFontFix
+   0021 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldftn System.Void Assets.Scripts.UI.CFontTextureAutoUpdateSystem::OnFontTextureRebuilt(UnityEngine.Font)
+   0007 newobj System.Void System.Action`1<UnityEngine.Font>::.ctor(System.Object,System.IntPtr)
+   000C call System.Void UnityEngine.Font::add_textureRebuilt(System.Action`1<UnityEngine.Font>)
+   0011 ldtoken UnityEngine.UI.FontUpdateTracker
+   0016 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   001B stloc.0 
+   001C ldarg.0 
+   001D ldloc.0 
+   001E ldstr RebuildForFont
+   0023 ldc.i4.s 40
+   0025 callvirt System.Reflection.MethodInfo System.Type::GetMethod(System.String,System.Reflection.BindingFlags)
+   002A stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_RebuildForFontFunc
+   002F ret 
+== System.Void LateUpdate() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 call System.Void Assets.Scripts.UI.CFontTextureAutoUpdateSystem::FixTextUV()
+   0016 ret 
+== System.Void FixTextUV() attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_RebuildForFontFunc
+   0006 brfalse IL_0021: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_needUpdateAllFonts
+   0011 brfalse IL_0021: ret
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_isForbidFontFix
+   001C brfalse IL_0022: ldc.i4.0
+   0021 ret 
+   0022 ldc.i4.0 
+   0023 stloc.0 
+   0024 br IL_0068: ldloc.0
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   002F ldloc.0 
+   0030 callvirt !0 ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode>::get_Item(System.Int32)
+   0035 stloc.1 
+   0036 ldloc.1 
+   0037 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_needUpdate
+   003C brfalse IL_0064: ldloc.0
+   0041 ldloc.1 
+   0042 ldc.i4.0 
+   0043 stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_needUpdate
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_RebuildForFontFunc
+   004E ldnull 
+   004F ldc.i4.1 
+   0050 newarr System.Object
+   0055 dup 
+   0056 ldc.i4.0 
+   0057 ldloc.1 
+   0058 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_font
+   005D stelem.ref 
+   005E callvirt System.Object System.Reflection.MethodBase::Invoke(System.Object,System.Object[])
+   0063 pop 
+   0064 ldloc.0 
+   0065 ldc.i4.1 
+   0066 add 
+   0067 stloc.0 
+   0068 ldloc.0 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   006F callvirt System.Int32 ListViewBase::get_Count()
+   0074 blt IL_0029: ldarg.0
+   0079 ldarg.0 
+   007A ldc.i4.0 
+   007B stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_needUpdateAllFonts
+   0080 ret 
+== System.Void TryFixTextUV() attrs=Public, HideBySig maxstack=1
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_0014: ldarg.0
+   000F leave IL_0025: ret
+   0014 ldarg.0 
+   0015 call System.Void Assets.Scripts.UI.CFontTextureAutoUpdateSystem::FixTextUV()
+   001A leave IL_0025: ret
+   001F pop 
+   0020 leave IL_0025: ret
+   0025 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void MonoSingleton`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem>::OnDestroy()
+   0006 ldarg.0 
+   0007 ldftn System.Void Assets.Scripts.UI.CFontTextureAutoUpdateSystem::OnFontTextureRebuilt(UnityEngine.Font)
+   000D newobj System.Void System.Action`1<UnityEngine.Font>::.ctor(System.Object,System.IntPtr)
+   0012 call System.Void UnityEngine.Font::remove_textureRebuilt(System.Action`1<UnityEngine.Font>)
+   0017 ret 
+== System.Void OnFontTextureRebuilt(UnityEngine.Font font) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_isForbidFontFix
+   0006 brfalse IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_0019: ldc.i4.0
+   0018 ret 
+   0019 ldc.i4.0 
+   001A stloc.0 
+   001B ldc.i4.0 
+   001C stloc.1 
+   001D br IL_0052: ldloc.1
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   0028 ldloc.1 
+   0029 callvirt !0 ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode>::get_Item(System.Int32)
+   002E stloc.2 
+   002F ldloc.2 
+   0030 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_font
+   0035 ldarg.1 
+   0036 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003B brfalse IL_004e: ldloc.1
+   0040 ldloc.2 
+   0041 ldc.i4.1 
+   0042 stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::m_needUpdate
+   0047 ldc.i4.1 
+   0048 stloc.0 
+   0049 br IL_0063: ldloc.0
+   004E ldloc.1 
+   004F ldc.i4.1 
+   0050 add 
+   0051 stloc.1 
+   0052 ldloc.1 
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   0059 callvirt System.Int32 ListViewBase::get_Count()
+   005E blt IL_0022: ldarg.0
+   0063 ldloc.0 
+   0064 brtrue IL_007a: ldarg.0
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_FontUpdateList
+   006F ldarg.1 
+   0070 newobj System.Void Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode::.ctor(UnityEngine.Font)
+   0075 callvirt System.Void ListView`1<Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode>::Add(!0)
+   007A ldarg.0 
+   007B ldc.i4.1 
+   007C stfld Assets.Scripts.UI.CFontTextureAutoUpdateSystem::m_needUpdateAllFonts
+   0081 ret 
+  NESTED Assets.Scripts.UI.CFontTextureAutoUpdateSystem/FontUpdateNode

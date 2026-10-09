@@ -1,0 +1,237 @@
+// TYPE GoogleARCore.Examples.HelloAR.HelloARController  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Camera FirstPersonCamera
+  FIELD UnityEngine.GameObject DetectedPlanePrefab
+  FIELD UnityEngine.GameObject AndyPlanePrefab
+  FIELD UnityEngine.GameObject AndyPointPrefab
+  FIELD UnityEngine.GameObject SearchingForPlaneUI
+  FIELD System.Single k_ModelRotation = 180
+  FIELD System.Collections.Generic.List`1<GoogleARCore.DetectedPlane> m_AllPlanes
+  FIELD System.Boolean m_IsQuitting
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<GoogleARCore.DetectedPlane>::.ctor()
+   0006 stfld GoogleARCore.Examples.HelloAR.HelloARController::m_AllPlanes
+   000B ldarg.0 
+   000C call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0011 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call System.Void GoogleARCore.Examples.HelloAR.HelloARController::_UpdateApplicationLifecycle()
+   0006 ldarg.0 
+   0007 ldfld GoogleARCore.Examples.HelloAR.HelloARController::m_AllPlanes
+   000C ldc.i4.0 
+   000D call System.Void GoogleARCore.Session::GetTrackables<GoogleARCore.DetectedPlane>(System.Collections.Generic.List`1<T>,GoogleARCore.TrackableQueryFilter)
+   0012 ldc.i4.1 
+   0013 stloc.0 
+   0014 ldc.i4.0 
+   0015 stloc.1 
+   0016 br IL_003c: ldloc.1
+   001B ldarg.0 
+   001C ldfld GoogleARCore.Examples.HelloAR.HelloARController::m_AllPlanes
+   0021 ldloc.1 
+   0022 callvirt !0 System.Collections.Generic.List`1<GoogleARCore.DetectedPlane>::get_Item(System.Int32)
+   0027 callvirt GoogleARCore.TrackingState GoogleARCore.Trackable::get_TrackingState()
+   002C brtrue IL_0038: ldloc.1
+   0031 ldc.i4.0 
+   0032 stloc.0 
+   0033 br IL_004d: ldarg.0
+   0038 ldloc.1 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.1 
+   003C ldloc.1 
+   003D ldarg.0 
+   003E ldfld GoogleARCore.Examples.HelloAR.HelloARController::m_AllPlanes
+   0043 callvirt System.Int32 System.Collections.Generic.List`1<GoogleARCore.DetectedPlane>::get_Count()
+   0048 blt IL_001b: ldarg.0
+   004D ldarg.0 
+   004E ldfld GoogleARCore.Examples.HelloAR.HelloARController::SearchingForPlaneUI
+   0053 ldloc.0 
+   0054 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0059 call System.Int32 UnityEngine.Input::get_touchCount()
+   005E ldc.i4.1 
+   005F blt IL_0079: ret
+   0064 ldc.i4.0 
+   0065 call UnityEngine.Touch UnityEngine.Input::GetTouch(System.Int32)
+   006A dup 
+   006B stloc.2 
+   006C stloc.3 
+   006D ldloca.s V_3
+   006F call UnityEngine.TouchPhase UnityEngine.Touch::get_phase()
+   0074 brfalse IL_007a: ldc.i4.s 17
+   0079 ret 
+   007A ldc.i4.s 17
+   007C stloc.s V_5
+   007E ldloca.s V_2
+   0080 call UnityEngine.Vector2 UnityEngine.Touch::get_position()
+   0085 stloc.s V_6
+   0087 ldloca.s V_6
+   0089 ldfld UnityEngine.Vector2::x
+   008E ldloca.s V_2
+   0090 call UnityEngine.Vector2 UnityEngine.Touch::get_position()
+   0095 stloc.s V_7
+   0097 ldloca.s V_7
+   0099 ldfld UnityEngine.Vector2::y
+   009E ldloc.s V_5
+   00A0 ldloca.s V_4
+   00A2 call System.Boolean GoogleARCore.Frame::Raycast(System.Single,System.Single,GoogleARCore.TrackableHitFlags,GoogleARCore.TrackableHit&)
+   00A7 brfalse IL_01ad: ret
+   00AC ldloca.s V_4
+   00AE call GoogleARCore.Trackable GoogleARCore.TrackableHit::get_Trackable()
+   00B3 isinst GoogleARCore.DetectedPlane
+   00B8 brfalse IL_011a: ldloca.s V_4
+   00BD ldarg.0 
+   00BE ldfld GoogleARCore.Examples.HelloAR.HelloARController::FirstPersonCamera
+   00C3 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00C8 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00CD ldloca.s V_4
+   00CF call UnityEngine.Pose GoogleARCore.TrackableHit::get_Pose()
+   00D4 stloc.s V_8
+   00D6 ldloca.s V_8
+   00D8 ldfld UnityEngine.Pose::position
+   00DD call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   00E2 ldloca.s V_4
+   00E4 call UnityEngine.Pose GoogleARCore.TrackableHit::get_Pose()
+   00E9 stloc.s V_9
+   00EB ldloca.s V_9
+   00ED ldfld UnityEngine.Pose::rotation
+   00F2 call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+   00F7 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   00FC call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0101 ldc.r4 0
+   0106 bge.un IL_011a: ldloca.s V_4
+   010B ldstr Hit at back of the current DetectedPlane
+   0110 call System.Void UnityEngine.Debug::Log(System.Object)
+   0115 br IL_01ad: ret
+   011A ldloca.s V_4
+   011C call GoogleARCore.Trackable GoogleARCore.TrackableHit::get_Trackable()
+   0121 isinst GoogleARCore.FeaturePoint
+   0126 brfalse IL_0138: ldarg.0
+   012B ldarg.0 
+   012C ldfld GoogleARCore.Examples.HelloAR.HelloARController::AndyPointPrefab
+   0131 stloc.s V_10
+   0133 br IL_0140: ldloc.s V_10
+   0138 ldarg.0 
+   0139 ldfld GoogleARCore.Examples.HelloAR.HelloARController::AndyPlanePrefab
+   013E stloc.s V_10
+   0140 ldloc.s V_10
+   0142 ldloca.s V_4
+   0144 call UnityEngine.Pose GoogleARCore.TrackableHit::get_Pose()
+   0149 stloc.s V_12
+   014B ldloca.s V_12
+   014D ldfld UnityEngine.Pose::position
+   0152 ldloca.s V_4
+   0154 call UnityEngine.Pose GoogleARCore.TrackableHit::get_Pose()
+   0159 stloc.s V_13
+   015B ldloca.s V_13
+   015D ldfld UnityEngine.Pose::rotation
+   0162 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0,UnityEngine.Vector3,UnityEngine.Quaternion)
+   0167 stloc.s V_11
+   0169 ldloc.s V_11
+   016B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0170 ldc.r4 0
+   0175 ldc.r4 180
+   017A ldc.r4 0
+   017F ldc.i4.1 
+   0180 callvirt System.Void UnityEngine.Transform::Rotate(System.Single,System.Single,System.Single,UnityEngine.Space)
+   0185 ldloca.s V_4
+   0187 call GoogleARCore.Trackable GoogleARCore.TrackableHit::get_Trackable()
+   018C ldloca.s V_4
+   018E call UnityEngine.Pose GoogleARCore.TrackableHit::get_Pose()
+   0193 callvirt GoogleARCore.Anchor GoogleARCore.Trackable::CreateAnchor(UnityEngine.Pose)
+   0198 stloc.s V_14
+   019A ldloc.s V_11
+   019C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01A1 ldloc.s V_14
+   01A3 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01A8 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   01AD ret 
+== System.Void _UpdateApplicationLifecycle() attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.s 27
+   0002 call System.Boolean UnityEngine.Input::GetKey(UnityEngine.KeyCode)
+   0007 brfalse IL_0011: call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   000C call System.Void UnityEngine.Application::Quit()
+   0011 call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   0016 ldc.i4.s 100
+   0018 beq IL_0029: ldc.i4.m1
+   001D ldc.i4.s 15
+   001F call System.Void UnityEngine.Screen::set_sleepTimeout(System.Int32)
+   0024 br IL_002f: ldarg.0
+   0029 ldc.i4.m1 
+   002A call System.Void UnityEngine.Screen::set_sleepTimeout(System.Int32)
+   002F ldarg.0 
+   0030 ldfld GoogleARCore.Examples.HelloAR.HelloARController::m_IsQuitting
+   0035 brfalse IL_003b: call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   003A ret 
+   003B call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   0040 ldc.i4 202
+   0045 bne.un IL_0071: call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   004A ldarg.0 
+   004B ldstr Camera permission is needed to run this application.
+   0050 call System.Void GoogleARCore.Examples.HelloAR.HelloARController::_ShowAndroidToastMessage(System.String)
+   0055 ldarg.0 
+   0056 ldc.i4.1 
+   0057 stfld GoogleARCore.Examples.HelloAR.HelloARController::m_IsQuitting
+   005C ldarg.0 
+   005D ldstr _DoQuit
+   0062 ldc.r4 0.5
+   0067 call System.Void UnityEngine.MonoBehaviour::Invoke(System.String,System.Single)
+   006C br IL_00a2: ret
+   0071 call GoogleARCore.SessionStatus GoogleARCore.Session::get_Status()
+   0076 call System.Boolean GoogleARCore.SessionStatusExtensions::IsError(GoogleARCore.SessionStatus)
+   007B brfalse IL_00a2: ret
+   0080 ldarg.0 
+   0081 ldstr ARCore encountered a problem connecting.  Please start the app again.
+   0086 call System.Void GoogleARCore.Examples.HelloAR.HelloARController::_ShowAndroidToastMessage(System.String)
+   008B ldarg.0 
+   008C ldc.i4.1 
+   008D stfld GoogleARCore.Examples.HelloAR.HelloARController::m_IsQuitting
+   0092 ldarg.0 
+   0093 ldstr _DoQuit
+   0098 ldc.r4 0.5
+   009D call System.Void UnityEngine.MonoBehaviour::Invoke(System.String,System.Single)
+   00A2 ret 
+== System.Void _DoQuit() attrs=Private, HideBySig maxstack=8
+   0000 call System.Void UnityEngine.Application::Quit()
+   0005 ret 
+== System.Void _ShowAndroidToastMessage(System.String message) attrs=Private, HideBySig maxstack=7
+   0000 newobj System.Void GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1::message
+   000D ldstr com.unity3d.player.UnityPlayer
+   0012 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0017 stloc.1 
+   0018 ldloc.0 
+   0019 ldloc.1 
+   001A ldstr currentActivity
+   001F callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<UnityEngine.AndroidJavaObject>(System.String)
+   0024 stfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1::unityActivity
+   0029 ldloc.0 
+   002A ldfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1::unityActivity
+   002F brfalse IL_0076: ret
+   0034 newobj System.Void GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey0::.ctor()
+   0039 stloc.2 
+   003A ldloc.2 
+   003B ldloc.0 
+   003C stfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey0::<>f__ref$1
+   0041 ldloc.2 
+   0042 ldstr android.widget.Toast
+   0047 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   004C stfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey0::toastClass
+   0051 ldloc.0 
+   0052 ldfld GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1::unityActivity
+   0057 ldstr runOnUiThread
+   005C ldc.i4.1 
+   005D newarr System.Object
+   0062 dup 
+   0063 ldc.i4.0 
+   0064 ldloc.2 
+   0065 ldftn System.Void GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey0::<>m__0()
+   006B newobj System.Void UnityEngine.AndroidJavaRunnable::.ctor(System.Object,System.IntPtr)
+   0070 stelem.ref 
+   0071 callvirt System.Void UnityEngine.AndroidJavaObject::Call(System.String,System.Object[])
+   0076 ret 
+  NESTED GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey1
+  NESTED GoogleARCore.Examples.HelloAR.HelloARController/<_ShowAndroidToastMessage>c__AnonStorey0

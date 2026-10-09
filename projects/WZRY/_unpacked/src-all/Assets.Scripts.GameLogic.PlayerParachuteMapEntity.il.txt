@@ -1,0 +1,601 @@
+// TYPE Assets.Scripts.GameLogic.PlayerParachuteMapEntity  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 updateFrameInterval
+  FIELD System.Int32 totalHeight
+  FIELD System.UInt32 m_playerId
+  FIELD CSProtocol.COM_PLAYERCAMP m_camp
+  FIELD System.Boolean m_isHost
+  FIELD CPooledGameObjectScript m_mapPointer
+  FIELD UnityEngine.Transform m_dirTrans
+  FIELD UnityEngine.UI.Image m_heightImg
+  FIELD System.Int32 m_dirtyFlags
+  FIELD System.Boolean m_bInViewPort
+  FIELD UnityEngine.Vector3 m_curPos
+  FIELD System.Int32 m_curRot
+  FIELD System.Boolean m_bUseActorPos
+  FIELD System.Boolean m_bLogicShow
+  FIELD System.Boolean m_pointerLogicVisible
+  FIELD Assets.Scripts.GameLogic.ChijiRendezvousNew chijiRendezvous
+== System.Void .ctor(System.UInt32 playerId) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   0007 ldarg.0 
+   0008 call System.Void System.Object::.ctor()
+   000D ldarg.0 
+   000E ldarg.1 
+   000F stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_playerId
+   0014 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0019 ldarg.1 
+   001A callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldloc.0 
+   0022 brfalse IL_0032: ldc.i4.0
+   0027 ldloc.0 
+   0028 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   002D br IL_0033: stfld CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_camp
+   0032 ldc.i4.0 
+   0033 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_camp
+   0038 ldarg.0 
+   0039 ldnull 
+   003A stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   003F ldarg.0 
+   0040 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0045 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   004A brfalse IL_0055: ldarg.1
+   004F ldc.i4.0 
+   0050 br IL_0062: stfld System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_isHost
+   0055 ldarg.1 
+   0056 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   005B ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   0060 ceq 
+   0062 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_isHost
+   0067 ret 
+== Assets.Scripts.GameLogic.ChijiRendezvousNew GetChijiLevelLogicRendezvous() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::chijiRendezvous
+   0006 brtrue IL_0016: ldarg.0
+   000B ldarg.0 
+   000C call Assets.Scripts.GameLogic.ChijiRendezvousNew Assets.Scripts.GameLogic.ChijiRendezvousNew::GetChijiLevelLogicRendezvous()
+   0011 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::chijiRendezvous
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::chijiRendezvous
+   001C ret 
+== System.Void Initialize() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0006 brtrue IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldarg.0 
+   000D call CPooledGameObjectScript Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetMapGameObject()
+   0012 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   001D brfalse IL_00a8: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_isHost
+   0028 brfalse IL_006d: ldarg.0
+   002D ldarg.0 
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0034 ldfld CPooledGameObjectScript::Trans
+   0039 ldstr dirSelf
+   003E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0043 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   0048 ldarg.0 
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   004F ldfld CPooledGameObjectScript::Trans
+   0054 ldstr hostHeight
+   0059 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   005E callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Image>()
+   0063 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   0068 br IL_00a8: ldarg.0
+   006D ldarg.0 
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0074 ldfld CPooledGameObjectScript::Trans
+   0079 ldstr dir
+   007E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0083 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   0088 ldarg.0 
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   008F ldfld CPooledGameObjectScript::Trans
+   0094 ldstr height
+   0099 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   009E callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Image>()
+   00A3 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   00A8 ldarg.0 
+   00A9 ldc.i4.0 
+   00AA stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   00AF ldarg.0 
+   00B0 ldc.i4.1 
+   00B1 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   00B6 ldarg.0 
+   00B7 ldc.i4.0 
+   00B8 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bUseActorPos
+   00BD ldarg.0 
+   00BE ldc.i4.1 
+   00BF stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bLogicShow
+   00C4 ldarg.0 
+   00C5 ldc.i4.1 
+   00C6 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_pointerLogicVisible
+   00CB ldarg.0 
+   00CC ldc.i4.1 
+   00CD call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00D2 ldarg.0 
+   00D3 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::Update()
+   00D8 ret 
+== System.Void Dispose() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0006 brfalse IL_001c: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0011 ldfld CPooledGameObjectScript::Trans
+   0016 ldnull 
+   0017 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0022 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0027 ldarg.0 
+   0028 ldnull 
+   0029 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   002E ldarg.0 
+   002F ldnull 
+   0030 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   0035 ldarg.0 
+   0036 ldnull 
+   0037 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   003C ret 
+== CPooledGameObjectScript GetMapGameObject() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.ChijiRendezvousNew Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetChijiLevelLogicRendezvous()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brtrue IL_000f: ldloc.0
+   000D ldnull 
+   000E ret 
+   000F ldloc.0 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_playerId
+   0016 callvirt CPooledGameObjectScript Assets.Scripts.GameLogic.ChijiRendezvousNew::GetEntityMapGameObject(System.UInt32)
+   001B ret 
+== System.Void RefreshMapPointer() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0006 brfalse IL_0027: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0011 ldfld CPooledGameObjectScript::Trans
+   0016 ldnull 
+   0017 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0022 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0027 ldarg.0 
+   0028 ldarg.0 
+   0029 call CPooledGameObjectScript Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetMapGameObject()
+   002E stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0039 brfalse IL_00c4: ldarg.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_isHost
+   0044 brfalse IL_0089: ldarg.0
+   0049 ldarg.0 
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0050 ldfld CPooledGameObjectScript::Trans
+   0055 ldstr dirSelf
+   005A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   005F stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   0064 ldarg.0 
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   006B ldfld CPooledGameObjectScript::Trans
+   0070 ldstr hostHeight
+   0075 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   007A callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Image>()
+   007F stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   0084 br IL_00c4: ldarg.0
+   0089 ldarg.0 
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0090 ldfld CPooledGameObjectScript::Trans
+   0095 ldstr dir
+   009A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   009F stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   00A4 ldarg.0 
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   00AB ldfld CPooledGameObjectScript::Trans
+   00B0 ldstr height
+   00B5 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00BA callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Image>()
+   00BF stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   00C4 ldarg.0 
+   00C5 ldc.i4.1 
+   00C6 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00CB ldarg.0 
+   00CC ldc.i4.2 
+   00CD call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00D2 ldarg.0 
+   00D3 ldc.i4.s 16
+   00D5 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00DA ret 
+== System.Void AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   0007 ldarg.1 
+   0008 or 
+   0009 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   000E ret 
+== System.Void RemoveDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   0007 ldarg.1 
+   0008 not 
+   0009 and 
+   000A stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   000F ret 
+== System.Boolean HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   0006 ldarg.1 
+   0007 and 
+   0008 ldc.i4.0 
+   0009 ceq 
+   000B ldc.i4.0 
+   000C ceq 
+   000E ret 
+== System.Void ClearDirtyFlags() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   0007 ret 
+== System.Void UpdateRotation() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curRot
+   0006 conv.r4 
+   0007 stloc.0 
+   0008 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000D callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0012 stloc.2 
+   0013 ldloc.2 
+   0014 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   0019 brfalse IL_0036: ldloc.0
+   001E ldloc.0 
+   001F ldloc.2 
+   0020 ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotationByCamp
+   0025 add 
+   0026 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   002B call UnityEngine.Quaternion UnityEngine.Quaternion::AngleAxis(System.Single,UnityEngine.Vector3)
+   0030 stloc.1 
+   0031 br IL_0042: ldarg.0
+   0036 ldloc.0 
+   0037 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   003C call UnityEngine.Quaternion UnityEngine.Quaternion::AngleAxis(System.Single,UnityEngine.Vector3)
+   0041 stloc.1 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirTrans
+   0048 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   004D ldloc.1 
+   004E callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0053 ret 
+== System.Void ProcessClip(UnityEngine.Vector3& pos) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.ChijiRendezvousNew Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetChijiLevelLogicRendezvous()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse IL_0053: ret
+   000D ldloc.0 
+   000E callvirt System.Boolean Assets.Scripts.GameLogic.ChijiRendezvousNew::get_viewPortChange()
+   0013 brfalse IL_0053: ret
+   0018 ldloc.0 
+   0019 callvirt UnityEngine.Bounds Assets.Scripts.GameLogic.ChijiRendezvousNew::get_viewPort()
+   001E stloc.2 
+   001F ldloca.s V_2
+   0021 ldarg.1 
+   0022 ldobj UnityEngine.Vector3
+   0027 call System.Boolean UnityEngine.Bounds::Contains(UnityEngine.Vector3)
+   002C stloc.1 
+   002D ldloc.1 
+   002E brfalse IL_003a: ldarg.0
+   0033 ldarg.0 
+   0034 ldc.i4.1 
+   0035 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   0040 ldloc.1 
+   0041 beq IL_0053: ret
+   0046 ldarg.0 
+   0047 ldloc.1 
+   0048 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   004D ldarg.0 
+   004E call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::SetVisibleState()
+   0053 ret 
+== System.Void SetUseActorPos(System.Boolean flag) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bUseActorPos
+   0007 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.ChijiRendezvousNew Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetChijiLevelLogicRendezvous()
+   0006 stloc.0 
+   0007 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   000C stloc.1 
+   000D call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0012 stloc.2 
+   0013 ldc.i4.0 
+   0014 stloc.3 
+   0015 ldc.i4.0 
+   0016 stloc.s V_4
+   0018 ldnull 
+   0019 stloc.s V_5
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bUseActorPos
+   0021 brfalse IL_00a8: ldloca.s V_7
+   0026 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_playerId
+   0031 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0036 stloc.s V_6
+   0038 ldloc.s V_6
+   003A brfalse IL_00a3: br IL_00f3
+   003F ldloc.s V_6
+   0041 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0046 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004B stloc.s V_5
+   004D ldloc.s V_5
+   004F ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0054 stloc.1 
+   0055 ldloca.s V_2
+   0057 ldloc.s V_5
+   0059 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   005E ldfld VInt3::x
+   0063 conv.r4 
+   0064 ldloc.s V_5
+   0066 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   006B ldfld VInt3::z
+   0070 conv.r4 
+   0071 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0076 ldloc.s V_5
+   0078 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   007D ldfld VInt3::z
+   0082 conv.r4 
+   0083 ldloc.s V_5
+   0085 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   008A ldfld VInt3::x
+   008F conv.r4 
+   0090 call System.Single UnityEngine.Mathf::Atan2(System.Single,System.Single)
+   0095 ldc.r4 57.29578
+   009A mul 
+   009B ldc.r4 90
+   00A0 sub 
+   00A1 conv.i4 
+   00A2 stloc.3 
+   00A3 br IL_00f3: ldarg.0
+   00A8 ldloca.s V_7
+   00AA initobj UnityEngine.Vector2
+   00B0 ldloc.0 
+   00B1 brfalse IL_00c8: ldc.i4.s -90
+   00B6 ldloc.0 
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_playerId
+   00BD ldloca.s V_7
+   00BF ldloca.s V_3
+   00C1 ldloca.s V_4
+   00C3 callvirt System.Void Assets.Scripts.GameLogic.ChijiRendezvousNew::GetPlayerPosDirHight(System.UInt32,UnityEngine.Vector2&,System.Int32&,System.Int32&)
+   00C8 ldc.i4.s -90
+   00CA ldloc.3 
+   00CB sub 
+   00CC stloc.3 
+   00CD ldloca.s V_1
+   00CF ldloca.s V_7
+   00D1 ldfld UnityEngine.Vector2::x
+   00D6 ldc.r4 0.001
+   00DB mul 
+   00DC ldc.r4 0
+   00E1 ldloca.s V_7
+   00E3 ldfld UnityEngine.Vector2::y
+   00E8 ldc.r4 0.001
+   00ED mul 
+   00EE call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00F3 ldarg.0 
+   00F4 ldloca.s V_1
+   00F6 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::ProcessClip(UnityEngine.Vector3&)
+   00FB ldloc.s V_5
+   00FD brfalse IL_0128: ldarg.0
+   0102 ldloc.s V_5
+   0104 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0109 brtrue IL_0128: ldarg.0
+   010E ldarg.0 
+   010F ldc.i4.s 16
+   0111 call System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0116 brtrue IL_0128: ldarg.0
+   011B ldarg.0 
+   011C ldc.i4.1 
+   011D call System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0122 brtrue IL_0128: ldarg.0
+   0127 ret 
+   0128 ldarg.0 
+   0129 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   012E ldc.i4.0 
+   012F bgt IL_0159: ldarg.0
+   0134 ldarg.0 
+   0135 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_playerId
+   013A conv.u8 
+   013B ldsfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::updateFrameInterval
+   0140 conv.i8 
+   0141 rem 
+   0142 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0147 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   014C conv.u8 
+   014D ldsfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::updateFrameInterval
+   0152 conv.i8 
+   0153 rem 
+   0154 bne.un IL_0192: ldarg.0
+   0159 ldarg.0 
+   015A ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curPos
+   015F ldloc.1 
+   0160 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0165 brfalse IL_0178: ldarg.0
+   016A ldarg.0 
+   016B ldc.i4.1 
+   016C call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0171 ldarg.0 
+   0172 ldloc.1 
+   0173 stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curPos
+   0178 ldarg.0 
+   0179 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curRot
+   017E ldloc.3 
+   017F beq IL_0192: ldarg.0
+   0184 ldarg.0 
+   0185 ldc.i4.2 
+   0186 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   018B ldarg.0 
+   018C ldloc.3 
+   018D stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curRot
+   0192 ldarg.0 
+   0193 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_dirtyFlags
+   0198 ldc.i4.0 
+   0199 ble IL_01dd: ldarg.0
+   019E ldarg.0 
+   019F ldc.i4.1 
+   01A0 call System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   01A5 brfalse IL_01b0: ldarg.0
+   01AA ldarg.0 
+   01AB call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::UpdateUIMap()
+   01B0 ldarg.0 
+   01B1 ldc.i4.2 
+   01B2 call System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   01B7 brfalse IL_01c2: ldarg.0
+   01BC ldarg.0 
+   01BD call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::UpdateRotation()
+   01C2 ldarg.0 
+   01C3 ldc.i4.s 16
+   01C5 call System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   01CA brfalse IL_01d7: ldarg.0
+   01CF ldarg.0 
+   01D0 ldloc.s V_5
+   01D2 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::UpdateVisible(Assets.Scripts.GameLogic.ActorLinker)
+   01D7 ldarg.0 
+   01D8 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::ClearDirtyFlags()
+   01DD ldarg.0 
+   01DE ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   01E3 ldnull 
+   01E4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01E9 brfalse IL_0203: ret
+   01EE ldarg.0 
+   01EF ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_heightImg
+   01F4 ldloc.s V_4
+   01F6 conv.r4 
+   01F7 ldsfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::totalHeight
+   01FC conv.r4 
+   01FD div 
+   01FE callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0203 ret 
+== System.Void setLogicVisible(System.Boolean show) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_pointerLogicVisible
+   0007 bne.un IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldarg.1 
+   000F stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_pointerLogicVisible
+   0014 ldarg.0 
+   0015 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::refreshLogicVisible()
+   001A ret 
+== System.Void refreshLogicVisible() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0007 ldarg.0 
+   0008 ldc.i4.s 16
+   000A call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   000F ret 
+== System.Void UpdateVisible(Assets.Scripts.GameLogic.ActorLinker actor) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_0007: ldarg.0
+   0006 ret 
+   0007 ldarg.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_pointerLogicVisible
+   000E brfalse IL_001b: ldc.i4.0
+   0013 ldarg.1 
+   0014 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0019 br.s IL_001c: stfld System.Boolean Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bLogicShow
+   001B ldc.i4.0 
+   001C stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bLogicShow
+   0021 ldarg.0 
+   0022 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::SetVisibleState()
+   0027 ldarg.0 
+   0028 ldc.i4.s 16
+   002A call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::RemoveDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   002F ret 
+== System.Void SetVisibleState() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bLogicShow
+   0006 brfalse IL_0013: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   0011 br.s IL_0014: stloc.0
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   001B brfalse IL_0031: ret
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   0026 ldfld CPooledGameObjectScript::Go
+   002B ldloc.0 
+   002C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0031 ret 
+== System.Void UpdateUIMap() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.ChijiRendezvousNew Assets.Scripts.GameLogic.PlayerParachuteMapEntity::GetChijiLevelLogicRendezvous()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   000D brfalse IL_0067: ret
+   0012 ldloc.0 
+   0013 brfalse IL_0067: ret
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_mapPointer
+   001E ldfld CPooledGameObjectScript::Trans
+   0023 isinst UnityEngine.RectTransform
+   0028 ldloc.0 
+   0029 ldarg.0 
+   002A ldflda Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curPos
+   002F callvirt UnityEngine.Vector2 Assets.Scripts.GameLogic.ChijiRendezvousNew::CalcUIPosInMapByWorldPos(UnityEngine.Vector3&)
+   0034 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0039 ldloc.0 
+   003A callvirt UnityEngine.Bounds Assets.Scripts.GameLogic.ChijiRendezvousNew::get_viewPort()
+   003F stloc.2 
+   0040 ldloca.s V_2
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_curPos
+   0048 call System.Boolean UnityEngine.Bounds::Contains(UnityEngine.Vector3)
+   004D stloc.1 
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   0054 ldloc.1 
+   0055 beq IL_0067: ret
+   005A ldarg.0 
+   005B ldloc.1 
+   005C stfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::m_bInViewPort
+   0061 ldarg.0 
+   0062 call System.Void Assets.Scripts.GameLogic.PlayerParachuteMapEntity::SetVisibleState()
+   0067 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.2 
+   0001 stsfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::updateFrameInterval
+   0006 ldc.i4 1000
+   000B stsfld Assets.Scripts.GameLogic.PlayerParachuteMapEntity::totalHeight
+   0010 ret 

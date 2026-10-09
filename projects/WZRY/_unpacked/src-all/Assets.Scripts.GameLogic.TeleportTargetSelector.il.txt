@@ -1,0 +1,901 @@
+// TYPE Assets.Scripts.GameLogic.TeleportTargetSelector  base=Singleton`1<Assets.Scripts.GameLogic.TeleportTargetSelector>  attrs=BeforeFieldInit
+  FIELD System.String TeleportNotePrefabName = Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_tishi
+  FIELD UnityEngine.Ray screenRay
+  FIELD UnityEngine.Plane curPlane
+  FIELD System.Collections.Generic.List`1<System.UInt32> m_CanTeleportActorList
+  FIELD DictionaryView`2<System.UInt32,CPooledGameObjectScript> m_CachedTeleportGameObjects
+  FIELD System.Boolean m_TargetSkillEnable
+  FIELD System.Boolean m_ClickDownStatus
+  FIELD System.Boolean m_NeedConfirm
+  FIELD System.Boolean m_bConfirmed
+  FIELD CoreDef.SkillSlotType c_invalidSkillSlotType = 16
+  FIELD CoreDef.SkillSlotType m_mapSelectTargetSkillSlot
+  FIELD SGW/SGCSkill/uintTypeDelegate <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   0007 ldarg.0 
+   0008 ldc.i4.s 16
+   000A stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   000F ldarg.0 
+   0010 call System.Void Singleton`1<Assets.Scripts.GameLogic.TeleportTargetSelector>::.ctor()
+   0015 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.r4 0
+   0006 ldc.r4 1
+   000B ldc.r4 0
+   0010 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0015 ldc.r4 0
+   001A newobj System.Void UnityEngine.Plane::.ctor(UnityEngine.Vector3,System.Single)
+   001F stfld Assets.Scripts.GameLogic.TeleportTargetSelector::curPlane
+   0024 ldarg.0 
+   0025 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   002A stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   002F ldarg.0 
+   0030 newobj System.Void DictionaryView`2<System.UInt32,CPooledGameObjectScript>::.ctor()
+   0035 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   003A ldarg.0 
+   003B ldc.i4.0 
+   003C stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   0041 ldarg.0 
+   0042 ldc.i4.0 
+   0043 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0048 ldarg.0 
+   0049 ldc.i4.0 
+   004A stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_NeedConfirm
+   004F ldarg.0 
+   0050 ldc.i4.0 
+   0051 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   0056 ldarg.0 
+   0057 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::RegEvent()
+   005C ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   0006 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   0011 callvirt System.Void DictionaryView`2<System.UInt32,CPooledGameObjectScript>::Clear()
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::UnregEvent()
+   001C ret 
+== System.Void RegEvent() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<EventRouter>::GetInstance()
+   0005 ldsfld EventID::RESET_SKILL_BUTTON_MANAGER
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnResetSkillButtonManager()
+   0011 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 1167
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 1161
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 1160
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnDragMiniMap(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 1162
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnDragMiniMapEnd(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 1009
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 1011
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C2 ldc.i4 1008
+   00C7 ldarg.0 
+   00C8 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   00CE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00DD ldc.i4 1007
+   00E2 ldarg.0 
+   00E3 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   00E9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00EE callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F3 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00F8 ldc.i4.8 
+   00F9 ldarg.0 
+   00FA ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   0100 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   0105 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   010A ret 
+== System.Void UnregEvent() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<EventRouter>::GetInstance()
+   0005 ldsfld EventID::RESET_SKILL_BUTTON_MANAGER
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnResetSkillButtonManager()
+   0011 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 1167
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 1161
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 1160
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnDragMiniMap(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 1162
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnDragMiniMapEnd(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 1009
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 1011
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C2 ldc.i4 1008
+   00C7 ldarg.0 
+   00C8 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragStart(Assets.Scripts.UI.CUIEvent)
+   00CE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00DD ldc.i4 1007
+   00E2 ldarg.0 
+   00E3 ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnCameraDragEnd(Assets.Scripts.UI.CUIEvent)
+   00E9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00EE callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F3 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00F8 ldc.i4.8 
+   00F9 ldarg.0 
+   00FA ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   0100 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   0105 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   010A ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::RefreshSkillEnableState()
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::UpdateTargetAfterClickDown()
+   001C ret 
+== System.Void OnResetSkillButtonManager() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0012: ldloc.0
+   0011 ret 
+   0012 ldloc.0 
+   0013 ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A ldarg.0 
+   001B ldflda Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0020 callvirt System.Boolean Assets.Scripts.GameSystem.CSkillButtonManager::HasMapSlectTargetSkill(CoreDef.SkillSlotType&)
+   0025 brtrue IL_0032: ret
+   002A ldarg.0 
+   002B ldc.i4.s 16
+   002D stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0032 ret 
+== System.Void RefreshSkillEnableState() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   001C ret 
+   001D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0022 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 brfalse IL_0039: ret
+   002E ldloc.0 
+   002F ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   0034 brtrue IL_003a: ldnull
+   0039 ret 
+   003A ldnull 
+   003B stloc.1 
+   003C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0041 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0046 stloc.2 
+   0047 ldloc.2 
+   0048 brfalse IL_005d: ret
+   004D ldloc.2 
+   004E ldfld Assets.Scripts.GameLogic.Player::Captain
+   0053 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0058 brtrue IL_005e: ldloc.2
+   005D ret 
+   005E ldloc.2 
+   005F ldflda Assets.Scripts.GameLogic.Player::Captain
+   0064 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0069 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0074 ldloca.s V_1
+   0076 callvirt System.Boolean Assets.Scripts.GameLogic.SkillLinkerComponent::TryGetSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameLogic.SkillSlotLinker&)
+   007B brtrue IL_0081: ldarg.0
+   0080 ret 
+   0081 ldarg.0 
+   0082 ldloc.0 
+   0083 ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   008E callvirt Assets.Scripts.GameSystem.enSkillJoystickMode Assets.Scripts.GameSystem.CSkillButtonManager::GetSkillJoystickMode(CoreDef.SkillSlotType)
+   0093 ldc.i4.5 
+   0094 ceq 
+   0096 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_NeedConfirm
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   00A1 ldloc.1 
+   00A2 callvirt System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   00A7 beq IL_00d7: ret
+   00AC ldarg.0 
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   00B3 ldc.i4.0 
+   00B4 ceq 
+   00B6 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   00C1 brfalse IL_00d1: ldarg.0
+   00C6 ldarg.0 
+   00C7 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnPlayerSkillEnable()
+   00CC br IL_00d7: ret
+   00D1 ldarg.0 
+   00D2 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::OnPlayerSkillDisable()
+   00D7 ret 
+== System.Void UpdateTargetAfterClickDown() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0023 brfalse IL_0034: ret
+   0028 ldarg.0 
+   0029 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::UpdateTeleportTargetList()
+   002E ldarg.0 
+   002F call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::RefreshTeleportTargetEffect()
+   0034 ret 
+== System.Void OnClickBattleScene(UnityEngine.Vector2 _screenPos) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_NeedConfirm
+   0023 brfalse IL_0034: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   002E brtrue IL_0034: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0033 ret 
+   0034 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0039 callvirt System.Boolean CameraSystem::get_enableLockedCamera()
+   003E brfalse IL_004f: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0049 brtrue IL_004f: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   004E ret 
+   004F call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0054 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0059 stloc.0 
+   005A ldloc.0 
+   005B brfalse IL_009f: ret
+   0060 ldloc.0 
+   0061 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0066 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   006B brfalse IL_009f: ret
+   0070 ldloc.0 
+   0071 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0076 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   007B ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0080 brfalse IL_009f: ret
+   0085 ldloc.0 
+   0086 ldflda Assets.Scripts.GameLogic.Player::Captain
+   008B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0090 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0095 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   009A brfalse IL_00a0: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   009F ret 
+   00A0 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   00A5 ldfld CameraSystem::m_mainCamera
+   00AA ldarg.1 
+   00AB call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   00B0 callvirt UnityEngine.Ray UnityEngine.Camera::ScreenPointToRay(UnityEngine.Vector3)
+   00B5 stloc.3 
+   00B6 ldarg.0 
+   00B7 ldflda Assets.Scripts.GameLogic.TeleportTargetSelector::curPlane
+   00BC ldloc.3 
+   00BD ldloca.s V_1
+   00BF call System.Boolean UnityEngine.Plane::Raycast(UnityEngine.Ray,System.Single&)
+   00C4 brfalse IL_0144: ret
+   00C9 ldloca.s V_3
+   00CB ldloc.1 
+   00CC call UnityEngine.Vector3 UnityEngine.Ray::GetPoint(System.Single)
+   00D1 stloc.2 
+   00D2 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00D7 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   00DC brfalse IL_0144: ret
+   00E1 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00E6 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   00EB ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   00F0 stloc.s V_4
+   00F2 ldloc.s V_4
+   00F4 brfalse IL_0144: ret
+   00F9 ldloc.s V_4
+   00FB ldloca.s V_5
+   00FD callvirt System.Boolean Assets.Scripts.GameSystem.CSkillButtonManager::HasMapSlectTargetSkill(CoreDef.SkillSlotType&)
+   0102 brfalse IL_0144: ret
+   0107 ldloc.0 
+   0108 ldflda Assets.Scripts.GameLogic.Player::Captain
+   010D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0112 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0117 ldloc.2 
+   0118 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   011D ldc.i4 3000
+   0122 ldsfld Assets.Scripts.GameLogic.TeleportTargetSelector::<>f__mg$cache0
+   0127 brtrue.s IL_013a: ldsfld SGW/SGCSkill/uintTypeDelegate Assets.Scripts.GameLogic.TeleportTargetSelector::<>f__mg$cache0
+   0129 ldnull 
+   012A ldftn System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::SearchNearestCanTeleportTargetCallBack(System.UInt32&)
+   0130 newobj System.Void SGW/SGCSkill/uintTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0135 stsfld Assets.Scripts.GameLogic.TeleportTargetSelector::<>f__mg$cache0
+   013A ldsfld Assets.Scripts.GameLogic.TeleportTargetSelector::<>f__mg$cache0
+   013F call System.Void SGW/SGCSkill::SearchNearestCanTeleportTarget(System.UInt32,VInt3,System.Int32,SGW/SGCSkill/uintTypeDelegate)
+   0144 ret 
+== System.Void SearchNearestCanTeleportTargetCallBack(System.UInt32& targetActorID) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldind.u4 
+   0002 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::SelectedMapTarget(System.UInt32)
+   0007 ret 
+== System.Void SelectedMapTarget(System.UInt32 targetActorID) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 brfalse IL_0023: ret
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000B callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   0010 ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0023: ret
+   001C ldloc.0 
+   001D ldarg.0 
+   001E callvirt System.Void Assets.Scripts.GameSystem.CSkillButtonManager::SelectedMapTarget(System.UInt32)
+   0023 ret 
+== System.Void OnCameraDragStart(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldc.i4.1 
+   001F stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0024 ret 
+== System.Void OnCameraDragEnd(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldc.i4.0 
+   001F stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0024 ldarg.0 
+   0025 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ClearTeleportTarget()
+   002A ret 
+== System.Void OnDragMiniMap(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldc.i4.1 
+   001F stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   0024 ret 
+== System.Void OnDragMiniMapEnd(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ClearTeleportTarget()
+   0023 ret 
+== System.Void OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.1
+   001C ret 
+   001D ldarg.1 
+   001E ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0023 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0028 brtrue IL_002e: ldarg.0
+   002D ret 
+   002E ldarg.0 
+   002F call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ClearTeleportTarget()
+   0034 ret 
+== System.Void OnPlayerSkillEnable() attrs=Private, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0005 callvirt System.Boolean CameraSystem::get_enableLockedCamera()
+   000A brtrue IL_002b: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brtrue IL_002b: ret
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0024 ldc.i4.s 16
+   0026 bne.un IL_002c: ldarg.0
+   002B ret 
+   002C ldarg.0 
+   002D call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::UpdateTeleportTargetList()
+   0032 ldarg.0 
+   0033 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::RefreshTeleportTargetEffect()
+   0038 ret 
+== System.Void OnPlayerSkillDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ClearTeleportTarget()
+   0006 ret 
+== System.Void UpdateTeleportTargetList() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001c: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0015 ldc.i4.s 16
+   0017 bne.un IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   0023 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   0028 ldnull 
+   0029 stloc.0 
+   002A call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   002F callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0034 stloc.1 
+   0035 ldloc.1 
+   0036 brfalse IL_004b: ret
+   003B ldloc.1 
+   003C ldfld Assets.Scripts.GameLogic.Player::Captain
+   0041 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0046 brtrue IL_004c: ldloc.1
+   004B ret 
+   004C ldloc.1 
+   004D ldflda Assets.Scripts.GameLogic.Player::Captain
+   0052 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0057 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_mapSelectTargetSkillSlot
+   0062 ldloca.s V_0
+   0064 callvirt System.Boolean Assets.Scripts.GameLogic.SkillLinkerComponent::TryGetSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameLogic.SkillSlotLinker&)
+   0069 brtrue IL_006f: ldloc.0
+   006E ret 
+   006F ldloc.0 
+   0070 callvirt System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   0075 brtrue IL_007b: call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   007A ret 
+   007B call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0080 ldfld Assets.Scripts.GameLogic.ActorManager::actorList
+   0085 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.GameLogic.ActorConfig>::GetEnumerator()
+   008A stloc.2 
+   008B br IL_0195: ldloca.s V_2
+   0090 ldloca.s V_2
+   0092 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.ActorConfig>::get_Current()
+   0097 stloc.s V_4
+   0099 ldloca.s V_4
+   009B call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.ActorConfig>::get_Value()
+   00A0 stloc.3 
+   00A1 ldloc.3 
+   00A2 ldnull 
+   00A3 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00A8 brtrue IL_00ec: br IL_0195
+   00AD ldloc.3 
+   00AE callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   00B3 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00B8 brfalse IL_00ec: br IL_0195
+   00BD ldloc.3 
+   00BE callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   00C3 ldloc.1 
+   00C4 ldfld Assets.Scripts.GameLogic.Player::Captain
+   00C9 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00CE brtrue IL_00ec: br IL_0195
+   00D3 ldloc.3 
+   00D4 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   00D9 stloc.s V_5
+   00DB ldloca.s V_5
+   00DD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00E2 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00E7 brtrue IL_00f1: ldloc.3
+   00EC br IL_0195: ldloca.s V_2
+   00F1 ldloc.3 
+   00F2 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   00F7 stloc.s V_6
+   00F9 ldloca.s V_6
+   00FB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0100 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0105 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   010A brtrue IL_012c: br IL_0195
+   010F ldloca.s V_6
+   0111 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0116 brfalse IL_012c: br IL_0195
+   011B ldloca.s V_6
+   011D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0122 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_InCamera()
+   0127 brtrue IL_0131: ldloc.0
+   012C br IL_0195: ldloca.s V_2
+   0131 ldloc.0 
+   0132 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0137 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   013C ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilter
+   0141 stloc.s V_7
+   0143 ldloc.0 
+   0144 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0149 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   014E ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldMonsterSubType
+   0153 stloc.s V_8
+   0155 ldloc.0 
+   0156 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   015B ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0160 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldOrganSubType
+   0165 stloc.s V_9
+   0167 ldloc.s V_6
+   0169 ldloc.s V_7
+   016B ldloc.s V_8
+   016D ldloc.s V_9
+   016F call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsFilterActorType(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.UInt32,System.UInt32,System.UInt32)
+   0174 brfalse IL_017e: ldarg.0
+   0179 br IL_0195: ldloca.s V_2
+   017E ldarg.0 
+   017F ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   0184 ldloca.s V_6
+   0186 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   018B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0190 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0195 ldloca.s V_2
+   0197 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.ActorConfig>::MoveNext()
+   019C brtrue IL_0090: ldloca.s V_2
+   01A1 ret 
+== System.Void RefreshTeleportTargetEffect() attrs=Private, HideBySig maxstack=3
+   0000 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   000C callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,CPooledGameObjectScript>::GetEnumerator()
+   0011 stloc.1 
+   0012 br IL_0060: ldloca.s V_1
+   0017 ldloca.s V_1
+   0019 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   001E stloc.2 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   0025 ldloca.s V_2
+   0027 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Key()
+   002C callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Contains(!0)
+   0031 brtrue IL_0060: ldloca.s V_1
+   0036 ldloca.s V_2
+   0038 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   003D brfalse IL_0053: ldloc.0
+   0042 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0047 ldloca.s V_2
+   0049 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   004E callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   0053 ldloc.0 
+   0054 ldloca.s V_2
+   0056 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Key()
+   005B callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0060 ldloca.s V_1
+   0062 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::MoveNext()
+   0067 brtrue IL_0017: ldloca.s V_1
+   006C ldc.i4.0 
+   006D stloc.3 
+   006E br IL_00a0: ldloc.3
+   0073 ldloc.0 
+   0074 ldloc.3 
+   0075 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   007A stloc.s V_4
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   0082 ldloc.s V_4
+   0084 callvirt System.Boolean DictionaryView`2<System.UInt32,CPooledGameObjectScript>::ContainsKey(!0)
+   0089 brfalse IL_009c: ldloc.3
+   008E ldarg.0 
+   008F ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   0094 ldloc.s V_4
+   0096 callvirt System.Boolean DictionaryView`2<System.UInt32,CPooledGameObjectScript>::Remove(!0)
+   009B pop 
+   009C ldloc.3 
+   009D ldc.i4.1 
+   009E add 
+   009F stloc.3 
+   00A0 ldloc.3 
+   00A1 ldloc.0 
+   00A2 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   00A7 blt IL_0073: ldloc.0
+   00AC ldarg.0 
+   00AD ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_NeedConfirm
+   00B2 brfalse IL_012c: ldc.i4.0
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   00BD brfalse IL_0127: br IL_0191
+   00C2 ldc.i4.0 
+   00C3 stloc.s V_5
+   00C5 br IL_0115: ldloc.s V_5
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   00D0 ldloc.s V_5
+   00D2 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   00D7 stloc.s V_6
+   00D9 ldarg.0 
+   00DA ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   00DF ldloc.s V_6
+   00E1 callvirt System.Boolean DictionaryView`2<System.UInt32,CPooledGameObjectScript>::ContainsKey(!0)
+   00E6 brtrue IL_010f: ldloc.s V_5
+   00EB call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   00F0 ldloc.s V_6
+   00F2 ldc.i4.1 
+   00F3 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   00F8 stloc.s V_7
+   00FA ldarg.0 
+   00FB ldloc.s V_7
+   00FD call System.Boolean Assets.Scripts.GameLogic.TeleportTargetSelector::IsShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0102 brfalse IL_010f: ldloc.s V_5
+   0107 ldarg.0 
+   0108 ldloc.s V_7
+   010A call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   010F ldloc.s V_5
+   0111 ldc.i4.1 
+   0112 add 
+   0113 stloc.s V_5
+   0115 ldloc.s V_5
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   011D callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0122 blt IL_00ca: ldarg.0
+   0127 br IL_0191: ldarg.0
+   012C ldc.i4.0 
+   012D stloc.s V_8
+   012F br IL_017f: ldloc.s V_8
+   0134 ldarg.0 
+   0135 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   013A ldloc.s V_8
+   013C callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0141 stloc.s V_9
+   0143 ldarg.0 
+   0144 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   0149 ldloc.s V_9
+   014B callvirt System.Boolean DictionaryView`2<System.UInt32,CPooledGameObjectScript>::ContainsKey(!0)
+   0150 brtrue IL_0179: ldloc.s V_8
+   0155 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   015A ldloc.s V_9
+   015C ldc.i4.1 
+   015D callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0162 stloc.s V_10
+   0164 ldarg.0 
+   0165 ldloc.s V_10
+   0167 call System.Boolean Assets.Scripts.GameLogic.TeleportTargetSelector::IsShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   016C brfalse IL_0179: ldloc.s V_8
+   0171 ldarg.0 
+   0172 ldloc.s V_10
+   0174 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0179 ldloc.s V_8
+   017B ldc.i4.1 
+   017C add 
+   017D stloc.s V_8
+   017F ldloc.s V_8
+   0181 ldarg.0 
+   0182 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   0187 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   018C blt IL_0134: ldarg.0
+   0191 ldarg.0 
+   0192 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_NeedConfirm
+   0197 brfalse IL_01d2: ret
+   019C ldarg.0 
+   019D ldarg.0 
+   019E ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   01A3 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   01A8 ldc.i4.0 
+   01A9 ble IL_01cc: ldc.i4.0
+   01AE ldarg.0 
+   01AF ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   01B4 brtrue IL_01cc: ldc.i4.0
+   01B9 ldarg.0 
+   01BA ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_ClickDownStatus
+   01BF brfalse IL_01cc: ldc.i4.0
+   01C4 ldarg.0 
+   01C5 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_TargetSkillEnable
+   01CA br.s IL_01cd: call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ShowSkillButtonFlowEffect(System.Boolean)
+   01CC ldc.i4.0 
+   01CD call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::ShowSkillButtonFlowEffect(System.Boolean)
+   01D2 ret 
+== System.Boolean IsShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0006 brfalse IL_0057: ldc.i4.0
+   000B ldarga.s actor
+   000D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0012 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0017 ldc.i4.2 
+   0018 beq IL_0055: ldc.i4.1
+   001D ldarga.s actor
+   001F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0024 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0029 ldc.i4.3 
+   002A beq IL_0055: ldc.i4.1
+   002F ldarga.s actor
+   0031 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0036 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   003B ldc.i4.1 
+   003C bne.un IL_0052: ldc.i4.0
+   0041 ldarga.s actor
+   0043 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0048 ldfld Assets.Scripts.GameLogic.ActorLinker::actorSubType
+   004D ldc.i4.1 
+   004E ceq 
+   0050 br.s IL_0053: br.s IL_0056
+   0052 ldc.i4.0 
+   0053 br.s IL_0056: ret
+   0055 ldc.i4.1 
+   0056 ret 
+   0057 ldc.i4.0 
+   0058 ret 
+== System.Void ShowSkillButtonFlowEffect(System.Boolean show) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   000A brfalse IL_0023: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0014 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   0019 ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   001E brtrue IL_0024: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0023 ret 
+   0024 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0029 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   002E ldfld Assets.Scripts.GameSystem.FightForm::m_skillButtonManager
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 ldloca.s V_1
+   0037 callvirt System.Boolean Assets.Scripts.GameSystem.CSkillButtonManager::HasMapSlectTargetSkill(CoreDef.SkillSlotType&)
+   003C brfalse IL_006d: ret
+   0041 ldloc.0 
+   0042 ldloc.1 
+   0043 callvirt Assets.Scripts.GameSystem.SkillButton Assets.Scripts.GameSystem.CSkillButtonManager::GetButton(CoreDef.SkillSlotType)
+   0048 stloc.2 
+   0049 ldloc.2 
+   004A brfalse IL_006d: ret
+   004F ldloc.2 
+   0050 ldfld Assets.Scripts.GameSystem.SkillButton::m_button
+   0055 ldnull 
+   0056 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005B brfalse IL_006d: ret
+   0060 ldloc.0 
+   0061 ldloc.2 
+   0062 ldfld Assets.Scripts.GameSystem.SkillButton::m_button
+   0067 ldarg.1 
+   0068 callvirt System.Void Assets.Scripts.GameSystem.CSkillButtonManager::SetButtonFlowLight(UnityEngine.GameObject,System.Boolean)
+   006D ret 
+== System.Void ClearTeleportTarget() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CanTeleportActorList
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_bConfirmed
+   0012 ldarg.0 
+   0013 call System.Void Assets.Scripts.GameLogic.TeleportTargetSelector::RefreshTeleportTargetEffect()
+   0018 ret 
+== System.Void ShowTeleportNoteEffect(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actorRoot) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   0006 ldarga.s actorRoot
+   0008 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   000D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0012 callvirt System.Boolean DictionaryView`2<System.UInt32,CPooledGameObjectScript>::ContainsKey(!0)
+   0017 brtrue IL_00bc: ret
+   001C ldarga.s actorRoot
+   001E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0023 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0028 ldc.i4.2 
+   0029 beq IL_0040: ldc.i4.0
+   002E ldarga.s actorRoot
+   0030 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0035 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   003A ldc.i4.3 
+   003B bne.un IL_00bc: ret
+   0040 ldc.i4.0 
+   0041 stloc.0 
+   0042 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0047 ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_tishi
+   004C ldc.i4.0 
+   004D ldc.i4.s 10
+   004F call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0054 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0059 ldloca.s V_0
+   005B ldnull 
+   005C callvirt CPooledGameObjectScript SceneMgr::GetPooledGameObjLOD(System.String,System.Boolean,SceneObjType,UnityEngine.Vector3,UnityEngine.Quaternion,System.Boolean&,System.String)
+   0061 stloc.1 
+   0062 ldloc.1 
+   0063 brfalse IL_00a4: ldarg.0
+   0068 ldloc.1 
+   0069 ldfld CPooledGameObjectScript::Trans
+   006E ldarga.s actorRoot
+   0070 ldfld Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::_handleObj
+   0075 callvirt UnityEngine.GameObject Assets.Scripts.GameLogic.ActorLinker::get_gameObject()
+   007A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007F callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0084 ldloc.1 
+   0085 ldfld CPooledGameObjectScript::Trans
+   008A call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   008F callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0094 ldloc.1 
+   0095 ldfld CPooledGameObjectScript::Trans
+   009A call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   009F callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.GameLogic.TeleportTargetSelector::m_CachedTeleportGameObjects
+   00AA ldarga.s actorRoot
+   00AC call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B1 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00B6 ldloc.1 
+   00B7 callvirt System.Void DictionaryView`2<System.UInt32,CPooledGameObjectScript>::set_Item(!0,!1)
+   00BC ret 

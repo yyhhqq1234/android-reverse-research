@@ -1,0 +1,370 @@
+// TYPE Assets.Scripts.UI.CHttpFileCacher  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 m_maxCnt
+  FIELD System.String m_dir
+  FIELD System.String m_metaFilePath
+  FIELD Assets.Scripts.UI.CCachedFileInfoSet m_cachedFileInfoSet
+  FIELD System.String m_fileExtension
+  FIELD System.String s_httpFileRootDir
+== System.Void .ctor(System.Int32 max, System.String folderName, System.String fileExtension) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.UI.CHttpFileCacher::m_maxCnt
+   000D ldarg.0 
+   000E ldsfld Assets.Scripts.UI.CHttpFileCacher::s_httpFileRootDir
+   0013 ldarg.2 
+   0014 callvirt System.String System.String::ToLower()
+   0019 call System.String CFileManager::CombinePath(System.String,System.String)
+   001E stfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   0023 ldarg.0 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   002A ldarg.2 
+   002B callvirt System.String System.String::ToLower()
+   0030 ldstr .bytes
+   0035 call System.String System.String::Concat(System.String,System.String)
+   003A call System.String CFileManager::CombinePath(System.String,System.String)
+   003F stfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   0044 ldarg.0 
+   0045 ldarg.3 
+   0046 stfld Assets.Scripts.UI.CHttpFileCacher::m_fileExtension
+   004B ldarg.0 
+   004C newobj System.Void Assets.Scripts.UI.CCachedFileInfoSet::.ctor()
+   0051 stfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0056 ldarg.0 
+   0057 call System.Void Assets.Scripts.UI.CHttpFileCacher::MakeDirReady()
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   0062 call System.Boolean CFileManager::IsFileExist(System.String)
+   0067 brfalse IL_00bc: ret
+   006C call System.Byte[] CFileManager::LockFileBuffer()
+   0071 stloc.0 
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   0078 ldloc.0 
+   0079 ldloc.0 
+   007A ldlen 
+   007B conv.i4 
+   007C call System.UInt32 CFileManager::ReadFile(System.String,System.Byte[],System.UInt32)
+   0081 stloc.1 
+   0082 ldc.i4.0 
+   0083 stloc.2 
+   0084 ldarg.0 
+   0085 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   008A ldloc.0 
+   008B ldloc.2 
+   008C ldloc.1 
+   008D callvirt System.Int32 Assets.Scripts.UI.CCachedFileInfoSet::Read(System.Byte[],System.Int32,System.UInt32)
+   0092 stloc.3 
+   0093 ldloc.3 
+   0094 ldc.i4.0 
+   0095 bge IL_00b1: leave IL_00bc
+   009A ldstr 读取出错，删除所有文件
+   009F ldc.i4.1 
+   00A0 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   00AB call System.Boolean CFileManager::ClearDirectory(System.String)
+   00B0 pop 
+   00B1 leave IL_00bc: ret
+   00B6 call System.Void CFileManager::UnLockFileBuffer()
+   00BB endfinally 
+   00BC ret 
+== System.String GetCachedFilePath(System.String url, System.Single validDays) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 callvirt System.String System.String::ToLower()
+   0006 call System.String CFileManager::GetMd5(System.String)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0012 ldloc.0 
+   0013 callvirt Assets.Scripts.UI.CCachedFileInfo Assets.Scripts.UI.CCachedFileInfoSet::GetFileInfo(System.String)
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A brtrue IL_0025: call System.DateTime System.DateTime::get_Now()
+   001F ldsfld System.String::Empty
+   0024 ret 
+   0025 call System.DateTime System.DateTime::get_Now()
+   002A ldloc.1 
+   002B ldfld Assets.Scripts.UI.CCachedFileInfo::m_lastModifyTime
+   0030 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   0035 stloc.2 
+   0036 ldloca.s V_2
+   0038 call System.Double System.TimeSpan::get_TotalDays()
+   003D ldarg.2 
+   003E conv.r8 
+   003F blt.un IL_0051: ldarg.0
+   0044 ldarg.0 
+   0045 ldloc.0 
+   0046 call System.Void Assets.Scripts.UI.CHttpFileCacher::RemoveFile(System.String)
+   004B ldsfld System.String::Empty
+   0050 ret 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   0057 ldloc.0 
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.UI.CHttpFileCacher::m_fileExtension
+   005E call System.String System.String::Concat(System.String,System.String)
+   0063 call System.String CFileManager::CombinePath(System.String,System.String)
+   0068 stloc.3 
+   0069 ldloc.3 
+   006A call System.Boolean CFileManager::IsFileExist(System.String)
+   006F brfalse IL_008e: ldsfld System.String System.String::Empty
+   0074 ldloc.1 
+   0075 ldfld Assets.Scripts.UI.CCachedFileInfo::m_fileLength
+   007A ldloc.3 
+   007B call System.Int32 CFileManager::GetFileLength(System.String)
+   0080 bne.un IL_0087: ldarg.0
+   0085 ldloc.3 
+   0086 ret 
+   0087 ldarg.0 
+   0088 ldloc.0 
+   0089 call System.Void Assets.Scripts.UI.CHttpFileCacher::RemoveFile(System.String)
+   008E ldsfld System.String::Empty
+   0093 ret 
+== Assets.Scripts.UI.CCachedFileInfo GetCacheFileInfo(System.String url) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.String System.String::ToLower()
+   0006 call System.String CFileManager::GetMd5(System.String)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0012 ldloc.0 
+   0013 callvirt Assets.Scripts.UI.CCachedFileInfo Assets.Scripts.UI.CCachedFileInfoSet::GetFileInfo(System.String)
+   0018 ret 
+== System.DateTime GetFileLastModifyTime(System.String url) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.String System.String::ToLower()
+   0006 call System.String CFileManager::GetMd5(System.String)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0012 ldloc.0 
+   0013 callvirt Assets.Scripts.UI.CCachedFileInfo Assets.Scripts.UI.CCachedFileInfoSet::GetFileInfo(System.String)
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A brfalse IL_0026: ldsfld System.DateTime System.DateTime::MinValue
+   001F ldloc.1 
+   0020 ldfld Assets.Scripts.UI.CCachedFileInfo::m_lastModifyTime
+   0025 ret 
+   0026 ldsfld System.DateTime::MinValue
+   002B ret 
+== System.Void SetFileLastModifyTime(System.String url, System.DateTime& dt) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.String System.String::ToLower()
+   0006 call System.String CFileManager::GetMd5(System.String)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0012 ldloc.0 
+   0013 callvirt Assets.Scripts.UI.CCachedFileInfo Assets.Scripts.UI.CCachedFileInfoSet::GetFileInfo(System.String)
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A brfalse IL_002b: ret
+   001F ldloc.1 
+   0020 ldarg.2 
+   0021 ldobj System.DateTime
+   0026 stfld Assets.Scripts.UI.CCachedFileInfo::m_lastModifyTime
+   002B ret 
+== System.Void RemoveFile(System.String key) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   0006 ldarg.1 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CHttpFileCacher::m_fileExtension
+   000D call System.String System.String::Concat(System.String,System.String)
+   0012 call System.String CFileManager::CombinePath(System.String,System.String)
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 call System.Boolean CFileManager::IsFileExist(System.String)
+   001E brfalse IL_002a: ldarg.0
+   0023 ldloc.0 
+   0024 call System.Boolean CFileManager::DeleteFile(System.String)
+   0029 pop 
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0030 ldarg.1 
+   0031 callvirt System.Void Assets.Scripts.UI.CCachedFileInfoSet::RemoveFileInfo(System.String)
+   0036 ret 
+== System.Void AddFile(System.String url, System.Byte[] data, System.Int32 tagInt1, System.Int32 tagInt2, System.Boolean tagBool) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.String System.String::ToLower()
+   0006 call System.String CFileManager::GetMd5(System.String)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0012 ldfld Assets.Scripts.UI.CCachedFileInfoSet::m_cachedFileInfos
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 brtrue IL_001f: ldarg.0
+   001E ret 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   0025 ldfld Assets.Scripts.UI.CCachedFileInfoSet::m_cachedFileInfoMap
+   002A ldloc.0 
+   002B callvirt System.Boolean DictionaryView`2<System.String,Assets.Scripts.UI.CCachedFileInfo>::ContainsKey(!0)
+   0030 brfalse IL_0095: ldloc.1
+   0035 ldnull 
+   0036 stloc.2 
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   003D ldfld Assets.Scripts.UI.CCachedFileInfoSet::m_cachedFileInfoMap
+   0042 ldloc.0 
+   0043 ldloca.s V_2
+   0045 callvirt System.Boolean DictionaryView`2<System.String,Assets.Scripts.UI.CCachedFileInfo>::TryGetValue(!0,!1&)
+   004A pop 
+   004B ldloc.1 
+   004C brfalse IL_005a: ldc.i4.0
+   0051 ldloc.1 
+   0052 ldloc.2 
+   0053 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CCachedFileInfo>::Contains(!0)
+   0058 br.s IL_005b: ldstr "zen me ke neng?"
+   005A ldc.i4.0 
+   005B ldstr zen me ke neng?
+   0060 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0065 ldloc.2 
+   0066 ldarg.2 
+   0067 ldlen 
+   0068 conv.i4 
+   0069 stfld Assets.Scripts.UI.CCachedFileInfo::m_fileLength
+   006E ldloc.2 
+   006F call System.DateTime System.DateTime::get_Now()
+   0074 stfld Assets.Scripts.UI.CCachedFileInfo::m_lastModifyTime
+   0079 ldloc.2 
+   007A ldarg.3 
+   007B stfld Assets.Scripts.UI.CCachedFileInfo::m_tagInt1
+   0080 ldloc.2 
+   0081 ldarg.s tagInt2
+   0083 stfld Assets.Scripts.UI.CCachedFileInfo::m_tagInt2
+   0088 ldloc.2 
+   0089 ldarg.s tagBool
+   008B stfld Assets.Scripts.UI.CCachedFileInfo::m_tagBool
+   0090 br IL_0137: ldarg.0
+   0095 ldloc.1 
+   0096 callvirt System.Int32 ListViewBase::get_Count()
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.UI.CHttpFileCacher::m_maxCnt
+   00A1 blt IL_00ea: newobj System.Void Assets.Scripts.UI.CCachedFileInfo::.ctor()
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   00AC callvirt System.String Assets.Scripts.UI.CCachedFileInfoSet::RemoveEarliestFileInfo()
+   00B1 stloc.3 
+   00B2 ldloc.3 
+   00B3 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00B8 brtrue IL_00ea: newobj System.Void Assets.Scripts.UI.CCachedFileInfo::.ctor()
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   00C3 ldloc.3 
+   00C4 ldarg.0 
+   00C5 ldfld Assets.Scripts.UI.CHttpFileCacher::m_fileExtension
+   00CA call System.String System.String::Concat(System.String,System.String)
+   00CF call System.String CFileManager::CombinePath(System.String,System.String)
+   00D4 stloc.s V_4
+   00D6 ldloc.s V_4
+   00D8 call System.Boolean CFileManager::IsFileExist(System.String)
+   00DD brfalse IL_00ea: newobj System.Void Assets.Scripts.UI.CCachedFileInfo::.ctor()
+   00E2 ldloc.s V_4
+   00E4 call System.Boolean CFileManager::DeleteFile(System.String)
+   00E9 pop 
+   00EA newobj System.Void Assets.Scripts.UI.CCachedFileInfo::.ctor()
+   00EF stloc.s V_5
+   00F1 ldloc.s V_5
+   00F3 ldloc.0 
+   00F4 stfld Assets.Scripts.UI.CCachedFileInfo::m_key
+   00F9 ldloc.s V_5
+   00FB ldarg.2 
+   00FC ldlen 
+   00FD conv.i4 
+   00FE stfld Assets.Scripts.UI.CCachedFileInfo::m_fileLength
+   0103 ldloc.s V_5
+   0105 call System.DateTime System.DateTime::get_Now()
+   010A stfld Assets.Scripts.UI.CCachedFileInfo::m_lastModifyTime
+   010F ldloc.s V_5
+   0111 ldarg.3 
+   0112 stfld Assets.Scripts.UI.CCachedFileInfo::m_tagInt1
+   0117 ldloc.s V_5
+   0119 ldarg.s tagInt2
+   011B stfld Assets.Scripts.UI.CCachedFileInfo::m_tagInt2
+   0120 ldloc.s V_5
+   0122 ldarg.s tagBool
+   0124 stfld Assets.Scripts.UI.CCachedFileInfo::m_tagBool
+   0129 ldarg.0 
+   012A ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   012F ldloc.0 
+   0130 ldloc.s V_5
+   0132 callvirt System.Void Assets.Scripts.UI.CCachedFileInfoSet::AddFileInfo(System.String,Assets.Scripts.UI.CCachedFileInfo)
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   013D ldfld Assets.Scripts.UI.CCachedFileInfoSet::m_cachedFileInfos
+   0142 callvirt System.Void ListViewBase::Sort()
+   0147 call System.Byte[] CFileManager::LockFileBuffer()
+   014C stloc.s V_6
+   014E ldarg.0 
+   014F call System.Void Assets.Scripts.UI.CHttpFileCacher::MakeDirReady()
+   0154 ldc.i4.0 
+   0155 stloc.s V_7
+   0157 ldarg.0 
+   0158 ldfld Assets.Scripts.UI.CHttpFileCacher::m_cachedFileInfoSet
+   015D ldloc.s V_6
+   015F ldloca.s V_7
+   0161 callvirt System.Void Assets.Scripts.UI.CCachedFileInfoSet::Write(System.Byte[],System.Int32&)
+   0166 ldarg.0 
+   0167 ldfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   016C call System.Boolean CFileManager::IsFileExist(System.String)
+   0171 brfalse IL_0182: ldarg.0
+   0176 ldarg.0 
+   0177 ldfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   017C call System.Boolean CFileManager::DeleteFile(System.String)
+   0181 pop 
+   0182 ldarg.0 
+   0183 ldfld Assets.Scripts.UI.CHttpFileCacher::m_metaFilePath
+   0188 ldloc.s V_6
+   018A ldc.i4.0 
+   018B ldloc.s V_7
+   018D call System.Boolean CFileManager::WriteFile(System.String,System.Byte[],System.Int32,System.Int32)
+   0192 pop 
+   0193 leave IL_019e: ldarg.0
+   0198 call System.Void CFileManager::UnLockFileBuffer()
+   019D endfinally 
+   019E ldarg.0 
+   019F ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   01A4 ldloc.0 
+   01A5 ldarg.0 
+   01A6 ldfld Assets.Scripts.UI.CHttpFileCacher::m_fileExtension
+   01AB call System.String System.String::Concat(System.String,System.String)
+   01B0 call System.String CFileManager::CombinePath(System.String,System.String)
+   01B5 stloc.s V_8
+   01B7 ldloc.s V_8
+   01B9 call System.Boolean CFileManager::IsFileExist(System.String)
+   01BE brfalse IL_01cb: ldloc.s V_8
+   01C3 ldloc.s V_8
+   01C5 call System.Boolean CFileManager::DeleteFile(System.String)
+   01CA pop 
+   01CB ldloc.s V_8
+   01CD ldarg.2 
+   01CE call System.Boolean CFileManager::WriteFile(System.String,System.Byte[])
+   01D3 pop 
+   01D4 ret 
+== System.Void MakeDirReady() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.UI.CHttpFileCacher::s_httpFileRootDir
+   0005 call System.Boolean CFileManager::IsDirectoryExist(System.String)
+   000A brtrue IL_001a: ldarg.0
+   000F ldsfld Assets.Scripts.UI.CHttpFileCacher::s_httpFileRootDir
+   0014 call System.Boolean CFileManager::CreateDirectory(System.String)
+   0019 pop 
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   0020 call System.Boolean CFileManager::IsDirectoryExist(System.String)
+   0025 brtrue IL_0036: ret
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CHttpFileCacher::m_dir
+   0030 call System.Boolean CFileManager::CreateDirectory(System.String)
+   0035 pop 
+   0036 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 call System.String CFileManager::GetCachePath()
+   0005 ldstr http
+   000A call System.String CFileManager::CombinePath(System.String,System.String)
+   000F stsfld Assets.Scripts.UI.CHttpFileCacher::s_httpFileRootDir
+   0014 ret 

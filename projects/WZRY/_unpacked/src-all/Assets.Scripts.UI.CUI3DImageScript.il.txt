@@ -1,0 +1,955 @@
+// TYPE Assets.Scripts.UI.CUI3DImageScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.UI.en3DImageLayer m_imageLayer
+  FIELD UnityEngine.Vector3 m_renderCameraDefaultScale
+  FIELD System.Single m_renderCameraDefaultSize
+  FIELD UnityEngine.Camera m_renderCamera
+  FIELD UnityEngine.Light m_renderLight
+  FIELD System.Boolean m_useFormCamera
+  FIELD System.Int32[] s_cameraLayers
+  FIELD System.Int32[] s_cameraDepths
+  FIELD UnityEngine.Vector2 m_pivotScreenPosition
+  FIELD UnityEngine.Vector2 m_lastPivotScreenPosition
+  FIELD ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject> m_3DGameObjects
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   0006 stfld Assets.Scripts.UI.CUI3DImageScript::m_renderCameraDefaultScale
+   000B ldarg.0 
+   000C ldc.r4 20
+   0011 stfld Assets.Scripts.UI.CUI3DImageScript::m_renderCameraDefaultSize
+   0016 ldarg.0 
+   0017 newobj System.Void ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::.ctor()
+   001C stfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0021 ldarg.0 
+   0022 call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0027 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_00af: ret
+   000B ldarg.0 
+   000C dup 
+   000D ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0012 ldc.i4.1 
+   0013 or 
+   0014 stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0019 ldarg.0 
+   001A ldarg.1 
+   001B call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0026 ldnull 
+   0027 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002C brfalse IL_0042: ldarg.0
+   0031 ldarg.0 
+   0032 ldarg.0 
+   0033 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0038 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Camera>()
+   003D stfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0048 ldnull 
+   0049 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   004E brfalse IL_006b: ldarg.0
+   0053 ldarg.0 
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   005A callvirt UnityEngine.Camera Assets.Scripts.UI.CUIFormScript::GetCamera()
+   005F stfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0064 ldarg.0 
+   0065 ldc.i4.1 
+   0066 stfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   006B ldarg.0 
+   006C call System.Void Assets.Scripts.UI.CUI3DImageScript::InitializeRender()
+   0071 ldarg.0 
+   0072 call UnityEngine.Vector2 Assets.Scripts.UI.CUI3DImageScript::GetPivotScreenPosition()
+   0077 pop 
+   0078 ldarg.0 
+   0079 call System.Void Assets.Scripts.UI.CUI3DImageScript::Initialize3DGameObjects()
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   0084 ldc.i4.1 
+   0085 beq IL_00a8: ldarg.0
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0090 ldnull 
+   0091 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0096 brfalse IL_00a8: ldarg.0
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   00A1 ldc.i4.s 64
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIFormScript::AddFlag(Assets.Scripts.UI.enFormFlag)
+   00A8 ldarg.0 
+   00A9 ldc.i4.1 
+   00AA stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   00AF ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0031: ret
+   000B ldarg.0 
+   000C ldnull 
+   000D stfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0018 callvirt System.Void ListViewBase::Clear()
+   001D ldarg.0 
+   001E ldnull 
+   001F stfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0024 ldarg.0 
+   0025 call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   002A ldarg.0 
+   002B ldc.i4.0 
+   002C stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0031 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void Close() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Close()
+   0006 ldc.i4.0 
+   0007 stloc.0 
+   0008 br IL_00d9: ldloc.0
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0013 ldloc.0 
+   0014 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0019 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_protogenic
+   001E brtrue IL_00d5: ldloc.0
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0029 ldloc.0 
+   002A callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   002F ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A brfalse IL_00a0: ldarg.0
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0045 ldloc.0 
+   0046 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   004B ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_useGameObjectPool
+   0050 brfalse IL_0085: ldarg.0
+   0055 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   005A call !0 Singleton`1<CGameObjectPool>::get_instance()
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0065 ldloc.0 
+   0066 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   006B ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0070 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0075 ldc.i4.1 
+   0076 callvirt CPooledGameObjectScript CGameObjectPool::GetPooledGameScript(System.Int32,System.Boolean)
+   007B callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   0080 br IL_00a0: ldarg.0
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   008B ldloc.0 
+   008C callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0091 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0096 ldc.r4 0.1
+   009B call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   00A0 ldarg.0 
+   00A1 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00A6 ldloc.0 
+   00A7 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   00AC ldnull 
+   00AD stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_path
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00B8 ldloc.0 
+   00B9 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   00BE ldnull 
+   00BF stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   00C4 ldarg.0 
+   00C5 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00CA ldloc.0 
+   00CB callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00D0 br IL_00d9: ldloc.0
+   00D5 ldloc.0 
+   00D6 ldc.i4.1 
+   00D7 add 
+   00D8 stloc.0 
+   00D9 ldloc.0 
+   00DA ldarg.0 
+   00DB ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00E0 callvirt System.Int32 ListViewBase::get_Count()
+   00E5 blt IL_000d: ldarg.0
+   00EA ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_002e: ldc.i4.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   001D brtrue IL_002e: ldc.i4.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0028 ldc.i4.0 
+   0029 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   002E ldc.i4.0 
+   002F stloc.0 
+   0030 br IL_0051: ldloc.0
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   003B ldloc.0 
+   003C callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0041 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0046 ldc.i4.s 31
+   0048 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   004D ldloc.0 
+   004E ldc.i4.1 
+   004F add 
+   0050 stloc.0 
+   0051 ldloc.0 
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0058 callvirt System.Int32 ListViewBase::get_Count()
+   005D blt IL_0035: ldarg.0
+   0062 ret 
+== System.Void Appear() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Appear()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_003e: ldc.i4.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   001D brtrue IL_003e: ldc.i4.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0028 call System.Boolean CameraController::NeedToAppear(UnityEngine.Camera)
+   002D brfalse IL_003e: ldc.i4.0
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0038 ldc.i4.1 
+   0039 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   003E ldc.i4.0 
+   003F stloc.0 
+   0040 br IL_006b: ldloc.0
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   004B ldloc.0 
+   004C callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0051 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0056 ldsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraLayers
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   0061 ldelem.i4 
+   0062 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   0067 ldloc.0 
+   0068 ldc.i4.1 
+   0069 add 
+   006A stloc.0 
+   006B ldloc.0 
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0072 callvirt System.Int32 ListViewBase::get_Count()
+   0077 blt IL_0045: ldarg.0
+   007C ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call UnityEngine.Vector2 Assets.Scripts.UI.CUI3DImageScript::GetPivotScreenPosition()
+   0006 pop 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUI3DImageScript::m_lastPivotScreenPosition
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0013 call System.Boolean UnityEngine.Vector2::op_Inequality(UnityEngine.Vector2,UnityEngine.Vector2)
+   0018 brfalse IL_010f: ret
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0023 ldnull 
+   0024 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse IL_0103: ldarg.0
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0034 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   0039 brfalse IL_0092: ldarg.0
+   003E ldc.i4.0 
+   003F stloc.0 
+   0040 br IL_007c: ldloc.0
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   004B ldloc.0 
+   004C callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0051 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_bindPivot
+   0056 brfalse IL_0078: ldloc.0
+   005B ldarg.0 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0062 ldloc.0 
+   0063 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0068 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   006D ldarg.0 
+   006E ldflda Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0073 call System.Void Assets.Scripts.UI.CUI3DImageScript::ChangeScreenPositionToWorld(UnityEngine.GameObject,UnityEngine.Vector2&)
+   0078 ldloc.0 
+   0079 ldc.i4.1 
+   007A add 
+   007B stloc.0 
+   007C ldloc.0 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0083 callvirt System.Int32 ListViewBase::get_Count()
+   0088 blt IL_0045: ldarg.0
+   008D br IL_0103: ldarg.0
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   0098 brtrue IL_0103: ldarg.0
+   009D ldarg.0 
+   009E ldflda Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   00A3 ldfld UnityEngine.Vector2::x
+   00A8 call System.Int32 UnityEngine.Screen::get_width()
+   00AD call System.Int32 UnityEngine.Screen::get_height()
+   00B2 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   00B7 conv.r4 
+   00B8 div 
+   00B9 stloc.1 
+   00BA ldloc.1 
+   00BB ldc.r4 2
+   00C0 mul 
+   00C1 ldc.r4 1
+   00C6 sub 
+   00C7 stloc.1 
+   00C8 ldarg.0 
+   00C9 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00CE ldc.r4 0
+   00D3 ldc.r4 0
+   00D8 ldc.r4 1
+   00DD ldc.r4 1
+   00E2 newobj System.Void UnityEngine.Rect::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00E7 callvirt System.Void UnityEngine.Camera::set_rect(UnityEngine.Rect)
+   00EC ldarg.0 
+   00ED ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00F2 callvirt System.Void UnityEngine.Camera::ResetAspect()
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00FD ldloc.1 
+   00FE call System.Void MMGame_Math::SetOffsetX(UnityEngine.Camera,System.Single)
+   0103 ldarg.0 
+   0104 ldarg.0 
+   0105 ldfld Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   010A stfld Assets.Scripts.UI.CUI3DImageScript::m_lastPivotScreenPosition
+   010F ret 
+== UnityEngine.GameObject AddGameObject(System.String path, System.Boolean useGameObjectPool, System.Boolean needCached, UnityEngine.GameObject exsitGo, System.Boolean isLobbyShow) attrs=Public, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.0 
+   0004 ldflda Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0009 ldc.i4.1 
+   000A ldarg.3 
+   000B ldnull 
+   000C ldarg.s exsitGo
+   000E ldarg.s isLobbyShow
+   0010 call UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::AddGameObject(System.String,System.Boolean,UnityEngine.Vector2&,System.Boolean,System.Boolean,System.String,UnityEngine.GameObject,System.Boolean)
+   0015 ret 
+== UnityEngine.GameObject AddGameObject(System.String path, System.Boolean useGameObjectPool, UnityEngine.Vector2& screenPosition, System.Boolean needCached) attrs=Public, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 ldc.i4.0 
+   0005 ldarg.s needCached
+   0007 ldnull 
+   0008 ldnull 
+   0009 ldc.i4.1 
+   000A call UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::AddGameObject(System.String,System.Boolean,UnityEngine.Vector2&,System.Boolean,System.Boolean,System.String,UnityEngine.GameObject,System.Boolean)
+   000F ret 
+== UnityEngine.GameObject AddGameObjectToPath(System.String path, System.Boolean useGameObjectPool, System.String pathToAdd) attrs=Public, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.0 
+   0004 ldflda Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0009 ldc.i4.0 
+   000A ldc.i4.0 
+   000B ldarg.3 
+   000C ldnull 
+   000D ldc.i4.1 
+   000E call UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::AddGameObject(System.String,System.Boolean,UnityEngine.Vector2&,System.Boolean,System.Boolean,System.String,UnityEngine.GameObject,System.Boolean)
+   0013 ret 
+== UnityEngine.GameObject AddGameObject(System.String path, System.Boolean useGameObjectPool, UnityEngine.Vector2& screenPosition, System.Boolean bindPivot, System.Boolean needCached, System.String pathToAdd, UnityEngine.GameObject exsitGo, System.Boolean isLobbyShow) attrs=Public, HideBySig maxstack=5
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.s exsitGo
+   0004 ldnull 
+   0005 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000A brfalse IL_0017: ldarg.1
+   000F ldarg.s exsitGo
+   0011 stloc.0 
+   0012 br IL_0024: ldloc.0
+   0017 ldarg.1 
+   0018 ldarg.2 
+   0019 ldc.i4.5 
+   001A ldarg.s needCached
+   001C ldarg.s isLobbyShow
+   001E call UnityEngine.GameObject CommonTools::LoadGameObject(System.String,System.Boolean,enResourceType,System.Boolean,System.Boolean)
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 ldnull 
+   0026 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002B brfalse IL_0032: ldloc.0
+   0030 ldnull 
+   0031 ret 
+   0032 ldloc.0 
+   0033 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0038 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   003D stloc.1 
+   003E ldarg.0 
+   003F call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0044 ldstr _root
+   0049 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   004E stloc.2 
+   004F ldloc.2 
+   0050 ldnull 
+   0051 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0056 brfalse IL_0067: ldloc.2
+   005B ldarg.0 
+   005C call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0061 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0066 stloc.2 
+   0067 ldloc.2 
+   0068 ldnull 
+   0069 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006E brfalse IL_00f3: newobj System.Void Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::.ctor()
+   0073 ldarg.s pathToAdd
+   0075 brtrue IL_008c: ldarg.0
+   007A ldloc.0 
+   007B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0080 ldloc.2 
+   0081 ldc.i4.1 
+   0082 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform,System.Boolean)
+   0087 br IL_00b7: ldloc.0
+   008C ldarg.0 
+   008D call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0092 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0097 ldarg.s pathToAdd
+   0099 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   009E stloc.3 
+   009F ldloc.3 
+   00A0 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00A5 brfalse IL_00b7: ldloc.0
+   00AA ldloc.0 
+   00AB callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B0 ldloc.3 
+   00B1 ldc.i4.1 
+   00B2 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform,System.Boolean)
+   00B7 ldloc.0 
+   00B8 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00BD call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00C2 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   00C7 ldloc.0 
+   00C8 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00CD call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   00D2 callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   00D7 ldarg.0 
+   00D8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00DD callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   00E2 brtrue IL_00f3: newobj System.Void Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::.ctor()
+   00E7 ldloc.0 
+   00E8 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00ED ldloc.1 
+   00EE callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00F3 newobj System.Void Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::.ctor()
+   00F8 stloc.s V_4
+   00FA ldloc.s V_4
+   00FC ldloc.0 
+   00FD stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0102 ldloc.s V_4
+   0104 ldarg.1 
+   0105 stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_path
+   010A ldloc.s V_4
+   010C ldarg.2 
+   010D stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_useGameObjectPool
+   0112 ldloc.s V_4
+   0114 ldc.i4.0 
+   0115 stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_protogenic
+   011A ldloc.s V_4
+   011C ldarg.s bindPivot
+   011E stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_bindPivot
+   0123 ldarg.0 
+   0124 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0129 ldloc.s V_4
+   012B callvirt System.Void ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::Add(!0)
+   0130 ldarg.0 
+   0131 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0136 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   013B brfalse IL_0180: ldloc.0
+   0140 ldarg.0 
+   0141 ldloc.0 
+   0142 ldarg.3 
+   0143 call System.Void Assets.Scripts.UI.CUI3DImageScript::ChangeScreenPositionToWorld(UnityEngine.GameObject,UnityEngine.Vector2&)
+   0148 ldarg.0 
+   0149 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   014E callvirt System.Boolean UnityEngine.Behaviour::get_enabled()
+   0153 brtrue IL_0180: ldloc.0
+   0158 ldarg.0 
+   0159 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   015E callvirt System.Int32 ListViewBase::get_Count()
+   0163 ldc.i4.0 
+   0164 ble IL_0180: ldloc.0
+   0169 ldarg.0 
+   016A ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   016F brtrue IL_0180: ldloc.0
+   0174 ldarg.0 
+   0175 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   017A ldc.i4.1 
+   017B callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0180 ldloc.0 
+   0181 ldarg.0 
+   0182 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0187 callvirt System.Boolean UnityEngine.Behaviour::get_enabled()
+   018C brfalse IL_01a2: ldc.i4.s 31
+   0191 ldsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraLayers
+   0196 ldarg.0 
+   0197 ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   019C ldelem.i4 
+   019D br IL_01a4: call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   01A2 ldc.i4.s 31
+   01A4 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   01A9 ldloc.0 
+   01AA ret 
+== System.Void RemoveGameObject(System.String path) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_009a: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0013 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_path
+   0018 ldarg.1 
+   0019 ldc.i4.5 
+   001A call System.Boolean System.String::Equals(System.String,System.String,System.StringComparison)
+   001F brfalse IL_0096: ldloc.0
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   002A ldloc.0 
+   002B callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0030 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_useGameObjectPool
+   0035 brfalse IL_006a: ldarg.0
+   003A call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   003F call !0 Singleton`1<CGameObjectPool>::get_instance()
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   004A ldloc.0 
+   004B callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0050 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0055 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   005A ldc.i4.1 
+   005B callvirt CPooledGameObjectScript CGameObjectPool::GetPooledGameScript(System.Int32,System.Boolean)
+   0060 callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   0065 br IL_0085: ldarg.0
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0070 ldloc.0 
+   0071 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0076 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   007B ldc.r4 0.1
+   0080 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   008B ldloc.0 
+   008C callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0091 br IL_009a: ldloc.0
+   0096 ldloc.0 
+   0097 ldc.i4.1 
+   0098 add 
+   0099 stloc.0 
+   009A ldloc.0 
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00A1 callvirt System.Int32 ListViewBase::get_Count()
+   00A6 blt IL_0007: ldarg.0
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00B1 callvirt System.Int32 ListViewBase::get_Count()
+   00B6 ldc.i4.0 
+   00B7 bgt IL_00d3: ret
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   00C2 brtrue IL_00d3: ret
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00CD ldc.i4.0 
+   00CE callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   00D3 ret 
+== System.Void Clear3dModelNonProtogenic() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0006 brtrue IL_000c: ldc.i4.0
+   000B ret 
+   000C ldc.i4.0 
+   000D stloc.0 
+   000E br IL_007b: ldloc.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0019 ldloc.0 
+   001A callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   001F brtrue IL_0035: ldarg.0
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   002A ldloc.0 
+   002B callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0030 br IL_007b: ldloc.0
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   003B ldloc.0 
+   003C callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0041 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_protogenic
+   0046 brtrue IL_0077: ldloc.0
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0051 ldloc.0 
+   0052 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0057 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   005C ldc.r4 0.1
+   0061 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   006C ldloc.0 
+   006D callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0072 br IL_007b: ldloc.0
+   0077 ldloc.0 
+   0078 ldc.i4.1 
+   0079 add 
+   007A stloc.0 
+   007B ldloc.0 
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0082 callvirt System.Int32 ListViewBase::get_Count()
+   0087 blt IL_0013: ldarg.0
+   008C ret 
+== System.Void RemoveGameObject(UnityEngine.GameObject removeObj) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldc.i4.0
+   000C ret 
+   000D ldc.i4.0 
+   000E stloc.0 
+   000F br IL_00a6: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   001A ldloc.0 
+   001B callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0020 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0025 ldarg.1 
+   0026 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002B brfalse IL_00a2: ldloc.0
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0036 ldloc.0 
+   0037 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   003C ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_useGameObjectPool
+   0041 brfalse IL_0076: ldarg.0
+   0046 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   004B call !0 Singleton`1<CGameObjectPool>::get_instance()
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0056 ldloc.0 
+   0057 callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   005C ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0061 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0066 ldc.i4.1 
+   0067 callvirt CPooledGameObjectScript CGameObjectPool::GetPooledGameScript(System.Int32,System.Boolean)
+   006C callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   0071 br IL_0091: ldarg.0
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   007C ldloc.0 
+   007D callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0082 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0087 ldc.r4 0.1
+   008C call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0097 ldloc.0 
+   0098 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   009D br IL_00a6: ldloc.0
+   00A2 ldloc.0 
+   00A3 ldc.i4.1 
+   00A4 add 
+   00A5 stloc.0 
+   00A6 ldloc.0 
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00AD callvirt System.Int32 ListViewBase::get_Count()
+   00B2 blt IL_0014: ldarg.0
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00BD callvirt System.Int32 ListViewBase::get_Count()
+   00C2 ldc.i4.0 
+   00C3 bgt IL_00df: ret
+   00C8 ldarg.0 
+   00C9 ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   00CE brtrue IL_00df: ret
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00D9 ldc.i4.0 
+   00DA callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   00DF ret 
+== UnityEngine.GameObject GetGameObject(System.String path) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0039: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   0013 ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_path
+   0018 ldarg.1 
+   0019 callvirt System.Boolean System.String::Equals(System.String)
+   001E brfalse IL_0035: ldloc.0
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0029 ldloc.0 
+   002A callvirt !0 ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::get_Item(System.Int32)
+   002F ldfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0034 ret 
+   0035 ldloc.0 
+   0036 ldc.i4.1 
+   0037 add 
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0040 callvirt System.Int32 ListViewBase::get_Count()
+   0045 blt IL_0007: ldarg.0
+   004A ldnull 
+   004B ret 
+== System.Void ChangeScreenPositionToWorld(System.String path, UnityEngine.Vector2& screenPosition) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldarg.1 
+   0003 call UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::GetGameObject(System.String)
+   0008 ldarg.2 
+   0009 call System.Void Assets.Scripts.UI.CUI3DImageScript::ChangeScreenPositionToWorld(UnityEngine.GameObject,UnityEngine.Vector2&)
+   000E ret 
+== System.Void ChangeScreenPositionToWorld(UnityEngine.GameObject gameObject, UnityEngine.Vector2& screenPosition) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.1
+   000C ret 
+   000D ldarg.1 
+   000E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0019 ldarg.2 
+   001A ldobj UnityEngine.Vector2
+   001F ldc.r4 100
+   0024 call UnityEngine.Vector3 Assets.Scripts.UI.CUIUtility::ScreenToWorldPoint(UnityEngine.Camera,UnityEngine.Vector2,System.Single)
+   0029 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   002E ret 
+== UnityEngine.Vector3 ScreenToWorldPoint(UnityEngine.Vector2& screenPosition) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0006 ldarg.1 
+   0007 ldobj UnityEngine.Vector2
+   000C ldc.r4 100
+   0011 call UnityEngine.Vector3 Assets.Scripts.UI.CUIUtility::ScreenToWorldPoint(UnityEngine.Camera,UnityEngine.Vector2,System.Single)
+   0016 ret 
+== UnityEngine.Vector2 GetPivotScreenPosition() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0007 callvirt UnityEngine.Camera Assets.Scripts.UI.CUIFormScript::GetCamera()
+   000C ldarg.0 
+   000D call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0012 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0017 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   001C call UnityEngine.Vector2 Assets.Scripts.UI.CUIUtility::WorldToScreenPoint(UnityEngine.Camera,UnityEngine.Vector3)
+   0021 stfld Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   002C ret 
+== System.Void InitializeRender() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0128: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   0017 brtrue IL_0128: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0022 ldc.i4.3 
+   0023 callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   002E ldc.i4.1 
+   002F ldsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraLayers
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   003A ldelem.i4 
+   003B ldc.i4.s 31
+   003D and 
+   003E shl 
+   003F callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   004A ldsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraDepths
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   0055 ldelem.i4 
+   0056 conv.r4 
+   0057 callvirt System.Void UnityEngine.Camera::set_depth(System.Single)
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0062 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   0067 brfalse IL_00b4: ldarg.0
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCameraDefaultSize
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   007E callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0083 isinst UnityEngine.RectTransform
+   0088 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   008D stloc.0 
+   008E ldloca.s V_0
+   0090 call System.Single UnityEngine.Rect::get_height()
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   009B callvirt UnityEngine.Vector2 Assets.Scripts.UI.CUIFormScript::GetReferenceResolution()
+   00A0 stloc.1 
+   00A1 ldloca.s V_1
+   00A3 ldfld UnityEngine.Vector2::y
+   00A8 div 
+   00A9 mul 
+   00AA callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   00AF br IL_0128: ret
+   00B4 ldarg.0 
+   00B5 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00BA callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00BF callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C4 ldarg.0 
+   00C5 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCameraDefaultScale
+   00CA ldc.r4 1
+   00CF ldarg.0 
+   00D0 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   00D5 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00DA callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00DF callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   00E4 stloc.2 
+   00E5 ldloca.s V_2
+   00E7 ldfld UnityEngine.Vector3::x
+   00EC ldc.r4 0
+   00F1 bne.un IL_0100: ldarg.0
+   00F6 ldc.r4 1
+   00FB br IL_011d: div
+   0100 ldarg.0 
+   0101 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0106 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   010B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0110 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0115 stloc.3 
+   0116 ldloca.s V_3
+   0118 ldfld UnityEngine.Vector3::x
+   011D div 
+   011E call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0123 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0128 ret 
+== System.Void Initialize3DGameObjects() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0096: ldloc.0
+   0012 ldarg.0 
+   0013 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0018 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   001D ldloc.0 
+   001E callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0023 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraLayers
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUI3DImageScript::m_imageLayer
+   0035 ldelem.i4 
+   0036 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   0041 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   0046 brfalse IL_0058: newobj System.Void Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::.ctor()
+   004B ldarg.0 
+   004C ldloc.1 
+   004D ldarg.0 
+   004E ldflda Assets.Scripts.UI.CUI3DImageScript::m_pivotScreenPosition
+   0053 call System.Void Assets.Scripts.UI.CUI3DImageScript::ChangeScreenPositionToWorld(UnityEngine.GameObject,UnityEngine.Vector2&)
+   0058 newobj System.Void Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::.ctor()
+   005D stloc.2 
+   005E ldloc.2 
+   005F ldloc.1 
+   0060 callvirt System.String UnityEngine.Object::get_name()
+   0065 stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_path
+   006A ldloc.2 
+   006B ldloc.1 
+   006C stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_gameObject
+   0071 ldloc.2 
+   0072 ldc.i4.0 
+   0073 stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_useGameObjectPool
+   0078 ldloc.2 
+   0079 ldc.i4.1 
+   007A stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_protogenic
+   007F ldloc.2 
+   0080 ldc.i4.1 
+   0081 stfld Assets.Scripts.UI.CUI3DImageScript/C3DGameObject::m_bindPivot
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   008C ldloc.2 
+   008D callvirt System.Void ListView`1<Assets.Scripts.UI.CUI3DImageScript/C3DGameObject>::Add(!0)
+   0092 ldloc.0 
+   0093 ldc.i4.1 
+   0094 add 
+   0095 stloc.0 
+   0096 ldloc.0 
+   0097 ldarg.0 
+   0098 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A2 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   00A7 blt IL_0012: ldarg.0
+   00AC ldarg.0 
+   00AD ldfld Assets.Scripts.UI.CUI3DImageScript::m_useFormCamera
+   00B2 brtrue IL_00d0: ret
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.UI.CUI3DImageScript::m_renderCamera
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.UI.CUI3DImageScript::m_3DGameObjects
+   00C3 callvirt System.Int32 ListViewBase::get_Count()
+   00C8 ldc.i4.0 
+   00C9 cgt 
+   00CB callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   00D0 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.3 
+   0001 newarr System.Int32
+   0006 dup 
+   0007 ldtoken <PrivateImplementationDetails>::$field-9E026594702FC79A923CF22AE584048C6B00945B
+   000C call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0011 stsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraLayers
+   0016 ldc.i4.3 
+   0017 newarr System.Int32
+   001C dup 
+   001D ldtoken <PrivateImplementationDetails>::$field-FDD16A8CF603D12C5E5DE0881FB7DD14F5278642
+   0022 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0027 stsfld Assets.Scripts.UI.CUI3DImageScript::s_cameraDepths
+   002C ret 
+  NESTED Assets.Scripts.UI.CUI3DImageScript/C3DGameObject

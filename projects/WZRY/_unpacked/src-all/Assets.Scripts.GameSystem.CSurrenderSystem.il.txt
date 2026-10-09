@@ -1,0 +1,1290 @@
+// TYPE Assets.Scripts.GameSystem.CSurrenderSystem  base=Singleton`1<Assets.Scripts.GameSystem.CSurrenderSystem>  attrs=Public, BeforeFieldInit
+  FIELD System.String s_surrenderForm
+  FIELD System.String s_surrenderTipFiveCampForm
+  FIELD System.Boolean m_haveRights
+  FIELD System.UInt32 m_lastSurrenderTime
+  FIELD System.Int32 SURRENDER_TIME_START
+  FIELD System.Int32 SURRENDER_TIME_VALID
+  FIELD System.Int32 SURRENDER_TIME_CD
+  FIELD System.Int32 SURRENDER_MAXCOUNTS
+  FIELD System.Int32 m_leftSurrenderCounts
+  FIELD System.Int32 m_timerSeq
+  FIELD System.Int32 m_maxCnt
+  FIELD System.Int32 m_curCnt
+  FIELD System.Byte m_result
+  FIELD System.Random m_random
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   0007 ldarg.0 
+   0008 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   000D stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   0012 ldarg.0 
+   0013 ldc.i4.m1 
+   0014 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   0019 ldarg.0 
+   001A newobj System.Void System.Random::.ctor()
+   001F stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_random
+   0024 ldarg.0 
+   0025 call System.Void Singleton`1<Assets.Scripts.GameSystem.CSurrenderSystem>::.ctor()
+   002A ret 
+== System.Int32 GetSurrenderStartTime() attrs=Private, HideBySig maxstack=1
+   0000 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_START
+   0005 brtrue IL_0020: ldsfld System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_START
+   000A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000F callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0014 stloc.0 
+   0015 ldloc.0 
+   0016 ldfld Assets.Scripts.GameLogic.CLevelContext::m_surrenderStartTime
+   001B stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_START
+   0020 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_START
+   0025 ret 
+== System.Int32 GetSurrenderVaildTime() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_VALID
+   0005 brtrue IL_0019: ldsfld System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_VALID
+   000A ldc.i4 138
+   000F call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0014 stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_VALID
+   0019 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_VALID
+   001E ret 
+== System.Int32 GetSurrenderCDTime() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_CD
+   0005 brtrue IL_0019: ldsfld System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_CD
+   000A ldc.i4 139
+   000F call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0014 stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_CD
+   0019 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_CD
+   001E ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 1193
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderConfirm(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 1194
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderConfirm(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 1195
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderAgainst(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 1196
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderCountDown(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 1197
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderTimeUp(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 1198
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderTimeStart(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 41200
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::HideFiveCampSurrenderInfo(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00C2 ldc.i4.s 84
+   00C4 ldarg.0 
+   00C5 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnFightOver(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   00CB newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00D0 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00D5 call !0 Singleton`1<EventRouter>::GetInstance()
+   00DA ldsfld EventID::GLOBAL_SERVER_TO_CLIENT_CFG_READY
+   00DF ldarg.0 
+   00E0 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::UpdateGlobalConfig()
+   00E6 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00EB callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   00F0 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 1193
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderConfirm(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 1194
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderConfirm(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 1195
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderAgainst(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 1196
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderCountDown(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 1197
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderTimeUp(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 1198
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderTimeStart(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 41200
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::HideFiveCampSurrenderInfo(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00C2 ldc.i4.s 84
+   00C4 ldarg.0 
+   00C5 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnFightOver(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   00CB newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00D0 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00D5 call !0 Singleton`1<EventRouter>::GetInstance()
+   00DA ldsfld EventID::GLOBAL_SERVER_TO_CLIENT_CFG_READY
+   00DF ldarg.0 
+   00E0 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::UpdateGlobalConfig()
+   00E6 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00EB callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00F0 ret 
+== System.Void UpdateGlobalConfig() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4 220
+   0005 ldloca.s V_0
+   0007 call System.Boolean ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE,System.UInt32&)
+   000C pop 
+   000D ldloc.0 
+   000E stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   0013 ret 
+== System.Void Reset() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0007 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   000C ldfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   0011 brfalse IL_0036: ldarg.0
+   0016 ldarg.0 
+   0017 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   001C call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0021 ldfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   0026 ldfld CSProtocol.CSDT_RECONN_GAMEINGINFO::iSelfSurrenderCnt
+   002B sub 
+   002C stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   0031 br IL_0041: ldarg.0
+   0036 ldarg.0 
+   0037 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   003C stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   0041 ldarg.0 
+   0042 ldc.i4.1 
+   0043 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   004E ldc.i4.m1 
+   004F beq IL_0064: ldarg.0
+   0054 call !0 Singleton`1<CTimerManager>::get_instance()
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   005F callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0064 ldarg.0 
+   0065 ldc.i4.m1 
+   0066 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   006B ldarg.0 
+   006C ldc.i4.0 
+   006D stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   0072 ldarg.0 
+   0073 ldc.i4.0 
+   0074 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   0079 ldarg.0 
+   007A ldc.i4.0 
+   007B stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_result
+   0080 ldc.i4.0 
+   0081 stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_TIME_START
+   0086 ret 
+== System.Void SetLeftSurrenderCountOnUI(UnityEngine.GameObject goLeftSurCount, Assets.Scripts.GameLogic.CLevelContext lc) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Boolean Assets.Scripts.GameSystem.CSurrenderSystem::CanSurrender(System.Boolean)
+   0007 brfalse IL_0020: ldc.i4.0
+   000C ldarg.2 
+   000D brfalse IL_001d: ldc.i4.1
+   0012 ldarg.2 
+   0013 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0018 ldc.i4.0 
+   0019 ceq 
+   001B br.s IL_001e: br.s IL_0021
+   001D ldc.i4.1 
+   001E br.s IL_0021: stloc.0
+   0020 ldc.i4.0 
+   0021 stloc.0 
+   0022 ldarg.1 
+   0023 ldloc.0 
+   0024 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0029 ldarg.1 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_009b: ret
+   0035 ldloc.0 
+   0036 brfalse IL_009b: ret
+   003B ldarg.1 
+   003C callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0041 stloc.1 
+   0042 ldsfld System.String::Empty
+   0047 stloc.2 
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   004E ldc.i4.0 
+   004F ble IL_0083: call !0 Singleton`1<CTextManager>::GetInstance()
+   0054 call !0 Singleton`1<CTextManager>::GetInstance()
+   0059 ldstr SURRENDER_LEFT_COUNT
+   005E ldc.i4.1 
+   005F newarr System.String
+   0064 dup 
+   0065 ldc.i4.0 
+   0066 ldarg.0 
+   0067 ldflda Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   006C constrained. System.Int32
+   0072 callvirt System.String System.Object::ToString()
+   0077 stelem.ref 
+   0078 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   007D stloc.2 
+   007E br IL_0094: ldloc.1
+   0083 call !0 Singleton`1<CTextManager>::GetInstance()
+   0088 ldstr SURRENDER_LEFT_OUT
+   008D ldc.i4.1 
+   008E callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0093 stloc.2 
+   0094 ldloc.1 
+   0095 ldloc.2 
+   0096 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   009B ret 
+== System.Void SetLeftSurrenderCount(System.Int32 leftCount) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   0007 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000C ldsfld Assets.Scripts.GameSystem.CSettingsSys::SETTING_FORM
+   0011 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_0042: ret
+   0023 ldloc.0 
+   0024 ldc.i4 144
+   0029 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   002E stloc.1 
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0034 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0039 stloc.2 
+   003A ldarg.0 
+   003B ldloc.1 
+   003C ldloc.2 
+   003D call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SetLeftSurrenderCountOnUI(UnityEngine.GameObject,Assets.Scripts.GameLogic.CLevelContext)
+   0042 ret 
+== System.Void OnSurrenderConfirm(Assets.Scripts.UI.CUIEvent cuiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 call System.Boolean Assets.Scripts.GameSystem.CSurrenderSystem::IsWarmBattle()
+   000C brfalse IL_00d2: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0016 ldfld Assets.Scripts.GameLogic.BattleLogic::inMultiGame
+   001B brtrue IL_00d2: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0020 ldarg.0 
+   0021 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0026 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   002B ldarg.0 
+   002C ldarg.0 
+   002D call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetTotalAcnt()
+   0032 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   0037 ldarg.0 
+   0038 ldc.i4.1 
+   0039 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   0044 ldc.i4.1 
+   0045 bne.un IL_006a: ldarg.0
+   004A call Assets.Scripts.GameLogic.GamePlayerCenter Assets.Scripts.GameLogic.CGameDataManager::GetPlayerCenterManager()
+   004F callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0054 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0059 stloc.1 
+   005A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   005F ldloc.1 
+   0060 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ForceKillCrystal(CSProtocol.COM_PLAYERCAMP)
+   0065 br IL_00cd: br IL_00fc
+   006A ldarg.0 
+   006B ldc.i4.0 
+   006C stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   0071 ldarg.0 
+   0072 ldarg.0 
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   0079 call System.Byte Assets.Scripts.GameSystem.CSurrenderSystem::ConstrcutData(System.Int32)
+   007E stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_result
+   0083 ldarg.0 
+   0084 call !0 Singleton`1<CTimerManager>::get_instance()
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_random
+   008F ldc.i4 500
+   0094 ldc.i4 3000
+   0099 callvirt System.Int32 System.Random::Next(System.Int32,System.Int32)
+   009E ldc.i4.1 
+   009F ldarg.0 
+   00A0 ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnTimerWarmBattle(System.Int32)
+   00A6 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00AB callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   00B0 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   00B5 ldarg.0 
+   00B6 ldarg.0 
+   00B7 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   00C2 ldarg.0 
+   00C3 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_result
+   00C8 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OpenSurrenderForm(System.Int32,System.Int32,System.Byte)
+   00CD br IL_00fc: ret
+   00D2 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00D7 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   00DC callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   00E1 brfalse IL_00f5: ldarg.0
+   00E6 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00EB callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ReqSelfQuitBattleBegin()
+   00F0 br IL_00fc: ret
+   00F5 ldarg.0 
+   00F6 ldc.i4.1 
+   00F7 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SendMsgSurrender(System.Byte)
+   00FC ret 
+== System.Boolean IsWarmBattle() attrs=Private, HideBySig maxstack=1
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 brtrue IL_000e: ldloc.0
+   000C ldc.i4.0 
+   000D ret 
+   000E ldloc.0 
+   000F ldfld Assets.Scripts.GameLogic.CLevelContext::m_isWarmBattle
+   0014 ret 
+== System.Int32 GetTotalAcnt() attrs=Private, HideBySig maxstack=2
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 brtrue IL_000e: ldloc.0
+   000C ldc.i4.0 
+   000D ret 
+   000E ldloc.0 
+   000F ldfld Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   0014 ldc.i4.2 
+   0015 div 
+   0016 ret 
+== System.Byte ConstrcutData(System.Int32 maxCnt) attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_003f: ldloc.1
+   0009 ldloc.1 
+   000A ldarg.1 
+   000B ldc.i4.1 
+   000C sub 
+   000D beq IL_0020: ldarg.0
+   0012 ldloc.0 
+   0013 ldc.i4.1 
+   0014 ldloc.1 
+   0015 ldc.i4.s 31
+   0017 and 
+   0018 shl 
+   0019 or 
+   001A stloc.0 
+   001B br IL_003b: ldloc.1
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_random
+   0026 ldc.i4.0 
+   0027 ldc.i4.2 
+   0028 callvirt System.Int32 System.Random::Next(System.Int32,System.Int32)
+   002D brtrue IL_003b: ldloc.1
+   0032 ldloc.0 
+   0033 ldc.i4.1 
+   0034 ldloc.1 
+   0035 ldc.i4.s 31
+   0037 and 
+   0038 shl 
+   0039 or 
+   003A stloc.0 
+   003B ldloc.1 
+   003C ldc.i4.1 
+   003D add 
+   003E stloc.1 
+   003F ldloc.1 
+   0040 ldarg.1 
+   0041 blt IL_0009: ldloc.1
+   0046 ldloc.0 
+   0047 conv.u1 
+   0048 ret 
+== System.Void OnTimerWarmBattle(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   000B callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0010 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0015 ldsfld Assets.Scripts.GameSystem.FightForm::s_battleUIForm
+   001A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldnull 
+   0022 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0027 brfalse IL_00e8: ret
+   002C ldloc.0 
+   002D callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   0032 brtrue IL_00e8: ret
+   0037 ldarg.0 
+   0038 ldc.i4.m1 
+   0039 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   004A beq IL_00ac: ldarg.0
+   004F ldarg.0 
+   0050 dup 
+   0051 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   0056 ldc.i4.1 
+   0057 add 
+   0058 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   005D ldarg.0 
+   005E call !0 Singleton`1<CTimerManager>::get_instance()
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_random
+   0069 ldc.i4 500
+   006E ldc.i4 3000
+   0073 callvirt System.Int32 System.Random::Next(System.Int32,System.Int32)
+   0078 ldc.i4.1 
+   0079 ldarg.0 
+   007A ldftn System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnTimerWarmBattle(System.Int32)
+   0080 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0085 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   008A stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_timerSeq
+   008F ldarg.0 
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_maxCnt
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_curCnt
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_result
+   00A2 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OpenSurrenderForm(System.Int32,System.Int32,System.Byte)
+   00A7 br IL_00e8: ret
+   00AC ldarg.0 
+   00AD ldc.i4.1 
+   00AE stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   00B3 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00B8 callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   00BD brfalse IL_00d2: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00C2 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00C7 callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   00CC ldc.i4.2 
+   00CD callvirt System.Void Assets.Scripts.GameSystem.CKillNotify::PlayKillNotifyWithSurrender(System.Int32)
+   00D2 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00D7 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.GamePlayerCenter::get_hostPlayerCamp()
+   00DC stloc.1 
+   00DD call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00E2 ldloc.1 
+   00E3 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ForceKillCrystal(CSProtocol.COM_PLAYERCAMP)
+   00E8 ret 
+== System.Void OnSurrenderAgainst(Assets.Scripts.UI.CUIEvent cuiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SendMsgSurrender(System.Byte)
+   0007 ret 
+== System.Int32 GetLeftSurrenderCounts() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   0006 ret 
+== System.Boolean CanSurrender(System.Boolean considerLeftCount) attrs=Public, HideBySig maxstack=2
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 brfalse IL_0057: ldc.i4.0
+   000C ldloc.0 
+   000D callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMultilModeWithWarmBattle()
+   0012 brfalse IL_0057: ldc.i4.0
+   0017 ldloc.0 
+   0018 callvirt System.Byte Assets.Scripts.GameLogic.CLevelContext::GetSurrenderSwitch()
+   001D ldc.i4.1 
+   001E bne.un IL_0025: ldloc.0
+   0023 ldc.i4.0 
+   0024 ret 
+   0025 ldloc.0 
+   0026 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   002B brfalse IL_0041: ldarg.1
+   0030 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0035 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsDeadWatching()
+   003A brfalse IL_0041: ldarg.1
+   003F ldc.i4.0 
+   0040 ret 
+   0041 ldarg.1 
+   0042 brfalse IL_0055: ldc.i4.1
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_leftSurrenderCounts
+   004D ldc.i4.0 
+   004E bgt IL_0055: ldc.i4.1
+   0053 ldc.i4.0 
+   0054 ret 
+   0055 ldc.i4.1 
+   0056 ret 
+   0057 ldc.i4.0 
+   0058 ret 
+== System.Boolean InSurrenderCD() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0006 brtrue IL_0028: ldarg.0
+   000B call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0010 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0015 ldarg.0 
+   0016 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderStartTime()
+   001B ldc.i4 1000
+   0020 mul 
+   0021 blt IL_0028: ldarg.0
+   0026 ldc.i4.0 
+   0027 ret 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   002E ldc.i4.0 
+   002F ble.un IL_0050: ldc.i4.1
+   0034 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0039 conv.i8 
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0040 conv.u8 
+   0041 ldarg.0 
+   0042 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderCDTime()
+   0047 conv.i8 
+   0048 add 
+   0049 blt IL_0050: ldc.i4.1
+   004E ldc.i4.0 
+   004F ret 
+   0050 ldc.i4.1 
+   0051 ret 
+== System.Boolean InSurrenderCD(System.UInt32& time) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.0 
+   0004 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0009 brtrue IL_0046: ldarg.0
+   000E call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0013 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0018 ldarg.0 
+   0019 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderStartTime()
+   001E ldc.i4 1000
+   0023 mul 
+   0024 blt IL_002b: ldarg.1
+   0029 ldc.i4.0 
+   002A ret 
+   002B ldarg.1 
+   002C ldarg.0 
+   002D call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderStartTime()
+   0032 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0037 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   003C ldc.i4 1000
+   0041 div.un 
+   0042 sub 
+   0043 stind.i4 
+   0044 ldc.i4.1 
+   0045 ret 
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   004C ldc.i4.0 
+   004D ble.un IL_0085: ldc.i4.1
+   0052 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0057 conv.i8 
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   005E conv.u8 
+   005F ldarg.0 
+   0060 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderCDTime()
+   0065 conv.i8 
+   0066 add 
+   0067 blt IL_006e: ldarg.1
+   006C ldc.i4.0 
+   006D ret 
+   006E ldarg.1 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0075 ldarg.0 
+   0076 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderCDTime()
+   007B add 
+   007C call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0081 sub 
+   0082 stind.i4 
+   0083 ldc.i4.1 
+   0084 ret 
+   0085 ldc.i4.1 
+   0086 ret 
+== System.Void HideFiveCampSurrenderInfo(Assets.Scripts.UI.CUIEvent kEvent) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F ret 
+== System.Void ShowFiveCampSurrenderInfo(System.Int32 iCampIndex) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0033: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0021 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   0026 ldc.i4.0 
+   0027 ldc.i4.1 
+   0028 ldnull 
+   0029 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   002E br IL_0042: stloc.1
+   0033 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0038 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   003D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0042 stloc.1 
+   0043 ldnull 
+   0044 stloc.2 
+   0045 ldloc.1 
+   0046 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004B brfalse IL_00c0: ret
+   0050 ldloc.1 
+   0051 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0056 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   005B ldc.i4.0 
+   005C callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0061 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0066 stloc.2 
+   0067 ldarg.0 
+   0068 ldloc.2 
+   0069 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   006E ldarg.1 
+   006F call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::_refreshFiveCampSurrenderInfo(UnityEngine.Transform,System.Int32)
+   0074 ldloc.2 
+   0075 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007A ldstr Timer
+   007F callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0084 stloc.3 
+   0085 ldloc.3 
+   0086 ldnull 
+   0087 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   008C brfalse IL_0092: ldloc.3
+   0091 ret 
+   0092 ldloc.3 
+   0093 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0098 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUITimerScript>()
+   009D stloc.s V_4
+   009F ldloc.s V_4
+   00A1 ldnull 
+   00A2 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00A7 brfalse IL_00ad: ldloc.s V_4
+   00AC ret 
+   00AD ldloc.s V_4
+   00AF ldc.r4 5
+   00B4 callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   00B9 ldloc.s V_4
+   00BB callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   00C0 ret 
+== System.Void _refreshFiveCampSurrenderInfo(UnityEngine.Transform kRootNode, System.Int32 iCampIndex) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldstr hero1/heroIconImage
+   0006 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   000B stloc.0 
+   000C ldarg.1 
+   000D ldstr hero1/heroHeadFrame
+   0012 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0017 stloc.1 
+   0018 ldarg.1 
+   0019 ldstr hero2/heroIconImage
+   001E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0023 stloc.2 
+   0024 ldarg.1 
+   0025 ldstr hero2/heroHeadFrame
+   002A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   002F stloc.3 
+   0030 ldloc.0 
+   0031 ldnull 
+   0032 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0037 brtrue IL_0060: ret
+   003C ldloc.1 
+   003D ldnull 
+   003E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0043 brtrue IL_0060: ret
+   0048 ldloc.2 
+   0049 ldnull 
+   004A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   004F brtrue IL_0060: ret
+   0054 ldloc.3 
+   0055 ldnull 
+   0056 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   005B brfalse IL_0061: ldloc.1
+   0060 ret 
+   0061 ldloc.1 
+   0062 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0067 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   006C stloc.s V_4
+   006E ldloc.3 
+   006F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0074 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0079 stloc.s V_5
+   007B ldloc.s V_4
+   007D ldnull 
+   007E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0083 brtrue IL_0095: ret
+   0088 ldloc.s V_5
+   008A ldnull 
+   008B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0090 brfalse IL_0096: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0095 ret 
+   0096 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   009B ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   00A0 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00A5 stloc.s V_6
+   00A7 ldloc.s V_6
+   00A9 ldnull 
+   00AA call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00AF brfalse IL_00b5: ldstr "UGUI/Sprite/Dynamic/HeroHeadFrame/0"
+   00B4 ret 
+   00B5 ldstr UGUI/Sprite/Dynamic/HeroHeadFrame/0
+   00BA ldarg.2 
+   00BB box System.Int32
+   00C0 call System.String System.String::Concat(System.Object,System.Object)
+   00C5 stloc.s V_7
+   00C7 ldloc.s V_4
+   00C9 ldloc.s V_7
+   00CB ldloc.s V_6
+   00CD ldc.i4.1 
+   00CE ldc.i4.0 
+   00CF ldc.i4.0 
+   00D0 ldc.i4.0 
+   00D1 ldc.i4.0 
+   00D2 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00D7 ldloc.s V_5
+   00D9 ldloc.s V_7
+   00DB ldloc.s V_6
+   00DD ldc.i4.1 
+   00DE ldc.i4.0 
+   00DF ldc.i4.0 
+   00E0 ldc.i4.0 
+   00E1 ldc.i4.0 
+   00E2 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00E7 ldloc.0 
+   00E8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00ED callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00F2 stloc.s V_8
+   00F4 ldloc.2 
+   00F5 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00FA callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00FF stloc.s V_9
+   0101 ldloc.s V_8
+   0103 ldnull 
+   0104 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0109 brtrue IL_011b: ret
+   010E ldloc.s V_9
+   0110 ldnull 
+   0111 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0116 brfalse IL_011c: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   011B ret 
+   011C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0121 ldarg.2 
+   0122 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllCampPlayers(CSProtocol.COM_PLAYERCAMP)
+   0127 stloc.s V_10
+   0129 ldloc.s V_10
+   012B callvirt System.Int32 ListViewBase::get_Count()
+   0130 ldc.i4.1 
+   0131 ble IL_016e: ldarg.1
+   0136 ldloc.s V_8
+   0138 ldarg.0 
+   0139 ldloc.s V_10
+   013B ldc.i4.0 
+   013C callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0141 call System.String Assets.Scripts.GameSystem.CSurrenderSystem::_getHeroIconPath(Assets.Scripts.GameLogic.Player)
+   0146 ldloc.s V_6
+   0148 ldc.i4.1 
+   0149 ldc.i4.0 
+   014A ldc.i4.0 
+   014B ldc.i4.0 
+   014C ldc.i4.0 
+   014D call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0152 ldloc.s V_9
+   0154 ldarg.0 
+   0155 ldloc.s V_10
+   0157 ldc.i4.1 
+   0158 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   015D call System.String Assets.Scripts.GameSystem.CSurrenderSystem::_getHeroIconPath(Assets.Scripts.GameLogic.Player)
+   0162 ldloc.s V_6
+   0164 ldc.i4.1 
+   0165 ldc.i4.0 
+   0166 ldc.i4.0 
+   0167 ldc.i4.0 
+   0168 ldc.i4.0 
+   0169 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   016E ldarg.1 
+   016F ldstr Text
+   0174 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0179 stloc.s V_11
+   017B ldloc.s V_11
+   017D ldnull 
+   017E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0183 brfalse IL_0189: call !0 Singleton`1<CTextManager>::GetInstance()
+   0188 ret 
+   0189 call !0 Singleton`1<CTextManager>::GetInstance()
+   018E ldstr FiveArmyCampName_{0:D2}
+   0193 ldarg.2 
+   0194 box System.Int32
+   0199 call System.String System.String::Format(System.String,System.Object)
+   019E ldc.i4.1 
+   019F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01A4 stloc.s V_12
+   01A6 ldloc.s V_12
+   01A8 ldstr 队伍已投降
+   01AD call System.String System.String::Concat(System.String,System.String)
+   01B2 stloc.s V_13
+   01B4 ldloc.s V_11
+   01B6 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01BB ldloc.s V_13
+   01BD call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.GameObject,System.String)
+   01C2 ret 
+== System.String _getHeroIconPath(Assets.Scripts.GameLogic.Player player) attrs=Private, HideBySig maxstack=2
+   0000 ldloca.s V_0
+   0002 ldarg.1 
+   0003 ldfld Assets.Scripts.GameLogic.Player::captainConfigID
+   0008 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   000D brtrue IL_0018: ldsfld System.String Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_BustCircle_Dir
+   0012 ldsfld System.String::Empty
+   0017 ret 
+   0018 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_BustCircle_Dir
+   001D ldloca.s V_0
+   001F call System.String ResData.ResHeroCfgInfo::get_szImagePath()
+   0024 call System.String System.String::Concat(System.String,System.String)
+   0029 stloc.1 
+   002A ldloc.1 
+   002B ret 
+== System.Void SyncReconnectData(CSProtocol.CSDT_RECONN_GAMEINGINFO data) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   0006 ldarg.1 
+   0007 ldfld CSProtocol.CSDT_RECONN_GAMEINGINFO::iSelfSurrenderCnt
+   000C sub 
+   000D call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SetLeftSurrenderCount(System.Int32)
+   0012 ret 
+== System.Void OpenSurrenderForm(System.Int32 maxNum, System.Int32 totalNum, System.Byte data) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 stloc.0 
+   0016 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001B ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   0020 ldc.i4.0 
+   0021 ldc.i4.1 
+   0022 ldnull 
+   0023 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0028 stloc.1 
+   0029 ldnull 
+   002A stloc.2 
+   002B ldnull 
+   002C stloc.3 
+   002D ldnull 
+   002E stloc.s V_4
+   0030 ldnull 
+   0031 stloc.s V_5
+   0033 ldc.i4.0 
+   0034 stloc.s V_6
+   0036 ldc.i4.0 
+   0037 stloc.s V_7
+   0039 ldloc.1 
+   003A call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   003F brfalse IL_0245: ret
+   0044 ldloc.1 
+   0045 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   004A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   004F ldc.i4.0 
+   0050 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0055 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005A stloc.2 
+   005B ldloc.2 
+   005C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0061 ldstr SurrenderElement
+   0066 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0070 stloc.3 
+   0071 ldc.i4.0 
+   0072 stloc.s V_8
+   0074 br IL_012a: ldloc.s V_8
+   0079 ldloc.3 
+   007A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007F ldloc.s V_8
+   0081 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0086 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   008B stloc.s V_4
+   008D ldloc.s V_8
+   008F ldarg.1 
+   0090 clt 
+   0092 stloc.s V_6
+   0094 ldloc.s V_4
+   0096 ldloc.s V_6
+   0098 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   009D ldloc.s V_6
+   009F brfalse IL_0124: ldloc.s V_8
+   00A4 ldloc.s V_8
+   00A6 ldarg.2 
+   00A7 bge IL_00f4: ldloc.s V_4
+   00AC ldarg.3 
+   00AD ldc.i4.1 
+   00AE ldloc.s V_8
+   00B0 ldc.i4.s 31
+   00B2 and 
+   00B3 shl 
+   00B4 and 
+   00B5 ldc.i4.0 
+   00B6 cgt 
+   00B8 stloc.s V_7
+   00BA ldloc.s V_4
+   00BC callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C1 ldc.i4.0 
+   00C2 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   00C7 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00CC ldloc.s V_7
+   00CE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D3 ldloc.s V_4
+   00D5 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00DA ldc.i4.1 
+   00DB callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   00E0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E5 ldloc.s V_7
+   00E7 ldc.i4.0 
+   00E8 ceq 
+   00EA call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EF br IL_0124: ldloc.s V_8
+   00F4 ldloc.s V_4
+   00F6 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00FB ldc.i4.0 
+   00FC callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0101 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0106 ldc.i4.0 
+   0107 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   010C ldloc.s V_4
+   010E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0113 ldc.i4.1 
+   0114 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0119 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   011E ldc.i4.0 
+   011F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0124 ldloc.s V_8
+   0126 ldc.i4.1 
+   0127 add 
+   0128 stloc.s V_8
+   012A ldloc.s V_8
+   012C ldc.i4.5 
+   012D blt IL_0079: ldloc.3
+   0132 ldloc.2 
+   0133 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0138 ldstr ButtonGroup/Button_Surrender
+   013D callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0142 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0147 ldarg.0 
+   0148 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   014D callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0152 ldloc.2 
+   0153 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0158 ldstr ButtonGroup/Button_Reject
+   015D callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0162 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0167 ldarg.0 
+   0168 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   016D callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0172 ldloc.0 
+   0173 brfalse IL_0203: ldloc.0
+   0178 ldarg.0 
+   0179 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   017E brfalse IL_0203: ldloc.0
+   0183 ldloc.2 
+   0184 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0189 ldstr FiveCampAlertTip
+   018E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0193 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0198 stloc.s V_5
+   019A ldc.i4.0 
+   019B stloc.s V_9
+   019D call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   01A2 stloc.s V_10
+   01A4 ldloc.s V_10
+   01A6 brfalse IL_01c0: ldloc.s V_5
+   01AB ldloc.s V_10
+   01AD callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMultilModeWithWarmBattle()
+   01B2 brfalse IL_01c0: ldloc.s V_5
+   01B7 ldloc.s V_10
+   01B9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   01BE stloc.s V_9
+   01C0 ldloc.s V_5
+   01C2 ldloc.s V_9
+   01C4 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.GameObject,System.Boolean)
+   01C9 ldloc.s V_9
+   01CB brfalse IL_0203: ldloc.0
+   01D0 ldloc.s V_5
+   01D2 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01D7 ldstr Text
+   01DC callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01E1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01E6 stloc.s V_11
+   01E8 call !0 Singleton`1<CTextManager>::GetInstance()
+   01ED ldstr FiveCampSurrenderAlertTip
+   01F2 ldc.i4.1 
+   01F3 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01F8 stloc.s V_12
+   01FA ldloc.s V_11
+   01FC ldloc.s V_12
+   01FE call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.GameObject,System.String)
+   0203 ldloc.0 
+   0204 brfalse IL_0237: ldarg.1
+   0209 ldloc.2 
+   020A callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUITimerScript>()
+   020F stloc.s V_13
+   0211 ldloc.s V_13
+   0213 ldarg.0 
+   0214 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderVaildTime()
+   0219 conv.r4 
+   021A callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   021F ldloc.s V_13
+   0221 callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   0226 ldarg.0 
+   0227 ldfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   022C brtrue IL_0237: ldarg.1
+   0231 ldarg.0 
+   0232 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SimplifySurrenderForm()
+   0237 ldarg.1 
+   0238 ldarg.2 
+   0239 bne.un IL_0245: ret
+   023E ldarg.0 
+   023F ldc.i4.5 
+   0240 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::DelayCloseSurrenderForm(System.Int32)
+   0245 ret 
+== System.Void CloseSurrenderForm() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F ret 
+== System.Void DelayCloseSurrenderForm(System.Int32 delay) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_005a: ret
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0022 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0027 ldc.i4.0 
+   0028 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   002D callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUITimerScript>()
+   0032 stloc.1 
+   0033 ldloc.1 
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A brfalse IL_005a: ret
+   003F ldloc.1 
+   0040 callvirt System.Single Assets.Scripts.UI.CUITimerScript::GetCurrentTime()
+   0045 ldarg.1 
+   0046 conv.r4 
+   0047 ble.un IL_005a: ret
+   004C ldloc.1 
+   004D ldarg.1 
+   004E conv.r4 
+   004F callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   0054 ldloc.1 
+   0055 callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   005A ret 
+== System.Void OnSurrenderCountDown(Assets.Scripts.UI.CUIEvent cuiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   000D isinst Assets.Scripts.UI.CUITimerScript
+   0012 stloc.1 
+   0013 ldloc.0 
+   0014 ldnull 
+   0015 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001A brfalse IL_004b: ret
+   001F ldloc.1 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_004b: ret
+   002B ldloc.1 
+   002C callvirt System.Single Assets.Scripts.UI.CUITimerScript::GetCurrentTime()
+   0031 ldarg.0 
+   0032 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderVaildTime()
+   0037 conv.r4 
+   0038 div 
+   0039 stloc.2 
+   003A ldloc.0 
+   003B ldstr CountDownBar/Bar
+   0040 call T Utility::GetComponetInChild<UnityEngine.UI.Slider>(UnityEngine.GameObject,System.String)
+   0045 ldloc.2 
+   0046 callvirt System.Void UnityEngine.UI.Slider::set_value(System.Single)
+   004B ret 
+== System.Void OnSurrenderTimeUp(Assets.Scripts.UI.CUIEvent cuiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::CloseSurrenderForm()
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   000D ret 
+== System.Void OnSurrenderTimeStart(Assets.Scripts.UI.CUIEvent cuiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   000D isinst Assets.Scripts.UI.CUITimerScript
+   0012 stloc.1 
+   0013 ldloc.0 
+   0014 ldnull 
+   0015 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001A brfalse IL_004b: ret
+   001F ldloc.1 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_004b: ret
+   002B ldloc.1 
+   002C callvirt System.Single Assets.Scripts.UI.CUITimerScript::GetCurrentTime()
+   0031 ldarg.0 
+   0032 call System.Int32 Assets.Scripts.GameSystem.CSurrenderSystem::GetSurrenderVaildTime()
+   0037 conv.r4 
+   0038 div 
+   0039 stloc.2 
+   003A ldloc.0 
+   003B ldstr CountDownBar/Bar
+   0040 call T Utility::GetComponetInChild<UnityEngine.UI.Slider>(UnityEngine.GameObject,System.String)
+   0045 ldloc.2 
+   0046 callvirt System.Void UnityEngine.UI.Slider::set_value(System.Single)
+   004B ret 
+== System.Void SendMsgSurrender(System.Byte bSurrender) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 4900
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_SURRENDER_REQ CSProtocol.CSPkgBody::get_stSurrenderReq()
+   0016 ldarg.1 
+   0017 stfld CSProtocol.CSPKG_SURRENDER_REQ::bSurrender
+   001C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0021 ldloca.s V_0
+   0023 ldc.i4.0 
+   0024 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0029 pop 
+   002A ret 
+== System.Void OnSurrenderNtf(CSProtocol.SCPKG_SURRENDER_NTF surrenderNtf) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.SCPKG_SURRENDER_NTF::dwSurrenderTime
+   0007 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldfld CSProtocol.SCPKG_SURRENDER_NTF::bSurrenderValidCnt
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.SCPKG_SURRENDER_NTF::bSurrenderCnt
+   0019 ldarg.1 
+   001A ldfld CSProtocol.SCPKG_SURRENDER_NTF::bSurrenderData
+   001F call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OpenSurrenderForm(System.Int32,System.Int32,System.Byte)
+   0024 ret 
+== System.Void OnSurrenderRsp(CSProtocol.SCPKG_SURRENDER_RSP msg) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_haveRights
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 ldfld CSProtocol.SCPKG_SURRENDER_RSP::dwSurrenderTime
+   000E stfld Assets.Scripts.GameSystem.CSurrenderSystem::m_lastSurrenderTime
+   0013 ldarg.0 
+   0014 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   0019 ldarg.1 
+   001A ldfld CSProtocol.SCPKG_SURRENDER_RSP::iSelfSurrenderCnt
+   001F sub 
+   0020 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SetLeftSurrenderCount(System.Int32)
+   0025 ldarg.0 
+   0026 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::SimplifySurrenderForm()
+   002B ret 
+== System.Void OnSurrenderRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CSurrenderSystem>::get_instance()
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_SURRENDER_RSP CSProtocol.CSPkgBody::get_stSurrenderRsp()
+   0010 callvirt System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderRsp(CSProtocol.SCPKG_SURRENDER_RSP)
+   0015 ret 
+== System.Void OnSurrenderNtf(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_SURRENDER_NTF CSProtocol.CSPkgBody::get_stSurrenderNtf()
+   000B stloc.0 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CSurrenderSystem>::get_instance()
+   0011 ldloc.0 
+   0012 callvirt System.Void Assets.Scripts.GameSystem.CSurrenderSystem::OnSurrenderNtf(CSProtocol.SCPKG_SURRENDER_NTF)
+   0017 ret 
+== System.Void OnFightOver(Assets.Scripts.GameLogic.GameCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CSurrenderSystem::CloseSurrenderForm()
+   0006 ret 
+== System.Void SimplifySurrenderForm() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0016 brfalse IL_0060: ret
+   001B ldloc.0 
+   001C ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0021 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0026 ldstr PanelSurrender
+   002B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0030 stloc.1 
+   0031 ldloc.1 
+   0032 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0037 brfalse IL_0060: ret
+   003C ldloc.1 
+   003D ldnull 
+   003E call System.Void Assets.Scripts.GameSystem.CUICommonSystem::PlayAnimation(UnityEngine.Transform,System.String)
+   0043 ldloc.1 
+   0044 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0049 ldstr FiveCampAlertTip
+   004E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0053 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0058 stloc.2 
+   0059 ldloc.2 
+   005A ldc.i4.0 
+   005B call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.GameObject,System.Boolean)
+   0060 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/Battle/Form_Surrender.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderForm
+   000A ldstr UGUI/Form/Battle/Form_SurrenderTipFiveCamp.prefab
+   000F stsfld Assets.Scripts.GameSystem.CSurrenderSystem::s_surrenderTipFiveCampForm
+   0014 ldc.i4.3 
+   0015 stsfld Assets.Scripts.GameSystem.CSurrenderSystem::SURRENDER_MAXCOUNTS
+   001A ret 

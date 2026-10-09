@@ -1,0 +1,70 @@
+// TYPE Assets.Scripts.Framework.OfflineSysState  base=BaseState  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void BaseState::.ctor()
+   0006 ret 
+== System.Void OnStateEnter() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.SettlementSystem::IsExistSettleForm()
+   000A brtrue IL_001c: call !0 Singleton`1<Assets.Scripts.Framework.ResourceLoader>::GetInstance()
+   000F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0014 ldnull 
+   0015 ldc.i4.1 
+   0016 ldc.i4.1 
+   0017 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseAllForm(System.String[],System.Boolean,System.Boolean)
+   001C call !0 Singleton`1<Assets.Scripts.Framework.ResourceLoader>::GetInstance()
+   0021 ldstr LobbyScene
+   0026 ldarg.0 
+   0027 ldftn System.Void Assets.Scripts.Framework.OfflineSysState::OnOfflineSceneCompleted()
+   002D newobj System.Void Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate::.ctor(System.Object,System.IntPtr)
+   0032 callvirt System.Void Assets.Scripts.Framework.ResourceLoader::LoadScene(System.String,Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate)
+   0037 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::GetInstance()
+   003C ldc.i4.0 
+   003D callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Open(System.Boolean)
+   0042 ret 
+== System.Void OnOfflineSceneCompleted() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0005 ldstr Music_Lobby
+   000A ldc.i4.2 
+   000B callvirt System.Void Assets.Scripts.Sound.CSoundManager::LoadBank(System.String,Assets.Scripts.Sound.enBankType)
+   0010 ldc.i4 244
+   0015 call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   001A ldc.i4.1 
+   001B bne.un IL_0055: call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   0020 call System.Boolean DeviceCheckSys::CheckAvailMemory()
+   0025 brtrue IL_0055: call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   002A call System.Int32 DeviceCheckSys::GetRecordCurMemNotEnoughPopTimes()
+   002F ldc.i4.3 
+   0030 bge IL_0055: call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   0035 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003A call !0 Singleton`1<CTextManager>::GetInstance()
+   003F ldstr CheckDevice_QuitGame_CurMemNotEnough
+   0044 ldc.i4.1 
+   0045 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   004A ldc.i4.0 
+   004B callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,System.Boolean)
+   0050 call System.Void DeviceCheckSys::RecordCurMemNotEnoughPopTimes()
+   0055 call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   005A callvirt System.Void Assets.Scripts.GameSystem.OfflineGamePlayMgr::StartOfflineMode()
+   005F ret 
+== System.Void OnStateLeave() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void BaseState::OnStateLeave()
+   0006 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   000B ldstr Music_Lobby
+   0010 ldnull 
+   0011 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0016 pop 
+   0017 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   001C ldc.i4.2 
+   001D ldc.i4.0 
+   001E ldnull 
+   001F callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBanks(Assets.Scripts.Sound.enBankType,System.Boolean,System.String[])
+   0024 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0029 ldc.i4.5 
+   002A newarr enResourceType
+   002F dup 
+   0030 ldtoken <PrivateImplementationDetails>::$field-D2EBB6A6D770A501F87474A4BD66C3D112AA635D
+   0035 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   003A callvirt System.Void CResourceManager::RemoveCachedResources(enResourceType[])
+   003F ret 

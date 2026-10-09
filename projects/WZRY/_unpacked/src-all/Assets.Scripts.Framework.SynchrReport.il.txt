@@ -1,0 +1,492 @@
+// TYPE Assets.Scripts.Framework.SynchrReport  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.UInt32 _checkFrameNo
+  FIELD System.Boolean _isSelfUnsync
+  FIELD System.Boolean _isDeskUnsync
+  FIELD System.Boolean _isAlerted
+  FIELD ListView`1<System.IO.MemoryStream> _uploadList
+  FIELD System.Int32 _uploadIndex
+  FIELD System.Boolean _getingBuffer
+  FIELD SGW/SnakeTraceBufferEntrysTypeDelegate <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Reset() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.Framework.SynchrReport::_checkFrameNo
+   0006 ldc.i4.0 
+   0007 stsfld Assets.Scripts.Framework.SynchrReport::_isSelfUnsync
+   000C ldc.i4.0 
+   000D stsfld Assets.Scripts.Framework.SynchrReport::_isDeskUnsync
+   0012 ldc.i4.0 
+   0013 stsfld Assets.Scripts.Framework.SynchrReport::_isAlerted
+   0018 ldnull 
+   0019 stsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   001E ldc.i4.m1 
+   001F stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0024 ldc.i4.0 
+   0025 stsfld Assets.Scripts.Framework.SynchrReport::_getingBuffer
+   002A ret 
+== System.Void OnUploadTrace(CSProtocol.CSPkg pkg) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0005 brtrue IL_0034: ldarg.0
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_NTF_UPLOAD_HASHNELOG CSProtocol.CSPkgBody::get_stNtfHashNeLogUpload()
+   0015 ldfld CSProtocol.SCPKG_NTF_UPLOAD_HASHNELOG::dwKFrapsNo
+   001A stsfld Assets.Scripts.Framework.SynchrReport::_checkFrameNo
+   001F ldc.i4.0 
+   0020 stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0025 newobj System.Void ListView`1<System.IO.MemoryStream>::.ctor()
+   002A stsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   002F call System.Void Assets.Scripts.Framework.SynchrReport::GetSnakeTraceBuffer()
+   0034 ldarg.0 
+   0035 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   003A ret 
+== System.Void OnHashCheckRsp(CSProtocol.CSPkg pkg) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_isSelfUnsync
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_RELAYHASHCHECK CSProtocol.CSPkgBody::get_stRelayHashChkRsp()
+   0010 ldfld CSProtocol.SCPKG_RELAYHASHCHECK::dwIsSelfNE
+   0015 ldc.i4.0 
+   0016 ceq 
+   0018 ldc.i4.0 
+   0019 ceq 
+   001B or 
+   001C stsfld Assets.Scripts.Framework.SynchrReport::_isSelfUnsync
+   0021 ldsfld Assets.Scripts.Framework.SynchrReport::_isDeskUnsync
+   0026 ldarg.0 
+   0027 ldfld CSProtocol.CSPkg::stPkgData
+   002C callvirt CSProtocol.SCPKG_RELAYHASHCHECK CSProtocol.CSPkgBody::get_stRelayHashChkRsp()
+   0031 ldfld CSProtocol.SCPKG_RELAYHASHCHECK::dwIsDeskNE
+   0036 ldc.i4.0 
+   0037 ceq 
+   0039 ldc.i4.0 
+   003A ceq 
+   003C or 
+   003D stsfld Assets.Scripts.Framework.SynchrReport::_isDeskUnsync
+   0042 call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   0047 call System.Void Assets.Scripts.Framework.SynchrReport::NotifyPlayer()
+   004C ldarg.0 
+   004D callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0052 ret 
+== System.Void GetSnakeTraceBuffer() attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_getingBuffer
+   0005 brfalse IL_000b: ldstr "HashCheckInvalideBegin!"
+   000A ret 
+   000B ldstr HashCheckInvalideBegin!
+   0010 call System.Void DebugHelper::CustomLog(System.String)
+   0015 ldstr HashCheckInvalideBegin
+   001A newobj System.Void Assets.Scripts.GameLogic.LobbyMsgHandler/HashCheckInvalideBegin::.ctor(System.String)
+   001F ldstr DeskId:
+   0024 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0029 ldfld Assets.Scripts.GameLogic.BattleLogic::ThisDeskID
+   002E box System.UInt32
+   0033 call System.String System.String::Concat(System.Object,System.Object)
+   0038 call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   003D ldc.i4.1 
+   003E stsfld Assets.Scripts.Framework.SynchrReport::_getingBuffer
+   0043 ldsfld Assets.Scripts.Framework.SynchrReport::<>f__mg$cache0
+   0048 brtrue.s IL_005b: ldsfld SGW/SnakeTraceBufferEntrysTypeDelegate Assets.Scripts.Framework.SynchrReport::<>f__mg$cache0
+   004A ldnull 
+   004B ldftn System.Void Assets.Scripts.Framework.SynchrReport::OnSnakeTraceBufferCallback(SGW/SnakeTraceBufferEntrys&)
+   0051 newobj System.Void SGW/SnakeTraceBufferEntrysTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0056 stsfld Assets.Scripts.Framework.SynchrReport::<>f__mg$cache0
+   005B ldsfld Assets.Scripts.Framework.SynchrReport::<>f__mg$cache0
+   0060 call System.Void SGW::GetSnakeTraceBufferEntrys(SGW/SnakeTraceBufferEntrysTypeDelegate)
+   0065 ret 
+== System.Void OnSnakeTraceBufferCallback(SGW/SnakeTraceBufferEntrys& callback) attrs=Private, Static, HideBySig maxstack=4
+   0000 ldstr HashCheckInvalideClose!
+   0005 call System.Void DebugHelper::CustomLog(System.String)
+   000A ldstr HashCheckInvalideClose
+   000F newobj System.Void Assets.Scripts.GameLogic.LobbyMsgHandler/HashCheckInvalideClose::.ctor(System.String)
+   0014 ldstr DeskId:
+   0019 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   001E ldfld Assets.Scripts.GameLogic.BattleLogic::ThisDeskID
+   0023 box System.UInt32
+   0028 call System.String System.String::Concat(System.Object,System.Object)
+   002D call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0032 ldc.i4.0 
+   0033 stsfld Assets.Scripts.Framework.SynchrReport::_getingBuffer
+   0038 ldc.i4.0 
+   0039 stloc.0 
+   003A call System.String CVersion::GetRevisonNumber()
+   003F ldloca.s V_0
+   0041 call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   0046 pop 
+   0047 ldarg.0 
+   0048 ldfld SGW/SnakeTraceBufferEntrys::buffers
+   004D stloc.1 
+   004E ldc.i4.0 
+   004F stloc.2 
+   0050 br IL_0107: ldloc.2
+   0055 ldnull 
+   0056 stloc.3 
+   0057 ldloc.1 
+   0058 ldloc.2 
+   0059 ldelema SGW/SnakeTraceBuffer
+   005E ldfld SGW/SnakeTraceBuffer::size
+   0063 stloc.s V_4
+   0065 ldloc.s V_4
+   0067 ldc.i4.0 
+   0068 ble.un IL_00fc: ldloc.3
+   006D ldloc.1 
+   006E ldloc.2 
+   006F ldelema SGW/SnakeTraceBuffer
+   0074 ldfld SGW/SnakeTraceBuffer::addr
+   0079 call System.IntPtr System.IntPtr::op_Explicit(System.Int64)
+   007E stloc.s V_5
+   0080 ldloc.s V_4
+   0082 conv.u 
+   0083 newarr System.Byte
+   0088 stloc.s V_6
+   008A ldloc.s V_5
+   008C ldloc.s V_6
+   008E ldc.i4.0 
+   008F ldloc.s V_4
+   0091 call System.Void System.Runtime.InteropServices.Marshal::Copy(System.IntPtr,System.Byte[],System.Int32,System.Int32)
+   0096 newobj System.Void System.IO.MemoryStream::.ctor()
+   009B stloc.3 
+   009C ldc.i4.1 
+   009D stloc.s V_7
+   009F ldloc.3 
+   00A0 newobj System.Void System.IO.BinaryWriter::.ctor(System.IO.Stream)
+   00A5 stloc.s V_8
+   00A7 ldloc.s V_8
+   00A9 ldloc.s V_7
+   00AB callvirt System.Void System.IO.BinaryWriter::Write(System.Byte)
+   00B0 ldloc.s V_8
+   00B2 ldloc.0 
+   00B3 callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   00B8 ldloc.s V_8
+   00BA ldsfld ApolloConfig::loginOnlyIp
+   00BF callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   00C4 ldloc.s V_8
+   00C6 callvirt System.Void System.IO.BinaryWriter::Flush()
+   00CB ldloc.3 
+   00CC ldc.i4.0 
+   00CD ldc.i4.1 
+   00CE ldc.i4.1 
+   00CF newobj System.Void Ionic.Zlib.GZipStream::.ctor(System.IO.Stream,Ionic.Zlib.CompressionMode,Ionic.Zlib.CompressionLevel,System.Boolean)
+   00D4 stloc.s V_9
+   00D6 ldloc.s V_9
+   00D8 ldloc.s V_6
+   00DA ldc.i4.0 
+   00DB ldloc.s V_4
+   00DD callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   00E2 ldloc.s V_9
+   00E4 callvirt System.Void System.IO.Stream::Flush()
+   00E9 ldloc.s V_9
+   00EB callvirt System.Void System.IO.Stream::Close()
+   00F0 leave IL_00fc: ldloc.3
+   00F5 stloc.s V_10
+   00F7 leave IL_00fc: ldloc.3
+   00FC ldloc.3 
+   00FD ldloc.2 
+   00FE call System.Void Assets.Scripts.Framework.SynchrReport::WriteSnakeTraceStream(System.IO.MemoryStream,System.Int32)
+   0103 ldloc.2 
+   0104 ldc.i4.1 
+   0105 add 
+   0106 stloc.2 
+   0107 ldloc.2 
+   0108 ldloc.1 
+   0109 ldlen 
+   010A conv.i4 
+   010B blt IL_0055: ldnull
+   0110 call System.IO.MemoryStream SnakeTrack::GetTraceBuffer()
+   0115 stloc.s V_11
+   0117 ldloc.s V_11
+   0119 brfalse IL_018e: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   011E newobj System.Void System.IO.MemoryStream::.ctor()
+   0123 stloc.s V_12
+   0125 ldloc.s V_12
+   0127 newobj System.Void System.IO.BinaryWriter::.ctor(System.IO.Stream)
+   012C stloc.s V_13
+   012E ldc.i4.2 
+   012F stloc.s V_14
+   0131 ldloc.s V_13
+   0133 ldloc.s V_14
+   0135 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte)
+   013A ldloc.s V_13
+   013C ldloc.0 
+   013D callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   0142 ldloc.s V_13
+   0144 ldsfld ApolloConfig::loginOnlyIp
+   0149 callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   014E ldloc.s V_13
+   0150 callvirt System.Void System.IO.BinaryWriter::Flush()
+   0155 ldloc.s V_12
+   0157 ldc.i4.0 
+   0158 ldc.i4.1 
+   0159 ldc.i4.1 
+   015A newobj System.Void Ionic.Zlib.GZipStream::.ctor(System.IO.Stream,Ionic.Zlib.CompressionMode,Ionic.Zlib.CompressionLevel,System.Boolean)
+   015F stloc.s V_15
+   0161 ldloc.s V_15
+   0163 ldloc.s V_11
+   0165 callvirt System.Byte[] System.IO.MemoryStream::GetBuffer()
+   016A ldc.i4.0 
+   016B ldloc.s V_11
+   016D callvirt System.Int64 System.IO.Stream::get_Length()
+   0172 conv.i4 
+   0173 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   0178 ldloc.s V_15
+   017A callvirt System.Void System.IO.Stream::Flush()
+   017F ldloc.s V_15
+   0181 callvirt System.Void System.IO.Stream::Close()
+   0186 ldloc.s V_12
+   0188 ldc.i4.4 
+   0189 call System.Void Assets.Scripts.Framework.SynchrReport::WriteSnakeTraceStream(System.IO.MemoryStream,System.Int32)
+   018E ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0193 brfalse IL_019f: call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   0198 ldc.i4.0 
+   0199 conv.i8 
+   019A call System.Void Assets.Scripts.Framework.SynchrReport::Upload(System.Int64)
+   019F call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   01A4 ret 
+== System.Void ClearSnakeTraceBuffer() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_getingBuffer
+   0005 brfalse IL_000b: ldsfld System.Boolean Assets.Scripts.Framework.SynchrReport::_isDeskUnsync
+   000A ret 
+   000B ldsfld Assets.Scripts.Framework.SynchrReport::_isDeskUnsync
+   0010 brfalse IL_0031: call System.Void SGW::ClearSnakeTraceCheckPoint()
+   0015 ldc.i4.0 
+   0016 call System.Void SGW::CloseSnakeTraceEntry(System.Int32)
+   001B ldc.i4.1 
+   001C call System.Void SGW::CloseSnakeTraceEntry(System.Int32)
+   0021 ldc.i4.2 
+   0022 call System.Void SGW::CloseSnakeTraceEntry(System.Int32)
+   0027 call System.Void SnakeTrack::CloseTrace()
+   002C br IL_003b: ret
+   0031 call System.Void SGW::ClearSnakeTraceCheckPoint()
+   0036 call System.Void SnakeTrack::ClearCheckPoint()
+   003B ret 
+== System.Void WriteSnakeTraceStream(System.IO.MemoryStream st, System.Int32 entry) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0005 brfalse IL_0015: ret
+   000A ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   000F ldarg.0 
+   0010 callvirt System.Void ListView`1<System.IO.MemoryStream>::Add(!0)
+   0015 ret 
+== System.Void WriteSnakeTraceLocal(System.UInt32 frameNo) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001e: call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   000F call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   0019 brfalse IL_0023: ret
+   001E call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   0023 ret 
+== System.Void Upload(System.Int64 offset) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldc.i4 5239
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_UPLOADCLTLOG_NTF CSProtocol.CSPkgBody::get_stUploadCltlogNtf()
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 ldc.i4.0 
+   0019 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::dwLogType
+   001E ldc.i4.0 
+   001F stloc.2 
+   0020 br IL_0031: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   0025 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   002A ldc.i4.1 
+   002B add 
+   002C stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0031 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0036 brfalse IL_006e: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   003B ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0040 ldc.i4.0 
+   0041 blt IL_006e: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   0046 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   004B ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0050 callvirt System.Int32 ListViewBase::get_Count()
+   0055 bge IL_006e: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   005A ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   005F ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0064 callvirt !0 ListView`1<System.IO.MemoryStream>::get_Item(System.Int32)
+   0069 brfalse IL_0025: ldsfld System.Int32 Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   006E ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0073 brfalse IL_015e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0078 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   007D ldc.i4.0 
+   007E blt IL_015e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0083 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0088 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   008D callvirt System.Int32 ListViewBase::get_Count()
+   0092 bge IL_015e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0097 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   009C ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   00A1 callvirt !0 ListView`1<System.IO.MemoryStream>::get_Item(System.Int32)
+   00A6 stloc.3 
+   00A7 ldarg.0 
+   00A8 ldloc.3 
+   00A9 callvirt System.Int64 System.IO.Stream::get_Length()
+   00AE bge IL_015e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00B3 ldarg.0 
+   00B4 ldloc.3 
+   00B5 callvirt System.Int64 System.IO.Stream::get_Position()
+   00BA beq IL_00c6: ldloc.1
+   00BF ldloc.3 
+   00C0 ldarg.0 
+   00C1 callvirt System.Void System.IO.Stream::set_Position(System.Int64)
+   00C6 ldloc.1 
+   00C7 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   00CC ldc.i4.1 
+   00CD add 
+   00CE ldc.i4 10000000
+   00D3 mul 
+   00D4 ldsfld Assets.Scripts.Framework.SynchrReport::_checkFrameNo
+   00D9 add 
+   00DA stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::dwLogType
+   00DF ldloc.1 
+   00E0 ldarg.0 
+   00E1 conv.u4 
+   00E2 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::dwBuffOffset
+   00E7 ldloc.1 
+   00E8 ldloc.3 
+   00E9 ldloc.1 
+   00EA ldfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::szBuf
+   00EF ldc.i4.0 
+   00F0 ldloc.1 
+   00F1 ldfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::szBuf
+   00F6 ldlen 
+   00F7 conv.i4 
+   00F8 callvirt System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)
+   00FD stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::dwBufLen
+   0102 ldloc.3 
+   0103 callvirt System.Int64 System.IO.Stream::get_Position()
+   0108 ldloc.3 
+   0109 callvirt System.Int64 System.IO.Stream::get_Length()
+   010E blt IL_0150: ldloc.1
+   0113 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0118 ldc.i4.1 
+   0119 add 
+   011A dup 
+   011B stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0120 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0125 callvirt System.Int32 ListViewBase::get_Count()
+   012A clt 
+   012C ldc.i4.0 
+   012D ceq 
+   012F stloc.2 
+   0130 ldloc.1 
+   0131 ldc.i4.1 
+   0132 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::bThisLogOver
+   0137 ldloc.1 
+   0138 ldloc.2 
+   0139 brfalse IL_0144: ldc.i4.0
+   013E ldc.i4.1 
+   013F br IL_0145: conv.u1
+   0144 ldc.i4.0 
+   0145 conv.u1 
+   0146 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::bAllLogOver
+   014B br IL_015e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0150 ldloc.1 
+   0151 ldc.i4.0 
+   0152 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::bThisLogOver
+   0157 ldloc.1 
+   0158 ldc.i4.0 
+   0159 stfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::bAllLogOver
+   015E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0163 ldloca.s V_0
+   0165 ldc.i4.0 
+   0166 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   016B pop 
+   016C ldloc.2 
+   016D brtrue IL_017d: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   0172 ldloc.1 
+   0173 ldfld CSProtocol.CSPKG_UPLOADCLTLOG_NTF::dwLogType
+   0178 brtrue IL_01de: ret
+   017D ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0182 brfalse IL_01ce: ldc.i4.m1
+   0187 ldc.i4.0 
+   0188 stloc.s V_4
+   018A br IL_01b7: ldloc.s V_4
+   018F ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0194 ldloc.s V_4
+   0196 callvirt !0 ListView`1<System.IO.MemoryStream>::get_Item(System.Int32)
+   019B brfalse IL_01b1: ldloc.s V_4
+   01A0 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   01A5 ldloc.s V_4
+   01A7 callvirt !0 ListView`1<System.IO.MemoryStream>::get_Item(System.Int32)
+   01AC callvirt System.Void System.IO.Stream::Close()
+   01B1 ldloc.s V_4
+   01B3 ldc.i4.1 
+   01B4 add 
+   01B5 stloc.s V_4
+   01B7 ldloc.s V_4
+   01B9 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   01BE callvirt System.Int32 ListViewBase::get_Count()
+   01C3 blt IL_018f: ldsfld ListView`1<System.IO.MemoryStream> Assets.Scripts.Framework.SynchrReport::_uploadList
+   01C8 ldnull 
+   01C9 stsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   01CE ldc.i4.m1 
+   01CF stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   01D4 call System.Void Assets.Scripts.Framework.SynchrReport::ClearSnakeTraceBuffer()
+   01D9 call System.Void Assets.Scripts.Framework.SynchrReport::NotifyPlayer()
+   01DE ret 
+== System.Void OnUpload(CSProtocol.CSPkg pkg) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_UPLOADCLTLOG_REQ CSProtocol.CSPkgBody::get_stUploadCltlogReq()
+   000B ldfld CSProtocol.SCPKG_UPLOADCLTLOG_REQ::dwOffset
+   0010 conv.u8 
+   0011 call System.Void Assets.Scripts.Framework.SynchrReport::Upload(System.Int64)
+   0016 ret 
+== System.Void NotifyPlayer() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.SynchrReport::_uploadList
+   0005 brfalse IL_000b: ldsfld System.Boolean Assets.Scripts.Framework.SynchrReport::_isSelfUnsync
+   000A ret 
+   000B ldsfld Assets.Scripts.Framework.SynchrReport::_isSelfUnsync
+   0010 brfalse IL_00cf: ret
+   0015 ldsfld Assets.Scripts.Framework.SynchrReport::_isAlerted
+   001A brtrue IL_00cf: ret
+   001F ldc.i4.1 
+   0020 stsfld Assets.Scripts.Framework.SynchrReport::_isAlerted
+   0025 ldstr HashCheckInvalidReport!
+   002A call System.Void DebugHelper::CustomLog(System.String)
+   002F ldstr HashCheckInvalideReport
+   0034 newobj System.Void Assets.Scripts.GameLogic.LobbyMsgHandler/HashCheckInvalideReport::.ctor(System.String)
+   0039 ldstr DeskId:
+   003E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0043 ldfld Assets.Scripts.GameLogic.BattleLogic::ThisDeskID
+   0048 box System.UInt32
+   004D call System.String System.String::Concat(System.Object,System.Object)
+   0052 call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0057 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   005C callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   0061 brfalse IL_008b: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0066 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   006B call !0 Singleton`1<CTextManager>::GetInstance()
+   0070 ldstr MultiGame_Not_Sync
+   0075 ldc.i4.1 
+   0076 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   007B ldc.i4 253
+   0080 ldc.i4.0 
+   0081 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0086 br IL_00cf: ret
+   008B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0090 call !0 Singleton`1<CTextManager>::GetInstance()
+   0095 ldstr MultiGame_Not_Sync_Try
+   009A ldc.i4.1 
+   009B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00A0 ldc.i4 1120
+   00A5 ldc.i4 5145
+   00AA call !0 Singleton`1<CTextManager>::GetInstance()
+   00AF ldstr Common_Confirm
+   00B4 ldc.i4.1 
+   00B5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00BA call !0 Singleton`1<CTextManager>::GetInstance()
+   00BF ldstr Setting_LIANXIKEFU_STR
+   00C4 ldc.i4.1 
+   00C5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00CA callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancelAndCancleNotCloseBox(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String)
+   00CF ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.m1 
+   0001 stsfld Assets.Scripts.Framework.SynchrReport::_uploadIndex
+   0006 ret 
+  NESTED Assets.Scripts.Framework.SynchrReport/Entry

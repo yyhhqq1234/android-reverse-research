@@ -1,0 +1,4 @@
+# WZRY双入口分流
+微信WXEntry空壳→BaseWXEntryActivity Router→WXEntry.handleIntent→LobbyState大厅
+QQ tencent1104791911/smobace→SGameActivity.onNewIntent→Unity BootObj→AutoLogin/QuickLogin→CMatchingSystem.OnStartMatching直进5V5
+改点: RouterCpp/GameStateCtrl.isLobby/Matching三处

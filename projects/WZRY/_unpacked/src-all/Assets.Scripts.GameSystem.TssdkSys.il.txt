@@ -1,0 +1,233 @@
+// TYPE Assets.Scripts.GameSystem.TssdkSys  base=MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean bInit
+  FIELD System.Boolean bEnableTSS
+  FIELD System.String m_OpenID
+  FIELD System.Single m_LastTime
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   0007 ldarg.0 
+   0008 ldsfld System.String::Empty
+   000D stfld Assets.Scripts.GameSystem.TssdkSys::m_OpenID
+   0012 ldarg.0 
+   0013 call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::.ctor()
+   0018 ret 
+== System.Void Init() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::Init()
+   0006 ldc.i4 9677
+   000B call System.Void TssSdk::TssSdkInit(System.UInt32)
+   0010 ldarg.0 
+   0011 ldc.i4.1 
+   0012 stfld Assets.Scripts.GameSystem.TssdkSys::bInit
+   0017 ldarg.0 
+   0018 call System.Single UnityEngine.Time::get_time()
+   001D stfld Assets.Scripts.GameSystem.TssdkSys::m_LastTime
+   0022 ldstr TssdkSys init
+   0027 call System.Void UnityEngine.Debug::Log(System.Object)
+   002C leave IL_003e: ret
+   0031 pop 
+   0032 ldarg.0 
+   0033 ldc.i4.0 
+   0034 stfld Assets.Scripts.GameSystem.TssdkSys::bInit
+   0039 leave IL_003e: ret
+   003E ret 
+== System.Void OnAccountLogin() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   0006 brfalse IL_001b: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.GameSystem.TssdkSys::InitTssSdk()
+   0011 ldstr TssdkSys OnAccountLogin
+   0016 call System.Void UnityEngine.Debug::Log(System.Object)
+   001B ret 
+== System.Void InitTssSdk() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   0006 brfalse IL_004b: ret
+   000B ldc.i4.1 
+   000C stloc.0 
+   000D ldsfld ApolloConfig::platform
+   0012 ldc.i4.1 
+   0013 bne.un IL_001a: newobj System.Void Apollo.ApolloAccountInfo::.ctor()
+   0018 ldc.i4.2 
+   0019 stloc.0 
+   001A newobj System.Void Apollo.ApolloAccountInfo::.ctor()
+   001F stloc.1 
+   0020 call Apollo.IApollo Apollo.IApollo::get_Instance()
+   0025 callvirt Apollo.IApolloAccountService Apollo.IApollo::GetAccountService()
+   002A ldloca.s V_1
+   002C callvirt Apollo.ApolloResult Apollo.IApolloAccountService::GetRecord(Apollo.ApolloAccountInfo&)
+   0031 pop 
+   0032 ldarg.0 
+   0033 ldloc.1 
+   0034 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   0039 stfld Assets.Scripts.GameSystem.TssdkSys::m_OpenID
+   003E ldarg.0 
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.TssdkSys::m_OpenID
+   0045 ldloc.0 
+   0046 call System.Void Assets.Scripts.GameSystem.TssdkSys::CreateTssSDKSys(System.String,System.Int32)
+   004B ret 
+== System.Void CreateTssSDKSys(System.String openId, System.Int32 nPlatform) attrs=Public, HideBySig maxstack=3
+   0000 ldstr TssdkSys CreateTssSDKSys, nplatf = 
+   0005 ldarg.2 
+   0006 box System.Int32
+   000B call System.String System.String::Concat(System.Object,System.Object)
+   0010 call System.Void UnityEngine.Debug::Log(System.Object)
+   0015 ldarg.1 
+   0016 brfalse IL_003f: ret
+   001B ldarg.2 
+   001C ldc.i4.2 
+   001D bne.un IL_0033: ldarg.2
+   0022 ldarg.2 
+   0023 ldarg.1 
+   0024 ldsfld ApolloConfig::WXAppID
+   0029 call System.Void TssSdk::TssSdkSetUserInfo(TssSdk/EENTRYID,System.String,System.String)
+   002E br IL_003f: ret
+   0033 ldarg.2 
+   0034 ldarg.1 
+   0035 ldsfld ApolloConfig::QQAppID
+   003A call System.Void TssSdk::TssSdkSetUserInfo(TssSdk/EENTRYID,System.String,System.String)
+   003F ret 
+== System.Void OnApplicationPause(System.Boolean pause) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.TssdkSys::bInit
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   0011 brtrue IL_0017: ldarg.1
+   0016 ret 
+   0017 ldarg.1 
+   0018 brfalse IL_0028: ldc.i4.1
+   001D ldc.i4.2 
+   001E call System.Void TssSdk::TssSdkSetGameStatus(TssSdk/EGAMESTATUS)
+   0023 br IL_002e: call !0 Singleton`1<BeaconHelper>::GetInstance()
+   0028 ldc.i4.1 
+   0029 call System.Void TssSdk::TssSdkSetGameStatus(TssSdk/EGAMESTATUS)
+   002E call !0 Singleton`1<BeaconHelper>::GetInstance()
+   0033 ldarg.1 
+   0034 callvirt System.Void BeaconHelper::Event_ApplicationPause(System.Boolean)
+   0039 ret 
+== System.Void On_GetAntiData(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   000A brtrue IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld CSProtocol.CSPkg::stPkgData
+   0016 callvirt CSProtocol.SCPKG_ANTIDATA_SYN CSProtocol.CSPkgBody::get_stAntiDataSyn()
+   001B ldfld CSProtocol.SCPKG_ANTIDATA_SYN::szBuff
+   0020 ldarg.0 
+   0021 ldfld CSProtocol.CSPkg::stPkgData
+   0026 callvirt CSProtocol.SCPKG_ANTIDATA_SYN CSProtocol.CSPkgBody::get_stAntiDataSyn()
+   002B ldfld CSProtocol.SCPKG_ANTIDATA_SYN::wLen
+   0030 call System.Void TssSdk::TssSdkRcvAntiData(System.Byte[],System.UInt16)
+   0035 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.TssdkSys::bInit
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.TssdkSys::bEnableTSS
+   0011 brtrue IL_0017: call System.Single UnityEngine.Time::get_time()
+   0016 ret 
+   0017 call System.Single UnityEngine.Time::get_time()
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.TssdkSys::m_LastTime
+   0022 sub 
+   0023 ldc.r4 20
+   0028 ble.un IL_0128: ret
+   002D call System.IntPtr TssSdk::tss_get_report_data()
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ldsfld System.IntPtr::Zero
+   0039 call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr)
+   003E brfalse IL_011d: ldarg.0
+   0043 newobj System.Void TssSdk/AntiDataInfo::.ctor()
+   0048 stloc.1 
+   0049 call System.Boolean TssSdk::Is64bit()
+   004E brfalse IL_007c: call System.Boolean TssSdk::Is32bit()
+   0053 ldloc.0 
+   0054 ldc.i4.0 
+   0055 call System.Int16 System.Runtime.InteropServices.Marshal::ReadInt16(System.IntPtr,System.Int32)
+   005A stloc.2 
+   005B ldloc.0 
+   005C ldc.i4.2 
+   005D call System.Int64 System.Runtime.InteropServices.Marshal::ReadInt64(System.IntPtr,System.Int32)
+   0062 stloc.3 
+   0063 ldloc.1 
+   0064 ldloc.2 
+   0065 conv.u2 
+   0066 stfld TssSdk/AntiDataInfo::anti_data_len
+   006B ldloc.1 
+   006C ldloc.3 
+   006D newobj System.Void System.IntPtr::.ctor(System.Int64)
+   0072 stfld TssSdk/AntiDataInfo::anti_data
+   0077 br IL_00ae: ldloc.1
+   007C call System.Boolean TssSdk::Is32bit()
+   0081 brfalse IL_00ae: ldloc.1
+   0086 ldloc.0 
+   0087 ldc.i4.0 
+   0088 call System.Int16 System.Runtime.InteropServices.Marshal::ReadInt16(System.IntPtr,System.Int32)
+   008D stloc.s V_4
+   008F ldloc.0 
+   0090 ldc.i4.2 
+   0091 call System.Int32 System.Runtime.InteropServices.Marshal::ReadInt32(System.IntPtr,System.Int32)
+   0096 stloc.s V_5
+   0098 ldloc.1 
+   0099 ldloc.s V_4
+   009B conv.u2 
+   009C stfld TssSdk/AntiDataInfo::anti_data_len
+   00A1 ldloc.1 
+   00A2 ldloc.s V_5
+   00A4 newobj System.Void System.IntPtr::.ctor(System.Int32)
+   00A9 stfld TssSdk/AntiDataInfo::anti_data
+   00AE ldloc.1 
+   00AF ldfld TssSdk/AntiDataInfo::anti_data
+   00B4 ldsfld System.IntPtr::Zero
+   00B9 call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr)
+   00BE brfalse IL_0117: ldloc.0
+   00C3 ldc.i4 3000
+   00C8 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   00CD stloc.s V_6
+   00CF ldloc.s V_6
+   00D1 ldfld CSProtocol.CSPkg::stPkgData
+   00D6 callvirt CSProtocol.CSPKG_ANTIDATA_REQ CSProtocol.CSPkgBody::get_stAntiDataReq()
+   00DB ldloc.1 
+   00DC ldfld TssSdk/AntiDataInfo::anti_data_len
+   00E1 stfld CSProtocol.CSPKG_ANTIDATA_REQ::wLen
+   00E6 ldloc.1 
+   00E7 ldfld TssSdk/AntiDataInfo::anti_data
+   00EC ldloc.s V_6
+   00EE ldfld CSProtocol.CSPkg::stPkgData
+   00F3 callvirt CSProtocol.CSPKG_ANTIDATA_REQ CSProtocol.CSPkgBody::get_stAntiDataReq()
+   00F8 ldfld CSProtocol.CSPKG_ANTIDATA_REQ::szBuff
+   00FD ldc.i4.0 
+   00FE ldloc.1 
+   00FF ldfld TssSdk/AntiDataInfo::anti_data_len
+   0104 call System.Void System.Runtime.InteropServices.Marshal::Copy(System.IntPtr,System.Byte[],System.Int32,System.Int32)
+   0109 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   010E ldloca.s V_6
+   0110 ldc.i4.0 
+   0111 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0116 pop 
+   0117 ldloc.0 
+   0118 call System.Void TssSdk::tss_del_report_data(System.IntPtr)
+   011D ldarg.0 
+   011E call System.Single UnityEngine.Time::get_time()
+   0123 stfld Assets.Scripts.GameSystem.TssdkSys::m_LastTime
+   0128 ret 
+== System.Void NotifyTssSdkStartGame() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.3 
+   0001 call System.Void TssSdk::TssSdkSetGameStatus(TssSdk/EGAMESTATUS)
+   0006 ret 
+== System.Void NotifyTssSdkEndGame() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.4 
+   0001 call System.Void TssSdk::TssSdkSetGameStatus(TssSdk/EGAMESTATUS)
+   0006 ret 
+== System.Void NotifyTssSdkUpdateFinished() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.5 
+   0001 call System.Void TssSdk::TssSdkSetGameStatus(TssSdk/EGAMESTATUS)
+   0006 ret 

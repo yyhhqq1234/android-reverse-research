@@ -1,0 +1,403 @@
+// TYPE Assets.Scripts.GameSystem.CSoundChat  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.GameObject tipObj
+  FIELD UnityEngine.UI.Text tipText
+  FIELD System.Int32 m_timer
+  FIELD System.Boolean bTimerInCD
+  FIELD UnityEngine.UI.Image m_cooldownImage
+  FIELD System.UInt64 m_startCooldownTimestamp
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Init(UnityEngine.GameObject cooldownImage, UnityEngine.GameObject tipObj) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 stfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   000D ldc.i4.0 
+   000E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0013 ldarg.0 
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   001A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   001F ldstr Text
+   0024 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0029 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   002E stfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   0033 ldarg.0 
+   0034 ldarg.1 
+   0035 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   003A stfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   003F ldarg.0 
+   0040 call !0 Singleton`1<CTimerManager>::get_instance()
+   0045 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   004A callvirt System.Int32 Assets.Scripts.GameSystem.VoiceSys::get_TotalVoiceTime()
+   004F ldc.i4 1000
+   0054 mul 
+   0055 ldc.i4.m1 
+   0056 ldarg.0 
+   0057 ldftn System.Void Assets.Scripts.GameSystem.CSoundChat::OnTimerEnd(System.Int32)
+   005D newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0062 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0067 stfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   006C call !0 Singleton`1<CTimerManager>::get_instance()
+   0071 ldarg.0 
+   0072 ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0077 callvirt System.Void CTimerManager::PauseTimer(System.Int32)
+   007C call !0 Singleton`1<CTimerManager>::get_instance()
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0087 callvirt System.Void CTimerManager::ResetTimer(System.Int32)
+   008C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0091 ldc.i4 1182
+   0096 ldarg.0 
+   0097 ldftn System.Void Assets.Scripts.GameSystem.CSoundChat::OnBattle_Voice_Btn(Assets.Scripts.UI.CUIEvent)
+   009D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A2 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A7 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0007 ldarg.0 
+   0008 ldnull 
+   0009 stfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   000E call !0 Singleton`1<CTimerManager>::get_instance()
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0019 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0023 ldc.i4 1182
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.GameSystem.CSoundChat::OnBattle_Voice_Btn(Assets.Scripts.UI.CUIEvent)
+   002F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0039 ret 
+== System.Void OnBattle_Voice_Btn(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameLogic.BattleLogic::get_bPauseGameLogic()
+   000A brfalse IL_0010: ldsfld System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeSelect
+   000F ret 
+   0010 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeSelect
+   0015 brfalse IL_008a: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   001A call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   001F callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_IsUseVoiceSysSetting()
+   0024 brtrue IL_0085: br IL_01d6
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   002F ldstr 语音聊天未开启，请在设置界面中打开
+   0034 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   003F ldnull 
+   0040 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0045 brfalse IL_004b: ldarg.0
+   004A ret 
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   0051 brfalse IL_0057: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0056 ret 
+   0057 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   005C ldstr UI_common_tishi
+   0061 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0066 pop 
+   0067 ldarg.0 
+   0068 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartTimer()
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0073 ldc.i4.1 
+   0074 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0079 ldarg.0 
+   007A ldc.i4 2000
+   007F call System.Void Assets.Scripts.GameSystem.CSoundChat::StartCooldown(System.UInt32)
+   0084 ret 
+   0085 br IL_01d6: ldarg.0
+   008A call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   008F callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_GlobalVoiceSetting()
+   0094 brtrue IL_00f5: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   009F ldstr 暂时无法连接语音服务器，请稍后尝试
+   00A4 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   00AF ldnull 
+   00B0 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00B5 brfalse IL_00bb: ldarg.0
+   00BA ret 
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   00C1 brfalse IL_00c7: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   00C6 ret 
+   00C7 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   00CC ldstr UI_common_tishi
+   00D1 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   00D6 pop 
+   00D7 ldarg.0 
+   00D8 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartTimer()
+   00DD ldarg.0 
+   00DE ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   00E3 ldc.i4.1 
+   00E4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00E9 ldarg.0 
+   00EA ldc.i4 2000
+   00EF call System.Void Assets.Scripts.GameSystem.CSoundChat::StartCooldown(System.UInt32)
+   00F4 ret 
+   00F5 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   00FA callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_IsUseVoiceSysSetting()
+   00FF brtrue IL_0160: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0104 ldarg.0 
+   0105 ldfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   010A ldstr 语音聊天未开启，请在设置界面中打开
+   010F callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0114 ldarg.0 
+   0115 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   011A ldnull 
+   011B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0120 brfalse IL_0126: ldarg.0
+   0125 ret 
+   0126 ldarg.0 
+   0127 ldfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   012C brfalse IL_0132: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0131 ret 
+   0132 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0137 ldstr UI_common_tishi
+   013C callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0141 pop 
+   0142 ldarg.0 
+   0143 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartTimer()
+   0148 ldarg.0 
+   0149 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   014E ldc.i4.1 
+   014F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0154 ldarg.0 
+   0155 ldc.i4 2000
+   015A call System.Void Assets.Scripts.GameSystem.CSoundChat::StartCooldown(System.UInt32)
+   015F ret 
+   0160 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0165 callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::IsInVoiceRoom()
+   016A brtrue IL_01d6: ldarg.0
+   016F ldarg.0 
+   0170 ldfld Assets.Scripts.GameSystem.CSoundChat::tipText
+   0175 call !0 Singleton`1<CTextManager>::GetInstance()
+   017A ldstr Voice_Cannot_JoinVoiceRoom
+   017F ldc.i4.1 
+   0180 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0185 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   018A ldarg.0 
+   018B ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0190 ldnull 
+   0191 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0196 brfalse IL_019c: ldarg.0
+   019B ret 
+   019C ldarg.0 
+   019D ldfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   01A2 brfalse IL_01a8: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   01A7 ret 
+   01A8 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   01AD ldstr UI_common_tishi
+   01B2 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   01B7 pop 
+   01B8 ldarg.0 
+   01B9 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartTimer()
+   01BE ldarg.0 
+   01BF ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   01C4 ldc.i4.1 
+   01C5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01CA ldarg.0 
+   01CB ldc.i4 2000
+   01D0 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartCooldown(System.UInt32)
+   01D5 ret 
+   01D6 ldarg.0 
+   01D7 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   01DC ldnull 
+   01DD call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   01E2 brfalse IL_01e8: ldarg.0
+   01E7 ret 
+   01E8 ldarg.0 
+   01E9 ldfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   01EE brfalse IL_01f4: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   01F3 ret 
+   01F4 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   01F9 ldstr UI_common_tishi
+   01FE callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0203 pop 
+   0204 ldarg.0 
+   0205 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartTimer()
+   020A ldarg.0 
+   020B ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0210 ldc.i4.0 
+   0211 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0216 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   021B callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::OpenSoundInBattle()
+   0220 ldarg.0 
+   0221 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0226 callvirt System.Int32 Assets.Scripts.GameSystem.VoiceSys::get_TotalVoiceTime()
+   022B ldc.i4 1000
+   0230 mul 
+   0231 call System.Void Assets.Scripts.GameSystem.CSoundChat::StartCooldown(System.UInt32)
+   0236 ret 
+== System.Void OnTimerEnd(System.Int32 timersequence) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   0019 call !0 Singleton`1<CTimerManager>::get_instance()
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0024 callvirt System.Void CTimerManager::PauseTimer(System.Int32)
+   0029 call !0 Singleton`1<CTimerManager>::get_instance()
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0034 callvirt System.Void CTimerManager::ResetTimer(System.Int32)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CSoundChat::tipObj
+   003F ldc.i4.0 
+   0040 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0045 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   004A callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::CloseSoundInBattle()
+   004F ldarg.0 
+   0050 call System.Void Assets.Scripts.GameSystem.CSoundChat::EndCooldown()
+   0055 ret 
+== System.Void StartTimer() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CSoundChat::bTimerInCD
+   0007 call !0 Singleton`1<CTimerManager>::get_instance()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CSoundChat::m_timer
+   0012 callvirt System.Void CTimerManager::ResumeTimer(System.Int32)
+   0017 ret 
+== System.Void StartCooldown(System.UInt32 maxCooldownTime) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0082: ret
+   0011 ldarg.1 
+   0012 ldc.i4.0 
+   0013 ble.un IL_006e: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   001E ldc.i4.1 
+   001F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   002A ldc.i4.3 
+   002B callvirt System.Void UnityEngine.UI.Image::set_type(UnityEngine.UI.Image/Type)
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   0036 ldc.i4.4 
+   0037 callvirt System.Void UnityEngine.UI.Image::set_fillMethod(UnityEngine.UI.Image/FillMethod)
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   0042 ldc.i4.2 
+   0043 callvirt System.Void UnityEngine.UI.Image::set_fillOrigin(System.Int32)
+   0048 ldarg.0 
+   0049 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   004E ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0053 conv.u8 
+   0054 stfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   005F ldc.r4 1
+   0064 call System.Void Assets.Scripts.UI.ImageExtension::CustomFillAmount(UnityEngine.UI.Image,System.Single)
+   0069 br IL_0082: ret
+   006E ldarg.0 
+   006F ldc.i4.0 
+   0070 conv.i8 
+   0071 stfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   007C ldc.i4.0 
+   007D callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0082 ret 
+== System.Void EndCooldown() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 conv.i8 
+   0003 stfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   000E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0013 brfalse IL_0024: ret
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   001E ldc.i4.0 
+   001F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0024 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CSoundChat::UpdateCooldown()
+   0006 ret 
+== System.Void UpdateCooldown() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   0006 ldc.i4.0 
+   0007 conv.i8 
+   0008 bne.un IL_000e: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   000D ret 
+   000E call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0013 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0018 conv.u8 
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   001F sub 
+   0020 conv.u4 
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 conv.u8 
+   0024 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0029 callvirt System.Int32 Assets.Scripts.GameSystem.VoiceSys::get_TotalVoiceTime()
+   002E ldc.i4 1000
+   0033 mul 
+   0034 conv.i8 
+   0035 blt IL_0064: ldarg.0
+   003A ldarg.0 
+   003B ldc.i4.0 
+   003C conv.i8 
+   003D stfld Assets.Scripts.GameSystem.CSoundChat::m_startCooldownTimestamp
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   0048 ldnull 
+   0049 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004E brfalse IL_005f: br IL_00af
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   0059 ldc.i4.0 
+   005A callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   005F br IL_00af: ret
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   006A ldnull 
+   006B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0070 brfalse IL_00af: ret
+   0075 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   007A callvirt System.Int32 Assets.Scripts.GameSystem.VoiceSys::get_TotalVoiceTime()
+   007F ldc.i4 1000
+   0084 mul 
+   0085 conv.i8 
+   0086 ldloc.0 
+   0087 conv.u8 
+   0088 sub 
+   0089 conv.r4 
+   008A ldc.r4 1
+   008F mul 
+   0090 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0095 callvirt System.Int32 Assets.Scripts.GameSystem.VoiceSys::get_TotalVoiceTime()
+   009A ldc.i4 1000
+   009F mul 
+   00A0 conv.r4 
+   00A1 div 
+   00A2 stloc.1 
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameSystem.CSoundChat::m_cooldownImage
+   00A9 ldloc.1 
+   00AA call System.Void Assets.Scripts.UI.ImageExtension::CustomFillAmount(UnityEngine.UI.Image,System.Single)
+   00AF ret 

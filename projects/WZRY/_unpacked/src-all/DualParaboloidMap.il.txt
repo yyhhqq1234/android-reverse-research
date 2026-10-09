@@ -1,0 +1,150 @@
+// TYPE DualParaboloidMap  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Camera paraboloidCamera
+  FIELD UnityEngine.RenderTexture frontRT
+  FIELD UnityEngine.RenderTexture backRT
+  FIELD UnityEngine.GameObject environmentMapBuildDMP
+  FIELD System.String generatePath
+  FIELD System.String generateFileName
+  FIELD System.Boolean buildDualParaboloidMapByYAxis
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldstr /Art_Resources/SceneModels/DualParaboloidMapping/
+   0006 stfld DualParaboloidMap::generatePath
+   000B ldarg.0 
+   000C ldstr DualParaboloidMap
+   0011 stfld DualParaboloidMap::generateFileName
+   0016 ldarg.0 
+   0017 ldc.i4.1 
+   0018 stfld DualParaboloidMap::buildDualParaboloidMapByYAxis
+   001D ldarg.0 
+   001E call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0023 ret 
+== System.Void Generate() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld DualParaboloidMap::environmentMapBuildDMP
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Renderer>()
+   000B callvirt UnityEngine.Material UnityEngine.Renderer::get_sharedMaterial()
+   0010 stloc.0 
+   0011 call System.String UnityEngine.Application::get_dataPath()
+   0016 ldarg.0 
+   0017 ldfld DualParaboloidMap::generatePath
+   001C call System.String System.String::Concat(System.String,System.String)
+   0021 stloc.1 
+   0022 ldloc.1 
+   0023 call System.Boolean System.IO.Directory::Exists(System.String)
+   0028 brtrue IL_0034: ldarg.0
+   002D ldloc.1 
+   002E call System.IO.DirectoryInfo System.IO.Directory::CreateDirectory(System.String)
+   0033 pop 
+   0034 ldarg.0 
+   0035 ldfld DualParaboloidMap::buildDualParaboloidMapByYAxis
+   003A brfalse IL_0072: ldarg.0
+   003F ldarg.0 
+   0040 ldfld DualParaboloidMap::paraboloidCamera
+   0045 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   004A ldc.r4 90
+   004F ldc.r4 0
+   0054 ldc.r4 0
+   0059 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   005E callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0063 ldstr _BUILD_DPM_BY_Y
+   0068 call System.Void UnityEngine.Shader::EnableKeyword(System.String)
+   006D br IL_00a0: ldloc.0
+   0072 ldarg.0 
+   0073 ldfld DualParaboloidMap::paraboloidCamera
+   0078 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   007D ldc.r4 0
+   0082 ldc.r4 180
+   0087 ldc.r4 0
+   008C call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   0091 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0096 ldstr _BUILD_DPM_BY_Y
+   009B call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   00A0 ldloc.0 
+   00A1 ldstr _Direction
+   00A6 ldc.r4 -1
+   00AB callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00B0 ldarg.0 
+   00B1 ldfld DualParaboloidMap::paraboloidCamera
+   00B6 ldarg.0 
+   00B7 ldfld DualParaboloidMap::backRT
+   00BC callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   00C1 ldarg.0 
+   00C2 ldfld DualParaboloidMap::paraboloidCamera
+   00C7 callvirt System.Void UnityEngine.Camera::Render()
+   00CC ldstr {0}back{1}.png
+   00D1 ldloc.1 
+   00D2 ldarg.0 
+   00D3 ldfld DualParaboloidMap::generateFileName
+   00D8 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00DD stloc.2 
+   00DE ldarg.0 
+   00DF ldarg.0 
+   00E0 ldfld DualParaboloidMap::backRT
+   00E5 ldloc.2 
+   00E6 call System.Void DualParaboloidMap::SaveRenderTextureToPng(UnityEngine.RenderTexture,System.String)
+   00EB ldloc.0 
+   00EC ldstr _Direction
+   00F1 ldc.r4 1
+   00F6 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00FB ldarg.0 
+   00FC ldfld DualParaboloidMap::paraboloidCamera
+   0101 ldarg.0 
+   0102 ldfld DualParaboloidMap::frontRT
+   0107 callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   010C ldarg.0 
+   010D ldfld DualParaboloidMap::paraboloidCamera
+   0112 callvirt System.Void UnityEngine.Camera::Render()
+   0117 ldstr {0}front{1}.png
+   011C ldloc.1 
+   011D ldarg.0 
+   011E ldfld DualParaboloidMap::generateFileName
+   0123 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0128 stloc.2 
+   0129 ldarg.0 
+   012A ldarg.0 
+   012B ldfld DualParaboloidMap::frontRT
+   0130 ldloc.2 
+   0131 call System.Void DualParaboloidMap::SaveRenderTextureToPng(UnityEngine.RenderTexture,System.String)
+   0136 ret 
+== System.Void SaveRenderTextureToPng(UnityEngine.RenderTexture rt, System.String path) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 callvirt System.Int32 UnityEngine.Texture::get_width()
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 callvirt System.Int32 UnityEngine.Texture::get_height()
+   000D stloc.1 
+   000E ldloc.0 
+   000F ldloc.1 
+   0010 ldc.i4.5 
+   0011 ldc.i4.0 
+   0012 newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   0017 stloc.2 
+   0018 call UnityEngine.RenderTexture UnityEngine.RenderTexture::get_active()
+   001D stloc.3 
+   001E ldarg.1 
+   001F call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   0024 ldloc.2 
+   0025 ldc.r4 0
+   002A ldc.r4 0
+   002F ldloc.0 
+   0030 conv.r4 
+   0031 ldloc.1 
+   0032 conv.r4 
+   0033 newobj System.Void UnityEngine.Rect::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0038 ldc.i4.0 
+   0039 ldc.i4.0 
+   003A callvirt System.Void UnityEngine.Texture2D::ReadPixels(UnityEngine.Rect,System.Int32,System.Int32)
+   003F ldloc.2 
+   0040 callvirt System.Void UnityEngine.Texture2D::Apply()
+   0045 ldloc.2 
+   0046 callvirt System.Byte[] UnityEngine.Texture2D::EncodeToPNG()
+   004B stloc.s V_4
+   004D ldarg.2 
+   004E ldloc.s V_4
+   0050 call System.Void System.IO.File::WriteAllBytes(System.String,System.Byte[])
+   0055 ldloc.3 
+   0056 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   005B ldloc.2 
+   005C call System.Void UnityEngine.Object::DestroyImmediate(UnityEngine.Object)
+   0061 ret 

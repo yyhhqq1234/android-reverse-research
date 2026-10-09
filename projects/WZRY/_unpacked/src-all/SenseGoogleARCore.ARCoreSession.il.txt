@@ -1,0 +1,184 @@
+// TYPE SenseGoogleARCore.ARCoreSession  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD SenseGoogleARCore.ARCoreSessionConfig SessionConfig
+  FIELD System.Boolean ConnectOnAwake
+  FIELD SenseGoogleARCoreInternal.SessionManager m_SessionManager
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld SenseGoogleARCore.ARCoreSession::ConnectOnAwake
+   0007 ldarg.0 
+   0008 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   000D ret 
+== System.Void Awake() attrs=Public, HideBySig maxstack=2
+   0000 call System.Boolean UnityEngine.Application::get_isEditor()
+   0005 brfalse IL_0012: call !!0[] UnityEngine.Object::FindObjectsOfType<SenseGoogleARCore.ARCoreSession>()
+   000A ldarg.0 
+   000B ldc.i4.0 
+   000C call System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0011 ret 
+   0012 call !!0[] UnityEngine.Object::FindObjectsOfType<SenseGoogleARCore.ARCoreSession>()
+   0017 ldlen 
+   0018 conv.i4 
+   0019 ldc.i4.1 
+   001A ble IL_0035: ldarg.0
+   001F ldstr Multiple SessionComponents present in the game scene.  Destroying the gameobject of the newest one.
+   0024 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   0029 ldarg.0 
+   002A call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002F call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0034 ret 
+   0035 ldarg.0 
+   0036 call SenseGoogleARCoreInternal.SessionManager SenseGoogleARCoreInternal.SessionManager::CreateSession()
+   003B stfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0040 ldarg.0 
+   0041 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0046 call System.Void SenseGoogleARCore.Session::Initialize(SenseGoogleARCoreInternal.SessionManager)
+   004B call SenseGoogleARCore.SessionConnectionState SenseGoogleARCore.Session::get_ConnectionState()
+   0050 brfalse IL_0060: ldarg.0
+   0055 ldstr Could not create an ARCore session.  The current Unity Editor may not support this version of ARCore.
+   005A call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   005F ret 
+   0060 ldarg.0 
+   0061 ldfld SenseGoogleARCore.ARCoreSession::ConnectOnAwake
+   0066 brfalse IL_0077: ldarg.0
+   006B ldarg.0 
+   006C ldarg.0 
+   006D ldfld SenseGoogleARCore.ARCoreSession::SessionConfig
+   0072 call System.Void SenseGoogleARCore.ARCoreSession::Connect_NoPermission(SenseGoogleARCore.ARCoreSessionConfig)
+   0077 ldarg.0 
+   0078 call System.Collections.IEnumerator SenseGoogleARCore.ARCoreSession::OpenCamera()
+   007D pop 
+   007E ret 
+== System.Collections.IEnumerator OpenCamera() attrs=Private, HideBySig maxstack=1
+   0000 newobj System.Void SenseGoogleARCore.ARCoreSession/<OpenCamera>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ret 
+== System.Void OnDestroy() attrs=Public, HideBySig maxstack=8
+   0000 ldstr before Frame.Destroy
+   0005 call System.Void SenseGoogleARCoreInternal.ARDebug::LogInfo(System.String)
+   000A call System.Void SenseGoogleARCore.Frame::Destroy()
+   000F ldstr before Session.Destroy
+   0014 call System.Void SenseGoogleARCoreInternal.ARDebug::LogInfo(System.String)
+   0019 call System.Void SenseGoogleARCore.Session::Destroy()
+   001E ldstr after Session.Destroy
+   0023 call System.Void SenseGoogleARCoreInternal.ARDebug::LogInfo(System.String)
+   0028 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0006 brtrue IL_000c: call System.Void SenseGoogleARCore.AsyncTask::OnUpdate()
+   000B ret 
+   000C call System.Void SenseGoogleARCore.AsyncTask::OnUpdate()
+   0011 ret 
+== System.Void OnApplicationFocus(System.Boolean focus) attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void OnApplicationPause(System.Boolean pause) attrs=Public, HideBySig maxstack=1
+   0000 ldarg.1 
+   0001 brfalse IL_002c: ldstr "OnApplicationPause true, call session resume"
+   0006 ldstr OnApplicationPause false, call session pause
+   000B call System.Void SenseGoogleARCoreInternal.ARDebug::LogInfo(System.String)
+   0010 ldarg.0 
+   0011 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0016 brfalse IL_0027: br IL_004d
+   001B ldarg.0 
+   001C ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0021 callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::Pause()
+   0026 pop 
+   0027 br IL_004d: ret
+   002C ldstr OnApplicationPause true, call session resume
+   0031 call System.Void SenseGoogleARCoreInternal.ARDebug::LogInfo(System.String)
+   0036 ldarg.0 
+   0037 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   003C brfalse IL_004d: ret
+   0041 ldarg.0 
+   0042 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0047 callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::Resume()
+   004C pop 
+   004D ret 
+== System.Void OnApplicationQuit() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0006 callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::Pause()
+   000B pop 
+   000C ret 
+== System.Void Connect_NoPermission(SenseGoogleARCore.ARCoreSessionConfig sessionConfig) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0006 brtrue IL_0015: ldarg.1
+   000B ldstr Cannot connect because ARCoreSession failed to initialize.
+   0010 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   0015 ldarg.1 
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001C brfalse IL_0037: call SenseGoogleARCore.SessionConnectionState SenseGoogleARCore.Session::get_ConnectionState()
+   0021 ldstr Unable to connect ARSession session due to missing ARSessionConfig.
+   0026 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   002B ldarg.0 
+   002C ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0031 ldc.i4.2 
+   0032 callvirt System.Void SenseGoogleARCoreInternal.SessionManager::set_ConnectionState(SenseGoogleARCore.SessionConnectionState)
+   0037 call SenseGoogleARCore.SessionConnectionState SenseGoogleARCore.Session::get_ConnectionState()
+   003C brfalse IL_004b: ldloca.s V_0
+   0041 ldstr Multiple attempts to connect to the ARSession.  Note that the ARSession connection spans the lifetime of the application and cannot be reconfigured.  This will change in future versions of ARCore.
+   0046 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   004B ldloca.s V_0
+   004D newobj System.Void SenseGoogleARCore.AsyncTask`1<SenseGoogleARCore.SessionConnectionState>::.ctor(System.Action`1<T>&)
+   0052 stloc.1 
+   0053 ldloc.1 
+   0054 ldarg.0 
+   0055 ldftn System.Void SenseGoogleARCore.ARCoreSession::<Connect_NoPermission>m__0(SenseGoogleARCore.SessionConnectionState)
+   005B newobj System.Void System.Action`1<SenseGoogleARCore.SessionConnectionState>::.ctor(System.Object,System.IntPtr)
+   0060 callvirt SenseGoogleARCore.AsyncTask`1<T> SenseGoogleARCore.AsyncTask`1<SenseGoogleARCore.SessionConnectionState>::ThenAction(System.Action`1<T>)
+   0065 pop 
+   0066 ldarg.0 
+   0067 ldarg.1 
+   0068 ldloc.0 
+   0069 call System.Void SenseGoogleARCore.ARCoreSession::_ResumeSession(SenseGoogleARCore.ARCoreSessionConfig,System.Action`1<SenseGoogleARCore.SessionConnectionState>)
+   006E ret 
+== System.Void _ResumeSession(SenseGoogleARCore.ARCoreSessionConfig sessionConfig, System.Action`1<SenseGoogleARCore.SessionConnectionState> onComplete) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0006 ldarg.1 
+   0007 callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::CheckSupported(SenseGoogleARCore.ARCoreSessionConfig)
+   000C brtrue IL_0023: ldarg.0
+   0011 ldstr The requested ARCore session configuration is not supported.
+   0016 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   001B ldarg.2 
+   001C ldc.i4.3 
+   001D callvirt System.Void System.Action`1<SenseGoogleARCore.SessionConnectionState>::Invoke(!0)
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0029 ldarg.1 
+   002A callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::SetConfiguration(SenseGoogleARCore.ARCoreSessionConfig)
+   002F brtrue IL_0046: ldarg.0
+   0034 ldstr ARCore connection failed because the current configuration is not supported.
+   0039 call System.Void SenseGoogleARCoreInternal.ARDebug::LogError(System.Object)
+   003E ldarg.2 
+   003F ldc.i4.3 
+   0040 callvirt System.Void System.Action`1<SenseGoogleARCore.SessionConnectionState>::Invoke(!0)
+   0045 ret 
+   0046 ldarg.0 
+   0047 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   004C callvirt SenseGoogleARCoreInternal.FrameManager SenseGoogleARCoreInternal.SessionManager::get_FrameManager()
+   0051 call System.Void SenseGoogleARCore.Frame::Initialize(SenseGoogleARCoreInternal.FrameManager)
+   0056 ldarg.0 
+   0057 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   005C callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::Resume()
+   0061 brtrue IL_0072: ldarg.2
+   0066 ldarg.2 
+   0067 ldc.i4.5 
+   0068 callvirt System.Void System.Action`1<SenseGoogleARCore.SessionConnectionState>::Invoke(!0)
+   006D br IL_0079: ret
+   0072 ldarg.2 
+   0073 ldc.i4.1 
+   0074 callvirt System.Void System.Action`1<SenseGoogleARCore.SessionConnectionState>::Invoke(!0)
+   0079 ret 
+== System.Void <Connect_NoPermission>m__0(SenseGoogleARCore.SessionConnectionState connectionState) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SenseGoogleARCore.ARCoreSession::m_SessionManager
+   0006 ldarg.1 
+   0007 callvirt System.Void SenseGoogleARCoreInternal.SessionManager::set_ConnectionState(SenseGoogleARCore.SessionConnectionState)
+   000C ret 
+  NESTED SenseGoogleARCore.ARCoreSession/<OpenCamera>c__Iterator0

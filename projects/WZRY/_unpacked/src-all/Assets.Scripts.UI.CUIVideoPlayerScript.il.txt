@@ -1,0 +1,339 @@
+// TYPE Assets.Scripts.UI.CUIVideoPlayerScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean m_initialized
+  FIELD System.String videoPath
+  FIELD Assets.Scripts.UI.enLoopMode loopMode
+  FIELD System.Int32 partlyLoopBeginTime
+  FIELD Assets.Scripts.UI.enVideoState currentVideoState
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0006 ret 
+== System.Void Play() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0006 ldc.i4.1 
+   0007 bne.un IL_0022: ldarg.0
+   000C ldstr CUIVideoPlayer: this video is already playing
+   0011 call System.Void UnityEngine.Debug::Log(System.Object)
+   0016 ldstr CUIVideoPlayer: this video is already playing
+   001B ldc.i4.1 
+   001C call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0021 ret 
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0028 ldc.i4.2 
+   0029 bne.un IL_0043: ldarg.0
+   002E ldstr CUIVideoPlayer: play pause video from begin
+   0033 call System.Void UnityEngine.Debug::Log(System.Object)
+   0038 ldstr CUIVideoPlayer: play pause video from begin
+   003D ldc.i4.1 
+   003E call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::m_initialized
+   0049 brtrue IL_0064: ldstr "CUIVideoPlayer play video:"
+   004E ldstr CUIVideoPlayer Not Initialize
+   0053 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0058 ldstr CUIVideoPlayer Not Initialize
+   005D ldc.i4.1 
+   005E call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0063 ret 
+   0064 ldstr CUIVideoPlayer play video:
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   006F call System.String System.String::Concat(System.String,System.String)
+   0074 call System.Void UnityEngine.Debug::Log(System.Object)
+   0079 ldstr CUIVideoPlayer play video:
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   0084 call System.String System.String::Concat(System.String,System.String)
+   0089 ldc.i4.1 
+   008A call System.Void ocsys::NSLog(System.String,System.Boolean)
+   008F call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0094 ldarg.0 
+   0095 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009A ldarg.0 
+   009B call System.String Assets.Scripts.UI.CUIVideoPlayerScript::GetFullVideoPath()
+   00A0 ldc.i4.1 
+   00A1 callvirt System.Void com.tencent.pandora.VideoPlayer::Play(UnityEngine.GameObject,System.String,System.Boolean)
+   00A6 ldarg.0 
+   00A7 ldc.i4.1 
+   00A8 stfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   00AD ret 
+== System.Void Pause() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0006 brtrue IL_0016: ldarg.0
+   000B ldstr CUIVideoPlayer play video: The video is not playing, can't pause
+   0010 call System.Void UnityEngine.Debug::Log(System.Object)
+   0015 ret 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::m_initialized
+   001C brtrue IL_002c: ldstr "CUIVideoPlayer pause video:"
+   0021 ldstr Not Initialize
+   0026 call System.Void UnityEngine.Debug::LogError(System.Object)
+   002B ret 
+   002C ldstr CUIVideoPlayer pause video:
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   0037 call System.String System.String::Concat(System.String,System.String)
+   003C call System.Void UnityEngine.Debug::Log(System.Object)
+   0041 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0046 callvirt System.Void com.tencent.pandora.VideoPlayer::Pause()
+   004B ldarg.0 
+   004C ldc.i4.2 
+   004D stfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0052 ret 
+== System.Void Stop() attrs=Public, HideBySig maxstack=8
+   0000 ldstr CUIVideoPlayer stop video:
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   000B call System.String System.String::Concat(System.String,System.String)
+   0010 call System.Void UnityEngine.Debug::Log(System.Object)
+   0015 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   001A callvirt System.Void com.tencent.pandora.VideoPlayer::Close()
+   001F ldarg.0 
+   0020 ldc.i4.0 
+   0021 stfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0026 ret 
+== System.Void Resume() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0006 ldc.i4.2 
+   0007 beq IL_0017: ldarg.0
+   000C ldstr CUIVideoPlayer stop video: this video is not paused, can't resume
+   0011 call System.Void UnityEngine.Debug::Log(System.Object)
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::m_initialized
+   001D brtrue IL_002d: ldstr "CUIVideoPlayer resume video:"
+   0022 ldstr Not Initialize
+   0027 call System.Void UnityEngine.Debug::LogError(System.Object)
+   002C ret 
+   002D ldstr CUIVideoPlayer resume video:
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   0038 call System.String System.String::Concat(System.String,System.String)
+   003D call System.Void UnityEngine.Debug::Log(System.Object)
+   0042 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0047 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   004C ldarg.0 
+   004D ldc.i4.1 
+   004E stfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   0053 ret 
+== System.String GetFullVideoPath() attrs=Public, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 ldnull 
+   0008 ldnull 
+   0009 call System.String CFileManager::GetIFSExtractPath(System.UInt32,CResourceInfo,CResourcePackerInfo)
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.UI.CUIVideoPlayerScript::videoPath
+   0014 call System.String CFileManager::CombinePath(System.String,System.String)
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::m_initialized
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldarg.1 
+   000E call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0013 ldarg.0 
+   0014 ldc.i4.0 
+   0015 stfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   001A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   001F ldc.i4 42101
+   0024 ldarg.0 
+   0025 ldftn System.Void Assets.Scripts.UI.CUIVideoPlayerScript::OnVideoError(Assets.Scripts.UI.CUIEvent)
+   002B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0030 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0035 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003A ldc.i4 42106
+   003F ldarg.0 
+   0040 ldftn System.Void Assets.Scripts.UI.CUIVideoPlayerScript::OnVideoEnd(Assets.Scripts.UI.CUIEvent)
+   0046 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004B callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0050 ldarg.0 
+   0051 ldc.i4.1 
+   0052 stfld Assets.Scripts.UI.CUIVideoPlayerScript::m_initialized
+   0057 ldarg.0 
+   0058 call !!0 UnityEngine.Component::GetComponent<UnityEngine.MeshRenderer>()
+   005D stloc.0 
+   005E ldloc.0 
+   005F ldnull 
+   0060 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0065 brfalse IL_0076: ret
+   006A ldloc.0 
+   006B ldarg.1 
+   006C callvirt System.Int32 Assets.Scripts.UI.CUIFormScript::GetSortingOrder()
+   0071 callvirt System.Void UnityEngine.Renderer::set_sortingOrder(System.Int32)
+   0076 ret 
+== System.Void OnVideoEnd(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_002e: ret
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0017 ldfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   001C conv.u8 
+   001D ldarg.0 
+   001E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0023 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0028 conv.i8 
+   0029 beq IL_002f: ldarg.0
+   002E ret 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::loopMode
+   0035 ldc.i4.3 
+   0036 bne.un IL_005a: ldarg.0
+   003B call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0040 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   0045 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.UI.CUIVideoPlayerScript::partlyLoopBeginTime
+   0050 callvirt System.Void com.tencent.pandora.VideoPlayer::Seek(System.Int32)
+   0055 br IL_007b: ret
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.UI.CUIVideoPlayerScript::loopMode
+   0060 ldc.i4.1 
+   0061 bne.un IL_007b: ret
+   0066 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   006B callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   0070 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0075 ldc.i4.0 
+   0076 callvirt System.Void com.tencent.pandora.VideoPlayer::Seek(System.Int32)
+   007B ret 
+== System.Void OnVideoError(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_002e: ret
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0017 ldfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   001C conv.u8 
+   001D ldarg.0 
+   001E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0023 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0028 conv.i8 
+   0029 beq IL_002f: ldstr "CUIVideoPlayer error eventId = "
+   002E ret 
+   002F ldstr CUIVideoPlayer error eventId = 
+   0034 ldarg.1 
+   0035 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   003A ldfld Assets.Scripts.UI.stUIEventParams::tag
+   003F box System.Int32
+   0044 ldarg.1 
+   0045 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   004A ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   004F call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0054 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0059 ldstr CUIVideoPlayereventId = 
+   005E ldarg.1 
+   005F ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0064 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0069 box System.Int32
+   006E ldarg.1 
+   006F ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0074 ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0079 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   007E ldc.i4.1 
+   007F call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0084 ldarg.0 
+   0085 call System.Void Assets.Scripts.UI.CUIVideoPlayerScript::Stop()
+   008A ldarg.1 
+   008B ldfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   0090 stloc.0 
+   0091 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0096 ldstr eventid = {0},msg = {1}
+   009B ldloca.s V_0
+   009D ldfld Assets.Scripts.UI.stUIEventParams::tag
+   00A2 box System.Int32
+   00A7 ldloca.s V_0
+   00A9 ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   00AE call System.String System.String::Format(System.String,System.Object,System.Object)
+   00B3 ldc.i4.0 
+   00B4 ldc.r4 1.5
+   00B9 ldnull 
+   00BA ldc.i4.0 
+   00BB newarr System.Object
+   00C0 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00C5 ret 
+== System.Boolean isVideoExist() attrs=Public, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 call System.String Assets.Scripts.UI.CUIVideoPlayerScript::GetFullVideoPath()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 call System.Boolean CFileManager::IsFileExist(System.String)
+   000D stloc.1 
+   000E ldloc.1 
+   000F ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 42101
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.UI.CUIVideoPlayerScript::OnVideoError(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 42106
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.UI.CUIVideoPlayerScript::OnVideoEnd(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIVideoPlayerScript::Stop()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIVideoPlayerScript::UnInit()
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   0012 ret 
+== System.Void OnApplicationFocus(System.Boolean hasFocus) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_001c: ret
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   000C ldc.i4.1 
+   000D bne.un IL_001c: ret
+   0012 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0017 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   001C ret 
+== System.Void OnApplicationPause(System.Boolean paused) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_001c: ret
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIVideoPlayerScript::currentVideoState
+   000C ldc.i4.1 
+   000D bne.un IL_001c: ret
+   0012 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0017 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   001C ret 
+== System.Boolean VideoComponentIsUsebale() attrs=Public, Static, HideBySig maxstack=2
+   0000 call UnityEngine.Rendering.GraphicsDeviceType UnityEngine.SystemInfo::get_graphicsDeviceType()
+   0005 ldc.i4.s 21
+   0007 bne.un IL_0013: ldc.i4.0
+   000C ldc.i4.1 
+   000D stloc.0 
+   000E br IL_0015: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   001A callvirt System.Int32 ApolloHelper::GetAndroidSDKLevel()
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldc.i4.s 21
+   0023 ble IL_002e: ldc.i4.0
+   0028 ldloc.0 
+   0029 ldc.i4.0 
+   002A ceq 
+   002C br.s IL_002f: ret
+   002E ldc.i4.0 
+   002F ret 

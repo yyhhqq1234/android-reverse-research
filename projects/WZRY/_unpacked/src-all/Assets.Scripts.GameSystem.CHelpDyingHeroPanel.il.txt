@@ -1,0 +1,1169 @@
+// TYPE Assets.Scripts.GameSystem.CHelpDyingHeroPanel  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String[] m_arrHeroIcons
+  FIELD System.String[] m_arrHeroPackageIcons
+  FIELD System.String[] m_arrHeroUnPackIcons
+  FIELD System.Boolean m_beUsed
+  FIELD System.Int32 m_maxHeroIconNum = 5
+  FIELD ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo> heroIconInfoList
+  FIELD UnityEngine.GameObject m_helpDyingPanel
+  FIELD UnityEngine.GameObject m_askHelpPanel
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_hostActor
+  FIELD System.Single maxDistance
+  FIELD CoreDef.SkillSlotType helpSkillType
+  FIELD CoreDef.SkillSlotType packageSkillType
+  FIELD CoreDef.SkillSlotType unPackSkillType
+  FIELD UnityEngine.GameObject m_bePackedTips
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>> selfCampHeroList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   000B ldarg.0 
+   000C ldc.r4 25
+   0011 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::maxDistance
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::.ctor()
+   001C stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::selfCampHeroList
+   0021 ldarg.0 
+   0022 call System.Void System.Object::.ctor()
+   0027 ret 
+== System.Void Init(UnityEngine.GameObject helpDyingheroObj, UnityEngine.GameObject askHelpObj, UnityEngine.GameObject bePackedTips) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_015e: ret
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0017 brfalse IL_015e: ret
+   001C ldarg.0 
+   001D ldloc.0 
+   001E ldfld Assets.Scripts.GameLogic.CLevelContext::m_extraSkill2Slot
+   0023 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::helpSkillType
+   0028 ldarg.0 
+   0029 ldloc.0 
+   002A ldfld Assets.Scripts.GameLogic.CLevelContext::m_extraSkill3Slot
+   002F stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::packageSkillType
+   0034 ldarg.0 
+   0035 ldloc.0 
+   0036 ldfld Assets.Scripts.GameLogic.CLevelContext::m_extraSkill4Slot
+   003B stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::unPackSkillType
+   0040 ldarg.0 
+   0041 ldc.i4.1 
+   0042 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_beUsed
+   0047 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   004C ldc.i4 15150
+   0051 ldarg.0 
+   0052 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnHelpDyingClick(Assets.Scripts.UI.CUIEvent)
+   0058 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   005D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0062 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0067 ldc.i4 15152
+   006C ldarg.0 
+   006D ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnPackageHeroClick(Assets.Scripts.UI.CUIEvent)
+   0073 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0078 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   007D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0082 ldc.i4 15153
+   0087 ldarg.0 
+   0088 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnUnPackHeroClick(Assets.Scripts.UI.CUIEvent)
+   008E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0093 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0098 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   009D ldc.i4.s 10
+   009F ldarg.0 
+   00A0 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00A6 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00AB callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00B0 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00B5 ldc.i4.s 83
+   00B7 ldarg.0 
+   00B8 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnFightStart(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   00BE newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00C3 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00C8 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00CD ldc.i4.s 9
+   00CF ldarg.0 
+   00D0 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDying(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00D6 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00DB callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00E0 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00E5 ldc.i4.8 
+   00E6 ldarg.0 
+   00E7 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   00ED newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   00F2 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00F7 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00FC ldc.i4.s 11
+   00FE ldarg.0 
+   00FF ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDyingRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0105 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   010A callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   010F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0114 ldc.i4.1 
+   0115 ldarg.0 
+   0116 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   011C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0121 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0126 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   012B ldc.i4.s 109
+   012D ldarg.0 
+   012E ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0134 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0139 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   013E ldarg.0 
+   013F ldarg.1 
+   0140 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   0145 ldarg.0 
+   0146 ldarg.2 
+   0147 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   014C ldarg.0 
+   014D ldarg.3 
+   014E stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_bePackedTips
+   0153 ldarg.0 
+   0154 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0159 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   015E ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_beUsed
+   0006 brfalse IL_0132: ret
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0010 ldc.i4 15150
+   0015 ldarg.0 
+   0016 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnHelpDyingClick(Assets.Scripts.UI.CUIEvent)
+   001C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0021 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0026 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   002B ldc.i4 15152
+   0030 ldarg.0 
+   0031 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnPackageHeroClick(Assets.Scripts.UI.CUIEvent)
+   0037 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   003C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0041 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0046 ldc.i4 15153
+   004B ldarg.0 
+   004C ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnUnPackHeroClick(Assets.Scripts.UI.CUIEvent)
+   0052 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0057 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   005C call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0061 ldc.i4.s 10
+   0063 ldarg.0 
+   0064 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   006A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   006F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0074 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0079 ldc.i4.s 83
+   007B ldarg.0 
+   007C ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnFightStart(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0082 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0087 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   008C call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0091 ldc.i4.s 9
+   0093 ldarg.0 
+   0094 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDying(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   009A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   009F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00A4 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00A9 ldc.i4.8 
+   00AA ldarg.0 
+   00AB ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   00B1 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   00B6 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00BB call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00C0 ldc.i4.s 11
+   00C2 ldarg.0 
+   00C3 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnActorDyingRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00C9 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00CE callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00D3 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00D8 ldc.i4.1 
+   00D9 ldarg.0 
+   00DA ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   00E0 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   00E5 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00EA call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00EF ldc.i4.s 109
+   00F1 ldarg.0 
+   00F2 ldftn System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   00F8 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00FD callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0102 ldarg.0 
+   0103 ldnull 
+   0104 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   0109 ldarg.0 
+   010A ldnull 
+   010B stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   0110 ldarg.0 
+   0111 ldnull 
+   0112 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_bePackedTips
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   011D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0122 brfalse IL_0132: ret
+   0127 ldarg.0 
+   0128 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   012D call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   0132 ret 
+== System.Void InitHeroIconInfo() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0006 ldfld Assets.Scripts.GameLogic.ActorManager::HeroActors
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldftn System.Boolean Assets.Scripts.GameLogic.BattleLogic::FilterTeamActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0016 newobj System.Void Assets.Scripts.GameLogic.ActorFilterDelegate::.ctor(System.Object,System.IntPtr)
+   001B call System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>> Assets.Scripts.GameLogic.ActorHelper::FilterActors(System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>,Assets.Scripts.GameLogic.ActorFilterDelegate)
+   0020 stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::selfCampHeroList
+   0025 ldc.i4.0 
+   0026 stloc.0 
+   0027 br IL_01e3: ldloc.0
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   0032 ldsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroIcons
+   0037 ldloc.0 
+   0038 ldelem.ref 
+   0039 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   003E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   0043 stloc.1 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   004A ldsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroPackageIcons
+   004F ldloc.0 
+   0050 ldelem.ref 
+   0051 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0056 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   005B stloc.2 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   0062 ldsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroUnPackIcons
+   0067 ldloc.0 
+   0068 ldelem.ref 
+   0069 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   006E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   0073 stloc.3 
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::selfCampHeroList
+   007A ldloc.0 
+   007B callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0080 stloc.s V_5
+   0082 ldloca.s V_5
+   0084 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0089 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   008E ldc.i4.0 
+   008F call System.String Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkinPic(System.UInt32,System.UInt32)
+   0094 stloc.s V_4
+   0096 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_BustCircle_Dir
+   009B ldloc.s V_4
+   009D call System.String System.String::Concat(System.String,System.String)
+   00A2 stloc.s V_6
+   00A4 ldloc.1 
+   00A5 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AA ldstr HeroIcon
+   00AF call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00B4 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00B9 stloc.s V_7
+   00BB ldloc.s V_7
+   00BD call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00C2 brfalse IL_00df: ldloc.2
+   00C7 ldloc.s V_7
+   00C9 ldloc.s V_6
+   00CB call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00D0 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   00D5 ldc.i4.1 
+   00D6 ldc.i4.0 
+   00D7 ldc.i4.0 
+   00D8 ldc.i4.0 
+   00D9 ldc.i4.0 
+   00DA call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00DF ldloc.2 
+   00E0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E5 ldstr HeroIcon
+   00EA call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00EF callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00F4 stloc.s V_7
+   00F6 ldloc.s V_7
+   00F8 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00FD brfalse IL_011a: ldloc.3
+   0102 ldloc.s V_7
+   0104 ldloc.s V_6
+   0106 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   010B callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   0110 ldc.i4.1 
+   0111 ldc.i4.0 
+   0112 ldc.i4.0 
+   0113 ldc.i4.0 
+   0114 ldc.i4.0 
+   0115 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   011A ldloc.3 
+   011B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0120 ldstr HeroIcon
+   0125 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   012A callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   012F stloc.s V_7
+   0131 ldloc.s V_7
+   0133 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0138 brfalse IL_0155: ldloc.1
+   013D ldloc.s V_7
+   013F ldloc.s V_6
+   0141 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0146 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   014B ldc.i4.1 
+   014C ldc.i4.0 
+   014D ldc.i4.0 
+   014E ldc.i4.0 
+   014F ldc.i4.0 
+   0150 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0155 ldloc.1 
+   0156 ldarg.0 
+   0157 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::selfCampHeroList
+   015C ldloc.0 
+   015D callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0162 ldc.i4.1 
+   0163 ldloc.2 
+   0164 ldloc.3 
+   0165 newobj System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::.ctor(UnityEngine.Transform,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE,UnityEngine.Transform,UnityEngine.Transform)
+   016A stloc.s V_8
+   016C ldarg.0 
+   016D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0172 ldloc.s V_8
+   0174 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::Add(!0)
+   0179 ldarg.0 
+   017A ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   017F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0184 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0189 ldloc.s V_8
+   018B ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   0190 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0195 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   019A bne.un IL_01df: ldloc.0
+   019F ldsfld Assets.Scripts.UI.CUIUtility::s_battleChiJiPrefabDir
+   01A4 ldstr Battle_HeroZhengTuo.prefab
+   01A9 call System.String System.String::Concat(System.String,System.String)
+   01AE stloc.s V_9
+   01B0 ldloc.2 
+   01B1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01B6 ldstr HeroIcon/Icon
+   01BB call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01C0 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   01C5 stloc.s V_10
+   01C7 ldloc.s V_10
+   01C9 ldloc.s V_9
+   01CB call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   01D0 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   01D5 ldc.i4.1 
+   01D6 ldc.i4.0 
+   01D7 ldc.i4.0 
+   01D8 ldc.i4.0 
+   01D9 ldc.i4.0 
+   01DA call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   01DF ldloc.0 
+   01E0 ldc.i4.1 
+   01E1 add 
+   01E2 stloc.0 
+   01E3 ldloc.0 
+   01E4 ldarg.0 
+   01E5 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::selfCampHeroList
+   01EA callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   01EF bge IL_01fb: ret
+   01F4 ldloc.0 
+   01F5 ldc.i4.5 
+   01F6 blt IL_002c: ldarg.0
+   01FB ret 
+== System.Void OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldarg.1
+   0010 ret 
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0017 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001C brfalse IL_0047: ldarg.1
+   0021 ldarg.0 
+   0022 ldarg.1 
+   0023 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0028 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0032 call System.Int32 Assets.Scripts.GameSystem.CHelpDyingHeroPanel::GetBtnIndexByActor(System.UInt32)
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldc.i4.0 
+   003A blt IL_0047: ldarg.1
+   003F ldarg.0 
+   0040 ldloc.0 
+   0041 ldc.i4.0 
+   0042 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0047 ldarg.1 
+   0048 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   004D call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0052 brfalse IL_0063: ret
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   005D ldc.i4.0 
+   005E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0063 ret 
+== System.Void OnFightStart(Assets.Scripts.GameLogic.GameCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::InitHeroIconInfo()
+   0006 ret 
+== System.Void OnActorDying(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldarg.1
+   0010 ret 
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0017 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001C brfalse IL_0051: ret
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   0027 ldc.i4.1 
+   0028 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002D ldc.i4.0 
+   002E stloc.0 
+   002F br IL_0040: ldloc.0
+   0034 ldarg.0 
+   0035 ldloc.0 
+   0036 ldc.i4.0 
+   0037 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   003C ldloc.0 
+   003D ldc.i4.1 
+   003E add 
+   003F stloc.0 
+   0040 ldloc.0 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0047 callvirt System.Int32 ListViewBase::get_Count()
+   004C blt IL_0034: ldarg.0
+   0051 ret 
+== System.Void OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam& prm) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldarg.1
+   0010 ret 
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0017 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001C brfalse IL_0047: ldarg.1
+   0021 ldarg.0 
+   0022 ldarg.1 
+   0023 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0028 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0032 call System.Int32 Assets.Scripts.GameSystem.CHelpDyingHeroPanel::GetBtnIndexByActor(System.UInt32)
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldc.i4.0 
+   003A blt IL_0047: ldarg.1
+   003F ldarg.0 
+   0040 ldloc.0 
+   0041 ldc.i4.0 
+   0042 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0047 ldarg.1 
+   0048 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   004D call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0052 brfalse IL_0087: ret
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   005D ldc.i4.0 
+   005E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0063 ldc.i4.0 
+   0064 stloc.1 
+   0065 br IL_0076: ldloc.1
+   006A ldarg.0 
+   006B ldloc.1 
+   006C ldc.i4.0 
+   006D call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0072 ldloc.1 
+   0073 ldc.i4.1 
+   0074 add 
+   0075 stloc.1 
+   0076 ldloc.1 
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   007D callvirt System.Int32 ListViewBase::get_Count()
+   0082 blt IL_006a: ldarg.0
+   0087 ret 
+== System.Void OnActorDyingRevive(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldarg.1
+   0010 ret 
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0017 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001C brfalse IL_002d: ret
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   0027 ldc.i4.0 
+   0028 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002D ret 
+== System.Void HandleIconClick(Assets.Scripts.UI.CUIEvent uiEvent, CoreDef.SkillSlotType slotType) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_013b: ret
+   0011 ldarg.1 
+   0012 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0017 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   001C callvirt System.String UnityEngine.Object::get_name()
+   0021 ldarg.1 
+   0022 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0027 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002C callvirt System.String UnityEngine.Object::get_name()
+   0031 ldstr _
+   0036 callvirt System.Int32 System.String::IndexOf(System.String)
+   003B ldc.i4.1 
+   003C add 
+   003D ldc.i4.1 
+   003E callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0043 call System.Int32 System.Int32::Parse(System.String)
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ldc.i4.0 
+   004B blt IL_013b: ret
+   0050 ldloc.0 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0057 callvirt System.Int32 ListViewBase::get_Count()
+   005C bge IL_013b: ret
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0067 ldloc.0 
+   0068 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   006D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   0072 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0077 brfalse IL_013b: ret
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0082 ldloc.0 
+   0083 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   0088 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   008D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0092 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0097 stloc.1 
+   0098 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   009D callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   00A2 stloc.2 
+   00A3 ldloc.2 
+   00A4 brfalse IL_013b: ret
+   00A9 ldloc.2 
+   00AA ldfld Assets.Scripts.GameLogic.Player::Captain
+   00AF call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00B4 brfalse IL_013b: ret
+   00B9 ldloc.1 
+   00BA brfalse IL_013b: ret
+   00BF ldloc.1 
+   00C0 ldarg.0 
+   00C1 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   00C6 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00CB callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00D0 bne.un IL_0123: ldloc.2
+   00D5 ldarg.0 
+   00D6 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   00DB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00E0 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00E5 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   00EA ldc.i4.5 
+   00EB bne.un IL_0123: ldloc.2
+   00F0 ldarg.0 
+   00F1 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   00F6 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00FB ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0100 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::objID_whoPackageMe
+   0105 stloc.3 
+   0106 ldloc.2 
+   0107 ldflda Assets.Scripts.GameLogic.Player::Captain
+   010C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0111 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0116 ldarg.2 
+   0117 ldc.i4.1 
+   0118 ldloc.3 
+   0119 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::RequestUseSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameSystem.enSkillJoystickMode,System.UInt32)
+   011E br IL_013b: ret
+   0123 ldloc.2 
+   0124 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0129 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   012E ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0133 ldarg.2 
+   0134 ldc.i4.1 
+   0135 ldloc.1 
+   0136 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::RequestUseSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameSystem.enSkillJoystickMode,System.UInt32)
+   013B ret 
+== System.Void OnHelpDyingClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::helpSkillType
+   0008 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::HandleIconClick(Assets.Scripts.UI.CUIEvent,CoreDef.SkillSlotType)
+   000D ret 
+== System.Void OnPackageHeroClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::packageSkillType
+   0008 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::HandleIconClick(Assets.Scripts.UI.CUIEvent,CoreDef.SkillSlotType)
+   000D ret 
+== System.Void OnUnPackHeroClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::unPackSkillType
+   0008 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::HandleIconClick(Assets.Scripts.UI.CUIEvent,CoreDef.SkillSlotType)
+   000D ret 
+== System.Void OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam& eventParams) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0089: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   001A call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001F brfalse IL_0085: ldloc.0
+   0024 ldloc.1 
+   0025 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   002A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0034 ldarg.1 
+   0035 ldflda Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   003A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0044 bne.un IL_0085: ldloc.0
+   0049 ldarg.1 
+   004A ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::nowValue
+   004F stloc.2 
+   0050 ldarg.1 
+   0051 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::par1
+   0056 stloc.3 
+   0057 ldloc.2 
+   0058 conv.r4 
+   0059 ldloc.3 
+   005A conv.r4 
+   005B div 
+   005C stloc.s V_4
+   005E ldloc.1 
+   005F ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::bloodRate
+   0064 ldloc.s V_4
+   0066 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   006B ldloc.1 
+   006C ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageBloodRate
+   0071 ldloc.s V_4
+   0073 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0078 ldloc.1 
+   0079 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::unPackBloodRate
+   007E ldloc.s V_4
+   0080 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0085 ldloc.0 
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.0 
+   0089 ldloc.0 
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0090 callvirt System.Int32 ListViewBase::get_Count()
+   0095 blt IL_0007: ldarg.0
+   009A ret 
+== System.Void LateUpdate() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.CHelpDyingHeroPanel::CheckShouldUpdate()
+   0006 brfalse IL_0034: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_001d: ldloc.0
+   0012 ldarg.0 
+   0013 ldloc.0 
+   0014 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::UpdateHeroIcon(System.Int32)
+   0019 ldloc.0 
+   001A ldc.i4.1 
+   001B add 
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0024 callvirt System.Int32 ListViewBase::get_Count()
+   0029 blt IL_0012: ldarg.0
+   002E ldarg.0 
+   002F call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::UpdateBePackedTips()
+   0034 ret 
+== System.Void UpdateBePackedTips() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_bePackedTips
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_005e: ret
+   0011 ldarg.0 
+   0012 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0017 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001C ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0021 brfalse IL_005e: ret
+   0026 ldarg.0 
+   0027 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   002C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0031 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0036 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   003B ldc.i4.5 
+   003C bne.un IL_0052: ldarg.0
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_bePackedTips
+   0047 ldc.i4.1 
+   0048 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   004D br IL_005e: ret
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_bePackedTips
+   0058 ldc.i4.0 
+   0059 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005E ret 
+== System.Void UpdateHeroIcon(System.Int32 index) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0006 brfalse IL_001b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0011 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0016 brtrue IL_001c: ldarg.1
+   001B ret 
+   001C ldarg.1 
+   001D ldc.i4.0 
+   001E blt IL_0255: ret
+   0023 ldarg.1 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   002A callvirt System.Int32 ListViewBase::get_Count()
+   002F bge IL_0255: ret
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   003A ldarg.1 
+   003B callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   0040 stloc.0 
+   0041 ldloc.0 
+   0042 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   0047 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   004C brtrue IL_0052: ldloc.0
+   0051 ret 
+   0052 ldloc.0 
+   0053 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   0058 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0062 ldarg.0 
+   0063 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0068 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0072 bne.un IL_00ac: ldarg.0
+   0077 ldarg.0 
+   0078 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   007D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0082 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0087 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   008C ldc.i4.5 
+   008D bne.un IL_009f: ldarg.0
+   0092 ldarg.0 
+   0093 ldarg.1 
+   0094 ldc.i4.4 
+   0095 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   009A br IL_00a7: br IL_0255
+   009F ldarg.0 
+   00A0 ldarg.1 
+   00A1 ldc.i4.0 
+   00A2 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   00A7 br IL_0255: ret
+   00AC ldarg.0 
+   00AD ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   00B2 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B7 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00BC ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::isDying
+   00C1 brfalse IL_00d3: ldarg.0
+   00C6 ldarg.0 
+   00C7 ldarg.1 
+   00C8 ldc.i4.0 
+   00C9 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   00CE br IL_0255: ret
+   00D3 ldarg.0 
+   00D4 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   00D9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00DE ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00E3 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   00E8 ldc.i4.3 
+   00E9 bne.un IL_0132: ldarg.0
+   00EE ldloc.0 
+   00EF ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   00F4 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00F9 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00FE ldarg.0 
+   00FF ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0104 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0109 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   010E ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::objID_packedActor
+   0113 bne.un IL_0125: ldarg.0
+   0118 ldarg.0 
+   0119 ldarg.1 
+   011A ldc.i4.3 
+   011B call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0120 br IL_012d: br IL_0255
+   0125 ldarg.0 
+   0126 ldarg.1 
+   0127 ldc.i4.0 
+   0128 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   012D br IL_0255: ret
+   0132 ldarg.0 
+   0133 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0138 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   013D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0142 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   0147 ldc.i4.2 
+   0148 beq IL_0168: ldarg.0
+   014D ldarg.0 
+   014E ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0153 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0158 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   015D ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   0162 ldc.i4.1 
+   0163 bne.un IL_0175: ldarg.0
+   0168 ldarg.0 
+   0169 ldarg.1 
+   016A ldc.i4.0 
+   016B call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0170 br IL_0255: ret
+   0175 ldarg.0 
+   0176 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   017B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0180 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0185 ldloc.0 
+   0186 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   018B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0190 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0195 call System.Single MMGame_Math::XZSqrMagnitude(UnityEngine.Vector3,UnityEngine.Vector3)
+   019A conv.u8 
+   019B stloc.1 
+   019C ldloc.1 
+   019D ldarg.0 
+   019E ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::maxDistance
+   01A3 conv.u8 
+   01A4 bge.un IL_024d: ldarg.0
+   01A9 ldloc.0 
+   01AA ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   01AF call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01B4 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   01B9 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::isDying
+   01BE brfalse IL_024d: ldarg.0
+   01C3 ldloc.0 
+   01C4 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   01C9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01CE ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   01D3 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   01D8 ldc.i4.5 
+   01D9 beq IL_024d: ldarg.0
+   01DE ldloc.0 
+   01DF ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   01E4 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01E9 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   01EE ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   01F3 ldc.i4.4 
+   01F4 beq IL_024d: ldarg.0
+   01F9 ldloc.0 
+   01FA ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   01FF call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0204 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0209 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::selfDyingState
+   020E ldc.i4.6 
+   020F beq IL_024d: ldarg.0
+   0214 ldloc.0 
+   0215 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   021A ldc.i4.1 
+   021B beq IL_0248: br IL_0255
+   0220 ldarg.0 
+   0221 ldarg.1 
+   0222 ldc.i4.1 
+   0223 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0228 ldc.i4.4 
+   0229 ldc.i4.1 
+   022A ldloc.0 
+   022B ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0230 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0235 ldsfld Assets.Scripts.GameSystem.FightForm::s_helpDyingHeroFormPath
+   023A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   023F ldc.i4.0 
+   0240 ldc.i4.0 
+   0241 ldc.i4.1 
+   0242 ldc.i4.1 
+   0243 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0248 br IL_0255: ret
+   024D ldarg.0 
+   024E ldarg.1 
+   024F ldc.i4.0 
+   0250 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::SetIconStateByIconInfo(System.Int32,Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE)
+   0255 ret 
+== System.Void SetIconStateByIconInfo(System.Int32 index, Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE state) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0031: ldarg.0
+   0007 ldarg.1 
+   0008 ldc.i4.5 
+   0009 bge IL_0031: ldarg.0
+   000E ldarg.1 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0015 callvirt System.Int32 ListViewBase::get_Count()
+   001A bge IL_0031: ldarg.0
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0025 ldarg.1 
+   0026 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   002B ldarg.2 
+   002C stfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   0031 ldarg.0 
+   0032 ldarg.1 
+   0033 call System.Void Assets.Scripts.GameSystem.CHelpDyingHeroPanel::HandleShowIcon(System.Int32)
+   0038 ret 
+== System.Void HandleShowIcon(System.Int32 index) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0183: ret
+   0007 ldarg.1 
+   0008 ldc.i4.5 
+   0009 bge IL_0183: ret
+   000E ldarg.1 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0015 callvirt System.Int32 ListViewBase::get_Count()
+   001A bge IL_0183: ret
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0025 ldarg.1 
+   0026 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   002B stloc.0 
+   002C ldloc.0 
+   002D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_0183: ret
+   003D ldloc.0 
+   003E ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageIconTransform
+   0043 ldnull 
+   0044 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0049 brfalse IL_0183: ret
+   004E ldloc.0 
+   004F ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   0054 ldc.i4.1 
+   0055 bne.un IL_00bd: ldloc.0
+   005A ldloc.0 
+   005B ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0060 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0065 ldc.i4.1 
+   0066 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   006B ldloc.0 
+   006C ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageIconTransform
+   0071 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0076 ldc.i4.1 
+   0077 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   007C ldloc.0 
+   007D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::unPackIconTransform
+   0082 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0087 ldc.i4.0 
+   0088 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   008D ldloc.0 
+   008E ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0093 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0098 ldstr HeroIcon
+   009D call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00A2 ldc.i4.2 
+   00A3 stloc.1 
+   00A4 ldloca.s V_1
+   00A6 constrained. Assets.Scripts.GameSystem.enSkillButtonAnimationName
+   00AC callvirt System.String System.Object::ToString()
+   00B1 ldc.i4.0 
+   00B2 ldc.i4.0 
+   00B3 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::PlayAnimation(UnityEngine.GameObject,System.String,System.Boolean,System.Boolean)
+   00B8 br IL_0183: ret
+   00BD ldloc.0 
+   00BE ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   00C3 brtrue IL_0100: ldloc.0
+   00C8 ldloc.0 
+   00C9 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   00CE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D3 ldc.i4.0 
+   00D4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D9 ldloc.0 
+   00DA ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageIconTransform
+   00DF callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E4 ldc.i4.0 
+   00E5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EA ldloc.0 
+   00EB ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::unPackIconTransform
+   00F0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00F5 ldc.i4.0 
+   00F6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00FB br IL_0183: ret
+   0100 ldloc.0 
+   0101 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   0106 ldc.i4.3 
+   0107 bne.un IL_0144: ldloc.0
+   010C ldloc.0 
+   010D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0112 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0117 ldc.i4.0 
+   0118 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   011D ldloc.0 
+   011E ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageIconTransform
+   0123 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0128 ldc.i4.0 
+   0129 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   012E ldloc.0 
+   012F ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::unPackIconTransform
+   0134 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0139 ldc.i4.1 
+   013A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   013F br IL_0183: ret
+   0144 ldloc.0 
+   0145 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconState
+   014A ldc.i4.4 
+   014B bne.un IL_0183: ret
+   0150 ldloc.0 
+   0151 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::heroIconTransform
+   0156 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   015B ldc.i4.0 
+   015C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0161 ldloc.0 
+   0162 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::packageIconTransform
+   0167 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   016C ldc.i4.1 
+   016D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0172 ldloc.0 
+   0173 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::unPackIconTransform
+   0178 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   017D ldc.i4.0 
+   017E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0183 ret 
+== System.Int32 GetBtnIndexByActor(System.UInt32 objID) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_002e: ldloc.0
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   000E ldloc.0 
+   000F callvirt !0 ListView`1<Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo>::get_Item(System.Int32)
+   0014 ldflda Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo::actorPtr
+   0019 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0023 bne.un IL_002a: ldloc.0
+   0028 ldloc.0 
+   0029 ret 
+   002A ldloc.0 
+   002B ldc.i4.1 
+   002C add 
+   002D stloc.0 
+   002E ldloc.0 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::heroIconInfoList
+   0035 callvirt System.Int32 ListViewBase::get_Count()
+   003A blt IL_0007: ldarg.1
+   003F ldc.i4.m1 
+   0040 ret 
+== System.Boolean CheckShouldUpdate() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001f: ldc.i4.0
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_hostActor
+   0015 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001A brtrue IL_0021: ldarg.0
+   001F ldc.i4.0 
+   0020 ret 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_beUsed
+   0027 brtrue IL_002e: ldc.i4.1
+   002C ldc.i4.0 
+   002D ret 
+   002E ldc.i4.1 
+   002F ret 
+== System.Void OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam& eventParams) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_helpDyingPanel
+   0006 ldc.i4.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.GameObject,System.Boolean)
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_askHelpPanel
+   0012 ldc.i4.0 
+   0013 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.GameObject,System.Boolean)
+   0018 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.5 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr Hero_0
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldstr Hero_1
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.2 
+   0018 ldstr Hero_2
+   001D stelem.ref 
+   001E dup 
+   001F ldc.i4.3 
+   0020 ldstr Hero_3
+   0025 stelem.ref 
+   0026 dup 
+   0027 ldc.i4.4 
+   0028 ldstr Hero_4
+   002D stelem.ref 
+   002E stsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroIcons
+   0033 ldc.i4.5 
+   0034 newarr System.String
+   0039 dup 
+   003A ldc.i4.0 
+   003B ldstr HeroPackage_0
+   0040 stelem.ref 
+   0041 dup 
+   0042 ldc.i4.1 
+   0043 ldstr HeroPackage_1
+   0048 stelem.ref 
+   0049 dup 
+   004A ldc.i4.2 
+   004B ldstr HeroPackage_2
+   0050 stelem.ref 
+   0051 dup 
+   0052 ldc.i4.3 
+   0053 ldstr HeroPackage_3
+   0058 stelem.ref 
+   0059 dup 
+   005A ldc.i4.4 
+   005B ldstr HeroPackage_4
+   0060 stelem.ref 
+   0061 stsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroPackageIcons
+   0066 ldc.i4.5 
+   0067 newarr System.String
+   006C dup 
+   006D ldc.i4.0 
+   006E ldstr HeroUnPack_0
+   0073 stelem.ref 
+   0074 dup 
+   0075 ldc.i4.1 
+   0076 ldstr HeroUnPack_1
+   007B stelem.ref 
+   007C dup 
+   007D ldc.i4.2 
+   007E ldstr HeroUnPack_2
+   0083 stelem.ref 
+   0084 dup 
+   0085 ldc.i4.3 
+   0086 ldstr HeroUnPack_3
+   008B stelem.ref 
+   008C dup 
+   008D ldc.i4.4 
+   008E ldstr HeroUnPack_4
+   0093 stelem.ref 
+   0094 stsfld Assets.Scripts.GameSystem.CHelpDyingHeroPanel::m_arrHeroUnPackIcons
+   0099 ret 
+  NESTED Assets.Scripts.GameSystem.CHelpDyingHeroPanel/E_HERO_ICON_STATE
+  NESTED Assets.Scripts.GameSystem.CHelpDyingHeroPanel/CHeroIconInfo

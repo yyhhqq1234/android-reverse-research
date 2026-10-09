@@ -1,0 +1,175 @@
+.class public Lcom/google/atap/tangoservice/fois/FoiResponse$Load;
+.super Lcom/google/atap/tangoservice/fois/FoiResponse;
+.source "FoiResponse.java"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/google/atap/tangoservice/fois/FoiResponse;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x9
+    name = "Load"
+.end annotation
+
+
+# instance fields
+.field public mFrameIds:[Ljava/lang/String;
+
+.field public mStatuses:[I
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 2
+
+    .prologue
+    const/4 v1, 0x0
+
+    .line 137
+    sget-object v0, Lcom/google/atap/tangoservice/fois/FoiRequest$Type;->LOAD:Lcom/google/atap/tangoservice/fois/FoiRequest$Type;
+
+    invoke-direct {p0, v0, v1}, Lcom/google/atap/tangoservice/fois/FoiResponse;-><init>(Lcom/google/atap/tangoservice/fois/FoiRequest$Type;Lcom/google/atap/tangoservice/fois/FoiResponse$1;)V
+
+    .line 133
+    iput-object v1, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mStatuses:[I
+
+    .line 134
+    iput-object v1, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mFrameIds:[Ljava/lang/String;
+
+    .line 138
+    return-void
+.end method
+
+
+# virtual methods
+.method public equals(Ljava/lang/Object;)Z
+    .locals 4
+    .param p1, "obj"    # Ljava/lang/Object;
+
+    .prologue
+    const/4 v1, 0x0
+
+    .line 141
+    if-eqz p1, :cond_0
+
+    invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+
+    move-result-object v2
+
+    const-class v3, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;
+
+    if-eq v2, v3, :cond_1
+
+    .line 145
+    :cond_0
+    :goto_0
+    return v1
+
+    :cond_1
+    move-object v0, p1
+
+    .line 144
+    check-cast v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;
+
+    .line 145
+    .local v0, "other":Lcom/google/atap/tangoservice/fois/FoiResponse$Load;
+    iget-object v2, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mType:Lcom/google/atap/tangoservice/fois/FoiRequest$Type;
+
+    iget-object v3, v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mType:Lcom/google/atap/tangoservice/fois/FoiRequest$Type;
+
+    if-ne v2, v3, :cond_0
+
+    iget-object v2, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mId:Ljava/lang/String;
+
+    if-eqz v2, :cond_2
+
+    iget-object v2, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mId:Ljava/lang/String;
+
+    iget-object v3, v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mId:Ljava/lang/String;
+
+    .line 146
+    invoke-virtual {v2, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    :goto_1
+    iget-object v2, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mStatuses:[I
+
+    iget-object v3, v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mStatuses:[I
+
+    .line 147
+    invoke-static {v2, v3}, Ljava/util/Arrays;->equals([I[I)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    iget-object v2, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mFrameIds:[Ljava/lang/String;
+
+    iget-object v3, v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mFrameIds:[Ljava/lang/String;
+
+    .line 148
+    invoke-static {v2, v3}, Ljava/util/Arrays;->equals([Ljava/lang/Object;[Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_0
+
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    .line 146
+    :cond_2
+    iget-object v2, v0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mId:Ljava/lang/String;
+
+    if-nez v2, :cond_0
+
+    goto :goto_1
+.end method
+
+.method protected parcelRead(Landroid/os/Parcel;)V
+    .locals 1
+    .param p1, "in"    # Landroid/os/Parcel;
+
+    .prologue
+    .line 152
+    invoke-virtual {p1}, Landroid/os/Parcel;->createIntArray()[I
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mStatuses:[I
+
+    .line 153
+    invoke-virtual {p1}, Landroid/os/Parcel;->createStringArray()[Ljava/lang/String;
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mFrameIds:[Ljava/lang/String;
+
+    .line 154
+    return-void
+.end method
+
+.method protected parcelWrite(Landroid/os/Parcel;)V
+    .locals 1
+    .param p1, "dest"    # Landroid/os/Parcel;
+
+    .prologue
+    .line 157
+    iget-object v0, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mStatuses:[I
+
+    invoke-virtual {p1, v0}, Landroid/os/Parcel;->writeIntArray([I)V
+
+    .line 158
+    iget-object v0, p0, Lcom/google/atap/tangoservice/fois/FoiResponse$Load;->mFrameIds:[Ljava/lang/String;
+
+    invoke-virtual {p1, v0}, Landroid/os/Parcel;->writeStringArray([Ljava/lang/String;)V
+
+    .line 159
+    return-void
+.end method

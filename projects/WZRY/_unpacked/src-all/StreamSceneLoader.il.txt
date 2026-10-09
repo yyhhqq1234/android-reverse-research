@@ -1,0 +1,774 @@
+// TYPE StreamSceneLoader  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Collections.Generic.Dictionary`2<System.Type,System.Object[]> typeAttributes
+  FIELD System.Collections.Generic.Dictionary`2<System.Type,System.Reflection.MemberInfo[]> typeMemberInfos
+  FIELD System.Collections.Generic.Dictionary`2<System.Type,System.String> typeNames
+  FIELD StreamSceneLoader/StreamSceneLoaderBasePolicy loadPolicy
+  FIELD System.String mFullPath
+  FIELD System.String m_elementDir
+  FIELD System.String m_primaryDir
+  FIELD LoadContext asynLoadCtx
+  FIELD UnityEngine.MonoBehaviour coroutineBehaviour
+  FIELD ListView`1<StreamSceneLoader/ChunkloadInfo> loadingQ
+  FIELD ListView`1<StreamSceneLoader/ChunkloadInfo> loadingQTmp
+  FIELD ListView`1<System.String> m_chunkProxyOrder
+  FIELD ListView`1<UnityEngine.Component> cpntPrefabArray
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.Type,System.Object[]>::.ctor()
+   0006 stfld StreamSceneLoader::typeAttributes
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.Dictionary`2<System.Type,System.Reflection.MemberInfo[]>::.ctor()
+   0011 stfld StreamSceneLoader::typeMemberInfos
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.Dictionary`2<System.Type,System.String>::.ctor()
+   001C stfld StreamSceneLoader::typeNames
+   0021 ldarg.0 
+   0022 newobj System.Void LoadContext::.ctor()
+   0027 stfld StreamSceneLoader::asynLoadCtx
+   002C ldarg.0 
+   002D newobj System.Void ListView`1<StreamSceneLoader/ChunkloadInfo>::.ctor()
+   0032 stfld StreamSceneLoader::loadingQ
+   0037 ldarg.0 
+   0038 newobj System.Void ListView`1<StreamSceneLoader/ChunkloadInfo>::.ctor()
+   003D stfld StreamSceneLoader::loadingQTmp
+   0042 ldarg.0 
+   0043 newobj System.Void ListView`1<System.String>::.ctor()
+   0048 stfld StreamSceneLoader::m_chunkProxyOrder
+   004D ldarg.0 
+   004E newobj System.Void ListView`1<UnityEngine.Component>::.ctor()
+   0053 stfld StreamSceneLoader::cpntPrefabArray
+   0058 ldarg.0 
+   0059 call System.Void System.Object::.ctor()
+   005E ret 
+== System.Object[] GetTypeAttributes(System.Type classType) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld StreamSceneLoader::typeAttributes
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Type,System.Object[]>::TryGetValue(!0,!1&)
+   0010 brtrue IL_0034: ldloc.0
+   0015 ldarg.1 
+   0016 ldtoken ServerSerializerAttribuite
+   001B call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0020 ldc.i4.1 
+   0021 callvirt System.Object[] System.Reflection.MemberInfo::GetCustomAttributes(System.Type,System.Boolean)
+   0026 stloc.0 
+   0027 ldarg.0 
+   0028 ldfld StreamSceneLoader::typeAttributes
+   002D ldarg.1 
+   002E ldloc.0 
+   002F callvirt System.Void System.Collections.Generic.Dictionary`2<System.Type,System.Object[]>::Add(!0,!1)
+   0034 ldloc.0 
+   0035 ret 
+== System.Reflection.MemberInfo[] GetTypeMemberInfos(System.Type classType) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld StreamSceneLoader::typeMemberInfos
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Type,System.Reflection.MemberInfo[]>::TryGetValue(!0,!1&)
+   0010 brtrue IL_0029: ldloc.0
+   0015 ldarg.1 
+   0016 callvirt System.Reflection.MemberInfo[] System.Type::GetMembers()
+   001B stloc.0 
+   001C ldarg.0 
+   001D ldfld StreamSceneLoader::typeMemberInfos
+   0022 ldarg.1 
+   0023 ldloc.0 
+   0024 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Type,System.Reflection.MemberInfo[]>::Add(!0,!1)
+   0029 ldloc.0 
+   002A ret 
+== System.String GetTypeName(System.Type classType) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld StreamSceneLoader::typeNames
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Type,System.String>::TryGetValue(!0,!1&)
+   0010 brtrue IL_0029: ldloc.0
+   0015 ldarg.1 
+   0016 callvirt System.String System.Object::ToString()
+   001B stloc.0 
+   001C ldarg.0 
+   001D ldfld StreamSceneLoader::typeNames
+   0022 ldarg.1 
+   0023 ldloc.0 
+   0024 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Type,System.String>::Add(!0,!1)
+   0029 ldloc.0 
+   002A ret 
+== System.Void CheckLoadCount(System.Boolean add, System.Boolean forceStart) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_003d: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld StreamSceneLoader::loadingQ
+   000C callvirt System.Int32 ListViewBase::get_Count()
+   0011 ldc.i4.1 
+   0012 beq IL_001d: call !0 Singleton`1<EventRouter>::GetInstance()
+   0017 ldarg.2 
+   0018 brfalse IL_0038: br IL_0068
+   001D call !0 Singleton`1<EventRouter>::GetInstance()
+   0022 ldsfld EventID::LOADCHUNK_START
+   0027 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   002C ldc.i4.s 41
+   002E ldstr 1
+   0033 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0038 br IL_0068: ret
+   003D ldarg.0 
+   003E ldfld StreamSceneLoader::loadingQ
+   0043 callvirt System.Int32 ListViewBase::get_Count()
+   0048 brtrue IL_0068: ret
+   004D call !0 Singleton`1<EventRouter>::GetInstance()
+   0052 ldsfld EventID::LOADCHUNK_END
+   0057 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   005C ldc.i4.s 41
+   005E ldstr 0
+   0063 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0068 ret 
+== System.Void Init(System.String fullPath) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldstr /{0}/
+   0006 ldstr Resources
+   000B call System.String System.String::Format(System.String,System.Object)
+   0010 ldsfld System.String::Empty
+   0015 callvirt System.String System.String::Replace(System.String,System.String)
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldloc.0 
+   001D ldstr /Chunks/
+   0022 call System.String System.String::Concat(System.String,System.String)
+   0027 stfld StreamSceneLoader::mFullPath
+   002C ldarg.0 
+   002D ldloc.0 
+   002E ldstr /Element/
+   0033 call System.String System.String::Concat(System.String,System.String)
+   0038 stfld StreamSceneLoader::m_elementDir
+   003D ldarg.0 
+   003E ldloc.0 
+   003F ldstr /Primary/
+   0044 call System.String System.String::Concat(System.String,System.String)
+   0049 stfld StreamSceneLoader::m_primaryDir
+   004E ldarg.0 
+   004F ldfld StreamSceneLoader::m_elementDir
+   0054 ldstr element.asset
+   0059 call System.String System.String::Concat(System.String,System.String)
+   005E call System.Void StreamSceneSerializer::LoadPrefabRefAsset(System.String)
+   0063 ldarg.0 
+   0064 newobj System.Void StreamSceneLoader/StreamSceneLoaderPolicy_GroundFirst::.ctor()
+   0069 stfld StreamSceneLoader::loadPolicy
+   006E ldarg.0 
+   006F ldfld StreamSceneLoader::loadPolicy
+   0074 ldarg.0 
+   0075 callvirt System.Void StreamSceneLoader/StreamSceneLoaderBasePolicy::SetLoader(StreamSceneLoader)
+   007A ret 
+== System.Void SetCoroutineBehaviour(UnityEngine.MonoBehaviour behaviour) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld StreamSceneLoader::coroutineBehaviour
+   0007 ret 
+== System.Collections.IEnumerator Update() attrs=Public, HideBySig maxstack=2
+   0000 newobj System.Void StreamSceneLoader/<Update>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld StreamSceneLoader/<Update>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void LoadChunkAsync(System.String chunkName, StreamSceneLoader/OnChunkLoad onLoadCB, System.Boolean groundFirst) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call StreamSceneLoader/ChunkloadInfo StreamSceneLoader::FindLoadInfo(System.String)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 brtrue IL_0049: ldloc.0
+   000E newobj System.Void StreamSceneLoader/ChunkloadInfo::.ctor()
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 ldarg.1 
+   0016 stfld StreamSceneLoader/ChunkloadInfo::chunkName
+   001B ldloc.0 
+   001C ldnull 
+   001D stfld StreamSceneLoader/ChunkloadInfo::coroutine
+   0022 ldloc.0 
+   0023 ldarg.2 
+   0024 stfld StreamSceneLoader/ChunkloadInfo::onLoadCB
+   0029 ldloc.0 
+   002A ldarg.3 
+   002B stfld StreamSceneLoader/ChunkloadInfo::groundFirst
+   0030 ldarg.0 
+   0031 ldfld StreamSceneLoader::loadingQ
+   0036 ldloc.0 
+   0037 callvirt System.Void ListView`1<StreamSceneLoader/ChunkloadInfo>::Add(!0)
+   003C ldarg.0 
+   003D ldc.i4.1 
+   003E ldc.i4.0 
+   003F call System.Void StreamSceneLoader::CheckLoadCount(System.Boolean,System.Boolean)
+   0044 br IL_005c: ret
+   0049 ldloc.0 
+   004A ldfld StreamSceneLoader/ChunkloadInfo::state
+   004F ldc.i4.3 
+   0050 bne.un IL_005c: ret
+   0055 ldloc.0 
+   0056 ldc.i4.1 
+   0057 stfld StreamSceneLoader/ChunkloadInfo::state
+   005C ret 
+== System.Void DoBatchLoadChunkAsync_Begin() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneLoader::m_chunkProxyOrder
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ret 
+== System.Void DoBatchLoadChunkAsync_End() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld StreamSceneLoader::m_chunkProxyOrder
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldfld StreamSceneLoader::loadingQ
+   0017 callvirt System.Int32 ListViewBase::get_Count()
+   001C stloc.0 
+   001D ldarg.0 
+   001E ldfld StreamSceneLoader::loadingQTmp
+   0023 callvirt System.Void ListViewBase::Clear()
+   0028 ldarg.0 
+   0029 ldfld StreamSceneLoader::m_chunkProxyOrder
+   002E callvirt ListView`1/Enumerator<!0> ListView`1<System.String>::GetEnumerator()
+   0033 stloc.1 
+   0034 br IL_006d: ldloca.s V_1
+   0039 ldloca.s V_1
+   003B call !0 ListView`1/Enumerator<System.String>::get_Current()
+   0040 stloc.2 
+   0041 ldarg.0 
+   0042 ldloc.2 
+   0043 call StreamSceneLoader/ChunkloadInfo StreamSceneLoader::FindLoadInfo(System.String)
+   0048 stloc.3 
+   0049 ldloc.3 
+   004A brtrue IL_0054: ldarg.0
+   004F br IL_006d: ldloca.s V_1
+   0054 ldarg.0 
+   0055 ldfld StreamSceneLoader::loadingQ
+   005A ldloc.3 
+   005B callvirt System.Boolean ListView`1<StreamSceneLoader/ChunkloadInfo>::Remove(!0)
+   0060 pop 
+   0061 ldarg.0 
+   0062 ldfld StreamSceneLoader::loadingQTmp
+   0067 ldloc.3 
+   0068 callvirt System.Void ListView`1<StreamSceneLoader/ChunkloadInfo>::Add(!0)
+   006D ldloca.s V_1
+   006F call System.Boolean ListView`1/Enumerator<System.String>::MoveNext()
+   0074 brtrue IL_0039: ldloca.s V_1
+   0079 ldarg.0 
+   007A ldfld StreamSceneLoader::loadingQTmp
+   007F ldarg.0 
+   0080 ldfld StreamSceneLoader::loadingQ
+   0085 callvirt System.Void ListView`1<StreamSceneLoader/ChunkloadInfo>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   008A ldarg.0 
+   008B ldfld StreamSceneLoader::loadingQ
+   0090 stloc.s V_4
+   0092 ldarg.0 
+   0093 ldarg.0 
+   0094 ldfld StreamSceneLoader::loadingQTmp
+   0099 stfld StreamSceneLoader::loadingQ
+   009E ldarg.0 
+   009F ldloc.s V_4
+   00A1 stfld StreamSceneLoader::loadingQTmp
+   00A6 ldloc.0 
+   00A7 brtrue IL_00c5: ret
+   00AC ldarg.0 
+   00AD ldfld StreamSceneLoader::loadingQ
+   00B2 callvirt System.Int32 ListViewBase::get_Count()
+   00B7 ldc.i4.0 
+   00B8 ble IL_00c5: ret
+   00BD ldarg.0 
+   00BE ldc.i4.1 
+   00BF ldc.i4.1 
+   00C0 call System.Void StreamSceneLoader::CheckLoadCount(System.Boolean,System.Boolean)
+   00C5 ret 
+== System.Void BatchLoadChunkAsync(ListView`1<System.String> chunkProxys) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneLoader::m_chunkProxyOrder
+   0006 ldarg.1 
+   0007 callvirt System.Void ListView`1<System.String>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   000C ret 
+== StreamSceneLoader/ChunkloadInfo FindLoadInfo(System.String chunkName) attrs=Public, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld StreamSceneLoader::loadingQ
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D stloc.1 
+   000E ldc.i4.0 
+   000F stloc.2 
+   0010 br IL_0042: ldloc.2
+   0015 ldarg.0 
+   0016 ldfld StreamSceneLoader::loadingQ
+   001B ldloc.2 
+   001C callvirt !0 ListView`1<StreamSceneLoader/ChunkloadInfo>::get_Item(System.Int32)
+   0021 ldfld StreamSceneLoader/ChunkloadInfo::chunkName
+   0026 ldarg.1 
+   0027 call System.Boolean System.String::op_Equality(System.String,System.String)
+   002C brfalse IL_003e: ldloc.2
+   0031 ldarg.0 
+   0032 ldfld StreamSceneLoader::loadingQ
+   0037 ldloc.2 
+   0038 callvirt !0 ListView`1<StreamSceneLoader/ChunkloadInfo>::get_Item(System.Int32)
+   003D stloc.0 
+   003E ldloc.2 
+   003F ldc.i4.1 
+   0040 add 
+   0041 stloc.2 
+   0042 ldloc.2 
+   0043 ldloc.1 
+   0044 blt IL_0015: ldarg.0
+   0049 ldloc.0 
+   004A ret 
+== System.Void LoadChunkSync(System.String chunkName, StreamSceneLoader/OnChunkLoad onLoadCB) attrs=Public, HideBySig maxstack=4
+   0000 newobj System.Void StreamSceneLoader/ChunkloadInfo::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld StreamSceneLoader/ChunkloadInfo::chunkName
+   000D ldloc.0 
+   000E ldnull 
+   000F stfld StreamSceneLoader/ChunkloadInfo::coroutine
+   0014 ldloc.0 
+   0015 ldarg.2 
+   0016 stfld StreamSceneLoader/ChunkloadInfo::onLoadCB
+   001B newobj System.Void LoadContext::.ctor()
+   0020 stloc.1 
+   0021 ldloc.1 
+   0022 ldarg.0 
+   0023 ldfld StreamSceneLoader::m_primaryDir
+   0028 stfld LoadContext::primayDir
+   002D ldloc.1 
+   002E ldc.i4.0 
+   002F stfld LoadContext::async
+   0034 ldloc.1 
+   0035 ldarg.0 
+   0036 stfld LoadContext::loader
+   003B ldloc.0 
+   003C ldc.i4.1 
+   003D stfld StreamSceneLoader/ChunkloadInfo::state
+   0042 ldarg.0 
+   0043 ldloc.0 
+   0044 ldloc.1 
+   0045 call System.Collections.IEnumerator StreamSceneLoader::LoadChunkAsync(StreamSceneLoader/ChunkloadInfo,LoadContext)
+   004A stloc.2 
+   004B br IL_0050: ldloc.2
+   0050 ldloc.2 
+   0051 callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   0056 brtrue IL_0050: ldloc.2
+   005B ldarg.2 
+   005C brfalse IL_0092: ret
+   0061 ldarg.2 
+   0062 ldloc.0 
+   0063 ldfld StreamSceneLoader/ChunkloadInfo::holder
+   0068 ldfld ObjectHolder::obj
+   006D ldloc.0 
+   006E ldfld StreamSceneLoader/ChunkloadInfo::chunkBinResholder
+   0073 ldfld ObjectHolder::obj
+   0078 isinst CResource
+   007D ldloc.0 
+   007E ldfld StreamSceneLoader/ChunkloadInfo::referenceHolder
+   0083 ldfld ObjectHolder::obj
+   0088 isinst ListView`1<CResource>
+   008D callvirt System.Void StreamSceneLoader/OnChunkLoad::Invoke(System.Object,CResource,ListView`1<CResource>)
+   0092 ret 
+== System.Boolean TryCancelLoad(System.String chunkName) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_0060: ldloc.1
+   0009 ldarg.0 
+   000A ldfld StreamSceneLoader::loadingQ
+   000F ldloc.1 
+   0010 callvirt !0 ListView`1<StreamSceneLoader/ChunkloadInfo>::get_Item(System.Int32)
+   0015 stloc.2 
+   0016 ldloc.2 
+   0017 ldfld StreamSceneLoader/ChunkloadInfo::chunkName
+   001C ldarg.1 
+   001D call System.Boolean System.String::op_Equality(System.String,System.String)
+   0022 brfalse IL_005c: ldloc.1
+   0027 ldloc.2 
+   0028 ldfld StreamSceneLoader/ChunkloadInfo::state
+   002D brtrue IL_004e: ldc.i4.1
+   0032 ldc.i4.1 
+   0033 stloc.0 
+   0034 ldarg.0 
+   0035 ldfld StreamSceneLoader::loadingQ
+   003A ldloc.2 
+   003B callvirt System.Boolean ListView`1<StreamSceneLoader/ChunkloadInfo>::Remove(!0)
+   0040 pop 
+   0041 ldarg.0 
+   0042 ldc.i4.0 
+   0043 ldc.i4.0 
+   0044 call System.Void StreamSceneLoader::CheckLoadCount(System.Boolean,System.Boolean)
+   0049 br IL_0071: ldloc.0
+   004E ldc.i4.1 
+   004F stloc.0 
+   0050 ldloc.2 
+   0051 ldc.i4.3 
+   0052 stfld StreamSceneLoader/ChunkloadInfo::state
+   0057 br IL_0071: ldloc.0
+   005C ldloc.1 
+   005D ldc.i4.1 
+   005E add 
+   005F stloc.1 
+   0060 ldloc.1 
+   0061 ldarg.0 
+   0062 ldfld StreamSceneLoader::loadingQ
+   0067 callvirt System.Int32 ListViewBase::get_Count()
+   006C blt IL_0009: ldarg.0
+   0071 ldloc.0 
+   0072 ret 
+== System.Collections.IEnumerator LoadChunkAsync(StreamSceneLoader/ChunkloadInfo loadInfo, LoadContext ctx) attrs=Public, HideBySig maxstack=2
+   0000 newobj System.Void StreamSceneLoader/<LoadChunkAsync>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld StreamSceneLoader/<LoadChunkAsync>c__Iterator1::loadInfo
+   000D ldloc.0 
+   000E ldarg.2 
+   000F stfld StreamSceneLoader/<LoadChunkAsync>c__Iterator1::ctx
+   0014 ldloc.0 
+   0015 ldarg.0 
+   0016 stfld StreamSceneLoader/<LoadChunkAsync>c__Iterator1::$this
+   001B ldloc.0 
+   001C ret 
+== System.Object GetResource(System.String pathName, System.Type type) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldstr \
+   0008 ldstr /
+   000D callvirt System.String System.String::Replace(System.String,System.String)
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 ldstr PrefabAssets
+   0019 callvirt System.Boolean System.String::Contains(System.String)
+   001E brfalse IL_004f: ldarg.0
+   0023 ldarg.0 
+   0024 ldstr PrefabAssets
+   0029 call System.Int32 System.String::get_Length()
+   002E callvirt System.String System.String::Substring(System.Int32)
+   0033 stloc.2 
+   0034 call PrefabRefAsset StreamSceneSerializer::GetPrefabRefAsset()
+   0039 ldfld PrefabRefAsset::m_prefabObjects
+   003E ldloc.2 
+   003F call System.Int32 System.Int32::Parse(System.String)
+   0044 callvirt !0 System.Collections.Generic.List`1<UnityEngine.Object>::get_Item(System.Int32)
+   0049 stloc.0 
+   004A br IL_0093: ldloc.0
+   004F ldarg.0 
+   0050 stloc.3 
+   0051 ldstr Assets/Resources
+   0056 stloc.s V_4
+   0058 ldarg.0 
+   0059 ldloc.s V_4
+   005B callvirt System.Int32 System.String::IndexOf(System.String)
+   0060 stloc.s V_5
+   0062 ldloc.s V_5
+   0064 ldc.i4.0 
+   0065 blt IL_007d: call !0 Singleton`1<CResourceManager>::GetInstance()
+   006A ldarg.0 
+   006B ldloc.s V_5
+   006D ldloc.s V_4
+   006F callvirt System.Int32 System.String::get_Length()
+   0074 add 
+   0075 ldc.i4.1 
+   0076 add 
+   0077 callvirt System.String System.String::Substring(System.Int32)
+   007C stloc.3 
+   007D call !0 Singleton`1<CResourceManager>::GetInstance()
+   0082 ldloc.3 
+   0083 ldarg.1 
+   0084 ldc.i4.0 
+   0085 ldc.i4.0 
+   0086 ldc.i4.0 
+   0087 ldc.i4.0 
+   0088 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   008D ldfld CResource::m_content
+   0092 stloc.0 
+   0093 ldloc.0 
+   0094 ret 
+== UnityEngine.GameObject CreateGameObjectSelf(UnityEngine.GameObject parentGo, BinaryNode domNode, StreamSceneLoader/ChunkloadInfo loadInfo, LoadContext ctx) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.2 
+   0003 ldstr ON
+   0008 callvirt System.String BinaryNode::GetAttr(System.String)
+   000D stloc.1 
+   000E ldarg.1 
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0015 brfalse IL_0022: ldloc.0
+   001A ldarg.1 
+   001B ldloc.1 
+   001C call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldnull 
+   0024 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse IL_008d: ldarg.3
+   002E ldarg.2 
+   002F ldstr PFB
+   0034 callvirt System.String BinaryNode::GetAttr(System.String)
+   0039 stloc.2 
+   003A ldloc.2 
+   003B brfalse IL_0058: ldarg.2
+   0040 ldloc.2 
+   0041 callvirt System.Int32 System.String::get_Length()
+   0046 brfalse IL_0058: ldarg.2
+   004B ldloc.2 
+   004C ldarg.2 
+   004D call UnityEngine.GameObject VertualPrefab::CreateFromNormalPrefab(System.String,BinaryNode)
+   0052 stloc.0 
+   0053 br IL_008d: ldarg.3
+   0058 ldarg.2 
+   0059 ldstr VPFB
+   005E callvirt System.String BinaryNode::GetAttr(System.String)
+   0063 stloc.3 
+   0064 ldloc.3 
+   0065 brfalse IL_0087: newobj System.Void UnityEngine.GameObject::.ctor()
+   006A ldloc.3 
+   006B callvirt System.Int32 System.String::get_Length()
+   0070 brfalse IL_0087: newobj System.Void UnityEngine.GameObject::.ctor()
+   0075 ldloc.3 
+   0076 call System.Int32 System.Int32::Parse(System.String)
+   007B ldarg.2 
+   007C call UnityEngine.GameObject VertualPrefab::Create(System.Int32,BinaryNode)
+   0081 stloc.0 
+   0082 br IL_008d: ldarg.3
+   0087 newobj System.Void UnityEngine.GameObject::.ctor()
+   008C stloc.0 
+   008D ldarg.3 
+   008E ldfld StreamSceneLoader/ChunkloadInfo::holder
+   0093 brfalse IL_00b4: ldloc.0
+   0098 ldarg.3 
+   0099 ldfld StreamSceneLoader/ChunkloadInfo::holder
+   009E ldfld ObjectHolder::obj
+   00A3 brtrue IL_00b4: ldloc.0
+   00A8 ldarg.3 
+   00A9 ldfld StreamSceneLoader/ChunkloadInfo::holder
+   00AE ldloc.0 
+   00AF stfld ObjectHolder::obj
+   00B4 ldloc.0 
+   00B5 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00BA callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   00BF stloc.s V_4
+   00C1 ldloc.0 
+   00C2 ldarg.2 
+   00C3 ldstr ON
+   00C8 callvirt System.String BinaryNode::GetAttr(System.String)
+   00CD callvirt System.Void UnityEngine.Object::set_name(System.String)
+   00D2 ldarg.1 
+   00D3 ldnull 
+   00D4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D9 brfalse IL_00ef: ldloc.0
+   00DE ldloc.0 
+   00DF callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00E4 ldarg.1 
+   00E5 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00EA callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   00EF ldloc.0 
+   00F0 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00F5 ldloc.s V_4
+   00F7 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00FC ldarg.2 
+   00FD ldloc.0 
+   00FE call System.Void GameSerializer::DeserializeObject(BinaryNode,UnityEngine.GameObject)
+   0103 ldloc.0 
+   0104 ldc.i4.0 
+   0105 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   010A ldarg.0 
+   010B ldarg.2 
+   010C ldloc.0 
+   010D call System.Void StreamSceneLoader::InitComponets(BinaryNode,UnityEngine.GameObject)
+   0112 ldc.i4.1 
+   0113 stloc.s V_5
+   0115 ldloc.s V_5
+   0117 brfalse IL_0146: ldloc.0
+   011C ldarg.2 
+   011D ldstr VID
+   0122 callvirt System.String BinaryNode::GetAttr(System.String)
+   0127 stloc.s V_6
+   0129 ldloc.s V_6
+   012B brfalse IL_0146: ldloc.0
+   0130 ldloc.s V_6
+   0132 call System.UInt32 System.UInt32::Parse(System.String)
+   0137 stloc.s V_7
+   0139 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   013E ldloc.0 
+   013F ldloc.s V_7
+   0141 callvirt System.Void UnityObjMgr::RigisterGameObject(UnityEngine.GameObject,System.UInt32)
+   0146 ldloc.0 
+   0147 ret 
+== System.Collections.IEnumerator LoadRecursionOneTime(UnityEngine.GameObject parentGo, BinaryNode domNode, StreamSceneLoader/ChunkloadInfo loadInfo, LoadContext ctx) attrs=Public, HideBySig maxstack=2
+   0000 newobj System.Void StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.3 
+   0008 stfld StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::loadInfo
+   000D ldloc.0 
+   000E ldarg.1 
+   000F stfld StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::parentGo
+   0014 ldloc.0 
+   0015 ldarg.2 
+   0016 stfld StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::domNode
+   001B ldloc.0 
+   001C ldarg.s ctx
+   001E stfld StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::ctx
+   0023 ldloc.0 
+   0024 ldarg.0 
+   0025 stfld StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2::$this
+   002A ldloc.0 
+   002B ret 
+== System.Collections.IEnumerator LoadComponetsAsync(BinaryNode domNode, UnityEngine.GameObject go, StreamSceneLoader/ChunkloadInfo loadInfo, LoadContext ctx) attrs=Private, Static, HideBySig maxstack=2
+   0000 newobj System.Void StreamSceneLoader/<LoadComponetsAsync>c__Iterator3::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld StreamSceneLoader/<LoadComponetsAsync>c__Iterator3::domNode
+   000D ldloc.0 
+   000E ldarg.1 
+   000F stfld StreamSceneLoader/<LoadComponetsAsync>c__Iterator3::go
+   0014 ldloc.0 
+   0015 ldarg.3 
+   0016 stfld StreamSceneLoader/<LoadComponetsAsync>c__Iterator3::ctx
+   001B ldloc.0 
+   001C ldarg.2 
+   001D stfld StreamSceneLoader/<LoadComponetsAsync>c__Iterator3::loadInfo
+   0022 ldloc.0 
+   0023 ret 
+== System.Void InitComponets(BinaryNode domNode, UnityEngine.GameObject go) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld StreamSceneLoader::cpntPrefabArray
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldarg.2 
+   000C ldtoken UnityEngine.Component
+   0011 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0016 callvirt UnityEngine.Component[] UnityEngine.GameObject::GetComponents(System.Type)
+   001B stloc.0 
+   001C ldarg.0 
+   001D ldfld StreamSceneLoader::cpntPrefabArray
+   0022 ldloc.0 
+   0023 callvirt System.Void ListView`1<UnityEngine.Component>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   0028 ldarg.1 
+   0029 callvirt System.Int32 BinaryNode::GetChildNum()
+   002E stloc.1 
+   002F ldarg.0 
+   0030 ldfld StreamSceneLoader::cpntPrefabArray
+   0035 callvirt System.Int32 ListViewBase::get_Count()
+   003A ldloc.1 
+   003B ble IL_0040: ldc.i4.0
+   0040 ldc.i4.0 
+   0041 stloc.2 
+   0042 br IL_015b: ldloc.2
+   0047 ldarg.1 
+   0048 ldloc.2 
+   0049 callvirt BinaryNode BinaryNode::GetChild(System.Int32)
+   004E stloc.3 
+   004F ldloc.3 
+   0050 callvirt System.String BinaryNode::GetName()
+   0055 ldstr Cop
+   005A call System.Boolean System.String::op_Inequality(System.String,System.String)
+   005F brfalse IL_006f: ldloc.3
+   0064 ldloc.3 
+   0065 callvirt System.Void BinaryNode::PutBack()
+   006A br IL_0157: ldloc.2
+   006F ldloc.3 
+   0070 ldstr Type
+   0075 callvirt System.String BinaryNode::GetAttr_String(System.String)
+   007A stloc.s V_4
+   007C ldnull 
+   007D stloc.s V_5
+   007F ldarg.0 
+   0080 ldfld StreamSceneLoader::cpntPrefabArray
+   0085 callvirt System.Int32 ListViewBase::get_Count()
+   008A ldc.i4.0 
+   008B ble IL_0128: ldloc.s V_5
+   0090 ldc.i4.0 
+   0091 stloc.s V_6
+   0093 br IL_0116: ldloc.s V_6
+   0098 ldarg.0 
+   0099 ldfld StreamSceneLoader::cpntPrefabArray
+   009E ldloc.s V_6
+   00A0 callvirt !0 ListView`1<UnityEngine.Component>::get_Item(System.Int32)
+   00A5 call System.Boolean GameSerializer::isNull(System.Object)
+   00AA brfalse IL_00b4: ldarg.0
+   00AF br IL_0110: ldloc.s V_6
+   00B4 ldarg.0 
+   00B5 ldfld StreamSceneLoader::asynLoadCtx
+   00BA ldfld LoadContext::loader
+   00BF ldarg.0 
+   00C0 ldfld StreamSceneLoader::cpntPrefabArray
+   00C5 ldloc.s V_6
+   00C7 callvirt !0 ListView`1<UnityEngine.Component>::get_Item(System.Int32)
+   00CC callvirt System.Type System.Object::GetType()
+   00D1 callvirt System.String StreamSceneLoader::GetTypeName(System.Type)
+   00D6 ldloc.s V_4
+   00D8 call System.Boolean GameSerializer::PureTypeEqual(System.String,System.String)
+   00DD brfalse IL_0110: ldloc.s V_6
+   00E2 ldarg.0 
+   00E3 ldfld StreamSceneLoader::cpntPrefabArray
+   00E8 ldloc.s V_6
+   00EA callvirt !0 ListView`1<UnityEngine.Component>::get_Item(System.Int32)
+   00EF stloc.s V_5
+   00F1 ldloc.s V_5
+   00F3 ldnull 
+   00F4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F9 call System.Void DebugHelper::Assert(System.Boolean)
+   00FE ldarg.0 
+   00FF ldfld StreamSceneLoader::cpntPrefabArray
+   0104 ldloc.s V_6
+   0106 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   010B br IL_0128: ldloc.s V_5
+   0110 ldloc.s V_6
+   0112 ldc.i4.1 
+   0113 add 
+   0114 stloc.s V_6
+   0116 ldloc.s V_6
+   0118 ldarg.0 
+   0119 ldfld StreamSceneLoader::cpntPrefabArray
+   011E callvirt System.Int32 ListViewBase::get_Count()
+   0123 blt IL_0098: ldarg.0
+   0128 ldloc.s V_5
+   012A ldnull 
+   012B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0130 brfalse IL_0151: ldloc.3
+   0135 ldarg.2 
+   0136 ldloc.s V_4
+   0138 call System.Type GameSerializer::GetType(System.String)
+   013D callvirt UnityEngine.Component UnityEngine.GameObject::AddComponent(System.Type)
+   0142 stloc.s V_5
+   0144 ldloc.s V_5
+   0146 ldnull 
+   0147 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   014C brfalse IL_0151: ldloc.3
+   0151 ldloc.3 
+   0152 callvirt System.Void BinaryNode::PutBack()
+   0157 ldloc.2 
+   0158 ldc.i4.1 
+   0159 add 
+   015A stloc.2 
+   015B ldloc.2 
+   015C ldloc.1 
+   015D blt IL_0047: ldarg.1
+   0162 ldarg.0 
+   0163 ldfld StreamSceneLoader::cpntPrefabArray
+   0168 callvirt System.Void ListViewBase::Clear()
+   016D ret 
+  NESTED StreamSceneLoader/StreamSceneLoaderBasePolicy
+  NESTED StreamSceneLoader/StreamSceneLoaderPolicy_Common
+  NESTED StreamSceneLoader/StreamSceneLoaderPolicy_GroundFirst
+  NESTED StreamSceneLoader/OnChunkLoad
+  NESTED StreamSceneLoader/ChunkLoadState
+  NESTED StreamSceneLoader/ChunkloadInfo
+  NESTED StreamSceneLoader/<Update>c__Iterator0
+  NESTED StreamSceneLoader/<LoadChunkAsync>c__Iterator1
+  NESTED StreamSceneLoader/<LoadRecursionOneTime>c__Iterator2
+  NESTED StreamSceneLoader/<LoadComponetsAsync>c__Iterator3

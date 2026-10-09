@@ -1,0 +1,1216 @@
+// TYPE Assets.Scripts.GameSystem.DragonIcon  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String dragonBornEffect
+  FIELD System.String buffMonsterAliveEffect
+  FIELD UnityEngine.Color yellowDragonColor
+  FIELD UnityEngine.Color purpleDragonColor
+  FIELD System.Int32 m_cdTimer
+  FIELD ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode> node_ary
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,System.Int32> dragonGroups
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::.ctor()
+   0011 stfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0016 ldarg.0 
+   0017 call System.Void System.Object::.ctor()
+   001C ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.s 100
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::onEvent_SpawnGroupSpawn(Assets.Scripts.GameLogic.SpawnGroupCommonParam&)
+   000E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupCommonParam>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.SpawnGroupCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0018 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001D ldc.i4.s 101
+   001F ldarg.0 
+   0020 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::onEvent_SpawnGroupDead(Assets.Scripts.GameLogic.SpawnGroupDeadParam&)
+   0026 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupDeadParam>::.ctor(System.Object,System.IntPtr)
+   002B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.SpawnGroupDeadParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0030 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0035 ldc.i4.s 102
+   0037 ldarg.0 
+   0038 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::OnEvent_SpawnGroupStop(Assets.Scripts.GameLogic.SpawnGroupCommonParam&)
+   003E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupCommonParam>::.ctor(System.Object,System.IntPtr)
+   0043 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.SpawnGroupCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0048 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   004D ldc.i4.s 103
+   004F ldarg.0 
+   0050 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::OnEvent_SpawnPointDeadAdvance(Assets.Scripts.GameLogic.SpawnPointCommonParam&)
+   0056 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnPointCommonParam>::.ctor(System.Object,System.IntPtr)
+   005B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.SpawnPointCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0060 ldc.i4.0 
+   0061 stloc.0 
+   0062 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0067 ldfld Assets.Scripts.GameLogic.BattleLogic::mapLogic
+   006C callvirt ListView`1<Assets.Scripts.GameLogic.CommonSpawnGroup> Assets.Scripts.GameLogic.MapWrapper::GetSpawnGroups()
+   0071 stloc.2 
+   0072 ldloc.2 
+   0073 brfalse IL_0316: ret
+   0078 ldc.i4.0 
+   0079 stloc.3 
+   007A br IL_030a: ldloc.3
+   007F ldloc.2 
+   0080 ldloc.3 
+   0081 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnGroup>::get_Item(System.Int32)
+   0086 stloc.1 
+   0087 ldloc.1 
+   0088 ldnull 
+   0089 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008E brfalse IL_0306: ldloc.3
+   0093 ldloc.1 
+   0094 ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::SpawnerList
+   0099 brfalse IL_0306: ldloc.3
+   009E ldloc.1 
+   009F ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::SpawnerList
+   00A4 ldlen 
+   00A5 conv.i4 
+   00A6 ldc.i4.0 
+   00A7 ble IL_0306: ldloc.3
+   00AC ldloc.1 
+   00AD ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::SpawnerList
+   00B2 ldc.i4.0 
+   00B3 ldelem.ref 
+   00B4 ldfld Assets.Scripts.GameLogic.SpawnerWrapper::TheActorMeta
+   00B9 stloc.s V_4
+   00BB ldloca.s V_4
+   00BD ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00C2 ldloca.s V_5
+   00C4 call System.Boolean MonsterDataHelper::GetDataCfgInfoByCurLevelDiff(System.Int32,ResData.ResMonsterCfgInfo&)
+   00C9 brtrue IL_00d3: ldloc.1
+   00CE br IL_0306: ldloc.3
+   00D3 ldloc.1 
+   00D4 ldfld Assets.Scripts.GameLogic.CommonSpawnGroup::countDown
+   00D9 ldc.i4.0 
+   00DA ble IL_01d6: ldloca.s V_5
+   00DF ldloc.1 
+   00E0 callvirt ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameLogic.CommonSpawnGroup::GetSubPointList()
+   00E5 newobj System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::.ctor(System.Collections.Generic.IEnumerable`1<!0>)
+   00EA stloc.s V_6
+   00EC ldloc.s V_6
+   00EE ldc.i4.0 
+   00EF ldloc.1 
+   00F0 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Insert(System.Int32,!0)
+   00F5 ldc.i4.0 
+   00F6 stloc.s V_7
+   00F8 br IL_01c3: ldloc.s V_7
+   00FD ldloc.s V_6
+   00FF ldloc.s V_7
+   0101 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0106 stloc.s V_8
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   010E ldloc.s V_8
+   0110 ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   0115 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::ContainsKey(!0)
+   011A brtrue IL_0138: ldloc.1
+   011F ldarg.0 
+   0120 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0125 ldloc.s V_8
+   0127 ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   012C ldloca.s V_5
+   012E ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   0133 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Add(!0,!1)
+   0138 ldloc.1 
+   0139 ldloc.s V_8
+   013B ldloca.s V_5
+   013D ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   0142 newobj System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::.ctor(Assets.Scripts.GameLogic.CommonSpawnGroup,Assets.Scripts.GameLogic.CommonSpawnPoint,System.Int32)
+   0147 stloc.s V_9
+   0149 ldloc.s V_9
+   014B ldloc.1 
+   014C ldfld Assets.Scripts.GameLogic.CommonSpawnGroup::showDeadIcon
+   0151 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bShowDeadIcon
+   0156 ldloca.s V_5
+   0158 call System.String ResData.ResMonsterCfgInfo::get_szIconPath()
+   015D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0162 brtrue IL_0175: ldloc.s V_9
+   0167 ldloc.s V_9
+   0169 ldloca.s V_5
+   016B call System.String ResData.ResMonsterCfgInfo::get_szIconPath()
+   0170 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::UpdateIconPath(System.String)
+   0175 ldloc.s V_9
+   0177 ldc.i4.1 
+   0178 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   017D ldloc.s V_9
+   017F callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshSmallUiPos()
+   0184 ldloc.s V_9
+   0186 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshBigUiPos()
+   018B ldloc.s V_9
+   018D ldc.i4.1 
+   018E callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   0193 ldloc.s V_9
+   0195 ldc.i4.0 
+   0196 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   019B ldloc.s V_9
+   019D ldc.i4.1 
+   019E callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetDeadState(System.Boolean)
+   01A3 ldloc.s V_9
+   01A5 ldloc.1 
+   01A6 ldfld Assets.Scripts.GameLogic.CommonSpawnGroup::countDown
+   01AB stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::countDownThreshold
+   01B0 ldarg.0 
+   01B1 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   01B6 ldloc.s V_9
+   01B8 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::Add(!0)
+   01BD ldloc.s V_7
+   01BF ldc.i4.1 
+   01C0 add 
+   01C1 stloc.s V_7
+   01C3 ldloc.s V_7
+   01C5 ldloc.s V_6
+   01C7 callvirt System.Int32 ListViewBase::get_Count()
+   01CC blt IL_00fd: ldloc.s V_6
+   01D1 br IL_0306: ldloc.3
+   01D6 ldloca.s V_5
+   01D8 ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   01DD call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsMonsterDragon(System.Int32)
+   01E2 brtrue IL_01f5: ldloc.1
+   01E7 ldloca.s V_5
+   01E9 ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   01EE ldc.i4.s 23
+   01F0 bne.un IL_0306: ldloc.3
+   01F5 ldloc.1 
+   01F6 callvirt ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameLogic.CommonSpawnGroup::GetSubPointList()
+   01FB newobj System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::.ctor(System.Collections.Generic.IEnumerable`1<!0>)
+   0200 stloc.s V_10
+   0202 ldloc.s V_10
+   0204 ldc.i4.0 
+   0205 ldloc.1 
+   0206 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Insert(System.Int32,!0)
+   020B ldc.i4.0 
+   020C stloc.s V_11
+   020E br IL_02f8: ldloc.s V_11
+   0213 ldloc.s V_10
+   0215 ldloc.s V_11
+   0217 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   021C stloc.s V_12
+   021E ldarg.0 
+   021F ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0224 ldloc.s V_12
+   0226 ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   022B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::ContainsKey(!0)
+   0230 brtrue IL_024e: ldloc.1
+   0235 ldarg.0 
+   0236 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   023B ldloc.s V_12
+   023D ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   0242 ldloca.s V_5
+   0244 ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   0249 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Add(!0,!1)
+   024E ldloc.1 
+   024F ldloc.s V_12
+   0251 ldloca.s V_5
+   0253 ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   0258 newobj System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::.ctor(Assets.Scripts.GameLogic.CommonSpawnGroup,Assets.Scripts.GameLogic.CommonSpawnPoint,System.Int32)
+   025D stloc.s V_13
+   025F ldloca.s V_5
+   0261 call System.String ResData.ResMonsterCfgInfo::get_szIconPath()
+   0266 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   026B brtrue IL_027e: ldloca.s V_5
+   0270 ldloc.s V_13
+   0272 ldloca.s V_5
+   0274 call System.String ResData.ResMonsterCfgInfo::get_szIconPath()
+   0279 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::UpdateIconPath(System.String)
+   027E ldloca.s V_5
+   0280 ldfld ResData.ResMonsterCfgInfo::bSoldierType
+   0285 ldc.i4.s 17
+   0287 ceq 
+   0289 ldc.i4.0 
+   028A ceq 
+   028C stloc.s V_14
+   028E ldloc.s V_13
+   0290 ldloc.s V_14
+   0292 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   0297 ldloc.s V_13
+   0299 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshSmallUiPos()
+   029E ldloc.s V_13
+   02A0 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshBigUiPos()
+   02A5 ldloc.s V_14
+   02A7 brfalse IL_02c1: ldloc.s V_13
+   02AC ldloc.s V_13
+   02AE ldc.i4.1 
+   02AF callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   02B4 ldloc.s V_13
+   02B6 ldc.i4.0 
+   02B7 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   02BC br IL_02d1: ldloc.s V_13
+   02C1 ldloc.s V_13
+   02C3 ldc.i4.0 
+   02C4 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   02C9 ldloc.s V_13
+   02CB ldc.i4.0 
+   02CC callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   02D1 ldloc.s V_13
+   02D3 ldc.i4.1 
+   02D4 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetDeadState(System.Boolean)
+   02D9 ldloc.s V_13
+   02DB ldc.i4 60000
+   02E0 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::countDownThreshold
+   02E5 ldarg.0 
+   02E6 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   02EB ldloc.s V_13
+   02ED callvirt System.Void ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::Add(!0)
+   02F2 ldloc.s V_11
+   02F4 ldc.i4.1 
+   02F5 add 
+   02F6 stloc.s V_11
+   02F8 ldloc.s V_11
+   02FA ldloc.s V_10
+   02FC callvirt System.Int32 ListViewBase::get_Count()
+   0301 blt IL_0213: ldloc.s V_10
+   0306 ldloc.3 
+   0307 ldc.i4.1 
+   0308 add 
+   0309 stloc.3 
+   030A ldloc.3 
+   030B ldloc.2 
+   030C callvirt System.Int32 ListViewBase::get_Count()
+   0311 blt IL_007f: ldloc.2
+   0316 ret 
+== System.Void SetMapType(System.Boolean isMini) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0034: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   001A brfalse IL_0030: ldloc.0
+   001F ldloc.1 
+   0020 ldarg.1 
+   0021 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   0026 ldloc.1 
+   0027 ldarg.1 
+   0028 ldc.i4.0 
+   0029 ceq 
+   002B callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   0030 ldloc.0 
+   0031 ldc.i4.1 
+   0032 add 
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   003B callvirt System.Int32 ListViewBase::get_Count()
+   0040 blt IL_0007: ldarg.0
+   0045 ret 
+== System.Void OnViewPortChange() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0024: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 brfalse IL_0020: ldloc.0
+   001A ldloc.1 
+   001B callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshSmallUiPos()
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   002B callvirt System.Int32 ListViewBase::get_Count()
+   0030 blt IL_0007: ldarg.0
+   0035 ret 
+== System.Void OnBigViewPortChange() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0024: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 brfalse IL_0020: ldloc.0
+   001A ldloc.1 
+   001B callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshBigUiPos()
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   002B callvirt System.Int32 ListViewBase::get_Count()
+   0030 blt IL_0007: ldarg.0
+   0035 ret 
+== System.Void CalcIconPosition(UnityEngine.Vector3& worldPos, Assets.Scripts.GameSystem.enMiniMapType miniMapType, UnityEngine.Vector3& positionIn3DUI, UnityEngine.Vector3& positionInUGUI) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.2 
+   0001 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0006 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000B ldarg.0 
+   000C ldobj UnityEngine.Vector3
+   0011 ldarg.1 
+   0012 callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInMap(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   0017 stobj UnityEngine.Vector3
+   001C ldarg.3 
+   001D ldarg.2 
+   001E ldobj UnityEngine.Vector3
+   0023 stobj UnityEngine.Vector3
+   0028 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001c: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::Clear()
+   0018 ldloc.0 
+   0019 ldc.i4.1 
+   001A add 
+   001B stloc.0 
+   001C ldloc.0 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0023 callvirt System.Int32 ListViewBase::get_Count()
+   0028 blt IL_0007: ldarg.0
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0033 callvirt System.Void ListViewBase::Clear()
+   0038 ldarg.0 
+   0039 ldnull 
+   003A stfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   003F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0044 ldc.i4.s 100
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::onEvent_SpawnGroupSpawn(Assets.Scripts.GameLogic.SpawnGroupCommonParam&)
+   004D newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupCommonParam>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.SpawnGroupCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0057 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   005C ldc.i4.s 101
+   005E ldarg.0 
+   005F ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::onEvent_SpawnGroupDead(Assets.Scripts.GameLogic.SpawnGroupDeadParam&)
+   0065 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupDeadParam>::.ctor(System.Object,System.IntPtr)
+   006A callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.SpawnGroupDeadParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   006F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0074 ldc.i4.s 102
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::OnEvent_SpawnGroupStop(Assets.Scripts.GameLogic.SpawnGroupCommonParam&)
+   007D newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnGroupCommonParam>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.SpawnGroupCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0087 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   008C ldc.i4.s 103
+   008E ldarg.0 
+   008F ldftn System.Void Assets.Scripts.GameSystem.DragonIcon::OnEvent_SpawnPointDeadAdvance(Assets.Scripts.GameLogic.SpawnPointCommonParam&)
+   0095 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.SpawnPointCommonParam>::.ctor(System.Object,System.IntPtr)
+   009A callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.SpawnPointCommonParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   009F ret 
+== System.Void OnCDTimer(System.Int32 seq) attrs=Public, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldnull 
+   0003 stloc.1 
+   0004 ldc.i4.0 
+   0005 stloc.2 
+   0006 br IL_004b: ldloc.2
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0011 ldloc.2 
+   0012 callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0017 stloc.3 
+   0018 ldloc.3 
+   0019 brfalse IL_0047: ldloc.2
+   001E ldloc.3 
+   001F callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::ValidateCD()
+   0024 ldloc.3 
+   0025 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::subType
+   002A ldc.i4.s 17
+   002C bne.un IL_0038: ldloc.3
+   0031 ldloc.3 
+   0032 stloc.0 
+   0033 br IL_0047: ldloc.2
+   0038 ldloc.3 
+   0039 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::subType
+   003E ldc.i4.s 9
+   0040 bne.un IL_0047: ldloc.2
+   0045 ldloc.3 
+   0046 stloc.1 
+   0047 ldloc.2 
+   0048 ldc.i4.1 
+   0049 add 
+   004A stloc.2 
+   004B ldloc.2 
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0052 callvirt System.Int32 ListViewBase::get_Count()
+   0057 blt IL_000b: ldarg.0
+   005C ldloc.0 
+   005D brfalse IL_00e0: ret
+   0062 ldloc.0 
+   0063 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   0068 brtrue IL_00e0: ret
+   006D ldloc.0 
+   006E callvirt System.Boolean Assets.Scripts.GameSystem.DragonIcon/DragonNode::IsIn60SecondCountDown()
+   0073 brfalse IL_00e0: ret
+   0078 ldloc.1 
+   0079 brfalse IL_00e0: ret
+   007E ldloc.1 
+   007F ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bDead
+   0084 brfalse IL_00e0: ret
+   0089 ldloc.1 
+   008A callvirt System.Boolean Assets.Scripts.GameSystem.DragonIcon/DragonNode::IsIn60SecondCountDown()
+   008F brtrue IL_00e0: ret
+   0094 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0099 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   009E stloc.s V_4
+   00A0 ldloc.0 
+   00A1 ldc.i4.1 
+   00A2 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   00A7 ldloc.0 
+   00A8 ldloc.s V_4
+   00AA callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   00AF ldc.i4.0 
+   00B0 ceq 
+   00B2 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   00B7 ldloc.0 
+   00B8 ldloc.s V_4
+   00BA callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   00BF ldc.i4.0 
+   00C0 ceq 
+   00C2 ldc.i4.0 
+   00C3 ceq 
+   00C5 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   00CA ldloc.1 
+   00CB ldc.i4.0 
+   00CC stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   00D1 ldloc.1 
+   00D2 ldc.i4.0 
+   00D3 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   00D8 ldloc.1 
+   00D9 ldc.i4.0 
+   00DA callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   00DF ret 
+   00E0 ret 
+== Assets.Scripts.GameSystem.DragonIcon/DragonNode GetNode(Assets.Scripts.GameLogic.CommonSpawnPoint point) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_002b: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::spawnPoint
+   001A ldarg.1 
+   001B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0020 brfalse IL_0027: ldloc.0
+   0025 ldloc.1 
+   0026 ret 
+   0027 ldloc.0 
+   0028 ldc.i4.1 
+   0029 add 
+   002A stloc.0 
+   002B ldloc.0 
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0032 callvirt System.Int32 ListViewBase::get_Count()
+   0037 blt IL_0007: ldarg.0
+   003C ldnull 
+   003D ret 
+== Assets.Scripts.GameSystem.DragonIcon/DragonNode GetNode(System.Int32 type) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0026: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::subType
+   001A ldarg.1 
+   001B bne.un IL_0022: ldloc.0
+   0020 ldloc.1 
+   0021 ret 
+   0022 ldloc.0 
+   0023 ldc.i4.1 
+   0024 add 
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   002D callvirt System.Int32 ListViewBase::get_Count()
+   0032 blt IL_0007: ldarg.0
+   0037 ldnull 
+   0038 ret 
+== ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> GetPointLast(Assets.Scripts.GameLogic.CommonSpawnGroup group, System.Int32[] inLastRandPointIndex) attrs=Private, Static, HideBySig maxstack=3
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 brfalse IL_006b: ldloc.0
+   000C ldarg.1 
+   000D ldlen 
+   000E conv.i4 
+   000F ldc.i4.0 
+   0010 ble IL_006b: ldloc.0
+   0015 ldarg.0 
+   0016 callvirt ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameLogic.CommonSpawnGroup::GetSubPointList()
+   001B stloc.1 
+   001C ldc.i4.0 
+   001D stloc.2 
+   001E br IL_005d: ldloc.2
+   0023 ldarg.1 
+   0024 ldloc.2 
+   0025 ldelem.i4 
+   0026 stloc.3 
+   0027 ldloc.3 
+   0028 ldc.i4.m1 
+   0029 beq IL_0052: ldloc.0
+   002E ldloc.1 
+   002F brfalse IL_004d: br IL_0059
+   0034 ldloc.1 
+   0035 callvirt System.Int32 ListViewBase::get_Count()
+   003A ldc.i4.0 
+   003B ble IL_004d: br IL_0059
+   0040 ldloc.0 
+   0041 ldloc.1 
+   0042 ldloc.3 
+   0043 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0048 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   004D br IL_0059: ldloc.2
+   0052 ldloc.0 
+   0053 ldarg.0 
+   0054 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   0059 ldloc.2 
+   005A ldc.i4.1 
+   005B add 
+   005C stloc.2 
+   005D ldloc.2 
+   005E ldarg.1 
+   005F ldlen 
+   0060 conv.i4 
+   0061 blt IL_0023: ldarg.1
+   0066 br IL_0072: ldloc.0
+   006B ldloc.0 
+   006C ldarg.0 
+   006D callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   0072 ldloc.0 
+   0073 ret 
+== System.Void onEvent_SpawnGroupDead(Assets.Scripts.GameLogic.SpawnGroupDeadParam& prm) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.SpawnGroupDeadParam::Group
+   0006 ldarg.1 
+   0007 ldfld Assets.Scripts.GameLogic.SpawnGroupDeadParam::LastRandPointIndex
+   000C call ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameSystem.DragonIcon::GetPointLast(Assets.Scripts.GameLogic.CommonSpawnGroup,System.Int32[])
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 brfalse IL_008a: ret
+   0018 ldc.i4.0 
+   0019 stloc.1 
+   001A br IL_007e: ldloc.1
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0025 ldloc.0 
+   0026 ldloc.1 
+   0027 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   002C ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   0031 ldloca.s V_2
+   0033 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::TryGetValue(!0,!1&)
+   0038 brfalse IL_007a: ldloc.1
+   003D ldarg.0 
+   003E ldloc.0 
+   003F ldloc.1 
+   0040 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0045 call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(Assets.Scripts.GameLogic.CommonSpawnPoint)
+   004A stloc.3 
+   004B ldloc.3 
+   004C brfalse IL_007a: ldloc.1
+   0051 ldloc.3 
+   0052 ldc.i4.1 
+   0053 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetDeadState(System.Boolean)
+   0058 ldloc.3 
+   0059 ldc.i4.1 
+   005A stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bDead
+   005F ldloc.3 
+   0060 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bindParticleInfo
+   0065 brfalse IL_007a: ldloc.1
+   006A call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   006F ldloc.3 
+   0070 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bindParticleInfo
+   0075 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::RemoveParticle(Assets.Scripts.GameSystem.UIParticleInfo)
+   007A ldloc.1 
+   007B ldc.i4.1 
+   007C add 
+   007D stloc.1 
+   007E ldloc.1 
+   007F ldloc.0 
+   0080 callvirt System.Int32 ListViewBase::get_Count()
+   0085 blt IL_001f: ldarg.0
+   008A ret 
+== System.Void OnEvent_SpawnPointDeadAdvance(Assets.Scripts.GameLogic.SpawnPointCommonParam& evtParam) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.SpawnPointCommonParam::Point
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_006a: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0017 ldarg.1 
+   0018 ldfld Assets.Scripts.GameLogic.SpawnPointCommonParam::Point
+   001D ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   0022 ldloca.s V_0
+   0024 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::TryGetValue(!0,!1&)
+   0029 brfalse IL_006a: ret
+   002E ldarg.0 
+   002F ldarg.1 
+   0030 ldfld Assets.Scripts.GameLogic.SpawnPointCommonParam::Point
+   0035 call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(Assets.Scripts.GameLogic.CommonSpawnPoint)
+   003A stloc.1 
+   003B ldloc.1 
+   003C brfalse IL_006a: ret
+   0041 ldloc.1 
+   0042 ldc.i4.1 
+   0043 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetDeadState(System.Boolean)
+   0048 ldloc.1 
+   0049 ldc.i4.1 
+   004A stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bDead
+   004F ldloc.1 
+   0050 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bindParticleInfo
+   0055 brfalse IL_006a: ret
+   005A call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   005F ldloc.1 
+   0060 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bindParticleInfo
+   0065 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::RemoveParticle(Assets.Scripts.GameSystem.UIParticleInfo)
+   006A ret 
+== ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> GetPoint(Assets.Scripts.GameLogic.CommonSpawnGroup group) attrs=Private, Static, HideBySig maxstack=3
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 callvirt ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameLogic.CommonSpawnGroup::GetSubPointList()
+   000C stloc.1 
+   000D ldloc.1 
+   000E callvirt System.Int32 ListViewBase::get_Count()
+   0013 ldc.i4.0 
+   0014 ble IL_0060: ldloc.0
+   0019 ldc.i4.0 
+   001A stloc.2 
+   001B br IL_004d: ldloc.2
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::NextRandPointIndex
+   0026 ldloc.2 
+   0027 ldelem.i4 
+   0028 stloc.3 
+   0029 ldloc.3 
+   002A ldc.i4.m1 
+   002B beq IL_0042: ldloc.0
+   0030 ldloc.0 
+   0031 ldloc.1 
+   0032 ldloc.3 
+   0033 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0038 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   003D br IL_0049: ldloc.2
+   0042 ldloc.0 
+   0043 ldarg.0 
+   0044 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   0049 ldloc.2 
+   004A ldc.i4.1 
+   004B add 
+   004C stloc.2 
+   004D ldloc.2 
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::NextRandPointIndex
+   0054 ldlen 
+   0055 conv.i4 
+   0056 blt IL_0020: ldarg.0
+   005B br IL_0067: ldloc.0
+   0060 ldloc.0 
+   0061 ldarg.0 
+   0062 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::Add(!0)
+   0067 ldloc.0 
+   0068 ret 
+== System.Void onEvent_SpawnGroupSpawn(Assets.Scripts.GameLogic.SpawnGroupCommonParam& prm) attrs=Private, HideBySig maxstack=10
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.SpawnGroupCommonParam::Group
+   0006 call ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameSystem.DragonIcon::GetPoint(Assets.Scripts.GameLogic.CommonSpawnGroup)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brfalse IL_01d6: ret
+   0012 ldc.i4.0 
+   0013 stloc.1 
+   0014 br IL_01ca: ldloc.1
+   0019 ldloc.0 
+   001A ldloc.1 
+   001B callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0020 stloc.2 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0027 ldloc.2 
+   0028 ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   002D ldloca.s V_3
+   002F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::TryGetValue(!0,!1&)
+   0034 brfalse IL_01c6: ldloc.1
+   0039 ldarg.0 
+   003A ldloc.2 
+   003B call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(Assets.Scripts.GameLogic.CommonSpawnPoint)
+   0040 stloc.s V_4
+   0042 ldloc.s V_4
+   0044 ldnull 
+   0045 ceq 
+   0047 ldc.i4.0 
+   0048 ceq 
+   004A call System.Void DebugHelper::Assert(System.Boolean)
+   004F ldloc.s V_4
+   0051 brtrue IL_0057: ldloc.s V_4
+   0056 ret 
+   0057 ldloc.s V_4
+   0059 ldc.i4.0 
+   005A callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetDeadState(System.Boolean)
+   005F ldloc.s V_4
+   0061 ldc.i4.0 
+   0062 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bDead
+   0067 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   006C callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0071 stloc.s V_5
+   0073 ldloc.s V_5
+   0075 brfalse IL_0086: ldc.i4.0
+   007A ldloc.s V_5
+   007C callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   0081 ldc.i4.0 
+   0082 ceq 
+   0084 br.s IL_0087: stloc.s V_6
+   0086 ldc.i4.0 
+   0087 stloc.s V_6
+   0089 ldloc.s V_6
+   008B brfalse IL_0160: ldloc.3
+   0090 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0095 callvirt Assets.Scripts.UI.C3DUIManager/IndirectCamera Assets.Scripts.UI.C3DUIManager::GetCurrentCamera()
+   009A stloc.s V_7
+   009C ldloc.s V_7
+   009E brfalse IL_0160: ldloc.3
+   00A3 ldloc.s V_4
+   00A5 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::mmNode3dui
+   00AA brfalse IL_0160: ldloc.3
+   00AF ldloc.s V_7
+   00B1 ldfld Assets.Scripts.UI.C3DUIManager/IndirectCamera::camera
+   00B6 ldloc.s V_4
+   00B8 ldfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::mmNode3dui
+   00BD ldfld CPooledGameObjectScript::Trans
+   00C2 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00C7 call UnityEngine.Vector2 Assets.Scripts.UI.CUIUtility::WorldToScreenPoint(UnityEngine.Camera,UnityEngine.Vector3)
+   00CC stloc.s V_8
+   00CE call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   00D3 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   00D8 brfalse IL_0160: ldloc.3
+   00DD call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   00E2 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   00E7 ldloc.s V_8
+   00E9 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::CheckMiniMapScreenPosValid(UnityEngine.Vector2)
+   00EE brfalse IL_0160: ldloc.3
+   00F3 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   00F8 ldsfld Assets.Scripts.GameSystem.DragonIcon::dragonBornEffect
+   00FD ldc.r4 3
+   0102 ldloc.s V_8
+   0104 ldloca.s V_9
+   0106 initobj System.Nullable`1<UnityEngine.Quaternion>
+   010C ldloc.s V_9
+   010E ldc.i4.1 
+   010F ldc.i4.1 
+   0110 ldc.i4.0 
+   0111 ldloca.s V_10
+   0113 initobj UnityEngine.Vector3
+   0119 ldloc.s V_10
+   011B callvirt Assets.Scripts.GameSystem.UIParticleInfo Assets.Scripts.GameSystem.CUIParticleSystem::AddParticle(System.String,System.Single,UnityEngine.Vector2,System.Nullable`1<UnityEngine.Quaternion>,System.Boolean,System.Boolean,System.Boolean,UnityEngine.Vector3)
+   0120 pop 
+   0121 ldloc.2 
+   0122 ldfld Assets.Scripts.GameLogic.CommonSpawnPoint::bBindEffect
+   0127 brfalse IL_0160: ldloc.3
+   012C ldloc.s V_4
+   012E call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0133 ldsfld Assets.Scripts.GameSystem.DragonIcon::buffMonsterAliveEffect
+   0138 ldc.r4 -1
+   013D ldloc.s V_8
+   013F ldloca.s V_9
+   0141 initobj System.Nullable`1<UnityEngine.Quaternion>
+   0147 ldloc.s V_9
+   0149 ldc.i4.1 
+   014A ldc.i4.1 
+   014B ldc.i4.0 
+   014C ldloca.s V_10
+   014E initobj UnityEngine.Vector3
+   0154 ldloc.s V_10
+   0156 callvirt Assets.Scripts.GameSystem.UIParticleInfo Assets.Scripts.GameSystem.CUIParticleSystem::AddParticle(System.String,System.Single,UnityEngine.Vector2,System.Nullable`1<UnityEngine.Quaternion>,System.Boolean,System.Boolean,System.Boolean,UnityEngine.Vector3)
+   015B stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bindParticleInfo
+   0160 ldloc.3 
+   0161 ldc.i4.8 
+   0162 bne.un IL_017c: ldloc.3
+   0167 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   016C ldstr Play_DaLong_VO_Refresh
+   0171 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0176 pop 
+   0177 br IL_01c6: ldloc.1
+   017C ldloc.3 
+   017D ldc.i4.s 9
+   017F bne.un IL_0199: ldloc.3
+   0184 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0189 ldstr Play_XiaoLong_VO_Refresh
+   018E callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0193 pop 
+   0194 br IL_01c6: ldloc.1
+   0199 ldloc.3 
+   019A ldc.i4.s 17
+   019C bne.un IL_01b6: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   01A1 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   01A6 ldstr Play_XiaoLong_VO_Refresh
+   01AB callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   01B0 pop 
+   01B1 br IL_01c6: ldloc.1
+   01B6 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   01BB ldstr Play_BaoJun_VO_Anger
+   01C0 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   01C5 pop 
+   01C6 ldloc.1 
+   01C7 ldc.i4.1 
+   01C8 add 
+   01C9 stloc.1 
+   01CA ldloc.1 
+   01CB ldloc.0 
+   01CC callvirt System.Int32 ListViewBase::get_Count()
+   01D1 blt IL_0019: ldloc.0
+   01D6 ret 
+== System.Void OnEvent_SpawnGroupStop(Assets.Scripts.GameLogic.SpawnGroupCommonParam& prm) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.SpawnGroupCommonParam::Group
+   0006 call ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint> Assets.Scripts.GameSystem.DragonIcon::GetPoint(Assets.Scripts.GameLogic.CommonSpawnGroup)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brfalse IL_01b0: ret
+   0012 ldc.i4.0 
+   0013 stloc.1 
+   0014 br IL_01a4: ldloc.1
+   0019 ldloc.0 
+   001A ldloc.1 
+   001B callvirt !0 ListView`1<Assets.Scripts.GameLogic.CommonSpawnPoint>::get_Item(System.Int32)
+   0020 stloc.2 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.DragonIcon::dragonGroups
+   0027 ldloc.2 
+   0028 ldfld Assets.Scripts.GameLogic.FuncRegion::uid
+   002D ldloca.s V_3
+   002F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::TryGetValue(!0,!1&)
+   0034 brfalse IL_01a0: ldloc.1
+   0039 ldloc.3 
+   003A ldc.i4.s 9
+   003C bne.un IL_011e: ldloc.3
+   0041 ldloca.s V_4
+   0043 initobj SGW/stKillNotifyParams
+   0049 ldloca.s V_4
+   004B ldc.i4.1 
+   004C call System.Void SGW/stKillNotifyParams::set_m_isSuicide(System.Boolean)
+   0051 ldloca.s V_4
+   0053 ldc.i4 4100
+   0058 stfld SGW/stKillNotifyParams::m_killNotifyType
+   005D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0062 callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   0067 ldloca.s V_4
+   0069 ldc.i4.0 
+   006A ldc.i4.0 
+   006B callvirt System.Void Assets.Scripts.GameSystem.CKillNotify::AddKillInfo(SGW/stKillNotifyParams&,System.Boolean,System.Boolean)
+   0070 ldloca.s V_5
+   0072 initobj SGW/stKillNotifyParams
+   0078 ldloca.s V_5
+   007A ldc.i4.1 
+   007B call System.Void SGW/stKillNotifyParams::set_m_isSuicide(System.Boolean)
+   0080 ldloca.s V_5
+   0082 ldc.i4 4101
+   0087 stfld SGW/stKillNotifyParams::m_killNotifyType
+   008C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0091 callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   0096 ldloca.s V_5
+   0098 ldc.i4.0 
+   0099 ldc.i4.0 
+   009A callvirt System.Void Assets.Scripts.GameSystem.CKillNotify::AddKillInfo(SGW/stKillNotifyParams&,System.Boolean,System.Boolean)
+   009F ldarg.0 
+   00A0 ldc.i4.s 17
+   00A2 call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(System.Int32)
+   00A7 stloc.s V_6
+   00A9 ldloc.s V_6
+   00AB brfalse IL_00f0: ldarg.0
+   00B0 ldloc.s V_6
+   00B2 ldc.i4.1 
+   00B3 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   00B8 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   00BD callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   00C2 stloc.s V_7
+   00C4 ldloc.s V_7
+   00C6 brfalse IL_00f0: ldarg.0
+   00CB ldloc.s V_6
+   00CD ldloc.s V_7
+   00CF callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   00D4 ldc.i4.0 
+   00D5 ceq 
+   00D7 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   00DC ldloc.s V_6
+   00DE ldloc.s V_7
+   00E0 callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   00E5 ldc.i4.0 
+   00E6 ceq 
+   00E8 ldc.i4.0 
+   00E9 ceq 
+   00EB callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   00F0 ldarg.0 
+   00F1 ldc.i4.s 9
+   00F3 call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(System.Int32)
+   00F8 stloc.s V_6
+   00FA ldloc.s V_6
+   00FC brfalse IL_0119: br IL_01a0
+   0101 ldloc.s V_6
+   0103 ldc.i4.0 
+   0104 stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   0109 ldloc.s V_6
+   010B ldc.i4.0 
+   010C callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   0111 ldloc.s V_6
+   0113 ldc.i4.0 
+   0114 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   0119 br IL_01a0: ldloc.1
+   011E ldloc.3 
+   011F ldc.i4.s 17
+   0121 bne.un IL_01a0: ldloc.1
+   0126 ldarg.0 
+   0127 ldc.i4.s 9
+   0129 call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(System.Int32)
+   012E stloc.s V_8
+   0130 ldloc.s V_8
+   0132 brfalse IL_0177: ldarg.0
+   0137 ldloc.s V_8
+   0139 ldc.i4.1 
+   013A stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   013F call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0144 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0149 stloc.s V_9
+   014B ldloc.s V_9
+   014D brfalse IL_0177: ldarg.0
+   0152 ldloc.s V_8
+   0154 ldloc.s V_9
+   0156 callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   015B ldc.i4.0 
+   015C ceq 
+   015E callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   0163 ldloc.s V_8
+   0165 ldloc.s V_9
+   0167 callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   016C ldc.i4.0 
+   016D ceq 
+   016F ldc.i4.0 
+   0170 ceq 
+   0172 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   0177 ldarg.0 
+   0178 ldc.i4.s 17
+   017A call Assets.Scripts.GameSystem.DragonIcon/DragonNode Assets.Scripts.GameSystem.DragonIcon::GetNode(System.Int32)
+   017F stloc.s V_8
+   0181 ldloc.s V_8
+   0183 brfalse IL_01a0: ldloc.1
+   0188 ldloc.s V_8
+   018A ldc.i4.0 
+   018B stfld Assets.Scripts.GameSystem.DragonIcon/DragonNode::bActiveShowCDText
+   0190 ldloc.s V_8
+   0192 ldc.i4.0 
+   0193 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetMiniNodeVisible(System.Boolean)
+   0198 ldloc.s V_8
+   019A ldc.i4.0 
+   019B callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::SetBigNodeVisible(System.Boolean)
+   01A0 ldloc.1 
+   01A1 ldc.i4.1 
+   01A2 add 
+   01A3 stloc.1 
+   01A4 ldloc.1 
+   01A5 ldloc.0 
+   01A6 callvirt System.Int32 ListViewBase::get_Count()
+   01AB blt IL_0019: ldloc.0
+   01B0 ret 
+== CPooledGameObjectScript GetMapDragonObject(System.Int32 subSoliderType, System.Boolean bMiniMap, Assets.Scripts.GameSystem.UI3DEventCom& evtCom) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldarg.2 
+   0001 ldnull 
+   0002 stind.ref 
+   0003 ldc.r4 1
+   0008 stloc.0 
+   0009 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000E callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0013 stloc.2 
+   0014 ldloc.2 
+   0015 brfalse IL_0184: ldnull
+   001A ldarg.0 
+   001B ldc.i4.7 
+   001C bne.un IL_005b: ldarg.0
+   0021 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_3v3
+   0026 stloc.s V_4
+   0028 ldarg.1 
+   0029 brfalse IL_0039: ldloc.2
+   002E ldloc.2 
+   002F callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcDragon_3dui()
+   0034 br IL_003f: stloc.1
+   0039 ldloc.2 
+   003A callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcDragon_3dui()
+   003F stloc.1 
+   0040 ldarg.1 
+   0041 brfalse IL_0050: ldc.r4 1
+   0046 ldc.r4 0.6
+   004B br IL_0055: stloc.0
+   0050 ldc.r4 1
+   0055 stloc.0 
+   0056 br IL_0132: ldloc.s V_4
+   005B ldarg.0 
+   005C ldc.i4.8 
+   005D bne.un IL_009c: ldarg.0
+   0062 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_5v5_big
+   0067 stloc.s V_4
+   0069 ldarg.1 
+   006A brfalse IL_007a: ldloc.2
+   006F ldloc.2 
+   0070 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcDragon_3dui()
+   0075 br IL_0080: stloc.1
+   007A ldloc.2 
+   007B callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcDragon_3dui()
+   0080 stloc.1 
+   0081 ldarg.1 
+   0082 brfalse IL_0091: ldc.r4 1
+   0087 ldc.r4 0.6
+   008C br IL_0096: stloc.0
+   0091 ldc.r4 1
+   0096 stloc.0 
+   0097 br IL_0132: ldloc.s V_4
+   009C ldarg.0 
+   009D ldc.i4.s 9
+   009F beq IL_00b4: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_5v5_small
+   00A4 ldarg.0 
+   00A5 ldc.i4.s 13
+   00A7 beq IL_00b4: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_5v5_small
+   00AC ldarg.0 
+   00AD ldc.i4.s 17
+   00AF bne.un IL_00ee: ldarg.0
+   00B4 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_5v5_small
+   00B9 stloc.s V_4
+   00BB ldarg.1 
+   00BC brfalse IL_00cc: ldloc.2
+   00C1 ldloc.2 
+   00C2 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcDragon_3dui()
+   00C7 br IL_00d2: stloc.1
+   00CC ldloc.2 
+   00CD callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcDragon_3dui()
+   00D2 stloc.1 
+   00D3 ldarg.1 
+   00D4 brfalse IL_00e3: ldc.r4 1
+   00D9 ldc.r4 0.6
+   00DE br IL_00e8: stloc.0
+   00E3 ldc.r4 1
+   00E8 stloc.0 
+   00E9 br IL_0132: ldloc.s V_4
+   00EE ldarg.0 
+   00EF ldc.i4.s 23
+   00F1 bne.un IL_0130: ldnull
+   00F6 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Dragon_5v5_big
+   00FB stloc.s V_4
+   00FD ldarg.1 
+   00FE brfalse IL_010e: ldloc.2
+   0103 ldloc.2 
+   0104 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcDragon_3dui()
+   0109 br IL_0114: stloc.1
+   010E ldloc.2 
+   010F callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcDragon_3dui()
+   0114 stloc.1 
+   0115 ldarg.1 
+   0116 brfalse IL_0125: ldc.r4 1
+   011B ldc.r4 0.6
+   0120 br IL_012a: stloc.0
+   0125 ldc.r4 1
+   012A stloc.0 
+   012B br IL_0132: ldloc.s V_4
+   0130 ldnull 
+   0131 ret 
+   0132 ldloc.s V_4
+   0134 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0139 brtrue IL_014a: ldnull
+   013E ldloc.1 
+   013F ldnull 
+   0140 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0145 brfalse IL_014c: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   014A ldnull 
+   014B ret 
+   014C call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0151 ldloc.s V_4
+   0153 ldc.i4.0 
+   0154 ldnull 
+   0155 ldc.i4.0 
+   0156 ldc.i4.1 
+   0157 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   015C stloc.3 
+   015D ldloc.3 
+   015E brfalse IL_0182: ldloc.3
+   0163 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0168 ldloc.3 
+   0169 ldfld CPooledGameObjectScript::Go
+   016E ldloc.1 
+   016F ldloc.0 
+   0170 ldloc.0 
+   0171 ldc.r4 1
+   0176 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   017B ldc.i4.1 
+   017C callvirt Assets.Scripts.UI.C3DUIGameObject Assets.Scripts.UI.C3DUIManager::AddGameObjectToGroup(UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.Vector3,System.Boolean)
+   0181 pop 
+   0182 ldloc.3 
+   0183 ret 
+   0184 ldnull 
+   0185 ret 
+== System.Void RefreshPosAndSetMapType(System.Boolean isMini) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0038: ldloc.0
+   0007 ldarg.1 
+   0008 brfalse IL_0023: ldarg.0
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0013 ldloc.0 
+   0014 callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   0019 callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshSmallUiPos()
+   001E br IL_0034: ldloc.0
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   0029 ldloc.0 
+   002A callvirt !0 ListView`1<Assets.Scripts.GameSystem.DragonIcon/DragonNode>::get_Item(System.Int32)
+   002F callvirt System.Void Assets.Scripts.GameSystem.DragonIcon/DragonNode::RefreshBigUiPos()
+   0034 ldloc.0 
+   0035 ldc.i4.1 
+   0036 add 
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.DragonIcon::node_ary
+   003F callvirt System.Int32 ListViewBase::get_Count()
+   0044 blt IL_0007: ldarg.1
+   0049 ldarg.0 
+   004A ldarg.1 
+   004B call System.Void Assets.Scripts.GameSystem.DragonIcon::SetMapType(System.Boolean)
+   0050 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=3
+   0000 ldstr Prefab_Skill_Effects/tongyong_effects/Indicator/blin_01_c.prefab
+   0005 stsfld Assets.Scripts.GameSystem.DragonIcon::dragonBornEffect
+   000A ldstr UGUI/Particle/UI_wujun_effect_02/UI_wujun_effect_02.prefab
+   000F stsfld Assets.Scripts.GameSystem.DragonIcon::buffMonsterAliveEffect
+   0014 ldc.r4 0.9647059
+   0019 ldc.r4 0.83137256
+   001E ldc.r4 0.21960784
+   0023 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single)
+   0028 stsfld Assets.Scripts.GameSystem.DragonIcon::yellowDragonColor
+   002D ldc.r4 0.972549
+   0032 ldc.r4 0.44313726
+   0037 ldc.r4 0.9137255
+   003C newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single)
+   0041 stsfld Assets.Scripts.GameSystem.DragonIcon::purpleDragonColor
+   0046 ret 
+  NESTED Assets.Scripts.GameSystem.DragonIcon/SpwanGroupMapDragonType
+  NESTED Assets.Scripts.GameSystem.DragonIcon/DragonNode

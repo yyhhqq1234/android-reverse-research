@@ -1,0 +1,244 @@
+// TYPE DistortionProxy  base=PostProxyBase  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 m_EnableCnt
+  FIELD System.Single m_Intensity
+  FIELD System.Int32 m_ID_DistortTex
+  FIELD System.Int32 m_ID_Intensity
+  FIELD System.Int32 m_LayerMask
+  FIELD UnityEngine.Material m_Mat
+  FIELD UnityEngine.RenderTexture m_DistortionRT
+  FIELD UnityEngine.Camera m_CamDistortion
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void PostProxyBase::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld DistortionProxy::m_Mat
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00ad: ret
+   0011 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0016 ldstr Shaders/Post/Distortion
+   001B ldtoken UnityEngine.Shader
+   0020 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0025 ldc.i4.0 
+   0026 ldc.i4.1 
+   0027 ldc.i4.1 
+   0028 ldc.i4.0 
+   0029 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   002E ldfld CResource::m_content
+   0033 isinst UnityEngine.Shader
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A ldnull 
+   003B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0040 brfalse IL_0050: ldarg.0
+   0045 ldstr Load shader SGame_Post/Distortion failed
+   004A call System.Void UnityEngine.Debug::LogError(System.Object)
+   004F ret 
+   0050 ldarg.0 
+   0051 ldloc.0 
+   0052 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   0057 stfld DistortionProxy::m_Mat
+   005C ldarg.0 
+   005D ldfld DistortionProxy::m_Mat
+   0062 ldc.i4.s 61
+   0064 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   0069 ldarg.0 
+   006A ldc.r4 1
+   006F stfld DistortionProxy::m_Intensity
+   0074 ldarg.0 
+   0075 ldstr _DistortTex
+   007A call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   007F stfld DistortionProxy::m_ID_DistortTex
+   0084 ldarg.0 
+   0085 ldstr _Intensity
+   008A call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   008F stfld DistortionProxy::m_ID_Intensity
+   0094 ldarg.0 
+   0095 ldc.i4.1 
+   0096 newarr System.String
+   009B dup 
+   009C ldc.i4.0 
+   009D ldstr Distortion
+   00A2 stelem.ref 
+   00A3 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   00A8 stfld DistortionProxy::m_LayerMask
+   00AD ret 
+== System.Void Enable(System.Int32 byWhoID, System.Single distortIntensity) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 stfld DistortionProxy::m_Intensity
+   0007 ldarg.0 
+   0008 ldfld DistortionProxy::m_EnableCnt
+   000D ldc.i4.0 
+   000E ble IL_003f: ldarg.0
+   0013 ldarg.0 
+   0014 dup 
+   0015 ldfld DistortionProxy::m_EnableCnt
+   001A ldc.i4.1 
+   001B add 
+   001C stfld DistortionProxy::m_EnableCnt
+   0021 ldarg.0 
+   0022 callvirt System.Void PostProxyBase::Init()
+   0027 ldarg.0 
+   0028 ldfld DistortionProxy::m_Mat
+   002D ldarg.0 
+   002E ldfld DistortionProxy::m_ID_Intensity
+   0033 ldarg.0 
+   0034 ldfld DistortionProxy::m_Intensity
+   0039 callvirt System.Void UnityEngine.Material::SetFloat(System.Int32,System.Single)
+   003E ret 
+   003F ldarg.0 
+   0040 dup 
+   0041 ldfld DistortionProxy::m_EnableCnt
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stfld DistortionProxy::m_EnableCnt
+   004D call UnityEngine.Camera PostProcessingManager::GetDistortCopyCamera()
+   0052 stloc.0 
+   0053 ldloc.0 
+   0054 ldnull 
+   0055 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   005A brfalse IL_0060: ldarg.0
+   005F ret 
+   0060 ldarg.0 
+   0061 callvirt System.Void PostProxyBase::Init()
+   0066 ldarg.0 
+   0067 ldc.i4 256
+   006C ldc.i4 256
+   0071 ldc.i4.0 
+   0072 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32)
+   0077 stfld DistortionProxy::m_DistortionRT
+   007C ldarg.0 
+   007D call UnityEngine.Camera PostProcessingManager::AddCamera()
+   0082 stfld DistortionProxy::m_CamDistortion
+   0087 ldarg.0 
+   0088 ldloc.0 
+   0089 call System.Void DistortionProxy::SetDistortCamera(UnityEngine.Camera)
+   008E ldarg.0 
+   008F ldfld DistortionProxy::m_Mat
+   0094 ldarg.0 
+   0095 ldfld DistortionProxy::m_ID_DistortTex
+   009A ldarg.0 
+   009B ldfld DistortionProxy::m_DistortionRT
+   00A0 callvirt System.Void UnityEngine.Material::SetTexture(System.Int32,UnityEngine.Texture)
+   00A5 ldarg.0 
+   00A6 ldfld DistortionProxy::m_Mat
+   00AB ldarg.0 
+   00AC ldfld DistortionProxy::m_ID_Intensity
+   00B1 ldarg.0 
+   00B2 ldfld DistortionProxy::m_Intensity
+   00B7 callvirt System.Void UnityEngine.Material::SetFloat(System.Int32,System.Single)
+   00BC ret 
+== System.Void SetDistortCamera(UnityEngine.Camera cam) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld DistortionProxy::m_CamDistortion
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld DistortionProxy::m_CamDistortion
+   0018 ldarg.1 
+   0019 callvirt System.Void UnityEngine.Camera::CopyFrom(UnityEngine.Camera)
+   001E ldarg.0 
+   001F ldfld DistortionProxy::m_CamDistortion
+   0024 call UnityEngine.Color UnityEngine.Color::get_black()
+   0029 callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   002E ldarg.0 
+   002F ldfld DistortionProxy::m_CamDistortion
+   0034 ldc.i4.2 
+   0035 callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   003A ldarg.0 
+   003B ldfld DistortionProxy::m_CamDistortion
+   0040 ldarg.0 
+   0041 ldfld DistortionProxy::m_LayerMask
+   0046 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   004B ldarg.0 
+   004C ldfld DistortionProxy::m_CamDistortion
+   0051 ldarg.0 
+   0052 ldfld DistortionProxy::m_DistortionRT
+   0057 callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   005C ldarg.0 
+   005D ldfld DistortionProxy::m_CamDistortion
+   0062 ldc.i4.1 
+   0063 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0068 ret 
+== System.Void Disable(System.Int32 byWhoID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld DistortionProxy::m_EnableCnt
+   0006 ldc.i4.0 
+   0007 bgt IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E dup 
+   000F ldfld DistortionProxy::m_EnableCnt
+   0014 ldc.i4.1 
+   0015 sub 
+   0016 stfld DistortionProxy::m_EnableCnt
+   001B ldarg.0 
+   001C ldfld DistortionProxy::m_EnableCnt
+   0021 ldc.i4.0 
+   0022 ble IL_0028: ldarg.0
+   0027 ret 
+   0028 ldarg.0 
+   0029 call System.Void DistortionProxy::RealDisable()
+   002E ret 
+== System.Void RealDisable() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld DistortionProxy::m_DistortionRT
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0022: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld DistortionProxy::m_DistortionRT
+   0016 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   001B ldarg.0 
+   001C ldnull 
+   001D stfld DistortionProxy::m_DistortionRT
+   0022 ldarg.0 
+   0023 ldfld DistortionProxy::m_CamDistortion
+   0028 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002D brfalse IL_003d: ldarg.0
+   0032 ldarg.0 
+   0033 ldfld DistortionProxy::m_CamDistortion
+   0038 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   003D ldarg.0 
+   003E ldnull 
+   003F stfld DistortionProxy::m_CamDistortion
+   0044 ldarg.0 
+   0045 ldc.r4 1
+   004A stfld DistortionProxy::m_Intensity
+   004F ret 
+== System.Void Render(UnityEngine.RenderTexture src, UnityEngine.RenderTexture dst) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 ldarg.0 
+   0003 ldfld DistortionProxy::m_Mat
+   0008 ldc.i4.0 
+   0009 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   000E ret 
+== System.Void ShutDown() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld DistortionProxy::m_EnableCnt
+   0007 ldarg.0 
+   0008 call System.Void DistortionProxy::RealDisable()
+   000D ldarg.0 
+   000E ldfld DistortionProxy::m_Mat
+   0013 ldnull 
+   0014 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0019 brfalse IL_0030: ret
+   001E ldarg.0 
+   001F ldfld DistortionProxy::m_Mat
+   0024 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0029 ldarg.0 
+   002A ldnull 
+   002B stfld DistortionProxy::m_Mat
+   0030 ret 
+== System.Boolean IsWorking() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld DistortionProxy::m_EnableCnt
+   0006 ldc.i4.0 
+   0007 cgt 
+   0009 ret 

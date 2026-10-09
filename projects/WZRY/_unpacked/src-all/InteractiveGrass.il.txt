@@ -1,0 +1,438 @@
+// TYPE InteractiveGrass  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean interactiveGrassOn
+  FIELD System.Single dampingFactor
+  FIELD System.Single maxForceMagnitude
+  FIELD System.Int32 maxForceCount
+  FIELD System.Single addForceInterval
+  FIELD System.Single interactiveRadius
+  FIELD System.Single mLastAddTime
+  FIELD UnityEngine.Material mMaterial
+  FIELD System.Collections.Generic.List`1<Force> mForces
+  FIELD UnityEngine.Bounds mBounds
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 stfld InteractiveGrass::dampingFactor
+   000B ldarg.0 
+   000C ldc.r4 7
+   0011 stfld InteractiveGrass::maxForceMagnitude
+   0016 ldarg.0 
+   0017 ldc.i4.s 10
+   0019 stfld InteractiveGrass::maxForceCount
+   001E ldarg.0 
+   001F ldc.r4 0.1
+   0024 stfld InteractiveGrass::addForceInterval
+   0029 ldarg.0 
+   002A ldc.r4 1.25
+   002F stfld InteractiveGrass::interactiveRadius
+   0034 ldarg.0 
+   0035 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   003A ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Renderer>()
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_00ae: ldstr "InteractiveGrass要和Renderer同级挂接!!! name:{0}"
+   0018 ldloc.0 
+   0019 callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   001E ldstr _ForceParam
+   0023 callvirt System.Boolean UnityEngine.Material::HasProperty(System.String)
+   0028 brfalse IL_008b: ldstr "材质属性不包含_ForceParam或者_ForceRange!!! name:{0}"
+   002D ldloc.0 
+   002E callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   0033 ldstr _ForceRange
+   0038 callvirt System.Boolean UnityEngine.Material::HasProperty(System.String)
+   003D brfalse IL_008b: ldstr "材质属性不包含_ForceParam或者_ForceRange!!! name:{0}"
+   0042 ldarg.0 
+   0043 ldloc.0 
+   0044 callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   0049 stfld InteractiveGrass::mMaterial
+   004E ldarg.0 
+   004F ldloc.0 
+   0050 callvirt UnityEngine.Bounds UnityEngine.Renderer::get_bounds()
+   0055 stloc.1 
+   0056 ldloca.s V_1
+   0058 call UnityEngine.Vector3 UnityEngine.Bounds::get_center()
+   005D ldloc.0 
+   005E callvirt UnityEngine.Bounds UnityEngine.Renderer::get_bounds()
+   0063 stloc.2 
+   0064 ldloca.s V_2
+   0066 call UnityEngine.Vector3 UnityEngine.Bounds::get_size()
+   006B newobj System.Void UnityEngine.Bounds::.ctor(UnityEngine.Vector3,UnityEngine.Vector3)
+   0070 stfld InteractiveGrass::mBounds
+   0075 ldarg.0 
+   0076 ldflda InteractiveGrass::mBounds
+   007B ldarg.0 
+   007C ldfld InteractiveGrass::interactiveRadius
+   0081 call System.Void UnityEngine.Bounds::Expand(System.Single)
+   0086 br IL_00a9: br IL_00cc
+   008B ldstr 材质属性不包含_ForceParam或者_ForceRange!!! name:{0}
+   0090 ldc.i4.1 
+   0091 newarr System.Object
+   0096 dup 
+   0097 ldc.i4.0 
+   0098 ldarg.0 
+   0099 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009E callvirt System.String UnityEngine.Object::get_name()
+   00A3 stelem.ref 
+   00A4 call System.Void UnityEngine.Debug::LogWarningFormat(System.String,System.Object[])
+   00A9 br IL_00cc: ret
+   00AE ldstr InteractiveGrass要和Renderer同级挂接!!! name:{0}
+   00B3 ldc.i4.1 
+   00B4 newarr System.Object
+   00B9 dup 
+   00BA ldc.i4.0 
+   00BB ldarg.0 
+   00BC call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C1 callvirt System.String UnityEngine.Object::get_name()
+   00C6 stelem.ref 
+   00C7 call System.Void UnityEngine.Debug::LogWarningFormat(System.String,System.Object[])
+   00CC ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld InteractiveGrass::interactiveGrassOn
+   0005 brfalse IL_001b: ret
+   000A ldarg.0 
+   000B ldfld InteractiveGrass::mMaterial
+   0010 ldnull 
+   0011 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0016 brfalse IL_001c: ldarg.0
+   001B ret 
+   001C ldarg.0 
+   001D call System.Void InteractiveGrass::AddHostActorForce()
+   0022 ldarg.0 
+   0023 call System.Void InteractiveGrass::UpdateForce()
+   0028 ret 
+== System.Void OnBecameVisible() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0007 ret 
+== System.Void OnBecameInvisible() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0007 ldarg.0 
+   0008 call System.Void InteractiveGrass::Clear()
+   000D ret 
+== System.Void Clear() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld InteractiveGrass::mForces
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld InteractiveGrass::mForces
+   0011 callvirt System.Void System.Collections.Generic.List`1<Force>::Clear()
+   0016 ret 
+== System.Void AddForce(UnityEngine.Vector3 force) attrs=Public, HideBySig maxstack=2
+   0000 call System.Single UnityEngine.Time::get_time()
+   0005 ldarg.0 
+   0006 ldfld InteractiveGrass::mLastAddTime
+   000B sub 
+   000C ldarg.0 
+   000D ldfld InteractiveGrass::addForceInterval
+   0012 ble.un IL_0085: ret
+   0017 ldarg.0 
+   0018 call System.Single UnityEngine.Time::get_time()
+   001D stfld InteractiveGrass::mLastAddTime
+   0022 ldarg.0 
+   0023 ldfld InteractiveGrass::mForces
+   0028 brtrue IL_0038: ldarg.0
+   002D ldarg.0 
+   002E newobj System.Void System.Collections.Generic.List`1<Force>::.ctor()
+   0033 stfld InteractiveGrass::mForces
+   0038 ldarg.0 
+   0039 ldfld InteractiveGrass::mForces
+   003E callvirt System.Int32 System.Collections.Generic.List`1<Force>::get_Count()
+   0043 ldarg.0 
+   0044 ldfld InteractiveGrass::maxForceCount
+   0049 bge IL_0085: ret
+   004E ldarga.s force
+   0050 call System.Single UnityEngine.Vector3::get_magnitude()
+   0055 ldarg.0 
+   0056 ldfld InteractiveGrass::maxForceMagnitude
+   005B ble.un IL_0074: ldarg.0
+   0060 ldarga.s force
+   0062 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0067 ldarg.0 
+   0068 ldfld InteractiveGrass::maxForceMagnitude
+   006D call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0072 starg.s force
+   0074 ldarg.0 
+   0075 ldfld InteractiveGrass::mForces
+   007A ldarg.1 
+   007B newobj System.Void Force::.ctor(UnityEngine.Vector3)
+   0080 callvirt System.Void System.Collections.Generic.List`1<Force>::Add(!0)
+   0085 ret 
+== System.Void AddHostActorForce() attrs=Private, HideBySig maxstack=3
+   0000 call System.Single UnityEngine.Time::get_time()
+   0005 ldarg.0 
+   0006 ldfld InteractiveGrass::mLastAddTime
+   000B sub 
+   000C ldarg.0 
+   000D ldfld InteractiveGrass::addForceInterval
+   0012 ble.un IL_0148: ret
+   0017 ldarg.0 
+   0018 call System.Single UnityEngine.Time::get_time()
+   001D stfld InteractiveGrass::mLastAddTime
+   0022 ldarg.0 
+   0023 ldfld InteractiveGrass::mForces
+   0028 brtrue IL_0038: ldarg.0
+   002D ldarg.0 
+   002E newobj System.Void System.Collections.Generic.List`1<Force>::.ctor()
+   0033 stfld InteractiveGrass::mForces
+   0038 ldarg.0 
+   0039 ldfld InteractiveGrass::mForces
+   003E callvirt System.Int32 System.Collections.Generic.List`1<Force>::get_Count()
+   0043 ldarg.0 
+   0044 ldfld InteractiveGrass::maxForceCount
+   0049 bge IL_0148: ret
+   004E call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0053 stloc.0 
+   0054 ldloc.0 
+   0055 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   005A brfalse IL_0148: ret
+   005F ldloca.s V_0
+   0061 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0066 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   006B ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   0070 ldc.i4.2 
+   0071 beq IL_00a4: ldarg.0
+   0076 ldloca.s V_0
+   0078 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   007D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0082 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   0087 ldc.i4.3 
+   0088 beq IL_00a4: ldarg.0
+   008D ldloca.s V_0
+   008F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0094 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0099 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   009E ldc.i4.5 
+   009F bne.un IL_0148: ret
+   00A4 ldarg.0 
+   00A5 ldarg.0 
+   00A6 ldfld InteractiveGrass::mBounds
+   00AB ldloca.s V_0
+   00AD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B2 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   00B7 call System.Boolean InteractiveGrass::BoundsContains2D(UnityEngine.Bounds,UnityEngine.Vector3)
+   00BC brfalse IL_0148: ret
+   00C1 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00C6 stloc.1 
+   00C7 ldloca.s V_1
+   00C9 ldloca.s V_0
+   00CB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00D0 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   00D5 ldfld VInt3::x
+   00DA conv.r4 
+   00DB stfld UnityEngine.Vector3::x
+   00E0 ldloca.s V_1
+   00E2 ldloca.s V_0
+   00E4 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00E9 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   00EE ldfld VInt3::y
+   00F3 conv.r4 
+   00F4 stfld UnityEngine.Vector3::y
+   00F9 ldloca.s V_1
+   00FB ldloca.s V_0
+   00FD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0102 ldflda Assets.Scripts.GameLogic.ActorLinker::forward
+   0107 ldfld VInt3::z
+   010C conv.r4 
+   010D stfld UnityEngine.Vector3::z
+   0112 ldloca.s V_1
+   0114 call System.Single UnityEngine.Vector3::get_magnitude()
+   0119 ldarg.0 
+   011A ldfld InteractiveGrass::maxForceMagnitude
+   011F ble.un IL_0137: ldarg.0
+   0124 ldloca.s V_1
+   0126 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   012B ldarg.0 
+   012C ldfld InteractiveGrass::maxForceMagnitude
+   0131 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0136 stloc.1 
+   0137 ldarg.0 
+   0138 ldfld InteractiveGrass::mForces
+   013D ldloc.1 
+   013E newobj System.Void Force::.ctor(UnityEngine.Vector3)
+   0143 callvirt System.Void System.Collections.Generic.List`1<Force>::Add(!0)
+   0148 ret 
+== System.Void UpdateForce() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld InteractiveGrass::mForces
+   0006 brfalse IL_001b: ret
+   000B ldarg.0 
+   000C ldfld InteractiveGrass::mForces
+   0011 callvirt System.Int32 System.Collections.Generic.List`1<Force>::get_Count()
+   0016 brtrue IL_001c: call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   001B ret 
+   001C call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0021 stloc.0 
+   0022 ldarg.0 
+   0023 ldfld InteractiveGrass::mForces
+   0028 callvirt System.Int32 System.Collections.Generic.List`1<Force>::get_Count()
+   002D ldc.i4.1 
+   002E sub 
+   002F stloc.1 
+   0030 br IL_0112: ldloc.1
+   0035 ldloc.0 
+   0036 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   003B ldarg.0 
+   003C ldfld InteractiveGrass::mForces
+   0041 ldloc.1 
+   0042 callvirt !0 System.Collections.Generic.List`1<Force>::get_Item(System.Int32)
+   0047 stloc.2 
+   0048 ldloca.s V_2
+   004A ldfld Force::force
+   004F ldarg.0 
+   0050 ldfld InteractiveGrass::mForces
+   0055 ldloc.1 
+   0056 callvirt !0 System.Collections.Generic.List`1<Force>::get_Item(System.Int32)
+   005B stloc.3 
+   005C ldloca.s V_3
+   005E ldfld Force::time
+   0063 call UnityEngine.Vector3 UnityEngine.Vector3::Lerp(UnityEngine.Vector3,UnityEngine.Vector3,System.Single)
+   0068 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   006D stloc.0 
+   006E ldc.r4 2
+   0073 ldc.r4 -10
+   0078 ldarg.0 
+   0079 ldfld InteractiveGrass::dampingFactor
+   007E mul 
+   007F call System.Single UnityEngine.Time::get_deltaTime()
+   0084 mul 
+   0085 call System.Single UnityEngine.Mathf::Pow(System.Single,System.Single)
+   008A stloc.s V_4
+   008C ldarg.0 
+   008D ldfld InteractiveGrass::mForces
+   0092 ldloc.1 
+   0093 callvirt !0 System.Collections.Generic.List`1<Force>::get_Item(System.Int32)
+   0098 stloc.s V_5
+   009A ldloca.s V_5
+   009C ldarg.0 
+   009D ldfld InteractiveGrass::mForces
+   00A2 ldloc.1 
+   00A3 callvirt !0 System.Collections.Generic.List`1<Force>::get_Item(System.Int32)
+   00A8 stloc.s V_6
+   00AA ldloca.s V_6
+   00AC ldfld Force::force
+   00B1 ldloc.s V_4
+   00B3 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   00B8 stfld Force::force
+   00BD ldloca.s V_5
+   00BF dup 
+   00C0 ldfld Force::time
+   00C5 call System.Single UnityEngine.Time::get_deltaTime()
+   00CA add 
+   00CB stfld Force::time
+   00D0 ldarg.0 
+   00D1 ldfld InteractiveGrass::mForces
+   00D6 ldloc.1 
+   00D7 ldloc.s V_5
+   00D9 callvirt System.Void System.Collections.Generic.List`1<Force>::set_Item(System.Int32,!0)
+   00DE ldarg.0 
+   00DF ldfld InteractiveGrass::mForces
+   00E4 ldloc.1 
+   00E5 callvirt !0 System.Collections.Generic.List`1<Force>::get_Item(System.Int32)
+   00EA stloc.s V_7
+   00EC ldloca.s V_7
+   00EE ldflda Force::force
+   00F3 call System.Single UnityEngine.Vector3::get_magnitude()
+   00F8 ldc.r4 0.1
+   00FD bge.un IL_010e: ldloc.1
+   0102 ldarg.0 
+   0103 ldfld InteractiveGrass::mForces
+   0108 ldloc.1 
+   0109 callvirt System.Void System.Collections.Generic.List`1<Force>::RemoveAt(System.Int32)
+   010E ldloc.1 
+   010F ldc.i4.1 
+   0110 sub 
+   0111 stloc.1 
+   0112 ldloc.1 
+   0113 ldc.i4.0 
+   0114 bge IL_0035: ldloc.0
+   0119 ldloc.0 
+   011A call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   011F call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0124 brfalse IL_01b7: ret
+   0129 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   012E stloc.s V_8
+   0130 ldloc.s V_8
+   0132 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0137 brfalse IL_01b7: ret
+   013C call UnityEngine.Vector4 UnityEngine.Vector4::get_zero()
+   0141 stloc.s V_9
+   0143 ldloca.s V_9
+   0145 ldloca.s V_0
+   0147 ldfld UnityEngine.Vector3::x
+   014C stfld UnityEngine.Vector4::x
+   0151 ldloca.s V_9
+   0153 ldloca.s V_0
+   0155 ldfld UnityEngine.Vector3::z
+   015A stfld UnityEngine.Vector4::y
+   015F ldloca.s V_9
+   0161 ldloca.s V_8
+   0163 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0168 ldflda Assets.Scripts.GameLogic.ActorLinker::position
+   016D ldfld UnityEngine.Vector3::x
+   0172 stfld UnityEngine.Vector4::z
+   0177 ldloca.s V_9
+   0179 ldloca.s V_8
+   017B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0180 ldflda Assets.Scripts.GameLogic.ActorLinker::position
+   0185 ldfld UnityEngine.Vector3::z
+   018A stfld UnityEngine.Vector4::w
+   018F ldarg.0 
+   0190 ldfld InteractiveGrass::mMaterial
+   0195 ldstr _ForceParam
+   019A ldloc.s V_9
+   019C callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   01A1 ldarg.0 
+   01A2 ldfld InteractiveGrass::mMaterial
+   01A7 ldstr _ForceRange
+   01AC ldarg.0 
+   01AD ldfld InteractiveGrass::interactiveRadius
+   01B2 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   01B7 ret 
+== System.Boolean BoundsContains2D(UnityEngine.Bounds bounds, UnityEngine.Vector3 point) attrs=Private, HideBySig maxstack=2
+   0000 ldarga.s point
+   0002 ldfld UnityEngine.Vector3::x
+   0007 ldarga.s bounds
+   0009 call UnityEngine.Vector3 UnityEngine.Bounds::get_center()
+   000E stloc.0 
+   000F ldloca.s V_0
+   0011 ldfld UnityEngine.Vector3::x
+   0016 sub 
+   0017 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   001C ldarga.s bounds
+   001E call UnityEngine.Vector3 UnityEngine.Bounds::get_extents()
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 ldfld UnityEngine.Vector3::x
+   002B bgt.un IL_0062: ldc.i4.0
+   0030 ldarga.s point
+   0032 ldfld UnityEngine.Vector3::z
+   0037 ldarga.s bounds
+   0039 call UnityEngine.Vector3 UnityEngine.Bounds::get_center()
+   003E stloc.2 
+   003F ldloca.s V_2
+   0041 ldfld UnityEngine.Vector3::z
+   0046 sub 
+   0047 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   004C ldarga.s bounds
+   004E call UnityEngine.Vector3 UnityEngine.Bounds::get_extents()
+   0053 stloc.3 
+   0054 ldloca.s V_3
+   0056 ldfld UnityEngine.Vector3::z
+   005B bgt.un IL_0062: ldc.i4.0
+   0060 ldc.i4.1 
+   0061 ret 
+   0062 ldc.i4.0 
+   0063 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.1 
+   0001 stsfld InteractiveGrass::interactiveGrassOn
+   0006 ret 

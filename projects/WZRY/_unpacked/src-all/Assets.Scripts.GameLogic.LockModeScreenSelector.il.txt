@@ -1,0 +1,78 @@
+// TYPE Assets.Scripts.GameLogic.LockModeScreenSelector  base=Singleton`1<Assets.Scripts.GameLogic.LockModeScreenSelector>  attrs=BeforeFieldInit
+  FIELD UnityEngine.Ray screenRay
+  FIELD UnityEngine.Plane curPlane
+  FIELD SGW/SGCSkill/uintTypeDelegate <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameLogic.LockModeScreenSelector>::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 0
+   0006 ldc.r4 1
+   000B ldc.r4 0
+   0010 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0015 ldc.r4 0
+   001A newobj System.Void UnityEngine.Plane::.ctor(UnityEngine.Vector3,System.Single)
+   001F stfld Assets.Scripts.GameLogic.LockModeScreenSelector::curPlane
+   0024 ret 
+== System.Void OnClickBattleScene(UnityEngine.Vector2 _screenPos) attrs=Public, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0007 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000C stloc.1 
+   000D ldloc.1 
+   000E brfalse IL_001a: ldloc.0
+   0013 ldloc.1 
+   0014 callvirt Assets.Scripts.Framework.OperateMode Assets.Scripts.GameLogic.Player::GetOperateMode()
+   0019 stloc.0 
+   001A ldloc.0 
+   001B brtrue IL_0021: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0020 ret 
+   0021 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0026 ldfld CameraSystem::m_mainCamera
+   002B ldarg.1 
+   002C call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0031 callvirt UnityEngine.Ray UnityEngine.Camera::ScreenPointToRay(UnityEngine.Vector3)
+   0036 stloc.s V_4
+   0038 ldarg.0 
+   0039 ldflda Assets.Scripts.GameLogic.LockModeScreenSelector::curPlane
+   003E ldloc.s V_4
+   0040 ldloca.s V_2
+   0042 call System.Boolean UnityEngine.Plane::Raycast(UnityEngine.Ray,System.Single&)
+   0047 brfalse IL_0098: ret
+   004C ldloca.s V_4
+   004E ldloc.2 
+   004F call UnityEngine.Vector3 UnityEngine.Ray::GetPoint(System.Single)
+   0054 stloc.3 
+   0055 ldloc.1 
+   0056 brfalse IL_0098: ret
+   005B ldloc.1 
+   005C ldflda Assets.Scripts.GameLogic.Player::Captain
+   0061 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0066 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   006B ldloc.3 
+   006C call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   0071 ldc.i4 3000
+   0076 ldsfld Assets.Scripts.GameLogic.LockModeScreenSelector::<>f__mg$cache0
+   007B brtrue.s IL_008e: ldsfld SGW/SGCSkill/uintTypeDelegate Assets.Scripts.GameLogic.LockModeScreenSelector::<>f__mg$cache0
+   007D ldnull 
+   007E ldftn System.Void Assets.Scripts.GameLogic.LockModeScreenSelector::AttackModeTargetSearchNearestTargetByPosCallBack(System.UInt32&)
+   0084 newobj System.Void SGW/SGCSkill/uintTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0089 stsfld Assets.Scripts.GameLogic.LockModeScreenSelector::<>f__mg$cache0
+   008E ldsfld Assets.Scripts.GameLogic.LockModeScreenSelector::<>f__mg$cache0
+   0093 call System.Void SGW/SGCSkill::AttackModeTargetSearchNearestTargetByPos(System.UInt32,VInt3,System.Int32,SGW/SGCSkill/uintTypeDelegate)
+   0098 ret 
+== System.Void AttackModeTargetSearchNearestTargetByPosCallBack(System.UInt32& targetActorID) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldind.u4 
+   0002 call System.Void Assets.Scripts.GameLogic.LockModeScreenSelector::SendLockAttackTarget(System.UInt32)
+   0007 ret 
+== System.Void SendLockAttackTarget(System.UInt32 targetActorID) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 brfalse IL_0011: ret
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.NetLockAttackTarget>::GetInstance()
+   000B ldarg.0 
+   000C callvirt System.Void Assets.Scripts.GameLogic.NetLockAttackTarget::SendLockAttackTarget(System.UInt32)
+   0011 ret 

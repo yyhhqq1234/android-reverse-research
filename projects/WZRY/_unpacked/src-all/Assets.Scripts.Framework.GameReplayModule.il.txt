@@ -1,0 +1,1862 @@
+// TYPE Assets.Scripts.Framework.GameReplayModule  base=Singleton`1<Assets.Scripts.Framework.GameReplayModule>  attrs=Public, BeforeFieldInit
+  FIELD System.String ABC_EXT = .abc
+  FIELD System.String ABS_EXT = .abs
+  FIELD System.String ABCS_EXT = .ab?
+  FIELD System.Int32 c_MaxAutoSaveCount = 10
+  FIELD System.Boolean <IsReplaying>k__BackingField
+  FIELD System.Boolean isReplayAbc
+  FIELD System.UInt32 endKFraqNo
+  FIELD System.IO.MemoryStream recordStream
+  FIELD System.IO.BinaryWriter recordWriter
+  FIELD System.IO.FileStream replayStream
+  FIELD System.IO.BinaryReader replayReader
+  FIELD System.Byte[] streamBuffer
+  FIELD System.Int32 bufferUsedSize
+  FIELD CSProtocol.COMDT_REPLAYHEADER replayAbsHeader
+  FIELD System.String <streamPath>k__BackingField
+  FIELD System.Int32 HostPlayerIndex
+  FIELD System.Single autoExitTimer
+  FIELD System.Boolean FakeReplaying
+  FIELD System.Int32 ExpectReplayFrameSpeed
+  PROP System.Boolean IsReplaying
+  PROP System.String streamPath
+  PROP System.String ReplayFolder
+  PROP System.String ReplayFolderAutoSave
+  PROP System.Boolean HasRecord
+  PROP System.Boolean IsStreamEnd
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.Framework.GameReplayModule::isReplayAbc
+   0007 ldarg.0 
+   0008 newobj System.Void CSProtocol.COMDT_REPLAYHEADER::.ctor()
+   000D stfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   0012 ldarg.0 
+   0013 ldc.i4.m1 
+   0014 stfld Assets.Scripts.Framework.GameReplayModule::HostPlayerIndex
+   0019 ldarg.0 
+   001A call System.Void Singleton`1<Assets.Scripts.Framework.GameReplayModule>::.ctor()
+   001F ret 
+== System.Boolean get_IsReplaying() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameReplayModule::<IsReplaying>k__BackingField
+   0006 ret 
+== System.Void set_IsReplaying(System.Boolean value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.GameReplayModule::<IsReplaying>k__BackingField
+   0007 ret 
+== System.String get_streamPath() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameReplayModule::<streamPath>k__BackingField
+   0006 ret 
+== System.Void set_streamPath(System.String value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.GameReplayModule::<streamPath>k__BackingField
+   0007 ret 
+== System.String get_ReplayFolder() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 call System.String DebugHelper::get_logRootPath()
+   0005 ret 
+== System.String get_ReplayFolderAutoSave() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 call System.String DebugHelper::get_AutoSaveRootPath()
+   0005 ret 
+== System.Void CacheRecord(System.Object obj) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   0006 brfalse IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D isinst CSProtocol.SCPKG_FRAPBOOT_SINGLE
+   0012 stloc.0 
+   0013 ldc.i4.0 
+   0014 stloc.1 
+   0015 ldloc.0 
+   0016 brfalse IL_007d: ldnull
+   001B ldloc.0 
+   001C ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::wLen
+   0021 ldc.i4.0 
+   0022 ble IL_006c: ldarg.0
+   0027 ldloc.0 
+   0028 ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   002D ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0032 ldlen 
+   0033 conv.i4 
+   0034 ldloca.s V_1
+   0036 ldc.i4.0 
+   0037 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::pack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   003C brfalse IL_0060: ldarg.0
+   0041 ldstr ReplayPackException
+   0046 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   004B ldstr pack fraqboot usedSize = 
+   0050 ldloc.1 
+   0051 box System.Int32
+   0056 call System.String System.String::Concat(System.Object,System.Object)
+   005B call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0060 ldarg.0 
+   0061 ldc.i4.0 
+   0062 stfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   0067 br IL_0078: br IL_010c
+   006C ldarg.0 
+   006D ldloc.0 
+   006E ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0073 stfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   0078 br IL_010c: ldarg.0
+   007D ldnull 
+   007E stloc.2 
+   007F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0084 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0089 brfalse IL_0099: ldarg.1
+   008E call !0 Singleton`1<Assets.Scripts.GameSystem.COBSystem>::GetInstance()
+   0093 callvirt Assets.Scripts.GameSystem.WatchEntryData Assets.Scripts.GameSystem.COBSystem::GetWatchEntryData()
+   0098 stloc.2 
+   0099 ldarg.1 
+   009A isinst CSProtocol.CSPkg
+   009F stloc.3 
+   00A0 ldloc.3 
+   00A1 ldfld CSProtocol.CSPkg::stPkgHead
+   00A6 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00AB ldc.i4 1075
+   00B0 bne.un IL_00cb: ldloc.3
+   00B5 ldloc.3 
+   00B6 ldfld CSProtocol.CSPkg::stPkgData
+   00BB callvirt CSProtocol.SCPKG_MULTGAME_BEGINLOAD CSProtocol.CSPkgBody::get_stMultGameBeginLoad()
+   00C0 stloc.s V_4
+   00C2 ldarg.0 
+   00C3 ldloc.s V_4
+   00C5 ldloc.2 
+   00C6 call System.Void Assets.Scripts.Framework.GameReplayModule::BeginRecord(CSProtocol.SCPKG_MULTGAME_BEGINLOAD,Assets.Scripts.GameSystem.WatchEntryData)
+   00CB ldloc.3 
+   00CC ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00D1 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00D6 ldlen 
+   00D7 conv.i4 
+   00D8 ldloca.s V_1
+   00DA ldc.i4.0 
+   00DB callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::pack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   00E0 brtrue IL_00ed: ldstr "ReplayPackException"
+   00E5 ldloc.1 
+   00E6 neg 
+   00E7 stloc.1 
+   00E8 br IL_010c: ldarg.0
+   00ED ldstr ReplayPackException
+   00F2 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   00F7 ldstr pack cspkg usedSize = 
+   00FC ldloc.1 
+   00FD box System.Int32
+   0102 call System.String System.String::Concat(System.Object,System.Object)
+   0107 call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   010C ldarg.0 
+   010D ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0112 brfalse IL_0140: ret
+   0117 ldloc.1 
+   0118 brfalse IL_0140: ret
+   011D ldarg.0 
+   011E ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0123 ldloc.1 
+   0124 callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+   0129 ldarg.0 
+   012A ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   012F ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0134 ldc.i4.0 
+   0135 ldloc.1 
+   0136 call System.Int32 System.Math::Abs(System.Int32)
+   013B callvirt System.Void System.IO.BinaryWriter::Write(System.Byte[],System.Int32,System.Int32)
+   0140 ret 
+== System.Void BeginRecord(CSProtocol.SCPKG_MULTGAME_BEGINLOAD beginLoadPkg, Assets.Scripts.GameSystem.WatchEntryData watchEntry) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.GameReplayModule::ClearRecord()
+   0006 ldarg.1 
+   0007 brtrue IL_000d: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   000C ret 
+   000D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0012 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 brtrue IL_001f: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   001E ret 
+   001F call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0024 ldc.i4.0 
+   0025 callvirt Apollo.ApolloAccountInfo ApolloHelper::GetAccountInfo(System.Boolean)
+   002A stloc.1 
+   002B ldloc.1 
+   002C brtrue IL_0032: ldc.i4.0
+   0031 ret 
+   0032 ldc.i4.0 
+   0033 stloc.2 
+   0034 ldloc.0 
+   0035 callvirt System.String Assets.Scripts.GameSystem.CRoleInfo::get_Name()
+   003A stloc.3 
+   003B ldloc.0 
+   003C callvirt System.String Assets.Scripts.GameSystem.CRoleInfo::get_HeadUrl()
+   0041 stloc.s V_4
+   0043 ldloc.0 
+   0044 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankShowGrade
+   0049 stloc.s V_5
+   004B ldloc.0 
+   004C ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankClass
+   0051 stloc.s V_6
+   0053 ldloc.0 
+   0054 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankScore
+   0059 stloc.s V_7
+   005B ldarg.2 
+   005C brtrue IL_014d: ldarg.2
+   0061 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0066 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   006B brfalse IL_00cf: ldc.i4.0
+   0070 ldarg.1 
+   0071 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stPlayerInfo
+   0076 ldfld CSProtocol.CSDT_DESK_PLAYERINFO::astCampPlayerInfo
+   007B ldc.i4.0 
+   007C callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_CAMPPLAYERINFO>::get_Item(System.Int32)
+   0081 stloc.s V_8
+   0083 ldloc.s V_8
+   0085 ldfld CSProtocol.CSDT_CAMPPLAYERINFO::stPlayerInfo
+   008A ldflda CSProtocol.COMDT_PLAYERINFO::szName
+   008F call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   0094 stloc.3 
+   0095 ldloc.s V_8
+   0097 ldfld CSProtocol.CSDT_CAMPPLAYERINFO::dwShowGradeOfRank
+   009C conv.u1 
+   009D stloc.s V_5
+   009F ldloc.s V_8
+   00A1 ldfld CSProtocol.CSDT_CAMPPLAYERINFO::dwClassOfRank
+   00A6 stloc.s V_6
+   00A8 ldloc.s V_8
+   00AA ldfld CSProtocol.CSDT_CAMPPLAYERINFO::stPlayerInfo
+   00AF ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   00B4 ldc.i4.0 
+   00B5 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   00BA ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   00BF ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   00C4 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   00C9 stloc.2 
+   00CA br IL_0148: br IL_017b
+   00CF ldc.i4.0 
+   00D0 stloc.s V_9
+   00D2 br IL_0134: ldloc.s V_9
+   00D7 ldarg.1 
+   00D8 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stPlayerInfo
+   00DD ldfld CSProtocol.CSDT_DESK_PLAYERINFO::astCampPlayerInfo
+   00E2 ldloc.s V_9
+   00E4 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_CAMPPLAYERINFO>::get_Item(System.Int32)
+   00E9 stloc.s V_10
+   00EB ldloc.s V_10
+   00ED ldfld CSProtocol.CSDT_CAMPPLAYERINFO::szOpenID
+   00F2 call System.String Utility::UTF8Convert(System.Byte[])
+   00F7 ldloc.1 
+   00F8 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   00FD call System.Boolean System.String::op_Equality(System.String,System.String)
+   0102 brfalse IL_012e: ldloc.s V_9
+   0107 ldloc.s V_10
+   0109 ldfld CSProtocol.CSDT_CAMPPLAYERINFO::stPlayerInfo
+   010E ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0113 ldc.i4.0 
+   0114 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0119 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   011E ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0123 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0128 stloc.2 
+   0129 br IL_0148: br IL_017b
+   012E ldloc.s V_9
+   0130 ldc.i4.1 
+   0131 add 
+   0132 stloc.s V_9
+   0134 ldloc.s V_9
+   0136 conv.i8 
+   0137 ldarg.1 
+   0138 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stPlayerInfo
+   013D ldfld CSProtocol.CSDT_DESK_PLAYERINFO::dwPlayerNum
+   0142 conv.u8 
+   0143 blt IL_00d7: ldarg.1
+   0148 br IL_017b: ldloc.2
+   014D ldarg.2 
+   014E ldfld Assets.Scripts.GameSystem.WatchEntryData::usedHeroId
+   0153 stloc.2 
+   0154 ldarg.2 
+   0155 ldfld Assets.Scripts.GameSystem.WatchEntryData::name
+   015A stloc.3 
+   015B ldarg.2 
+   015C ldfld Assets.Scripts.GameSystem.WatchEntryData::headUrl
+   0161 stloc.s V_4
+   0163 ldarg.2 
+   0164 ldfld Assets.Scripts.GameSystem.WatchEntryData::rankShowGrade
+   0169 stloc.s V_5
+   016B ldarg.2 
+   016C ldfld Assets.Scripts.GameSystem.WatchEntryData::rankClass
+   0171 stloc.s V_6
+   0173 ldarg.2 
+   0174 ldfld Assets.Scripts.GameSystem.WatchEntryData::rankScore
+   0179 stloc.s V_7
+   017B ldloc.2 
+   017C ldc.i4.0 
+   017D ble.un IL_0264: ret
+   0182 ldarg.0 
+   0183 ldc.i4 1048576
+   0188 newobj System.Void System.IO.MemoryStream::.ctor(System.Int32)
+   018D stfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0192 ldarg.0 
+   0193 ldarg.0 
+   0194 ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0199 newobj System.Void System.IO.BinaryWriter::.ctor(System.IO.Stream)
+   019E stfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01A3 ldarg.0 
+   01A4 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01A9 call System.String CVersion::GetAppVersion()
+   01AE callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   01B3 ldarg.0 
+   01B4 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01B9 call System.String CVersion::GetUsedResourceVersion()
+   01BE callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   01C3 ldarg.0 
+   01C4 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01C9 call System.String CVersion::GetRevisonNumber()
+   01CE callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   01D3 ldarg.0 
+   01D4 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01D9 ldloc.2 
+   01DA callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   01DF ldarg.0 
+   01E0 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01E5 call System.DateTime System.DateTime::get_Now()
+   01EA stloc.s V_11
+   01EC ldloca.s V_11
+   01EE call System.Int64 System.DateTime::get_Ticks()
+   01F3 callvirt System.Void System.IO.BinaryWriter::Write(System.Int64)
+   01F8 ldarg.0 
+   01F9 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   01FE ldarg.1 
+   01FF ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stDeskInfo
+   0204 ldfld CSProtocol.COMDT_DESKINFO::bMapType
+   0209 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte)
+   020E ldarg.0 
+   020F ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0214 ldarg.1 
+   0215 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stDeskInfo
+   021A ldfld CSProtocol.COMDT_DESKINFO::dwMapId
+   021F callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   0224 ldarg.0 
+   0225 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   022A ldloc.3 
+   022B callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   0230 ldarg.0 
+   0231 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0236 ldloc.s V_4
+   0238 callvirt System.Void System.IO.BinaryWriter::Write(System.String)
+   023D ldarg.0 
+   023E ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0243 ldloc.s V_5
+   0245 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte)
+   024A ldarg.0 
+   024B ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0250 ldloc.s V_6
+   0252 callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   0257 ldarg.0 
+   0258 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   025D ldloc.s V_7
+   025F callvirt System.Void System.IO.BinaryWriter::Write(System.UInt32)
+   0264 ret 
+== System.Boolean get_HasRecord() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0006 brfalse IL_001c: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0011 callvirt System.Int64 System.IO.Stream::get_Length()
+   0016 ldc.i4.0 
+   0017 conv.i8 
+   0018 cgt 
+   001A br.s IL_001d: ret
+   001C ldc.i4.0 
+   001D ret 
+== System.String FlushRecord(System.Boolean isAutoSave, System.String extraNameStr) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.GameReplayModule::get_HasRecord()
+   0006 brtrue IL_000d: ldnull
+   000B ldnull 
+   000C ret 
+   000D ldnull 
+   000E stloc.0 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   0015 ldc.i4.0 
+   0016 ble.un IL_0099: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   001B newobj System.Void CSProtocol.SCPKG_FRAPBOOT_SINGLE::.ctor()
+   0020 stloc.1 
+   0021 ldloc.1 
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   0028 stfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   002D ldloc.1 
+   002E ldc.i4.0 
+   002F stfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::wLen
+   0034 ldarg.0 
+   0035 ldc.i4.0 
+   0036 stfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   003B ldc.i4.0 
+   003C stloc.2 
+   003D ldloc.1 
+   003E ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0043 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0048 ldlen 
+   0049 conv.i4 
+   004A ldloca.s V_2
+   004C ldc.i4.0 
+   004D callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::pack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0052 brtrue IL_007a: ldstr "ReplayPackException"
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   005D ldloc.2 
+   005E callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0069 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   006E ldc.i4.0 
+   006F ldloc.2 
+   0070 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte[],System.Int32,System.Int32)
+   0075 br IL_0099: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   007A ldstr ReplayPackException
+   007F newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   0084 ldstr pack endfbi usedSize = 
+   0089 ldloc.2 
+   008A box System.Int32
+   008F call System.String System.String::Concat(System.Object,System.Object)
+   0094 call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0099 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   009E conv.i8 
+   009F call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   00A4 stloc.3 
+   00A5 ldarg.1 
+   00A6 brtrue IL_00d7: ldarg.0
+   00AB ldarg.0 
+   00AC ldstr {0}/{1}.abc
+   00B1 call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolder()
+   00B6 ldloca.s V_3
+   00B8 ldstr yyyyMMdd_HHmmss
+   00BD call System.String System.DateTime::ToString(System.String)
+   00C2 ldarg.2 
+   00C3 call System.String System.String::Concat(System.String,System.String)
+   00C8 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00CD call System.Void Assets.Scripts.Framework.GameReplayModule::set_streamPath(System.String)
+   00D2 br IL_00fe: ldarg.0
+   00D7 ldarg.0 
+   00D8 ldstr {0}/{1}.abc
+   00DD call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolderAutoSave()
+   00E2 ldloca.s V_3
+   00E4 ldstr yyyyMMdd_HHmmss
+   00E9 call System.String System.DateTime::ToString(System.String)
+   00EE ldarg.2 
+   00EF call System.String System.String::Concat(System.String,System.String)
+   00F4 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00F9 call System.Void Assets.Scripts.Framework.GameReplayModule::set_streamPath(System.String)
+   00FE ldarg.0 
+   00FF call System.String Assets.Scripts.Framework.GameReplayModule::get_streamPath()
+   0104 ldc.i4.2 
+   0105 ldc.i4.2 
+   0106 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   010B stloc.s V_4
+   010D ldloc.s V_4
+   010F ldarg.0 
+   0110 ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0115 callvirt System.Byte[] System.IO.MemoryStream::GetBuffer()
+   011A ldc.i4.0 
+   011B ldarg.0 
+   011C ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0121 callvirt System.Int64 System.IO.Stream::get_Position()
+   0126 conv.i4 
+   0127 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   012C ldloc.s V_4
+   012E callvirt System.Void System.IO.Stream::Flush()
+   0133 ldloc.s V_4
+   0135 callvirt System.Void System.IO.Stream::Close()
+   013A ldarg.0 
+   013B call System.String Assets.Scripts.Framework.GameReplayModule::get_streamPath()
+   0140 stloc.0 
+   0141 leave IL_0169: ldloc.0
+   0146 pop 
+   0147 ldnull 
+   0148 stloc.0 
+   0149 ldarg.0 
+   014A call System.String Assets.Scripts.Framework.GameReplayModule::get_streamPath()
+   014F call System.Boolean System.IO.File::Exists(System.String)
+   0154 brfalse IL_0164: leave IL_0169
+   0159 ldarg.0 
+   015A call System.String Assets.Scripts.Framework.GameReplayModule::get_streamPath()
+   015F call System.Void System.IO.File::Delete(System.String)
+   0164 leave IL_0169: ldloc.0
+   0169 ldloc.0 
+   016A ret 
+== System.Void AutoSaveRecord() attrs=Public, HideBySig maxstack=4
+   0000 call System.Boolean Assets.Scripts.Framework.GameSettings::IsOpenAutoSaveReplayFunc()
+   0005 brtrue IL_000b: ldsfld System.String System.String::Empty
+   000A ret 
+   000B ldsfld System.String::Empty
+   0010 stloc.0 
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0016 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001B stloc.1 
+   001C ldloc.1 
+   001D brfalse IL_006e: call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::get_instance()
+   0022 ldloc.0 
+   0023 stloc.2 
+   0024 ldc.i4.6 
+   0025 newarr System.Object
+   002A dup 
+   002B ldc.i4.0 
+   002C ldloc.2 
+   002D stelem.ref 
+   002E dup 
+   002F ldc.i4.1 
+   0030 ldloc.1 
+   0031 ldfld Assets.Scripts.GameLogic.CLevelContext::relayEntity
+   0036 box System.Int32
+   003B stelem.ref 
+   003C dup 
+   003D ldc.i4.2 
+   003E ldstr _
+   0043 stelem.ref 
+   0044 dup 
+   0045 ldc.i4.3 
+   0046 ldloc.1 
+   0047 ldfld Assets.Scripts.GameLogic.CLevelContext::dwDeskId
+   004C box System.UInt32
+   0051 stelem.ref 
+   0052 dup 
+   0053 ldc.i4.4 
+   0054 ldstr _
+   0059 stelem.ref 
+   005A dup 
+   005B ldc.i4.5 
+   005C ldloc.1 
+   005D ldfld Assets.Scripts.GameLogic.CLevelContext::dwDeskSeq
+   0062 box System.UInt32
+   0067 stelem.ref 
+   0068 call System.String System.String::Concat(System.Object[])
+   006D stloc.0 
+   006E call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::get_instance()
+   0073 callvirt SGW/stPlayerSettlementKDAInfoList Assets.Scripts.GameLogic.CSettleDataManager::GetAllSettlementInfo()
+   0078 stloc.3 
+   0079 ldsfld System.String::Empty
+   007E stloc.s V_4
+   0080 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0085 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   008A stloc.s V_5
+   008C ldc.i4.0 
+   008D stloc.s V_6
+   008F br IL_010e: ldloc.s V_6
+   0094 ldloca.s V_3
+   0096 ldloc.s V_6
+   0098 call SGW/stPlayerSettlementKDAInfo SGW/stPlayerSettlementKDAInfoList::getPlayerKDAList(System.Int32)
+   009D stloc.s V_7
+   009F ldloca.s V_7
+   00A1 ldfld SGW/stPlayerSettlementKDAInfo::PlayerID
+   00A6 brtrue IL_00b0: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00AB br IL_0108: ldloc.s V_6
+   00B0 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00B5 ldloca.s V_7
+   00B7 ldfld SGW/stPlayerSettlementKDAInfo::PlayerID
+   00BC callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   00C1 stloc.s V_8
+   00C3 ldloc.s V_8
+   00C5 brtrue IL_00cb: ldloc.s V_8
+   00CA ret 
+   00CB ldloc.s V_8
+   00CD ldfld Assets.Scripts.GameLogic.Player::PlayerUId
+   00D2 ldloc.s V_5
+   00D4 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   00D9 bne.un IL_0108: ldloc.s V_6
+   00DE ldloc.s V_8
+   00E0 ldfld Assets.Scripts.GameLogic.Player::logicWrold
+   00E5 conv.u8 
+   00E6 ldloc.s V_5
+   00E8 callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   00ED conv.i8 
+   00EE bne.un IL_0108: ldloc.s V_6
+   00F3 ldloc.s V_4
+   00F5 ldloc.s V_8
+   00F7 ldfld Assets.Scripts.GameLogic.Player::openId
+   00FC call System.String System.String::Concat(System.String,System.String)
+   0101 stloc.s V_4
+   0103 br IL_0117: call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolderAutoSave()
+   0108 ldloc.s V_6
+   010A ldc.i4.1 
+   010B add 
+   010C stloc.s V_6
+   010E ldloc.s V_6
+   0110 ldc.i4.s 40
+   0112 blt IL_0094: ldloca.s V_3
+   0117 call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolderAutoSave()
+   011C stloc.s V_9
+   011E ldloc.s V_9
+   0120 newobj System.Void System.IO.DirectoryInfo::.ctor(System.String)
+   0125 stloc.s V_10
+   0127 ldloc.s V_10
+   0129 callvirt System.Boolean System.IO.FileSystemInfo::get_Exists()
+   012E brfalse IL_01a3: ldarg.0
+   0133 ldloc.s V_10
+   0135 callvirt System.String System.IO.FileSystemInfo::get_FullName()
+   013A ldstr *.abc
+   013F ldc.i4.0 
+   0140 call System.String[] System.IO.Directory::GetFiles(System.String,System.String,System.IO.SearchOption)
+   0145 stloc.s V_11
+   0147 ldloc.s V_11
+   0149 ldlen 
+   014A conv.i4 
+   014B ldc.i4.s 10
+   014D blt IL_01a3: ldarg.0
+   0152 ldloc.s V_11
+   0154 call System.Void System.Array::Sort<System.String>(!!0[])
+   0159 ldloc.s V_11
+   015B ldlen 
+   015C conv.i4 
+   015D ldc.i4.s 10
+   015F sub 
+   0160 ldc.i4.1 
+   0161 add 
+   0162 stloc.s V_12
+   0164 ldc.i4.0 
+   0165 stloc.s V_13
+   0167 br IL_019a: ldloc.s V_13
+   016C ldloc.s V_13
+   016E ldc.i4.0 
+   016F blt IL_0189: leave IL_0194
+   0174 ldloc.s V_13
+   0176 ldloc.s V_11
+   0178 ldlen 
+   0179 conv.i4 
+   017A bge IL_0189: leave IL_0194
+   017F ldloc.s V_11
+   0181 ldloc.s V_13
+   0183 ldelem.ref 
+   0184 call System.Void System.IO.File::Delete(System.String)
+   0189 leave IL_0194: ldloc.s V_13
+   018E pop 
+   018F leave IL_0194: ldloc.s V_13
+   0194 ldloc.s V_13
+   0196 ldc.i4.1 
+   0197 add 
+   0198 stloc.s V_13
+   019A ldloc.s V_13
+   019C ldloc.s V_12
+   019E blt IL_016c: ldloc.s V_13
+   01A3 ldarg.0 
+   01A4 ldc.i4.1 
+   01A5 ldloc.0 
+   01A6 ldloc.s V_4
+   01A8 call System.String Assets.Scripts.Framework.GameReplayModule::GetRecordExtraName(System.String,System.String)
+   01AD call System.String Assets.Scripts.Framework.GameReplayModule::FlushRecord(System.Boolean,System.String)
+   01B2 pop 
+   01B3 ret 
+== System.String GetRecordExtraName(System.String deskIdStr, System.String openIdStr) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0016: ldsfld System.String System.String::Empty
+   000B ldarg.1 
+   000C call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0011 brfalse IL_001c: ldstr "_"
+   0016 ldsfld System.String::Empty
+   001B ret 
+   001C ldstr _
+   0021 ldarg.0 
+   0022 ldstr _
+   0027 ldarg.1 
+   0028 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   002D ret 
+== System.Boolean LoadMsg(CSProtocol.CSPkg& replayMsg, CSProtocol.SCPKG_FRAPBOOT_SINGLE& fraqBoot) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 stind.ref 
+   0003 ldarg.2 
+   0004 ldnull 
+   0005 stind.ref 
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.Framework.GameReplayModule::isReplayAbc
+   000C brfalse IL_015e: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0017 brfalse IL_0037: ldc.i4.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0022 callvirt System.Int64 System.IO.Stream::get_Position()
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   002D callvirt System.Int64 System.IO.Stream::get_Length()
+   0032 blt IL_003e: ldarg.0
+   0037 ldc.i4.0 
+   0038 stloc.0 
+   0039 leave IL_02da: ldloc.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0044 callvirt System.Int32 System.IO.BinaryReader::ReadInt32()
+   0049 stloc.1 
+   004A ldloc.1 
+   004B ldc.i4.0 
+   004C cgt 
+   004E stloc.2 
+   004F ldloc.1 
+   0050 call System.Int32 System.Math::Abs(System.Int32)
+   0055 stloc.1 
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   005C callvirt System.Int64 System.IO.Stream::get_Position()
+   0061 ldloc.1 
+   0062 conv.i8 
+   0063 add 
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   006A callvirt System.Int64 System.IO.Stream::get_Length()
+   006F ble IL_007b: ldarg.0
+   0074 ldc.i4.0 
+   0075 stloc.0 
+   0076 leave IL_02da: ldloc.0
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0081 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0086 ldc.i4.0 
+   0087 ldloc.1 
+   0088 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   008D ldloc.1 
+   008E bne.un IL_0133: ldstr "ReplayPackException"
+   0093 ldc.i4.0 
+   0094 stloc.3 
+   0095 ldloc.2 
+   0096 brfalse IL_00ec: ldarg.1
+   009B ldarg.2 
+   009C ldsfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::CLASS_ID
+   00A1 call Assets.Scripts.Common.ProtocolObject Assets.Scripts.Common.ProtocolObjectPool::Get(System.Int32)
+   00A6 castclass CSProtocol.SCPKG_FRAPBOOT_SINGLE
+   00AB stind.ref 
+   00AC ldarg.2 
+   00AD ldind.ref 
+   00AE ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00B3 ldloc.1 
+   00B4 ldloca.s V_3
+   00B6 ldc.i4.0 
+   00B7 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   00BC brfalse IL_00e7: br IL_012e
+   00C1 ldstr ReplayPackException
+   00C6 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   00CB ldstr fraqBoot.unpack usedSize = 
+   00D0 ldloc.3 
+   00D1 box System.Int32
+   00D6 call System.String System.String::Concat(System.Object,System.Object)
+   00DB call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   00E0 ldc.i4.0 
+   00E1 stloc.0 
+   00E2 leave IL_02da: ldloc.0
+   00E7 br IL_012e: br IL_0159
+   00EC ldarg.1 
+   00ED call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   00F2 stind.ref 
+   00F3 ldarg.1 
+   00F4 ldind.ref 
+   00F5 ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00FA ldloc.1 
+   00FB ldloca.s V_3
+   00FD ldc.i4.0 
+   00FE callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0103 brfalse IL_012e: br IL_0159
+   0108 ldstr ReplayPackException
+   010D newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   0112 ldstr replayMsg.unpack usedSize = 
+   0117 ldloc.3 
+   0118 box System.Int32
+   011D call System.String System.String::Concat(System.Object,System.Object)
+   0122 call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0127 ldc.i4.0 
+   0128 stloc.0 
+   0129 leave IL_02da: ldloc.0
+   012E br IL_0159: br IL_0283
+   0133 ldstr ReplayPackException
+   0138 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayPackException::.ctor(System.String)
+   013D ldstr replayReader packSize = 
+   0142 ldloc.1 
+   0143 box System.Int32
+   0148 call System.String System.String::Concat(System.Object,System.Object)
+   014D call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0152 ldc.i4.0 
+   0153 stloc.0 
+   0154 leave IL_02da: ldloc.0
+   0159 br IL_0283: leave IL_02b7
+   015E ldarg.0 
+   015F ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   0164 ldc.i4.0 
+   0165 bgt IL_0197: ldarg.0
+   016A ldarg.0 
+   016B ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0170 brfalse IL_0190: ldc.i4.0
+   0175 ldarg.0 
+   0176 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   017B callvirt System.Int64 System.IO.Stream::get_Position()
+   0180 ldarg.0 
+   0181 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0186 callvirt System.Int64 System.IO.Stream::get_Length()
+   018B blt IL_0197: ldarg.0
+   0190 ldc.i4.0 
+   0191 stloc.0 
+   0192 leave IL_02da: ldloc.0
+   0197 ldarg.0 
+   0198 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   019D brfalse IL_01ee: ldarg.1
+   01A2 ldarg.0 
+   01A3 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   01A8 callvirt System.Int64 System.IO.Stream::get_Position()
+   01AD ldarg.0 
+   01AE ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   01B3 callvirt System.Int64 System.IO.Stream::get_Length()
+   01B8 bge IL_01ee: ldarg.1
+   01BD ldarg.0 
+   01BE dup 
+   01BF ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   01C4 ldarg.0 
+   01C5 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   01CA ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   01CF ldarg.0 
+   01D0 ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   01D5 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   01DA ldlen 
+   01DB conv.i4 
+   01DC ldarg.0 
+   01DD ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   01E2 sub 
+   01E3 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   01E8 add 
+   01E9 stfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   01EE ldarg.1 
+   01EF call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   01F4 stind.ref 
+   01F5 ldc.i4.0 
+   01F6 stloc.s V_4
+   01F8 ldarg.1 
+   01F9 ldind.ref 
+   01FA ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   01FF ldarg.0 
+   0200 ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   0205 ldloca.s V_4
+   0207 ldc.i4.0 
+   0208 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   020D brtrue IL_0255: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0212 ldc.i4.0 
+   0213 ldloc.s V_4
+   0215 bge IL_0255: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   021A ldloc.s V_4
+   021C ldarg.0 
+   021D ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   0222 bgt IL_0255: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0227 ldarg.0 
+   0228 dup 
+   0229 ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   022E ldloc.s V_4
+   0230 sub 
+   0231 stfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   0236 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   023B ldloc.s V_4
+   023D ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0242 ldc.i4.0 
+   0243 ldarg.0 
+   0244 ldfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   0249 call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   024E ldc.i4.1 
+   024F stloc.0 
+   0250 leave IL_02da: ldloc.0
+   0255 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   025A call !0 Singleton`1<CTextManager>::GetInstance()
+   025F ldstr Download_VersionNotMatch
+   0264 ldc.i4.1 
+   0265 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   026A ldc.i4.0 
+   026B ldc.r4 1.5
+   0270 ldnull 
+   0271 ldc.i4.0 
+   0272 newarr System.Object
+   0277 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   027C ldc.i4.0 
+   027D stloc.0 
+   027E leave IL_02da: ldloc.0
+   0283 leave IL_02b7: ldarg.0
+   0288 pop 
+   0289 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   028E call !0 Singleton`1<CTextManager>::GetInstance()
+   0293 ldstr Download_VersionNotMatch
+   0298 ldc.i4.1 
+   0299 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   029E ldc.i4.0 
+   029F ldc.r4 1.5
+   02A4 ldnull 
+   02A5 ldc.i4.0 
+   02A6 newarr System.Object
+   02AB callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   02B0 ldc.i4.0 
+   02B1 stloc.0 
+   02B2 leave IL_02da: ldloc.0
+   02B7 ldarg.0 
+   02B8 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   02BD callvirt System.Int64 System.IO.Stream::get_Position()
+   02C2 ldarg.0 
+   02C3 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   02C8 callvirt System.Int64 System.IO.Stream::get_Length()
+   02CD blt IL_02d8: ldc.i4.1
+   02D2 ldarg.0 
+   02D3 call System.Void Assets.Scripts.Framework.GameReplayModule::ClearReplay()
+   02D8 ldc.i4.1 
+   02D9 ret 
+   02DA ldloc.0 
+   02DB ret 
+== System.Boolean UploadPunlishAllegeVideo(System.String deskId, System.String deskSeq, System.String relayEntity, System.String url) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 ldc.i4.1 
+   0003 ldc.i4.7 
+   0004 newarr System.String
+   0009 dup 
+   000A ldc.i4.0 
+   000B ldstr *
+   0010 stelem.ref 
+   0011 dup 
+   0012 ldc.i4.1 
+   0013 ldarg.3 
+   0014 stelem.ref 
+   0015 dup 
+   0016 ldc.i4.2 
+   0017 ldstr _
+   001C stelem.ref 
+   001D dup 
+   001E ldc.i4.3 
+   001F ldarg.1 
+   0020 stelem.ref 
+   0021 dup 
+   0022 ldc.i4.4 
+   0023 ldstr _
+   0028 stelem.ref 
+   0029 dup 
+   002A ldc.i4.5 
+   002B ldarg.2 
+   002C stelem.ref 
+   002D dup 
+   002E ldc.i4.6 
+   002F ldstr *.abc
+   0034 stelem.ref 
+   0035 call System.String System.String::Concat(System.String[])
+   003A call ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo> Assets.Scripts.Framework.GameReplayModule::ListReplayFiles(System.Boolean,System.Boolean,System.String)
+   003F stloc.0 
+   0040 ldloc.0 
+   0041 callvirt System.Int32 ListViewBase::get_Count()
+   0046 ldc.i4.0 
+   0047 ble IL_0095: ldc.i4.0
+   004C ldloca.s V_1
+   004E initobj Assets.Scripts.UI.stUIEventParams
+   0054 ldloca.s V_1
+   0056 ldloc.0 
+   0057 ldc.i4.0 
+   0058 callvirt !0 ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo>::get_Item(System.Int32)
+   005D ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::path
+   0062 stfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0067 ldloca.s V_1
+   0069 ldarg.s url
+   006B stfld Assets.Scripts.UI.stUIEventParams::tagStr1
+   0070 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0075 call !0 Singleton`1<CTextManager>::GetInstance()
+   007A ldstr CUSTOMERSERVICE_ALLEGE_CONFIRM
+   007F ldc.i4.1 
+   0080 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0085 ldc.i4 1443
+   008A ldc.i4.0 
+   008B ldloc.1 
+   008C ldc.i4.0 
+   008D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.Boolean)
+   0092 pop 
+   0093 ldc.i4.1 
+   0094 ret 
+   0095 ldc.i4.0 
+   0096 ret 
+== ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo> ListReplayFiles(System.Boolean removeObsolete, System.Boolean isAutoSave, System.String fileNameRegex) attrs=Public, HideBySig maxstack=6
+   0000 newobj System.Void ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo>::.ctor()
+   0005 stloc.0 
+   0006 call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolder()
+   000B stloc.1 
+   000C ldarg.2 
+   000D brfalse IL_0018: ldloc.1
+   0012 call System.String Assets.Scripts.Framework.GameReplayModule::get_ReplayFolderAutoSave()
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 newobj System.Void System.IO.DirectoryInfo::.ctor(System.String)
+   001E stloc.2 
+   001F ldloc.2 
+   0020 callvirt System.Boolean System.IO.FileSystemInfo::get_Exists()
+   0025 brfalse IL_0362: ldloc.0
+   002A ldloc.2 
+   002B callvirt System.String System.IO.FileSystemInfo::get_FullName()
+   0030 ldarg.3 
+   0031 ldc.i4.0 
+   0032 call System.String[] System.IO.Directory::GetFiles(System.String,System.String,System.IO.SearchOption)
+   0037 stloc.3 
+   0038 ldloc.3 
+   0039 ldlen 
+   003A conv.i4 
+   003B ldc.i4.1 
+   003C sub 
+   003D stloc.s V_4
+   003F br IL_035a: ldloc.s V_4
+   0044 ldloc.3 
+   0045 ldloc.s V_4
+   0047 ldelem.ref 
+   0048 stloc.s V_5
+   004A ldloc.s V_5
+   004C ldc.i4.3 
+   004D ldc.i4.1 
+   004E newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   0053 stloc.s V_6
+   0055 ldloc.s V_6
+   0057 newobj System.Void System.IO.BinaryReader::.ctor(System.IO.Stream)
+   005C stloc.s V_7
+   005E ldloc.s V_5
+   0060 ldstr .abc
+   0065 callvirt System.Boolean System.String::EndsWith(System.String)
+   006A brfalse IL_01a1: ldloc.s V_7
+   006F ldloc.s V_7
+   0071 callvirt System.String System.IO.BinaryReader::ReadString()
+   0076 stloc.s V_8
+   0078 ldloc.s V_7
+   007A callvirt System.String System.IO.BinaryReader::ReadString()
+   007F stloc.s V_9
+   0081 ldloc.s V_7
+   0083 callvirt System.String System.IO.BinaryReader::ReadString()
+   0088 pop 
+   0089 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::.ctor()
+   008E stloc.s V_10
+   0090 ldloc.s V_10
+   0092 ldloc.s V_8
+   0094 ldloc.s V_9
+   0096 call System.Boolean CVersion::IsSynchronizedVersion(System.String,System.String)
+   009B ldc.i4.0 
+   009C ceq 
+   009E stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::isExpired
+   00A3 ldloc.s V_10
+   00A5 ldloc.s V_5
+   00A7 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::path
+   00AC ldloc.s V_10
+   00AE ldloc.s V_7
+   00B0 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   00B5 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::heroId
+   00BA ldloc.s V_10
+   00BC ldloc.s V_7
+   00BE callvirt System.Int64 System.IO.BinaryReader::ReadInt64()
+   00C3 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   00C8 ldloc.s V_10
+   00CA ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   00CF ldc.i4.0 
+   00D0 conv.i8 
+   00D1 blt IL_00ea: ldc.i4.0
+   00D6 ldloc.s V_10
+   00D8 ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   00DD ldc.i8 3155378975999999999
+   00E6 clt 
+   00E8 br.s IL_00eb: ldstr " Error!! abc file -> appVer = {0} , resVer = {1} , heroId = {2} , startTime = {3}"
+   00EA ldc.i4.0 
+   00EB ldstr  Error!! abc file -> appVer = {0} , resVer = {1} , heroId = {2} , startTime = {3}
+   00F0 ldc.i4.4 
+   00F1 newarr System.Object
+   00F6 dup 
+   00F7 ldc.i4.0 
+   00F8 ldloc.s V_8
+   00FA stelem.ref 
+   00FB dup 
+   00FC ldc.i4.1 
+   00FD ldloc.s V_9
+   00FF stelem.ref 
+   0100 dup 
+   0101 ldc.i4.2 
+   0102 ldloc.s V_10
+   0104 ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::heroId
+   0109 box System.UInt32
+   010E stelem.ref 
+   010F dup 
+   0110 ldc.i4.3 
+   0111 ldloc.s V_10
+   0113 ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   0118 box System.Int64
+   011D stelem.ref 
+   011E call System.String System.String::Format(System.String,System.Object[])
+   0123 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0128 ldloc.s V_10
+   012A ldloc.s V_7
+   012C callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0131 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::mapType
+   0136 ldloc.s V_10
+   0138 ldloc.s V_7
+   013A callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   013F stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::mapId
+   0144 ldloc.s V_10
+   0146 ldloc.s V_7
+   0148 callvirt System.String System.IO.BinaryReader::ReadString()
+   014D stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userName
+   0152 ldloc.s V_10
+   0154 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0159 ldloc.s V_7
+   015B callvirt System.String System.IO.BinaryReader::ReadString()
+   0160 callvirt System.String ApolloHelper::ToSnsHeadUrl(System.String)
+   0165 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userHead
+   016A ldloc.s V_10
+   016C ldloc.s V_7
+   016E callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0173 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankGrade
+   0178 ldloc.s V_10
+   017A ldloc.s V_7
+   017C callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   0181 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankClass
+   0186 ldloc.s V_10
+   0188 ldloc.s V_7
+   018A callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   018F stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankScore
+   0194 ldloc.0 
+   0195 ldloc.s V_10
+   0197 callvirt System.Void ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo>::Add(!0)
+   019C br IL_032e: ldloc.s V_7
+   01A1 ldloc.s V_7
+   01A3 callvirt System.Int32 System.IO.BinaryReader::ReadInt32()
+   01A8 stloc.s V_11
+   01AA ldc.i4.0 
+   01AB stloc.s V_12
+   01AD ldloc.s V_7
+   01AF ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   01B4 ldc.i4.0 
+   01B5 ldloc.s V_11
+   01B7 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   01BC pop 
+   01BD ldarg.0 
+   01BE ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   01C3 ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   01C8 ldloc.s V_11
+   01CA ldloca.s V_12
+   01CC ldc.i4.0 
+   01CD callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   01D2 pop 
+   01D3 ldarg.0 
+   01D4 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   01D9 ldfld CSProtocol.COMDT_REPLAYHEADER::iAppVersion
+   01DE call System.String CVersion::GetVersionString(System.Int32)
+   01E3 stloc.s V_13
+   01E5 ldarg.0 
+   01E6 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   01EB ldfld CSProtocol.COMDT_REPLAYHEADER::iResVersion
+   01F0 call System.String CVersion::GetVersionString(System.Int32)
+   01F5 stloc.s V_14
+   01F7 newobj System.Void Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::.ctor()
+   01FC stloc.s V_15
+   01FE ldloc.s V_15
+   0200 ldloc.s V_13
+   0202 ldloc.s V_14
+   0204 call System.Boolean CVersion::IsSynchronizedVersion(System.String,System.String)
+   0209 ldc.i4.0 
+   020A ceq 
+   020C stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::isExpired
+   0211 ldloc.s V_15
+   0213 ldloc.s V_5
+   0215 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::path
+   021A ldloc.s V_15
+   021C ldarg.0 
+   021D ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   0222 ldfld CSProtocol.COMDT_REPLAYHEADER::dwHeroID
+   0227 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::heroId
+   022C ldloc.s V_15
+   022E ldarg.0 
+   022F ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   0234 ldfld CSProtocol.COMDT_REPLAYHEADER::ullTime
+   0239 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   023E ldloc.s V_15
+   0240 ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   0245 ldc.i4.0 
+   0246 conv.i8 
+   0247 blt IL_0260: ldc.i4.0
+   024C ldloc.s V_15
+   024E ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   0253 ldc.i8 3155378975999999999
+   025C clt 
+   025E br.s IL_0261: ldstr " Error!! abs file -> aappVer = {0} , resVer = {1} , heroId = {2} , startTime = {3}"
+   0260 ldc.i4.0 
+   0261 ldstr  Error!! abs file -> aappVer = {0} , resVer = {1} , heroId = {2} , startTime = {3}
+   0266 ldc.i4.4 
+   0267 newarr System.Object
+   026C dup 
+   026D ldc.i4.0 
+   026E ldloc.s V_13
+   0270 stelem.ref 
+   0271 dup 
+   0272 ldc.i4.1 
+   0273 ldloc.s V_14
+   0275 stelem.ref 
+   0276 dup 
+   0277 ldc.i4.2 
+   0278 ldloc.s V_15
+   027A ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::heroId
+   027F box System.UInt32
+   0284 stelem.ref 
+   0285 dup 
+   0286 ldc.i4.3 
+   0287 ldloc.s V_15
+   0289 ldfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::startTime
+   028E box System.Int64
+   0293 stelem.ref 
+   0294 call System.String System.String::Format(System.String,System.Object[])
+   0299 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   029E ldloc.s V_15
+   02A0 ldarg.0 
+   02A1 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   02A6 ldfld CSProtocol.COMDT_REPLAYHEADER::bMapType
+   02AB stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::mapType
+   02B0 ldloc.s V_15
+   02B2 ldarg.0 
+   02B3 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   02B8 ldfld CSProtocol.COMDT_REPLAYHEADER::dwMapId
+   02BD stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::mapId
+   02C2 ldloc.s V_15
+   02C4 ldarg.0 
+   02C5 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   02CA ldflda CSProtocol.COMDT_REPLAYHEADER::szName
+   02CF call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   02D4 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userName
+   02D9 ldloc.s V_15
+   02DB ldarg.0 
+   02DC ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   02E1 ldflda CSProtocol.COMDT_REPLAYHEADER::szHeadUrl
+   02E6 call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   02EB stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userHead
+   02F0 ldloc.s V_15
+   02F2 ldarg.0 
+   02F3 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   02F8 ldfld CSProtocol.COMDT_REPLAYHEADER::bRankGrade
+   02FD stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankGrade
+   0302 ldloc.s V_15
+   0304 ldarg.0 
+   0305 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   030A ldfld CSProtocol.COMDT_REPLAYHEADER::dwRankClass
+   030F stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankClass
+   0314 ldloc.s V_15
+   0316 ldarg.0 
+   0317 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   031C ldfld CSProtocol.COMDT_REPLAYHEADER::dwScoreOfRank
+   0321 stfld Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo::userRankScore
+   0326 ldloc.0 
+   0327 ldloc.s V_15
+   0329 callvirt System.Void ListView`1<Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo>::Add(!0)
+   032E ldloc.s V_7
+   0330 callvirt System.Void System.IO.BinaryReader::Close()
+   0335 ldloc.s V_6
+   0337 callvirt System.Void System.IO.Stream::Close()
+   033C ldarg.1 
+   033D brfalse IL_0349: leave IL_0354
+   0342 ldloc.s V_5
+   0344 call System.Void System.IO.File::Delete(System.String)
+   0349 leave IL_0354: ldloc.s V_4
+   034E pop 
+   034F leave IL_0354: ldloc.s V_4
+   0354 ldloc.s V_4
+   0356 ldc.i4.1 
+   0357 sub 
+   0358 stloc.s V_4
+   035A ldloc.s V_4
+   035C ldc.i4.0 
+   035D bge IL_0044: ldloc.3
+   0362 ldloc.0 
+   0363 ret 
+== System.Boolean BeginReplay(System.String path, System.Boolean checkVersion) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 call System.Boolean System.IO.File::Exists(System.String)
+   0006 brtrue IL_0014: ldarg.0
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D call System.Void Assets.Scripts.Framework.GameReplayModule::set_IsReplaying(System.Boolean)
+   0012 ldc.i4.0 
+   0013 ret 
+   0014 ldarg.0 
+   0015 ldarg.1 
+   0016 call System.Void Assets.Scripts.Framework.GameReplayModule::set_streamPath(System.String)
+   001B ldarg.0 
+   001C ldarg.1 
+   001D ldstr .abc
+   0022 callvirt System.Boolean System.String::EndsWith(System.String)
+   0027 stfld Assets.Scripts.Framework.GameReplayModule::isReplayAbc
+   002C ldarg.0 
+   002D ldarg.1 
+   002E ldc.i4.3 
+   002F ldc.i4.1 
+   0030 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   0035 stfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   003A ldarg.0 
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0041 newobj System.Void System.IO.BinaryReader::.ctor(System.IO.Stream)
+   0046 stfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.Framework.GameReplayModule::isReplayAbc
+   0051 brfalse IL_011e: ldarg.0
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   005C callvirt System.String System.IO.BinaryReader::ReadString()
+   0061 stloc.0 
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0068 callvirt System.String System.IO.BinaryReader::ReadString()
+   006D stloc.1 
+   006E ldarg.2 
+   006F brfalse IL_00a1: ldarg.0
+   0074 ldloc.0 
+   0075 ldloc.1 
+   0076 call System.Boolean CVersion::IsSynchronizedVersion(System.String,System.String)
+   007B brtrue IL_00a1: ldarg.0
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0086 callvirt System.Void System.IO.BinaryReader::Close()
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0091 callvirt System.Void System.IO.Stream::Close()
+   0096 ldstr ABC version not match!
+   009B newobj System.Void System.Exception::.ctor(System.String)
+   00A0 throw 
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00A7 callvirt System.String System.IO.BinaryReader::ReadString()
+   00AC pop 
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00B3 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   00B8 pop 
+   00B9 ldarg.0 
+   00BA ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00BF callvirt System.Int64 System.IO.BinaryReader::ReadInt64()
+   00C4 pop 
+   00C5 ldarg.0 
+   00C6 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00CB callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   00D0 stloc.2 
+   00D1 ldarg.0 
+   00D2 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00D7 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   00DC stloc.3 
+   00DD ldarg.0 
+   00DE ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00E3 callvirt System.String System.IO.BinaryReader::ReadString()
+   00E8 pop 
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00EF callvirt System.String System.IO.BinaryReader::ReadString()
+   00F4 pop 
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   00FB callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0100 pop 
+   0101 ldarg.0 
+   0102 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0107 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   010C pop 
+   010D ldarg.0 
+   010E ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0113 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   0118 pop 
+   0119 br IL_01b8: ldarg.0
+   011E ldarg.0 
+   011F ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0124 callvirt System.Int32 System.IO.BinaryReader::ReadInt32()
+   0129 stloc.s V_4
+   012B ldarg.0 
+   012C ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0131 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0136 ldc.i4.0 
+   0137 ldloc.s V_4
+   0139 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   013E pop 
+   013F ldc.i4.0 
+   0140 stloc.s V_5
+   0142 ldarg.0 
+   0143 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   0148 ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   014D ldloc.s V_4
+   014F ldloca.s V_5
+   0151 ldc.i4.0 
+   0152 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0157 pop 
+   0158 ldarg.0 
+   0159 ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   015E ldfld CSProtocol.COMDT_REPLAYHEADER::iAppVersion
+   0163 call System.String CVersion::GetVersionString(System.Int32)
+   0168 stloc.s V_6
+   016A ldarg.0 
+   016B ldfld Assets.Scripts.Framework.GameReplayModule::replayAbsHeader
+   0170 ldfld CSProtocol.COMDT_REPLAYHEADER::iResVersion
+   0175 call System.String CVersion::GetVersionString(System.Int32)
+   017A stloc.s V_7
+   017C ldarg.2 
+   017D brfalse IL_01b1: ldarg.0
+   0182 ldloc.s V_6
+   0184 ldloc.s V_7
+   0186 call System.Boolean CVersion::IsSynchronizedVersion(System.String,System.String)
+   018B brtrue IL_01b1: ldarg.0
+   0190 ldarg.0 
+   0191 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0196 callvirt System.Void System.IO.BinaryReader::Close()
+   019B ldarg.0 
+   019C ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   01A1 callvirt System.Void System.IO.Stream::Close()
+   01A6 ldstr ABS version not match!
+   01AB newobj System.Void System.Exception::.ctor(System.String)
+   01B0 throw 
+   01B1 ldarg.0 
+   01B2 ldc.i4.0 
+   01B3 stfld Assets.Scripts.Framework.GameReplayModule::bufferUsedSize
+   01B8 ldarg.0 
+   01B9 ldc.i4.1 
+   01BA call System.Void Assets.Scripts.Framework.GameReplayModule::set_IsReplaying(System.Boolean)
+   01BF ldarg.0 
+   01C0 ldc.i4.m1 
+   01C1 stfld Assets.Scripts.Framework.GameReplayModule::HostPlayerIndex
+   01C6 ldarg.0 
+   01C7 ldc.r4 0
+   01CC stfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   01D1 ldarg.0 
+   01D2 ldc.i4.0 
+   01D3 stfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   01D8 ldc.i4.1 
+   01D9 stloc.s V_8
+   01DB leave IL_01fe: ldloc.s V_8
+   01E0 pop 
+   01E1 ldarg.0 
+   01E2 ldnull 
+   01E3 stfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   01E8 ldarg.0 
+   01E9 ldnull 
+   01EA stfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   01EF ldarg.0 
+   01F0 ldc.i4.0 
+   01F1 call System.Void Assets.Scripts.Framework.GameReplayModule::set_IsReplaying(System.Boolean)
+   01F6 ldc.i4.0 
+   01F7 stloc.s V_8
+   01F9 leave IL_01fe: ldloc.s V_8
+   01FE ldloc.s V_8
+   0200 ret 
+== System.Void UpdateFrame() attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0006 ldc.r4 0
+   000B beq IL_007b: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0016 ldc.r4 0
+   001B bge.un IL_0044: ldarg.0
+   0020 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0025 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   002A call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   002F ldfld Assets.Scripts.Framework.FrameSynchr::EndFrameNum
+   0034 blt.un IL_0044: ldarg.0
+   0039 ldarg.0 
+   003A call System.Single UnityEngine.Time::get_time()
+   003F stfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   004A ldc.r4 0
+   004F ble.un IL_007a: ret
+   0054 call System.Single UnityEngine.Time::get_time()
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   005F ldc.r4 10
+   0064 add 
+   0065 ble.un IL_007a: ret
+   006A ldarg.0 
+   006B call System.Void Assets.Scripts.Framework.GameReplayModule::StopReplay()
+   0070 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0075 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   007A ret 
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0081 brtrue IL_0087: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0086 ret 
+   0087 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   008C ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   0091 brfalse IL_00da: ldc.i4.0
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   009C ldc.i4.0 
+   009D ble IL_00da: ldc.i4.0
+   00A2 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00A7 ldfld Assets.Scripts.Framework.FrameSynchr::FrameSpeed
+   00AC ldarg.0 
+   00AD ldfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   00B2 beq IL_00da: ldc.i4.0
+   00B7 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   00C2 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::SetFrameSpeed(System.Int32)
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   00CD conv.r4 
+   00CE call System.Void UnityEngine.Time::set_timeScale(System.Single)
+   00D3 ldarg.0 
+   00D4 ldc.i4.0 
+   00D5 stfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   00DA ldc.i4.0 
+   00DB stloc.2 
+   00DC br IL_019c: ldloc.2
+   00E1 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00E6 ldfld Assets.Scripts.GameLogic.BattleLogic::isLoading
+   00EB brfalse IL_00f5: ldarg.0
+   00F0 br IL_01ac: ret
+   00F5 ldarg.0 
+   00F6 ldloca.s V_0
+   00F8 ldloca.s V_1
+   00FA call System.Boolean Assets.Scripts.Framework.GameReplayModule::LoadMsg(CSProtocol.CSPkg&,CSProtocol.SCPKG_FRAPBOOT_SINGLE&)
+   00FF brfalse IL_016d: ldarg.0
+   0104 ldloc.1 
+   0105 brfalse IL_013e: ldloc.0
+   010A ldloc.1 
+   010B ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0110 stloc.3 
+   0111 call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0116 ldloc.1 
+   0117 callvirt System.Void Assets.Scripts.Framework.FrameWindow::HandleFraqBootInfo(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   011C ldarg.0 
+   011D ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0122 brtrue IL_0139: br IL_0150
+   0127 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   012C ldloc.3 
+   012D ldc.i4 150
+   0132 add 
+   0133 callvirt System.Boolean Assets.Scripts.Framework.FrameSynchr::SetKeyFrameIndex(System.UInt32)
+   0138 pop 
+   0139 br IL_0150: call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   013E ldloc.0 
+   013F brfalse IL_0150: call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0144 ldarg.0 
+   0145 ldloc.0 
+   0146 call System.Void Assets.Scripts.Framework.GameReplayModule::DirectHandleMsg(CSProtocol.CSPkg)
+   014B br IL_0150: call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0150 call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0155 callvirt System.Boolean Assets.Scripts.Framework.FrameWindow::get_ValidRunning()
+   015A brtrue IL_0168: br IL_0198
+   015F ldloc.2 
+   0160 ldc.i4.1 
+   0161 sub 
+   0162 stloc.2 
+   0163 br IL_0198: ldloc.2
+   0168 br IL_0198: ldloc.2
+   016D ldarg.0 
+   016E ldfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0173 ldc.r4 0
+   0178 bne.un IL_0188: ldarg.0
+   017D ldarg.0 
+   017E ldc.r4 -1
+   0183 stfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0188 ldarg.0 
+   0189 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   018E brfalse IL_0193: br IL_01ac
+   0193 br IL_01ac: ret
+   0198 ldloc.2 
+   0199 ldc.i4.1 
+   019A add 
+   019B stloc.2 
+   019C ldloc.2 
+   019D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   01A2 ldfld Assets.Scripts.Framework.FrameSynchr::FrameSpeed
+   01A7 blt IL_00e1: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01AC ret 
+== System.Boolean get_IsStreamEnd() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0007 ceq 
+   0009 ret 
+== System.Void StopReplay() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void Assets.Scripts.Framework.GameReplayModule::set_IsReplaying(System.Boolean)
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.Framework.GameReplayModule::FakeReplaying
+   000E ldarg.0 
+   000F ldc.r4 0
+   0014 stfld Assets.Scripts.Framework.GameReplayModule::autoExitTimer
+   0019 ldarg.0 
+   001A ldc.i4.m1 
+   001B stfld Assets.Scripts.Framework.GameReplayModule::HostPlayerIndex
+   0020 ldarg.0 
+   0021 ldc.i4.0 
+   0022 stfld Assets.Scripts.Framework.GameReplayModule::ExpectReplayFrameSpeed
+   0027 ldarg.0 
+   0028 call System.Void Assets.Scripts.Framework.GameReplayModule::ClearReplay()
+   002D ldc.r4 1
+   0032 call System.Void UnityEngine.Time::set_timeScale(System.Single)
+   0037 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   003C ldc.i4.1 
+   003D callvirt System.Void Assets.Scripts.Framework.FrameSynchr::SetFrameSpeed(System.Int32)
+   0042 ldarg.0 
+   0043 ldc.i4.m1 
+   0044 stfld Assets.Scripts.Framework.GameReplayModule::HostPlayerIndex
+   0049 ret 
+== System.Void ClearRecord() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.Framework.GameReplayModule::endKFraqNo
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   000D brfalse IL_0024: ldarg.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0018 callvirt System.Void System.IO.BinaryWriter::Close()
+   001D ldarg.0 
+   001E ldnull 
+   001F stfld Assets.Scripts.Framework.GameReplayModule::recordWriter
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   002A brfalse IL_0041: ret
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0035 callvirt System.Void System.IO.Stream::Close()
+   003A ldarg.0 
+   003B ldnull 
+   003C stfld Assets.Scripts.Framework.GameReplayModule::recordStream
+   0041 ret 
+== System.Void ClearReplay() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0006 brfalse IL_001d: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   0011 callvirt System.Void System.IO.BinaryReader::Close()
+   0016 ldarg.0 
+   0017 ldnull 
+   0018 stfld Assets.Scripts.Framework.GameReplayModule::replayReader
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   0023 brfalse IL_003a: ret
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   002E callvirt System.Void System.IO.Stream::Close()
+   0033 ldarg.0 
+   0034 ldnull 
+   0035 stfld Assets.Scripts.Framework.GameReplayModule::replayStream
+   003A ret 
+== System.Void DirectHandleMsg(CSProtocol.CSPkg msg) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0005 ldarg.1 
+   0006 ldfld CSProtocol.CSPkg::stPkgHead
+   000B ldfld CSProtocol.CSPkgHead::dwMsgID
+   0010 callvirt Assets.Scripts.Framework.NetMsgDelegate Assets.Scripts.Framework.NetworkModule::GetMsgHandler(System.UInt32)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0034: ret
+   001C ldloc.0 
+   001D ldarg.1 
+   001E callvirt System.Void Assets.Scripts.Framework.NetMsgDelegate::Invoke(CSProtocol.CSPkg)
+   0023 leave IL_0034: ret
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A call System.Void UnityEngine.Debug::LogException(System.Exception)
+   002F leave IL_0034: ret
+   0034 ret 
+== System.Void BattleStart() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   0006 brfalse IL_000b: ret
+   000B ret 
+== System.Void AnalyseReplayFile(System.String replayFile, System.Int32& mapID, ListView`1<System.String>& playerLabelList, System.Collections.Generic.List`1<System.UInt32>& playerUIDList) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call CSProtocol.SCPKG_MULTGAME_BEGINLOAD Assets.Scripts.Framework.GameReplayModule::RetriveBeginLoad(System.String)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse IL_00d9: ret
+   000D ldarg.1 
+   000E ldloc.0 
+   000F ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stDeskInfo
+   0014 ldfld CSProtocol.COMDT_DESKINFO::dwMapId
+   0019 stind.i4 
+   001A ldc.i4.0 
+   001B stloc.1 
+   001C br IL_00c6: ldloc.1
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stPlayerInfo
+   0027 ldfld CSProtocol.CSDT_DESK_PLAYERINFO::astCampPlayerInfo
+   002C ldloc.1 
+   002D callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_CAMPPLAYERINFO>::get_Item(System.Int32)
+   0032 ldfld CSProtocol.CSDT_CAMPPLAYERINFO::stPlayerInfo
+   0037 stloc.2 
+   0038 ldloc.2 
+   0039 ldfld CSProtocol.COMDT_PLAYERINFO::szName
+   003E call System.String Utility::UTF8Convert(System.Byte[])
+   0043 stloc.3 
+   0044 ldloc.3 
+   0045 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   004A brfalse IL_0055: ldstr "hero"
+   004F ldstr computer
+   0054 stloc.3 
+   0055 ldstr hero
+   005A stloc.s V_5
+   005C ldloca.s V_4
+   005E ldloc.2 
+   005F ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0064 ldc.i4.0 
+   0065 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   006A ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   006F ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0074 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0079 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   007E brfalse IL_0096: ldarg.2
+   0083 ldloca.s V_4
+   0085 ldfld ResData.ResHeroCfgInfo::strIdName
+   008A call System.String StringId2::op_Implicit(StringId2)
+   008F call System.String Utility::UTF8Convert(System.String)
+   0094 stloc.s V_5
+   0096 ldarg.2 
+   0097 ldind.ref 
+   0098 ldstr {0}_{1}_{2}
+   009D ldloc.2 
+   009E ldfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   00A3 box System.Byte
+   00A8 ldloc.3 
+   00A9 ldloc.s V_5
+   00AB call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00B0 callvirt System.Void ListView`1<System.String>::Add(!0)
+   00B5 ldarg.3 
+   00B6 ldind.ref 
+   00B7 ldloc.2 
+   00B8 ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   00BD callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   00C2 ldloc.1 
+   00C3 ldc.i4.1 
+   00C4 add 
+   00C5 stloc.1 
+   00C6 ldloc.1 
+   00C7 conv.i8 
+   00C8 ldloc.0 
+   00C9 ldfld CSProtocol.SCPKG_MULTGAME_BEGINLOAD::stPlayerInfo
+   00CE ldfld CSProtocol.CSDT_DESK_PLAYERINFO::dwPlayerNum
+   00D3 conv.u8 
+   00D4 blt IL_0021: ldloc.0
+   00D9 ret 
+== CSProtocol.SCPKG_MULTGAME_BEGINLOAD RetriveBeginLoad(System.String replayFilePath) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldnull 
+   0003 stloc.1 
+   0004 ldarg.0 
+   0005 ldc.i4.3 
+   0006 ldc.i4.1 
+   0007 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   000C stloc.1 
+   000D ldarg.0 
+   000E ldstr .abc
+   0013 callvirt System.Boolean System.String::EndsWith(System.String)
+   0018 stloc.2 
+   0019 ldloc.1 
+   001A newobj System.Void System.IO.BinaryReader::.ctor(System.IO.Stream)
+   001F stloc.3 
+   0020 ldloc.2 
+   0021 brfalse IL_009c: ldloc.3
+   0026 ldloc.3 
+   0027 callvirt System.String System.IO.BinaryReader::ReadString()
+   002C pop 
+   002D ldloc.3 
+   002E callvirt System.String System.IO.BinaryReader::ReadString()
+   0033 pop 
+   0034 ldloc.3 
+   0035 callvirt System.String System.IO.BinaryReader::ReadString()
+   003A pop 
+   003B ldloc.3 
+   003C callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   0041 pop 
+   0042 ldloc.3 
+   0043 callvirt System.Int64 System.IO.BinaryReader::ReadInt64()
+   0048 pop 
+   0049 ldloc.3 
+   004A callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   004F stloc.s V_4
+   0051 ldloc.3 
+   0052 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   0057 stloc.s V_5
+   0059 ldloc.3 
+   005A callvirt System.String System.IO.BinaryReader::ReadString()
+   005F pop 
+   0060 ldloc.3 
+   0061 callvirt System.String System.IO.BinaryReader::ReadString()
+   0066 pop 
+   0067 ldloc.3 
+   0068 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   006D pop 
+   006E ldloc.3 
+   006F callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   0074 pop 
+   0075 ldloc.3 
+   0076 callvirt System.UInt32 System.IO.BinaryReader::ReadUInt32()
+   007B pop 
+   007C ldloc.3 
+   007D callvirt System.Int32 System.IO.BinaryReader::ReadInt32()
+   0082 pop 
+   0083 ldloc.3 
+   0084 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   0089 ldc.i4.0 
+   008A ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   008F ldlen 
+   0090 conv.i4 
+   0091 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   0096 pop 
+   0097 br IL_00c8: call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   009C ldloc.3 
+   009D callvirt System.Int32 System.IO.BinaryReader::ReadInt32()
+   00A2 stloc.s V_6
+   00A4 ldloc.1 
+   00A5 dup 
+   00A6 callvirt System.Int64 System.IO.Stream::get_Position()
+   00AB ldloc.s V_6
+   00AD conv.i8 
+   00AE add 
+   00AF callvirt System.Void System.IO.Stream::set_Position(System.Int64)
+   00B4 ldloc.3 
+   00B5 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00BA ldc.i4.0 
+   00BB ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00C0 ldlen 
+   00C1 conv.i4 
+   00C2 callvirt System.Int32 System.IO.BinaryReader::Read(System.Byte[],System.Int32,System.Int32)
+   00C7 pop 
+   00C8 call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   00CD stloc.s V_7
+   00CF ldc.i4.0 
+   00D0 stloc.s V_8
+   00D2 ldloc.s V_7
+   00D4 ldsflda Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00D9 ldsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   00DE ldlen 
+   00DF conv.i4 
+   00E0 ldloca.s V_8
+   00E2 ldc.i4.0 
+   00E3 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   00E8 brtrue IL_0110: leave IL_013f
+   00ED ldloc.s V_7
+   00EF ldfld CSProtocol.CSPkg::stPkgHead
+   00F4 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00F9 ldc.i4 1075
+   00FE bne.un IL_0110: leave IL_013f
+   0103 ldloc.s V_7
+   0105 ldfld CSProtocol.CSPkg::stPkgData
+   010A callvirt CSProtocol.SCPKG_MULTGAME_BEGINLOAD CSProtocol.CSPkgBody::get_stMultGameBeginLoad()
+   010F stloc.0 
+   0110 leave IL_013f: ldloc.0
+   0115 stloc.s V_9
+   0117 ldstr play err:
+   011C ldloc.s V_9
+   011E callvirt System.String System.Exception::get_Message()
+   0123 call System.String System.String::Concat(System.String,System.String)
+   0128 call System.Void UnityEngine.Debug::Log(System.Object)
+   012D leave IL_013f: ldloc.0
+   0132 ldloc.1 
+   0133 brfalse IL_013e: endfinally
+   0138 ldloc.1 
+   0139 callvirt System.Void System.IO.Stream::Close()
+   013E endfinally 
+   013F ldloc.0 
+   0140 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4 200000
+   0005 newarr System.Byte
+   000A stsfld Assets.Scripts.Framework.GameReplayModule::streamBuffer
+   000F ret 
+  NESTED Assets.Scripts.Framework.GameReplayModule/ReplayFileInfo
+  NESTED Assets.Scripts.Framework.GameReplayModule/ReplayPackException
+  NESTED Assets.Scripts.Framework.GameReplayModule/ReplayFileInfoCompare

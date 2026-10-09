@@ -1,0 +1,1419 @@
+// TYPE Assets.Scripts.GameSystem.HeroInfoPanel  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 HERO_MAX_NUM = 5
+  FIELD System.String TaoShaHeroInfoResPath = UGUI/Form/Battle/Form_Battle_Module/MapPanel_MiniMap_TaoShaHeroInfo.prefab
+  FIELD System.String[] TaoShaColorInfoList
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32> m_PlayerToIndexDic
+  FIELD System.Int32[] m_heroInfoChangeBitsList
+  FIELD Assets.Scripts.UI.CUIListScript heroInfoList
+  FIELD ListView`1<UnityEngine.UI.Text> m_reviveTextCacheList
+  FIELD ListView`1<UnityEngine.UI.Image> m_hpImageCacheList
+  FIELD ListView`1<Assets.Scripts.GameLogic.Player> m_enemyPlayerList
+  FIELD ListView`1<Assets.Scripts.GameLogic.Player> m_teamPlayerList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   000B ldarg.0 
+   000C ldc.i4.4 
+   000D newarr System.Int32
+   0012 stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_heroInfoChangeBitsList
+   0017 ldarg.0 
+   0018 newobj System.Void ListView`1<UnityEngine.UI.Text>::.ctor()
+   001D stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   0022 ldarg.0 
+   0023 newobj System.Void ListView`1<UnityEngine.UI.Image>::.ctor()
+   0028 stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   002D ldarg.0 
+   002E newobj System.Void ListView`1<Assets.Scripts.GameLogic.Player>::.ctor()
+   0033 stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0038 ldarg.0 
+   0039 newobj System.Void ListView`1<Assets.Scripts.GameLogic.Player>::.ctor()
+   003E stfld Assets.Scripts.GameSystem.HeroInfoPanel::m_teamPlayerList
+   0043 ldarg.0 
+   0044 call System.Void System.Object::.ctor()
+   0049 ret 
+== System.Void Init(UnityEngine.GameObject heroInfoPanelObj, Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, HideBySig maxstack=5
+   0000 ldnull 
+   0001 ldarg.1 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldarg.1 
+   000F callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0014 stfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0019 ldnull 
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0020 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0025 brfalse IL_002b: ldc.i4.s 10
+   002A ret 
+   002B ldc.i4.s 10
+   002D stloc.0 
+   002E call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0033 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0038 stloc.1 
+   0039 ldloc.1 
+   003A brfalse IL_0041: ldarg.0
+   003F ldc.i4.5 
+   0040 stloc.0 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0047 ldloc.0 
+   0048 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   004D ldarg.0 
+   004E call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitTextImageCacheList()
+   0053 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0058 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   005D stloc.2 
+   005E ldloc.2 
+   005F brtrue IL_0070: ldarg.0
+   0064 ldc.i4.0 
+   0065 ldstr HeroInfoPanel Init hostPlayer is null
+   006A call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   006F ret 
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0076 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::Clear()
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0081 callvirt System.Void ListViewBase::Clear()
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_teamPlayerList
+   008C callvirt System.Void ListViewBase::Clear()
+   0091 ldc.i4.0 
+   0092 stloc.3 
+   0093 ldc.i4.0 
+   0094 stloc.s V_4
+   0096 ldnull 
+   0097 stloc.s V_5
+   0099 ldnull 
+   009A stloc.s V_6
+   009C ldnull 
+   009D stloc.s V_7
+   009F ldnull 
+   00A0 stloc.s V_8
+   00A2 ldc.i4.0 
+   00A3 stloc.3 
+   00A4 br IL_0179: ldloc.3
+   00A9 ldloc.3 
+   00AA ldc.i4.5 
+   00AB clt 
+   00AD ldc.i4.0 
+   00AE ceq 
+   00B0 stloc.s V_4
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   00B8 ldloc.3 
+   00B9 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   00BE stloc.s V_9
+   00C0 ldloc.s V_9
+   00C2 ldnull 
+   00C3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00C8 brfalse IL_0175: ldloc.3
+   00CD ldloc.s V_9
+   00CF callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D4 ldc.i4.0 
+   00D5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00DA ldloc.s V_9
+   00DC ldc.i4.1 
+   00DD callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00E2 stloc.s V_5
+   00E4 ldloc.s V_9
+   00E6 ldc.i4.2 
+   00E7 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00EC stloc.s V_6
+   00EE ldloc.s V_5
+   00F0 ldloc.s V_4
+   00F2 ldc.i4.0 
+   00F3 ceq 
+   00F5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00FA ldloc.s V_6
+   00FC ldloc.s V_4
+   00FE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0103 ldloc.s V_9
+   0105 ldc.i4.6 
+   0106 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   010B stloc.s V_7
+   010D ldloc.s V_9
+   010F ldc.i4.7 
+   0110 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0115 stloc.s V_8
+   0117 ldloc.s V_7
+   0119 ldc.i4.0 
+   011A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   011F ldloc.s V_8
+   0121 ldloc.s V_4
+   0123 ldc.i4.0 
+   0124 ceq 
+   0126 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   012B ldloc.1 
+   012C brfalse IL_016a: ldloc.s V_9
+   0131 ldloc.s V_9
+   0133 ldc.i4.8 
+   0134 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0139 stloc.s V_10
+   013B ldstr UGUI/Form/Battle/Form_Battle_Module/MapPanel_MiniMap_TaoShaHeroInfo.prefab
+   0140 ldstr MapPanel_MiniMap_TaoShaHeroInfo
+   0145 ldloc.s V_10
+   0147 ldarg.2 
+   0148 ldc.i4.0 
+   0149 call UnityEngine.GameObject Assets.Scripts.GameSystem.CUICommonSystem::LoadUIPrefab(System.String,System.String,UnityEngine.GameObject,Assets.Scripts.UI.CUIFormScript,System.Boolean)
+   014E pop 
+   014F ldloc.s V_9
+   0151 ldfld Assets.Scripts.UI.CUIComponent::m_widgets
+   0156 ldc.i4.s 9
+   0158 ldloc.s V_10
+   015A ldstr MapPanel_MiniMap_TaoShaHeroInfo/Dying
+   015F call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0164 stelem.ref 
+   0165 br IL_0175: ldloc.3
+   016A ldloc.s V_9
+   016C ldfld Assets.Scripts.UI.CUIComponent::m_widgets
+   0171 ldc.i4.s 9
+   0173 ldnull 
+   0174 stelem.ref 
+   0175 ldloc.3 
+   0176 ldc.i4.1 
+   0177 add 
+   0178 stloc.3 
+   0179 ldloc.3 
+   017A ldloc.0 
+   017B blt IL_00a9: ldloc.3
+   0180 ldc.i4.0 
+   0181 stloc.s V_11
+   0183 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0188 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllPlayers()
+   018D stloc.s V_12
+   018F ldc.i4.0 
+   0190 stloc.s V_13
+   0192 ldc.i4.0 
+   0193 stloc.s V_14
+   0195 ldc.i4.0 
+   0196 stloc.3 
+   0197 br IL_02a8: ldloc.3
+   019C ldnull 
+   019D stloc.s V_15
+   019F ldloc.s V_12
+   01A1 ldloc.3 
+   01A2 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   01A7 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   01AC ldloc.2 
+   01AD ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   01B2 bne.un IL_02a4: ldloc.3
+   01B7 ldloc.s V_12
+   01B9 ldloc.3 
+   01BA callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   01BF ldloc.2 
+   01C0 beq IL_024c: ldloc.1
+   01C5 ldloc.s V_13
+   01C7 stloc.s V_14
+   01C9 ldarg.0 
+   01CA ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   01CF ldloc.s V_13
+   01D1 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   01D6 stloc.s V_15
+   01D8 ldloc.s V_15
+   01DA ldnull 
+   01DB call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01E0 brfalse IL_0246: ldloc.s V_13
+   01E5 ldloc.s V_12
+   01E7 ldloc.3 
+   01E8 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   01ED ldfld Assets.Scripts.GameLogic.Player::Captain
+   01F2 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   01F7 brfalse IL_0246: ldloc.s V_13
+   01FC ldloc.s V_15
+   01FE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0203 ldc.i4.1 
+   0204 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0209 ldloc.s V_15
+   020B ldloc.s V_12
+   020D ldloc.3 
+   020E callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0213 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0218 ldc.i4.1 
+   0219 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitHeroItemData(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   021E ldarg.0 
+   021F ldloc.s V_12
+   0221 ldloc.3 
+   0222 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0227 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   022C ldloc.s V_14
+   022E call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::AddPlayerToDic(System.UInt32,System.Int32)
+   0233 ldarg.0 
+   0234 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_teamPlayerList
+   0239 ldloc.s V_12
+   023B ldloc.3 
+   023C callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0241 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Add(!0)
+   0246 ldloc.s V_13
+   0248 ldc.i4.1 
+   0249 add 
+   024A stloc.s V_13
+   024C ldloc.1 
+   024D brfalse IL_029e: ldloc.s V_11
+   0252 ldloc.s V_15
+   0254 ldnull 
+   0255 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   025A brfalse IL_029e: ldloc.s V_11
+   025F ldloc.s V_15
+   0261 ldc.i4.8 
+   0262 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0267 stloc.s V_16
+   0269 ldloc.s V_16
+   026B ldstr MapPanel_MiniMap_TaoShaHeroInfo/ColorInfo
+   0270 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0275 stloc.s V_17
+   0277 ldloc.s V_17
+   0279 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   027E ldsfld Assets.Scripts.UI.CUIUtility::s_battleChiJiPrefabDir
+   0283 ldsfld Assets.Scripts.GameSystem.HeroInfoPanel::TaoShaColorInfoList
+   0288 ldloc.s V_11
+   028A ldelem.ref 
+   028B call System.String System.String::Concat(System.String,System.String)
+   0290 ldc.i4.0 
+   0291 ldc.i4.0 
+   0292 call UnityEngine.GameObject Assets.Scripts.UI.CUIUtility::GetSpritePrefeb(System.String,System.Boolean,System.Boolean)
+   0297 ldc.i4.0 
+   0298 ldc.i4.0 
+   0299 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.GameObject,System.Boolean,System.Boolean)
+   029E ldloc.s V_11
+   02A0 ldc.i4.1 
+   02A1 add 
+   02A2 stloc.s V_11
+   02A4 ldloc.3 
+   02A5 ldc.i4.1 
+   02A6 add 
+   02A7 stloc.3 
+   02A8 ldloc.3 
+   02A9 ldloc.s V_12
+   02AB callvirt System.Int32 ListViewBase::get_Count()
+   02B0 blt IL_019c: ldnull
+   02B5 ldarg.0 
+   02B6 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitEventListener()
+   02BB ret 
+== System.Void Preload(Assets.Scripts.GameLogic.PreloadResTypeDelegate loadFunc) attrs=Public, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_005e: ret
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0017 brfalse IL_005e: ret
+   001C ldarg.0 
+   001D ldc.i4.4 
+   001E ldstr UGUI/Form/Battle/Form_Battle_Module/MapPanel_MiniMap_TaoShaHeroInfo.prefab
+   0023 ldc.i4.0 
+   0024 conv.i8 
+   0025 ldnull 
+   0026 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   002B ldc.i4.0 
+   002C stloc.1 
+   002D br IL_0051: ldloc.1
+   0032 ldarg.0 
+   0033 ldc.i4.4 
+   0034 ldsfld Assets.Scripts.UI.CUIUtility::s_battleChiJiPrefabDir
+   0039 ldsfld Assets.Scripts.GameSystem.HeroInfoPanel::TaoShaColorInfoList
+   003E ldloc.1 
+   003F ldelem.ref 
+   0040 call System.String System.String::Concat(System.String,System.String)
+   0045 ldc.i4.0 
+   0046 conv.i8 
+   0047 ldnull 
+   0048 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   004D ldloc.1 
+   004E ldc.i4.1 
+   004F add 
+   0050 stloc.1 
+   0051 ldloc.1 
+   0052 ldsfld Assets.Scripts.GameSystem.HeroInfoPanel::TaoShaColorInfoList
+   0057 ldlen 
+   0058 conv.i4 
+   0059 blt IL_0032: ldarg.0
+   005E ret 
+== System.Void InitTextImageCacheList() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   0011 callvirt System.Void ListViewBase::Clear()
+   0016 ldnull 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   001D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0022 brfalse IL_0028: ldarg.0
+   0027 ret 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   002E callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   0033 stloc.0 
+   0034 ldnull 
+   0035 stloc.1 
+   0036 ldnull 
+   0037 stloc.2 
+   0038 ldnull 
+   0039 stloc.3 
+   003A ldc.i4.0 
+   003B stloc.s V_4
+   003D br IL_00ac: ldloc.s V_4
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0048 ldloc.s V_4
+   004A callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ldnull 
+   0052 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0057 brfalse IL_00a6: ldloc.s V_4
+   005C ldloc.1 
+   005D ldc.i4.3 
+   005E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0063 stloc.2 
+   0064 ldloc.2 
+   0065 ldnull 
+   0066 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006B brfalse IL_0081: ldloc.1
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   0076 ldloc.2 
+   0077 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   007C callvirt System.Void ListView`1<UnityEngine.UI.Image>::Add(!0)
+   0081 ldloc.1 
+   0082 ldc.i4.5 
+   0083 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0088 stloc.3 
+   0089 ldloc.3 
+   008A ldnull 
+   008B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0090 brfalse IL_00a6: ldloc.s V_4
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   009B ldloc.3 
+   009C callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00A1 callvirt System.Void ListView`1<UnityEngine.UI.Text>::Add(!0)
+   00A6 ldloc.s V_4
+   00A8 ldc.i4.1 
+   00A9 add 
+   00AA stloc.s V_4
+   00AC ldloc.s V_4
+   00AE ldloc.0 
+   00AF blt IL_0042: ldarg.0
+   00B4 ret 
+== UnityEngine.UI.Text GetReviveText(System.Int32 index) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0025: ldnull
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   000E callvirt System.Int32 ListViewBase::get_Count()
+   0013 bge IL_0025: ldnull
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   001E ldarg.1 
+   001F callvirt !0 ListView`1<UnityEngine.UI.Text>::get_Item(System.Int32)
+   0024 ret 
+   0025 ldnull 
+   0026 ret 
+== UnityEngine.UI.Image GetHpImage(System.Int32 index) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0025: ldnull
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   000E callvirt System.Int32 ListViewBase::get_Count()
+   0013 bge IL_0025: ldnull
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   001E ldarg.1 
+   001F callvirt !0 ListView`1<UnityEngine.UI.Image>::get_Item(System.Int32)
+   0024 ret 
+   0025 ldnull 
+   0026 ret 
+== System.Void AddPlayerToDic(System.UInt32 playerId, System.Int32 listIndex) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0006 ldarg.1 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::ContainsKey(!0)
+   000C brtrue IL_0023: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0017 ldarg.1 
+   0018 ldarg.2 
+   0019 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::Add(!0,!1)
+   001E br IL_0030: ret
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0029 ldarg.1 
+   002A ldarg.2 
+   002B callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::set_Item(!0,!1)
+   0030 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::UnInitEventListener()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   000C callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::Clear()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0017 callvirt System.Void ListViewBase::Clear()
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_hpImageCacheList
+   0022 callvirt System.Void ListViewBase::Clear()
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_reviveTextCacheList
+   002D callvirt System.Void ListViewBase::Clear()
+   0032 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=3
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_teamPlayerList
+   0018 callvirt System.Int32 ListViewBase::get_Count()
+   001D stloc.0 
+   001E ldnull 
+   001F stloc.1 
+   0020 ldc.i4.0 
+   0021 stloc.2 
+   0022 ldc.i4.0 
+   0023 stloc.3 
+   0024 ldc.i4.0 
+   0025 stloc.3 
+   0026 br IL_01b1: ldloc.3
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_teamPlayerList
+   0031 ldloc.3 
+   0032 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0037 ldfld Assets.Scripts.GameLogic.Player::Captain
+   003C stloc.s V_4
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0044 ldloc.3 
+   0045 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   004A stloc.1 
+   004B ldloc.s V_4
+   004D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0052 brfalse IL_0074: br IL_01ad
+   0057 ldloca.s V_4
+   0059 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005E ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0063 brfalse IL_0074: br IL_01ad
+   0068 ldnull 
+   0069 ldloc.1 
+   006A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   006F brfalse IL_0079: ldnull
+   0074 br IL_01ad: ldloc.3
+   0079 ldnull 
+   007A stloc.s V_5
+   007C ldloca.s V_4
+   007E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0083 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0088 ldloca.s V_5
+   008A callvirt System.Boolean Assets.Scripts.GameLogic.SkillLinkerComponent::TryGetUltSkillSlot(Assets.Scripts.GameLogic.SkillSlotLinker&)
+   008F brfalse IL_00b2: ldloc.1
+   0094 ldloc.s V_5
+   0096 callvirt System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   009B brfalse IL_00b2: ldloc.1
+   00A0 ldloc.1 
+   00A1 ldc.i4.6 
+   00A2 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00A7 ldc.i4.1 
+   00A8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00AD br IL_00bf: ldarg.0
+   00B2 ldloc.1 
+   00B3 ldc.i4.6 
+   00B4 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00B9 ldc.i4.0 
+   00BA call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BF ldarg.0 
+   00C0 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_heroInfoChangeBitsList
+   00C5 ldloc.3 
+   00C6 ldelem.i4 
+   00C7 stloc.2 
+   00C8 ldloc.2 
+   00C9 brtrue IL_00d3: ldloc.2
+   00CE br IL_01ad: ldloc.3
+   00D3 ldloc.2 
+   00D4 ldc.i4.1 
+   00D5 and 
+   00D6 brfalse IL_0117: call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   00DB ldarg.0 
+   00DC ldloc.3 
+   00DD call UnityEngine.UI.Image Assets.Scripts.GameSystem.HeroInfoPanel::GetHpImage(System.Int32)
+   00E2 stloc.s V_6
+   00E4 ldloc.s V_6
+   00E6 ldnull 
+   00E7 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00EC brfalse IL_0112: ldloc.2
+   00F1 ldloc.s V_6
+   00F3 ldloca.s V_4
+   00F5 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00FA ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   00FF callvirt VFactor Assets.Scripts.GameLogic.ValueLinkerComponent::GetHpRate()
+   0104 stloc.s V_7
+   0106 ldloca.s V_7
+   0108 call System.Single VFactor::get_single()
+   010D callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0112 ldloc.2 
+   0113 ldc.i4.s -2
+   0115 and 
+   0116 stloc.2 
+   0117 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   011C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0121 brfalse IL_015d: ldarg.0
+   0126 ldloca.s V_4
+   0128 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   012D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0132 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::isDying
+   0137 brfalse IL_014f: ldloc.1
+   013C ldloc.1 
+   013D ldc.i4.s 9
+   013F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0144 ldc.i4.1 
+   0145 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   014A br IL_015d: ldarg.0
+   014F ldloc.1 
+   0150 ldc.i4.s 9
+   0152 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0157 ldc.i4.0 
+   0158 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   015D ldarg.0 
+   015E ldloc.3 
+   015F call UnityEngine.UI.Text Assets.Scripts.GameSystem.HeroInfoPanel::GetReviveText(System.Int32)
+   0164 stloc.s V_8
+   0166 ldloc.s V_8
+   0168 ldnull 
+   0169 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   016E brfalse IL_01a4: ldarg.0
+   0173 ldloc.2 
+   0174 ldc.i4.2 
+   0175 and 
+   0176 brfalse IL_01a4: ldarg.0
+   017B ldloc.s V_8
+   017D ldloca.s V_4
+   017F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0184 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0189 callvirt System.Int32 Assets.Scripts.GameLogic.ObjLinkerWrapper::get_ReviveCooldown()
+   018E conv.r4 
+   018F ldc.r4 0.001
+   0194 mul 
+   0195 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   019A call System.String Assets.Scripts.GameSystem.SimpleNumericString::GetNumeric(System.Int32)
+   019F callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01A4 ldarg.0 
+   01A5 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_heroInfoChangeBitsList
+   01AA ldloc.3 
+   01AB ldloc.2 
+   01AC stelem.i4 
+   01AD ldloc.3 
+   01AE ldc.i4.1 
+   01AF add 
+   01B0 stloc.3 
+   01B1 ldloc.3 
+   01B2 ldloc.0 
+   01B3 blt IL_002b: ldarg.0
+   01B8 ldarg.0 
+   01B9 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   01BE callvirt System.Int32 ListViewBase::get_Count()
+   01C3 stloc.s V_9
+   01C5 ldc.i4.0 
+   01C6 stloc.3 
+   01C7 br IL_0267: ldloc.3
+   01CC ldarg.0 
+   01CD ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   01D2 ldloc.3 
+   01D3 ldc.i4.5 
+   01D4 add 
+   01D5 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   01DA stloc.1 
+   01DB ldloc.1 
+   01DC ldnull 
+   01DD call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01E2 brfalse IL_0263: ldloc.3
+   01E7 ldarg.0 
+   01E8 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   01ED ldloc.3 
+   01EE callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   01F3 brfalse IL_0263: ldloc.3
+   01F8 ldarg.0 
+   01F9 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   01FE ldloc.3 
+   01FF callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0204 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0209 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   020E brfalse IL_0263: ldloc.3
+   0213 ldarg.0 
+   0214 ldloc.3 
+   0215 ldc.i4.5 
+   0216 add 
+   0217 call UnityEngine.UI.Text Assets.Scripts.GameSystem.HeroInfoPanel::GetReviveText(System.Int32)
+   021C stloc.s V_10
+   021E ldloc.s V_10
+   0220 ldnull 
+   0221 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0226 brfalse IL_0263: ldloc.3
+   022B ldloc.s V_10
+   022D ldarg.0 
+   022E ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0233 ldloc.3 
+   0234 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0239 ldflda Assets.Scripts.GameLogic.Player::Captain
+   023E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0243 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0248 callvirt System.Int32 Assets.Scripts.GameLogic.ObjLinkerWrapper::get_ReviveCooldown()
+   024D conv.r4 
+   024E ldc.r4 0.001
+   0253 mul 
+   0254 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   0259 call System.String Assets.Scripts.GameSystem.SimpleNumericString::GetNumeric(System.Int32)
+   025E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0263 ldloc.3 
+   0264 ldc.i4.1 
+   0265 add 
+   0266 stloc.3 
+   0267 ldloc.3 
+   0268 ldloc.s V_9
+   026A blt IL_01cc: ldarg.0
+   026F ret 
+== System.Void InitEventListener() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.8 
+   0006 ldarg.0 
+   0007 ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   000D newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   0012 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0017 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001C ldc.i4.s 10
+   001E ldarg.0 
+   001F ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0025 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   002A callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0034 ldc.i4.1 
+   0035 ldarg.0 
+   0036 ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   003C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0041 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0046 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   004B ldc.i4.s 77
+   004D ldarg.0 
+   004E ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnCaptainSwitch(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0054 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0059 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   005E ret 
+== System.Void UnInitEventListener() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.8 
+   0006 ldarg.0 
+   0007 ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   000D newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   0012 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0017 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001C ldc.i4.s 10
+   001E ldarg.0 
+   001F ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0025 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   002A callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0034 ldc.i4.1 
+   0035 ldarg.0 
+   0036 ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   003C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0041 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0046 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   004B ldc.i4.s 77
+   004D ldarg.0 
+   004E ldftn System.Void Assets.Scripts.GameSystem.HeroInfoPanel::OnCaptainSwitch(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0054 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0059 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   005E ret 
+== System.Void InitHeroItemData(Assets.Scripts.UI.CUIListElementScript elementScript, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, System.Boolean hideEnemy) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0028: ret
+   000C ldarg.1 
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brfalse IL_0028: ret
+   0017 ldarga.s actor
+   0019 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001E ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0023 brtrue IL_0029: ldarga.s actor
+   0028 ret 
+   0029 ldarga.s actor
+   002B call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0030 stloc.0 
+   0031 ldarg.2 
+   0032 brfalse IL_0061: ldarg.0
+   0037 ldarg.0 
+   0038 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003D ldloc.0 
+   003E brtrue IL_0056: ldc.i4.1
+   0043 ldarga.s actor
+   0045 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004A ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   004F callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0054 br.s IL_0057: call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0056 ldc.i4.1 
+   0057 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005C br IL_006d: ldarg.0
+   0061 ldarg.0 
+   0062 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0067 ldc.i4.1 
+   0068 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   006D ldarg.0 
+   006E ldarg.1 
+   006F call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroIconImage(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0074 ldarg.0 
+   0075 ldarg.1 
+   0076 ldarg.2 
+   0077 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroIconImageColor(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   007C ldarg.0 
+   007D ldc.i4.3 
+   007E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0083 stloc.1 
+   0084 ldarg.0 
+   0085 ldc.i4.4 
+   0086 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   008B stloc.2 
+   008C ldloc.1 
+   008D ldnull 
+   008E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0093 brfalse IL_00f5: ldarg.0
+   0098 ldloc.2 
+   0099 ldnull 
+   009A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   009F brfalse IL_00f5: ldarg.0
+   00A4 ldarg.2 
+   00A5 brfalse IL_00bd: ldloc.1
+   00AA ldloc.1 
+   00AB ldloc.0 
+   00AC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B1 ldloc.2 
+   00B2 ldloc.0 
+   00B3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B8 br IL_00cb: ldloc.0
+   00BD ldloc.1 
+   00BE ldc.i4.1 
+   00BF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C4 ldloc.2 
+   00C5 ldc.i4.1 
+   00C6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00CB ldloc.0 
+   00CC brfalse IL_00f5: ldarg.0
+   00D1 ldloc.1 
+   00D2 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00D7 ldarga.s actor
+   00D9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00DE ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   00E3 callvirt VFactor Assets.Scripts.GameLogic.ValueLinkerComponent::GetHpRate()
+   00E8 stloc.3 
+   00E9 ldloca.s V_3
+   00EB call System.Single VFactor::get_single()
+   00F0 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   00F5 ldarg.0 
+   00F6 ldc.i4.5 
+   00F7 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00FC stloc.s V_4
+   00FE ldloc.s V_4
+   0100 ldnull 
+   0101 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0106 brfalse IL_01a2: ret
+   010B ldarga.s actor
+   010D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0112 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0117 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   011C brfalse IL_019a: ldloc.s V_4
+   0121 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0126 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   012B brtrue IL_019a: ldloc.s V_4
+   0130 call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0135 ldarga.s actor
+   0137 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   013C ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0141 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorCamp
+   0146 callvirt CSProtocol.CS_CAMPSTATE_TYPE Assets.Scripts.GameLogic.CKdaDataManager::GetCampState(CSProtocol.COM_PLAYERCAMP)
+   014B stloc.s V_5
+   014D ldloc.s V_5
+   014F ldc.i4.1 
+   0150 beq IL_015d: ldloc.s V_4
+   0155 ldloc.s V_4
+   0157 ldc.i4.1 
+   0158 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   015D ldloc.s V_4
+   015F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0164 ldstr {0}
+   0169 ldarga.s actor
+   016B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0170 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0175 callvirt System.Int32 Assets.Scripts.GameLogic.ObjLinkerWrapper::get_ReviveCooldown()
+   017A conv.r4 
+   017B ldc.r4 0.001
+   0180 mul 
+   0181 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   0186 box System.Int32
+   018B call System.String System.String::Format(System.String,System.Object)
+   0190 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0195 br IL_01a2: ret
+   019A ldloc.s V_4
+   019C ldc.i4.0 
+   019D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01A2 ret 
+== System.Void RefreshHeroIconImage(Assets.Scripts.UI.CUIListElementScript elementScript, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0017: ret
+   000C ldarg.1 
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brtrue IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldc.i4.0 
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldnull 
+   0022 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0027 brfalse IL_0082: ret
+   002C ldloc.0 
+   002D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0032 stloc.2 
+   0033 ldloc.2 
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A brfalse IL_0082: ret
+   003F ldloca.s V_1
+   0041 ldarga.s actor
+   0043 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0048 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   004D call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   0052 brfalse IL_0082: ret
+   0057 ldloc.2 
+   0058 ldstr {0}{1}
+   005D ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_BustCircle_Dir
+   0062 ldloca.s V_1
+   0064 call System.String ResData.ResHeroCfgInfo::get_szImagePath()
+   0069 call System.String System.String::Format(System.String,System.Object,System.Object)
+   006E call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0073 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FightFormScript()
+   0078 ldc.i4.1 
+   0079 ldc.i4.0 
+   007A ldc.i4.0 
+   007B ldc.i4.0 
+   007C ldc.i4.0 
+   007D call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0082 ret 
+== System.Void RefreshHeroIconImageColor(Assets.Scripts.UI.CUIListElementScript elementScript, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, System.Boolean hideEnemy) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0017: ret
+   000C ldarg.1 
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brtrue IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldc.i4.0 
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldnull 
+   0022 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0027 brfalse IL_00b0: ret
+   002C ldloc.0 
+   002D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0032 stloc.1 
+   0033 ldarg.2 
+   0034 brfalse IL_0085: ldloc.1
+   0039 ldarga.s actor
+   003B call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0040 brfalse IL_0075: ldloc.1
+   0045 ldloc.1 
+   0046 ldarga.s actor
+   0048 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0052 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0057 brfalse IL_0066: ldsfld UnityEngine.Color Assets.Scripts.UI.CUIUtility::s_Color_White
+   005C ldsfld Assets.Scripts.UI.CUIUtility::s_Color_GrayShader
+   0061 br IL_006b: callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   0066 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   006B callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   0070 br IL_0080: br IL_00b0
+   0075 ldloc.1 
+   0076 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_GrayShader
+   007B callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   0080 br IL_00b0: ret
+   0085 ldloc.1 
+   0086 ldarga.s actor
+   0088 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0092 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0097 brfalse IL_00a6: ldsfld UnityEngine.Color Assets.Scripts.UI.CUIUtility::s_Color_White
+   009C ldsfld Assets.Scripts.UI.CUIUtility::s_Color_GrayShader
+   00A1 br IL_00ab: callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   00A6 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   00AB callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   00B0 ret 
+== System.Void RefreshHeroReviveCntDown(Assets.Scripts.UI.CUIListElementScript elementScript, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 ldarg.1 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0017: ret
+   000C ldarg.2 
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brtrue IL_0018: ldarg.1
+   0017 ret 
+   0018 ldarg.1 
+   0019 ldc.i4.5 
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldnull 
+   0022 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0027 brfalse IL_006f: ret
+   002C ldarga.s actor
+   002E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0033 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0038 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   003D brfalse IL_006f: ret
+   0042 ldloc.0 
+   0043 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0048 ldarga.s actor
+   004A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004F ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0054 callvirt System.Int32 Assets.Scripts.GameLogic.ObjLinkerWrapper::get_ReviveCooldown()
+   0059 conv.r4 
+   005A ldc.r4 0.001
+   005F mul 
+   0060 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   0065 call System.String Assets.Scripts.GameSystem.SimpleNumericString::GetNumeric(System.Int32)
+   006A callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   006F ret 
+== System.Void SetHeroChangeFlag(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoChangeType changeType, System.Boolean bSetFlag) attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0008 brfalse IL_002b: ret
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0013 ldarga.s actor
+   0015 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001A callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   001F ldloca.s V_0
+   0021 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::TryGetValue(!0,!1&)
+   0026 brtrue IL_002c: ldarg.0
+   002B ret 
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_heroInfoChangeBitsList
+   0032 ldloc.0 
+   0033 ldelem.i4 
+   0034 stloc.1 
+   0035 ldarg.3 
+   0036 brfalse IL_0049: ldloc.1
+   003B ldloc.1 
+   003C ldc.i4.1 
+   003D ldarg.2 
+   003E ldc.i4.s 31
+   0040 and 
+   0041 shl 
+   0042 or 
+   0043 stloc.1 
+   0044 br IL_0053: ldarg.0
+   0049 ldloc.1 
+   004A ldc.i4.1 
+   004B ldarg.2 
+   004C ldc.i4.s 31
+   004E and 
+   004F shl 
+   0050 not 
+   0051 and 
+   0052 stloc.1 
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_heroInfoChangeBitsList
+   0059 ldloc.0 
+   005A ldloc.1 
+   005B stelem.i4 
+   005C ret 
+== System.Void OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam& eventParam) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0134: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0020 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   0025 brtrue IL_0134: ret
+   002A ldarg.1 
+   002B ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0030 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0035 stloc.0 
+   0036 ldc.i4.0 
+   0037 stloc.1 
+   0038 ldnull 
+   0039 stloc.2 
+   003A ldloc.0 
+   003B brtrue IL_00a3: ldarg.0
+   0040 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0045 ldarg.1 
+   0046 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   004B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0050 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   0055 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   005A stloc.3 
+   005B ldloc.3 
+   005C brfalse IL_00a3: ldarg.0
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0067 ldloc.3 
+   0068 callvirt System.Int32 ListView`1<Assets.Scripts.GameLogic.Player>::IndexOf(!0)
+   006D stloc.s V_4
+   006F ldloc.s V_4
+   0071 ldc.i4.m1 
+   0072 bne.un IL_0096: ldloc.s V_4
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   007D ldloc.3 
+   007E callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Add(!0)
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0089 callvirt System.Int32 ListViewBase::get_Count()
+   008E ldc.i4.1 
+   008F sub 
+   0090 stloc.1 
+   0091 br IL_0099: ldarg.0
+   0096 ldloc.s V_4
+   0098 stloc.1 
+   0099 ldarg.0 
+   009A ldloc.1 
+   009B ldc.i4.5 
+   009C add 
+   009D call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   00A2 stloc.2 
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   00A9 ldarg.1 
+   00AA ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   00AF call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B4 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   00B9 ldloca.s V_1
+   00BB callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::TryGetValue(!0,!1&)
+   00C0 brfalse IL_00cd: ldloc.2
+   00C5 ldarg.0 
+   00C6 ldloc.1 
+   00C7 call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   00CC stloc.2 
+   00CD ldloc.2 
+   00CE ldnull 
+   00CF call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D4 brfalse IL_0134: ret
+   00D9 ldloc.0 
+   00DA brtrue IL_00fd: ldloc.2
+   00DF ldloc.2 
+   00E0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E5 ldc.i4.1 
+   00E6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EB ldloc.2 
+   00EC ldarg.1 
+   00ED ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   00F2 ldc.i4.1 
+   00F3 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitHeroItemData(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   00F8 br IL_0134: ret
+   00FD ldloc.2 
+   00FE ldarg.1 
+   00FF ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0104 ldc.i4.1 
+   0105 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroIconImageColor(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   010A call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   010F callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0114 brtrue IL_0134: ret
+   0119 ldloc.2 
+   011A ldc.i4.5 
+   011B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0120 ldc.i4.1 
+   0121 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0126 ldarg.0 
+   0127 ldarg.1 
+   0128 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   012D ldc.i4.1 
+   012E ldc.i4.1 
+   012F call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::SetHeroChangeFlag(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoChangeType,System.Boolean)
+   0134 ret 
+== Assets.Scripts.UI.CUIListElementScript GetHeroListElement(System.Int32 listIndex) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0020: ldnull
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::heroInfoList
+   0017 ldarg.1 
+   0018 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   001D stloc.0 
+   001E ldloc.0 
+   001F ret 
+   0020 ldnull 
+   0021 ret 
+== System.Void OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam& eventParam) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_00ca: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0020 brtrue IL_00ca: ret
+   0025 ldarg.1 
+   0026 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   002B call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0030 stloc.0 
+   0031 ldc.i4.0 
+   0032 stloc.1 
+   0033 ldloc.0 
+   0034 brfalse IL_009c: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   003F ldarg.1 
+   0040 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0045 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004A callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   004F ldloca.s V_1
+   0051 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::TryGetValue(!0,!1&)
+   0056 brfalse IL_0097: br IL_00ca
+   005B ldarg.0 
+   005C ldloc.1 
+   005D call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   0062 stloc.2 
+   0063 ldloc.2 
+   0064 ldnull 
+   0065 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006A brfalse IL_0089: ldarg.0
+   006F ldloc.2 
+   0070 ldarg.1 
+   0071 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0076 ldc.i4.1 
+   0077 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroIconImageColor(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   007C ldloc.2 
+   007D ldc.i4.5 
+   007E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0083 ldc.i4.0 
+   0084 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0089 ldarg.0 
+   008A ldarg.1 
+   008B ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0090 ldc.i4.1 
+   0091 ldc.i4.0 
+   0092 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::SetHeroChangeFlag(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoChangeType,System.Boolean)
+   0097 br IL_00ca: ret
+   009C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00A1 ldarg.1 
+   00A2 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   00A7 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00AC callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   00B1 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   00B6 stloc.3 
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   00BD ldloc.3 
+   00BE callvirt System.Boolean ListView`1<Assets.Scripts.GameLogic.Player>::Remove(!0)
+   00C3 pop 
+   00C4 ldarg.0 
+   00C5 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshEnemyHeroListUI()
+   00CA ret 
+== System.Void RefreshEnemyHeroListUI() attrs=Private, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D stloc.1 
+   000E ldc.i4.0 
+   000F stloc.2 
+   0010 br IL_0074: ldloc.2
+   0015 ldarg.0 
+   0016 ldloc.2 
+   0017 ldc.i4.5 
+   0018 add 
+   0019 call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_0070: ldloc.2
+   002B ldloc.0 
+   002C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0031 ldloc.2 
+   0032 ldloc.1 
+   0033 clt 
+   0035 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003A ldloc.2 
+   003B ldloc.1 
+   003C bge IL_0070: ldloc.2
+   0041 ldloc.0 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0048 ldloc.2 
+   0049 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   004E ldfld Assets.Scripts.GameLogic.Player::Captain
+   0053 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroIconImage(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0058 ldarg.0 
+   0059 ldloc.0 
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   0060 ldloc.2 
+   0061 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0066 ldfld Assets.Scripts.GameLogic.Player::Captain
+   006B call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::RefreshHeroReviveCntDown(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0070 ldloc.2 
+   0071 ldc.i4.1 
+   0072 add 
+   0073 stloc.2 
+   0074 ldloc.2 
+   0075 ldc.i4.5 
+   0076 blt IL_0015: ldarg.0
+   007B ret 
+== System.Void OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam& param) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0065: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0020 brtrue IL_0065: ret
+   0025 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   002A stloc.0 
+   002B ldloc.0 
+   002C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0031 brfalse IL_0065: ret
+   0036 ldarg.1 
+   0037 ldflda Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   003C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0041 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   0046 ldloca.s V_0
+   0048 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004D callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   0052 bne.un IL_0065: ret
+   0057 ldarg.0 
+   0058 ldarg.1 
+   0059 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   005E ldc.i4.0 
+   005F ldc.i4.1 
+   0060 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::SetHeroChangeFlag(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoChangeType,System.Boolean)
+   0065 ret 
+== System.Void OnCaptainSwitch(Assets.Scripts.GameLogic.ActorCommonEventParam& param) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 ldarg.1 
+   0006 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::par1
+   000B callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0010 stloc.0 
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0016 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   001B stloc.1 
+   001C ldloc.0 
+   001D brfalse IL_00d9: ret
+   0022 ldloc.1 
+   0023 brfalse IL_00d9: ret
+   0028 ldloc.0 
+   0029 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   002E ldloc.1 
+   002F ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0034 bne.un IL_0088: ldarg.0
+   0039 ldc.i4.0 
+   003A stloc.2 
+   003B ldloc.0 
+   003C ldfld Assets.Scripts.GameLogic.Player::Captain
+   0041 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0046 brfalse IL_006d: ret
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_PlayerToIndexDic
+   0051 ldloc.0 
+   0052 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0057 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005C callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   0061 ldloca.s V_2
+   0063 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::TryGetValue(!0,!1&)
+   0068 brtrue IL_006e: ldarg.0
+   006D ret 
+   006E ldarg.0 
+   006F ldloc.2 
+   0070 call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   0075 stloc.3 
+   0076 ldloc.3 
+   0077 ldloc.0 
+   0078 ldfld Assets.Scripts.GameLogic.Player::Captain
+   007D ldc.i4.1 
+   007E call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitHeroItemData(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0083 br IL_00d9: ret
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   008E callvirt System.Int32 ListViewBase::get_Count()
+   0093 stloc.s V_4
+   0095 ldc.i4.0 
+   0096 stloc.s V_5
+   0098 br IL_00d0: ldloc.s V_5
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.HeroInfoPanel::m_enemyPlayerList
+   00A3 ldloc.s V_5
+   00A5 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   00AA ldloc.0 
+   00AB bne.un IL_00ca: ldloc.s V_5
+   00B0 ldarg.0 
+   00B1 ldloc.s V_5
+   00B3 ldc.i4.5 
+   00B4 add 
+   00B5 call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.GameSystem.HeroInfoPanel::GetHeroListElement(System.Int32)
+   00BA stloc.s V_6
+   00BC ldloc.s V_6
+   00BE ldloc.0 
+   00BF ldfld Assets.Scripts.GameLogic.Player::Captain
+   00C4 ldc.i4.1 
+   00C5 call System.Void Assets.Scripts.GameSystem.HeroInfoPanel::InitHeroItemData(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   00CA ldloc.s V_5
+   00CC ldc.i4.1 
+   00CD add 
+   00CE stloc.s V_5
+   00D0 ldloc.s V_5
+   00D2 ldloc.s V_4
+   00D4 blt IL_009d: ldarg.0
+   00D9 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.5 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr MiniMap_MarkedDi01
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldstr MiniMap_MarkedDi02
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.2 
+   0018 ldstr MiniMap_MarkedDi03
+   001D stelem.ref 
+   001E dup 
+   001F ldc.i4.3 
+   0020 ldstr MiniMap_MarkedDi04
+   0025 stelem.ref 
+   0026 dup 
+   0027 ldc.i4.4 
+   0028 ldstr MiniMap_MarkedDi05
+   002D stelem.ref 
+   002E stsfld Assets.Scripts.GameSystem.HeroInfoPanel::TaoShaColorInfoList
+   0033 ret 
+  NESTED Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoItemWidget
+  NESTED Assets.Scripts.GameSystem.HeroInfoPanel/enHeroInfoChangeType

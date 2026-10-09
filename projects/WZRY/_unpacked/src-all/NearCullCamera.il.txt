@@ -1,0 +1,116 @@
+// TYPE NearCullCamera  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Single frustumNear
+  FIELD System.Single frustumFar
+  FIELD System.Single fieldOfView
+  FIELD System.Single aspect
+  FIELD UnityEngine.Plane[] OutPlanes
+  FIELD NearCullCamera inst
+  FIELD ListView`1<NearCullObject> cullObjects
+  FIELD UnityEngine.Matrix4x4 projectionMatrix
+  FIELD UnityEngine.Matrix4x4 revertMatrix
+  FIELD UnityEngine.Transform trans
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.6 
+   0002 newarr UnityEngine.Plane
+   0007 stfld NearCullCamera::OutPlanes
+   000C ldarg.0 
+   000D newobj System.Void ListView`1<NearCullObject>::.ctor()
+   0012 stfld NearCullCamera::cullObjects
+   0017 ldarg.0 
+   0018 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_identity()
+   001D stfld NearCullCamera::projectionMatrix
+   0022 ldarg.0 
+   0023 ldc.r4 1
+   0028 ldc.r4 1
+   002D ldc.r4 -1
+   0032 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0037 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::Scale(UnityEngine.Vector3)
+   003C stfld NearCullCamera::revertMatrix
+   0041 ldarg.0 
+   0042 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0047 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 stsfld NearCullCamera::inst
+   0006 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0007 stfld NearCullCamera::trans
+   000C ldarg.0 
+   000D call System.Void NearCullCamera::CalcateProjection()
+   0012 ret 
+== System.Void CalcateProjection() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld NearCullCamera::fieldOfView
+   0007 ldarg.0 
+   0008 ldfld NearCullCamera::aspect
+   000D ldarg.0 
+   000E ldfld NearCullCamera::frustumNear
+   0013 ldarg.0 
+   0014 ldfld NearCullCamera::frustumFar
+   0019 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::Perspective(System.Single,System.Single,System.Single,System.Single)
+   001E stfld NearCullCamera::projectionMatrix
+   0023 ret 
+== System.Void RegisterObject(NearCullObject cullObject) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NearCullCamera::cullObjects
+   0006 ldarg.1 
+   0007 callvirt System.Void ListView`1<NearCullObject>::Add(!0)
+   000C ret 
+== System.Void UnregisterObject(NearCullObject cullObject) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NearCullCamera::cullObjects
+   0006 ldarg.1 
+   0007 callvirt System.Boolean ListView`1<NearCullObject>::Remove(!0)
+   000C pop 
+   000D ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 call System.Int32 UnityEngine.Time::get_frameCount()
+   0005 ldc.i4.2 
+   0006 rem 
+   0007 brtrue IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldfld NearCullCamera::revertMatrix
+   0013 ldarg.0 
+   0014 ldfld NearCullCamera::trans
+   0019 callvirt UnityEngine.Matrix4x4 UnityEngine.Transform::get_worldToLocalMatrix()
+   001E call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 ldfld NearCullCamera::projectionMatrix
+   002A ldloc.0 
+   002B call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0030 stloc.1 
+   0031 ldloc.1 
+   0032 ldarg.0 
+   0033 ldflda NearCullCamera::OutPlanes
+   0038 call System.Void GeometryUtilityUser::_CalculateFrustumPlanes(UnityEngine.Matrix4x4,UnityEngine.Plane[]&)
+   003D ldarg.0 
+   003E ldfld NearCullCamera::cullObjects
+   0043 callvirt ListView`1/Enumerator<!0> ListView`1<NearCullObject>::GetEnumerator()
+   0048 stloc.2 
+   0049 br IL_0079: ldloca.s V_2
+   004E ldloca.s V_2
+   0050 call !0 ListView`1/Enumerator<NearCullObject>::get_Current()
+   0055 stloc.3 
+   0056 ldarg.0 
+   0057 ldfld NearCullCamera::OutPlanes
+   005C ldloc.3 
+   005D callvirt UnityEngine.Bounds NearCullObject::GetAABB()
+   0062 call System.Boolean UnityEngine.GeometryUtility::TestPlanesAABB(UnityEngine.Plane[],UnityEngine.Bounds)
+   0067 stloc.s V_4
+   0069 ldloc.3 
+   006A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   006F ldloc.s V_4
+   0071 ldc.i4.0 
+   0072 ceq 
+   0074 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0079 ldloca.s V_2
+   007B call System.Boolean ListView`1/Enumerator<NearCullObject>::MoveNext()
+   0080 brtrue IL_004e: ldloca.s V_2
+   0085 ret 

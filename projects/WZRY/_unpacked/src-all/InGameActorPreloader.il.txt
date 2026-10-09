@@ -1,0 +1,549 @@
+// TYPE InGameActorPreloader  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD ListView`1<InGameActorPreloader/ActorResourceKey> _alreadyPreloaded
+  FIELD ListView`1<InGameActorPreloader/PreloadingResource> _preloadingResources
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void ResetActorPreLoadInfo(ListView`1<InGameActorPreloader/ActorResourceKey> preloadedOnLoading) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld InGameActorPreloader::_preloadingResources
+   0005 callvirt System.Void ListViewBase::Clear()
+   000A ldarg.0 
+   000B stsfld InGameActorPreloader::_alreadyPreloaded
+   0010 ret 
+== System.Void StopAllPreloads() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0026: ldloc.0
+   0007 call !0 Singleton`1<CCoroutineManager>::GetInstance()
+   000C ldsfld InGameActorPreloader::_preloadingResources
+   0011 ldloc.0 
+   0012 callvirt !0 ListView`1<InGameActorPreloader/PreloadingResource>::get_Item(System.Int32)
+   0017 ldfld InGameActorPreloader/PreloadingResource::CoroutineHandle
+   001C ldc.i4.1 
+   001D callvirt System.Void CCoroutineManager::StopCoroutine(CCoroutine,System.Boolean)
+   0022 ldloc.0 
+   0023 ldc.i4.1 
+   0024 add 
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldsfld InGameActorPreloader::_preloadingResources
+   002C callvirt System.Int32 ListViewBase::get_Count()
+   0031 blt IL_0007: call !0 Singleton`1<CCoroutineManager>::GetInstance()
+   0036 ldsfld InGameActorPreloader::_preloadingResources
+   003B callvirt System.Void ListViewBase::Clear()
+   0040 ldsfld InGameActorPreloader::_alreadyPreloaded
+   0045 brfalse IL_0054: ret
+   004A ldsfld InGameActorPreloader::_alreadyPreloaded
+   004F callvirt System.Void ListViewBase::Clear()
+   0054 ret 
+== System.Void PreLoadActorResources(System.UInt32 playerId, System.Int32 configId, System.Byte skinID, System.Int32 playerCamp) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/PreloadingResource::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldc.i4.0 
+   0008 stfld InGameActorPreloader/PreloadingResource::OnlyLoadBank
+   000D ldloc.0 
+   000E ldc.i4.0 
+   000F stfld InGameActorPreloader/PreloadingResource::LoadSoundIndex
+   0014 ldloc.0 
+   0015 ldc.i4.0 
+   0016 stfld InGameActorPreloader/PreloadingResource::LoadCompleted
+   001B ldc.i4.0 
+   001C stloc.1 
+   001D br IL_005d: ldloc.1
+   0022 ldsfld InGameActorPreloader::_alreadyPreloaded
+   0027 ldloc.1 
+   0028 callvirt !0 ListView`1<InGameActorPreloader/ActorResourceKey>::get_Item(System.Int32)
+   002D ldfld InGameActorPreloader/ActorResourceKey::ConfigId
+   0032 ldarg.1 
+   0033 bne.un IL_0059: ldloc.1
+   0038 ldsfld InGameActorPreloader::_alreadyPreloaded
+   003D ldloc.1 
+   003E callvirt !0 ListView`1<InGameActorPreloader/ActorResourceKey>::get_Item(System.Int32)
+   0043 ldfld InGameActorPreloader/ActorResourceKey::SkinId
+   0048 brtrue IL_0059: ldloc.1
+   004D ldloc.0 
+   004E ldc.i4.1 
+   004F stfld InGameActorPreloader/PreloadingResource::OnlyLoadBank
+   0054 br IL_006d: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0059 ldloc.1 
+   005A ldc.i4.1 
+   005B add 
+   005C stloc.1 
+   005D ldloc.1 
+   005E ldsfld InGameActorPreloader::_alreadyPreloaded
+   0063 callvirt System.Int32 ListViewBase::get_Count()
+   0068 blt IL_0022: ldsfld ListView`1<InGameActorPreloader/ActorResourceKey> InGameActorPreloader::_alreadyPreloaded
+   006D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0072 ldarg.0 
+   0073 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0078 stloc.2 
+   0079 ldloc.2 
+   007A brfalse IL_00c5: ldloca.s V_4
+   007F ldloc.2 
+   0080 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0085 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008A brfalse IL_00c5: ldloca.s V_4
+   008F ldnull 
+   0090 ldloc.2 
+   0091 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0096 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   009B ldfld Assets.Scripts.GameLogic.ActorLinker::charInfo
+   00A0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A5 brfalse IL_00c5: ldloca.s V_4
+   00AA ldloc.0 
+   00AB ldloc.2 
+   00AC ldflda Assets.Scripts.GameLogic.Player::Captain
+   00B1 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B6 ldfld Assets.Scripts.GameLogic.ActorLinker::charInfo
+   00BB ldfld Assets.Scripts.GameLogic.CActorInfo::SoundBanks
+   00C0 stfld InGameActorPreloader/PreloadingResource::OldSoundBanks
+   00C5 ldloca.s V_4
+   00C7 initobj Assets.Scripts.GameLogic.DataCenter.ActorMeta
+   00CD ldloca.s V_4
+   00CF ldarg.1 
+   00D0 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00D5 ldloca.s V_4
+   00D7 ldarg.0 
+   00D8 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::PlayerId
+   00DD ldloca.s V_4
+   00DF ldarg.3 
+   00E0 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorCamp
+   00E5 ldloca.s V_4
+   00E7 ldarg.2 
+   00E8 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::SkinID
+   00ED ldloca.s V_4
+   00EF ldc.i4.0 
+   00F0 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   00F5 ldloc.s V_4
+   00F7 stloc.3 
+   00F8 ldsfld InGameActorPreloader::_preloadingResources
+   00FD ldloc.0 
+   00FE callvirt System.Void ListView`1<InGameActorPreloader/PreloadingResource>::Add(!0)
+   0103 ldloc.0 
+   0104 ldarg.0 
+   0105 stfld InGameActorPreloader/PreloadingResource::PlayerId
+   010A ldloc.0 
+   010B ldarg.1 
+   010C stfld InGameActorPreloader/PreloadingResource::ConfigId
+   0111 ldloc.0 
+   0112 ldarg.3 
+   0113 stfld InGameActorPreloader/PreloadingResource::ActorCamp
+   0118 ldloc.0 
+   0119 newobj System.Void LoaderHelper::.ctor()
+   011E stfld InGameActorPreloader/PreloadingResource::Helper
+   0123 ldloc.0 
+   0124 ldc.i4.1 
+   0125 newobj System.Void ListView`1<ActorPreloadTab>::.ctor(System.Int32)
+   012A stfld InGameActorPreloader/PreloadingResource::LoadList
+   012F ldloc.0 
+   0130 ldc.i4.s 20
+   0132 newobj System.Void ListView`1<ActorPreloadTab>::.ctor(System.Int32)
+   0137 stfld InGameActorPreloader/PreloadingResource::AgeRefAssetsList
+   013C ldloca.s V_3
+   013E ldloc.0 
+   013F call System.Void InGameActorPreloader::LoadHeroNecessaryRes(Assets.Scripts.GameLogic.DataCenter.ActorMeta&,InGameActorPreloader/PreloadingResource)
+   0144 ret 
+== System.Void StopPreLoadActorResources(System.UInt32 playerId, System.Int32 configId, System.Int32 playerCamp) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_013b: ldloc.0
+   0007 ldsfld InGameActorPreloader::_preloadingResources
+   000C ldloc.0 
+   000D callvirt !0 ListView`1<InGameActorPreloader/PreloadingResource>::get_Item(System.Int32)
+   0012 ldfld InGameActorPreloader/PreloadingResource::PlayerId
+   0017 ldarg.0 
+   0018 bne.un IL_0137: ldloc.0
+   001D ldsfld InGameActorPreloader::_preloadingResources
+   0022 ldloc.0 
+   0023 callvirt !0 ListView`1<InGameActorPreloader/PreloadingResource>::get_Item(System.Int32)
+   0028 ldfld InGameActorPreloader/PreloadingResource::ConfigId
+   002D ldarg.1 
+   002E bne.un IL_0137: ldloc.0
+   0033 ldsfld InGameActorPreloader::_preloadingResources
+   0038 ldloc.0 
+   0039 callvirt !0 ListView`1<InGameActorPreloader/PreloadingResource>::get_Item(System.Int32)
+   003E stloc.1 
+   003F ldloc.1 
+   0040 ldfld InGameActorPreloader/PreloadingResource::OldSoundBanks
+   0045 brfalse IL_0077: ldloc.1
+   004A ldc.i4.0 
+   004B stloc.2 
+   004C br IL_0069: ldloc.2
+   0051 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0056 ldloc.1 
+   0057 ldfld InGameActorPreloader/PreloadingResource::OldSoundBanks
+   005C ldloc.2 
+   005D ldelem.ref 
+   005E ldc.i4.0 
+   005F ldc.i4.0 
+   0060 callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBank(System.String,System.Boolean,System.Boolean)
+   0065 ldloc.2 
+   0066 ldc.i4.1 
+   0067 add 
+   0068 stloc.2 
+   0069 ldloc.2 
+   006A ldloc.1 
+   006B ldfld InGameActorPreloader/PreloadingResource::OldSoundBanks
+   0070 ldlen 
+   0071 conv.i4 
+   0072 blt IL_0051: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0077 ldloc.1 
+   0078 ldfld InGameActorPreloader/PreloadingResource::LoadCompleted
+   007D brtrue IL_0127: ldsfld ListView`1<InGameActorPreloader/PreloadingResource> InGameActorPreloader::_preloadingResources
+   0082 call !0 Singleton`1<CCoroutineManager>::GetInstance()
+   0087 ldloc.1 
+   0088 ldfld InGameActorPreloader/PreloadingResource::CoroutineHandle
+   008D ldc.i4.1 
+   008E callvirt System.Void CCoroutineManager::StopCoroutine(CCoroutine,System.Boolean)
+   0093 ldloc.1 
+   0094 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   0099 brfalse IL_0127: ldsfld ListView`1<InGameActorPreloader/PreloadingResource> InGameActorPreloader::_preloadingResources
+   009E ldc.i4.0 
+   009F stloc.3 
+   00A0 br IL_0116: ldloc.3
+   00A5 ldloc.1 
+   00A6 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   00AB ldloc.3 
+   00AC callvirt !0 ListView`1<ActorPreloadTab>::get_Item(System.Int32)
+   00B1 stloc.s V_4
+   00B3 ldloc.s V_4
+   00B5 brfalse IL_0112: ldloc.3
+   00BA ldloc.s V_4
+   00BC ldfld ActorPreloadTab::soundBanks
+   00C1 brfalse IL_0112: ldloc.3
+   00C6 ldloc.1 
+   00C7 ldfld InGameActorPreloader/PreloadingResource::LoadSoundIndex
+   00CC stloc.s V_5
+   00CE br IL_00ff: ldloc.s V_5
+   00D3 ldloc.s V_5
+   00D5 ldc.i4.0 
+   00D6 blt IL_00f9: ldloc.s V_5
+   00DB call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   00E0 ldloc.s V_4
+   00E2 ldfld ActorPreloadTab::soundBanks
+   00E7 ldloc.s V_5
+   00E9 callvirt !0 ListView`1<AssetLoadBase>::get_Item(System.Int32)
+   00EE ldfld AssetLoadBase::assetPath
+   00F3 ldc.i4.4 
+   00F4 callvirt System.Void Assets.Scripts.Sound.CSoundManager::LoadBank(System.String,Assets.Scripts.Sound.enBankType)
+   00F9 ldloc.s V_5
+   00FB ldc.i4.1 
+   00FC add 
+   00FD stloc.s V_5
+   00FF ldloc.s V_5
+   0101 ldloc.s V_4
+   0103 ldfld ActorPreloadTab::soundBanks
+   0108 callvirt System.Int32 ListViewBase::get_Count()
+   010D blt IL_00d3: ldloc.s V_5
+   0112 ldloc.3 
+   0113 ldc.i4.1 
+   0114 add 
+   0115 stloc.3 
+   0116 ldloc.3 
+   0117 ldloc.1 
+   0118 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   011D callvirt System.Int32 ListViewBase::get_Count()
+   0122 blt IL_00a5: ldloc.1
+   0127 ldsfld InGameActorPreloader::_preloadingResources
+   012C ldloc.0 
+   012D callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0132 br IL_014b: ret
+   0137 ldloc.0 
+   0138 ldc.i4.1 
+   0139 add 
+   013A stloc.0 
+   013B ldloc.0 
+   013C ldsfld InGameActorPreloader::_preloadingResources
+   0141 callvirt System.Int32 ListViewBase::get_Count()
+   0146 blt IL_0007: ldsfld ListView`1<InGameActorPreloader/PreloadingResource> InGameActorPreloader::_preloadingResources
+   014B ret 
+== System.Collections.IEnumerator AnalyseAndPreloadResources(Assets.Scripts.GameLogic.DataCenter.ActorMeta actor, InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/<AnalyseAndPreloadResources>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld InGameActorPreloader/<AnalyseAndPreloadResources>c__Iterator0::actor
+   000D ldloc.0 
+   000E ldarg.1 
+   000F stfld InGameActorPreloader/<AnalyseAndPreloadResources>c__Iterator0::preloading
+   0014 ldloc.0 
+   0015 ret 
+== System.Collections.IEnumerator AnalyseActorAssets(Assets.Scripts.GameLogic.DataCenter.ActorMeta actor, InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/<AnalyseActorAssets>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld InGameActorPreloader/<AnalyseActorAssets>c__Iterator1::preloading
+   000D ldloc.0 
+   000E ldarg.0 
+   000F stfld InGameActorPreloader/<AnalyseActorAssets>c__Iterator1::actor
+   0014 ldloc.0 
+   0015 ret 
+== System.Collections.IEnumerator AnalyseAgeRecursiveAssets(InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/<AnalyseAgeRecursiveAssets>c__Iterator2::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld InGameActorPreloader/<AnalyseAgeRecursiveAssets>c__Iterator2::preloading
+   000D ldloc.0 
+   000E ret 
+== System.Collections.IEnumerator PreloadActor(InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/<PreloadActor>c__Iterator3::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld InGameActorPreloader/<PreloadActor>c__Iterator3::preloading
+   000D ldloc.0 
+   000E ret 
+== System.Collections.IEnumerator PreloadAgeRecursiveAssets(InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void InGameActorPreloader/<PreloadAgeRecursiveAssets>c__Iterator4::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld InGameActorPreloader/<PreloadAgeRecursiveAssets>c__Iterator4::preloading
+   000D ldloc.0 
+   000E ret 
+== System.Void LoadHeroNecessaryRes(Assets.Scripts.GameLogic.DataCenter.ActorMeta& actor, InGameActorPreloader/PreloadingResource preloading) attrs=Public, Static, HideBySig maxstack=9
+   0000 ldarg.1 
+   0001 ldfld InGameActorPreloader/PreloadingResource::Helper
+   0006 ldarg.1 
+   0007 ldflda InGameActorPreloader/PreloadingResource::LoadList
+   000C ldarg.0 
+   000D ldc.r4 1
+   0012 ldsfld InGameActorPreloader::_alreadyPreloaded
+   0017 ldc.i4.m1 
+   0018 ldc.i4.1 
+   0019 ldc.i4.m1 
+   001A ldc.i4.0 
+   001B callvirt System.Void LoaderHelper::AddPreloadActor(ListView`1<ActorPreloadTab>&,Assets.Scripts.GameLogic.DataCenter.ActorMeta&,System.Single,ListView`1<InGameActorPreloader/ActorResourceKey>,System.Int32,System.Boolean,System.Int32,System.Int32)
+   0020 ldc.i4.0 
+   0021 stloc.0 
+   0022 br IL_0079: ldloc.0
+   0027 ldarg.1 
+   0028 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   002D ldloc.0 
+   002E callvirt !0 ListView`1<ActorPreloadTab>::get_Item(System.Int32)
+   0033 stloc.1 
+   0034 ldc.i4.0 
+   0035 stloc.2 
+   0036 br IL_0064: ldloc.2
+   003B call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0040 ldloc.1 
+   0041 ldfld ActorPreloadTab::soundBanks
+   0046 ldloc.2 
+   0047 callvirt !0 ListView`1<AssetLoadBase>::get_Item(System.Int32)
+   004C ldfld AssetLoadBase::assetPath
+   0051 ldc.i4.4 
+   0052 callvirt System.Void Assets.Scripts.Sound.CSoundManager::LoadBank(System.String,Assets.Scripts.Sound.enBankType)
+   0057 ldarg.1 
+   0058 ldloc.2 
+   0059 ldc.i4.1 
+   005A add 
+   005B stfld InGameActorPreloader/PreloadingResource::LoadSoundIndex
+   0060 ldloc.2 
+   0061 ldc.i4.1 
+   0062 add 
+   0063 stloc.2 
+   0064 ldloc.2 
+   0065 ldloc.1 
+   0066 ldfld ActorPreloadTab::soundBanks
+   006B callvirt System.Int32 ListViewBase::get_Count()
+   0070 blt IL_003b: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0075 ldloc.0 
+   0076 ldc.i4.1 
+   0077 add 
+   0078 stloc.0 
+   0079 ldloc.0 
+   007A ldarg.1 
+   007B ldfld InGameActorPreloader/PreloadingResource::LoadList
+   0080 callvirt System.Int32 ListViewBase::get_Count()
+   0085 blt IL_0027: ldarg.1
+   008A ldarg.1 
+   008B ldfld InGameActorPreloader/PreloadingResource::OnlyLoadBank
+   0090 brtrue IL_02af: ret
+   0095 ldc.i4.0 
+   0096 stloc.3 
+   0097 br IL_012c: ldloc.3
+   009C ldarg.1 
+   009D ldfld InGameActorPreloader/PreloadingResource::LoadList
+   00A2 ldloc.3 
+   00A3 callvirt !0 ListView`1<ActorPreloadTab>::get_Item(System.Int32)
+   00A8 stloc.s V_4
+   00AA ldloc.s V_4
+   00AC ldfld ActorPreloadTab::modelPrefab
+   00B1 ldfld AssetLoadBase::assetPath
+   00B6 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00BB brtrue IL_0128: ldloc.3
+   00C0 call !0 Singleton`1<CResourceManager>::GetInstance()
+   00C5 ldloc.s V_4
+   00C7 ldfld ActorPreloadTab::modelPrefab
+   00CC ldfld AssetLoadBase::assetPath
+   00D1 ldtoken UnityEngine.GameObject
+   00D6 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00DB ldc.i4.0 
+   00DC ldc.i4.1 
+   00DD ldc.i4.0 
+   00DE ldc.i4.0 
+   00DF callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   00E4 stloc.s V_5
+   00E6 ldnull 
+   00E7 ldloc.s V_5
+   00E9 ldfld CResource::m_content
+   00EE isinst UnityEngine.GameObject
+   00F3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F8 brfalse IL_0128: ldloc.3
+   00FD ldloc.s V_5
+   00FF ldfld CResource::m_missCache
+   0104 brfalse IL_010e: call !0 Singleton`1<CGameObjectPool>::get_instance()
+   0109 br IL_0128: ldloc.3
+   010E call !0 Singleton`1<CGameObjectPool>::get_instance()
+   0113 ldloc.s V_4
+   0115 ldfld ActorPreloadTab::modelPrefab
+   011A ldfld AssetLoadBase::assetPath
+   011F ldc.i4.0 
+   0120 ldc.i4.1 
+   0121 ldc.i4.1 
+   0122 ldc.i4.1 
+   0123 callvirt System.Void CGameObjectPool::PrepareGameObject(System.String,enResourceType,System.Int32,System.Boolean,System.Boolean)
+   0128 ldloc.3 
+   0129 ldc.i4.1 
+   012A add 
+   012B stloc.3 
+   012C ldloc.3 
+   012D ldarg.1 
+   012E ldfld InGameActorPreloader/PreloadingResource::LoadList
+   0133 callvirt System.Int32 ListViewBase::get_Count()
+   0138 blt IL_009c: ldarg.1
+   013D ldc.i4.0 
+   013E stloc.s V_6
+   0140 br IL_029d: ldloc.s V_6
+   0145 ldarg.1 
+   0146 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   014B ldloc.s V_6
+   014D callvirt !0 ListView`1<ActorPreloadTab>::get_Item(System.Int32)
+   0152 stloc.s V_7
+   0154 ldc.i4.0 
+   0155 stloc.s V_8
+   0157 br IL_0289: ldloc.s V_8
+   015C ldc.i4.1 
+   015D stloc.s V_9
+   015F call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0164 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0169 callvirt System.Int32 SceneMgr::GetParticleLod(System.Int32)
+   016E stloc.s V_10
+   0170 ldloc.s V_7
+   0172 ldloc.s V_8
+   0174 callvirt AssetLoadBase ActorPreloadTab::GetParticlePreload(System.Int32)
+   0179 stloc.s V_11
+   017B call !0 Singleton`1<CResourceManager>::GetInstance()
+   0180 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0185 ldloc.s V_11
+   0187 ldflda AssetLoadBase::assetPath
+   018C ldloc.s V_10
+   018E callvirt System.String SceneMgr::GetLodPostfixedPath(System.String&,System.Int32)
+   0193 ldtoken UnityEngine.GameObject
+   0198 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   019D ldc.i4.0 
+   019E ldc.i4.1 
+   019F ldc.i4.0 
+   01A0 ldc.i4.0 
+   01A1 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   01A6 stloc.s V_12
+   01A8 ldnull 
+   01A9 ldloc.s V_12
+   01AB ldfld CResource::m_content
+   01B0 isinst UnityEngine.GameObject
+   01B5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01BA brfalse IL_01f1: call System.Boolean Assets.Scripts.Framework.GameSettings::get_DynamicParticleLOD()
+   01BF ldloc.s V_12
+   01C1 ldfld CResource::m_missCache
+   01C6 brfalse IL_01d0: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   01CB br IL_0283: ldloc.s V_8
+   01D0 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   01D5 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   01DA ldloc.s V_11
+   01DC ldflda AssetLoadBase::assetPath
+   01E1 ldloc.s V_10
+   01E3 callvirt System.String SceneMgr::GetLodPostfixedPath(System.String&,System.Int32)
+   01E8 ldc.i4.0 
+   01E9 ldc.i4.1 
+   01EA ldc.i4.1 
+   01EB ldc.i4.1 
+   01EC callvirt System.Void CGameObjectPool::PrepareGameObject(System.String,enResourceType,System.Int32,System.Boolean,System.Boolean)
+   01F1 call System.Boolean Assets.Scripts.Framework.GameSettings::get_DynamicParticleLOD()
+   01F6 brfalse IL_0283: ldloc.s V_8
+   01FB ldloc.s V_9
+   01FD brfalse IL_0283: ldloc.s V_8
+   0202 ldloc.s V_10
+   0204 ldc.i4.3 
+   0205 beq IL_0283: ldloc.s V_8
+   020A ldc.i4.3 
+   020B stloc.s V_10
+   020D call !0 Singleton`1<CResourceManager>::GetInstance()
+   0212 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0217 ldloc.s V_11
+   0219 ldflda AssetLoadBase::assetPath
+   021E ldloc.s V_10
+   0220 callvirt System.String SceneMgr::GetLodPostfixedPath(System.String&,System.Int32)
+   0225 ldtoken UnityEngine.GameObject
+   022A call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   022F ldc.i4.0 
+   0230 ldc.i4.1 
+   0231 ldc.i4.0 
+   0232 ldc.i4.0 
+   0233 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0238 stloc.s V_12
+   023A ldnull 
+   023B ldloc.s V_12
+   023D ldfld CResource::m_content
+   0242 isinst UnityEngine.GameObject
+   0247 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   024C brfalse IL_0283: ldloc.s V_8
+   0251 ldloc.s V_12
+   0253 ldfld CResource::m_missCache
+   0258 brfalse IL_0262: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   025D br IL_0283: ldloc.s V_8
+   0262 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0267 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   026C ldloc.s V_11
+   026E ldflda AssetLoadBase::assetPath
+   0273 ldloc.s V_10
+   0275 callvirt System.String SceneMgr::GetLodPostfixedPath(System.String&,System.Int32)
+   027A ldc.i4.0 
+   027B ldc.i4.1 
+   027C ldc.i4.1 
+   027D ldc.i4.1 
+   027E callvirt System.Void CGameObjectPool::PrepareGameObject(System.String,enResourceType,System.Int32,System.Boolean,System.Boolean)
+   0283 ldloc.s V_8
+   0285 ldc.i4.1 
+   0286 add 
+   0287 stloc.s V_8
+   0289 ldloc.s V_8
+   028B ldloc.s V_7
+   028D callvirt System.Int32 ActorPreloadTab::GetParticlePreloadCount()
+   0292 blt IL_015c: ldc.i4.1
+   0297 ldloc.s V_6
+   0299 ldc.i4.1 
+   029A add 
+   029B stloc.s V_6
+   029D ldloc.s V_6
+   029F ldarg.1 
+   02A0 ldfld InGameActorPreloader/PreloadingResource::LoadList
+   02A5 callvirt System.Int32 ListViewBase::get_Count()
+   02AA blt IL_0145: ldarg.1
+   02AF ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void ListView`1<InGameActorPreloader/ActorResourceKey>::.ctor()
+   0005 stsfld InGameActorPreloader::_alreadyPreloaded
+   000A newobj System.Void ListView`1<InGameActorPreloader/PreloadingResource>::.ctor()
+   000F stsfld InGameActorPreloader::_preloadingResources
+   0014 ret 
+  NESTED InGameActorPreloader/ActorResourceKey
+  NESTED InGameActorPreloader/PreloadingResource
+  NESTED InGameActorPreloader/<AnalyseAndPreloadResources>c__Iterator0
+  NESTED InGameActorPreloader/<AnalyseActorAssets>c__Iterator1
+  NESTED InGameActorPreloader/<AnalyseAgeRecursiveAssets>c__Iterator2
+  NESTED InGameActorPreloader/<PreloadActor>c__Iterator3
+  NESTED InGameActorPreloader/<PreloadAgeRecursiveAssets>c__Iterator4

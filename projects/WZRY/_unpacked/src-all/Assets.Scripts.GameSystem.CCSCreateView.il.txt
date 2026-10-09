@@ -1,0 +1,2233 @@
+// TYPE Assets.Scripts.GameSystem.CCSCreateView  base=Assets.Scripts.GameSystem.CCSViewBase  attrs=Public, BeforeFieldInit
+  FIELD System.Int32[] EXCLUDE_TIME_NODE
+  FIELD System.Int32 MAX_COMPETITION_NAME_LEN = 18
+  FIELD System.Int32 SHOW_TOTAL_DAYS = 7
+  FIELD System.Int32 SHOW_TOTAL_HALF_HOUR = 48
+  FIELD System.Int32 TOTAL_HOUR_SEC = 3600
+  FIELD System.Int32 TOTAL_HALF_HOUR_SEC = 1800
+  FIELD System.Int32 TOTAL_MINUTE_SEC = 60
+  FIELD Assets.Scripts.GameSystem.CCSCreateView/enComCreateState comCreateState
+  FIELD DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>> resMap
+  FIELD System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo> levelInfoList
+  FIELD System.Boolean bResMapInit
+  FIELD System.Int32 PEER_MAX = 5
+  FIELD System.Int32[] stepTimes
+  FIELD System.Int32[] stepTimesView
+  FIELD System.Int32 stepInitTime
+  FIELD System.Int32 weekFirstDaySec
+  FIELD System.Boolean bNeedResetTimeStep
+  FIELD System.Int32 curStep
+  PROP ResData.RES_COMPETITION_GAME_TYPE CurGameType
+  PROP System.Collections.Generic.List`1<ResData.ResCompetitionMain> CurResList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0007 ldarg.0 
+   0008 newobj System.Void DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::.ctor()
+   000D stfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0012 ldarg.0 
+   0013 newobj System.Void System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::.ctor()
+   0018 stfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   001D ldarg.0 
+   001E ldc.i4.5 
+   001F newarr System.Int32
+   0024 stfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0029 ldarg.0 
+   002A ldc.i4.5 
+   002B newarr System.Int32
+   0030 stfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   0035 ldarg.0 
+   0036 ldc.i4.1 
+   0037 stfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   003C ldarg.0 
+   003D call System.Void Assets.Scripts.GameSystem.CCSViewBase::.ctor()
+   0042 ret 
+== System.Void Update() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0023 ldc.i4.1 
+   0024 bne.un IL_0034: ldarg.0
+   0029 ldarg.0 
+   002A call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep1()
+   002F br IL_0074: ret
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   003A ldc.i4.2 
+   003B bne.un IL_004b: ldarg.0
+   0040 ldarg.0 
+   0041 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep2()
+   0046 br IL_0074: ret
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0051 ldc.i4.3 
+   0052 bne.un IL_0062: ldarg.0
+   0057 ldarg.0 
+   0058 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep3()
+   005D br IL_0074: ret
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0068 ldc.i4.4 
+   0069 bne.un IL_0074: ret
+   006E ldarg.0 
+   006F call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep4()
+   0074 ret 
+== System.Int32 GetTitleFontSize(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState inParam) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0007 bne.un IL_0013: ldc.i4.s 22
+   000C ldc.i4.s 28
+   000E br IL_0015: ret
+   0013 ldc.i4.s 22
+   0015 ret 
+== System.String GetTitleFontColor(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState inParam) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0007 bne.un IL_0016: ldstr "#9b9b9b"
+   000C ldstr #ffffff
+   0011 br IL_001b: ret
+   0016 ldstr #9b9b9b
+   001B ret 
+== System.Void SetDefaultStep(System.Int32 curSec) attrs=Public, HideBySig maxstack=5
+   0000 ldloca.s V_0
+   0002 ldc.i4.6 
+   0003 call System.Boolean ResData.GameDataMgr/competitionMisc::FindByKey(ResData.ResCompetitionMisc&,System.UInt32)
+   0008 pop 
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   000F ldc.i4.0 
+   0010 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0015 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   001A ldarg.1 
+   001B callvirt System.Int32 Assets.Scripts.GameSystem.CCSUtility::CeilToHalfHour(System.Int32)
+   0020 ldloca.s V_0
+   0022 ldfld ResData.ResCompetitionMisc::dwConfValue
+   0027 ldc.i4.s 60
+   0029 mul 
+   002A add 
+   002B stelem.i4 
+   002C ldloca.s V_0
+   002E ldc.i4.7 
+   002F call System.Boolean ResData.GameDataMgr/competitionMisc::FindByKey(ResData.ResCompetitionMisc&,System.UInt32)
+   0034 pop 
+   0035 ldloca.s V_0
+   0037 ldfld ResData.ResCompetitionMisc::dwConfValue
+   003C ldc.i4.s 60
+   003E mul 
+   003F stloc.1 
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0046 ldc.i4.1 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   004D ldc.i4.0 
+   004E ldelem.i4 
+   004F ldloc.1 
+   0050 add 
+   0051 stelem.i4 
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0058 ldc.i4.2 
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   005F ldc.i4.1 
+   0060 ldelem.i4 
+   0061 ldloc.1 
+   0062 add 
+   0063 stelem.i4 
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   006A ldc.i4.3 
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0071 ldc.i4.2 
+   0072 ldelem.i4 
+   0073 ldloc.1 
+   0074 add 
+   0075 stelem.i4 
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   007C ldc.i4.4 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0083 ldc.i4.3 
+   0084 ldelem.i4 
+   0085 ldloc.1 
+   0086 add 
+   0087 stelem.i4 
+   0088 ldarg.0 
+   0089 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   008E ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0093 ldarg.1 
+   0094 callvirt System.Int32 Assets.Scripts.GameSystem.CCSUtility::CeilToHalfHour(System.Int32)
+   0099 stfld Assets.Scripts.GameSystem.CCSCreateView::stepInitTime
+   009E ldarg.0 
+   009F ldarg.1 
+   00A0 ldarg.1 
+   00A1 ldc.i4 86400
+   00A6 rem 
+   00A7 sub 
+   00A8 stfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   00B3 ldc.i4.2 
+   00B4 newarr System.Int32
+   00B9 dup 
+   00BA ldc.i4.0 
+   00BB ldc.i4.8 
+   00BC stelem.i4 
+   00BD dup 
+   00BE ldc.i4.1 
+   00BF ldc.i4.s 9
+   00C1 stelem.i4 
+   00C2 ldc.i4.0 
+   00C3 call System.Void Assets.Scripts.GameSystem.CCSCreateSys::ExcludeStepTime(System.Int32[],System.Int32[],System.Int32)
+   00C8 ret 
+== System.Int32 GetRecycleTime(System.Boolean bUseViewTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_001f: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   000C ldc.i4.0 
+   000D ldelem.i4 
+   000E call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0013 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0018 callvirt System.Int32 Assets.Scripts.GameSystem.CCSUtility::get_FLEXMODE_RECYCLE_TIME_DELTA()
+   001D add 
+   001E ret 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0025 ldc.i4.0 
+   0026 ldelem.i4 
+   0027 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   002C ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0031 callvirt System.Int32 Assets.Scripts.GameSystem.CCSUtility::get_FLEXMODE_RECYCLE_TIME_DELTA()
+   0036 add 
+   0037 ret 
+== System.Void OpenComCreateForm() attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A ldc.i4.0 
+   000B ldc.i4.1 
+   000C ldnull 
+   000D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0012 pop 
+   0013 ldarg.0 
+   0014 ldc.i4.1 
+   0015 stfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   001A ldarg.0 
+   001B ldc.i4.1 
+   001C stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0021 ldarg.0 
+   0022 call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitResCompetionMap()
+   0027 ldarg.0 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   002E call System.Void Assets.Scripts.GameSystem.CCSCreateView::SetActivePanel(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState)
+   0033 ldarg.0 
+   0034 call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitComCreateForm()
+   0039 ldarg.0 
+   003A call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep1()
+   003F ret 
+== System.Void InitResCompetionMap() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CCSCreateView::bResMapInit
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0012 callvirt System.Void DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::Clear()
+   0017 call System.Int32 ResData.GameDataMgr/competitionMain::Count()
+   001C stloc.0 
+   001D ldc.i4.0 
+   001E stloc.1 
+   001F br IL_006b: ldloc.1
+   0024 ldloc.1 
+   0025 call ResData.ResCompetitionMain ResData.GameDataMgr/competitionMain::GetByIndex(System.Int32)
+   002A stloc.2 
+   002B ldloca.s V_2
+   002D ldfld ResData.ResCompetitionMain::bGameType
+   0032 stloc.3 
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0039 ldloc.3 
+   003A callvirt System.Boolean DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::ContainsKey(!0)
+   003F brtrue IL_0055: ldarg.0
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   004A ldloc.3 
+   004B newobj System.Void System.Collections.Generic.List`1<ResData.ResCompetitionMain>::.ctor()
+   0050 callvirt System.Void DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::Add(!0,!1)
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   005B ldloc.3 
+   005C callvirt !1 DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::get_Item(!0)
+   0061 ldloc.2 
+   0062 callvirt System.Void System.Collections.Generic.List`1<ResData.ResCompetitionMain>::Add(!0)
+   0067 ldloc.1 
+   0068 ldc.i4.1 
+   0069 add 
+   006A stloc.1 
+   006B ldloc.1 
+   006C ldloc.0 
+   006D blt IL_0024: ldloc.1
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   0078 callvirt System.Void System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::Clear()
+   007D call System.Int32 ResData.GameDataMgr/competitionMatchLevelDatabin::Count()
+   0082 stloc.0 
+   0083 ldc.i4.0 
+   0084 stloc.s V_4
+   0086 br IL_00b4: ldloc.s V_4
+   008B ldloc.s V_4
+   008D call ResData.ResCompetitionLevelInfo ResData.GameDataMgr/competitionMatchLevelDatabin::GetByIndex(System.Int32)
+   0092 stloc.s V_5
+   0094 ldloca.s V_5
+   0096 ldfld ResData.ResCompetitionLevelInfo::bIsCustomCompetitionUse
+   009B ldc.i4.0 
+   009C ble IL_00ae: ldloc.s V_4
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   00A7 ldloc.s V_5
+   00A9 callvirt System.Void System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::Add(!0)
+   00AE ldloc.s V_4
+   00B0 ldc.i4.1 
+   00B1 add 
+   00B2 stloc.s V_4
+   00B4 ldloc.s V_4
+   00B6 ldloc.0 
+   00B7 blt IL_008b: ldloc.s V_4
+   00BC ldarg.0 
+   00BD ldc.i4.1 
+   00BE stfld Assets.Scripts.GameSystem.CCSCreateView::bResMapInit
+   00C3 ret 
+== ResData.RES_COMPETITION_GAME_TYPE get_CurGameType() attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.1 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 ldstr CustomComTypeList
+   001C call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0021 stloc.1 
+   0022 ldloc.1 
+   0023 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0028 stloc.2 
+   0029 ldarg.0 
+   002A ldloc.2 
+   002B call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::GetGameType(System.Int32)
+   0030 ret 
+== ResData.RES_COMPETITION_GAME_TYPE GetGameType(System.Int32 index) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0006 callvirt System.Collections.Generic.Dictionary`2/KeyCollection<!0,System.Object> DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::get_Keys()
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt System.Int32 System.Collections.Generic.Dictionary`2/KeyCollection<ResData.RES_COMPETITION_GAME_TYPE,System.Object>::get_Count()
+   0012 newarr ResData.RES_COMPETITION_GAME_TYPE
+   0017 stloc.1 
+   0018 ldloc.0 
+   0019 ldloc.1 
+   001A ldc.i4.0 
+   001B callvirt System.Void System.Collections.Generic.Dictionary`2/KeyCollection<ResData.RES_COMPETITION_GAME_TYPE,System.Object>::CopyTo(!0[],System.Int32)
+   0020 ldloc.1 
+   0021 ldarg.1 
+   0022 ldelem.i4 
+   0023 ret 
+== System.Collections.Generic.List`1<ResData.ResCompetitionMain> get_CurResList() attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0006 ldarg.0 
+   0007 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   000C callvirt !1 DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::get_Item(!0)
+   0011 ret 
+== System.Void InitComCreateForm() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitComCreateFormStep1()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitComCreateFormStep2()
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitComCreateFormStep3()
+   0012 ldarg.0 
+   0013 call System.Void Assets.Scripts.GameSystem.CCSCreateView::InitComCreateFormStep4()
+   0018 ret 
+== System.Void InitComCreateFormStep1() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.1 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 ldstr CustomComTypeList
+   001C call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0021 stloc.1 
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CCSCreateView::resMap
+   0028 callvirt System.Int32 DictionaryView`2<ResData.RES_COMPETITION_GAME_TYPE,System.Collections.Generic.List`1<ResData.ResCompetitionMain>>::get_Count()
+   002D stloc.2 
+   002E ldloc.1 
+   002F ldloc.2 
+   0030 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0035 ldloc.1 
+   0036 ldc.i4.0 
+   0037 ldc.i4.1 
+   0038 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   003D ldc.i4.0 
+   003E stloc.3 
+   003F br IL_00af: ldloc.3
+   0044 ldloc.1 
+   0045 ldloc.3 
+   0046 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   004B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0050 stloc.s V_4
+   0052 ldloc.s V_4
+   0054 ldstr Normal
+   0059 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   005E ldc.i4.1 
+   005F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0064 ldarg.0 
+   0065 ldloc.3 
+   0066 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::GetGameType(System.Int32)
+   006B stloc.s V_5
+   006D ldloc.s V_4
+   006F ldstr Normal/Taotai
+   0074 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0079 ldloc.s V_5
+   007B ldc.i4.1 
+   007C ceq 
+   007E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0083 ldloc.s V_4
+   0085 ldstr Normal/Linghuo
+   008A call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   008F ldloc.s V_5
+   0091 ldc.i4.2 
+   0092 ceq 
+   0094 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0099 ldloc.s V_4
+   009B ldstr Empty
+   00A0 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00A5 ldc.i4.0 
+   00A6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00AB ldloc.3 
+   00AC ldc.i4.1 
+   00AD add 
+   00AE stloc.3 
+   00AF ldloc.3 
+   00B0 ldloc.2 
+   00B1 blt IL_0044: ldloc.1
+   00B6 ret 
+== System.Void InitComCreateFormStep2() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.2 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr TeamList
+   001E call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldloc.1 
+   0025 ldstr RewardList
+   002A call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   002F stloc.3 
+   0030 ldarg.0 
+   0031 call System.Collections.Generic.List`1<ResData.ResCompetitionMain> Assets.Scripts.GameSystem.CCSCreateView::get_CurResList()
+   0036 stloc.s V_4
+   0038 ldloc.2 
+   0039 ldloc.s V_4
+   003B callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Count()
+   0040 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0045 ldc.i4.0 
+   0046 stloc.s V_5
+   0048 br IL_00a4: ldloc.s V_5
+   004D ldloc.2 
+   004E ldloc.s V_5
+   0050 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0055 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005A ldstr Text
+   005F call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0064 call !0 Singleton`1<CTextManager>::get_instance()
+   0069 ldstr CustomCompetition_Tips_11
+   006E ldc.i4.1 
+   006F newarr System.String
+   0074 dup 
+   0075 ldc.i4.0 
+   0076 ldloc.s V_4
+   0078 ldloc.s V_5
+   007A callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Item(System.Int32)
+   007F stloc.s V_6
+   0081 ldloca.s V_6
+   0083 ldflda ResData.ResCompetitionMain::bTeamCnt
+   0088 constrained. System.Byte
+   008E callvirt System.String System.Object::ToString()
+   0093 stelem.ref 
+   0094 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0099 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   009E ldloc.s V_5
+   00A0 ldc.i4.1 
+   00A1 add 
+   00A2 stloc.s V_5
+   00A4 ldloc.s V_5
+   00A6 ldloc.s V_4
+   00A8 callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Count()
+   00AD blt IL_004d: ldloc.2
+   00B2 ldloc.2 
+   00B3 ldc.i4.0 
+   00B4 ldc.i4.1 
+   00B5 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   00BA ldarg.0 
+   00BB ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   00C0 callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::get_Count()
+   00C5 stloc.s V_7
+   00C7 ldloc.3 
+   00C8 ldloc.s V_7
+   00CA callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   00CF ldc.i4.0 
+   00D0 stloc.s V_8
+   00D2 br IL_016c: ldloc.s V_8
+   00D7 ldloc.3 
+   00D8 ldloc.s V_8
+   00DA callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   00DF callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E4 stloc.s V_9
+   00E6 ldarg.0 
+   00E7 ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   00EC ldloc.s V_8
+   00EE callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::get_Item(System.Int32)
+   00F3 stloc.s V_10
+   00F5 ldloc.s V_9
+   00F7 ldstr Text
+   00FC call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0101 stloc.s V_11
+   0103 ldloc.s V_11
+   0105 ldloca.s V_10
+   0107 ldflda ResData.ResCompetitionLevelInfo::stLevelCommonInfo
+   010C ldflda ResData.ResDT_LevelCommonInfo::strIdName
+   0111 constrained. StringId2
+   0117 callvirt System.String System.Object::ToString()
+   011C call System.String Utility::UTF8Convert(System.String)
+   0121 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0126 ldloc.s V_9
+   0128 ldstr Map
+   012D call T Utility::GetComponetInChild<UnityEngine.UI.Image>(UnityEngine.GameObject,System.String)
+   0132 stloc.s V_12
+   0134 ldstr {0}MapIcon/{1}
+   0139 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_CustomCompetition_Dir
+   013E ldloca.s V_10
+   0140 ldflda ResData.ResCompetitionLevelInfo::dwMapId
+   0145 constrained. System.UInt32
+   014B callvirt System.String System.Object::ToString()
+   0150 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0155 stloc.s V_13
+   0157 ldloc.s V_12
+   0159 ldloc.s V_13
+   015B ldloc.0 
+   015C ldc.i4.1 
+   015D ldc.i4.0 
+   015E ldc.i4.0 
+   015F ldc.i4.0 
+   0160 ldc.i4.0 
+   0161 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0166 ldloc.s V_8
+   0168 ldc.i4.1 
+   0169 add 
+   016A stloc.s V_8
+   016C ldloc.s V_8
+   016E ldloc.s V_7
+   0170 blt IL_00d7: ldloc.3
+   0175 ldloc.3 
+   0176 ldc.i4.0 
+   0177 ldc.i4.1 
+   0178 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   017D ret 
+== System.Void InitComCreateFormStep3() attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void InitComCreateFormStep4() attrs=Public, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0010 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   0015 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001A stloc.1 
+   001B ldloc.1 
+   001C ldc.i4.4 
+   001D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0022 stloc.2 
+   0023 ldloc.2 
+   0024 ldstr CustomComNameInput
+   0029 call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   002E stloc.3 
+   002F ldloc.3 
+   0030 call !0 Singleton`1<CTextManager>::get_instance()
+   0035 ldstr CustomCompetition_Tips_15
+   003A ldc.i4.1 
+   003B newarr System.String
+   0040 dup 
+   0041 ldc.i4.0 
+   0042 ldloc.0 
+   0043 callvirt System.String Assets.Scripts.GameSystem.CRoleInfo::get_Name()
+   0048 stelem.ref 
+   0049 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   004E callvirt System.Void UnityEngine.UI.InputField::set_text(System.String)
+   0053 ret 
+== System.Void UpdateComCreateFormStep1() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.7 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 ldc.i4.0 
+   0018 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001D ldloc.0 
+   001E ldc.i4.6 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 ldc.i4.1 
+   0025 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002A ldloc.0 
+   002B ldc.i4.8 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 ldc.i4.0 
+   0032 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0037 ret 
+== System.Void UpdateComCreateFormStep2() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.7 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 ldc.i4.1 
+   0018 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001D ldloc.0 
+   001E ldc.i4.6 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 ldc.i4.1 
+   0025 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002A ldloc.0 
+   002B ldc.i4.8 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 ldc.i4.0 
+   0032 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0037 ldloc.0 
+   0038 ldc.i4.2 
+   0039 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   003E stloc.1 
+   003F ldloc.1 
+   0040 ldstr TeamList
+   0045 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   004A stloc.2 
+   004B ldloc.1 
+   004C ldstr RewardList
+   0051 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0056 stloc.3 
+   0057 ldloc.2 
+   0058 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   005D stloc.s V_4
+   005F ldloc.3 
+   0060 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0065 stloc.s V_5
+   0067 ldloc.s V_4
+   0069 ldc.i4.m1 
+   006A bne.un IL_0070: ldloc.s V_5
+   006F ret 
+   0070 ldloc.s V_5
+   0072 ldc.i4.m1 
+   0073 bne.un IL_0079: ldloc.1
+   0078 ret 
+   0079 ldloc.1 
+   007A ldstr TeamTitle
+   007F call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0084 stloc.s V_6
+   0086 ldloc.1 
+   0087 ldstr RewardTitle
+   008C call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0091 stloc.s V_7
+   0093 ldarg.0 
+   0094 call System.Collections.Generic.List`1<ResData.ResCompetitionMain> Assets.Scripts.GameSystem.CCSCreateView::get_CurResList()
+   0099 stloc.s V_8
+   009B ldloc.s V_6
+   009D call !0 Singleton`1<CTextManager>::get_instance()
+   00A2 ldstr CustomCompetition_Tips_9
+   00A7 ldc.i4.1 
+   00A8 newarr System.String
+   00AD dup 
+   00AE ldc.i4.0 
+   00AF ldloc.s V_8
+   00B1 ldloc.s V_4
+   00B3 callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Item(System.Int32)
+   00B8 stloc.s V_9
+   00BA ldloca.s V_9
+   00BC ldflda ResData.ResCompetitionMain::bTeamCnt
+   00C1 constrained. System.Byte
+   00C7 callvirt System.String System.Object::ToString()
+   00CC stelem.ref 
+   00CD callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00D2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00D7 ldarg.0 
+   00D8 ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   00DD ldloc.s V_5
+   00DF callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::get_Item(System.Int32)
+   00E4 stloc.s V_10
+   00E6 ldloc.s V_7
+   00E8 call !0 Singleton`1<CTextManager>::get_instance()
+   00ED ldstr CustomCompetition_Tips_10
+   00F2 ldc.i4.1 
+   00F3 newarr System.String
+   00F8 dup 
+   00F9 ldc.i4.0 
+   00FA ldloca.s V_10
+   00FC ldflda ResData.ResCompetitionLevelInfo::stLevelCommonInfo
+   0101 ldflda ResData.ResDT_LevelCommonInfo::strIdName
+   0106 constrained. StringId2
+   010C callvirt System.String System.Object::ToString()
+   0111 stelem.ref 
+   0112 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0117 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   011C ret 
+== System.Void UpdateComCreateFormStep3() attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldarg.0 
+   0011 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   0016 stloc.1 
+   0017 ldloc.0 
+   0018 ldc.i4.7 
+   0019 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001E ldc.i4.1 
+   001F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0024 ldloc.0 
+   0025 ldc.i4.6 
+   0026 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   002B ldc.i4.1 
+   002C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0031 ldloc.0 
+   0032 ldc.i4.8 
+   0033 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0038 ldc.i4.0 
+   0039 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003E ldloc.0 
+   003F ldc.i4.3 
+   0040 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0045 stloc.2 
+   0046 ldloc.0 
+   0047 ldc.i4.0 
+   0048 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   004D stloc.3 
+   004E ldloc.2 
+   004F ldstr TitleList
+   0054 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0059 stloc.s V_4
+   005B ldloc.3 
+   005C ldloc.1 
+   005D ldc.i4.2 
+   005E ceq 
+   0060 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0065 ldarg.0 
+   0066 call System.Byte Assets.Scripts.GameSystem.CCSCreateView::GetComCreateGameTotalStep()
+   006B ldc.i4.1 
+   006C add 
+   006D stloc.s V_5
+   006F ldloc.1 
+   0070 ldc.i4.2 
+   0071 bne.un IL_007c: ldloc.s V_5
+   0076 ldc.i4.2 
+   0077 br IL_007e: stloc.s V_6
+   007C ldloc.s V_5
+   007E stloc.s V_6
+   0080 ldloc.s V_4
+   0082 ldloc.s V_6
+   0084 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0089 ldc.i4.0 
+   008A stloc.s V_7
+   008C br IL_0294: ldloc.s V_7
+   0091 ldloc.s V_4
+   0093 ldloc.s V_7
+   0095 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   009A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009F stloc.s V_8
+   00A1 ldloc.1 
+   00A2 ldc.i4.2 
+   00A3 bne.un IL_010a: ldloc.s V_8
+   00A8 ldloc.s V_7
+   00AA ldloc.s V_6
+   00AC ldc.i4.1 
+   00AD sub 
+   00AE bne.un IL_010a: ldloc.s V_8
+   00B3 ldloc.s V_8
+   00B5 ldstr Normal
+   00BA call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00BF ldc.i4.0 
+   00C0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C5 ldloc.s V_8
+   00C7 ldstr End
+   00CC call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00D1 ldc.i4.1 
+   00D2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D7 ldloc.s V_8
+   00D9 ldstr End/EndText
+   00DE call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   00E3 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00E8 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   00ED ldarg.0 
+   00EE ldc.i4.0 
+   00EF call System.Int32 Assets.Scripts.GameSystem.CCSCreateView::GetRecycleTime(System.Boolean)
+   00F4 ldc.i4 28800
+   00F9 sub 
+   00FA ldc.i4.1 
+   00FB callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetTimeFullStr(System.Int32,System.Boolean)
+   0100 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0105 br IL_028e: ldloc.s V_7
+   010A ldloc.s V_8
+   010C ldstr Normal
+   0111 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0116 ldc.i4.1 
+   0117 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   011C ldloc.s V_8
+   011E ldstr End
+   0123 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0128 ldc.i4.0 
+   0129 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   012E ldloc.s V_8
+   0130 ldstr Normal/TitleText
+   0135 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   013A stloc.s V_9
+   013C ldloc.s V_8
+   013E ldstr Normal/TimeText
+   0143 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0148 stloc.s V_10
+   014A ldloc.s V_8
+   014C ldstr Normal/SetButton
+   0151 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIEventScript>(UnityEngine.GameObject,System.String)
+   0156 stloc.s V_11
+   0158 ldloc.s V_8
+   015A ldstr Normal/SetButton2
+   015F call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIEventScript>(UnityEngine.GameObject,System.String)
+   0164 stloc.s V_12
+   0166 ldloc.s V_9
+   0168 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   016D ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0172 ldloc.s V_7
+   0174 ldloc.s V_5
+   0176 ldc.i4.0 
+   0177 callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetGameStepTitle(System.Int32,System.Int32,System.Boolean)
+   017C callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0181 ldloc.s V_10
+   0183 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0188 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   018D ldarg.0 
+   018E ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0193 ldloc.s V_7
+   0195 ldelem.i4 
+   0196 ldc.i4 28800
+   019B sub 
+   019C ldc.i4.1 
+   019D callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetTimeFullStr(System.Int32,System.Boolean)
+   01A2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01A7 ldloc.s V_11
+   01A9 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   01AE ldloc.s V_7
+   01B0 stfld Assets.Scripts.UI.stUIEventParams::tag
+   01B5 ldloc.s V_12
+   01B7 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   01BC ldloc.s V_7
+   01BE stfld Assets.Scripts.UI.stUIEventParams::tag
+   01C3 ldloc.s V_8
+   01C5 ldstr Normal/IconGroup/Icon1
+   01CA call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01CF stloc.s V_13
+   01D1 ldloc.s V_8
+   01D3 ldstr Normal/IconGroup/Icon2
+   01D8 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01DD stloc.s V_14
+   01DF ldloc.s V_8
+   01E1 ldstr Normal/IconGroup/Icon3
+   01E6 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01EB stloc.s V_15
+   01ED ldloc.s V_8
+   01EF ldstr Normal/IconGroup/Icon4
+   01F4 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01F9 stloc.s V_16
+   01FB ldloc.s V_8
+   01FD ldstr Normal/IconGroup/Icon5
+   0202 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0207 stloc.s V_17
+   0209 ldloc.s V_13
+   020B ldc.i4.0 
+   020C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0211 ldloc.s V_14
+   0213 ldc.i4.0 
+   0214 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0219 ldloc.s V_15
+   021B ldc.i4.0 
+   021C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0221 ldloc.s V_16
+   0223 ldc.i4.0 
+   0224 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0229 ldloc.s V_17
+   022B ldc.i4.0 
+   022C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0231 ldloc.s V_7
+   0233 brtrue IL_0245: ldc.i4.4
+   0238 ldloc.s V_13
+   023A ldc.i4.1 
+   023B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0240 br IL_028e: ldloc.s V_7
+   0245 ldc.i4.4 
+   0246 newarr UnityEngine.GameObject
+   024B dup 
+   024C ldc.i4.0 
+   024D ldloc.s V_14
+   024F stelem.ref 
+   0250 dup 
+   0251 ldc.i4.1 
+   0252 ldloc.s V_15
+   0254 stelem.ref 
+   0255 dup 
+   0256 ldc.i4.2 
+   0257 ldloc.s V_16
+   0259 stelem.ref 
+   025A dup 
+   025B ldc.i4.3 
+   025C ldloc.s V_17
+   025E stelem.ref 
+   025F stloc.s V_18
+   0261 ldloc.s V_5
+   0263 ldloc.s V_7
+   0265 sub 
+   0266 stloc.s V_19
+   0268 ldc.i4.0 
+   0269 stloc.s V_20
+   026B br IL_0283: ldloc.s V_20
+   0270 ldloc.s V_18
+   0272 ldc.i4.4 
+   0273 ldloc.s V_19
+   0275 sub 
+   0276 ldelem.ref 
+   0277 ldc.i4.1 
+   0278 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   027D ldloc.s V_20
+   027F ldc.i4.1 
+   0280 add 
+   0281 stloc.s V_20
+   0283 ldloc.s V_20
+   0285 ldloc.s V_18
+   0287 ldlen 
+   0288 conv.i4 
+   0289 blt IL_0270: ldloc.s V_18
+   028E ldloc.s V_7
+   0290 ldc.i4.1 
+   0291 add 
+   0292 stloc.s V_7
+   0294 ldloc.s V_7
+   0296 ldloc.s V_6
+   0298 blt IL_0091: ldloc.s V_4
+   029D ret 
+== System.Void UpdateComCreateFormStep4() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call ResData.ResCompetitionLevelInfo Assets.Scripts.GameSystem.CCSCreateView::GetComCreateMapLevel()
+   0006 stloc.1 
+   0007 ldloca.s V_0
+   0009 ldarg.0 
+   000A call System.UInt32 Assets.Scripts.GameSystem.CCSCreateView::GetConfigID()
+   000F call System.Boolean ResData.GameDataMgr/competitionMain::FindByKey(ResData.ResCompetitionMain&,System.UInt32)
+   0014 brtrue IL_001a: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0019 ret 
+   001A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   001F ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   0024 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0029 stloc.2 
+   002A ldloc.2 
+   002B ldc.i4.7 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 ldc.i4.1 
+   0032 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0037 ldloc.2 
+   0038 ldc.i4.6 
+   0039 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   003E ldc.i4.0 
+   003F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0044 ldloc.2 
+   0045 ldc.i4.8 
+   0046 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   004B ldc.i4.1 
+   004C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0051 ldloc.2 
+   0052 ldc.i4.4 
+   0053 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0058 stloc.3 
+   0059 ldloc.3 
+   005A ldstr List
+   005F call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0064 stloc.s V_4
+   0066 ldloc.3 
+   0067 ldstr PreViewTip/Text
+   006C call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0071 stloc.s V_5
+   0073 ldarg.0 
+   0074 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   0079 ldc.i4.1 
+   007A bne.un IL_00b5: ldarg.0
+   007F ldloc.s V_5
+   0081 call !0 Singleton`1<CTextManager>::get_instance()
+   0086 ldstr CustomCompetition_Tips_62
+   008B ldc.i4.1 
+   008C newarr System.String
+   0091 dup 
+   0092 ldc.i4.0 
+   0093 ldloca.s V_0
+   0095 ldflda ResData.ResCompetitionMain::bTeamCnt
+   009A constrained. System.Byte
+   00A0 callvirt System.String System.Object::ToString()
+   00A5 stelem.ref 
+   00A6 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00AB callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00B0 br IL_0103: ldloc.3
+   00B5 ldarg.0 
+   00B6 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   00BB ldc.i4.2 
+   00BC bne.un IL_00f7: ldloc.s V_5
+   00C1 ldloc.s V_5
+   00C3 call !0 Singleton`1<CTextManager>::get_instance()
+   00C8 ldstr CustomCompetition_Tips_302
+   00CD ldc.i4.1 
+   00CE newarr System.String
+   00D3 dup 
+   00D4 ldc.i4.0 
+   00D5 ldloca.s V_0
+   00D7 ldflda ResData.ResCompetitionMain::bTeamCnt
+   00DC constrained. System.Byte
+   00E2 callvirt System.String System.Object::ToString()
+   00E7 stelem.ref 
+   00E8 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00ED callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00F2 br IL_0103: ldloc.3
+   00F7 ldloc.s V_5
+   00F9 ldsfld System.String::Empty
+   00FE callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0103 ldloc.3 
+   0104 ldstr MapTip/Text
+   0109 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   010E stloc.s V_6
+   0110 ldloc.3 
+   0111 ldstr MapTip/Map
+   0116 call T Utility::GetComponetInChild<UnityEngine.UI.Image>(UnityEngine.GameObject,System.String)
+   011B stloc.s V_7
+   011D ldarg.0 
+   011E call ResData.ResCompetitionLevelInfo Assets.Scripts.GameSystem.CCSCreateView::GetComCreateMapLevel()
+   0123 stloc.s V_8
+   0125 ldloc.s V_6
+   0127 ldloca.s V_8
+   0129 ldflda ResData.ResCompetitionLevelInfo::stLevelCommonInfo
+   012E ldfld ResData.ResDT_LevelCommonInfo::strIdName
+   0133 call System.String StringId2::op_Implicit(StringId2)
+   0138 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   013D ldstr {0}MapIcon/{1}
+   0142 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_CustomCompetition_Dir
+   0147 ldloca.s V_8
+   0149 ldflda ResData.ResCompetitionLevelInfo::dwMapId
+   014E constrained. System.UInt32
+   0154 callvirt System.String System.Object::ToString()
+   0159 call System.String System.String::Format(System.String,System.Object,System.Object)
+   015E stloc.s V_9
+   0160 ldloc.s V_7
+   0162 ldloc.s V_9
+   0164 ldloc.2 
+   0165 ldc.i4.1 
+   0166 ldc.i4.0 
+   0167 ldc.i4.0 
+   0168 ldc.i4.0 
+   0169 ldc.i4.0 
+   016A call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   016F ldarg.0 
+   0170 call System.Byte Assets.Scripts.GameSystem.CCSCreateView::GetComCreateGameTotalStep()
+   0175 ldc.i4.1 
+   0176 add 
+   0177 stloc.s V_10
+   0179 ldarg.0 
+   017A call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   017F ldc.i4.2 
+   0180 ceq 
+   0182 stloc.s V_11
+   0184 ldloc.s V_11
+   0186 brfalse IL_018e: ldloc.s V_4
+   018B ldc.i4.2 
+   018C stloc.s V_10
+   018E ldloc.s V_4
+   0190 ldloc.s V_10
+   0192 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0197 ldc.i4.0 
+   0198 stloc.s V_12
+   019A br IL_0280: ldloc.s V_12
+   019F ldloc.s V_4
+   01A1 ldloc.s V_12
+   01A3 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   01A8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01AD stloc.s V_13
+   01AF ldloc.s V_13
+   01B1 ldstr TimeTxt
+   01B6 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   01BB stloc.s V_14
+   01BD ldloc.s V_13
+   01BF ldstr TitleTxt
+   01C4 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   01C9 stloc.s V_15
+   01CB ldloc.s V_11
+   01CD brfalse IL_021d: ldloc.s V_14
+   01D2 ldloc.s V_12
+   01D4 ldloc.s V_10
+   01D6 ldc.i4.1 
+   01D7 sub 
+   01D8 bne.un IL_021d: ldloc.s V_14
+   01DD ldloc.s V_15
+   01DF call !0 Singleton`1<CTextManager>::get_instance()
+   01E4 ldstr CustomCompetition_Tips_303
+   01E9 ldc.i4.1 
+   01EA callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01EF callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01F4 ldloc.s V_14
+   01F6 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   01FB ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0200 ldarg.0 
+   0201 ldc.i4.1 
+   0202 call System.Int32 Assets.Scripts.GameSystem.CCSCreateView::GetRecycleTime(System.Boolean)
+   0207 ldc.i4 28800
+   020C sub 
+   020D ldc.i4.0 
+   020E callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetTimeFullStr(System.Int32,System.Boolean)
+   0213 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0218 br IL_025e: ldloc.s V_13
+   021D ldloc.s V_14
+   021F call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0224 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0229 ldarg.0 
+   022A ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   022F ldloc.s V_12
+   0231 ldelem.i4 
+   0232 ldc.i4 28800
+   0237 sub 
+   0238 ldc.i4.0 
+   0239 callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetTimeFullStr(System.Int32,System.Boolean)
+   023E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0243 ldloc.s V_15
+   0245 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   024A ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   024F ldloc.s V_12
+   0251 ldloc.s V_10
+   0253 ldc.i4.0 
+   0254 callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetGameStepTitle(System.Int32,System.Int32,System.Boolean)
+   0259 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   025E ldloc.s V_13
+   0260 ldstr Image
+   0265 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   026A ldloc.s V_12
+   026C ldloc.s V_10
+   026E ldc.i4.1 
+   026F sub 
+   0270 ceq 
+   0272 ldc.i4.0 
+   0273 ceq 
+   0275 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   027A ldloc.s V_12
+   027C ldc.i4.1 
+   027D add 
+   027E stloc.s V_12
+   0280 ldloc.s V_12
+   0282 ldloc.s V_10
+   0284 blt IL_019f: ldloc.s V_4
+   0289 ret 
+== System.Boolean ComCreateFormPreStep() attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0008 ldc.i4.1 
+   0009 bne.un IL_0015: ldarg.0
+   000E ldc.i4.1 
+   000F stloc.0 
+   0010 br IL_008d: ldarg.0
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   001B ldc.i4.2 
+   001C bne.un IL_0033: ldarg.0
+   0021 ldarg.0 
+   0022 ldc.i4.1 
+   0023 stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0028 ldarg.0 
+   0029 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep1()
+   002E br IL_008d: ldarg.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0039 ldc.i4.3 
+   003A bne.un IL_0051: ldarg.0
+   003F ldarg.0 
+   0040 ldc.i4.2 
+   0041 stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0046 ldarg.0 
+   0047 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep2()
+   004C br IL_008d: ldarg.0
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0057 ldc.i4.4 
+   0058 bne.un IL_008d: ldarg.0
+   005D ldarg.0 
+   005E ldc.i4.3 
+   005F stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   006A brfalse IL_0087: ldarg.0
+   006F ldarg.0 
+   0070 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0075 ldc.i4 28800
+   007A add 
+   007B call System.Void Assets.Scripts.GameSystem.CCSCreateView::SetDefaultStep(System.Int32)
+   0080 ldarg.0 
+   0081 ldc.i4.0 
+   0082 stfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   0087 ldarg.0 
+   0088 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep3()
+   008D ldarg.0 
+   008E ldarg.0 
+   008F ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0094 call System.Void Assets.Scripts.GameSystem.CCSCreateView::SetActivePanel(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState)
+   0099 ldloc.0 
+   009A ret 
+== System.Boolean ComCreateFormNextStep() attrs=Public, HideBySig maxstack=6
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0008 ldc.i4.1 
+   0009 bne.un IL_0020: ldarg.0
+   000E ldarg.0 
+   000F ldc.i4.2 
+   0010 stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0015 ldarg.0 
+   0016 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep2()
+   001B br IL_0173: ldarg.0
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0026 ldc.i4.2 
+   0027 bne.un IL_0073: ldarg.0
+   002C ldarg.0 
+   002D ldc.i4.3 
+   002E stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   0039 brfalse IL_0068: ldarg.0
+   003E ldarg.0 
+   003F call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0044 ldc.i4 28800
+   0049 add 
+   004A call System.Void Assets.Scripts.GameSystem.CCSCreateView::SetDefaultStep(System.Int32)
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   005B ldc.i4.5 
+   005C call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+   0061 ldarg.0 
+   0062 ldc.i4.0 
+   0063 stfld Assets.Scripts.GameSystem.CCSCreateView::bNeedResetTimeStep
+   0068 ldarg.0 
+   0069 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep3()
+   006E br IL_0173: ldarg.0
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0079 ldc.i4.3 
+   007A bne.un IL_00ee: ldarg.0
+   007F ldarg.0 
+   0080 call Assets.Scripts.GameSystem.CCSCreateView/enCreateComTimeResult Assets.Scripts.GameSystem.CCSCreateView::CreateComCheck()
+   0085 stloc.1 
+   0086 ldloc.1 
+   0087 brtrue IL_009e: ldloc.1
+   008C ldarg.0 
+   008D ldc.i4.4 
+   008E stfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   0093 ldarg.0 
+   0094 call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateComCreateFormStep4()
+   0099 br IL_00e9: br IL_0173
+   009E ldloc.1 
+   009F ldc.i4.1 
+   00A0 bne.un IL_00c6: ldloc.1
+   00A5 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00AA ldstr CustomCompetition_Tips_28
+   00AF ldc.i4.1 
+   00B0 ldc.r4 1.5
+   00B5 ldnull 
+   00B6 ldc.i4.0 
+   00B7 newarr System.Object
+   00BC callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00C1 br IL_00e9: br IL_0173
+   00C6 ldloc.1 
+   00C7 ldc.i4.2 
+   00C8 bne.un IL_00e9: br IL_0173
+   00CD call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00D2 ldstr CustomCompetition_Tips_29
+   00D7 ldc.i4.1 
+   00D8 ldc.r4 1.5
+   00DD ldnull 
+   00DE ldc.i4.0 
+   00DF newarr System.Object
+   00E4 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00E9 br IL_0173: ldarg.0
+   00EE ldarg.0 
+   00EF ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   00F4 ldc.i4.4 
+   00F5 bne.un IL_0173: ldarg.0
+   00FA ldarg.0 
+   00FB call System.String Assets.Scripts.GameSystem.CCSCreateView::GetComCreateName()
+   0100 stloc.2 
+   0101 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0106 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   010B ldloc.2 
+   010C ldc.i4.s 18
+   010E callvirt Assets.Scripts.GameSystem.CCSUtility/enAllNameResult Assets.Scripts.GameSystem.CCSUtility::CheckAllName(System.String,System.Int32)
+   0113 stloc.3 
+   0114 ldloc.3 
+   0115 brtrue IL_0121: ldloc.3
+   011A ldc.i4.1 
+   011B stloc.0 
+   011C br IL_0173: ldarg.0
+   0121 ldloc.3 
+   0122 ldc.i4.1 
+   0123 beq IL_012f: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0128 ldloc.3 
+   0129 ldc.i4.2 
+   012A bne.un IL_0150: ldloc.3
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0134 ldstr CustomCompetition_Tips_97
+   0139 ldc.i4.1 
+   013A ldc.r4 1.5
+   013F ldnull 
+   0140 ldc.i4.0 
+   0141 newarr System.Object
+   0146 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   014B br IL_0173: ldarg.0
+   0150 ldloc.3 
+   0151 ldc.i4.3 
+   0152 bne.un IL_0173: ldarg.0
+   0157 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   015C ldstr InValid_Input_Tips
+   0161 ldc.i4.1 
+   0162 ldc.r4 1.5
+   0167 ldnull 
+   0168 ldc.i4.0 
+   0169 newarr System.Object
+   016E callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0173 ldarg.0 
+   0174 ldarg.0 
+   0175 ldfld Assets.Scripts.GameSystem.CCSCreateView::comCreateState
+   017A call System.Void Assets.Scripts.GameSystem.CCSCreateView::SetActivePanel(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState)
+   017F ldloc.0 
+   0180 ret 
+== System.Void SetActivePanel(Assets.Scripts.GameSystem.CCSCreateView/enComCreateState step) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldc.i4.1 
+   0011 stloc.1 
+   0012 br IL_002b: ldloc.1
+   0017 ldloc.0 
+   0018 ldloc.1 
+   0019 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001E ldarg.1 
+   001F ldloc.1 
+   0020 ceq 
+   0022 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0027 ldloc.1 
+   0028 ldc.i4.1 
+   0029 add 
+   002A stloc.1 
+   002B ldloc.1 
+   002C ldc.i4.4 
+   002D ble IL_0017: ldloc.0
+   0032 ret 
+== Assets.Scripts.GameSystem.CCSCreateView/enCreateComTimeResult CreateComCheck() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   0006 ldc.i4.2 
+   0007 bne.un IL_0012: ldarg.0
+   000C ldc.i4.1 
+   000D br IL_001a: stloc.0
+   0012 ldarg.0 
+   0013 call System.Byte Assets.Scripts.GameSystem.CCSCreateView::GetComCreateGameTotalStep()
+   0018 ldc.i4.1 
+   0019 add 
+   001A stloc.0 
+   001B ldc.i4.0 
+   001C stloc.1 
+   001D br IL_0057: ldloc.1
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0028 ldloc.1 
+   0029 ldelem.i4 
+   002A brtrue IL_0031: ldloc.1
+   002F ldc.i4.2 
+   0030 ret 
+   0031 ldloc.1 
+   0032 ldloc.0 
+   0033 ldc.i4.1 
+   0034 sub 
+   0035 bge IL_0053: ldloc.1
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0040 ldloc.1 
+   0041 ldelem.i4 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0048 ldloc.1 
+   0049 ldc.i4.1 
+   004A add 
+   004B ldelem.i4 
+   004C blt IL_0053: ldloc.1
+   0051 ldc.i4.1 
+   0052 ret 
+   0053 ldloc.1 
+   0054 ldc.i4.1 
+   0055 add 
+   0056 stloc.1 
+   0057 ldloc.1 
+   0058 ldloc.0 
+   0059 blt IL_0022: ldarg.0
+   005E ldc.i4.0 
+   005F ret 
+== System.Int32 GetCreateComSelectTime() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_CreateTimeSelected.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.0 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   001C stloc.1 
+   001D ldloc.0 
+   001E ldc.i4.1 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0029 stloc.2 
+   002A ldloc.1 
+   002B callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0030 stloc.3 
+   0031 ldloc.2 
+   0032 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0037 stloc.s V_4
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   003F ldloc.3 
+   0040 ldc.i4 86400
+   0045 mul 
+   0046 add 
+   0047 ldloc.s V_4
+   0049 ldc.i4 1800
+   004E mul 
+   004F add 
+   0050 ret 
+== System.UInt32 GetConfigID() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.2 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr TeamList
+   001E call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldarg.0 
+   0025 call System.Collections.Generic.List`1<ResData.ResCompetitionMain> Assets.Scripts.GameSystem.CCSCreateView::get_CurResList()
+   002A ldloc.2 
+   002B callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0030 callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Item(System.Int32)
+   0035 stloc.3 
+   0036 ldloca.s V_3
+   0038 ldfld ResData.ResCompetitionMain::dwConfigID
+   003D ret 
+== ResData.ResCompetitionLevelInfo GetComCreateMapLevel() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.2 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr RewardList
+   001E call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CCSCreateView::levelInfoList
+   002A ldloc.2 
+   002B callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0030 callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionLevelInfo>::get_Item(System.Int32)
+   0035 ret 
+== System.String GetComCreateName() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.4 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr CustomComNameInput
+   001E call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldloc.2 
+   0025 callvirt System.String UnityEngine.UI.InputField::get_text()
+   002A ret 
+== System.String GetComCreateDesc() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.4 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr CustomComDescInput
+   001E call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldloc.2 
+   0025 callvirt System.String UnityEngine.UI.InputField::get_text()
+   002A ret 
+== System.UInt32 GetComCreateMaskSetting() attrs=Public, HideBySig maxstack=1
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 ret 
+== System.UInt32 GetComCreateSignUpTime() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0006 ldc.i4.0 
+   0007 ldelem.i4 
+   0008 ldc.i4 28800
+   000D sub 
+   000E ret 
+== System.Byte GetComCreateGameTotalStep() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_Create.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.2 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldstr TeamList
+   001E call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0023 stloc.2 
+   0024 ldarg.0 
+   0025 call System.Collections.Generic.List`1<ResData.ResCompetitionMain> Assets.Scripts.GameSystem.CCSCreateView::get_CurResList()
+   002A ldloc.2 
+   002B callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0030 callvirt !0 System.Collections.Generic.List`1<ResData.ResCompetitionMain>::get_Item(System.Int32)
+   0035 stloc.3 
+   0036 ldloca.s V_3
+   0038 ldfld ResData.ResCompetitionMain::bGameStep
+   003D ret 
+== System.UInt32[] GetComCreateGameStepTime() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0006 ldlen 
+   0007 conv.i4 
+   0008 ldc.i4.1 
+   0009 sub 
+   000A newarr System.UInt32
+   000F stloc.0 
+   0010 ldc.i4.1 
+   0011 stloc.1 
+   0012 br IL_002e: ldloc.1
+   0017 ldloc.0 
+   0018 ldloc.1 
+   0019 ldc.i4.1 
+   001A sub 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0021 ldloc.1 
+   0022 ldelem.i4 
+   0023 ldc.i4 28800
+   0028 sub 
+   0029 stelem.i4 
+   002A ldloc.1 
+   002B ldc.i4.1 
+   002C add 
+   002D stloc.1 
+   002E ldloc.1 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   0035 ldlen 
+   0036 conv.i4 
+   0037 blt IL_0017: ldloc.0
+   003C ldloc.0 
+   003D ret 
+== System.Void OpenTimeSelectedForm(System.Int32 curStep) attrs=Public, HideBySig maxstack=10
+   0000 ldarg.0 
+   0001 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   0006 ldc.i4.2 
+   0007 ceq 
+   0009 stloc.0 
+   000A ldarg.0 
+   000B ldarg.1 
+   000C stfld Assets.Scripts.GameSystem.CCSCreateView::curStep
+   0011 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0016 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_CreateTimeSelected.prefab
+   001B ldc.i4.0 
+   001C ldc.i4.1 
+   001D ldnull 
+   001E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 ldc.i4.0 
+   0026 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   002B callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0030 stloc.2 
+   0031 ldloc.1 
+   0032 ldc.i4.1 
+   0033 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0038 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   003D stloc.3 
+   003E ldloc.1 
+   003F ldc.i4.2 
+   0040 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0045 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   004A stloc.s V_4
+   004C ldarg.0 
+   004D call System.Byte Assets.Scripts.GameSystem.CCSCreateView::GetComCreateGameTotalStep()
+   0052 ldc.i4.1 
+   0053 add 
+   0054 stloc.s V_5
+   0056 ldloc.s V_4
+   0058 call !0 Singleton`1<CTextManager>::get_instance()
+   005D ldstr CustomCompetition_Tips_164
+   0062 ldc.i4.1 
+   0063 newarr System.String
+   0068 dup 
+   0069 ldc.i4.0 
+   006A call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   006F ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   0074 ldarg.1 
+   0075 ldloc.s V_5
+   0077 ldc.i4.0 
+   0078 callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetGameStepTitle(System.Int32,System.Int32,System.Boolean)
+   007D stelem.ref 
+   007E callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0083 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0088 ldloc.2 
+   0089 ldloc.0 
+   008A brfalse IL_0096: ldc.i4.7
+   008F ldc.i4.s 9
+   0091 br IL_0097: callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0096 ldc.i4.7 
+   0097 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   009C ldloc.3 
+   009D ldc.i4.s 48
+   009F callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   00A4 ldarg.0 
+   00A5 ldarg.1 
+   00A6 call System.Int32 Assets.Scripts.GameSystem.CCSCreateView::GetWeekDayIndex(System.Int32)
+   00AB stloc.s V_6
+   00AD ldloc.2 
+   00AE ldloc.s V_6
+   00B0 ldc.i4.1 
+   00B1 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   00B6 ldarg.0 
+   00B7 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   00C2 ldc.i4.5 
+   00C3 call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+   00C8 ldarg.0 
+   00C9 ldc.i4.1 
+   00CA call System.Void Assets.Scripts.GameSystem.CCSCreateView::UpdateTimeSelectedForm(System.Boolean)
+   00CF ret 
+== System.Int32 GetWeekDayIndex(System.Int32 curStep) attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_002a: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimes
+   000D ldarg.1 
+   000E ldelem.i4 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   0015 ldloc.0 
+   0016 ldc.i4.1 
+   0017 add 
+   0018 ldc.i4 86400
+   001D mul 
+   001E add 
+   001F bge IL_0026: ldloc.0
+   0024 ldloc.0 
+   0025 ret 
+   0026 ldloc.0 
+   0027 ldc.i4.1 
+   0028 add 
+   0029 stloc.0 
+   002A ldloc.0 
+   002B ldc.i4.7 
+   002C blt IL_0007: ldarg.0
+   0031 ldc.i4.0 
+   0032 ret 
+== System.Void CloseTimeSelectedForm() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_CreateTimeSelected.prefab
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F ret 
+== System.Void UpdateTimeSelectedForm(System.Boolean bForceCurTimeElm) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldstr UGUI/Form/System/CustomCompetition/Form_CustomCompetition_CreateTimeSelected.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldc.i4.0 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0029 stloc.1 
+   002A ldloc.0 
+   002B ldc.i4.1 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0036 stloc.2 
+   0037 ldloc.0 
+   0038 ldc.i4.3 
+   0039 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   003E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0043 stloc.3 
+   0044 ldarg.0 
+   0045 call System.Byte Assets.Scripts.GameSystem.CCSCreateView::GetComCreateGameTotalStep()
+   004A ldc.i4.1 
+   004B add 
+   004C stloc.s V_4
+   004E ldarg.0 
+   004F call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   0054 ldc.i4.2 
+   0055 bne.un IL_0060: ldloc.s V_4
+   005A ldc.i4.1 
+   005B br IL_0062: stloc.s V_5
+   0060 ldloc.s V_4
+   0062 stloc.s V_5
+   0064 ldloc.1 
+   0065 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   006A stloc.s V_6
+   006C ldloca.s V_7
+   006E ldc.i4.4 
+   006F call System.Boolean ResData.GameDataMgr/competitionMisc::FindByKey(ResData.ResCompetitionMisc&,System.UInt32)
+   0074 pop 
+   0075 ldloca.s V_7
+   0077 ldfld ResData.ResCompetitionMisc::dwConfValue
+   007C ldc.i4.s 24
+   007E div 
+   007F ldc.i4.1 
+   0080 add 
+   0081 stloc.s V_8
+   0083 ldarg.0 
+   0084 ldc.i4.1 
+   0085 call System.Int32 Assets.Scripts.GameSystem.CCSCreateView::GetRecycleTime(System.Boolean)
+   008A stloc.s V_9
+   008C ldc.i4.0 
+   008D stloc.s V_10
+   008F br IL_026a: ldloc.s V_10
+   0094 ldloc.1 
+   0095 ldloc.s V_10
+   0097 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   009C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A1 stloc.s V_11
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   00A9 ldloc.s V_10
+   00AB ldc.i4 86400
+   00B0 mul 
+   00B1 add 
+   00B2 stloc.s V_12
+   00B4 ldarg.0 
+   00B5 ldfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   00BA ldloc.s V_10
+   00BC ldc.i4.1 
+   00BD add 
+   00BE ldc.i4 86400
+   00C3 mul 
+   00C4 add 
+   00C5 stloc.s V_13
+   00C7 ldloc.s V_10
+   00C9 ldloc.s V_8
+   00CB bge IL_00d7: ldc.i4.0
+   00D0 ldloc.s V_10
+   00D2 ldc.i4.7 
+   00D3 clt 
+   00D5 br.s IL_00d8: stloc.s V_14
+   00D7 ldc.i4.0 
+   00D8 stloc.s V_14
+   00DA ldarg.0 
+   00DB ldfld Assets.Scripts.GameSystem.CCSCreateView::stepInitTime
+   00E0 ldloc.s V_10
+   00E2 ldc.i4 86400
+   00E7 mul 
+   00E8 add 
+   00E9 conv.i8 
+   00EA call System.DateTime Utility::ToUtcTime(System.Int64)
+   00EF stloc.s V_15
+   00F1 ldloc.s V_11
+   00F3 ldstr WeekText
+   00F8 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   00FD call !0 Singleton`1<CTextManager>::get_instance()
+   0102 ldloca.s V_15
+   0104 call System.DayOfWeek System.DateTime::get_DayOfWeek()
+   0109 stloc.s V_16
+   010B ldloca.s V_16
+   010D constrained. System.DayOfWeek
+   0113 callvirt System.String System.Object::ToString()
+   0118 ldc.i4.1 
+   0119 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   011E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0123 ldloc.s V_11
+   0125 ldstr DateText
+   012A call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   012F ldloca.s V_15
+   0131 call System.Int32 System.DateTime::get_Day()
+   0136 stloc.s V_17
+   0138 ldloca.s V_17
+   013A constrained. System.Int32
+   0140 callvirt System.String System.Object::ToString()
+   0145 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   014A ldloc.s V_11
+   014C ldstr Mask
+   0151 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0156 ldloc.s V_14
+   0158 ldc.i4.0 
+   0159 ceq 
+   015B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0160 ldloc.s V_11
+   0162 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0167 ldloc.s V_14
+   0169 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   016E ldc.i4.5 
+   016F newarr UnityEngine.GameObject
+   0174 stloc.s V_18
+   0176 ldc.i4.0 
+   0177 stloc.s V_19
+   0179 br IL_01ae: ldloc.s V_19
+   017E ldloc.s V_18
+   0180 ldloc.s V_19
+   0182 ldloc.s V_11
+   0184 ldstr Container/T{0}
+   0189 ldloc.s V_19
+   018B ldc.i4.1 
+   018C add 
+   018D box System.Int32
+   0192 call System.String System.String::Format(System.String,System.Object)
+   0197 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   019C stelem.ref 
+   019D ldloc.s V_18
+   019F ldloc.s V_19
+   01A1 ldelem.ref 
+   01A2 ldc.i4.0 
+   01A3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01A8 ldloc.s V_19
+   01AA ldc.i4.1 
+   01AB add 
+   01AC stloc.s V_19
+   01AE ldloc.s V_19
+   01B0 ldc.i4.5 
+   01B1 blt IL_017e: ldloc.s V_18
+   01B6 ldloc.s V_11
+   01B8 ldstr Container/End
+   01BD ldc.i4.0 
+   01BE newarr System.Object
+   01C3 call System.String System.String::Format(System.String,System.Object[])
+   01C8 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01CD ldc.i4.0 
+   01CE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01D3 ldc.i4.0 
+   01D4 stloc.s V_20
+   01D6 br IL_0220: ldloc.s V_20
+   01DB ldloc.s V_12
+   01DD ldarg.0 
+   01DE ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   01E3 ldloc.s V_20
+   01E5 ldelem.i4 
+   01E6 bgt IL_021a: ldloc.s V_20
+   01EB ldloc.s V_13
+   01ED ldarg.0 
+   01EE ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   01F3 ldloc.s V_20
+   01F5 ldelem.i4 
+   01F6 ble IL_021a: ldloc.s V_20
+   01FB ldloc.s V_20
+   01FD stloc.s V_21
+   01FF ldloc.s V_21
+   0201 brfalse IL_020f: ldloc.s V_18
+   0206 ldloc.s V_21
+   0208 ldc.i4.5 
+   0209 ldloc.s V_4
+   020B sub 
+   020C add 
+   020D stloc.s V_21
+   020F ldloc.s V_18
+   0211 ldloc.s V_21
+   0213 ldelem.ref 
+   0214 ldc.i4.1 
+   0215 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   021A ldloc.s V_20
+   021C ldc.i4.1 
+   021D add 
+   021E stloc.s V_20
+   0220 ldloc.s V_20
+   0222 ldloc.s V_5
+   0224 blt IL_01db: ldloc.s V_12
+   0229 ldarg.0 
+   022A call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   022F ldc.i4.2 
+   0230 bne.un IL_0264: ldloc.s V_10
+   0235 ldloc.s V_12
+   0237 ldloc.s V_9
+   0239 bgt IL_0264: ldloc.s V_10
+   023E ldloc.s V_13
+   0240 ldloc.s V_9
+   0242 ble IL_0264: ldloc.s V_10
+   0247 ldloc.s V_11
+   0249 ldstr Container/End
+   024E ldc.i4.0 
+   024F newarr System.Object
+   0254 call System.String System.String::Format(System.String,System.Object[])
+   0259 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   025E ldc.i4.1 
+   025F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0264 ldloc.s V_10
+   0266 ldc.i4.1 
+   0267 add 
+   0268 stloc.s V_10
+   026A ldloc.s V_10
+   026C ldloc.1 
+   026D callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   0272 blt IL_0094: ldloc.1
+   0277 ldarg.0 
+   0278 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepInitTime
+   027D ldloc.s V_6
+   027F ldc.i4 86400
+   0284 mul 
+   0285 add 
+   0286 conv.i8 
+   0287 call System.DateTime Utility::ToUtcTime(System.Int64)
+   028C stloc.s V_22
+   028E ldloc.3 
+   028F ldloca.s V_22
+   0291 call System.Int32 System.DateTime::get_Month()
+   0296 stloc.s V_23
+   0298 ldloca.s V_23
+   029A constrained. System.Int32
+   02A0 callvirt System.String System.Object::ToString()
+   02A5 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   02AA ldloca.s V_7
+   02AC ldc.i4.5 
+   02AD call System.Boolean ResData.GameDataMgr/competitionMisc::FindByKey(ResData.ResCompetitionMisc&,System.UInt32)
+   02B2 pop 
+   02B3 ldarg.0 
+   02B4 ldfld Assets.Scripts.GameSystem.CCSCreateView::stepInitTime
+   02B9 ldloca.s V_7
+   02BB ldfld ResData.ResCompetitionMisc::dwConfValue
+   02C0 ldc.i4.s 60
+   02C2 mul 
+   02C3 add 
+   02C4 stloc.s V_24
+   02C6 ldc.i4.m1 
+   02C7 stloc.s V_25
+   02C9 ldc.i4.0 
+   02CA stloc.s V_26
+   02CC br IL_0484: ldloc.s V_26
+   02D1 ldloc.2 
+   02D2 ldloc.s V_26
+   02D4 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   02D9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   02DE stloc.s V_27
+   02E0 ldloc.s V_27
+   02E2 ldstr EventText
+   02E7 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   02EC stloc.s V_28
+   02EE ldloc.s V_27
+   02F0 ldstr TimeText
+   02F5 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   02FA ldstr {0}:{1}
+   02FF ldloc.s V_26
+   0301 ldc.i4.2 
+   0302 div 
+   0303 stloc.s V_29
+   0305 ldloca.s V_29
+   0307 ldstr D2
+   030C call System.String System.Int32::ToString(System.String)
+   0311 ldc.i4.s 30
+   0313 ldloc.s V_26
+   0315 ldc.i4.2 
+   0316 rem 
+   0317 mul 
+   0318 stloc.s V_30
+   031A ldloca.s V_30
+   031C ldstr D2
+   0321 call System.String System.Int32::ToString(System.String)
+   0326 call System.String System.String::Format(System.String,System.Object,System.Object)
+   032B callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0330 ldc.i4.0 
+   0331 stloc.s V_31
+   0333 ldarg.0 
+   0334 ldfld Assets.Scripts.GameSystem.CCSCreateView::weekFirstDaySec
+   0339 ldloc.s V_6
+   033B ldc.i4 86400
+   0340 mul 
+   0341 add 
+   0342 ldloc.s V_26
+   0344 ldc.i4 1800
+   0349 mul 
+   034A add 
+   034B stloc.s V_32
+   034D ldc.i4.0 
+   034E stloc.s V_33
+   0350 br IL_03fa: ldloc.s V_33
+   0355 ldloc.s V_33
+   0357 ldloc.s V_5
+   0359 bge IL_03c5: ldarg.0
+   035E ldarg.0 
+   035F ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   0364 ldloc.s V_33
+   0366 ldelem.i4 
+   0367 ldloc.s V_32
+   0369 bne.un IL_03c5: ldarg.0
+   036E ldloc.s V_28
+   0370 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0375 ldfld Assets.Scripts.GameSystem.CCSCoreSys::utility
+   037A ldloc.s V_33
+   037C ldloc.s V_4
+   037E ldc.i4.0 
+   037F callvirt System.String Assets.Scripts.GameSystem.CCSUtility::GetGameStepTitle(System.Int32,System.Int32,System.Boolean)
+   0384 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0389 ldloc.s V_28
+   038B ldarg.0 
+   038C ldfld Assets.Scripts.GameSystem.CCSCreateView::curStep
+   0391 ldloc.s V_33
+   0393 bne.un IL_03a2: ldsfld UnityEngine.Color Assets.Scripts.UI.CUIUtility::s_Color_Grey
+   0398 ldsfld Assets.Scripts.UI.CUIUtility::s_Text_Color_Green
+   039D br IL_03a7: callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   03A2 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_Grey
+   03A7 callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   03AC ldc.i4.1 
+   03AD stloc.s V_31
+   03AF ldarg.0 
+   03B0 ldfld Assets.Scripts.GameSystem.CCSCreateView::curStep
+   03B5 ldloc.s V_33
+   03B7 bne.un IL_03c0: br IL_0409
+   03BC ldloc.s V_26
+   03BE stloc.s V_25
+   03C0 br IL_0409: ldloc.s V_31
+   03C5 ldarg.0 
+   03C6 call ResData.RES_COMPETITION_GAME_TYPE Assets.Scripts.GameSystem.CCSCreateView::get_CurGameType()
+   03CB ldc.i4.2 
+   03CC bne.un IL_03f4: ldloc.s V_33
+   03D1 ldloc.s V_9
+   03D3 ldloc.s V_32
+   03D5 bne.un IL_03f4: ldloc.s V_33
+   03DA ldloc.s V_28
+   03DC call !0 Singleton`1<CTextManager>::get_instance()
+   03E1 ldstr CustomCompetition_Tips_301
+   03E6 ldc.i4.1 
+   03E7 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   03EC callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   03F1 ldc.i4.1 
+   03F2 stloc.s V_31
+   03F4 ldloc.s V_33
+   03F6 ldc.i4.1 
+   03F7 add 
+   03F8 stloc.s V_33
+   03FA ldloc.s V_33
+   03FC ldarg.0 
+   03FD ldfld Assets.Scripts.GameSystem.CCSCreateView::stepTimesView
+   0402 ldlen 
+   0403 conv.i4 
+   0404 blt IL_0355: ldloc.s V_33
+   0409 ldloc.s V_31
+   040B brtrue IL_041c: ldloc.s V_32
+   0410 ldloc.s V_28
+   0412 ldsfld System.String::Empty
+   0417 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   041C ldloc.s V_32
+   041E ldloc.s V_24
+   0420 clt 
+   0422 ldc.i4.0 
+   0423 ceq 
+   0425 stloc.s V_34
+   0427 ldc.i4.0 
+   0428 stloc.s V_35
+   042A br IL_044c: ldloc.s V_35
+   042F ldsfld Assets.Scripts.GameSystem.CCSCreateView::EXCLUDE_TIME_NODE
+   0434 ldloc.s V_35
+   0436 ldelem.i4 
+   0437 ldloc.s V_26
+   0439 bne.un IL_0446: ldloc.s V_35
+   043E ldc.i4.0 
+   043F stloc.s V_34
+   0441 br IL_045a: ldloc.s V_27
+   0446 ldloc.s V_35
+   0448 ldc.i4.1 
+   0449 add 
+   044A stloc.s V_35
+   044C ldloc.s V_35
+   044E ldsfld Assets.Scripts.GameSystem.CCSCreateView::EXCLUDE_TIME_NODE
+   0453 ldlen 
+   0454 conv.i4 
+   0455 blt IL_042f: ldsfld System.Int32[] Assets.Scripts.GameSystem.CCSCreateView::EXCLUDE_TIME_NODE
+   045A ldloc.s V_27
+   045C callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0461 ldloc.s V_34
+   0463 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0468 ldloc.s V_27
+   046A ldstr Mask
+   046F call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0474 ldloc.s V_34
+   0476 ldc.i4.0 
+   0477 ceq 
+   0479 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   047E ldloc.s V_26
+   0480 ldc.i4.1 
+   0481 add 
+   0482 stloc.s V_26
+   0484 ldloc.s V_26
+   0486 ldloc.2 
+   0487 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   048C blt IL_02d1: ldloc.2
+   0491 ldarg.1 
+   0492 brfalse IL_04f7: ret
+   0497 ldloc.s V_25
+   0499 ldc.i4.m1 
+   049A beq IL_04cd: ldloc.2
+   049F ldloc.s V_25
+   04A1 ldloc.2 
+   04A2 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   04A7 bne.un IL_04bf: ldloc.2
+   04AC ldloc.2 
+   04AD ldloc.s V_25
+   04AF callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   04B4 ldc.i4.1 
+   04B5 callvirt System.Void Assets.Scripts.UI.CUIListElementScript::ChangeDisplay(System.Boolean)
+   04BA br IL_04c8: br IL_04ea
+   04BF ldloc.2 
+   04C0 ldloc.s V_25
+   04C2 ldc.i4.1 
+   04C3 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   04C8 br IL_04ea: ldloc.2
+   04CD ldloc.2 
+   04CE callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetSelectedElement()
+   04D3 stloc.s V_36
+   04D5 ldloc.s V_36
+   04D7 ldnull 
+   04D8 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   04DD brfalse IL_04ea: ldloc.2
+   04E2 ldloc.s V_36
+   04E4 ldc.i4.0 
+   04E5 callvirt System.Void Assets.Scripts.UI.CUIListElementScript::ChangeDisplay(System.Boolean)
+   04EA ldloc.2 
+   04EB ldloc.2 
+   04EC callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   04F1 ldc.i4.1 
+   04F2 callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   04F7 ret 
+== System.Void ClearData() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void OpenRule(Assets.Scripts.UI.enUIEventID uiEventID) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldc.i4 30151
+   0006 bne.un IL_0032: ldarg.1
+   000B ldloca.s V_0
+   000D ldc.i4.s 43
+   000F call System.Boolean ResData.GameDataMgr/s_ruleTextDatabin::FindByKey(ResData.ResRuleText&,System.UInt16)
+   0014 pop 
+   0015 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   001A ldloca.s V_0
+   001C call System.String ResData.ResRuleText::get_szTitle()
+   0021 ldloca.s V_0
+   0023 call System.String ResData.ResRuleText::get_szContent()
+   0028 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenInfoForm(System.String,System.String)
+   002D br IL_00c3: ret
+   0032 ldarg.1 
+   0033 ldc.i4 30152
+   0038 bne.un IL_0064: ldarg.1
+   003D ldloca.s V_1
+   003F ldc.i4.s 44
+   0041 call System.Boolean ResData.GameDataMgr/s_ruleTextDatabin::FindByKey(ResData.ResRuleText&,System.UInt16)
+   0046 pop 
+   0047 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   004C ldloca.s V_1
+   004E call System.String ResData.ResRuleText::get_szTitle()
+   0053 ldloca.s V_1
+   0055 call System.String ResData.ResRuleText::get_szContent()
+   005A callvirt System.Void Assets.Scripts.UI.CUIManager::OpenInfoForm(System.String,System.String)
+   005F br IL_00c3: ret
+   0064 ldarg.1 
+   0065 ldc.i4 30153
+   006A bne.un IL_0096: ldarg.1
+   006F ldloca.s V_2
+   0071 ldc.i4.s 45
+   0073 call System.Boolean ResData.GameDataMgr/s_ruleTextDatabin::FindByKey(ResData.ResRuleText&,System.UInt16)
+   0078 pop 
+   0079 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   007E ldloca.s V_2
+   0080 call System.String ResData.ResRuleText::get_szTitle()
+   0085 ldloca.s V_2
+   0087 call System.String ResData.ResRuleText::get_szContent()
+   008C callvirt System.Void Assets.Scripts.UI.CUIManager::OpenInfoForm(System.String,System.String)
+   0091 br IL_00c3: ret
+   0096 ldarg.1 
+   0097 ldc.i4 30154
+   009C bne.un IL_00c3: ret
+   00A1 ldloca.s V_3
+   00A3 ldc.i4.s 46
+   00A5 call System.Boolean ResData.GameDataMgr/s_ruleTextDatabin::FindByKey(ResData.ResRuleText&,System.UInt16)
+   00AA pop 
+   00AB call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00B0 ldloca.s V_3
+   00B2 call System.String ResData.ResRuleText::get_szTitle()
+   00B7 ldloca.s V_3
+   00B9 call System.String ResData.ResRuleText::get_szContent()
+   00BE callvirt System.Void Assets.Scripts.UI.CUIManager::OpenInfoForm(System.String,System.String)
+   00C3 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.4 
+   0001 newarr System.Int32
+   0006 dup 
+   0007 ldtoken <PrivateImplementationDetails>::$field-4E01AEA83E851929243870154CE04ACAC5DCAA75
+   000C call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0011 stsfld Assets.Scripts.GameSystem.CCSCreateView::EXCLUDE_TIME_NODE
+   0016 ret 
+  NESTED Assets.Scripts.GameSystem.CCSCreateView/enComCreateState
+  NESTED Assets.Scripts.GameSystem.CCSCreateView/enCreateComTimeResult

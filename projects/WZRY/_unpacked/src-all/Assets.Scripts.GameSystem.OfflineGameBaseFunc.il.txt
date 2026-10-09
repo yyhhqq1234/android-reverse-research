@@ -1,0 +1,1347 @@
+// TYPE Assets.Scripts.GameSystem.OfflineGameBaseFunc  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 c_fakePlayerUid = 65535
+  FIELD System.Int32 c_fakeLogicWorldID = 1
+  FIELD System.String m_fakePlayerName
+  FIELD System.Int32 c_fakePlayerPvpLevel = 30
+  FIELD System.Int32 c_fakeSelfPlayerObjID = 65535
+  FIELD System.Int32 c_fakeEnemyPlayerObjID = 65536
+  FIELD System.Int32 c_fakeWood1PlayerObjID = 65537
+  FIELD System.Int32 c_fakeWood2PlayerObjID = 65538
+  FIELD System.UInt32[] s_summonSkillIDs
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean> m_usedHeroConfigIDs
+  FIELD ListView`1<Assets.Scripts.GameSystem.COfflineAvailableHero> m_offlineAvailableHeroList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   000B ldarg.0 
+   000C call System.Void System.Object::.ctor()
+   0011 ret 
+== System.Void Finalize() attrs=Family, Virtual, HideBySig maxstack=1
+   0000 leave IL_000c: ret
+   0005 ldarg.0 
+   0006 call System.Void System.Object::Finalize()
+   000B endfinally 
+   000C ret 
+== System.Void StartOfflineGame(Assets.Scripts.GameSystem.stOfflineGamePlayParams& offlineGamePlayParams, System.Boolean editorOffline) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldc.i4.2 
+   0006 callvirt System.Void Assets.Scripts.UI.CUIManager::SetLowMemoryDevicePoolLimitSize(System.Int32)
+   000B call !0 Singleton`1<CGameObjectPool>::get_instance()
+   0010 ldc.i4 600
+   0015 callvirt System.Void CGameObjectPool::SetLowMemoryDevicePoolLimitSize(System.Int32)
+   001A ldarg.0 
+   001B ldarg.1 
+   001C call System.Void Assets.Scripts.GameSystem.OfflineGameBaseFunc::ApplyRenderSetting(Assets.Scripts.GameSystem.stOfflineGamePlayParams&)
+   0021 ldarg.0 
+   0022 ldarg.1 
+   0023 call CSProtocol.CSPkg Assets.Scripts.GameSystem.OfflineGameBaseFunc::CreateStargSingleGameRsp(Assets.Scripts.GameSystem.stOfflineGamePlayParams&)
+   0028 stloc.0 
+   0029 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   002E ldloc.0 
+   002F ldfld CSProtocol.CSPkg::stPkgData
+   0034 callvirt CSProtocol.SCPKG_STARTSINGLEGAMERSP CSProtocol.CSPkgBody::get_stStartSingleGameRsp()
+   0039 ldarg.2 
+   003A callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::StartOfflineGame(CSProtocol.SCPKG_STARTSINGLEGAMERSP,System.Boolean)
+   003F ret 
+== System.Void SetSelfPlayerName(System.String name) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_fakePlayerName
+   0007 ret 
+== System.Void ApplyRenderSetting(Assets.Scripts.GameSystem.stOfflineGamePlayParams& offlineGamePlayParams) attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void CreateMasterRoleInfo() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfoManager::ClearMasterRoleInfo()
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0011 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 brtrue IL_0040: ret
+   001D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0022 ldc.i4.1 
+   0023 ldc.i4 65535
+   0028 conv.i8 
+   0029 ldc.i4.1 
+   002A callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::CreateRoleInfo(Assets.Scripts.GameSystem.enROLEINFO_TYPE,System.UInt64,System.Int32)
+   002F stloc.1 
+   0030 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0035 ldc.i4 65535
+   003A conv.i8 
+   003B callvirt System.Void Assets.Scripts.GameSystem.CRoleInfoManager::SetMaterUUID(System.UInt64)
+   0040 ret 
+== System.Void FillCampPlayerInfo(Assets.Scripts.GameSystem.stOfflineGamePlayParams& offlineGamePlayParams, CSProtocol.SCPKG_STARTSINGLEGAMERSP startSingleGameRsp, System.Int32 campID) attrs=Private, HideBySig maxstack=11
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0006 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::Clear()
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D ldsfld System.String::Empty
+   0012 stloc.1 
+   0013 ldc.i4.1 
+   0014 stloc.2 
+   0015 ldc.i4.0 
+   0016 stloc.3 
+   0017 ldc.i4.0 
+   0018 stloc.s V_4
+   001A ldc.i4.0 
+   001B stloc.s V_5
+   001D ldc.i4.0 
+   001E stloc.s V_6
+   0020 ldnull 
+   0021 stloc.s V_7
+   0023 ldnull 
+   0024 stloc.s V_8
+   0026 ldc.i4.0 
+   0027 stloc.s V_9
+   0029 ldarg.1 
+   002A ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   002F ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_forceMiddle
+   0034 stloc.s V_10
+   0036 ldarg.3 
+   0037 ldc.i4.1 
+   0038 beq IL_0044: ldarg.3
+   003D ldarg.3 
+   003E ldc.i4.2 
+   003F bne.un IL_0130: ldc.i4.0
+   0044 ldarg.3 
+   0045 ldarg.1 
+   0046 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   004B ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_hostCamp
+   0050 bne.un IL_00c3: ldc.i4 65536
+   0055 ldc.i4 65535
+   005A stloc.0 
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_fakePlayerName
+   0061 stloc.1 
+   0062 ldc.i4.1 
+   0063 stloc.2 
+   0064 ldarg.1 
+   0065 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   006A ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   006F stloc.3 
+   0070 ldarg.1 
+   0071 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   0076 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   007B stloc.s V_4
+   007D ldarg.1 
+   007E ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   0083 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   0088 stloc.s V_6
+   008A ldarg.1 
+   008B ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   0090 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   0095 stloc.s V_7
+   0097 ldarg.1 
+   0098 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   009D ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_equipUseID
+   00A2 stloc.s V_5
+   00A4 ldarg.1 
+   00A5 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_selfHeroInfo
+   00AA ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_symbolID
+   00AF stloc.s V_8
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   00B7 ldloc.3 
+   00B8 ldc.i4.1 
+   00B9 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::Add(!0,!1)
+   00BE br IL_012b: br IL_0188
+   00C3 ldc.i4 65536
+   00C8 stloc.0 
+   00C9 ldsfld System.String::Empty
+   00CE stloc.1 
+   00CF ldc.i4.2 
+   00D0 stloc.2 
+   00D1 ldarg.1 
+   00D2 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   00D7 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   00DC stloc.3 
+   00DD ldarg.1 
+   00DE ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   00E3 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   00E8 stloc.s V_4
+   00EA ldarg.1 
+   00EB ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   00F0 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   00F5 stloc.s V_6
+   00F7 ldarg.1 
+   00F8 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   00FD ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   0102 stloc.s V_7
+   0104 ldarg.1 
+   0105 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   010A ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_equipUseID
+   010F stloc.s V_5
+   0111 ldarg.1 
+   0112 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_enemyHeroInfo
+   0117 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_symbolID
+   011C stloc.s V_8
+   011E ldarg.0 
+   011F ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0124 ldloc.3 
+   0125 ldc.i4.1 
+   0126 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::Add(!0,!1)
+   012B br IL_0188: ldarg.1
+   0130 ldc.i4.0 
+   0131 stloc.s V_11
+   0133 ldc.i4.0 
+   0134 stloc.s V_12
+   0136 ldc.i4.0 
+   0137 stloc.s V_13
+   0139 ldarg.0 
+   013A ldarg.0 
+   013B ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0140 ldloca.s V_11
+   0142 ldloca.s V_12
+   0144 ldloca.s V_13
+   0146 call System.Boolean Assets.Scripts.GameSystem.OfflineGameBaseFunc::GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>,System.UInt32&,System.UInt32&,System.UInt32&)
+   014B brfalse IL_0188: ldarg.1
+   0150 ldarg.2 
+   0151 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0156 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   015B ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0160 stloc.0 
+   0161 ldsfld System.String::Empty
+   0166 stloc.1 
+   0167 ldc.i4.2 
+   0168 stloc.2 
+   0169 ldloc.s V_11
+   016B stloc.3 
+   016C ldloc.s V_12
+   016E stloc.s V_4
+   0170 ldloc.s V_13
+   0172 stloc.s V_6
+   0174 ldnull 
+   0175 stloc.s V_7
+   0177 ldc.i4.0 
+   0178 stloc.s V_5
+   017A ldarg.0 
+   017B ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0180 ldloc.s V_11
+   0182 ldc.i4.1 
+   0183 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::Add(!0,!1)
+   0188 ldarg.1 
+   0189 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   018E ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   0193 ldc.i4 20019
+   0198 bne.un IL_01a3: ldc.i4.1
+   019D ldc.i4.2 
+   019E br IL_01a4: stloc.s V_14
+   01A3 ldc.i4.1 
+   01A4 stloc.s V_14
+   01A6 ldloc.s V_14
+   01A8 newarr Assets.Scripts.GameSystem.stOfflineHeroInfo
+   01AD stloc.s V_15
+   01AF ldc.i4.0 
+   01B0 stloc.s V_16
+   01B2 br IL_024e: ldloc.s V_16
+   01B7 ldloc.s V_16
+   01B9 brfalse IL_01ce: ldloc.s V_15
+   01BE ldarg.1 
+   01BF ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   01C4 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_isCloneMode
+   01C9 brfalse IL_0232: ldarg.0
+   01CE ldloc.s V_15
+   01D0 ldloc.s V_16
+   01D2 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   01D7 ldloc.3 
+   01D8 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   01DD ldloc.s V_15
+   01DF ldloc.s V_16
+   01E1 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   01E6 ldloc.s V_4
+   01E8 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   01ED ldloc.s V_15
+   01EF ldloc.s V_16
+   01F1 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   01F6 ldloc.s V_6
+   01F8 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   01FD ldloc.s V_15
+   01FF ldloc.s V_16
+   0201 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0206 ldloc.s V_7
+   0208 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   020D ldloc.s V_15
+   020F ldloc.s V_16
+   0211 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0216 ldloc.s V_5
+   0218 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_equipUseID
+   021D ldloc.s V_15
+   021F ldloc.s V_16
+   0221 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0226 ldloc.s V_8
+   0228 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_symbolID
+   022D br IL_0248: ldloc.s V_16
+   0232 ldarg.0 
+   0233 ldarg.0 
+   0234 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0239 ldloc.s V_15
+   023B ldloc.s V_16
+   023D ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0242 call System.Boolean Assets.Scripts.GameSystem.OfflineGameBaseFunc::GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>,Assets.Scripts.GameSystem.stOfflineHeroInfo&)
+   0247 pop 
+   0248 ldloc.s V_16
+   024A ldc.i4.1 
+   024B add 
+   024C stloc.s V_16
+   024E ldloc.s V_16
+   0250 ldloc.s V_14
+   0252 blt IL_01b7: ldloc.s V_16
+   0257 ldarg.2 
+   0258 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   025D callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0262 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0267 ldarg.2 
+   0268 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   026D callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0272 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0277 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   027C stloc.s V_17
+   027E ldarg.0 
+   027F ldloc.s V_17
+   0281 ldloc.0 
+   0282 ldloc.1 
+   0283 ldarg.3 
+   0284 conv.u1 
+   0285 ldloc.2 
+   0286 conv.u1 
+   0287 ldarg.2 
+   0288 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   028D callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0292 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0297 conv.u8 
+   0298 ldloc.s V_15
+   029A ldloc.s V_9
+   029C dup 
+   029D ldc.i4.1 
+   029E add 
+   029F stloc.s V_9
+   02A1 ldloc.s V_10
+   02A3 call System.Void Assets.Scripts.GameSystem.OfflineGameBaseFunc::FillPlayerInfo(CSProtocol.COMDT_PLAYERINFO,System.UInt32,System.String,System.Byte,System.Byte,System.UInt64,Assets.Scripts.GameSystem.stOfflineHeroInfo[],System.Int32,System.Boolean)
+   02A8 ldarg.2 
+   02A9 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   02AE callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   02B3 dup 
+   02B4 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   02B9 ldc.i4.1 
+   02BA add 
+   02BB conv.u1 
+   02BC stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   02C1 ldarg.1 
+   02C2 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   02C7 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_playerInCampCount
+   02CC ldc.i4.1 
+   02CD ble IL_048a: ret
+   02D2 ldarg.1 
+   02D3 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   02D8 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_startWithFullPlayer
+   02DD brfalse IL_048a: ret
+   02E2 ldc.i4.1 
+   02E3 stloc.s V_18
+   02E5 br IL_0478: ldloc.s V_18
+   02EA ldc.i4.0 
+   02EB stloc.s V_19
+   02ED ldc.i4.0 
+   02EE stloc.s V_20
+   02F0 ldc.i4.0 
+   02F1 stloc.s V_21
+   02F3 ldnull 
+   02F4 stloc.s V_22
+   02F6 ldarg.1 
+   02F7 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   02FC ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_isCloneMode
+   0301 brfalse IL_032b: ldarg.0
+   0306 ldloc.3 
+   0307 stloc.s V_19
+   0309 ldloc.s V_4
+   030B stloc.s V_20
+   030D ldsfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::s_summonSkillIDs
+   0312 ldc.i4.0 
+   0313 ldsfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::s_summonSkillIDs
+   0318 ldlen 
+   0319 conv.i4 
+   031A call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   031F ldelem.u4 
+   0320 stloc.s V_21
+   0322 ldloc.s V_7
+   0324 stloc.s V_22
+   0326 br IL_033e: ldloc.s V_19
+   032B ldarg.0 
+   032C ldarg.0 
+   032D ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0332 ldloca.s V_19
+   0334 ldloca.s V_20
+   0336 ldloca.s V_21
+   0338 call System.Boolean Assets.Scripts.GameSystem.OfflineGameBaseFunc::GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>,System.UInt32&,System.UInt32&,System.UInt32&)
+   033D pop 
+   033E ldloc.s V_19
+   0340 ldc.i4.0 
+   0341 ble.un IL_0472: ldloc.s V_18
+   0346 ldloc.s V_14
+   0348 newarr Assets.Scripts.GameSystem.stOfflineHeroInfo
+   034D stloc.s V_23
+   034F ldc.i4.0 
+   0350 stloc.s V_24
+   0352 br IL_03cf: ldloc.s V_24
+   0357 ldloc.s V_24
+   0359 brfalse IL_036e: ldloc.s V_23
+   035E ldarg.1 
+   035F ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0364 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_isCloneMode
+   0369 brfalse IL_03b3: ldarg.0
+   036E ldloc.s V_23
+   0370 ldloc.s V_24
+   0372 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0377 ldloc.s V_19
+   0379 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   037E ldloc.s V_23
+   0380 ldloc.s V_24
+   0382 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0387 ldloc.s V_20
+   0389 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   038E ldloc.s V_23
+   0390 ldloc.s V_24
+   0392 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   0397 ldloc.s V_21
+   0399 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   039E ldloc.s V_23
+   03A0 ldloc.s V_24
+   03A2 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   03A7 ldloc.s V_22
+   03A9 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   03AE br IL_03c9: ldloc.s V_24
+   03B3 ldarg.0 
+   03B4 ldarg.0 
+   03B5 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   03BA ldloc.s V_23
+   03BC ldloc.s V_24
+   03BE ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   03C3 call System.Boolean Assets.Scripts.GameSystem.OfflineGameBaseFunc::GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>,Assets.Scripts.GameSystem.stOfflineHeroInfo&)
+   03C8 pop 
+   03C9 ldloc.s V_24
+   03CB ldc.i4.1 
+   03CC add 
+   03CD stloc.s V_24
+   03CF ldloc.s V_24
+   03D1 ldloc.s V_14
+   03D3 blt IL_0357: ldloc.s V_24
+   03D8 ldarg.2 
+   03D9 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   03DE callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   03E3 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   03E8 ldarg.2 
+   03E9 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   03EE callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   03F3 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   03F8 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   03FD stloc.s V_25
+   03FF ldarg.0 
+   0400 ldloc.s V_25
+   0402 ldarg.2 
+   0403 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0408 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   040D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0412 ldsfld System.String::Empty
+   0417 ldarg.3 
+   0418 conv.u1 
+   0419 ldc.i4.2 
+   041A ldarg.2 
+   041B ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0420 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0425 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   042A conv.u8 
+   042B ldloc.s V_23
+   042D ldloc.s V_9
+   042F dup 
+   0430 ldc.i4.1 
+   0431 add 
+   0432 stloc.s V_9
+   0434 ldloc.s V_10
+   0436 call System.Void Assets.Scripts.GameSystem.OfflineGameBaseFunc::FillPlayerInfo(CSProtocol.COMDT_PLAYERINFO,System.UInt32,System.String,System.Byte,System.Byte,System.UInt64,Assets.Scripts.GameSystem.stOfflineHeroInfo[],System.Int32,System.Boolean)
+   043B ldarg.1 
+   043C ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0441 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_isCloneMode
+   0446 brtrue IL_0459: ldarg.2
+   044B ldarg.0 
+   044C ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   0451 ldloc.s V_19
+   0453 ldc.i4.1 
+   0454 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::Add(!0,!1)
+   0459 ldarg.2 
+   045A ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   045F callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0464 dup 
+   0465 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   046A ldc.i4.1 
+   046B add 
+   046C conv.u1 
+   046D stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0472 ldloc.s V_18
+   0474 ldc.i4.1 
+   0475 add 
+   0476 stloc.s V_18
+   0478 ldloc.s V_18
+   047A ldarg.1 
+   047B ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0480 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_playerInCampCount
+   0485 blt IL_02ea: ldc.i4.0
+   048A ret 
+== System.Void FillPlayerInfo(CSProtocol.COMDT_PLAYERINFO playerInfo, System.UInt32 playerObjID, System.String playerName, System.Byte campID, System.Byte playerType, System.UInt64 playerUID, Assets.Scripts.GameSystem.stOfflineHeroInfo[] choosedHeroInfos, System.Int32 pos, System.Boolean forceMiddle) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldarg.s campID
+   0003 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0008 ldarg.1 
+   0009 ldarg.s playerType
+   000B stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0010 ldarg.1 
+   0011 ldarg.s forceMiddle
+   0013 brfalse IL_001e: ldarg.s pos
+   0018 ldc.i4.0 
+   0019 br IL_0022: conv.u1
+   001E ldarg.s pos
+   0020 ldc.i4.5 
+   0021 rem 
+   0022 conv.u1 
+   0023 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   0028 ldarg.1 
+   0029 ldarg.2 
+   002A stfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   002F ldarg.1 
+   0030 ldc.i4.1 
+   0031 stfld CSProtocol.COMDT_PLAYERINFO::dwLevel
+   0036 ldarg.1 
+   0037 call System.Text.Encoding System.Text.Encoding::get_UTF8()
+   003C ldarg.3 
+   003D callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   0042 stfld CSProtocol.COMDT_PLAYERINFO::szName
+   0047 ldarg.1 
+   0048 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   004D ldarg.1 
+   004E ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0053 conv.i8 
+   0054 callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.COMDT_PLAYERINFO_DETAIL::construct(System.Int64)
+   0059 pop 
+   005A ldarg.1 
+   005B ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0060 ldc.i4.1 
+   0061 bne.un IL_00b1: ldarg.1
+   0066 ldarg.1 
+   0067 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   006C callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0071 ldc.i4.1 
+   0072 stfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::dwHeadId
+   0077 ldarg.1 
+   0078 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   007D callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0082 ldarg.s playerUID
+   0084 stfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::ullUid
+   0089 ldarg.1 
+   008A ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   008F callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0094 ldc.i4.1 
+   0095 stfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::iLogicWorldID
+   009A ldarg.1 
+   009B ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00A0 callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   00A5 ldc.i4.s 30
+   00A7 stfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::dwPvpLevel
+   00AC br IL_00e6: ldc.i4.0
+   00B1 ldarg.1 
+   00B2 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00B7 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   00BC ldarg.s playerUID
+   00BE stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::ullFakeUid
+   00C3 ldarg.1 
+   00C4 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00C9 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   00CE ldc.i4.1 
+   00CF stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakeLogicWorldID
+   00D4 ldarg.1 
+   00D5 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00DA callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   00DF ldc.i4.s 30
+   00E1 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakePvpLevel
+   00E6 ldc.i4.0 
+   00E7 stloc.0 
+   00E8 br IL_02db: ldloc.0
+   00ED ldarg.s choosedHeroInfos
+   00EF ldloc.0 
+   00F0 ldelema Assets.Scripts.GameSystem.stOfflineHeroInfo
+   00F5 ldobj Assets.Scripts.GameSystem.stOfflineHeroInfo
+   00FA stloc.1 
+   00FB ldarg.1 
+   00FC ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0101 ldloc.0 
+   0102 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0107 stloc.2 
+   0108 ldloc.2 
+   0109 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   010E ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0113 ldloca.s V_1
+   0115 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   011A stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   011F ldloc.2 
+   0120 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0125 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   012A ldloca.s V_1
+   012C ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   0131 conv.u2 
+   0132 stfld CSProtocol.COMDT_HERO_COMMON_INFO::wSkinID
+   0137 ldloc.2 
+   0138 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   013D ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0142 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   0147 ldloca.s V_1
+   0149 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   014E stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   0153 ldloc.2 
+   0154 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0159 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   015E ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkinPartWearing
+   0163 ldc.i4.5 
+   0164 stfld CSProtocol.COMDT_SKINPART_WEARING::bNum
+   0169 ldloca.s V_1
+   016B ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_symbolID
+   0170 brfalse IL_0182: ldloca.s V_1
+   0175 ldloc.2 
+   0176 ldloca.s V_1
+   0178 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_symbolID
+   017D stfld CSProtocol.COMDT_CHOICEHERO::SymbolID
+   0182 ldloca.s V_1
+   0184 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   0189 brfalse IL_01d5: ldc.i4.0
+   018E ldloca.s V_1
+   0190 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   0195 ldlen 
+   0196 conv.i4 
+   0197 ldc.i4.5 
+   0198 bne.un IL_01d5: ldc.i4.0
+   019D ldc.i4.0 
+   019E stloc.3 
+   019F br IL_01c9: ldloc.3
+   01A4 ldloc.2 
+   01A5 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   01AA ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   01AF ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkinPartWearing
+   01B4 ldfld CSProtocol.COMDT_SKINPART_WEARING::szParts
+   01B9 ldloc.3 
+   01BA ldloca.s V_1
+   01BC ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   01C1 ldloc.3 
+   01C2 ldelem.u4 
+   01C3 conv.u1 
+   01C4 stelem.i1 
+   01C5 ldloc.3 
+   01C6 ldc.i4.1 
+   01C7 add 
+   01C8 stloc.3 
+   01C9 ldloc.3 
+   01CA ldc.i4.5 
+   01CB blt IL_01a4: ldloc.2
+   01D0 br IL_0204: ldloc.2
+   01D5 ldc.i4.0 
+   01D6 stloc.s V_4
+   01D8 br IL_01fc: ldloc.s V_4
+   01DD ldloc.2 
+   01DE ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   01E3 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   01E8 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkinPartWearing
+   01ED ldfld CSProtocol.COMDT_SKINPART_WEARING::szParts
+   01F2 ldloc.s V_4
+   01F4 ldc.i4.0 
+   01F5 stelem.i1 
+   01F6 ldloc.s V_4
+   01F8 ldc.i4.1 
+   01F9 add 
+   01FA stloc.s V_4
+   01FC ldloc.s V_4
+   01FE ldc.i4.5 
+   01FF blt IL_01dd: ldloc.2
+   0204 ldloc.2 
+   0205 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   020A ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   020F ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stProficiency
+   0214 ldloca.s V_1
+   0216 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   021B stfld CSProtocol.COMDT_HERO_PROFICIENCY::dwHeroID
+   0220 ldloc.2 
+   0221 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0226 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   022B ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stProficiency
+   0230 ldc.i4.0 
+   0231 stfld CSProtocol.COMDT_HERO_PROFICIENCY::dwProficiency
+   0236 ldloc.2 
+   0237 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   023C ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0241 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stProficiency
+   0246 ldc.i4.0 
+   0247 stfld CSProtocol.COMDT_HERO_PROFICIENCY::bLv
+   024C ldloc.2 
+   024D ldfld CSProtocol.COMDT_CHOICEHERO::stNewHeroEquipList
+   0252 ldloca.s V_1
+   0254 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   0259 stfld CSProtocol.COMDT_HERO_EQUIPLIST_NEW::dwHeroId
+   025E ldloc.2 
+   025F ldfld CSProtocol.COMDT_CHOICEHERO::stNewHeroEquipList
+   0264 ldloca.s V_1
+   0266 ldfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_equipUseID
+   026B stfld CSProtocol.COMDT_HERO_EQUIPLIST_NEW::dwCurUsed
+   0270 ldloc.2 
+   0271 ldfld CSProtocol.COMDT_CHOICEHERO::stNewHeroEquipList
+   0276 ldc.i4.3 
+   0277 stfld CSProtocol.COMDT_HERO_EQUIPLIST_NEW::dwEquipNum
+   027C ldc.i4.0 
+   027D stloc.s V_5
+   027F br IL_02a6: ldloc.s V_5
+   0284 ldloc.2 
+   0285 ldfld CSProtocol.COMDT_CHOICEHERO::stNewHeroEquipList
+   028A ldfld CSProtocol.COMDT_HERO_EQUIPLIST_NEW::astEquipList
+   028F ldloc.s V_5
+   0291 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_HERO_EQUIP_DETAIL>::get_Item(System.Int32)
+   0296 stloc.s V_6
+   0298 ldloc.s V_6
+   029A ldc.i4.0 
+   029B stfld CSProtocol.COMDT_HERO_EQUIP_DETAIL::bSelfDefine
+   02A0 ldloc.s V_5
+   02A2 ldc.i4.1 
+   02A3 add 
+   02A4 stloc.s V_5
+   02A6 ldloc.s V_5
+   02A8 conv.i8 
+   02A9 ldloc.2 
+   02AA ldfld CSProtocol.COMDT_CHOICEHERO::stNewHeroEquipList
+   02AF ldfld CSProtocol.COMDT_HERO_EQUIPLIST_NEW::dwEquipNum
+   02B4 conv.u8 
+   02B5 blt IL_0284: ldloc.2
+   02BA ldloc.2 
+   02BB ldfld CSProtocol.COMDT_CHOICEHERO::stHeroExtral
+   02C0 ldarg.s forceMiddle
+   02C2 brfalse IL_02cd: ldarg.s pos
+   02C7 ldc.i4.0 
+   02C8 br IL_02d1: conv.u1
+   02CD ldarg.s pos
+   02CF ldc.i4.5 
+   02D0 rem 
+   02D1 conv.u1 
+   02D2 stfld CSProtocol.COMDT_HEROEXTRALINFO::iHeroPos
+   02D7 ldloc.0 
+   02D8 ldc.i4.1 
+   02D9 add 
+   02DA stloc.0 
+   02DB ldloc.0 
+   02DC ldarg.s choosedHeroInfos
+   02DE ldlen 
+   02DF conv.i4 
+   02E0 blt IL_00ed: ldarg.s choosedHeroInfos
+   02E5 ret 
+== CSProtocol.CSPkg CreateStargSingleGameRsp(Assets.Scripts.GameSystem.stOfflineGamePlayParams& offlineGamePlayParams) attrs=Private, HideBySig maxstack=5
+   0000 ldc.i4 1051
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.SCPKG_STARTSINGLEGAMERSP CSProtocol.CSPkgBody::get_stStartSingleGameRsp()
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 ldc.i4.0 
+   0019 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::iErrCode
+   001E ldloc.1 
+   001F ldc.i4.0 
+   0020 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::dwRewardNum
+   0025 ldloc.1 
+   0026 ldarg.1 
+   0027 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   002C ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_gameType
+   0031 conv.u1 
+   0032 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::bGameType
+   0037 ldloc.1 
+   0038 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   003D ldloc.1 
+   003E ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::bGameType
+   0043 conv.i8 
+   0044 callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSDT_SINGLEGAMETYPE_RSP::construct(System.Int64)
+   0049 pop 
+   004A ldarg.1 
+   004B ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0050 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_gameType
+   0055 ldc.i4.1 
+   0056 bne.un IL_01ac: ldarg.1
+   005B ldloc.1 
+   005C ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   0061 callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0066 ldc.i4.0 
+   0067 stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::bIsWarmBattle
+   006C ldloc.1 
+   006D ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   0072 callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0077 ldarg.1 
+   0078 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   007D ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_aiLevel
+   0082 conv.u1 
+   0083 stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::bAILevel
+   0088 ldloc.1 
+   0089 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   008E callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0093 ldc.i4.1 
+   0094 stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::bRoomType
+   0099 ldloc.1 
+   009A ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   009F callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   00A4 ldarg.1 
+   00A5 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   00AA ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapType
+   00AF conv.u1 
+   00B0 stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::bMapType
+   00B5 ldloc.1 
+   00B6 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   00BB callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   00C0 ldarg.1 
+   00C1 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   00C6 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   00CB stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::dwMapId
+   00D0 ldarg.1 
+   00D1 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   00D6 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapType
+   00DB ldc.i4.2 
+   00DC bne.un IL_01a7: br IL_01f5
+   00E1 ldloca.s V_2
+   00E3 ldarg.1 
+   00E4 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   00E9 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   00EE call System.Boolean ResData.GameDataMgr/cpLevelDatabin::FindByKey(ResData.ResCounterPartLevelInfo&,System.UInt32)
+   00F3 brfalse IL_01a7: br IL_01f5
+   00F8 ldloca.s V_2
+   00FA ldfld ResData.ResCounterPartLevelInfo::bCounterPartSubType
+   00FF ldc.i4.1 
+   0100 bne.un IL_01a7: br IL_01f5
+   0105 ldc.i4.0 
+   0106 stloc.3 
+   0107 ldloc.1 
+   0108 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   010D callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0112 ldfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::stPveEquipInfo
+   0117 ldc.i4.0 
+   0118 stfld CSProtocol.COMDT_INBATTLE_PVE_EQUIP_DETAIL::dwTabIndexOrSuitID
+   011D ldc.i4.1 
+   011E stloc.s V_4
+   0120 br IL_016d: ldloc.s V_4
+   0125 ldstr PveEquipPos{0}
+   012A ldloc.s V_4
+   012C box System.Int32
+   0131 call System.String System.String::Format(System.String,System.Object)
+   0136 stloc.s V_5
+   0138 ldloc.s V_5
+   013A ldc.i4.0 
+   013B call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0140 stloc.s V_6
+   0142 ldloc.s V_6
+   0144 brfalse IL_0167: ldloc.s V_4
+   0149 ldloc.1 
+   014A ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   014F callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0154 ldfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::stPveEquipInfo
+   0159 ldfld CSProtocol.COMDT_INBATTLE_PVE_EQUIP_DETAIL::EquipID
+   015E ldloc.3 
+   015F ldloc.s V_6
+   0161 stelem.i4 
+   0162 ldloc.3 
+   0163 ldc.i4.1 
+   0164 add 
+   0165 conv.u1 
+   0166 stloc.3 
+   0167 ldloc.s V_4
+   0169 ldc.i4.1 
+   016A add 
+   016B stloc.s V_4
+   016D ldloc.s V_4
+   016F ldc.i4.6 
+   0170 ble IL_0125: ldstr "PveEquipPos{0}"
+   0175 ldloc.1 
+   0176 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   017B callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0180 ldfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::stPveEquipInfo
+   0185 ldloc.3 
+   0186 stfld CSProtocol.COMDT_INBATTLE_PVE_EQUIP_DETAIL::bEquipNum
+   018B ldloc.1 
+   018C ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   0191 callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   0196 ldarg.1 
+   0197 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   019C ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_aiLevel
+   01A1 conv.u1 
+   01A2 stfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::bAILevel
+   01A7 br IL_01f5: ldloc.1
+   01AC ldarg.1 
+   01AD ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   01B2 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_gameType
+   01B7 ldc.i4.s 12
+   01B9 bne.un IL_01f5: ldloc.1
+   01BE ldloc.1 
+   01BF ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   01C4 callvirt CSProtocol.CSDT_SINGLEGAME_OF_TRAINING_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfTraining()
+   01C9 ldarg.1 
+   01CA ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   01CF ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   01D4 stfld CSProtocol.CSDT_SINGLEGAME_OF_TRAINING_DETAIL::iLevelID
+   01D9 ldloc.1 
+   01DA ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   01DF callvirt CSProtocol.CSDT_SINGLEGAME_OF_TRAINING_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfTraining()
+   01E4 ldarg.1 
+   01E5 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   01EA ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_aiLevel
+   01EF conv.u1 
+   01F0 stfld CSProtocol.CSDT_SINGLEGAME_OF_TRAINING_DETAIL::bAILevel
+   01F5 ldloc.1 
+   01F6 ldc.i4.1 
+   01F7 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::dwBattleRoyaleSeed1
+   01FC ldloc.1 
+   01FD ldc.i4.2 
+   01FE stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::dwBattleRoyaleSeed2
+   0203 ldloc.1 
+   0204 ldc.i4.3 
+   0205 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::dwBattleRoyaleSeed3
+   020A ldloc.1 
+   020B ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0210 ldc.i4 454
+   0215 stfld CSProtocol.CSDT_PARACHUTE_PARAM::dwStartFrapN
+   021A ldloc.1 
+   021B ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0220 ldc.i4 2272
+   0225 stfld CSProtocol.CSDT_PARACHUTE_PARAM::dwEndFrapN
+   022A ldloc.1 
+   022B ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0230 ldfld CSProtocol.CSDT_PARACHUTE_PARAM::stStartPoint
+   0235 ldc.i4 -600000
+   023A stfld CSProtocol.COMDT_POS::iPosX
+   023F ldloc.1 
+   0240 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0245 ldfld CSProtocol.CSDT_PARACHUTE_PARAM::stStartPoint
+   024A ldc.i4 -600000
+   024F stfld CSProtocol.COMDT_POS::iPosY
+   0254 ldloc.1 
+   0255 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   025A ldfld CSProtocol.CSDT_PARACHUTE_PARAM::stEndPoint
+   025F ldc.i4 600000
+   0264 stfld CSProtocol.COMDT_POS::iPosX
+   0269 ldloc.1 
+   026A ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   026F ldfld CSProtocol.CSDT_PARACHUTE_PARAM::stEndPoint
+   0274 ldc.i4 600000
+   0279 stfld CSProtocol.COMDT_POS::iPosY
+   027E ldloc.1 
+   027F ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0284 ldc.i4.s 29
+   0286 stfld CSProtocol.CSDT_PARACHUTE_PARAM::iPlaneSpeed
+   028B ldloc.1 
+   028C ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   0291 ldc.i4 20000
+   0296 stfld CSProtocol.CSDT_PARACHUTE_PARAM::iPlaneHeight
+   029B ldloc.1 
+   029C ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   02A1 ldc.i4 1000
+   02A6 stfld CSProtocol.CSDT_PARACHUTE_PARAM::iJumpSpeed1
+   02AB ldloc.1 
+   02AC ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   02B1 ldc.i4 2000
+   02B6 stfld CSProtocol.CSDT_PARACHUTE_PARAM::iJumpSpeed2
+   02BB ldloc.1 
+   02BC ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   02C1 ldc.i4.5 
+   02C2 stfld CSProtocol.CSDT_PARACHUTE_PARAM::iEarlyJumpTime
+   02C7 ldloc.1 
+   02C8 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stParachuteParam
+   02CD ldc.i4.s 40
+   02CF stfld CSProtocol.CSDT_PARACHUTE_PARAM::iLatestJumpTime
+   02D4 ldloc.1 
+   02D5 ldarg.1 
+   02D6 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   02DB ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   02E0 stfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::iLevelId
+   02E5 ldloc.1 
+   02E6 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   02EB ldloc.1 
+   02EC ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::iErrCode
+   02F1 conv.i8 
+   02F2 callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSDT_SINGLEGAME_DETAIL::construct(System.Int64)
+   02F7 pop 
+   02F8 ldloc.1 
+   02F9 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   02FE callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0303 ldc.i4.0 
+   0304 stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0309 ldc.i4.0 
+   030A stloc.s V_7
+   030C br IL_0340: ldloc.s V_7
+   0311 ldarg.1 
+   0312 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0317 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_startWithFullPlayer
+   031C brtrue IL_032e: ldarg.0
+   0321 ldloc.s V_7
+   0323 ldc.i4.2 
+   0324 blt IL_032e: ldarg.0
+   0329 br IL_0352: ldarg.1
+   032E ldarg.0 
+   032F ldarg.1 
+   0330 ldloc.1 
+   0331 ldc.i4.1 
+   0332 ldloc.s V_7
+   0334 add 
+   0335 call System.Void Assets.Scripts.GameSystem.OfflineGameBaseFunc::FillCampPlayerInfo(Assets.Scripts.GameSystem.stOfflineGamePlayParams&,CSProtocol.SCPKG_STARTSINGLEGAMERSP,System.Int32)
+   033A ldloc.s V_7
+   033C ldc.i4.1 
+   033D add 
+   033E stloc.s V_7
+   0340 ldloc.s V_7
+   0342 ldarg.1 
+   0343 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0348 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_campCount
+   034D blt IL_0311: ldarg.1
+   0352 ldarg.1 
+   0353 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0358 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_gameType
+   035D ldc.i4.s 12
+   035F bne.un IL_0629: ldloc.0
+   0364 ldloca.s V_8
+   0366 ldarg.1 
+   0367 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   036C ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_mapID
+   0371 call System.Boolean ResData.GameDataMgr/trainLevelDatabin::FindByKey(ResData.ResTrainLevelCfgInfo&,System.Int32)
+   0376 brfalse IL_0629: ldloc.0
+   037B ldloca.s V_8
+   037D ldc.i4.1 
+   037E call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   0383 stloc.s V_9
+   0385 ldloca.s V_9
+   0387 ldc.i4.1 
+   0388 call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   038D brfalse IL_04d2: ldloca.s V_8
+   0392 ldloc.1 
+   0393 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0398 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   039D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   03A2 ldloc.1 
+   03A3 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   03A8 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   03AD dup 
+   03AE ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   03B3 dup 
+   03B4 stloc.s V_11
+   03B6 ldc.i4.1 
+   03B7 add 
+   03B8 conv.u1 
+   03B9 stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   03BE ldloc.s V_11
+   03C0 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   03C5 stloc.s V_10
+   03C7 ldloc.s V_10
+   03C9 ldarg.1 
+   03CA ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   03CF ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_hostCamp
+   03D4 ldc.i4.1 
+   03D5 bne.un IL_03e0: ldc.i4.1
+   03DA ldc.i4.2 
+   03DB br IL_03e1: conv.u1
+   03E0 ldc.i4.1 
+   03E1 conv.u1 
+   03E2 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   03E7 ldloc.s V_10
+   03E9 ldc.i4.2 
+   03EA stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   03EF ldloc.s V_10
+   03F1 ldc.i4.1 
+   03F2 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   03F7 ldloc.s V_10
+   03F9 ldc.i4 65537
+   03FE stfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   0403 ldloc.s V_10
+   0405 ldc.i4.1 
+   0406 stfld CSProtocol.COMDT_PLAYERINFO::dwLevel
+   040B ldloc.s V_10
+   040D ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0412 ldloc.s V_10
+   0414 ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0419 conv.i8 
+   041A callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.COMDT_PLAYERINFO_DETAIL::construct(System.Int64)
+   041F pop 
+   0420 ldloc.s V_10
+   0422 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0427 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   042C ldc.i4.0 
+   042D stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::bReserved
+   0432 ldloc.s V_10
+   0434 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0439 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   043E ldc.i4.1 
+   043F conv.i8 
+   0440 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::ullFakeUid
+   0445 ldloc.s V_10
+   0447 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   044C callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   0451 ldc.i4.1 
+   0452 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakeLogicWorldID
+   0457 ldloc.s V_10
+   0459 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   045E callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   0463 ldc.i4.s 30
+   0465 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakePvpLevel
+   046A ldloc.s V_10
+   046C ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0471 ldc.i4.0 
+   0472 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0477 stloc.s V_12
+   0479 ldloc.s V_12
+   047B ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0480 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0485 ldloca.s V_8
+   0487 ldc.i4.1 
+   0488 call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   048D stloc.s V_13
+   048F ldloca.s V_13
+   0491 ldc.i4.1 
+   0492 call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   0497 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   049C ldloc.s V_12
+   049E ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   04A3 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   04A8 ldc.i4.0 
+   04A9 stfld CSProtocol.COMDT_HERO_COMMON_INFO::wSkinID
+   04AE ldloc.s V_12
+   04B0 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   04B5 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   04BA ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   04BF ldc.i4.0 
+   04C0 stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   04C5 ldloc.s V_12
+   04C7 ldfld CSProtocol.COMDT_CHOICEHERO::stHeroExtral
+   04CC ldc.i4.1 
+   04CD stfld CSProtocol.COMDT_HEROEXTRALINFO::iHeroPos
+   04D2 ldloca.s V_8
+   04D4 ldc.i4.1 
+   04D5 call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   04DA stloc.s V_14
+   04DC ldloca.s V_14
+   04DE ldc.i4.2 
+   04DF call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   04E4 brfalse IL_0629: ldloc.0
+   04E9 ldloc.1 
+   04EA ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   04EF callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   04F4 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   04F9 ldloc.1 
+   04FA ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   04FF callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0504 dup 
+   0505 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   050A dup 
+   050B stloc.s V_11
+   050D ldc.i4.1 
+   050E add 
+   050F conv.u1 
+   0510 stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   0515 ldloc.s V_11
+   0517 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   051C stloc.s V_15
+   051E ldloc.s V_15
+   0520 ldarg.1 
+   0521 ldflda Assets.Scripts.GameSystem.stOfflineGamePlayParams::m_levelInfo
+   0526 ldfld Assets.Scripts.GameSystem.stOfflineLevelInfo::m_hostCamp
+   052B ldc.i4.1 
+   052C bne.un IL_0537: ldc.i4.1
+   0531 ldc.i4.2 
+   0532 br IL_0538: conv.u1
+   0537 ldc.i4.1 
+   0538 conv.u1 
+   0539 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   053E ldloc.s V_15
+   0540 ldc.i4.2 
+   0541 stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0546 ldloc.s V_15
+   0548 ldc.i4.2 
+   0549 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   054E ldloc.s V_15
+   0550 ldc.i4 65538
+   0555 stfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   055A ldloc.s V_15
+   055C ldc.i4.1 
+   055D stfld CSProtocol.COMDT_PLAYERINFO::dwLevel
+   0562 ldloc.s V_15
+   0564 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0569 ldloc.s V_15
+   056B ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0570 conv.i8 
+   0571 callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.COMDT_PLAYERINFO_DETAIL::construct(System.Int64)
+   0576 pop 
+   0577 ldloc.s V_15
+   0579 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   057E callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   0583 ldc.i4.0 
+   0584 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::bReserved
+   0589 ldloc.s V_15
+   058B ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0590 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   0595 ldc.i4.1 
+   0596 conv.i8 
+   0597 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::ullFakeUid
+   059C ldloc.s V_15
+   059E ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   05A3 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   05A8 ldc.i4.1 
+   05A9 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakeLogicWorldID
+   05AE ldloc.s V_15
+   05B0 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   05B5 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   05BA ldc.i4.s 30
+   05BC stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakePvpLevel
+   05C1 ldloc.s V_15
+   05C3 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   05C8 ldc.i4.0 
+   05C9 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   05CE stloc.s V_16
+   05D0 ldloc.s V_16
+   05D2 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   05D7 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   05DC ldloca.s V_8
+   05DE ldc.i4.1 
+   05DF call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   05E4 stloc.s V_17
+   05E6 ldloca.s V_17
+   05E8 ldc.i4.2 
+   05E9 call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   05EE stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   05F3 ldloc.s V_16
+   05F5 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   05FA ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   05FF ldc.i4.0 
+   0600 stfld CSProtocol.COMDT_HERO_COMMON_INFO::wSkinID
+   0605 ldloc.s V_16
+   0607 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   060C ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0611 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   0616 ldc.i4.0 
+   0617 stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   061C ldloc.s V_16
+   061E ldfld CSProtocol.COMDT_CHOICEHERO::stHeroExtral
+   0623 ldc.i4.2 
+   0624 stfld CSProtocol.COMDT_HEROEXTRALINFO::iHeroPos
+   0629 ldloc.0 
+   062A ret 
+== System.Boolean GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean> excludeMap, System.UInt32& heroID, System.UInt32& skinID, System.UInt32& summonSkillID) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.3 
+   0004 ldc.i4.0 
+   0005 stind.i4 
+   0006 ldarg.s summonSkillID
+   0008 ldc.i4.0 
+   0009 stind.i4 
+   000A ldc.i4.0 
+   000B stloc.0 
+   000C br IL_008c: ldarg.2
+   0011 ldloc.0 
+   0012 ldc.i4.1 
+   0013 add 
+   0014 stloc.0 
+   0015 ldc.i4.0 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_offlineAvailableHeroList
+   001C callvirt System.Int32 ListViewBase::get_Count()
+   0021 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0026 stloc.1 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_offlineAvailableHeroList
+   002D ldloc.1 
+   002E callvirt !0 ListView`1<Assets.Scripts.GameSystem.COfflineAvailableHero>::get_Item(System.Int32)
+   0033 stloc.2 
+   0034 ldarg.1 
+   0035 brfalse IL_0050: ldarg.2
+   003A ldarg.1 
+   003B ldloc.2 
+   003C ldfld Assets.Scripts.GameSystem.COfflineAvailableHero::m_heroID
+   0041 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>::ContainsKey(!0)
+   0046 brfalse IL_0050: ldarg.2
+   004B br IL_008c: ldarg.2
+   0050 ldarg.2 
+   0051 ldloc.2 
+   0052 ldfld Assets.Scripts.GameSystem.COfflineAvailableHero::m_heroID
+   0057 stind.i4 
+   0058 ldarg.3 
+   0059 ldloc.2 
+   005A ldfld Assets.Scripts.GameSystem.COfflineAvailableHero::m_skinIDs
+   005F ldc.i4.0 
+   0060 ldloc.2 
+   0061 ldfld Assets.Scripts.GameSystem.COfflineAvailableHero::m_skinIDs
+   0066 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   006B call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0070 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0075 stind.i4 
+   0076 ldarg.s summonSkillID
+   0078 ldsfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::s_summonSkillIDs
+   007D ldc.i4.0 
+   007E ldsfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::s_summonSkillIDs
+   0083 ldlen 
+   0084 conv.i4 
+   0085 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   008A ldelem.u4 
+   008B stind.i4 
+   008C ldarg.2 
+   008D ldind.u4 
+   008E brtrue IL_009e: ldarg.2
+   0093 ldloc.0 
+   0094 ldc.i4 10000
+   0099 blt IL_0011: ldloc.0
+   009E ldarg.2 
+   009F ldind.u4 
+   00A0 ldc.i4.0 
+   00A1 cgt.un 
+   00A3 ret 
+== System.Boolean GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean> excludeMap, Assets.Scripts.GameSystem.stOfflineHeroInfo& offlineHeroInfo) attrs=Private, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldc.i4.0 
+   0005 stloc.2 
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_usedHeroConfigIDs
+   000D ldloca.s V_0
+   000F ldloca.s V_1
+   0011 ldloca.s V_2
+   0013 call System.Boolean Assets.Scripts.GameSystem.OfflineGameBaseFunc::GetRandomPlayerHeroInfo(System.Collections.Generic.Dictionary`2<System.UInt32,System.Boolean>,System.UInt32&,System.UInt32&,System.UInt32&)
+   0018 brfalse IL_0042: ldc.i4.0
+   001D ldarg.2 
+   001E ldloc.0 
+   001F stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_heroID
+   0024 ldarg.2 
+   0025 ldloc.1 
+   0026 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_skinID
+   002B ldarg.2 
+   002C ldloc.2 
+   002D stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_summonSkillID
+   0032 ldarg.2 
+   0033 ldnull 
+   0034 stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_avatarParts
+   0039 ldarg.2 
+   003A ldc.i4.0 
+   003B stfld Assets.Scripts.GameSystem.stOfflineHeroInfo::m_equipUseID
+   0040 ldc.i4.1 
+   0041 ret 
+   0042 ldc.i4.0 
+   0043 ret 
+== System.Void SetOfflineAvailableHeroList(ListView`1<Assets.Scripts.GameSystem.COfflineAvailableHero> heroList) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::m_offlineAvailableHeroList
+   0007 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.s 10
+   0002 newarr System.UInt32
+   0007 dup 
+   0008 ldtoken <PrivateImplementationDetails>::$field-1D7F23A6A6CA27ACDC2D37DF6B3ED0EFACCBF6BB
+   000D call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0012 stsfld Assets.Scripts.GameSystem.OfflineGameBaseFunc::s_summonSkillIDs
+   0017 ret 

@@ -1,0 +1,398 @@
+// TYPE CMiniMapElementManager  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD DictionaryView`2<System.UInt32,CMiniMapElement> m_displayedMiniMapElements
+  FIELD DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>> m_miniMapElementPool
+  FIELD Assets.Scripts.GameSystem.MinimapSys m_miniMapSystem
+== System.Void .ctor(Assets.Scripts.GameSystem.MinimapSys miniMapSystem) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void DictionaryView`2<System.UInt32,CMiniMapElement>::.ctor()
+   0006 stfld CMiniMapElementManager::m_displayedMiniMapElements
+   000B ldarg.0 
+   000C newobj System.Void DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>>::.ctor()
+   0011 stfld CMiniMapElementManager::m_miniMapElementPool
+   0016 ldarg.0 
+   0017 call System.Void System.Object::.ctor()
+   001C ldarg.0 
+   001D ldarg.1 
+   001E stfld CMiniMapElementManager::m_miniMapSystem
+   0023 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   0006 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,CMiniMapElement>::GetEnumerator()
+   000B stloc.0 
+   000C br IL_0025: ldloca.s V_0
+   0011 ldloca.s V_0
+   0013 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CMiniMapElement>::get_Current()
+   0018 stloc.1 
+   0019 ldloca.s V_1
+   001B call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CMiniMapElement>::get_Value()
+   0020 callvirt System.Void CMiniMapElement::Clear()
+   0025 ldloca.s V_0
+   0027 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,CMiniMapElement>::MoveNext()
+   002C brtrue IL_0011: ldloca.s V_0
+   0031 ldarg.0 
+   0032 ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   0037 callvirt System.Void DictionaryView`2<System.UInt32,CMiniMapElement>::Clear()
+   003C ldarg.0 
+   003D ldfld CMiniMapElementManager::m_miniMapElementPool
+   0042 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>>::GetEnumerator()
+   0047 stloc.2 
+   0048 br IL_0090: ldloca.s V_2
+   004D ldloca.s V_2
+   004F call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,ListView`1<CMiniMapElement>>::get_Current()
+   0054 stloc.s V_4
+   0056 ldloca.s V_4
+   0058 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,ListView`1<CMiniMapElement>>::get_Value()
+   005D stloc.3 
+   005E ldloc.3 
+   005F callvirt System.Int32 ListViewBase::get_Count()
+   0064 stloc.s V_5
+   0066 ldc.i4.0 
+   0067 stloc.s V_6
+   0069 br IL_0081: ldloc.s V_6
+   006E ldloc.3 
+   006F ldloc.s V_6
+   0071 callvirt !0 ListView`1<CMiniMapElement>::get_Item(System.Int32)
+   0076 callvirt System.Void CMiniMapElement::Clear()
+   007B ldloc.s V_6
+   007D ldc.i4.1 
+   007E add 
+   007F stloc.s V_6
+   0081 ldloc.s V_6
+   0083 ldloc.s V_5
+   0085 blt IL_006e: ldloc.3
+   008A ldloc.3 
+   008B callvirt System.Void ListViewBase::Clear()
+   0090 ldloca.s V_2
+   0092 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,ListView`1<CMiniMapElement>>::MoveNext()
+   0097 brtrue IL_004d: ldloca.s V_2
+   009C ldarg.0 
+   009D ldfld CMiniMapElementManager::m_miniMapElementPool
+   00A2 callvirt System.Void DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>>::Clear()
+   00A7 ret 
+== System.Void DisplayMiniMapElement(SGW/stMiniMapElementInfo& miniMapElementInfo, System.Boolean checkViewPort) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldfld SGW/stMiniMapElementInfo::m_positionInScene
+   0006 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldfld SGW/stMiniMapElementInfo::m_uniID
+   0013 ldarg.1 
+   0014 ldfld SGW/stMiniMapElementInfo::m_actorType
+   0019 ldarg.1 
+   001A ldfld SGW/stMiniMapElementInfo::m_configID
+   001F ldloca.s V_0
+   0021 ldarg.1 
+   0022 call System.Boolean SGW/stMiniMapElementInfo::get_m_display()
+   0027 ldarg.2 
+   0028 call System.Void CMiniMapElementManager::DisplayMiniMapElement(System.UInt32,CoreDef.ActorTypeDef,System.UInt32,UnityEngine.Vector3&,System.Boolean,System.Boolean)
+   002D ret 
+== System.Void DisplayMiniMapElement(System.UInt32 uniID, CoreDef.ActorTypeDef actorType, System.UInt32 configID, UnityEngine.Vector3& positionInScene, System.Boolean display, System.Boolean checkViewPort) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.s display
+   0002 brfalse IL_0088: ldnull
+   0007 ldarg.0 
+   0008 ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   000D ldarg.1 
+   000E callvirt System.Boolean DictionaryView`2<System.UInt32,CMiniMapElement>::ContainsKey(!0)
+   0013 brfalse IL_0019: ldnull
+   0018 ret 
+   0019 ldnull 
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldarg.3 
+   001D call ListView`1<CMiniMapElement> CMiniMapElementManager::GetPooledElementList(System.UInt32)
+   0022 stloc.1 
+   0023 ldloc.1 
+   0024 callvirt System.Int32 ListViewBase::get_Count()
+   0029 ldc.i4.0 
+   002A ble IL_005c: ldarg.1
+   002F ldloc.1 
+   0030 callvirt System.Int32 ListViewBase::get_Count()
+   0035 ldc.i4.1 
+   0036 sub 
+   0037 stloc.2 
+   0038 ldloc.1 
+   0039 ldloc.2 
+   003A callvirt !0 ListView`1<CMiniMapElement>::get_Item(System.Int32)
+   003F stloc.0 
+   0040 ldloc.1 
+   0041 ldloc.2 
+   0042 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0047 ldloc.0 
+   0048 ldarg.1 
+   0049 ldarg.s positionInScene
+   004B callvirt System.Void CMiniMapElement::ReUse(System.UInt32,UnityEngine.Vector3&)
+   0050 ldloc.0 
+   0051 ldc.i4.1 
+   0052 callvirt System.Void CMiniMapElement::Display(System.Boolean)
+   0057 br IL_006d: ldarg.0
+   005C ldarg.1 
+   005D ldarg.2 
+   005E ldarg.3 
+   005F ldarg.s positionInScene
+   0061 ldarg.0 
+   0062 ldfld CMiniMapElementManager::m_miniMapSystem
+   0067 newobj System.Void CMiniMapElement::.ctor(System.UInt32,CoreDef.ActorTypeDef,System.UInt32,UnityEngine.Vector3&,Assets.Scripts.GameSystem.MinimapSys)
+   006C stloc.0 
+   006D ldarg.0 
+   006E ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   0073 ldarg.1 
+   0074 ldloc.0 
+   0075 callvirt System.Void DictionaryView`2<System.UInt32,CMiniMapElement>::Add(!0,!1)
+   007A ldarg.0 
+   007B ldloc.0 
+   007C ldarg.s checkViewPort
+   007E call System.Void CMiniMapElementManager::RefreshElementPosition(CMiniMapElement,System.Boolean)
+   0083 br IL_00c2: ret
+   0088 ldnull 
+   0089 stloc.3 
+   008A ldarg.0 
+   008B ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   0090 ldarg.1 
+   0091 ldloca.s V_3
+   0093 callvirt System.Boolean DictionaryView`2<System.UInt32,CMiniMapElement>::TryGetValue(!0,!1&)
+   0098 brfalse IL_00c2: ret
+   009D ldloc.3 
+   009E ldc.i4.0 
+   009F callvirt System.Void CMiniMapElement::Display(System.Boolean)
+   00A4 ldarg.0 
+   00A5 ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   00AA ldarg.1 
+   00AB callvirt System.Boolean DictionaryView`2<System.UInt32,CMiniMapElement>::Remove(!0)
+   00B0 pop 
+   00B1 ldarg.0 
+   00B2 ldarg.3 
+   00B3 call ListView`1<CMiniMapElement> CMiniMapElementManager::GetPooledElementList(System.UInt32)
+   00B8 stloc.s V_4
+   00BA ldloc.s V_4
+   00BC ldloc.3 
+   00BD callvirt System.Void ListView`1<CMiniMapElement>::Add(!0)
+   00C2 ret 
+== System.Void RefreshElementsPositionOnBigMap(System.Boolean bigMapOnLeft, System.Boolean checkViewPort) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CMiniMapElementManager::m_miniMapSystem
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D brfalse IL_0018: ldc.i4.2
+   0012 ldc.i4.1 
+   0013 br IL_0019: stloc.0
+   0018 ldc.i4.2 
+   0019 stloc.0 
+   001A ldarg.0 
+   001B ldc.i4.1 
+   001C ldloc.0 
+   001D ldarg.2 
+   001E call System.Void CMiniMapElementManager::RefreshElementsPosition(enMiniMapElementMode,Assets.Scripts.GameSystem.enMiniMapType,System.Boolean)
+   0023 ret 
+== System.Void RefreshElementsPosition(enMiniMapElementMode mode, System.Boolean checkViewPort) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CMiniMapElementManager::m_miniMapSystem
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldc.i4.1 
+   000E bne.un IL_0024: ldc.i4.0
+   0013 ldarg.0 
+   0014 ldfld CMiniMapElementManager::m_miniMapSystem
+   0019 ldc.i4.1 
+   001A callvirt Assets.Scripts.GameSystem.enMiniMapType Assets.Scripts.GameSystem.MinimapSys::GetUsedMiniMapType(System.Boolean)
+   001F br IL_0025: stloc.0
+   0024 ldc.i4.0 
+   0025 stloc.0 
+   0026 ldarg.0 
+   0027 ldarg.1 
+   0028 ldloc.0 
+   0029 ldarg.2 
+   002A call System.Void CMiniMapElementManager::RefreshElementsPosition(enMiniMapElementMode,Assets.Scripts.GameSystem.enMiniMapType,System.Boolean)
+   002F ret 
+== System.Void RefreshElementsPosition(enMiniMapElementMode mode, Assets.Scripts.GameSystem.enMiniMapType miniMapType, System.Boolean checkViewPort) attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld CMiniMapElementManager::m_displayedMiniMapElements
+   000C callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,CMiniMapElement>::GetEnumerator()
+   0011 stloc.1 
+   0012 br IL_009d: ldloca.s V_1
+   0017 ldloca.s V_1
+   0019 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CMiniMapElement>::get_Current()
+   001E stloc.3 
+   001F ldloca.s V_3
+   0021 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CMiniMapElement>::get_Value()
+   0026 stloc.2 
+   0027 ldloc.2 
+   0028 ldfld CMiniMapElement::m_elements
+   002D ldarg.1 
+   002E ldelema CMiniMapElement/stElement
+   0033 ldfld CMiniMapElement/stElement::m_gameObject
+   0038 brfalse IL_009d: ldloca.s V_1
+   003D ldloc.2 
+   003E ldfld CMiniMapElement::m_elements
+   0043 ldarg.1 
+   0044 ldelema CMiniMapElement/stElement
+   0049 ldfld CMiniMapElement/stElement::m_gameObject
+   004E ldfld CPooledGameObjectScript::Trans
+   0053 ldarg.0 
+   0054 ldfld CMiniMapElementManager::m_miniMapSystem
+   0059 ldloc.2 
+   005A ldfld CMiniMapElement::m_positionInScene
+   005F ldarg.2 
+   0060 callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInMap(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   0065 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   006A ldarg.3 
+   006B brfalse IL_009d: ldloca.s V_1
+   0070 ldarg.0 
+   0071 ldfld CMiniMapElementManager::m_miniMapSystem
+   0076 ldloc.2 
+   0077 ldfld CMiniMapElement::m_positionInScene
+   007C ldarg.2 
+   007D callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::IsPositionInViewPort(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   0082 stloc.s V_4
+   0084 ldloc.0 
+   0085 ldloc.2 
+   0086 ldfld CMiniMapElement::m_elements
+   008B ldarg.1 
+   008C ldelema CMiniMapElement/stElement
+   0091 ldfld CMiniMapElement/stElement::m_3DUIGameObject
+   0096 ldloc.s V_4
+   0098 callvirt System.Void Assets.Scripts.UI.C3DUIManager::Display3DUIGameObject(Assets.Scripts.UI.C3DUIGameObject,System.Boolean)
+   009D ldloca.s V_1
+   009F call System.Boolean DictionaryView`2/Enumerator<System.UInt32,CMiniMapElement>::MoveNext()
+   00A4 brtrue IL_0017: ldloca.s V_1
+   00A9 ret 
+== System.Void RefreshElementPosition(CMiniMapElement miniMapElement, System.Boolean checkViewPort) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CMiniMapElementManager::m_miniMapSystem
+   0006 brtrue IL_000c: call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0011 stloc.0 
+   0012 ldc.i4.0 
+   0013 stloc.1 
+   0014 ldc.i4.0 
+   0015 stloc.2 
+   0016 br IL_00c9: ldloc.2
+   001B ldarg.1 
+   001C ldfld CMiniMapElement::m_elements
+   0021 ldloc.2 
+   0022 ldelema CMiniMapElement/stElement
+   0027 ldfld CMiniMapElement/stElement::m_gameObject
+   002C brfalse IL_00c5: ldloc.2
+   0031 ldloc.2 
+   0032 brtrue IL_003e: ldloc.2
+   0037 ldc.i4.0 
+   0038 stloc.1 
+   0039 br IL_0067: ldarg.1
+   003E ldloc.2 
+   003F ldc.i4.1 
+   0040 bne.un IL_0067: ldarg.1
+   0045 ldarg.0 
+   0046 ldfld CMiniMapElementManager::m_miniMapSystem
+   004B callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::HasBigMap()
+   0050 brtrue IL_005a: ldarg.0
+   0055 br IL_00c5: ldloc.2
+   005A ldarg.0 
+   005B ldfld CMiniMapElementManager::m_miniMapSystem
+   0060 ldc.i4.1 
+   0061 callvirt Assets.Scripts.GameSystem.enMiniMapType Assets.Scripts.GameSystem.MinimapSys::GetUsedMiniMapType(System.Boolean)
+   0066 stloc.1 
+   0067 ldarg.1 
+   0068 ldfld CMiniMapElement::m_elements
+   006D ldloc.2 
+   006E ldelema CMiniMapElement/stElement
+   0073 ldfld CMiniMapElement/stElement::m_gameObject
+   0078 ldfld CPooledGameObjectScript::Trans
+   007D ldarg.0 
+   007E ldfld CMiniMapElementManager::m_miniMapSystem
+   0083 ldarg.1 
+   0084 ldfld CMiniMapElement::m_positionInScene
+   0089 ldloc.1 
+   008A callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInMap(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   008F callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0094 ldarg.2 
+   0095 brfalse IL_00c5: ldloc.2
+   009A ldarg.0 
+   009B ldfld CMiniMapElementManager::m_miniMapSystem
+   00A0 ldarg.1 
+   00A1 ldfld CMiniMapElement::m_positionInScene
+   00A6 ldloc.1 
+   00A7 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::IsPositionInViewPort(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   00AC stloc.3 
+   00AD ldloc.0 
+   00AE ldarg.1 
+   00AF ldfld CMiniMapElement::m_elements
+   00B4 ldloc.2 
+   00B5 ldelema CMiniMapElement/stElement
+   00BA ldfld CMiniMapElement/stElement::m_3DUIGameObject
+   00BF ldloc.3 
+   00C0 callvirt System.Void Assets.Scripts.UI.C3DUIManager::Display3DUIGameObject(Assets.Scripts.UI.C3DUIGameObject,System.Boolean)
+   00C5 ldloc.2 
+   00C6 ldc.i4.1 
+   00C7 add 
+   00C8 stloc.2 
+   00C9 ldloc.2 
+   00CA ldc.i4.2 
+   00CB blt IL_001b: ldarg.1
+   00D0 ret 
+== System.Boolean UseMiniMapElement(CoreDef.ActorTypeDef actorType, System.Int32 subType, System.Int32 extraSubType) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 bne.un IL_005b: ldc.i4.0
+   0007 ldarg.1 
+   0008 ldc.i4.2 
+   0009 bne.un IL_005b: ldc.i4.0
+   000E ldarg.2 
+   000F call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsMonsterDragon(System.Int32)
+   0014 brtrue IL_0021: ldc.i4.0
+   0019 ldarg.2 
+   001A ldc.i4.s 23
+   001C bne.un IL_0023: ldarg.2
+   0021 ldc.i4.0 
+   0022 ret 
+   0023 ldarg.2 
+   0024 ldc.i4.s 19
+   0026 beq IL_003b: ldc.i4.0
+   002B ldarg.2 
+   002C ldc.i4.s 24
+   002E beq IL_003b: ldc.i4.0
+   0033 ldarg.2 
+   0034 ldc.i4.s 25
+   0036 bne.un IL_003d: ldarg.2
+   003B ldc.i4.0 
+   003C ret 
+   003D ldarg.2 
+   003E ldc.i4.s 18
+   0040 beq IL_004d: ldc.i4.0
+   0045 ldarg.2 
+   0046 ldc.i4.s 22
+   0048 bne.un IL_004f: ldarg.2
+   004D ldc.i4.0 
+   004E ret 
+   004F ldarg.2 
+   0050 ldc.i4.s 27
+   0052 bne.un IL_0059: ldc.i4.1
+   0057 ldc.i4.0 
+   0058 ret 
+   0059 ldc.i4.1 
+   005A ret 
+   005B ldc.i4.0 
+   005C ret 
+== ListView`1<CMiniMapElement> GetPooledElementList(System.UInt32 configID) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld CMiniMapElementManager::m_miniMapElementPool
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>>::TryGetValue(!0,!1&)
+   0010 brtrue IL_0028: ldloc.0
+   0015 newobj System.Void ListView`1<CMiniMapElement>::.ctor()
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldfld CMiniMapElementManager::m_miniMapElementPool
+   0021 ldarg.1 
+   0022 ldloc.0 
+   0023 callvirt System.Void DictionaryView`2<System.UInt32,ListView`1<CMiniMapElement>>::Add(!0,!1)
+   0028 ldloc.0 
+   0029 ret 

@@ -1,0 +1,993 @@
+// TYPE Assets.Scripts.Framework.GameConnector  base=Assets.Scripts.Framework.BaseConnector  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 nBuffSize
+  FIELD System.Byte[] szSendBuffer
+  FIELD Assets.Scripts.Framework.ReconnectPolicy reconPolicy
+  FIELD ListView`1<CSProtocol.CSPkg> gameMsgSendQueue
+  FIELD ListView`1<CSProtocol.CSPkg> confirmSendQueue
+  FIELD Assets.Scripts.Framework.CmdQueueSenderBase cmdSender
+  FIELD DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase> cmdRedundancyQueueDicAI
+  FIELD System.Boolean netStateChanged
+  FIELD Apollo.NetworkState changedNetState
+  FIELD UnityEngine.NetworkReachability curNetworkReachability
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4 204800
+   0006 stfld Assets.Scripts.Framework.GameConnector::nBuffSize
+   000B ldarg.0 
+   000C ldc.i4 204800
+   0011 newarr System.Byte
+   0016 stfld Assets.Scripts.Framework.GameConnector::szSendBuffer
+   001B ldarg.0 
+   001C newobj System.Void Assets.Scripts.Framework.ReconnectPolicy::.ctor()
+   0021 stfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0026 ldarg.0 
+   0027 newobj System.Void ListView`1<CSProtocol.CSPkg>::.ctor()
+   002C stfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   0031 ldarg.0 
+   0032 newobj System.Void ListView`1<CSProtocol.CSPkg>::.ctor()
+   0037 stfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   003C ldarg.0 
+   003D newobj System.Void Assets.Scripts.Framework.CmdQueueSenderNormal::.ctor()
+   0042 stfld Assets.Scripts.Framework.GameConnector::cmdSender
+   0047 ldarg.0 
+   0048 newobj System.Void DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::.ctor()
+   004D stfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   0052 ldarg.0 
+   0053 call System.Void Assets.Scripts.Framework.BaseConnector::.ctor()
+   0058 ret 
+== System.Void Finalize() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.BaseConnector::DestroyConnector()
+   0006 ldarg.0 
+   0007 ldnull 
+   0008 stfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   000D leave IL_0019: ret
+   0012 ldarg.0 
+   0013 call System.Void System.Object::Finalize()
+   0018 endfinally 
+   0019 ret 
+== System.Void Disconnect() attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Apollo.ApolloNetworkService::Intance
+   0005 ldarg.0 
+   0006 ldftn System.Void Assets.Scripts.Framework.GameConnector::NetworkStateChanged(Apollo.NetworkState)
+   000C newobj System.Void Apollo.NetworkStateChanged::.ctor(System.Object,System.IntPtr)
+   0011 callvirt System.Void Apollo.ApolloNetworkService::remove_NetworkChangedEvent(Apollo.NetworkStateChanged)
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.Framework.BaseConnector::DestroyConnector()
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0022 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::StopPolicy()
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   002D ldnull 
+   002E ldnull 
+   002F ldc.i4.0 
+   0030 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::SetConnector(Assets.Scripts.Framework.BaseConnector,Assets.Scripts.Framework.tryReconnectDelegate,System.UInt32)
+   0035 ldarg.0 
+   0036 ldnull 
+   0037 stfld Assets.Scripts.Framework.BaseConnector::initParam
+   003C ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0006 ldc.i4.0 
+   0007 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::UpdatePolicy(System.Boolean)
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.Framework.GameConnector::netStateChanged
+   0012 brfalse IL_0055: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.Framework.GameConnector::changedNetState
+   001D brtrue IL_0044: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0022 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0027 call !0 Singleton`1<CTextManager>::GetInstance()
+   002C ldstr NetworkConnecting
+   0031 ldc.i4.1 
+   0032 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0037 ldc.i4.s 10
+   0039 ldc.i4.0 
+   003A callvirt System.Void Assets.Scripts.UI.CUIManager::OpenSendMsgAlert(System.String,System.Int32,Assets.Scripts.UI.enUIEventID)
+   003F br IL_004e: ldarg.0
+   0044 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0049 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   004E ldarg.0 
+   004F ldc.i4.0 
+   0050 stfld Assets.Scripts.Framework.GameConnector::netStateChanged
+   0055 ret 
+== System.Void ForceReconnect() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.Framework.BaseConnector::connected
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   000D ldc.i4.1 
+   000E callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::UpdatePolicy(System.Boolean)
+   0013 ret 
+== System.Boolean Init(Assets.Scripts.Framework.ConnectorParam para) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 ldftn System.UInt32 Assets.Scripts.Framework.GameConnector::onTryReconnect(System.UInt32,System.UInt32)
+   000E newobj System.Void Assets.Scripts.Framework.tryReconnectDelegate::.ctor(System.Object,System.IntPtr)
+   0013 ldc.i4.8 
+   0014 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::SetConnector(Assets.Scripts.Framework.BaseConnector,Assets.Scripts.Framework.tryReconnectDelegate,System.UInt32)
+   0019 ldsfld Apollo.ApolloNetworkService::Intance
+   001E ldarg.0 
+   001F ldftn System.Void Assets.Scripts.Framework.GameConnector::NetworkStateChanged(Apollo.NetworkState)
+   0025 newobj System.Void Apollo.NetworkStateChanged::.ctor(System.Object,System.IntPtr)
+   002A callvirt System.Void Apollo.ApolloNetworkService::remove_NetworkChangedEvent(Apollo.NetworkStateChanged)
+   002F ldsfld Apollo.ApolloNetworkService::Intance
+   0034 ldarg.0 
+   0035 ldftn System.Void Assets.Scripts.Framework.GameConnector::NetworkStateChanged(Apollo.NetworkState)
+   003B newobj System.Void Apollo.NetworkStateChanged::.ctor(System.Object,System.IntPtr)
+   0040 callvirt System.Void Apollo.ApolloNetworkService::add_NetworkChangedEvent(Apollo.NetworkStateChanged)
+   0045 ldarg.0 
+   0046 call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   004B stfld Assets.Scripts.Framework.GameConnector::curNetworkReachability
+   0050 ldarg.0 
+   0051 ldarg.1 
+   0052 call System.Boolean Assets.Scripts.Framework.BaseConnector::CreateConnector(Assets.Scripts.Framework.ConnectorParam)
+   0057 stloc.0 
+   0058 ldc.i4.s 15
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   0060 ldfld Assets.Scripts.Framework.ConnectorParam::url
+   0065 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   006A ldarg.0 
+   006B call Assets.Scripts.Framework.ConnectorParam Assets.Scripts.Framework.BaseConnector::GetConnectionParam()
+   0070 ldfld Assets.Scripts.Framework.ConnectorParam::httpDns
+   0075 ldarg.0 
+   0076 call Assets.Scripts.Framework.ConnectorParam Assets.Scripts.Framework.BaseConnector::GetConnectionParam()
+   007B ldfld Assets.Scripts.Framework.ConnectorParam::vPort
+   0080 call System.Void NetworkAccelerator::SetConnectIP(System.String,System.UInt16)
+   0085 ldloc.0 
+   0086 ret 
+== System.Void CleanUp() attrs=Public, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   0011 callvirt System.Void ListViewBase::Clear()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   001C callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::StopPolicy()
+   0021 ldarg.0 
+   0022 call System.Void Assets.Scripts.Framework.GameConnector::ClearBuffer()
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.Framework.GameConnector::cmdSender
+   002D callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::Clear()
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   0038 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::GetEnumerator()
+   003D stloc.0 
+   003E br IL_006b: ldloca.s V_0
+   0043 ldloca.s V_0
+   0045 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Current()
+   004A stloc.1 
+   004B ldloca.s V_1
+   004D call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Value()
+   0052 brfalse IL_006b: ldloca.s V_0
+   0057 ldloca.s V_0
+   0059 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Current()
+   005E stloc.2 
+   005F ldloca.s V_2
+   0061 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Value()
+   0066 callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::Clear()
+   006B ldloca.s V_0
+   006D call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::MoveNext()
+   0072 brtrue IL_0043: ldloca.s V_0
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   007D callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::Clear()
+   0082 ret 
+== System.Void ClearBuffer() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::szSendBuffer
+   0006 callvirt System.Void System.Array::Initialize()
+   000B ret 
+== System.UInt32 onTryReconnect(System.UInt32 nCount, System.UInt32 nMax) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.ReconnectIpSelect>::get_instance()
+   0005 ldc.i4.1 
+   0006 ldarg.1 
+   0007 callvirt System.String Assets.Scripts.Framework.ReconnectIpSelect::GetConnectUrl(Assets.Scripts.Framework.ConnectorType,System.UInt32)
+   000C stloc.0 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   0013 ldloc.0 
+   0014 callvirt System.Void Assets.Scripts.Framework.ConnectorParam::SetVip(System.String)
+   0019 ldarg.1 
+   001A ldc.i4.2 
+   001B bge.un IL_002a: call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0020 call System.Boolean Assets.Scripts.GameSystem.CCheatSystem::IsInhanceReconnect()
+   0025 brfalse IL_0068: ldarg.1
+   002A call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   002F ldarg.1 
+   0030 ldc.i4.1 
+   0031 sub 
+   0032 ldarg.2 
+   0033 ldc.i4.1 
+   0034 sub 
+   0035 callvirt System.Void Assets.Scripts.Framework.Reconnection::ShowReconnectMsgAlert(System.Int32,System.Int32)
+   003A leave IL_0068: ldarg.1
+   003F stloc.1 
+   0040 ldc.i4.0 
+   0041 ldstr Exception In GameConnector Try Reconnect, {0} {1}
+   0046 ldc.i4.2 
+   0047 newarr System.Object
+   004C dup 
+   004D ldc.i4.0 
+   004E ldloc.1 
+   004F callvirt System.String System.Exception::get_Message()
+   0054 stelem.ref 
+   0055 dup 
+   0056 ldc.i4.1 
+   0057 ldloc.1 
+   0058 callvirt System.String System.Exception::get_StackTrace()
+   005D stelem.ref 
+   005E call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0063 leave IL_0068: ldarg.1
+   0068 ldarg.1 
+   0069 ldc.i4.2 
+   006A bne.un IL_01bb: call !0 Singleton`1<DataReportSys>::GetInstance()
+   006F newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0074 stloc.2 
+   0075 ldloc.2 
+   0076 ldstr g_version
+   007B call System.String CVersion::GetAppVersion()
+   0080 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0085 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   008A ldloc.2 
+   008B ldstr WorldID
+   0090 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0095 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   009A stloc.3 
+   009B ldloca.s V_3
+   009D ldflda TdirUrl::logicWorldID
+   00A2 constrained. System.Int32
+   00A8 callvirt System.String System.Object::ToString()
+   00AD newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00B2 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00B7 ldloc.2 
+   00B8 ldstr platform
+   00BD call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00C2 ldflda ApolloHelper::CurPlatform
+   00C7 constrained. Apollo.ApolloPlatform
+   00CD callvirt System.String System.Object::ToString()
+   00D2 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00D7 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00DC ldloc.2 
+   00DD ldstr ping
+   00E2 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   00E7 ldflda Assets.Scripts.Framework.FrameSynchr::GameSvrPing
+   00EC constrained. System.Int32
+   00F2 callvirt System.String System.Object::ToString()
+   00F7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00FC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0101 call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   0106 ldc.i4.1 
+   0107 bne.un IL_0126: call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   010C ldloc.2 
+   010D ldstr Network
+   0112 ldstr 3G or 4G
+   0117 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   011C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0121 br IL_0160: ldloc.2
+   0126 call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   012B ldc.i4.2 
+   012C bne.un IL_014b: ldloc.2
+   0131 ldloc.2 
+   0132 ldstr Network
+   0137 ldstr WIFI
+   013C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0141 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0146 br IL_0160: ldloc.2
+   014B ldloc.2 
+   014C ldstr Network
+   0151 ldstr NoSignal
+   0156 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   015B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0160 ldloc.2 
+   0161 ldstr FrameNum
+   0166 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   016B ldflda Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   0170 constrained. System.UInt32
+   0176 callvirt System.String System.Object::ToString()
+   017B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0180 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0185 ldloc.2 
+   0186 ldstr IsFighting
+   018B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0190 ldflda Assets.Scripts.GameLogic.BattleLogic::isFighting
+   0195 constrained. System.Boolean
+   019B callvirt System.String System.Object::ToString()
+   01A0 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01A5 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01AA call !0 Singleton`1<ApolloHelper>::GetInstance()
+   01AF ldstr GameConnector.onTryReconnect
+   01B4 ldloc.2 
+   01B5 ldc.i4.1 
+   01B6 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   01BB call !0 Singleton`1<DataReportSys>::GetInstance()
+   01C0 callvirt System.Void DataReportSys::AddBattleReconnectCount()
+   01C5 ldarg.1 
+   01C6 ret 
+== System.Void NetworkStateChanged(Apollo.NetworkState state) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.GameConnector::changedNetState
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 stfld Assets.Scripts.Framework.GameConnector::netStateChanged
+   000E ret 
+== System.Void DealConnectSucc() attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0006 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::StopPolicy()
+   000B call !0 Singleton`1<Assets.Scripts.Framework.ReconnectIpSelect>::get_instance()
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   0016 ldfld Assets.Scripts.Framework.ConnectorParam::ip
+   001B callvirt System.Void Assets.Scripts.Framework.ReconnectIpSelect::SetRelaySuccessUrl(System.String)
+   0020 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0025 callvirt System.Void Assets.Scripts.Framework.Reconnection::OnConnectSuccess()
+   002A newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   002F stloc.0 
+   0030 ldloc.0 
+   0031 ldstr g_version
+   0036 call System.String CVersion::GetAppVersion()
+   003B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0040 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0045 ldloc.0 
+   0046 ldstr WorldID
+   004B call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0050 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0055 stloc.1 
+   0056 ldloca.s V_1
+   0058 ldflda TdirUrl::logicWorldID
+   005D constrained. System.Int32
+   0063 callvirt System.String System.Object::ToString()
+   0068 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   006D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0072 ldloc.0 
+   0073 ldstr platform
+   0078 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   007D ldflda ApolloHelper::CurPlatform
+   0082 constrained. Apollo.ApolloPlatform
+   0088 callvirt System.String System.Object::ToString()
+   008D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0092 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0097 ldloc.0 
+   0098 ldstr openid
+   009D ldstr NULL
+   00A2 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00A7 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00AC ldloc.0 
+   00AD ldstr status
+   00B2 ldstr 0
+   00B7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00BC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00C1 ldloc.0 
+   00C2 ldstr type
+   00C7 ldstr challenge
+   00CC newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00D1 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00D6 ldloc.0 
+   00D7 ldstr errorCode
+   00DC ldstr SUCC
+   00E1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00E6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00EB call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00F0 ldstr Service_SvrConnect_succ_GameConnector
+   00F5 ldloc.0 
+   00F6 ldc.i4.1 
+   00F7 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00FC ret 
+== System.Void DealConnectError(Apollo.ApolloResult result) attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0006 ldarg.1 
+   0007 ldc.i4.6 
+   0008 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::StartPolicy(Apollo.ApolloResult,System.Int32)
+   000D call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   0012 ldarg.1 
+   0013 callvirt System.Void Assets.Scripts.Framework.Reconnection::QueryIsRelayGaming(Apollo.ApolloResult)
+   0018 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldstr g_version
+   0024 call System.String CVersion::GetAppVersion()
+   0029 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   002E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0033 ldloc.0 
+   0034 ldstr WorldID
+   0039 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   003E callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0043 stloc.1 
+   0044 ldloca.s V_1
+   0046 ldflda TdirUrl::logicWorldID
+   004B constrained. System.Int32
+   0051 callvirt System.String System.Object::ToString()
+   0056 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   005B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0060 ldloc.0 
+   0061 ldstr platform
+   0066 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   006B ldflda ApolloHelper::CurPlatform
+   0070 constrained. Apollo.ApolloPlatform
+   0076 callvirt System.String System.Object::ToString()
+   007B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0080 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0085 ldloc.0 
+   0086 ldstr openid
+   008B ldstr NULL
+   0090 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0095 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   009A ldloc.0 
+   009B ldstr status
+   00A0 ldstr 0
+   00A5 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00AA callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00AF ldloc.0 
+   00B0 ldstr type
+   00B5 ldstr challenge
+   00BA newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00BF callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00C4 ldloc.0 
+   00C5 ldstr errorCode
+   00CA ldarga.s result
+   00CC constrained. Apollo.ApolloResult
+   00D2 callvirt System.String System.Object::ToString()
+   00D7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00DC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00E1 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00E6 ldstr Service_SvrConnectFail_GameConnector
+   00EB ldloc.0 
+   00EC ldc.i4.1 
+   00ED callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00F2 ret 
+== System.Void DealConnectFail(Apollo.ApolloResult result, Apollo.ApolloLoginInfo loginInfo) attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::reconPolicy
+   0006 ldarg.1 
+   0007 ldc.i4.6 
+   0008 callvirt System.Void Assets.Scripts.Framework.ReconnectPolicy::StartPolicy(Apollo.ApolloResult,System.Int32)
+   000D call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   0012 ldarg.1 
+   0013 callvirt System.Void Assets.Scripts.Framework.Reconnection::QueryIsRelayGaming(Apollo.ApolloResult)
+   0018 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldstr g_version
+   0024 call System.String CVersion::GetAppVersion()
+   0029 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   002E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0033 ldloc.0 
+   0034 ldstr WorldID
+   0039 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   003E callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0043 stloc.1 
+   0044 ldloca.s V_1
+   0046 ldflda TdirUrl::logicWorldID
+   004B constrained. System.Int32
+   0051 callvirt System.String System.Object::ToString()
+   0056 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   005B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0060 ldloc.0 
+   0061 ldstr platform
+   0066 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   006B ldflda ApolloHelper::CurPlatform
+   0070 constrained. Apollo.ApolloPlatform
+   0076 callvirt System.String System.Object::ToString()
+   007B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0080 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0085 ldloc.0 
+   0086 ldstr openid
+   008B ldstr NULL
+   0090 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0095 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   009A ldloc.0 
+   009B ldstr status
+   00A0 ldstr 0
+   00A5 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00AA callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00AF ldloc.0 
+   00B0 ldstr type
+   00B5 ldstr challenge
+   00BA newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00BF callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00C4 ldloc.0 
+   00C5 ldstr errorCode
+   00CA ldarga.s result
+   00CC constrained. Apollo.ApolloResult
+   00D2 callvirt System.String System.Object::ToString()
+   00D7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00DC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00E1 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00E6 ldstr Service_SvrConnectFail_GameConnector
+   00EB ldloc.0 
+   00EC ldc.i4.1 
+   00ED callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00F2 ret 
+== System.Void DealConnectClose(Apollo.ApolloResult result) attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void PushSendMsg(CSProtocol.CSPkg msg) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   0006 ldarg.1 
+   0007 callvirt System.Void ListView`1<CSProtocol.CSPkg>::Add(!0)
+   000C ret 
+== System.Void ImmeSendCmd(Assets.Scripts.Framework.FrameCommand& cmd, System.Boolean bAI) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.2 
+   0001 brfalse IL_0063: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   000C ldarg.1 
+   000D ldind.ref 
+   000E callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   0013 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::ContainsKey(!0)
+   0018 brfalse IL_003c: newobj System.Void Assets.Scripts.Framework.CmdQueueSenderAI::.ctor()
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   0023 ldarg.1 
+   0024 ldind.ref 
+   0025 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   002A callvirt !1 DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Item(!0)
+   002F ldarg.1 
+   0030 ldind.ref 
+   0031 ldarg.0 
+   0032 callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::SendCmd(Assets.Scripts.Framework.FrameCommand,Assets.Scripts.Framework.GameConnector)
+   0037 br IL_005e: br IL_0071
+   003C newobj System.Void Assets.Scripts.Framework.CmdQueueSenderAI::.ctor()
+   0041 stloc.0 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   0048 ldarg.1 
+   0049 ldind.ref 
+   004A callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   004F ldloc.0 
+   0050 callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::Add(!0,!1)
+   0055 ldloc.0 
+   0056 ldarg.1 
+   0057 ldind.ref 
+   0058 ldarg.0 
+   0059 callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::SendCmd(Assets.Scripts.Framework.FrameCommand,Assets.Scripts.Framework.GameConnector)
+   005E br IL_0071: ret
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.Framework.GameConnector::cmdSender
+   0069 ldarg.1 
+   006A ldind.ref 
+   006B ldarg.0 
+   006C callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::SendCmd(Assets.Scripts.Framework.FrameCommand,Assets.Scripts.Framework.GameConnector)
+   0071 ret 
+== System.Void PackCmd2Msg(Assets.Scripts.Framework.FrameCommand& cmd, CSProtocol.CSDT_GAMING_UPER_INFO msg) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 ldind.ref 
+   0002 callvirt System.Boolean Assets.Scripts.Framework.FrameCommand::get_isCSSync()
+   0007 brfalse IL_0069: ldarg.2
+   000C ldarg.2 
+   000D ldc.i4.2 
+   000E stfld CSProtocol.CSDT_GAMING_UPER_INFO::bType
+   0013 ldarg.2 
+   0014 ldarg.1 
+   0015 ldind.ref 
+   0016 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_cmdId()
+   001B stfld CSProtocol.CSDT_GAMING_UPER_INFO::dwCmdSeq
+   0020 ldarg.2 
+   0021 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   0026 ldarg.2 
+   0027 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::bType
+   002C conv.i8 
+   002D callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.UN_GAMING_UPER_DT::construct(System.Int64)
+   0032 pop 
+   0033 ldarg.2 
+   0034 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   0039 callvirt CSProtocol.CSDT_GAMING_CSSYNCINFO CSProtocol.UN_GAMING_UPER_DT::get_stCSInfo()
+   003E ldfld CSProtocol.CSDT_GAMING_CSSYNCINFO::stCSSyncDt
+   0043 ldarg.1 
+   0044 ldind.ref 
+   0045 callvirt System.Byte Assets.Scripts.Framework.FrameCommand::get_cmdType()
+   004A conv.i8 
+   004B callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSDT_GAMING_CSSYNCUN::construct(System.Int64)
+   0050 pop 
+   0051 ldarg.1 
+   0052 ldind.ref 
+   0053 ldarg.2 
+   0054 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   0059 callvirt CSProtocol.CSDT_GAMING_CSSYNCINFO CSProtocol.UN_GAMING_UPER_DT::get_stCSInfo()
+   005E callvirt System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO)
+   0063 pop 
+   0064 br IL_00f1: ret
+   0069 ldarg.2 
+   006A ldc.i4.1 
+   006B stfld CSProtocol.CSDT_GAMING_UPER_INFO::bType
+   0070 ldarg.2 
+   0071 ldarg.1 
+   0072 ldind.ref 
+   0073 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_cmdId()
+   0078 stfld CSProtocol.CSDT_GAMING_UPER_INFO::dwCmdSeq
+   007D ldarg.2 
+   007E ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   0083 ldarg.2 
+   0084 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::bType
+   0089 conv.i8 
+   008A callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.UN_GAMING_UPER_DT::construct(System.Int64)
+   008F pop 
+   0090 ldarg.2 
+   0091 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   0096 callvirt CSProtocol.CSDT_GAMING_CCSYNCINFO CSProtocol.UN_GAMING_UPER_DT::get_stCCInfo()
+   009B callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::construct()
+   00A0 pop 
+   00A1 ldarg.1 
+   00A2 ldind.ref 
+   00A3 call CSProtocol.FRAME_CMD_PKG Assets.Scripts.Framework.FrameCommandFactory::CreateCommandPKG(Assets.Scripts.Framework.FrameCommand)
+   00A8 stloc.0 
+   00A9 ldarg.1 
+   00AA ldind.ref 
+   00AB ldloc.0 
+   00AC callvirt System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.FRAME_CMD_PKG)
+   00B1 pop 
+   00B2 ldc.i4.0 
+   00B3 stloc.1 
+   00B4 ldloc.0 
+   00B5 ldarg.2 
+   00B6 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   00BB callvirt CSProtocol.CSDT_GAMING_CCSYNCINFO CSProtocol.UN_GAMING_UPER_DT::get_stCCInfo()
+   00C0 ldflda CSProtocol.CSDT_GAMING_CCSYNCINFO::szBuff
+   00C5 ldc.i4.s 64
+   00C7 ldloca.s V_1
+   00C9 ldc.i4.0 
+   00CA callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::pack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   00CF stloc.2 
+   00D0 ldarg.2 
+   00D1 ldfld CSProtocol.CSDT_GAMING_UPER_INFO::stUperDt
+   00D6 callvirt CSProtocol.CSDT_GAMING_CCSYNCINFO CSProtocol.UN_GAMING_UPER_DT::get_stCCInfo()
+   00DB ldloc.1 
+   00DC conv.u2 
+   00DD stfld CSProtocol.CSDT_GAMING_CCSYNCINFO::wLen
+   00E2 ldloc.2 
+   00E3 ldc.i4.0 
+   00E4 ceq 
+   00E6 call System.Void DebugHelper::Assert(System.Boolean)
+   00EB ldloc.0 
+   00EC callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   00F1 ret 
+== System.Void HandleSending() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0006 brfalse IL_015a: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.GameConnector::cmdRedundancyQueueDicAI
+   0011 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::GetEnumerator()
+   0016 stloc.0 
+   0017 br IL_0045: ldloca.s V_0
+   001C ldloca.s V_0
+   001E call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Current()
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Value()
+   002B brfalse IL_0045: ldloca.s V_0
+   0030 ldloca.s V_0
+   0032 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Current()
+   0037 stloc.2 
+   0038 ldloca.s V_2
+   003A call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::get_Value()
+   003F ldarg.0 
+   0040 callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::ReSendCmd(Assets.Scripts.Framework.GameConnector)
+   0045 ldloca.s V_0
+   0047 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.Framework.CmdQueueSenderBase>::MoveNext()
+   004C brtrue IL_001c: ldloca.s V_0
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.Framework.GameConnector::cmdSender
+   0057 ldarg.0 
+   0058 callvirt System.Void Assets.Scripts.Framework.CmdQueueSenderBase::ReSendCmd(Assets.Scripts.Framework.GameConnector)
+   005D ldc.i4.0 
+   005E stloc.3 
+   005F br IL_00b6: ldloc.3
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   006A ldloc.3 
+   006B callvirt !0 ListView`1<CSProtocol.CSPkg>::get_Item(System.Int32)
+   0070 stloc.s V_4
+   0072 call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::get_instance()
+   0077 ldfld Assets.Scripts.Framework.GameLogic::GameRunningTick
+   007C ldloc.s V_4
+   007E ldfld CSProtocol.CSPkg::stPkgHead
+   0083 ldfld CSProtocol.CSPkgHead::dwSvrPkgSeq
+   0088 sub 
+   0089 ldc.i4 5000
+   008E ble.un IL_00b2: ldloc.3
+   0093 ldarg.0 
+   0094 ldloc.s V_4
+   0096 call System.Boolean Assets.Scripts.Framework.GameConnector::SendPackage(CSProtocol.CSPkg)
+   009B pop 
+   009C ldloc.s V_4
+   009E ldfld CSProtocol.CSPkg::stPkgHead
+   00A3 call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::get_instance()
+   00A8 ldfld Assets.Scripts.Framework.GameLogic::GameRunningTick
+   00AD stfld CSProtocol.CSPkgHead::dwSvrPkgSeq
+   00B2 ldloc.3 
+   00B3 ldc.i4.1 
+   00B4 add 
+   00B5 stloc.3 
+   00B6 ldloc.3 
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   00BD callvirt System.Int32 ListViewBase::get_Count()
+   00C2 blt IL_0064: ldarg.0
+   00C7 br IL_013e: ldarg.0
+   00CC ldarg.0 
+   00CD ldfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   00D2 ldc.i4.0 
+   00D3 callvirt !0 ListView`1<CSProtocol.CSPkg>::get_Item(System.Int32)
+   00D8 stloc.s V_5
+   00DA ldarg.0 
+   00DB ldloc.s V_5
+   00DD call System.Boolean Assets.Scripts.Framework.GameConnector::SendPackage(CSProtocol.CSPkg)
+   00E2 brfalse IL_0139: br IL_015a
+   00E7 ldloc.s V_5
+   00E9 ldfld CSProtocol.CSPkg::stPkgHead
+   00EE ldfld CSProtocol.CSPkgHead::dwReserve
+   00F3 ldc.i4.0 
+   00F4 ble.un IL_0121: ldloc.s V_5
+   00F9 ldloc.s V_5
+   00FB ldfld CSProtocol.CSPkg::stPkgHead
+   0100 call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::get_instance()
+   0105 ldfld Assets.Scripts.Framework.GameLogic::GameRunningTick
+   010A stfld CSProtocol.CSPkgHead::dwSvrPkgSeq
+   010F ldarg.0 
+   0110 ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   0115 ldloc.s V_5
+   0117 callvirt System.Void ListView`1<CSProtocol.CSPkg>::Add(!0)
+   011C br IL_0128: ldarg.0
+   0121 ldloc.s V_5
+   0123 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0128 ldarg.0 
+   0129 ldfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   012E ldc.i4.0 
+   012F callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0134 br IL_013e: ldarg.0
+   0139 br IL_015a: ret
+   013E ldarg.0 
+   013F ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0144 brfalse IL_015a: ret
+   0149 ldarg.0 
+   014A ldfld Assets.Scripts.Framework.GameConnector::gameMsgSendQueue
+   014F callvirt System.Int32 ListViewBase::get_Count()
+   0154 ldc.i4.0 
+   0155 bgt IL_00cc: ldarg.0
+   015A ret 
+== System.Boolean SendPackage(CSProtocol.CSPkg msg) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0006 brfalse IL_0016: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0011 brtrue IL_0018: ldarg.1
+   0016 ldc.i4.0 
+   0017 ret 
+   0018 ldarg.1 
+   0019 ldfld CSProtocol.CSPkg::stPkgHead
+   001E ldfld CSProtocol.CSPkgHead::dwMsgID
+   0023 ldc.i4 1080
+   0028 bne.un IL_0038: ldc.i4.0
+   002D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0032 ldc.i4.1 
+   0033 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::SetSendExtraInfo(System.Int32)
+   0038 ldc.i4.0 
+   0039 stloc.0 
+   003A ldarg.1 
+   003B ldarg.0 
+   003C ldflda Assets.Scripts.Framework.GameConnector::szSendBuffer
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.Framework.GameConnector::nBuffSize
+   0047 ldloca.s V_0
+   0049 ldc.i4.0 
+   004A callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::pack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   004F brtrue IL_0170: call !0 Singleton`1<DataReportSys>::GetInstance()
+   0054 ldarg.1 
+   0055 ldfld CSProtocol.CSPkg::stPkgHead
+   005A ldfld CSProtocol.CSPkgHead::dwMsgID
+   005F ldc.i4 1080
+   0064 bne.un IL_0074: call !0 Singleton`1<DataReportSys>::GetInstance()
+   0069 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   006E ldc.i4.2 
+   006F callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::SetSendExtraInfo(System.Int32)
+   0074 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0079 callvirt System.Void DataReportSys::SendPackagePerSecond()
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   0084 ldfld Assets.Scripts.Framework.ConnectorParam::bIsUDP
+   0089 brfalse IL_0119: ldarg.0
+   008E ldarg.1 
+   008F ldfld CSProtocol.CSPkg::stPkgHead
+   0094 ldfld CSProtocol.CSPkgHead::dwMsgID
+   0099 ldc.i4 1004
+   009E beq IL_00e2: ldarg.0
+   00A3 ldarg.1 
+   00A4 ldfld CSProtocol.CSPkg::stPkgHead
+   00A9 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00AE ldc.i4 1260
+   00B3 beq IL_00e2: ldarg.0
+   00B8 ldarg.1 
+   00B9 ldfld CSProtocol.CSPkg::stPkgHead
+   00BE ldfld CSProtocol.CSPkgHead::dwMsgID
+   00C3 ldc.i4 1036
+   00C8 beq IL_00e2: ldarg.0
+   00CD ldarg.1 
+   00CE ldfld CSProtocol.CSPkg::stPkgHead
+   00D3 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00D8 ldc.i4 1037
+   00DD bne.un IL_0119: ldarg.0
+   00E2 ldarg.0 
+   00E3 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   00E8 ldarg.0 
+   00E9 ldfld Assets.Scripts.Framework.GameConnector::szSendBuffer
+   00EE ldloc.0 
+   00EF callvirt Apollo.ApolloResult Apollo.IApolloConnector::WriteUdpData(System.Byte[],System.Int32)
+   00F4 ldc.i4.0 
+   00F5 ceq 
+   00F7 stloc.1 
+   00F8 ldloc.1 
+   00F9 brfalse IL_010d: call !0 Singleton`1<DataReportSys>::GetInstance()
+   00FE call !0 Singleton`1<DataReportSys>::GetInstance()
+   0103 callvirt System.Void DataReportSys::AddSendUDPPackage()
+   0108 br IL_0117: ldloc.1
+   010D call !0 Singleton`1<DataReportSys>::GetInstance()
+   0112 callvirt System.Void DataReportSys::AddSendUDPPackageFail()
+   0117 ldloc.1 
+   0118 ret 
+   0119 ldarg.0 
+   011A ldfld Assets.Scripts.Framework.BaseConnector::connector
+   011F ldarg.0 
+   0120 ldfld Assets.Scripts.Framework.GameConnector::szSendBuffer
+   0125 ldloc.0 
+   0126 callvirt Apollo.ApolloResult Apollo.IApolloConnector::WriteData(System.Byte[],System.Int32)
+   012B ldc.i4.0 
+   012C ceq 
+   012E stloc.2 
+   012F ldloc.2 
+   0130 brfalse IL_0164: call !0 Singleton`1<DataReportSys>::GetInstance()
+   0135 ldarg.1 
+   0136 ldfld CSProtocol.CSPkg::stPkgHead
+   013B ldfld CSProtocol.CSPkgHead::dwMsgID
+   0140 ldc.i4 1080
+   0145 bne.un IL_0155: call !0 Singleton`1<DataReportSys>::GetInstance()
+   014A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   014F ldc.i4.4 
+   0150 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::SetSendExtraInfo(System.Int32)
+   0155 call !0 Singleton`1<DataReportSys>::GetInstance()
+   015A callvirt System.Void DataReportSys::AddSendDataPackage()
+   015F br IL_016e: ldloc.2
+   0164 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0169 callvirt System.Void DataReportSys::AddSendDataPackageFail()
+   016E ldloc.2 
+   016F ret 
+   0170 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0175 callvirt System.Void DataReportSys::PackErrorNum()
+   017A ldc.i4.0 
+   017B ret 
+== CSProtocol.CSPkg RecvPackage() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0006 brfalse IL_0106: ldnull
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0011 brfalse IL_0106: ldnull
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   001C ldloca.s V_0
+   001E ldloca.s V_1
+   0020 callvirt Apollo.ApolloResult Apollo.IApolloConnector::ReadUdpData(System.Byte[]&,System.Int32&)
+   0025 brtrue IL_0050: ldarg.0
+   002A ldc.i4.0 
+   002B stloc.2 
+   002C call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   0031 stloc.3 
+   0032 ldloc.3 
+   0033 ldloca.s V_0
+   0035 ldloc.1 
+   0036 ldloca.s V_2
+   0038 ldc.i4.0 
+   0039 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   003E stloc.s V_4
+   0040 ldloc.s V_4
+   0042 brtrue IL_0050: ldarg.0
+   0047 ldloc.2 
+   0048 ldc.i4.0 
+   0049 ble IL_0050: ldarg.0
+   004E ldloc.3 
+   004F ret 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0056 ldloca.s V_0
+   0058 ldloca.s V_1
+   005A callvirt Apollo.ApolloResult Apollo.IApolloConnector::ReadData(System.Byte[]&,System.Int32&)
+   005F brtrue IL_0106: ldnull
+   0064 ldc.i4.0 
+   0065 stloc.s V_5
+   0067 call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   006C stloc.s V_6
+   006E ldloc.s V_6
+   0070 ldloca.s V_0
+   0072 ldloc.1 
+   0073 ldloca.s V_5
+   0075 ldc.i4.0 
+   0076 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   007B stloc.s V_7
+   007D ldloc.s V_7
+   007F brtrue IL_0106: ldnull
+   0084 ldloc.s V_5
+   0086 ldc.i4.0 
+   0087 ble IL_0106: ldnull
+   008C ldc.i4.0 
+   008D stloc.s V_8
+   008F br IL_00f1: ldloc.s V_8
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   009A ldloc.s V_8
+   009C callvirt !0 ListView`1<CSProtocol.CSPkg>::get_Item(System.Int32)
+   00A1 stloc.s V_9
+   00A3 ldloc.s V_9
+   00A5 ldfld CSProtocol.CSPkg::stPkgHead
+   00AA ldfld CSProtocol.CSPkgHead::dwReserve
+   00AF ldc.i4.0 
+   00B0 ble.un IL_00eb: ldloc.s V_8
+   00B5 ldloc.s V_9
+   00B7 ldfld CSProtocol.CSPkg::stPkgHead
+   00BC ldfld CSProtocol.CSPkgHead::dwReserve
+   00C1 ldloc.s V_6
+   00C3 ldfld CSProtocol.CSPkg::stPkgHead
+   00C8 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00CD bne.un IL_00eb: ldloc.s V_8
+   00D2 ldloc.s V_9
+   00D4 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   00D9 ldarg.0 
+   00DA ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   00DF ldloc.s V_8
+   00E1 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00E6 br IL_00f1: ldloc.s V_8
+   00EB ldloc.s V_8
+   00ED ldc.i4.1 
+   00EE add 
+   00EF stloc.s V_8
+   00F1 ldloc.s V_8
+   00F3 ldarg.0 
+   00F4 ldfld Assets.Scripts.Framework.GameConnector::confirmSendQueue
+   00F9 callvirt System.Int32 ListViewBase::get_Count()
+   00FE blt IL_0094: ldarg.0
+   0103 ldloc.s V_6
+   0105 ret 
+   0106 ldnull 
+   0107 ret 
+== System.Void HandleMsg(CSProtocol.CSPkg msg) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.CSPkg::stPkgHead
+   0006 ldfld CSProtocol.CSPkgHead::dwMsgID
+   000B ldc.i4 1075
+   0010 beq IL_003f: call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   0015 ldarg.1 
+   0016 ldfld CSProtocol.CSPkg::stPkgHead
+   001B ldfld CSProtocol.CSPkgHead::dwMsgID
+   0020 ldc.i4 1077
+   0025 beq IL_003f: call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   002A ldarg.1 
+   002B ldfld CSProtocol.CSPkg::stPkgHead
+   0030 ldfld CSProtocol.CSPkgHead::dwMsgID
+   0035 ldc.i4 1251
+   003A bne.un IL_004a: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::get_instance()
+   003F call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   0044 ldarg.1 
+   0045 callvirt System.Void Assets.Scripts.Framework.GameReplayModule::CacheRecord(System.Object)
+   004A call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::get_instance()
+   004F ldarg.1 
+   0050 ldfld CSProtocol.CSPkg::stPkgHead
+   0055 ldfld CSProtocol.CSPkgHead::dwMsgID
+   005A callvirt Assets.Scripts.Framework.NetMsgDelegate Assets.Scripts.Framework.NetworkModule::GetMsgHandler(System.UInt32)
+   005F stloc.0 
+   0060 ldloc.0 
+   0061 brfalse IL_006d: ret
+   0066 ldloc.0 
+   0067 ldarg.1 
+   0068 callvirt System.Void Assets.Scripts.Framework.NetMsgDelegate::Invoke(CSProtocol.CSPkg)
+   006D ret 

@@ -1,0 +1,81 @@
+// TYPE Assets.Scripts.GameSystem.CPvPHeroShop  base=Singleton`1<Assets.Scripts.GameSystem.CPvPHeroShop>  attrs=BeforeFieldInit
+  FIELD System.Int32 ReGetFreeHeroTimer
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CPvPHeroShop>::.ctor()
+   0006 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CPvPHeroShop::ReGetFreeHeroTimer
+   0005 brfalse IL_0019: ldarg.0
+   000A call !0 Singleton`1<CTimerManager>::GetInstance()
+   000F ldsfld Assets.Scripts.GameSystem.CPvPHeroShop::ReGetFreeHeroTimer
+   0014 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0019 ldarg.0 
+   001A call System.Void Singleton`1<Assets.Scripts.GameSystem.CPvPHeroShop>::UnInit()
+   001F ret 
+== System.Void GetFreeHero(System.Int32 seq) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 1814
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 ldloca.s V_0
+   0012 ldc.i4.1 
+   0013 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0018 pop 
+   0019 ret 
+== System.Void OnGetFreeHero(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldsfld Assets.Scripts.GameSystem.CPvPHeroShop::ReGetFreeHeroTimer
+   000F brfalse IL_0023: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0014 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0019 ldsfld Assets.Scripts.GameSystem.CPvPHeroShop::ReGetFreeHeroTimer
+   001E callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0023 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0028 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   002D stloc.0 
+   002E ldloc.0 
+   002F brfalse IL_00c6: ldc.i4.0
+   0034 ldloc.0 
+   0035 ldarg.0 
+   0036 ldfld CSProtocol.CSPkg::stPkgData
+   003B callvirt CSProtocol.SCPKG_FREEHERO_RSP CSProtocol.CSPkgBody::get_stFreeHeroRsp()
+   0040 ldfld CSProtocol.SCPKG_FREEHERO_RSP::stFreeHero
+   0045 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfo::SetFreeHeroInfo(CSProtocol.COMDT_FREEHERO)
+   004A ldloc.0 
+   004B ldarg.0 
+   004C ldfld CSProtocol.CSPkg::stPkgData
+   0051 callvirt CSProtocol.SCPKG_FREEHERO_RSP CSProtocol.CSPkgBody::get_stFreeHeroRsp()
+   0056 ldfld CSProtocol.SCPKG_FREEHERO_RSP::stFreeHeroSymbol
+   005B callvirt System.Void Assets.Scripts.GameSystem.CRoleInfo::SetFreeHeroSymbol(CSProtocol.COMDT_FREEHERO_INACNT_MEM)
+   0060 ldloc.0 
+   0061 ldarg.0 
+   0062 ldfld CSProtocol.CSPkg::stPkgData
+   0067 callvirt CSProtocol.SCPKG_FREEHERO_RSP CSProtocol.CSPkgBody::get_stFreeHeroRsp()
+   006C ldfld CSProtocol.SCPKG_FREEHERO_RSP::stFreeExpHeroProficiency
+   0071 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfo::SetNotHeroProficiency(CSProtocol.COMDT_FREE_EXP_HERO_PROFICIENCY)
+   0076 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   007B conv.i8 
+   007C ldarg.0 
+   007D ldfld CSProtocol.CSPkg::stPkgData
+   0082 callvirt CSProtocol.SCPKG_FREEHERO_RSP CSProtocol.CSPkgBody::get_stFreeHeroRsp()
+   0087 ldfld CSProtocol.SCPKG_FREEHERO_RSP::stFreeHero
+   008C ldfld CSProtocol.COMDT_FREEHERO::dwDeadline
+   0091 conv.u8 
+   0092 bge IL_009c: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0097 br IL_00c1: br IL_00d1
+   009C call !0 Singleton`1<CTimerManager>::GetInstance()
+   00A1 ldc.i4 900000
+   00A6 ldc.i4.1 
+   00A7 call !0 Singleton`1<Assets.Scripts.GameSystem.CPvPHeroShop>::GetInstance()
+   00AC ldftn System.Void Assets.Scripts.GameSystem.CPvPHeroShop::GetFreeHero(System.Int32)
+   00B2 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00B7 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   00BC stsfld Assets.Scripts.GameSystem.CPvPHeroShop::ReGetFreeHeroTimer
+   00C1 br IL_00d1: ret
+   00C6 ldc.i4.0 
+   00C7 ldstr Master RoleInfo is NULL!!!
+   00CC call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   00D1 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

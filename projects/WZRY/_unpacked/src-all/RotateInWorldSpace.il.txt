@@ -1,0 +1,68 @@
+// TYPE RotateInWorldSpace  base=CameraUpdateComponent  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Vector3 initAngle
+  FIELD UnityEngine.Vector3 speedPerSecond
+  FIELD System.Boolean useQuaternionDirectly
+  FIELD UnityEngine.Vector3 currentAngle
+  FIELD UnityEngine.Vector3 speedAnglePerFrame
+  FIELD UnityEngine.Quaternion m_quaternion
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void CameraUpdateComponent::.ctor()
+   0006 ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld RotateInWorldSpace::useQuaternionDirectly
+   0006 brfalse IL_001b: ldarg.0
+   000B ldarg.0 
+   000C call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0011 stfld RotateInWorldSpace::m_quaternion
+   0016 br IL_0040: ret
+   001B ldarg.0 
+   001C ldarg.0 
+   001D ldfld RotateInWorldSpace::initAngle
+   0022 stfld RotateInWorldSpace::currentAngle
+   0027 call System.Int32 UnityEngine.Application::get_targetFrameRate()
+   002C stloc.0 
+   002D ldarg.0 
+   002E ldarg.0 
+   002F ldfld RotateInWorldSpace::speedPerSecond
+   0034 ldloc.0 
+   0035 conv.r4 
+   0036 call UnityEngine.Vector3 UnityEngine.Vector3::op_Division(UnityEngine.Vector3,System.Single)
+   003B stfld RotateInWorldSpace::speedAnglePerFrame
+   0040 ret 
+== System.Void SetRotateQuaternion(UnityEngine.Quaternion quaternion) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld RotateInWorldSpace::m_quaternion
+   0007 ret 
+== System.Void LateUpdate() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void CameraUpdateComponent::AfterUpdate()
+   0006 ret 
+== System.Void AfterUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld RotateInWorldSpace::useQuaternionDirectly
+   0006 brfalse IL_0026: ldarg.0
+   000B ldarg.0 
+   000C call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0011 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0016 ldarg.0 
+   0017 ldfld RotateInWorldSpace::m_quaternion
+   001C callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0021 br IL_0058: ret
+   0026 ldarg.0 
+   0027 dup 
+   0028 ldfld RotateInWorldSpace::currentAngle
+   002D ldarg.0 
+   002E ldfld RotateInWorldSpace::speedAnglePerFrame
+   0033 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0038 stfld RotateInWorldSpace::currentAngle
+   003D ldarg.0 
+   003E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0043 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0048 ldarg.0 
+   0049 ldfld RotateInWorldSpace::currentAngle
+   004E call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(UnityEngine.Vector3)
+   0053 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0058 ret 

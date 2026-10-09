@@ -1,0 +1,173 @@
+// TYPE Assets.Scripts.Framework.LaunchState  base=BaseState  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean m_isSplashPlayComplete
+  FIELD System.Boolean m_isBaseSystemPrepareComplete
+  FIELD System.Boolean m_jumpState
+  FIELD System.Boolean m_videoVerifySucc
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void BaseState::.ctor()
+   0006 ret 
+== System.Void OnStateEnter() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldc.i4.4 
+   0001 ldstr 1
+   0006 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   000B ldc.i4.1 
+   000C stsfld Assets.Scripts.Framework.GameSettings::ParticleQuality
+   0011 ldc.i4.1 
+   0012 stsfld Assets.Scripts.Framework.GameSettings::RenderQuality
+   0017 ldc.i4.1 
+   0018 call System.Void Assets.Scripts.Framework.GameSettings::SetHDMode(System.Int32)
+   001D ldc.i4.s 60
+   001F stsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   0024 ldc.r4 1000
+   0029 ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   002E conv.r4 
+   002F div 
+   0030 stsfld Assets.Scripts.Framework.GameFramework::c_targetFrameTime
+   0035 call !0 Singleton`1<Assets.Scripts.Framework.ResourceLoader>::GetInstance()
+   003A ldstr SplashScene
+   003F ldarg.0 
+   0040 ldftn System.Void Assets.Scripts.Framework.LaunchState::OnSplashLoadCompleted()
+   0046 newobj System.Void Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate::.ctor(System.Object,System.IntPtr)
+   004B callvirt System.Void Assets.Scripts.Framework.ResourceLoader::LoadScene(System.String,Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate)
+   0050 ldarg.0 
+   0051 ldc.i4.0 
+   0052 stfld Assets.Scripts.Framework.LaunchState::m_isSplashPlayComplete
+   0057 ldarg.0 
+   0058 ldc.i4.0 
+   0059 stfld Assets.Scripts.Framework.LaunchState::m_isBaseSystemPrepareComplete
+   005E ret 
+== System.Void OnSplashLoadCompleted() attrs=Private, HideBySig maxstack=7
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldc.i4 1000
+   000A ldc.i4.1 
+   000B ldarg.0 
+   000C ldftn System.Void Assets.Scripts.Framework.LaunchState::OnTimiPlayComplete(System.Int32)
+   0012 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0017 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   001C pop 
+   001D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0022 ldc.i4 3000
+   0027 ldc.i4.1 
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.Framework.LaunchState::OnSplashPlayComplete(System.Int32)
+   002F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0039 pop 
+   003A call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   003F ldarg.0 
+   0040 ldftn System.Void Assets.Scripts.Framework.LaunchState::OnCheatSystemDisable()
+   0046 newobj System.Void Assets.Scripts.GameSystem.CCheatSystem/OnDisable::.ctor(System.Object,System.IntPtr)
+   004B callvirt System.Void Assets.Scripts.GameSystem.CCheatSystem::OpenCheatTriggerForm(Assets.Scripts.GameSystem.CCheatSystem/OnDisable)
+   0050 call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0055 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.SplashSystem::OpenSplashForm()
+   005A pop 
+   005B call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0060 ldc.i4.0 
+   0061 callvirt System.Void Assets.Scripts.GameSystem.SplashSystem::ShowSplashForm(System.Boolean)
+   0066 ldarg.0 
+   0067 ldc.i4.1 
+   0068 stfld Assets.Scripts.Framework.LaunchState::m_videoVerifySucc
+   006D call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0072 callvirt Assets.Scripts.GameSystem.SplashSystem/enSplashType Assets.Scripts.GameSystem.SplashSystem::GetSplashType()
+   0077 ldc.i4.1 
+   0078 bne.un.s IL_00b1: ret
+   007A ldarg.0 
+   007B call System.Boolean Assets.Scripts.Framework.LaunchState::SplashVideoVerify()
+   0080 brtrue.s IL_00b1: ret
+   0082 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0087 ldstr 资源校验失败
+   008C ldc.i4 3405
+   0091 ldloca.s V_0
+   0093 initobj Assets.Scripts.UI.stUIEventParams
+   0099 ldloc.0 
+   009A ldstr 确定
+   009F ldstr 错误
+   00A4 ldc.i4.0 
+   00A5 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String,System.String,System.Boolean)
+   00AA ldarg.0 
+   00AB ldc.i4.0 
+   00AC stfld Assets.Scripts.Framework.LaunchState::m_videoVerifySucc
+   00B1 ret 
+== System.Void OnTimiPlayComplete(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0005 ldarg.0 
+   0006 ldftn System.Void Assets.Scripts.Framework.LaunchState::OnPrepareBaseSystemComplete()
+   000C newobj System.Void Assets.Scripts.Framework.GameFramework/DelegateOnBaseSystemPrepareComplete::.ctor(System.Object,System.IntPtr)
+   0011 callvirt System.Void Assets.Scripts.Framework.GameFramework::StartPrepareBaseSystem(Assets.Scripts.Framework.GameFramework/DelegateOnBaseSystemPrepareComplete)
+   0016 ret 
+== System.Void OnSplashPlayComplete(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.Framework.LaunchState::m_isSplashPlayComplete
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.Framework.LaunchState::CheckContionToNextState()
+   000D ret 
+== System.Void OnPrepareBaseSystemComplete() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.Framework.LaunchState::m_isBaseSystemPrepareComplete
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.Framework.LaunchState::CheckContionToNextState()
+   000D ret 
+== System.Void OnCheatSystemDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.LaunchState::CheckContionToNextState()
+   0006 ret 
+== System.Void CheckContionToNextState() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.LaunchState::m_isSplashPlayComplete
+   0006 brfalse.s IL_004c: ret
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.Framework.LaunchState::m_isBaseSystemPrepareComplete
+   000E brfalse.s IL_004c: ret
+   0010 call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   0015 ldfld Assets.Scripts.GameSystem.CCheatSystem::m_enabled
+   001A brtrue.s IL_004c: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.Framework.LaunchState::m_jumpState
+   0022 brtrue.s IL_004c: ret
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.Framework.LaunchState::m_videoVerifySucc
+   002A brfalse.s IL_004c: ret
+   002C ldarg.0 
+   002D ldc.i4.1 
+   002E stfld Assets.Scripts.Framework.LaunchState::m_jumpState
+   0033 call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   0038 callvirt System.Void Assets.Scripts.GameSystem.CCheatSystem::CloseCheatTriggerForm()
+   003D call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0042 ldstr VersionUpdateState
+   0047 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   004C ret 
+== System.Boolean SplashVideoVerify() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0007 ldfld Assets.Scripts.GameSystem.SplashSystem::m_SplashConfig
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse.s IL_0069: ldloc.0
+   0014 call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0019 ldfld Assets.Scripts.GameSystem.SplashSystem::m_SplashConfig
+   001E ldfld SplashConfig::SplashVideoNode
+   0023 ldnull 
+   0024 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse.s IL_0069: ldloc.0
+   002B call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0030 ldfld Assets.Scripts.GameSystem.SplashSystem::m_SplashConfig
+   0035 ldfld SplashConfig::SplashVideoNode
+   003A callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIVideoPlayerScript>()
+   003F ldnull 
+   0040 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0045 brfalse.s IL_0069: ldloc.0
+   0047 call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   004C ldfld Assets.Scripts.GameSystem.SplashSystem::m_SplashConfig
+   0051 ldfld SplashConfig::SplashVideoNode
+   0056 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIVideoPlayerScript>()
+   005B callvirt System.String Assets.Scripts.UI.CUIVideoPlayerScript::GetFullVideoPath()
+   0060 call System.Boolean Utility::VerifyBigFile(System.String)
+   0065 brfalse.s IL_0069: ldloc.0
+   0067 ldc.i4.1 
+   0068 stloc.0 
+   0069 ldloc.0 
+   006A ret 

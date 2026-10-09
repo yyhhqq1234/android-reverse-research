@@ -1,0 +1,1446 @@
+// TYPE FastWater  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.String walkingWaterRippleEffect = Prefab_Skill_Effects/Common_Effects/Walking_Shuihua_001
+  FIELD FastWater mInstance
+  FIELD System.Single emissiveFrequency
+  FIELD System.Boolean mWaterRippleEnable
+  FIELD System.Single amplitude
+  FIELD System.Single velocity
+  FIELD System.Single lambda
+  FIELD System.Single durationTime
+  FIELD System.Single hostActorGenerateRippleInterval
+  FIELD System.Single phase_degree
+  FIELD System.Int32 maxRippleCount
+  FIELD UnityEngine.RenderTexture mWaterRippleRT
+  FIELD UnityEngine.Material mWaterRippleMat
+  FIELD UnityEngine.Camera mCamera
+  FIELD System.Collections.Generic.List`1<WaterDrop> mWaterDropList
+  FIELD FastWaterVisible[] mFastWaterVisibles
+  FIELD System.Single mLastAddTime
+  FIELD System.Collections.Generic.List`1<WaterDropEffect> mWaterDropEffectPool
+  FIELD UnityEngine.GameObject mWaterDropEffectTemplate
+  FIELD System.Single mEffectDurationTime
+  FIELD System.Boolean mWaterReflectionEnable
+  FIELD System.Single mWaterHeight
+  FIELD System.Single clipPlaneOffset
+  FIELD UnityEngine.RenderTexture mReflectionTexture
+  FIELD System.Int32 mTextureSize
+  FIELD UnityEngine.Plane[] mCameraPlanes
+  FIELD System.Boolean mVisibleCache
+  FIELD System.Int32 mOldReflectionTextureSize
+  FIELD UnityEngine.Vector3 mLastCameraPos
+  FIELD System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera> mReflectionCameras
+  FIELD UnityEngine.Matrix4x4 mReflectionMatrix
+  FIELD UnityEngine.Shader mReplacementShader
+  FIELD System.Single mUpdateTimeInterval
+  FIELD System.Single mLastUpdateTime
+  FIELD System.Boolean sInsideWater
+  PROP FastWater instance
+  PROP System.Boolean waterRippleEnable
+  PROP System.Boolean waterReflectionEnable
+  PROP System.Single waterHeight
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.r4 2
+   0006 stfld FastWater::emissiveFrequency
+   000B ldarg.0 
+   000C ldc.r4 20
+   0011 stfld FastWater::amplitude
+   0016 ldarg.0 
+   0017 ldc.r4 2
+   001C stfld FastWater::velocity
+   0021 ldarg.0 
+   0022 ldc.r4 0.05
+   0027 stfld FastWater::lambda
+   002C ldarg.0 
+   002D ldc.r4 1.8
+   0032 stfld FastWater::durationTime
+   0037 ldarg.0 
+   0038 ldc.r4 0.45
+   003D stfld FastWater::hostActorGenerateRippleInterval
+   0042 ldarg.0 
+   0043 ldc.i4.5 
+   0044 stfld FastWater::maxRippleCount
+   0049 ldarg.0 
+   004A newobj System.Void System.Collections.Generic.List`1<WaterDrop>::.ctor()
+   004F stfld FastWater::mWaterDropList
+   0054 ldarg.0 
+   0055 newobj System.Void System.Collections.Generic.List`1<WaterDropEffect>::.ctor()
+   005A stfld FastWater::mWaterDropEffectPool
+   005F ldarg.0 
+   0060 ldc.r4 0.07
+   0065 stfld FastWater::clipPlaneOffset
+   006A ldarg.0 
+   006B ldc.i4 512
+   0070 stfld FastWater::mTextureSize
+   0075 ldarg.0 
+   0076 ldc.i4.6 
+   0077 newarr UnityEngine.Plane
+   007C stfld FastWater::mCameraPlanes
+   0081 ldarg.0 
+   0082 newobj System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera>::.ctor()
+   0087 stfld FastWater::mReflectionCameras
+   008C ldarg.0 
+   008D ldc.r4 0.2
+   0092 stfld FastWater::mUpdateTimeInterval
+   0097 ldarg.0 
+   0098 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   009D ret 
+== FastWater get_instance() attrs=Public, Static, HideBySig, SpecialName maxstack=2
+   0000 ldsfld FastWater::mInstance
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_003f: ldsfld FastWater FastWater::mInstance
+   0010 ldstr Artist
+   0015 call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldnull 
+   001D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0022 brfalse IL_003f: ldsfld FastWater FastWater::mInstance
+   0027 ldloc.0 
+   0028 callvirt !!0 UnityEngine.GameObject::GetComponent<FastWater>()
+   002D dup 
+   002E brtrue IL_003a: stsfld FastWater FastWater::mInstance
+   0033 pop 
+   0034 ldloc.0 
+   0035 callvirt !!0 UnityEngine.GameObject::AddComponent<FastWater>()
+   003A stsfld FastWater::mInstance
+   003F ldsfld FastWater::mInstance
+   0044 ret 
+== System.Boolean get_waterRippleEnable() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterRippleEnable
+   0006 ret 
+== System.Void set_waterRippleEnable(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld FastWater::mWaterRippleEnable
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 ldc.i4.1 
+   000A call System.Void FastWater::SetWater(System.Boolean,System.Boolean)
+   000F ret 
+== System.Boolean get_waterReflectionEnable() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterReflectionEnable
+   0006 ret 
+== System.Void set_waterReflectionEnable(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld FastWater::mWaterReflectionEnable
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 ldc.i4.0 
+   000A call System.Void FastWater::SetWater(System.Boolean,System.Boolean)
+   000F ret 
+== System.Single get_waterHeight() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterHeight
+   0006 ret 
+== System.Void set_waterHeight(System.Single value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld FastWater::mWaterHeight
+   0007 ldarg.0 
+   0008 call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+   000D ldarg.0 
+   000E call System.Single FastWater::get_waterHeight()
+   0013 ldarg.0 
+   0014 ldfld FastWater::clipPlaneOffset
+   0019 call System.Void FastWater::CalculateReflectionMatrix(UnityEngine.Vector3,System.Single,System.Single)
+   001E ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call System.Boolean FastWater::get_waterRippleEnable()
+   0007 ldc.i4.1 
+   0008 call System.Void FastWater::SetWater(System.Boolean,System.Boolean)
+   000D ldarg.0 
+   000E ldarg.0 
+   000F call System.Boolean FastWater::get_waterReflectionEnable()
+   0014 ldc.i4.0 
+   0015 call System.Void FastWater::SetWater(System.Boolean,System.Boolean)
+   001A ldarg.0 
+   001B call System.Void FastWater::CheckWater()
+   0020 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean FastWater::Check()
+   0006 brfalse IL_0046: ret
+   000B ldarg.0 
+   000C call System.Void FastWater::UpdateWaterRipple()
+   0011 ldarg.0 
+   0012 call System.Void FastWater::UpdateWaterReflection()
+   0017 call System.Single UnityEngine.Time::get_time()
+   001C ldarg.0 
+   001D ldfld FastWater::emissiveFrequency
+   0022 mul 
+   0023 call System.Single UnityEngine.Mathf::Sin(System.Single)
+   0028 ldc.r4 0.5
+   002D mul 
+   002E ldc.r4 0.5
+   0033 add 
+   0034 stloc.0 
+   0035 ldstr _WaterEmissiveIntensity
+   003A ldloc.0 
+   003B ldc.r4 8
+   0040 mul 
+   0041 call System.Void UnityEngine.Shader::SetGlobalFloat(System.String,System.Single)
+   0046 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void FastWater::set_waterRippleEnable(System.Boolean)
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void FastWater::set_waterReflectionEnable(System.Boolean)
+   000E ldnull 
+   000F stsfld FastWater::mInstance
+   0014 ret 
+== System.Boolean Check() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mFastWaterVisibles
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E call System.Void FastWater::CheckCamera()
+   0013 ldarg.0 
+   0014 ldfld FastWater::mCamera
+   0019 ldnull 
+   001A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001F brfalse IL_0026: ldc.i4.1
+   0024 ldc.i4.0 
+   0025 ret 
+   0026 ldc.i4.1 
+   0027 ret 
+== System.Void CheckWater() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld FastWater::mFastWaterVisibles
+   0006 brtrue IL_0059: ret
+   000B ldstr Artist
+   0010 call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_0023: ldloc.0
+   0022 ret 
+   0023 ldloc.0 
+   0024 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0029 ldstr SceneMesh/Terrain
+   002E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0033 stloc.1 
+   0034 ldloc.1 
+   0035 ldnull 
+   0036 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003B brfalse IL_0041: ldarg.0
+   0040 ret 
+   0041 ldarg.0 
+   0042 ldloc.1 
+   0043 callvirt !!0[] UnityEngine.Component::GetComponentsInChildren<FastWaterVisible>()
+   0048 stfld FastWater::mFastWaterVisibles
+   004D ldarg.0 
+   004E ldfld FastWater::mFastWaterVisibles
+   0053 brtrue IL_0059: ret
+   0058 ret 
+   0059 ret 
+== System.Void CheckCamera() attrs=Private, HideBySig maxstack=2
+   0000 call System.Boolean UnityEngine.Application::get_isPlaying()
+   0005 brfalse IL_003b: ldarg.0
+   000A ldarg.0 
+   000B call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0010 callvirt UnityEngine.Camera CameraSystem::get_mainCamera()
+   0015 stfld FastWater::mCamera
+   001A ldarg.0 
+   001B ldfld FastWater::mCamera
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_0036: br IL_0046
+   002B ldarg.0 
+   002C call UnityEngine.Camera UnityEngine.Camera::get_current()
+   0031 stfld FastWater::mCamera
+   0036 br IL_0046: ret
+   003B ldarg.0 
+   003C call UnityEngine.Camera UnityEngine.Camera::get_current()
+   0041 stfld FastWater::mCamera
+   0046 ret 
+== System.Void SetWater(System.Boolean enable, System.Boolean isWaterRipple) attrs=Private, HideBySig maxstack=1
+   0000 ldarg.2 
+   0001 brfalse IL_0040: ldarg.1
+   0006 ldarg.1 
+   0007 brfalse IL_002b: ldarg.0
+   000C call System.Boolean Assets.Scripts.Framework.GameSettings::get_IsHighQuality()
+   0011 brfalse IL_002b: ldarg.0
+   0016 ldarg.0 
+   0017 call System.Void FastWater::InitWaterRipple()
+   001C ldstr _WATER_RIPPLE
+   0021 call System.Void UnityEngine.Shader::EnableKeyword(System.String)
+   0026 br IL_003b: br IL_006f
+   002B ldarg.0 
+   002C call System.Void FastWater::DestroyWaterRipple()
+   0031 ldstr _WATER_RIPPLE
+   0036 call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   003B br IL_006f: ret
+   0040 ldarg.1 
+   0041 brfalse IL_005f: ldarg.0
+   0046 call System.Boolean Assets.Scripts.Framework.GameSettings::get_IsHDQuality()
+   004B brfalse IL_005f: ldarg.0
+   0050 ldstr _WATER_REFLECTION
+   0055 call System.Void UnityEngine.Shader::EnableKeyword(System.String)
+   005A br IL_006f: ret
+   005F ldarg.0 
+   0060 call System.Void FastWater::DestroyWaterRefletcion()
+   0065 ldstr _WATER_REFLECTION
+   006A call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   006F ret 
+== System.Void InitWaterRipple() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 128
+   0006 ldc.i4 128
+   000B ldc.i4.0 
+   000C ldc.i4.4 
+   000D call System.Boolean UnityEngine.SystemInfo::SupportsRenderTextureFormat(UnityEngine.RenderTextureFormat)
+   0012 brfalse IL_001d: ldc.i4.7
+   0017 ldc.i4.4 
+   0018 br IL_001e: call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   001D ldc.i4.7 
+   001E call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0023 stfld FastWater::mWaterRippleRT
+   0028 ldstr _GlobalWaterRippleRT
+   002D ldarg.0 
+   002E ldfld FastWater::mWaterRippleRT
+   0033 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0038 call !0 Singleton`1<CResourceManager>::GetInstance()
+   003D ldstr Shaders/Reborn/Scene/Water/FastWater/FastWaterRipple
+   0042 ldtoken UnityEngine.Shader
+   0047 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   004C ldc.i4.0 
+   004D ldc.i4.1 
+   004E ldc.i4.1 
+   004F ldc.i4.0 
+   0050 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0055 ldfld CResource::m_content
+   005A isinst UnityEngine.Shader
+   005F stloc.0 
+   0060 ldarg.0 
+   0061 ldloc.0 
+   0062 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   0067 stfld FastWater::mWaterRippleMat
+   006C call System.Int32 UnityEngine.Screen::get_width()
+   0071 conv.r4 
+   0072 call System.Int32 UnityEngine.Screen::get_height()
+   0077 conv.r4 
+   0078 div 
+   0079 ldc.r4 0.55
+   007E mul 
+   007F stloc.1 
+   0080 ldarg.0 
+   0081 ldfld FastWater::mWaterRippleMat
+   0086 ldstr _RippleData
+   008B ldarg.0 
+   008C ldfld FastWater::velocity
+   0091 ldarg.0 
+   0092 ldfld FastWater::lambda
+   0097 ldc.r4 0.017453292
+   009C ldarg.0 
+   009D ldfld FastWater::phase_degree
+   00A2 mul 
+   00A3 ldloc.1 
+   00A4 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00A9 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   00AE ldarg.0 
+   00AF ldfld FastWater::mWaterDropEffectTemplate
+   00B4 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00B9 brtrue IL_014e: ret
+   00BE ldarg.0 
+   00BF call !0 Singleton`1<CResourceManager>::GetInstance()
+   00C4 ldstr Prefab_Skill_Effects/Common_Effects/Walking_Shuihua_001
+   00C9 ldtoken UnityEngine.GameObject
+   00CE call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00D3 ldc.i4.0 
+   00D4 ldc.i4.0 
+   00D5 ldc.i4.0 
+   00D6 ldc.i4.0 
+   00D7 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   00DC ldfld CResource::m_content
+   00E1 isinst UnityEngine.GameObject
+   00E6 stfld FastWater::mWaterDropEffectTemplate
+   00EB ldarg.0 
+   00EC ldc.r4 1.5
+   00F1 stfld FastWater::mEffectDurationTime
+   00F6 ldarg.0 
+   00F7 ldfld FastWater::mWaterDropEffectTemplate
+   00FC callvirt !!0[] UnityEngine.GameObject::GetComponentsInChildren<UnityEngine.ParticleSystem>()
+   0101 stloc.3 
+   0102 ldc.i4.0 
+   0103 stloc.s V_4
+   0105 br IL_0144: ldloc.s V_4
+   010A ldloc.3 
+   010B ldloc.s V_4
+   010D ldelem.ref 
+   010E stloc.2 
+   010F ldloc.2 
+   0110 callvirt UnityEngine.ParticleSystem/MainModule UnityEngine.ParticleSystem::get_main()
+   0115 stloc.s V_5
+   0117 ldloca.s V_5
+   0119 call System.Single UnityEngine.ParticleSystem/MainModule::get_startDelayMultiplier()
+   011E ldarg.0 
+   011F ldfld FastWater::mEffectDurationTime
+   0124 ble.un IL_013e: ldloc.s V_4
+   0129 ldarg.0 
+   012A ldloc.2 
+   012B callvirt UnityEngine.ParticleSystem/MainModule UnityEngine.ParticleSystem::get_main()
+   0130 stloc.s V_6
+   0132 ldloca.s V_6
+   0134 call System.Single UnityEngine.ParticleSystem/MainModule::get_startDelayMultiplier()
+   0139 stfld FastWater::mEffectDurationTime
+   013E ldloc.s V_4
+   0140 ldc.i4.1 
+   0141 add 
+   0142 stloc.s V_4
+   0144 ldloc.s V_4
+   0146 ldloc.3 
+   0147 ldlen 
+   0148 conv.i4 
+   0149 blt IL_010a: ldloc.3
+   014E ret 
+== System.Void DestroyWaterRipple() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterRippleRT
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001c: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld FastWater::mWaterRippleRT
+   0017 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   001C ldarg.0 
+   001D ldnull 
+   001E stfld FastWater::mWaterRippleRT
+   0023 ldstr _GlobalWaterRippleRT
+   0028 ldnull 
+   0029 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   002E ret 
+== System.Void UpdateWaterRipple() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterRippleEnable
+   0006 brfalse IL_0021: ret
+   000B call System.Boolean Assets.Scripts.Framework.GameSettings::get_IsHighQuality()
+   0010 brfalse IL_0021: ret
+   0015 ldarg.0 
+   0016 call System.Void FastWater::UpdateHostActorRipple()
+   001B ldarg.0 
+   001C call System.Void FastWater::UpdateWaterRippleRT()
+   0021 ret 
+== System.Void UpdateHostActorRipple() attrs=Private, HideBySig maxstack=2
+   0000 call System.Single UnityEngine.Time::get_time()
+   0005 ldarg.0 
+   0006 ldfld FastWater::mLastAddTime
+   000B sub 
+   000C ldarg.0 
+   000D ldfld FastWater::hostActorGenerateRippleInterval
+   0012 ble.un IL_00a1: ret
+   0017 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   001C stloc.0 
+   001D ldloc.0 
+   001E call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0023 brfalse IL_00a1: ret
+   0028 ldloca.s V_0
+   002A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002F ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0034 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   0039 ldc.i4.2 
+   003A beq IL_006d: ldarg.0
+   003F ldloca.s V_0
+   0041 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0046 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   004B ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   0050 ldc.i4.3 
+   0051 beq IL_006d: ldarg.0
+   0056 ldloca.s V_0
+   0058 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0062 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::behaviMode
+   0067 ldc.i4.5 
+   0068 bne.un IL_00a1: ret
+   006D ldarg.0 
+   006E ldloca.s V_0
+   0070 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0075 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   007A call System.Boolean FastWater::IsInWater(UnityEngine.Vector3)
+   007F brfalse IL_00a1: ret
+   0084 ldarg.0 
+   0085 ldloca.s V_0
+   0087 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008C ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0091 call System.Void FastWater::AddDrop(UnityEngine.Vector3)
+   0096 ldarg.0 
+   0097 call System.Single UnityEngine.Time::get_time()
+   009C stfld FastWater::mLastAddTime
+   00A1 ret 
+== System.Boolean IsInWater(UnityEngine.Vector3 pos) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0020: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld FastWater::mFastWaterVisibles
+   000D ldloc.0 
+   000E ldelem.ref 
+   000F ldarg.1 
+   0010 callvirt System.Boolean FastWaterVisible::IntersectOBBPoint2D(UnityEngine.Vector3)
+   0015 brfalse IL_001c: ldloc.0
+   001A ldc.i4.1 
+   001B ret 
+   001C ldloc.0 
+   001D ldc.i4.1 
+   001E add 
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldarg.0 
+   0022 ldfld FastWater::mFastWaterVisibles
+   0027 ldlen 
+   0028 conv.i4 
+   0029 blt IL_0007: ldarg.0
+   002E ldc.i4.0 
+   002F ret 
+== System.Void AddDrop(UnityEngine.Vector3 pos) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterDropList
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<WaterDrop>::get_Count()
+   000B ldarg.0 
+   000C ldfld FastWater::maxRippleCount
+   0011 blt IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld FastWater::mWaterDropList
+   001D ldarg.1 
+   001E ldc.r4 0
+   0023 ldc.r4 0
+   0028 ldc.r4 0
+   002D ldc.r4 0
+   0032 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0037 newobj System.Void WaterDrop::.ctor(UnityEngine.Vector3,UnityEngine.Vector4)
+   003C callvirt System.Void System.Collections.Generic.List`1<WaterDrop>::Add(!0)
+   0041 ldarg.0 
+   0042 ldarg.1 
+   0043 call System.Void FastWater::GenerateWaterDropEffect(UnityEngine.Vector3)
+   0048 ret 
+== System.Void GenerateWaterDropEffect(UnityEngine.Vector3 pos) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterDropEffectTemplate
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldc.i4.0
+   0010 ret 
+   0011 ldc.i4.0 
+   0012 stloc.0 
+   0013 br IL_005c: ldloc.0
+   0018 ldarg.0 
+   0019 ldfld FastWater::mWaterDropEffectPool
+   001E ldloc.0 
+   001F callvirt !0 System.Collections.Generic.List`1<WaterDropEffect>::get_Item(System.Int32)
+   0024 stloc.1 
+   0025 ldloc.1 
+   0026 ldfld WaterDropEffect::go
+   002B callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   0030 brfalse IL_0058: ldloc.0
+   0035 call System.Single UnityEngine.Time::get_time()
+   003A ldloc.1 
+   003B ldfld WaterDropEffect::startTime
+   0040 sub 
+   0041 ldarg.0 
+   0042 ldfld FastWater::mEffectDurationTime
+   0047 ble.un IL_0058: ldloc.0
+   004C ldloc.1 
+   004D ldfld WaterDropEffect::go
+   0052 ldc.i4.0 
+   0053 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0058 ldloc.0 
+   0059 ldc.i4.1 
+   005A add 
+   005B stloc.0 
+   005C ldloc.0 
+   005D ldarg.0 
+   005E ldfld FastWater::mWaterDropEffectPool
+   0063 callvirt System.Int32 System.Collections.Generic.List`1<WaterDropEffect>::get_Count()
+   0068 blt IL_0018: ldarg.0
+   006D ldc.i4.0 
+   006E stloc.2 
+   006F br IL_00be: ldloc.2
+   0074 ldarg.0 
+   0075 ldfld FastWater::mWaterDropEffectPool
+   007A ldloc.2 
+   007B callvirt !0 System.Collections.Generic.List`1<WaterDropEffect>::get_Item(System.Int32)
+   0080 stloc.3 
+   0081 ldloc.3 
+   0082 ldfld WaterDropEffect::go
+   0087 callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   008C brtrue IL_00ba: ldloc.2
+   0091 ldloc.3 
+   0092 call System.Single UnityEngine.Time::get_time()
+   0097 stfld WaterDropEffect::startTime
+   009C ldloc.3 
+   009D ldfld WaterDropEffect::go
+   00A2 ldc.i4.1 
+   00A3 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   00A8 ldloc.3 
+   00A9 ldfld WaterDropEffect::go
+   00AE callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B3 ldarg.1 
+   00B4 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00B9 ret 
+   00BA ldloc.2 
+   00BB ldc.i4.1 
+   00BC add 
+   00BD stloc.2 
+   00BE ldloc.2 
+   00BF ldarg.0 
+   00C0 ldfld FastWater::mWaterDropEffectPool
+   00C5 callvirt System.Int32 System.Collections.Generic.List`1<WaterDropEffect>::get_Count()
+   00CA blt IL_0074: ldarg.0
+   00CF ldarg.0 
+   00D0 ldfld FastWater::mWaterDropEffectTemplate
+   00D5 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0)
+   00DA newobj System.Void WaterDropEffect::.ctor(UnityEngine.GameObject)
+   00DF stloc.s V_4
+   00E1 ldloc.s V_4
+   00E3 call System.Single UnityEngine.Time::get_time()
+   00E8 stfld WaterDropEffect::startTime
+   00ED ldloc.s V_4
+   00EF ldfld WaterDropEffect::go
+   00F4 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00F9 ldarg.1 
+   00FA callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00FF ldarg.0 
+   0100 ldfld FastWater::mWaterDropEffectPool
+   0105 ldloc.s V_4
+   0107 callvirt System.Void System.Collections.Generic.List`1<WaterDropEffect>::Add(!0)
+   010C ret 
+== System.Void UpdateWaterRippleRT() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld FastWater::mWaterDropList
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<WaterDrop>::get_Count()
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldc.i4.0 
+   000E ble IL_0023: ret
+   0013 ldarg.0 
+   0014 ldfld FastWater::mWaterRippleRT
+   0019 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   001E brtrue IL_0024: call UnityEngine.RenderTexture UnityEngine.RenderTexture::get_active()
+   0023 ret 
+   0024 call UnityEngine.RenderTexture UnityEngine.RenderTexture::get_active()
+   0029 stloc.1 
+   002A ldarg.0 
+   002B ldfld FastWater::mWaterRippleRT
+   0030 call System.Void UnityEngine.Graphics::SetRenderTarget(UnityEngine.RenderTexture)
+   0035 ldc.i4.0 
+   0036 ldc.i4.1 
+   0037 call UnityEngine.Color UnityEngine.Color::get_black()
+   003C call System.Void UnityEngine.GL::Clear(System.Boolean,System.Boolean,UnityEngine.Color)
+   0041 call System.Void UnityEngine.GL::PushMatrix()
+   0046 call System.Void UnityEngine.GL::LoadOrtho()
+   004B call System.Single UnityEngine.Time::get_deltaTime()
+   0050 stloc.2 
+   0051 ldloc.0 
+   0052 ldc.i4.1 
+   0053 sub 
+   0054 stloc.3 
+   0055 br IL_0227: ldloc.3
+   005A ldarg.0 
+   005B ldfld FastWater::mWaterDropList
+   0060 ldloc.3 
+   0061 callvirt !0 System.Collections.Generic.List`1<WaterDrop>::get_Item(System.Int32)
+   0066 stloc.s V_4
+   0068 ldloca.s V_4
+   006A ldflda WaterDrop::drop
+   006F dup 
+   0070 ldfld UnityEngine.Vector4::z
+   0075 ldloc.2 
+   0076 add 
+   0077 stfld UnityEngine.Vector4::z
+   007C ldloca.s V_4
+   007E ldflda WaterDrop::drop
+   0083 ldfld UnityEngine.Vector4::z
+   0088 ldarg.0 
+   0089 ldfld FastWater::durationTime
+   008E ble.un IL_00a4: ldc.r4 1
+   0093 ldarg.0 
+   0094 ldfld FastWater::mWaterDropList
+   0099 ldloc.3 
+   009A callvirt System.Void System.Collections.Generic.List`1<WaterDrop>::RemoveAt(System.Int32)
+   009F br IL_0223: ldloc.3
+   00A4 ldc.r4 1
+   00A9 ldloca.s V_4
+   00AB ldflda WaterDrop::drop
+   00B0 ldfld UnityEngine.Vector4::z
+   00B5 ldarg.0 
+   00B6 ldfld FastWater::durationTime
+   00BB div 
+   00BC sub 
+   00BD stloc.s V_5
+   00BF ldc.r4 2
+   00C4 ldloc.s V_5
+   00C6 mul 
+   00C7 ldloc.s V_5
+   00C9 mul 
+   00CA ldloc.s V_5
+   00CC mul 
+   00CD ldc.r4 1
+   00D2 ldloc.s V_5
+   00D4 add 
+   00D5 div 
+   00D6 stloc.s V_5
+   00D8 ldloca.s V_4
+   00DA ldflda WaterDrop::drop
+   00DF ldarg.0 
+   00E0 ldfld FastWater::amplitude
+   00E5 ldloc.s V_5
+   00E7 mul 
+   00E8 stfld UnityEngine.Vector4::w
+   00ED ldarg.0 
+   00EE ldfld FastWater::mWaterDropList
+   00F3 ldloc.3 
+   00F4 ldloc.s V_4
+   00F6 callvirt System.Void System.Collections.Generic.List`1<WaterDrop>::set_Item(System.Int32,!0)
+   00FB ldloca.s V_4
+   00FD ldfld WaterDrop::prevCameraPos
+   0102 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0107 call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   010C brtrue IL_0132: ldarg.0
+   0111 ldloca.s V_4
+   0113 ldfld WaterDrop::prevCameraPos
+   0118 ldarg.0 
+   0119 ldfld FastWater::mCamera
+   011E callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0123 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0128 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   012D brfalse IL_0196: ldarg.0
+   0132 ldarg.0 
+   0133 ldfld FastWater::mCamera
+   0138 ldloca.s V_4
+   013A ldfld WaterDrop::wPos
+   013F callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   0144 call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   0149 stloc.s V_6
+   014B ldloca.s V_4
+   014D ldflda WaterDrop::drop
+   0152 ldloca.s V_6
+   0154 ldfld UnityEngine.Vector2::x
+   0159 call System.Int32 UnityEngine.Screen::get_width()
+   015E conv.r4 
+   015F div 
+   0160 stfld UnityEngine.Vector4::x
+   0165 ldloca.s V_4
+   0167 ldflda WaterDrop::drop
+   016C ldloca.s V_6
+   016E ldfld UnityEngine.Vector2::y
+   0173 call System.Int32 UnityEngine.Screen::get_height()
+   0178 conv.r4 
+   0179 div 
+   017A stfld UnityEngine.Vector4::y
+   017F ldloca.s V_4
+   0181 ldarg.0 
+   0182 ldfld FastWater::mCamera
+   0187 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   018C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0191 stfld WaterDrop::prevCameraPos
+   0196 ldarg.0 
+   0197 ldfld FastWater::mWaterDropList
+   019C ldloc.3 
+   019D ldloc.s V_4
+   019F callvirt System.Void System.Collections.Generic.List`1<WaterDrop>::set_Item(System.Int32,!0)
+   01A4 ldarg.0 
+   01A5 ldfld FastWater::mWaterRippleMat
+   01AA ldc.i4.0 
+   01AB callvirt System.Boolean UnityEngine.Material::SetPass(System.Int32)
+   01B0 pop 
+   01B1 ldarg.0 
+   01B2 ldfld FastWater::mWaterRippleMat
+   01B7 ldstr _DropData
+   01BC ldloca.s V_4
+   01BE ldfld WaterDrop::drop
+   01C3 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   01C8 ldc.i4.7 
+   01C9 call System.Void UnityEngine.GL::Begin(System.Int32)
+   01CE ldc.r4 0
+   01D3 ldc.r4 1
+   01D8 ldc.r4 0
+   01DD call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   01E2 ldc.r4 1
+   01E7 ldc.r4 1
+   01EC ldc.r4 0
+   01F1 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   01F6 ldc.r4 1
+   01FB ldc.r4 0
+   0200 ldc.r4 0
+   0205 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   020A ldc.r4 0
+   020F ldc.r4 0
+   0214 ldc.r4 0
+   0219 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   021E call System.Void UnityEngine.GL::End()
+   0223 ldloc.3 
+   0224 ldc.i4.1 
+   0225 sub 
+   0226 stloc.3 
+   0227 ldloc.3 
+   0228 ldc.i4.0 
+   0229 bge IL_005a: ldarg.0
+   022E call System.Void UnityEngine.GL::PopMatrix()
+   0233 ldloc.1 
+   0234 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   0239 ret 
+== System.Void InitWaterRefletcion(UnityEngine.Camera currentCamera, UnityEngine.Camera& reflectionCamera) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld FastWater::mReflectionTexture
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0021: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld FastWater::mOldReflectionTextureSize
+   0016 ldarg.0 
+   0017 ldfld FastWater::mTextureSize
+   001C beq IL_009b: ldarg.0
+   0021 ldarg.0 
+   0022 ldfld FastWater::mReflectionTexture
+   0027 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002C brfalse IL_003c: ldarg.0
+   0031 ldarg.0 
+   0032 ldfld FastWater::mReflectionTexture
+   0037 call System.Void UnityEngine.Object::DestroyImmediate(UnityEngine.Object)
+   003C ldarg.0 
+   003D ldarg.0 
+   003E ldfld FastWater::mTextureSize
+   0043 ldarg.0 
+   0044 ldfld FastWater::mTextureSize
+   0049 ldc.i4.s 16
+   004B ldc.i4.4 
+   004C call System.Boolean UnityEngine.SystemInfo::SupportsRenderTextureFormat(UnityEngine.RenderTextureFormat)
+   0051 brfalse IL_005c: ldc.i4.7
+   0056 ldc.i4.4 
+   0057 br IL_005d: call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   005C ldc.i4.7 
+   005D call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0062 stfld FastWater::mReflectionTexture
+   0067 ldarg.0 
+   0068 ldfld FastWater::mReflectionTexture
+   006D ldstr WaterReflectionRT
+   0072 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0077 ldarg.0 
+   0078 ldfld FastWater::mReflectionTexture
+   007D ldc.i4.1 
+   007E callvirt System.Void UnityEngine.RenderTexture::set_isPowerOfTwo(System.Boolean)
+   0083 ldarg.0 
+   0084 ldfld FastWater::mReflectionTexture
+   0089 ldc.i4.1 
+   008A callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   008F ldarg.0 
+   0090 ldarg.0 
+   0091 ldfld FastWater::mTextureSize
+   0096 stfld FastWater::mOldReflectionTextureSize
+   009B ldarg.0 
+   009C ldfld FastWater::mReflectionCameras
+   00A1 ldarg.1 
+   00A2 ldarg.2 
+   00A3 callvirt System.Boolean System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera>::TryGetValue(!0,!1&)
+   00A8 pop 
+   00A9 ldarg.2 
+   00AA ldind.ref 
+   00AB call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00B0 brtrue IL_0196: ldarg.0
+   00B5 ldstr reflectionCamera_{0}
+   00BA ldarg.1 
+   00BB callvirt System.String UnityEngine.Object::get_name()
+   00C0 call System.String System.String::Format(System.String,System.Object)
+   00C5 stloc.0 
+   00C6 ldloc.0 
+   00C7 ldc.i4.1 
+   00C8 newarr System.Type
+   00CD dup 
+   00CE ldc.i4.0 
+   00CF ldtoken UnityEngine.Camera
+   00D4 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00D9 stelem.ref 
+   00DA newobj System.Void UnityEngine.GameObject::.ctor(System.String,System.Type[])
+   00DF stloc.1 
+   00E0 ldarg.2 
+   00E1 ldloc.1 
+   00E2 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Camera>()
+   00E7 stind.ref 
+   00E8 ldarg.2 
+   00E9 ldind.ref 
+   00EA ldc.i4.0 
+   00EB callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   00F0 ldarg.2 
+   00F1 ldind.ref 
+   00F2 ldc.i4.0 
+   00F3 callvirt System.Void UnityEngine.Camera::set_allowHDR(System.Boolean)
+   00F8 ldarg.2 
+   00F9 ldind.ref 
+   00FA ldc.i4.0 
+   00FB callvirt System.Void UnityEngine.Camera::set_allowMSAA(System.Boolean)
+   0100 ldarg.2 
+   0101 ldind.ref 
+   0102 ldc.i4.0 
+   0103 callvirt System.Void UnityEngine.Camera::set_useOcclusionCulling(System.Boolean)
+   0108 ldarg.2 
+   0109 ldind.ref 
+   010A callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   010F ldarg.0 
+   0110 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0115 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   011A callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   011F ldarg.2 
+   0120 ldind.ref 
+   0121 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0126 ldarg.0 
+   0127 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   012C callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0131 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0136 ldloc.1 
+   0137 ldc.i4.s 21
+   0139 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   013E ldarg.2 
+   013F ldind.ref 
+   0140 ldc.i4.1 
+   0141 ldstr FastWaterReflection
+   0146 call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   014B ldc.i4.s 31
+   014D and 
+   014E shl 
+   014F ldc.i4.1 
+   0150 ldstr FastWaterReflectionTransparent
+   0155 call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   015A ldc.i4.s 31
+   015C and 
+   015D shl 
+   015E or 
+   015F callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0164 ldarg.2 
+   0165 ldind.ref 
+   0166 ldarg.0 
+   0167 ldfld FastWater::mReflectionTexture
+   016C callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   0171 ldarg.0 
+   0172 ldfld FastWater::mReflectionCameras
+   0177 ldarg.1 
+   0178 ldarg.2 
+   0179 ldind.ref 
+   017A callvirt System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera>::set_Item(!0,!1)
+   017F ldarg.0 
+   0180 call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+   0185 ldarg.0 
+   0186 call System.Single FastWater::get_waterHeight()
+   018B ldarg.0 
+   018C ldfld FastWater::clipPlaneOffset
+   0191 call System.Void FastWater::CalculateReflectionMatrix(UnityEngine.Vector3,System.Single,System.Single)
+   0196 ldarg.0 
+   0197 ldfld FastWater::mReplacementShader
+   019C ldnull 
+   019D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   01A2 brfalse IL_01d4: ret
+   01A7 ldarg.0 
+   01A8 call !0 Singleton`1<CResourceManager>::GetInstance()
+   01AD ldstr Shaders/Reborn/Scene/Water/FastWater/FastWaterRenderReflection
+   01B2 ldtoken UnityEngine.Shader
+   01B7 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   01BC ldc.i4.0 
+   01BD ldc.i4.0 
+   01BE ldc.i4.0 
+   01BF ldc.i4.0 
+   01C0 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   01C5 ldfld CResource::m_content
+   01CA isinst UnityEngine.Shader
+   01CF stfld FastWater::mReplacementShader
+   01D4 ret 
+== System.Void DestroyWaterRefletcion() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld FastWater::mReflectionTexture
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0022: ldstr "_GlobalWaterReflectionRT"
+   0010 ldarg.0 
+   0011 ldfld FastWater::mReflectionTexture
+   0016 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   001B ldarg.0 
+   001C ldnull 
+   001D stfld FastWater::mReflectionTexture
+   0022 ldstr _GlobalWaterReflectionRT
+   0027 ldnull 
+   0028 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   002D ldarg.0 
+   002E ldfld FastWater::mReflectionCameras
+   0033 callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera>::GetEnumerator()
+   0038 stloc.1 
+   0039 br IL_005b: ldloca.s V_1
+   003E ldloca.s V_1
+   0040 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<UnityEngine.Camera,UnityEngine.Camera>::get_Current()
+   0045 stloc.0 
+   0046 ldloca.s V_0
+   0048 call !1 System.Collections.Generic.KeyValuePair`2<UnityEngine.Camera,UnityEngine.Camera>::get_Value()
+   004D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0052 stloc.2 
+   0053 ldloc.2 
+   0054 call System.Void UnityEngine.Object::DestroyImmediate(UnityEngine.Object)
+   0059 ldnull 
+   005A stloc.2 
+   005B ldloca.s V_1
+   005D call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<UnityEngine.Camera,UnityEngine.Camera>::MoveNext()
+   0062 brtrue IL_003e: ldloca.s V_1
+   0067 leave IL_007a: ldarg.0
+   006C ldloca.s V_1
+   006E constrained. System.Collections.Generic.Dictionary`2/Enumerator<UnityEngine.Camera,UnityEngine.Camera>
+   0074 callvirt System.Void System.IDisposable::Dispose()
+   0079 endfinally 
+   007A ldarg.0 
+   007B ldfld FastWater::mReflectionCameras
+   0080 callvirt System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Camera,UnityEngine.Camera>::Clear()
+   0085 ldarg.0 
+   0086 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   008B stfld FastWater::mLastCameraPos
+   0090 ldc.i4.0 
+   0091 stsfld FastWater::sInsideWater
+   0096 ret 
+== System.Void UpdateWaterReflection() attrs=Public, HideBySig maxstack=2
+   0000 call System.Boolean UnityEngine.Application::get_isPlaying()
+   0005 brtrue IL_002d: ldarg.0
+   000A ldarg.0 
+   000B ldfld FastWater::mWaterRippleRT
+   0010 ldnull 
+   0011 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0016 brfalse IL_0021: ldarg.0
+   001B ldarg.0 
+   001C call System.Void FastWater::Awake()
+   0021 ldarg.0 
+   0022 call System.Boolean FastWater::Check()
+   0027 brtrue IL_002d: ldarg.0
+   002C ret 
+   002D ldarg.0 
+   002E ldfld FastWater::mWaterReflectionEnable
+   0033 brfalse IL_0099: ret
+   0038 call System.Boolean Assets.Scripts.Framework.GameSettings::get_IsHDQuality()
+   003D brfalse IL_0099: ret
+   0042 call System.Boolean UnityEngine.Application::get_isPlaying()
+   0047 brfalse IL_006c: ldarg.0
+   004C ldarg.0 
+   004D ldfld FastWater::mLastCameraPos
+   0052 ldarg.0 
+   0053 ldfld FastWater::mCamera
+   0058 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   005D callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0062 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0067 brfalse IL_0099: ret
+   006C ldarg.0 
+   006D ldarg.0 
+   006E ldfld FastWater::mCamera
+   0073 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0078 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   007D stfld FastWater::mLastCameraPos
+   0082 ldarg.0 
+   0083 call System.Void FastWater::UpdateWaterVisible()
+   0088 ldarg.0 
+   0089 ldfld FastWater::mVisibleCache
+   008E brfalse IL_0099: ret
+   0093 ldarg.0 
+   0094 call System.Void FastWater::UpdateWaterReflectionRT()
+   0099 ret 
+== System.Void UpdateWaterReflectionRT() attrs=Private, HideBySig maxstack=5
+   0000 ldsfld FastWater::sInsideWater
+   0005 brfalse IL_000b: ldc.i4.1
+   000A ret 
+   000B ldc.i4.1 
+   000C stsfld FastWater::sInsideWater
+   0011 ldarg.0 
+   0012 ldarg.0 
+   0013 ldfld FastWater::mCamera
+   0018 ldloca.s V_0
+   001A call System.Void FastWater::InitWaterRefletcion(UnityEngine.Camera,UnityEngine.Camera&)
+   001F ldarg.0 
+   0020 ldarg.0 
+   0021 ldfld FastWater::mCamera
+   0026 ldloc.0 
+   0027 call System.Void FastWater::UpdateCameraModes(UnityEngine.Camera,UnityEngine.Camera)
+   002C ldarg.0 
+   002D ldfld FastWater::mCamera
+   0032 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0037 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   003C stloc.1 
+   003D ldarg.0 
+   003E ldflda FastWater::mReflectionMatrix
+   0043 ldloc.1 
+   0044 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   0049 stloc.2 
+   004A ldloc.0 
+   004B ldarg.0 
+   004C ldfld FastWater::mCamera
+   0051 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   0056 ldarg.0 
+   0057 ldfld FastWater::mReflectionMatrix
+   005C call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0061 callvirt System.Void UnityEngine.Camera::set_worldToCameraMatrix(UnityEngine.Matrix4x4)
+   0066 ldloca.s V_3
+   0068 ldc.r4 0
+   006D ldarg.0 
+   006E call System.Single FastWater::get_waterHeight()
+   0073 ldc.r4 0
+   0078 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   007D ldarg.0 
+   007E ldloc.0 
+   007F ldloc.3 
+   0080 call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+   0085 ldc.r4 1
+   008A call UnityEngine.Vector4 FastWater::CameraSpacePlane(UnityEngine.Camera,UnityEngine.Vector3,UnityEngine.Vector3,System.Single)
+   008F stloc.s V_4
+   0091 ldloc.0 
+   0092 ldarg.0 
+   0093 ldfld FastWater::mCamera
+   0098 ldloc.s V_4
+   009A callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::CalculateObliqueMatrix(UnityEngine.Vector4)
+   009F callvirt System.Void UnityEngine.Camera::set_projectionMatrix(UnityEngine.Matrix4x4)
+   00A4 ldloc.0 
+   00A5 ldarg.0 
+   00A6 ldfld FastWater::mCamera
+   00AB callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   00B0 ldarg.0 
+   00B1 ldfld FastWater::mCamera
+   00B6 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   00BB call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   00C0 callvirt System.Void UnityEngine.Camera::set_cullingMatrix(UnityEngine.Matrix4x4)
+   00C5 call System.Boolean UnityEngine.GL::get_invertCulling()
+   00CA stloc.s V_5
+   00CC ldloc.s V_5
+   00CE ldc.i4.0 
+   00CF ceq 
+   00D1 call System.Void UnityEngine.GL::set_invertCulling(System.Boolean)
+   00D6 ldloc.0 
+   00D7 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00DC ldloc.2 
+   00DD callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00E2 ldarg.0 
+   00E3 ldfld FastWater::mCamera
+   00E8 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00ED callvirt UnityEngine.Vector3 UnityEngine.Transform::get_eulerAngles()
+   00F2 stloc.s V_6
+   00F4 ldloc.0 
+   00F5 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00FA ldloca.s V_6
+   00FC ldfld UnityEngine.Vector3::x
+   0101 neg 
+   0102 ldloca.s V_6
+   0104 ldfld UnityEngine.Vector3::y
+   0109 ldloca.s V_6
+   010B ldfld UnityEngine.Vector3::z
+   0110 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0115 callvirt System.Void UnityEngine.Transform::set_eulerAngles(UnityEngine.Vector3)
+   011A ldloc.0 
+   011B ldarg.0 
+   011C ldfld FastWater::mReplacementShader
+   0121 ldstr RenderType
+   0126 callvirt System.Void UnityEngine.Camera::RenderWithShader(UnityEngine.Shader,System.String)
+   012B ldloc.0 
+   012C callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0131 ldloc.1 
+   0132 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0137 ldloc.s V_5
+   0139 call System.Void UnityEngine.GL::set_invertCulling(System.Boolean)
+   013E ldstr _GlobalWaterReflectionRT
+   0143 ldarg.0 
+   0144 ldfld FastWater::mReflectionTexture
+   0149 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   014E ldc.i4.0 
+   014F stsfld FastWater::sInsideWater
+   0154 ret 
+== System.Void UpdateCameraModes(UnityEngine.Camera src, UnityEngine.Camera dest) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.2 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.2
+   000C ret 
+   000D ldarg.2 
+   000E ldc.i4.2 
+   000F callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   0014 ldarg.2 
+   0015 call UnityEngine.Color UnityEngine.Color::get_black()
+   001A callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   001F ldarg.2 
+   0020 ldarg.1 
+   0021 callvirt System.Single UnityEngine.Camera::get_farClipPlane()
+   0026 callvirt System.Void UnityEngine.Camera::set_farClipPlane(System.Single)
+   002B ldarg.2 
+   002C ldarg.1 
+   002D callvirt System.Single UnityEngine.Camera::get_nearClipPlane()
+   0032 callvirt System.Void UnityEngine.Camera::set_nearClipPlane(System.Single)
+   0037 ldarg.2 
+   0038 ldarg.1 
+   0039 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   003E callvirt System.Void UnityEngine.Camera::set_orthographic(System.Boolean)
+   0043 ldarg.2 
+   0044 ldarg.1 
+   0045 callvirt System.Single UnityEngine.Camera::get_fieldOfView()
+   004A callvirt System.Void UnityEngine.Camera::set_fieldOfView(System.Single)
+   004F ldarg.2 
+   0050 ldarg.1 
+   0051 callvirt System.Single UnityEngine.Camera::get_aspect()
+   0056 callvirt System.Void UnityEngine.Camera::set_aspect(System.Single)
+   005B ldarg.2 
+   005C ldarg.1 
+   005D callvirt System.Single UnityEngine.Camera::get_orthographicSize()
+   0062 callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   0067 ret 
+== UnityEngine.Vector4 CameraSpacePlane(UnityEngine.Camera cam, UnityEngine.Vector3 pos, UnityEngine.Vector3 normal, System.Single sideSign) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.2 
+   0001 ldarg.3 
+   0002 ldarg.0 
+   0003 ldfld FastWater::clipPlaneOffset
+   0008 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   000D call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   0019 stloc.1 
+   001A ldloca.s V_1
+   001C ldloc.0 
+   001D call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   0022 stloc.2 
+   0023 ldloca.s V_1
+   0025 ldarg.3 
+   0026 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyVector(UnityEngine.Vector3)
+   002B stloc.s V_4
+   002D ldloca.s V_4
+   002F call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0034 ldarg.s sideSign
+   0036 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   003B stloc.3 
+   003C ldloca.s V_3
+   003E ldfld UnityEngine.Vector3::x
+   0043 ldloca.s V_3
+   0045 ldfld UnityEngine.Vector3::y
+   004A ldloca.s V_3
+   004C ldfld UnityEngine.Vector3::z
+   0051 ldloc.2 
+   0052 ldloc.3 
+   0053 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0058 neg 
+   0059 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   005E ret 
+== System.Void CalculateReflectionMatrix(UnityEngine.Vector3 normal, System.Single waterHeight, System.Single offset) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.2 
+   0001 neg 
+   0002 ldarg.0 
+   0003 ldfld FastWater::clipPlaneOffset
+   0008 sub 
+   0009 stloc.0 
+   000A ldloca.s V_1
+   000C ldarga.s normal
+   000E ldfld UnityEngine.Vector3::x
+   0013 ldarga.s normal
+   0015 ldfld UnityEngine.Vector3::y
+   001A ldarga.s normal
+   001C ldfld UnityEngine.Vector3::z
+   0021 ldloc.0 
+   0022 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0027 ldarg.0 
+   0028 ldflda FastWater::mReflectionMatrix
+   002D ldloc.1 
+   002E call System.Void FastWater::CalculateReflectionMatrix(UnityEngine.Matrix4x4&,UnityEngine.Vector4)
+   0033 ret 
+== System.Void CalculateReflectionMatrix(UnityEngine.Matrix4x4& reflectionMat, UnityEngine.Vector4 plane) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 ldc.r4 2
+   000B ldarga.s plane
+   000D ldc.i4.0 
+   000E call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0013 mul 
+   0014 ldarga.s plane
+   0016 ldc.i4.0 
+   0017 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   001C mul 
+   001D sub 
+   001E stfld UnityEngine.Matrix4x4::m00
+   0023 ldarg.0 
+   0024 ldc.r4 -2
+   0029 ldarga.s plane
+   002B ldc.i4.0 
+   002C call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0031 mul 
+   0032 ldarga.s plane
+   0034 ldc.i4.1 
+   0035 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   003A mul 
+   003B stfld UnityEngine.Matrix4x4::m01
+   0040 ldarg.0 
+   0041 ldc.r4 -2
+   0046 ldarga.s plane
+   0048 ldc.i4.0 
+   0049 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   004E mul 
+   004F ldarga.s plane
+   0051 ldc.i4.2 
+   0052 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0057 mul 
+   0058 stfld UnityEngine.Matrix4x4::m02
+   005D ldarg.0 
+   005E ldc.r4 -2
+   0063 ldarga.s plane
+   0065 ldc.i4.3 
+   0066 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   006B mul 
+   006C ldarga.s plane
+   006E ldc.i4.0 
+   006F call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0074 mul 
+   0075 stfld UnityEngine.Matrix4x4::m03
+   007A ldarg.0 
+   007B ldc.r4 -2
+   0080 ldarga.s plane
+   0082 ldc.i4.1 
+   0083 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0088 mul 
+   0089 ldarga.s plane
+   008B ldc.i4.0 
+   008C call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0091 mul 
+   0092 stfld UnityEngine.Matrix4x4::m10
+   0097 ldarg.0 
+   0098 ldc.r4 1
+   009D ldc.r4 2
+   00A2 ldarga.s plane
+   00A4 ldc.i4.1 
+   00A5 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00AA mul 
+   00AB ldarga.s plane
+   00AD ldc.i4.1 
+   00AE call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00B3 mul 
+   00B4 sub 
+   00B5 stfld UnityEngine.Matrix4x4::m11
+   00BA ldarg.0 
+   00BB ldc.r4 -2
+   00C0 ldarga.s plane
+   00C2 ldc.i4.1 
+   00C3 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00C8 mul 
+   00C9 ldarga.s plane
+   00CB ldc.i4.2 
+   00CC call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00D1 mul 
+   00D2 stfld UnityEngine.Matrix4x4::m12
+   00D7 ldarg.0 
+   00D8 ldc.r4 -2
+   00DD ldarga.s plane
+   00DF ldc.i4.3 
+   00E0 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00E5 mul 
+   00E6 ldarga.s plane
+   00E8 ldc.i4.1 
+   00E9 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   00EE mul 
+   00EF stfld UnityEngine.Matrix4x4::m13
+   00F4 ldarg.0 
+   00F5 ldc.r4 -2
+   00FA ldarga.s plane
+   00FC ldc.i4.2 
+   00FD call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0102 mul 
+   0103 ldarga.s plane
+   0105 ldc.i4.0 
+   0106 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   010B mul 
+   010C stfld UnityEngine.Matrix4x4::m20
+   0111 ldarg.0 
+   0112 ldc.r4 -2
+   0117 ldarga.s plane
+   0119 ldc.i4.2 
+   011A call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   011F mul 
+   0120 ldarga.s plane
+   0122 ldc.i4.1 
+   0123 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0128 mul 
+   0129 stfld UnityEngine.Matrix4x4::m21
+   012E ldarg.0 
+   012F ldc.r4 1
+   0134 ldc.r4 2
+   0139 ldarga.s plane
+   013B ldc.i4.2 
+   013C call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0141 mul 
+   0142 ldarga.s plane
+   0144 ldc.i4.2 
+   0145 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   014A mul 
+   014B sub 
+   014C stfld UnityEngine.Matrix4x4::m22
+   0151 ldarg.0 
+   0152 ldc.r4 -2
+   0157 ldarga.s plane
+   0159 ldc.i4.3 
+   015A call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   015F mul 
+   0160 ldarga.s plane
+   0162 ldc.i4.2 
+   0163 call System.Single UnityEngine.Vector4::get_Item(System.Int32)
+   0168 mul 
+   0169 stfld UnityEngine.Matrix4x4::m23
+   016E ldarg.0 
+   016F ldc.r4 0
+   0174 stfld UnityEngine.Matrix4x4::m30
+   0179 ldarg.0 
+   017A ldc.r4 0
+   017F stfld UnityEngine.Matrix4x4::m31
+   0184 ldarg.0 
+   0185 ldc.r4 0
+   018A stfld UnityEngine.Matrix4x4::m32
+   018F ldarg.0 
+   0190 ldc.r4 1
+   0195 stfld UnityEngine.Matrix4x4::m33
+   019A ret 
+== System.Void UpdateWaterVisible() attrs=Private, HideBySig maxstack=3
+   0000 call System.Boolean UnityEngine.Application::get_isPlaying()
+   0005 brfalse IL_0021: ldarg.0
+   000A call System.Single UnityEngine.Time::get_time()
+   000F ldarg.0 
+   0010 ldfld FastWater::mLastUpdateTime
+   0015 sub 
+   0016 ldarg.0 
+   0017 ldfld FastWater::mUpdateTimeInterval
+   001C ble.un IL_0086: ret
+   0021 ldarg.0 
+   0022 call System.Single UnityEngine.Time::get_time()
+   0027 stfld FastWater::mLastUpdateTime
+   002C ldarg.0 
+   002D ldfld FastWater::mCamera
+   0032 ldarg.0 
+   0033 ldfld FastWater::mCameraPlanes
+   0038 call System.Void UnityEngine.GeometryUtility::CalculateFrustumPlanesNonAlloc(UnityEngine.Camera,UnityEngine.Plane[])
+   003D ldarg.0 
+   003E ldc.i4.0 
+   003F stfld FastWater::mVisibleCache
+   0044 ldc.i4.0 
+   0045 stloc.0 
+   0046 br IL_0078: ldloc.0
+   004B ldarg.0 
+   004C ldarg.0 
+   004D ldfld FastWater::mFastWaterVisibles
+   0052 ldloc.0 
+   0053 ldelem.ref 
+   0054 ldarg.0 
+   0055 ldfld FastWater::mCameraPlanes
+   005A callvirt System.Boolean FastWaterVisible::IsVisible(UnityEngine.Plane[])
+   005F stfld FastWater::mVisibleCache
+   0064 ldarg.0 
+   0065 ldfld FastWater::mVisibleCache
+   006A brfalse IL_0074: ldloc.0
+   006F br IL_0086: ret
+   0074 ldloc.0 
+   0075 ldc.i4.1 
+   0076 add 
+   0077 stloc.0 
+   0078 ldloc.0 
+   0079 ldarg.0 
+   007A ldfld FastWater::mFastWaterVisibles
+   007F ldlen 
+   0080 conv.i4 
+   0081 blt IL_004b: ldarg.0
+   0086 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

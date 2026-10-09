@@ -1,0 +1,166 @@
+// TYPE Assets.Scripts.GameSystem.TowerHit  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Byte organ_type
+  FIELD System.UInt32 cd_time
+  FIELD System.String voice
+  FIELD System.String effect
+  FIELD System.UInt32 effect_last_time
+  FIELD System.Boolean bValid
+  FIELD System.Int32 cd_timer
+== System.Void .ctor(ResData.RES_ORGAN_TYPE type) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=6
+   0000 ldarg.0 
+   0001 ldc.i4.m1 
+   0002 stfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0007 ldarg.0 
+   0008 call System.Void System.Object::.ctor()
+   000D ldarg.0 
+   000E ldc.i4.0 
+   000F stfld Assets.Scripts.GameSystem.TowerHit::bValid
+   0014 ldloca.s V_0
+   0016 ldarg.1 
+   0017 conv.u1 
+   0018 call System.Boolean ResData.GameDataMgr/towerHitDatabin::FindByKey(ResData.TowerHitConf&,System.Byte)
+   001D brtrue IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldarg.1 
+   0025 conv.u1 
+   0026 stfld Assets.Scripts.GameSystem.TowerHit::organ_type
+   002B ldarg.0 
+   002C ldloca.s V_0
+   002E ldfld ResData.TowerHitConf::dwCdTime
+   0033 stfld Assets.Scripts.GameSystem.TowerHit::cd_time
+   0038 ldarg.0 
+   0039 ldloca.s V_0
+   003B call System.String ResData.TowerHitConf::get_szVoice()
+   0040 stfld Assets.Scripts.GameSystem.TowerHit::voice
+   0045 ldarg.0 
+   0046 ldloca.s V_0
+   0048 call System.String ResData.TowerHitConf::get_szEffect()
+   004D stfld Assets.Scripts.GameSystem.TowerHit::effect
+   0052 ldarg.0 
+   0053 ldloca.s V_0
+   0055 ldfld ResData.TowerHitConf::dwLastTime
+   005A stfld Assets.Scripts.GameSystem.TowerHit::effect_last_time
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.TowerHit::cd_time
+   0065 ldc.i4.0 
+   0066 ble.un IL_009e: ldarg.0
+   006B ldarg.0 
+   006C call !0 Singleton`1<CTimerManager>::get_instance()
+   0071 ldarg.0 
+   0072 ldfld Assets.Scripts.GameSystem.TowerHit::cd_time
+   0077 ldc.i4.m1 
+   0078 ldarg.0 
+   0079 ldftn System.Void Assets.Scripts.GameSystem.TowerHit::On_CD_Timer_Finish(System.Int32)
+   007F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0084 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0089 stfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   008E call !0 Singleton`1<CTimerManager>::get_instance()
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0099 callvirt System.Void CTimerManager::PauseTimer(System.Int32)
+   009E ldarg.0 
+   009F ldc.i4.1 
+   00A0 stfld Assets.Scripts.GameSystem.TowerHit::bValid
+   00A5 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0006 ldc.i4.m1 
+   0007 beq IL_001c: ldarg.0
+   000C call !0 Singleton`1<CTimerManager>::get_instance()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0017 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001C ldarg.0 
+   001D ldc.i4.m1 
+   001E stfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0023 ret 
+== System.Void TryActive(UnityEngine.GameObject target) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0017: ret
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.TowerHit::bValid
+   0012 brtrue IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.TowerHit::effect
+   001E call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0023 brtrue IL_0055: ldarg.0
+   0028 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   002D callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 brfalse IL_0055: ldarg.0
+   0039 ldloc.0 
+   003A callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   003F brtrue IL_0055: ldarg.0
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.TowerHit::effect
+   004A ldc.r4 2
+   004F ldarg.1 
+   0050 call System.Void Assets.Scripts.GameSystem.TowerHit::PlayEffect(System.String,System.Single,UnityEngine.GameObject)
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.TowerHit::voice
+   005B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0060 brtrue IL_0076: call !0 Singleton`1<CTimerManager>::get_instance()
+   0065 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.TowerHit::voice
+   0070 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0075 pop 
+   0076 call !0 Singleton`1<CTimerManager>::get_instance()
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0081 callvirt System.Void CTimerManager::ResumeTimer(System.Int32)
+   0086 ldarg.0 
+   0087 ldc.i4.0 
+   0088 stfld Assets.Scripts.GameSystem.TowerHit::bValid
+   008D ret 
+== System.Void On_CD_Timer_Finish(System.Int32 index) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.TowerHit::bValid
+   0007 call !0 Singleton`1<CTimerManager>::get_instance()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.TowerHit::cd_timer
+   0012 callvirt System.Void CTimerManager::PauseTimer(System.Int32)
+   0017 ret 
+== System.Void PlayEffect(System.String effect_name, System.Single playTime, UnityEngine.GameObject target) attrs=Public, Static, HideBySig maxstack=9
+   0000 ldarg.2 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   000C ret 
+   000D call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0012 callvirt Assets.Scripts.UI.C3DUIManager/IndirectCamera Assets.Scripts.UI.C3DUIManager::GetCurrentCamera()
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 brtrue IL_001f: ldloc.0
+   001E ret 
+   001F ldloc.0 
+   0020 ldfld Assets.Scripts.UI.C3DUIManager/IndirectCamera::camera
+   0025 ldarg.2 
+   0026 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0030 callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   0035 call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   003A stloc.1 
+   003B call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0040 ldarg.0 
+   0041 ldarg.1 
+   0042 ldloc.1 
+   0043 ldloca.s V_2
+   0045 initobj System.Nullable`1<UnityEngine.Quaternion>
+   004B ldloc.2 
+   004C ldc.i4.1 
+   004D ldc.i4.1 
+   004E ldc.i4.0 
+   004F ldloca.s V_3
+   0051 initobj UnityEngine.Vector3
+   0057 ldloc.3 
+   0058 callvirt Assets.Scripts.GameSystem.UIParticleInfo Assets.Scripts.GameSystem.CUIParticleSystem::AddParticle(System.String,System.Single,UnityEngine.Vector2,System.Nullable`1<UnityEngine.Quaternion>,System.Boolean,System.Boolean,System.Boolean,UnityEngine.Vector3)
+   005D pop 
+   005E ret 

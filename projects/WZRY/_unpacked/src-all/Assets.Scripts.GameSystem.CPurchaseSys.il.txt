@@ -1,0 +1,89 @@
+// TYPE Assets.Scripts.GameSystem.CPurchaseSys  base=Singleton`1<Assets.Scripts.GameSystem.CPurchaseSys>  attrs=BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CPurchaseSys>::.ctor()
+   0006 ret 
+== System.UInt32 GetShopInfoCfgId(ResData.RES_SHOPBUY_TYPE type, System.Int32 subType) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.s 100
+   0003 mul 
+   0004 ldarg.1 
+   0005 add 
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ret 
+== System.Boolean GetCfgShopInfo(ResData.RES_SHOPBUY_TYPE type, System.Int32 subType, ResData.ResShopInfo& info) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CPurchaseSys::GetShopInfoCfgId(ResData.RES_SHOPBUY_TYPE,System.Int32)
+   0007 stloc.0 
+   0008 ldarg.2 
+   0009 ldloc.0 
+   000A call System.Boolean ResData.GameDataMgr/resShopInfoDatabin::FindByKey(ResData.ResShopInfo&,System.UInt32)
+   000F ret 
+== System.Void ShopBuyRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   000B ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iBuyType
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldc.i4.1 
+   0013 sub 
+   0014 switch Mono.Cecil.Cil.Instruction[]
+   0051 br IL_0117: br IL_011c
+   0056 call !0 Singleton`1<EventRouter>::get_instance()
+   005B ldsfld EventID::ShopBuy_Draw
+   0060 ldarg.0 
+   0061 callvirt System.Void EventRouter::BroadCastEvent<CSProtocol.CSPkg>(System.Int32,!!0)
+   0066 br IL_011c: ret
+   006B call !0 Singleton`1<EventRouter>::get_instance()
+   0070 ldsfld EventID::ShopBuy_LvlChallengeTime
+   0075 ldarg.0 
+   0076 callvirt System.Void EventRouter::BroadCastEvent<CSProtocol.CSPkg>(System.Int32,!!0)
+   007B br IL_011c: ret
+   0080 ldarg.0 
+   0081 ldfld CSProtocol.CSPkg::stPkgData
+   0086 callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   008B ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iChgValue
+   0090 ldarg.0 
+   0091 ldfld CSProtocol.CSPkg::stPkgData
+   0096 callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   009B ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iBuySubType
+   00A0 call System.Void Assets.Scripts.GameSystem.CSymbolWearController::OnSymbolBuySuccess(System.Int32,System.Int32)
+   00A5 br IL_011c: ret
+   00AA ldarg.0 
+   00AB ldfld CSProtocol.CSPkg::stPkgData
+   00B0 callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   00B5 ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iChgValue
+   00BA call System.Void Assets.Scripts.GameSystem.CSymbolWearController::OnSymbolGridBuySuccess(System.Int32)
+   00BF br IL_011c: ret
+   00C4 call !0 Singleton`1<Assets.Scripts.GameSystem.CArenaSystem>::GetInstance()
+   00C9 ldarg.0 
+   00CA ldfld CSProtocol.CSPkg::stPkgData
+   00CF callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   00D4 ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iBuySubType
+   00D9 ldarg.0 
+   00DA ldfld CSProtocol.CSPkg::stPkgData
+   00DF callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   00E4 ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iChgValue
+   00E9 callvirt System.Void Assets.Scripts.GameSystem.CArenaSystem::ResetFightTimes(System.Int32,System.Int32)
+   00EE br IL_011c: ret
+   00F3 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectNormalSystem>::get_instance()
+   00F8 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectNormalSystem::OnHeroCountBought()
+   00FD br IL_011c: ret
+   0102 call !0 Singleton`1<EventRouter>::GetInstance()
+   0107 ldsfld EventID::GetBuyPkAiGameCntRsp
+   010C ldarg.0 
+   010D callvirt System.Void EventRouter::BroadCastEvent<CSProtocol.CSPkg>(System.Int32,!!0)
+   0112 br IL_011c: ret
+   0117 br IL_011c: ret
+   011C ret 
+== System.Void ReceiveRandHeroCount(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_ENTERTAINMENT_SYN_RAND_HERO_CNT CSProtocol.CSPkgBody::get_stEntertainmentRandHeroCnt()
+   0010 ldfld CSProtocol.SCPKG_ENTERTAINMENT_SYN_RAND_HERO_CNT::dwRandHeroCnt
+   0015 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::ResetRandHeroLeftCount(System.Int32)
+   001A ret 

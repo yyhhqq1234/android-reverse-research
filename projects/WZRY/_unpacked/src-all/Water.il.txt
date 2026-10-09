@@ -1,0 +1,669 @@
+// TYPE Water  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.RenderTexture m_RtReflection
+  FIELD UnityEngine.Camera m_SrcCam
+  FIELD UnityEngine.Camera m_Cam
+  FIELD System.Single m_ClipPlaneOffset
+  FIELD UnityEngine.LayerMask m_ReflectLayers
+  FIELD System.Single m_WaveScale
+  FIELD System.Int32 m_ID_Global_ReflectionTex
+  FIELD System.Int32 m_ID_Global_WaveOffset
+  FIELD System.Int32 m_ID_Global_WaveScale4
+  FIELD Water/Ripple m_Ripple
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 0.07
+   0006 stfld Water::m_ClipPlaneOffset
+   000B ldarg.0 
+   000C ldc.i4.m1 
+   000D call UnityEngine.LayerMask UnityEngine.LayerMask::op_Implicit(System.Int32)
+   0012 stfld Water::m_ReflectLayers
+   0017 ldarg.0 
+   0018 ldc.r4 0.063
+   001D stfld Water::m_WaveScale
+   0022 ldarg.0 
+   0023 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0028 ret 
+== System.Void SetUpCamera(UnityEngine.Camera cam) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Water::m_SrcCam
+   0007 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   0007 stfld Water::m_Cam
+   000C ldarg.0 
+   000D call System.Int32 UnityEngine.Screen::get_width()
+   0012 call System.Int32 UnityEngine.Screen::get_height()
+   0017 ldc.i4.s 24
+   0019 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32)
+   001E stfld Water::m_RtReflection
+   0023 ldarg.0 
+   0024 ldflda Water::m_Ripple
+   0029 ldc.i4 128
+   002E ldc.i4 128
+   0033 ldc.i4.0 
+   0034 ldc.i4.0 
+   0035 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   003A stfld Water/Ripple::Curr
+   003F ldarg.0 
+   0040 ldflda Water::m_Ripple
+   0045 ldc.i4 128
+   004A ldc.i4 128
+   004F ldc.i4.0 
+   0050 ldc.i4.0 
+   0051 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0056 stfld Water/Ripple::Prev
+   005B ldarg.0 
+   005C ldstr _Global_ReflectionTex
+   0061 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0066 stfld Water::m_ID_Global_ReflectionTex
+   006B ldarg.0 
+   006C ldstr _Global_WaveOffset
+   0071 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0076 stfld Water::m_ID_Global_WaveOffset
+   007B ldarg.0 
+   007C ldstr _Global_WaveScale4
+   0081 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0086 stfld Water::m_ID_Global_WaveScale4
+   008B call !0 Singleton`1<CResourceManager>::GetInstance()
+   0090 ldstr Shaders/Scene/New/Water Ripple
+   0095 ldtoken UnityEngine.Shader
+   009A call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   009F ldc.i4.0 
+   00A0 ldc.i4.1 
+   00A1 ldc.i4.1 
+   00A2 ldc.i4.0 
+   00A3 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   00A8 ldfld CResource::m_content
+   00AD isinst UnityEngine.Shader
+   00B2 stloc.0 
+   00B3 ldarg.0 
+   00B4 ldflda Water::m_Ripple
+   00B9 ldloc.0 
+   00BA newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   00BF stfld Water/Ripple::Mat
+   00C4 ldarg.0 
+   00C5 ldflda Water::m_Ripple
+   00CA ldstr _DropSize
+   00CF call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   00D4 stfld Water/Ripple::ID_DropSize
+   00D9 ldarg.0 
+   00DA ldflda Water::m_Ripple
+   00DF ldstr _Damping
+   00E4 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   00E9 stfld Water/Ripple::ID_Damping
+   00EE ldarg.0 
+   00EF ldflda Water::m_Ripple
+   00F4 ldstr _RipplePos
+   00F9 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   00FE stfld Water/Ripple::ID_RipplePos
+   0103 ldarg.0 
+   0104 ldflda Water::m_Ripple
+   0109 ldstr _PrevTex
+   010E call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0113 stfld Water/Ripple::ID_PrevTex
+   0118 ldarg.0 
+   0119 ldflda Water::m_Ripple
+   011E ldstr _Global_RippleTex
+   0123 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0128 stfld Water/Ripple::ID_Global_RippleTex
+   012D ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Water::UpdateReflection()
+   0006 ldarg.0 
+   0007 call System.Void Water::UpdateRipple()
+   000C ret 
+== UnityEngine.Vector4 CameraSpacePlane(UnityEngine.Camera cam, UnityEngine.Vector3 pos, UnityEngine.Vector3 normal, System.Single sideSign) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.2 
+   0001 ldarg.3 
+   0002 ldarg.0 
+   0003 ldfld Water::m_ClipPlaneOffset
+   0008 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   000D call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   0019 stloc.1 
+   001A ldloca.s V_1
+   001C ldloc.0 
+   001D call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   0022 stloc.2 
+   0023 ldloca.s V_1
+   0025 ldarg.3 
+   0026 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyVector(UnityEngine.Vector3)
+   002B stloc.s V_4
+   002D ldloca.s V_4
+   002F call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0034 ldarg.s sideSign
+   0036 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   003B stloc.3 
+   003C ldloca.s V_3
+   003E ldfld UnityEngine.Vector3::x
+   0043 ldloca.s V_3
+   0045 ldfld UnityEngine.Vector3::y
+   004A ldloca.s V_3
+   004C ldfld UnityEngine.Vector3::z
+   0051 ldloc.2 
+   0052 ldloc.3 
+   0053 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0058 neg 
+   0059 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   005E ret 
+== System.Void UpdateReflection() attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Water::m_SrcCam
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0022: ret
+   0011 ldarg.0 
+   0012 ldfld Water::m_Cam
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldfld Water::m_Cam
+   0029 ldc.i4.2 
+   002A callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   002F ldarg.0 
+   0030 ldfld Water::m_Cam
+   0035 call UnityEngine.Color UnityEngine.Color::get_white()
+   003A callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   003F ldarg.0 
+   0040 ldfld Water::m_Cam
+   0045 ldarg.0 
+   0046 ldfld Water::m_SrcCam
+   004B callvirt System.Single UnityEngine.Camera::get_farClipPlane()
+   0050 callvirt System.Void UnityEngine.Camera::set_farClipPlane(System.Single)
+   0055 ldarg.0 
+   0056 ldfld Water::m_Cam
+   005B ldarg.0 
+   005C ldfld Water::m_SrcCam
+   0061 callvirt System.Single UnityEngine.Camera::get_nearClipPlane()
+   0066 callvirt System.Void UnityEngine.Camera::set_nearClipPlane(System.Single)
+   006B ldarg.0 
+   006C ldfld Water::m_Cam
+   0071 ldarg.0 
+   0072 ldfld Water::m_SrcCam
+   0077 callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   007C callvirt System.Void UnityEngine.Camera::set_orthographic(System.Boolean)
+   0081 ldarg.0 
+   0082 ldfld Water::m_Cam
+   0087 ldarg.0 
+   0088 ldfld Water::m_SrcCam
+   008D callvirt System.Single UnityEngine.Camera::get_fieldOfView()
+   0092 callvirt System.Void UnityEngine.Camera::set_fieldOfView(System.Single)
+   0097 ldarg.0 
+   0098 ldfld Water::m_Cam
+   009D ldarg.0 
+   009E ldfld Water::m_SrcCam
+   00A3 callvirt System.Single UnityEngine.Camera::get_aspect()
+   00A8 callvirt System.Void UnityEngine.Camera::set_aspect(System.Single)
+   00AD ldarg.0 
+   00AE ldfld Water::m_Cam
+   00B3 ldarg.0 
+   00B4 ldfld Water::m_SrcCam
+   00B9 callvirt System.Single UnityEngine.Camera::get_orthographicSize()
+   00BE callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   00C3 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00C8 stloc.0 
+   00C9 ldarg.0 
+   00CA call UnityEngine.Transform UnityEngine.Component::get_transform()
+   00CF callvirt UnityEngine.Vector3 UnityEngine.Transform::get_up()
+   00D4 stloc.1 
+   00D5 ldloc.1 
+   00D6 ldloc.0 
+   00D7 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   00DC neg 
+   00DD ldarg.0 
+   00DE ldfld Water::m_ClipPlaneOffset
+   00E3 sub 
+   00E4 stloc.2 
+   00E5 ldloca.s V_3
+   00E7 ldloca.s V_1
+   00E9 ldfld UnityEngine.Vector3::x
+   00EE ldloca.s V_1
+   00F0 ldfld UnityEngine.Vector3::y
+   00F5 ldloca.s V_1
+   00F7 ldfld UnityEngine.Vector3::z
+   00FC ldloc.2 
+   00FD call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0102 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_zero()
+   0107 stloc.s V_4
+   0109 ldloca.s V_4
+   010B ldloc.3 
+   010C call System.Void MMGame_Math::CalculateReflectionMatrix(UnityEngine.Matrix4x4&,UnityEngine.Vector4)
+   0111 ldarg.0 
+   0112 ldfld Water::m_SrcCam
+   0117 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   011C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0121 stloc.s V_5
+   0123 ldloca.s V_4
+   0125 ldloc.s V_5
+   0127 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   012C stloc.s V_6
+   012E ldarg.0 
+   012F ldfld Water::m_Cam
+   0134 ldarg.0 
+   0135 ldfld Water::m_SrcCam
+   013A callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   013F ldloc.s V_4
+   0141 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0146 callvirt System.Void UnityEngine.Camera::set_worldToCameraMatrix(UnityEngine.Matrix4x4)
+   014B ldarg.0 
+   014C ldarg.0 
+   014D ldfld Water::m_Cam
+   0152 ldloc.0 
+   0153 ldloc.1 
+   0154 ldc.r4 1
+   0159 call UnityEngine.Vector4 Water::CameraSpacePlane(UnityEngine.Camera,UnityEngine.Vector3,UnityEngine.Vector3,System.Single)
+   015E stloc.s V_7
+   0160 ldarg.0 
+   0161 ldfld Water::m_SrcCam
+   0166 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   016B stloc.s V_8
+   016D ldloca.s V_8
+   016F ldloc.s V_7
+   0171 call System.Void MMGame_Math::CalculateObliqueMatrix(UnityEngine.Matrix4x4&,UnityEngine.Vector4)
+   0176 ldarg.0 
+   0177 ldfld Water::m_Cam
+   017C ldloc.s V_8
+   017E callvirt System.Void UnityEngine.Camera::set_projectionMatrix(UnityEngine.Matrix4x4)
+   0183 ldarg.0 
+   0184 ldfld Water::m_Cam
+   0189 ldc.i4.s -17
+   018B ldarg.0 
+   018C ldflda Water::m_ReflectLayers
+   0191 call System.Int32 UnityEngine.LayerMask::get_value()
+   0196 and 
+   0197 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   019C ldarg.0 
+   019D ldfld Water::m_Cam
+   01A2 ldarg.0 
+   01A3 ldfld Water::m_RtReflection
+   01A8 callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   01AD ldc.i4.1 
+   01AE call System.Void UnityEngine.GL::set_invertCulling(System.Boolean)
+   01B3 ldarg.0 
+   01B4 ldfld Water::m_Cam
+   01B9 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01BE ldloc.s V_6
+   01C0 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   01C5 ldarg.0 
+   01C6 ldfld Water::m_SrcCam
+   01CB callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01D0 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_eulerAngles()
+   01D5 stloc.s V_9
+   01D7 ldarg.0 
+   01D8 ldfld Water::m_Cam
+   01DD callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01E2 ldc.r4 0
+   01E7 ldloca.s V_9
+   01E9 ldfld UnityEngine.Vector3::y
+   01EE ldloca.s V_9
+   01F0 ldfld UnityEngine.Vector3::z
+   01F5 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   01FA callvirt System.Void UnityEngine.Transform::set_eulerAngles(UnityEngine.Vector3)
+   01FF ldarg.0 
+   0200 ldfld Water::m_Cam
+   0205 callvirt System.Void UnityEngine.Camera::Render()
+   020A ldarg.0 
+   020B ldfld Water::m_Cam
+   0210 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0215 ldloc.s V_5
+   0217 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   021C ldc.i4.0 
+   021D call System.Void UnityEngine.GL::set_invertCulling(System.Boolean)
+   0222 ldloca.s V_10
+   0224 ldc.r4 9
+   0229 ldc.r4 4.5
+   022E ldc.r4 -8
+   0233 ldc.r4 -3.5
+   0238 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   023D ldarg.0 
+   023E ldfld Water::m_WaveScale
+   0243 stloc.s V_11
+   0245 ldloca.s V_12
+   0247 ldloc.s V_11
+   0249 ldloc.s V_11
+   024B ldloc.s V_11
+   024D ldc.r4 0.4
+   0252 mul 
+   0253 ldloc.s V_11
+   0255 ldc.r4 0.45
+   025A mul 
+   025B call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0260 call System.Single UnityEngine.Time::get_timeSinceLevelLoad()
+   0265 conv.r8 
+   0266 ldc.r8 20
+   026F div 
+   0270 stloc.s V_13
+   0272 ldloca.s V_14
+   0274 ldloca.s V_10
+   0276 ldfld UnityEngine.Vector4::x
+   027B ldloca.s V_12
+   027D ldfld UnityEngine.Vector4::x
+   0282 mul 
+   0283 conv.r8 
+   0284 ldloc.s V_13
+   0286 mul 
+   0287 ldc.r8 1
+   0290 call System.Double System.Math::IEEERemainder(System.Double,System.Double)
+   0295 conv.r4 
+   0296 ldloca.s V_10
+   0298 ldfld UnityEngine.Vector4::y
+   029D ldloca.s V_12
+   029F ldfld UnityEngine.Vector4::y
+   02A4 mul 
+   02A5 conv.r8 
+   02A6 ldloc.s V_13
+   02A8 mul 
+   02A9 ldc.r8 1
+   02B2 call System.Double System.Math::IEEERemainder(System.Double,System.Double)
+   02B7 conv.r4 
+   02B8 ldloca.s V_10
+   02BA ldfld UnityEngine.Vector4::z
+   02BF ldloca.s V_12
+   02C1 ldfld UnityEngine.Vector4::z
+   02C6 mul 
+   02C7 conv.r8 
+   02C8 ldloc.s V_13
+   02CA mul 
+   02CB ldc.r8 1
+   02D4 call System.Double System.Math::IEEERemainder(System.Double,System.Double)
+   02D9 conv.r4 
+   02DA ldloca.s V_10
+   02DC ldfld UnityEngine.Vector4::w
+   02E1 ldloca.s V_12
+   02E3 ldfld UnityEngine.Vector4::w
+   02E8 mul 
+   02E9 conv.r8 
+   02EA ldloc.s V_13
+   02EC mul 
+   02ED ldc.r8 1
+   02F6 call System.Double System.Math::IEEERemainder(System.Double,System.Double)
+   02FB conv.r4 
+   02FC call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0301 ldarg.0 
+   0302 ldfld Water::m_ID_Global_ReflectionTex
+   0307 ldarg.0 
+   0308 ldfld Water::m_RtReflection
+   030D call System.Void UnityEngine.Shader::SetGlobalTexture(System.Int32,UnityEngine.Texture)
+   0312 ldarg.0 
+   0313 ldfld Water::m_ID_Global_WaveOffset
+   0318 ldloc.s V_14
+   031A call System.Void UnityEngine.Shader::SetGlobalVector(System.Int32,UnityEngine.Vector4)
+   031F ldarg.0 
+   0320 ldfld Water::m_ID_Global_WaveScale4
+   0325 ldloc.s V_12
+   0327 call System.Void UnityEngine.Shader::SetGlobalVector(System.Int32,UnityEngine.Vector4)
+   032C ret 
+== System.Void UpdateRipple() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldflda Water::m_Ripple
+   0006 ldfld Water/Ripple::Mat
+   000B ldarg.0 
+   000C ldflda Water::m_Ripple
+   0011 ldfld Water/Ripple::ID_DropSize
+   0016 ldc.r4 0.02
+   001B callvirt System.Void UnityEngine.Material::SetFloat(System.Int32,System.Single)
+   0020 ldarg.0 
+   0021 ldflda Water::m_Ripple
+   0026 ldfld Water/Ripple::Mat
+   002B ldarg.0 
+   002C ldflda Water::m_Ripple
+   0031 ldfld Water/Ripple::ID_Damping
+   0036 ldc.r4 0.99
+   003B callvirt System.Void UnityEngine.Material::SetFloat(System.Int32,System.Single)
+   0040 ldarg.0 
+   0041 ldflda Water::m_Ripple
+   0046 ldfld Water/Ripple::Curr
+   004B callvirt System.Int32 UnityEngine.Texture::get_width()
+   0050 ldarg.0 
+   0051 ldflda Water::m_Ripple
+   0056 ldfld Water/Ripple::Curr
+   005B callvirt System.Int32 UnityEngine.Texture::get_height()
+   0060 ldc.i4.0 
+   0061 ldarg.0 
+   0062 ldflda Water::m_Ripple
+   0067 ldfld Water/Ripple::Curr
+   006C callvirt UnityEngine.RenderTextureFormat UnityEngine.RenderTexture::get_format()
+   0071 ldc.i4.1 
+   0072 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat,UnityEngine.RenderTextureReadWrite)
+   0077 stloc.0 
+   0078 ldloc.0 
+   0079 ldarg.0 
+   007A ldflda Water::m_Ripple
+   007F ldfld Water/Ripple::Curr
+   0084 callvirt UnityEngine.FilterMode UnityEngine.Texture::get_filterMode()
+   0089 callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   008E ldloc.0 
+   008F call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   0094 ldc.i4.1 
+   0095 ldc.i4.1 
+   0096 call UnityEngine.Color UnityEngine.Color::get_grey()
+   009B call System.Void UnityEngine.GL::Clear(System.Boolean,System.Boolean,UnityEngine.Color)
+   00A0 ldnull 
+   00A1 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   00A6 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   00AB stloc.1 
+   00AC ldloc.1 
+   00AD call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00B2 brfalse IL_01ce: ldarg.0
+   00B7 ldarg.0 
+   00B8 ldfld Water::m_SrcCam
+   00BD ldloca.s V_1
+   00BF call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00C4 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   00C9 callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   00CE call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   00D3 stloc.2 
+   00D4 ldloca.s V_3
+   00D6 ldloca.s V_2
+   00D8 ldfld UnityEngine.Vector2::x
+   00DD call System.Int32 UnityEngine.Screen::get_width()
+   00E2 conv.r4 
+   00E3 div 
+   00E4 ldloca.s V_2
+   00E6 ldfld UnityEngine.Vector2::y
+   00EB call System.Int32 UnityEngine.Screen::get_height()
+   00F0 conv.r4 
+   00F1 div 
+   00F2 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00F7 call System.Single UnityEngine.Time::get_time()
+   00FC ldarg.0 
+   00FD ldflda Water::m_Ripple
+   0102 ldfld Water/Ripple::Test_TempTime
+   0107 sub 
+   0108 ldc.r4 1
+   010D ble.un IL_01c9: br IL_022d
+   0112 ldloca.s V_4
+   0114 ldloca.s V_3
+   0116 ldfld UnityEngine.Vector2::x
+   011B ldloca.s V_3
+   011D ldfld UnityEngine.Vector2::y
+   0122 ldc.r4 0
+   0127 ldc.r4 0
+   012C call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0131 ldarg.0 
+   0132 ldflda Water::m_Ripple
+   0137 ldfld Water/Ripple::Mat
+   013C ldarg.0 
+   013D ldflda Water::m_Ripple
+   0142 ldfld Water/Ripple::ID_RipplePos
+   0147 ldloc.s V_4
+   0149 callvirt System.Void UnityEngine.Material::SetVector(System.Int32,UnityEngine.Vector4)
+   014E ldstr {0} {1} {2}
+   0153 ldloca.s V_4
+   0155 ldfld UnityEngine.Vector4::x
+   015A box System.Single
+   015F ldloca.s V_4
+   0161 ldfld UnityEngine.Vector4::y
+   0166 box System.Single
+   016B call System.Single UnityEngine.Time::get_time()
+   0170 box System.Single
+   0175 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   017A call System.Void UnityEngine.Debug::Log(System.Object)
+   017F ldarg.0 
+   0180 ldflda Water::m_Ripple
+   0185 call System.Single UnityEngine.Time::get_time()
+   018A stfld Water/Ripple::Test_TempTime
+   018F ldarg.0 
+   0190 ldflda Water::m_Ripple
+   0195 ldfld Water/Ripple::Curr
+   019A ldloc.0 
+   019B ldarg.0 
+   019C ldflda Water::m_Ripple
+   01A1 ldfld Water/Ripple::Mat
+   01A6 ldc.i4.0 
+   01A7 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   01AC ldloc.0 
+   01AD ldarg.0 
+   01AE ldflda Water::m_Ripple
+   01B3 ldfld Water/Ripple::Curr
+   01B8 ldarg.0 
+   01B9 ldflda Water::m_Ripple
+   01BE ldfld Water/Ripple::Mat
+   01C3 ldc.i4.0 
+   01C4 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   01C9 br IL_022d: ldarg.0
+   01CE ldarg.0 
+   01CF ldflda Water::m_Ripple
+   01D4 ldfld Water/Ripple::Mat
+   01D9 ldarg.0 
+   01DA ldflda Water::m_Ripple
+   01DF ldfld Water/Ripple::ID_RipplePos
+   01E4 call UnityEngine.Vector3 UnityEngine.Random::get_onUnitSphere()
+   01E9 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   01EE callvirt System.Void UnityEngine.Material::SetVector(System.Int32,UnityEngine.Vector4)
+   01F3 ldarg.0 
+   01F4 ldflda Water::m_Ripple
+   01F9 ldfld Water/Ripple::Curr
+   01FE ldloc.0 
+   01FF ldarg.0 
+   0200 ldflda Water::m_Ripple
+   0205 ldfld Water/Ripple::Mat
+   020A ldc.i4.0 
+   020B call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0210 ldloc.0 
+   0211 ldarg.0 
+   0212 ldflda Water::m_Ripple
+   0217 ldfld Water/Ripple::Curr
+   021C ldarg.0 
+   021D ldflda Water::m_Ripple
+   0222 ldfld Water/Ripple::Mat
+   0227 ldc.i4.0 
+   0228 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   022D ldarg.0 
+   022E ldflda Water::m_Ripple
+   0233 ldfld Water/Ripple::Cnt
+   0238 ldc.i4.2 
+   0239 rem 
+   023A brtrue IL_024f: ldarg.0
+   023F ldarg.0 
+   0240 ldflda Water::m_Ripple
+   0245 ldfld Water/Ripple::Curr
+   024A br IL_025a: stloc.s V_5
+   024F ldarg.0 
+   0250 ldflda Water::m_Ripple
+   0255 ldfld Water/Ripple::Prev
+   025A stloc.s V_5
+   025C ldarg.0 
+   025D ldflda Water::m_Ripple
+   0262 ldfld Water/Ripple::Cnt
+   0267 ldc.i4.2 
+   0268 rem 
+   0269 brtrue IL_027e: ldarg.0
+   026E ldarg.0 
+   026F ldflda Water::m_Ripple
+   0274 ldfld Water/Ripple::Prev
+   0279 br IL_0289: stloc.s V_6
+   027E ldarg.0 
+   027F ldflda Water::m_Ripple
+   0284 ldfld Water/Ripple::Curr
+   0289 stloc.s V_6
+   028B ldarg.0 
+   028C ldflda Water::m_Ripple
+   0291 dup 
+   0292 ldfld Water/Ripple::Cnt
+   0297 ldc.i4.1 
+   0298 add 
+   0299 stfld Water/Ripple::Cnt
+   029E ldloc.0 
+   029F call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   02A4 ldc.i4.1 
+   02A5 ldc.i4.1 
+   02A6 call UnityEngine.Color UnityEngine.Color::get_grey()
+   02AB call System.Void UnityEngine.GL::Clear(System.Boolean,System.Boolean,UnityEngine.Color)
+   02B0 ldnull 
+   02B1 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   02B6 ldarg.0 
+   02B7 ldflda Water::m_Ripple
+   02BC ldfld Water/Ripple::Mat
+   02C1 ldarg.0 
+   02C2 ldflda Water::m_Ripple
+   02C7 ldfld Water/Ripple::ID_PrevTex
+   02CC ldloc.s V_6
+   02CE callvirt System.Void UnityEngine.Material::SetTexture(System.Int32,UnityEngine.Texture)
+   02D3 ldloc.s V_5
+   02D5 ldloc.0 
+   02D6 ldarg.0 
+   02D7 ldflda Water::m_Ripple
+   02DC ldfld Water/Ripple::Mat
+   02E1 ldc.i4.1 
+   02E2 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   02E7 ldloc.0 
+   02E8 ldloc.s V_6
+   02EA call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture)
+   02EF ldloc.0 
+   02F0 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   02F5 ldarg.0 
+   02F6 ldflda Water::m_Ripple
+   02FB ldfld Water/Ripple::ID_Global_RippleTex
+   0300 ldarg.0 
+   0301 ldflda Water::m_Ripple
+   0306 ldfld Water/Ripple::Curr
+   030B call System.Void UnityEngine.Shader::SetGlobalTexture(System.Int32,UnityEngine.Texture)
+   0310 ret 
+== System.Void Release() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Water::m_RtReflection
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0022: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld Water::m_RtReflection
+   0016 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   001B ldarg.0 
+   001C ldnull 
+   001D stfld Water::m_RtReflection
+   0022 ldarg.0 
+   0023 ldflda Water::m_Ripple
+   0028 ldfld Water/Ripple::Curr
+   002D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0032 brfalse IL_0053: ldarg.0
+   0037 ldarg.0 
+   0038 ldflda Water::m_Ripple
+   003D ldfld Water/Ripple::Curr
+   0042 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0047 ldarg.0 
+   0048 ldflda Water::m_Ripple
+   004D ldnull 
+   004E stfld Water/Ripple::Curr
+   0053 ldarg.0 
+   0054 ldflda Water::m_Ripple
+   0059 ldfld Water/Ripple::Prev
+   005E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0063 brfalse IL_0084: ret
+   0068 ldarg.0 
+   0069 ldflda Water::m_Ripple
+   006E ldfld Water/Ripple::Prev
+   0073 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0078 ldarg.0 
+   0079 ldflda Water::m_Ripple
+   007E ldnull 
+   007F stfld Water/Ripple::Prev
+   0084 ret 
+  NESTED Water/Ripple

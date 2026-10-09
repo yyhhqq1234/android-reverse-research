@@ -1,0 +1,229 @@
+// TYPE Assets.Scripts.GameSystem.CFriendRecruitNetCore  base=System.Object  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Send_INTIMACY_RELATION_REQUEST(System.UInt64 ulluid, System.UInt32 worldID, System.UInt16 rewardID) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 1370
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ CSProtocol.CSPkgBody::get_stRecruitmentRewardReq()
+   0016 ldfld CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ::stUin
+   001B ldarg.0 
+   001C stfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ CSProtocol.CSPkgBody::get_stRecruitmentRewardReq()
+   002C ldfld CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ::stUin
+   0031 ldarg.1 
+   0032 stfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ CSProtocol.CSPkgBody::get_stRecruitmentRewardReq()
+   0042 ldarg.2 
+   0043 stfld CSProtocol.CSPKG_RECRUITMENT_REWARD_REQ::wRecruitRewardId
+   0048 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   004D ldloca.s V_0
+   004F ldc.i4.1 
+   0050 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0055 pop 
+   0056 ret 
+== System.Void On_Send_INTIMACY_RELATION_REQUEST(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP CSProtocol.CSPkgBody::get_stRecruitmentRewardRsp()
+   0015 stloc.0 
+   0016 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   001B ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0020 ldfld Assets.Scripts.GameSystem.CFriendModel::friendRecruit
+   0025 stloc.1 
+   0026 ldloc.1 
+   0027 ldloc.0 
+   0028 ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP::wRecruitRewardId
+   002D ldloca.s V_2
+   002F callvirt System.Boolean Assets.Scripts.GameSystem.CFriendRecruit::GetCfgReward(System.UInt16,ResData.ResRecruitmentReward&)
+   0034 pop 
+   0035 ldloca.s V_2
+   0037 ldfld ResData.ResRecruitmentReward::bRewardType
+   003C ldc.i4.2 
+   003D bne.un IL_0050: ldloc.1
+   0042 ldloc.1 
+   0043 ldloca.s V_2
+   0045 ldfld ResData.ResRecruitmentReward::bRewardBit
+   004A ldc.i4.1 
+   004B callvirt System.Void Assets.Scripts.GameSystem.CFriendRecruit::SetBITS(ResData.RES_RECRUIMENT_BITS,System.Boolean)
+   0050 ldloc.1 
+   0051 ldloc.0 
+   0052 ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP::stUin
+   0057 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   005C ldloc.0 
+   005D ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP::stUin
+   0062 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0067 callvirt Assets.Scripts.GameSystem.CFriendRecruit/RecruitData Assets.Scripts.GameSystem.CFriendRecruit::GetRecruitData(System.UInt64,System.UInt32)
+   006C stloc.3 
+   006D ldloc.3 
+   006E brfalse IL_0080: ldloc.1
+   0073 ldloc.3 
+   0074 ldloc.0 
+   0075 ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP::wRecruitRewardId
+   007A ldc.i4.2 
+   007B callvirt System.Void Assets.Scripts.GameSystem.CFriendRecruit/RecruitData::SetReward(System.UInt16,Assets.Scripts.GameSystem.CFriendRecruit/RewardState)
+   0080 ldloc.1 
+   0081 callvirt Assets.Scripts.GameSystem.CFriendRecruit/RecruitReward Assets.Scripts.GameSystem.CFriendRecruit::get_SuperReward()
+   0086 ldfld Assets.Scripts.GameSystem.CFriendRecruit/RecruitReward::rewardID
+   008B ldloc.0 
+   008C ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_RSP::wRecruitRewardId
+   0091 bne.un IL_00a2: ret
+   0096 ldloc.1 
+   0097 callvirt Assets.Scripts.GameSystem.CFriendRecruit/RecruitReward Assets.Scripts.GameSystem.CFriendRecruit::get_SuperReward()
+   009C ldc.i4.2 
+   009D stfld Assets.Scripts.GameSystem.CFriendRecruit/RecruitReward::state
+   00A2 ret 
+== System.Void On_RECRUITMENT_REWARD_ERR_NTF(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_RECRUITMENT_REWARD_ERR_NTF CSProtocol.CSPkgBody::get_stRecruitmentRewardErrNtf()
+   0015 stloc.0 
+   0016 ldsfld System.String::Empty
+   001B stloc.1 
+   001C ldloc.0 
+   001D ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_ERR_NTF::dwErrorCode
+   0022 stloc.2 
+   0023 ldloc.2 
+   0024 ldc.i4.1 
+   0025 sub 
+   0026 switch Mono.Cecil.Cil.Instruction[]
+   0043 br IL_00cc: ldstr "no RECRUITMENT REWARD ERR code:{0}"
+   0048 call !0 Singleton`1<CTextManager>::get_instance()
+   004D ldstr CS_RECRUITMENTWARD_NOTINTABLE
+   0052 ldc.i4.1 
+   0053 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0058 stloc.1 
+   0059 br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   005E call !0 Singleton`1<CTextManager>::get_instance()
+   0063 ldstr CS_RECRUITMENTWARD_LEVEL_NOTENOUGH
+   0068 ldc.i4.1 
+   0069 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   006E stloc.1 
+   006F br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0074 call !0 Singleton`1<CTextManager>::get_instance()
+   0079 ldstr CS_RECRUITMENTWARD_NOTRECRUITMENT
+   007E ldc.i4.1 
+   007F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0084 stloc.1 
+   0085 br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   008A call !0 Singleton`1<CTextManager>::get_instance()
+   008F ldstr CS_RECRUITMENTWARD_GETED
+   0094 ldc.i4.1 
+   0095 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   009A stloc.1 
+   009B br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00A0 call !0 Singleton`1<CTextManager>::get_instance()
+   00A5 ldstr CS_RECRUITMENTWARD_OTHER
+   00AA ldc.i4.1 
+   00AB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00B0 stloc.1 
+   00B1 br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00B6 call !0 Singleton`1<CTextManager>::get_instance()
+   00BB ldstr CS_RECRUITMENTWARD_SUPER
+   00C0 ldc.i4.1 
+   00C1 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00C6 stloc.1 
+   00C7 br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00CC ldstr no RECRUITMENT REWARD ERR code:{0}
+   00D1 ldloc.0 
+   00D2 ldfld CSProtocol.SCPKG_RECRUITMENT_REWARD_ERR_NTF::dwErrorCode
+   00D7 box System.UInt32
+   00DC call System.String System.String::Format(System.String,System.Object)
+   00E1 stloc.1 
+   00E2 br IL_00e7: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00E7 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00EC ldloc.1 
+   00ED ldc.i4.0 
+   00EE ldc.r4 1.5
+   00F3 ldnull 
+   00F4 ldc.i4.0 
+   00F5 newarr System.Object
+   00FA callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00FF ret 
+== System.Void On_RECRUITMENT_ERR_NTF(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_RECRUITMENT_ERR_NTF CSProtocol.CSPkgBody::get_stRecruitmentErrNtf()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.SCPKG_RECRUITMENT_ERR_NTF::dwErrorCode
+   001C brfalse IL_0043: ret
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0026 ldloc.0 
+   0027 ldfld CSProtocol.SCPKG_RECRUITMENT_ERR_NTF::dwErrorCode
+   002C call System.String Assets.Scripts.GameSystem.UT::ErrorCode_String(System.UInt32)
+   0031 ldc.i4.0 
+   0032 ldc.r4 1.5
+   0037 ldnull 
+   0038 ldc.i4.0 
+   0039 newarr System.Object
+   003E callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0043 ret 
+== System.Void On_CHG_RECRUITMENT_NTF(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CHG_RECRUITMENT_NTF CSProtocol.CSPkgBody::get_stChgRecruitmentNtf()
+   000B stloc.0 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0011 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0016 ldfld Assets.Scripts.GameSystem.CFriendModel::friendRecruit
+   001B stloc.1 
+   001C ldloc.0 
+   001D ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::bChgRecruitmentType
+   0022 ldc.i4.1 
+   0023 bne.un IL_0080: ldloc.0
+   0028 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   002D ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0032 ldc.i4.1 
+   0033 ldloc.0 
+   0034 ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::stUin
+   0039 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   003E ldloc.0 
+   003F ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::stUin
+   0044 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0049 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetInfo(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   004E stloc.2 
+   004F ldloc.2 
+   0050 brfalse IL_007b: br IL_00a8
+   0055 ldloc.0 
+   0056 ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::bChgRecruitmentType
+   005B ldc.i4.1 
+   005C bne.un IL_0068: ldloc.0
+   0061 ldloc.1 
+   0062 ldloc.2 
+   0063 callvirt System.Void Assets.Scripts.GameSystem.CFriendRecruit::SetZhaoMuZhe(Assets.Scripts.GameSystem.BasicFriendData)
+   0068 ldloc.0 
+   0069 ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::bChgRecruitmentType
+   006E ldc.i4.2 
+   006F bne.un IL_007b: br IL_00a8
+   0074 ldloc.1 
+   0075 ldloc.2 
+   0076 callvirt System.Void Assets.Scripts.GameSystem.CFriendRecruit::SetBeiZhaoMuZheRewardData(Assets.Scripts.GameSystem.BasicFriendData)
+   007B br IL_00a8: ret
+   0080 ldloc.0 
+   0081 ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::bChgRecruitmentType
+   0086 ldc.i4.2 
+   0087 bne.un IL_00a8: ret
+   008C ldloc.1 
+   008D ldloc.0 
+   008E ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::stUin
+   0093 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0098 ldloc.0 
+   0099 ldfld CSProtocol.SCPKG_CHG_RECRUITMENT_NTF::stUin
+   009E ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   00A3 callvirt System.Void Assets.Scripts.GameSystem.CFriendRecruit::RemoveRecruitData(System.UInt64,System.UInt32)
+   00A8 ret 

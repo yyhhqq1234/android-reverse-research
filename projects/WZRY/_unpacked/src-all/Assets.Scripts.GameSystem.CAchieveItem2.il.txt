@@ -1,0 +1,371 @@
+// TYPE Assets.Scripts.GameSystem.CAchieveItem2  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.UInt32 ID
+  FIELD System.UInt32 PrevID
+  FIELD System.UInt32 DoneTime
+  FIELD Assets.Scripts.GameSystem.CAchieveItem2 Prev
+  FIELD Assets.Scripts.GameSystem.CAchieveItem2 Next
+  FIELD ResData.ResAchievement Cfg
+  FIELD CSProtocol.COM_ACHIEVEMENT_STATE State
+  FIELD ResData.RES_ACHIEVE_DONE_TYPE DoneType
+  FIELD System.Int32 DoneCnt
+== System.Void .ctor(ResData.ResAchievement& achievement) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 ldfld ResData.ResAchievement::dwID
+   000D stfld Assets.Scripts.GameSystem.CAchieveItem2::ID
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   0019 ldarg.0 
+   001A ldc.i4.0 
+   001B stfld Assets.Scripts.GameSystem.CAchieveItem2::State
+   0020 ldarg.0 
+   0021 ldarg.1 
+   0022 ldfld ResData.ResAchievement::dwDoneType
+   0027 stfld Assets.Scripts.GameSystem.CAchieveItem2::DoneType
+   002C ldarg.0 
+   002D ldarg.1 
+   002E ldobj ResData.ResAchievement
+   0033 stfld Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0038 ldarg.0 
+   0039 ldarg.1 
+   003A ldfld ResData.ResAchievement::dwPreAchievementID
+   003F stfld Assets.Scripts.GameSystem.CAchieveItem2::PrevID
+   0044 ldarg.0 
+   0045 ldc.i4.0 
+   0046 stfld Assets.Scripts.GameSystem.CAchieveItem2::DoneCnt
+   004B ret 
+== System.Boolean IsFinish() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveItem2::State
+   0006 ldc.i4.2 
+   0007 beq IL_0017: ldc.i4.1
+   000C ldc.i4.1 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CAchieveItem2::State
+   0013 ceq 
+   0015 br.s IL_0018: ret
+   0017 ldc.i4.1 
+   0018 ret 
+== System.Boolean IsHideForegroundIcon() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0006 ldfld ResData.ResAchievement::bHideForegroundImage
+   000B ldc.i4.0 
+   000C cgt 
+   000E ret 
+== System.UInt32 GetMostRecentlyModifyTime() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0006 brfalse IL_0027: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   0016 brfalse IL_0027: ldarg.0
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0021 callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveItem2::GetMostRecentlyModifyTime()
+   0026 ret 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   002D ret 
+== System.String GetGotTimeText(System.Boolean needCheckMostRecentlyDone, System.Boolean needJudgeLeveUp) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 brfalse IL_000f: ldloc.0
+   0008 ldarg.0 
+   0009 call Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::TryToGetMostRecentlyDoneItem()
+   000E stloc.0 
+   000F ldloc.0 
+   0010 brtrue IL_0026: ldloc.0
+   0015 call !0 Singleton`1<CTextManager>::GetInstance()
+   001A ldstr Achievement_Status_Not_Done
+   001F ldc.i4.1 
+   0020 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0025 ret 
+   0026 ldloc.0 
+   0027 callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   002C brtrue IL_0042: ldloc.0
+   0031 call !0 Singleton`1<CTextManager>::GetInstance()
+   0036 ldstr Achievement_Status_Not_Done
+   003B ldc.i4.1 
+   003C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0041 ret 
+   0042 ldloc.0 
+   0043 ldarg.0 
+   0044 bne.un IL_0091: ldloc.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   004F brtrue IL_0065: ldstr "{0:yyyy.M.d} {1}"
+   0054 call !0 Singleton`1<CTextManager>::GetInstance()
+   0059 ldstr Achievement_Status_Done
+   005E ldc.i4.1 
+   005F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0064 ret 
+   0065 ldstr {0:yyyy.M.d} {1}
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   0070 conv.u8 
+   0071 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0076 box System.DateTime
+   007B call !0 Singleton`1<CTextManager>::GetInstance()
+   0080 ldstr Achievement_Status_Done
+   0085 ldc.i4.1 
+   0086 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   008B call System.String System.String::Format(System.String,System.Object,System.Object)
+   0090 ret 
+   0091 ldloc.0 
+   0092 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   0097 brtrue IL_00ad: ldarg.2
+   009C call !0 Singleton`1<CTextManager>::GetInstance()
+   00A1 ldstr Achievement_Status_Done
+   00A6 ldc.i4.1 
+   00A7 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00AC ret 
+   00AD ldarg.2 
+   00AE brfalse IL_00df: ldstr "{0:yyyy.M.d} {1}"
+   00B3 ldstr {0:yyyy.M.d} {1}
+   00B8 ldloc.0 
+   00B9 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   00BE conv.u8 
+   00BF call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   00C4 box System.DateTime
+   00C9 call !0 Singleton`1<CTextManager>::GetInstance()
+   00CE ldstr Achievement_Status_Level_Up
+   00D3 ldc.i4.1 
+   00D4 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00D9 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00DE ret 
+   00DF ldstr {0:yyyy.M.d} {1}
+   00E4 ldloc.0 
+   00E5 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   00EA conv.u8 
+   00EB call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   00F0 box System.DateTime
+   00F5 call !0 Singleton`1<CTextManager>::GetInstance()
+   00FA ldstr Achievement_Status_Done
+   00FF ldc.i4.1 
+   0100 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0105 call System.String System.String::Format(System.String,System.Object,System.Object)
+   010A ret 
+== Assets.Scripts.GameSystem.CAchieveItem2 TryToGetMostRecentlyDoneItem() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0006 brfalse IL_0027: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   0016 brfalse IL_0027: ldarg.0
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0021 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::TryToGetMostRecentlyDoneItem()
+   0026 ret 
+   0027 ldarg.0 
+   0028 call System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   002D brfalse IL_0034: ldnull
+   0032 ldarg.0 
+   0033 ret 
+   0034 ldnull 
+   0035 ret 
+== System.String GetAchievementDesc() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0006 call System.String ResData.ResAchievement::get_szDesc()
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0012 ldfld ResData.ResAchievement::dwDoneType
+   0017 ldc.i4.s 41
+   0019 bne.un IL_0042: ldarg.0
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0025 ldfld ResData.ResAchievement::dwDoneCondi
+   002A conv.u1 
+   002B ldarg.0 
+   002C ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0031 ldfld ResData.ResAchievement::dwDoneParm
+   0036 ldc.i4.m1 
+   0037 call System.String Assets.Scripts.GameSystem.CLadderView::GetRankName(System.Byte,System.UInt32,Assets.Scripts.GameSystem.enHonorKingJudgeType)
+   003C call System.String System.String::Format(System.String,System.Object)
+   0041 ret 
+   0042 ldarg.0 
+   0043 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0048 ldfld ResData.ResAchievement::dwDoneParm
+   004D brtrue IL_00c1: ldarg.0
+   0052 ldarg.0 
+   0053 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0058 ldfld ResData.ResAchievement::bShowProcess
+   005D ldc.i4.0 
+   005E ble IL_00aa: ldloc.0
+   0063 ldarg.0 
+   0064 call System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   0069 brtrue IL_00aa: ldloc.0
+   006E ldstr {0}
+({1}/{2})
+   0073 ldloc.0 
+   0074 ldarg.0 
+   0075 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   007A ldfld ResData.ResAchievement::dwDoneCondi
+   007F box System.UInt32
+   0084 call System.String System.String::Format(System.String,System.Object)
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneCnt
+   008F box System.Int32
+   0094 ldarg.0 
+   0095 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   009A ldfld ResData.ResAchievement::dwDoneCondi
+   009F box System.UInt32
+   00A4 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00A9 ret 
+   00AA ldloc.0 
+   00AB ldarg.0 
+   00AC ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   00B1 ldfld ResData.ResAchievement::dwDoneCondi
+   00B6 box System.UInt32
+   00BB call System.String System.String::Format(System.String,System.Object)
+   00C0 ret 
+   00C1 ldarg.0 
+   00C2 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   00C7 ldfld ResData.ResAchievement::bShowProcess
+   00CC ldc.i4.0 
+   00CD ble IL_0129: ldloc.0
+   00D2 ldarg.0 
+   00D3 call System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   00D8 brtrue IL_0129: ldloc.0
+   00DD ldstr {0}
+({1}/{2})
+   00E2 ldloc.0 
+   00E3 ldarg.0 
+   00E4 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   00E9 ldfld ResData.ResAchievement::dwDoneCondi
+   00EE box System.UInt32
+   00F3 ldarg.0 
+   00F4 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   00F9 ldfld ResData.ResAchievement::dwDoneParm
+   00FE box System.UInt32
+   0103 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneCnt
+   010E box System.Int32
+   0113 ldarg.0 
+   0114 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0119 ldfld ResData.ResAchievement::dwDoneCondi
+   011E box System.UInt32
+   0123 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0128 ret 
+   0129 ldloc.0 
+   012A ldarg.0 
+   012B ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0130 ldfld ResData.ResAchievement::dwDoneCondi
+   0135 box System.UInt32
+   013A ldarg.0 
+   013B ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0140 ldfld ResData.ResAchievement::dwDoneParm
+   0145 box System.UInt32
+   014A call System.String System.String::Format(System.String,System.Object,System.Object)
+   014F ret 
+== System.String GetAchievementTips() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0006 call System.String ResData.ResAchievement::get_szTips()
+   000B stloc.0 
+   000C ldloc.0 
+   000D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0012 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0017 callvirt System.String Assets.Scripts.GameSystem.CRoleInfo::get_Name()
+   001C call System.String System.String::Format(System.String,System.Object)
+   0021 ret 
+== System.String GetAchieveImagePath() attrs=Public, HideBySig maxstack=8
+   0000 ldstr {0}{1}
+   0005 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Task_Dir
+   000A ldarg.0 
+   000B ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0010 ldfld ResData.ResAchievement::dwImage
+   0015 box System.UInt32
+   001A call System.String System.String::Format(System.String,System.Object,System.Object)
+   001F ret 
+== System.String GetAchievementBgIconPath() attrs=Public, HideBySig maxstack=8
+   0000 ldstr {0}{1}
+   0005 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Task_Dir
+   000A ldarg.0 
+   000B ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0010 ldfld ResData.ResAchievement::dwBgImage
+   0015 box System.UInt32
+   001A call System.String System.String::Format(System.String,System.Object,System.Object)
+   001F ret 
+== Assets.Scripts.GameSystem.CAchieveItem2 GetHead() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Prev
+   0006 brfalse IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Prev
+   0011 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::GetHead()
+   0016 ret 
+   0017 ldarg.0 
+   0018 ret 
+== Assets.Scripts.GameSystem.CAchieveItem2 GetHeadAndSetFinishRecursively(System.UInt32 doneTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CAchieveItem2::State
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 stfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.CAchieveItem2::Prev
+   0014 brfalse IL_0026: ldarg.0
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.CAchieveItem2::Prev
+   001F ldarg.1 
+   0020 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::GetHeadAndSetFinishRecursively(System.UInt32)
+   0025 ret 
+   0026 ldarg.0 
+   0027 ret 
+== System.Int32 GetAchievementCnt() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0008 brfalse IL_001d: ldloc.0
+   000D ldloc.0 
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0014 callvirt System.Int32 Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementCnt()
+   0019 add 
+   001A dup 
+   001B stloc.0 
+   001C ret 
+   001D ldloc.0 
+   001E ret 
+== System.UInt32 GetTotalDonePoints() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 call System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   0008 brfalse IL_001b: ldarg.0
+   000D ldloc.0 
+   000E ldarg.0 
+   000F ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0014 ldfld ResData.ResAchievement::dwPoint
+   0019 add 
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   0021 brfalse IL_0046: ldloc.0
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   002C callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   0031 brfalse IL_0046: ldloc.0
+   0036 ldloc.0 
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   003D callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveItem2::GetTotalDonePoints()
+   0042 add 
+   0043 dup 
+   0044 stloc.0 
+   0045 ret 
+   0046 ldloc.0 
+   0047 ret 

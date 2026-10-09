@@ -1,0 +1,305 @@
+// TYPE Assets.Scripts.GameLogic.BuffLinkerComponent  base=Assets.Scripts.GameLogic.LogicComponent  attrs=Public, BeforeFieldInit
+  FIELD ListView`1<Assets.Scripts.GameLogic.BuffLinker> SpawnedBuffList
+  FIELD ListView`1<Assets.Scripts.GameLogic.BuffLinker> SpawnedTipsBuffList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   000B ldarg.0 
+   000C newobj System.Void ListView`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor()
+   0011 stfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameLogic.LogicComponent::.ctor()
+   001C ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LogicComponent::OnUse()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   000C callvirt System.Void ListViewBase::Clear()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0017 callvirt System.Void ListViewBase::Clear()
+   001C ret 
+== System.Void OnRelease() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LogicComponent::OnRelease()
+   0006 ldc.i4.0 
+   0007 stloc.0 
+   0008 br IL_0022: ldloc.0
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0013 ldloc.0 
+   0014 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   0019 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   001E ldloc.0 
+   001F ldc.i4.1 
+   0020 add 
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0029 callvirt System.Int32 ListViewBase::get_Count()
+   002E blt IL_000d: ldarg.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0039 callvirt System.Void ListViewBase::Clear()
+   003E ldc.i4.0 
+   003F stloc.1 
+   0040 br IL_005a: ldloc.1
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   004B ldloc.1 
+   004C callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   0051 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0056 ldloc.1 
+   0057 ldc.i4.1 
+   0058 add 
+   0059 stloc.1 
+   005A ldloc.1 
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0061 callvirt System.Int32 ListViewBase::get_Count()
+   0066 blt IL_0045: ldarg.0
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0071 callvirt System.Void ListViewBase::Clear()
+   0076 ret 
+== System.Void AddBuff(System.UInt32 buffID, System.Int32 overlay, System.Int32 iDelayTime, System.Boolean bOnlyTipsBuff) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Assets.Scripts.Common.ClassObjPool`1<Assets.Scripts.GameLogic.BuffLinker>::Get()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.GameLogic.BuffLinker::id
+   000D ldloc.0 
+   000E ldflda Assets.Scripts.GameLogic.BuffLinker::cfgData
+   0013 ldloc.0 
+   0014 ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   0019 call System.Boolean ResData.GameDataMgr/skillCombineDatabin::FindByKey(ResData.ResSkillCombineCfgInfo&,System.Int32)
+   001E brtrue IL_0023: ldloc.0
+   0023 ldloc.0 
+   0024 ldarg.2 
+   0025 stfld Assets.Scripts.GameLogic.BuffLinker::overlay
+   002A call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   002F ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0034 conv.u8 
+   0035 ldarg.3 
+   0036 conv.i8 
+   0037 ble IL_0056: ldloc.0
+   003C ldloc.0 
+   003D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0042 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0047 conv.u8 
+   0048 ldarg.3 
+   0049 conv.i8 
+   004A sub 
+   004B conv.u4 
+   004C stfld Assets.Scripts.GameLogic.BuffLinker::uiBuffStartTime
+   0051 br IL_005d: ldarg.s bOnlyTipsBuff
+   0056 ldloc.0 
+   0057 ldc.i4.0 
+   0058 stfld Assets.Scripts.GameLogic.BuffLinker::uiBuffStartTime
+   005D ldarg.s bOnlyTipsBuff
+   005F brfalse IL_00a7: ldarg.0
+   0064 ldloc.0 
+   0065 ldflda Assets.Scripts.GameLogic.BuffLinker::cfgData
+   006A ldfld ResData.ResSkillCombineCfgInfo::bIsShowBuff
+   006F brfalse IL_00a2: br IL_00d5
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   007A ldloc.0 
+   007B callvirt System.Void ListView`1<Assets.Scripts.GameLogic.BuffLinker>::Add(!0)
+   0080 ldloca.s V_1
+   0082 ldarg.0 
+   0083 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0088 ldc.i4.1 
+   0089 ldloc.0 
+   008A newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   008F call System.Void Assets.Scripts.GameLogic.BuffChangeEventParam::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&,System.Boolean,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>)
+   0094 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0099 ldc.i4.s 111
+   009B ldloca.s V_1
+   009D callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   00A2 br IL_00d5: ret
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   00AD ldloc.0 
+   00AE callvirt System.Void ListView`1<Assets.Scripts.GameLogic.BuffLinker>::Add(!0)
+   00B3 ldloca.s V_2
+   00B5 ldarg.0 
+   00B6 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   00BB ldc.i4.1 
+   00BC ldloc.0 
+   00BD newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   00C2 call System.Void Assets.Scripts.GameLogic.BuffChangeEventParam::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&,System.Boolean,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>)
+   00C7 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00CC ldc.i4.s 67
+   00CE ldloca.s V_2
+   00D0 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   00D5 ret 
+== System.Void RemoveBuff(System.UInt32 buffID) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_006b: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   0013 ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   0018 ldarg.1 
+   0019 bne.un IL_0067: ldloc.0
+   001E ldloca.s V_1
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0026 ldloc.0 
+   0027 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   002C call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   0031 ldloca.s V_2
+   0033 ldarg.0 
+   0034 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0039 ldc.i4.0 
+   003A ldloc.1 
+   003B call System.Void Assets.Scripts.GameLogic.BuffChangeEventParam::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&,System.Boolean,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>)
+   0040 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0045 ldc.i4.s 67
+   0047 ldloca.s V_2
+   0049 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0054 ldloc.0 
+   0055 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   005A ldloca.s V_1
+   005C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::get_handle()
+   0061 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0066 ret 
+   0067 ldloc.0 
+   0068 ldc.i4.1 
+   0069 add 
+   006A stloc.0 
+   006B ldloc.0 
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0072 callvirt System.Int32 ListViewBase::get_Count()
+   0077 blt IL_0007: ldarg.0
+   007C ldc.i4.0 
+   007D stloc.3 
+   007E br IL_00e8: ldloc.3
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0089 ldloc.3 
+   008A callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   008F ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   0094 ldarg.1 
+   0095 bne.un IL_00e4: ldloc.3
+   009A ldloca.s V_4
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   00A2 ldloc.3 
+   00A3 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   00A8 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   00AD ldloca.s V_5
+   00AF ldarg.0 
+   00B0 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   00B5 ldc.i4.0 
+   00B6 ldloc.s V_4
+   00B8 call System.Void Assets.Scripts.GameLogic.BuffChangeEventParam::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&,System.Boolean,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>)
+   00BD call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00C2 ldc.i4.s 111
+   00C4 ldloca.s V_5
+   00C6 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   00D1 ldloc.3 
+   00D2 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00D7 ldloca.s V_4
+   00D9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::get_handle()
+   00DE callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   00E3 ret 
+   00E4 ldloc.3 
+   00E5 ldc.i4.1 
+   00E6 add 
+   00E7 stloc.3 
+   00E8 ldloc.3 
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   00EF callvirt System.Int32 ListViewBase::get_Count()
+   00F4 blt IL_0083: ldarg.0
+   00F9 ret 
+== Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker> GetByIndex(System.Int32 index) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0006 ldarg.1 
+   0007 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   000C newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   0011 ret 
+== Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker> GetTipsBuffByIndex(System.Int32 index) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0006 ldarg.1 
+   0007 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   000C newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   0011 ret 
+== Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker> GetByID(System.Int32 id) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0034: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   0013 ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   0018 ldarg.1 
+   0019 bne.un IL_0030: ldloc.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0024 ldloc.0 
+   0025 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   002A newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   002F ret 
+   0030 ldloc.0 
+   0031 ldc.i4.1 
+   0032 add 
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   003B callvirt System.Int32 ListViewBase::get_Count()
+   0040 blt IL_0007: ldarg.0
+   0045 ldc.i4.0 
+   0046 stloc.1 
+   0047 br IL_0079: ldloc.1
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0052 ldloc.1 
+   0053 callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   0058 ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   005D ldarg.1 
+   005E bne.un IL_0075: ldloc.1
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0069 ldloc.1 
+   006A callvirt !0 ListView`1<Assets.Scripts.GameLogic.BuffLinker>::get_Item(System.Int32)
+   006F newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   0074 ret 
+   0075 ldloc.1 
+   0076 ldc.i4.1 
+   0077 add 
+   0078 stloc.1 
+   0079 ldloc.1 
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0080 callvirt System.Int32 ListViewBase::get_Count()
+   0085 blt IL_004c: ldarg.0
+   008A ldnull 
+   008B newobj System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::.ctor(!0)
+   0090 ret 
+== System.Int32 GetCount() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedBuffList
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B ret 
+== System.Int32 GetTipsBuffCount() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.BuffLinkerComponent::SpawnedTipsBuffList
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B ret 

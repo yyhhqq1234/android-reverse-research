@@ -1,0 +1,755 @@
+// TYPE FastWaterVisible  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Vector3 oBBSize
+  FIELD UnityEngine.Vector3 oBBEuler
+  FIELD UnityEngine.Vector3 oBBCenter
+  FIELD System.Boolean skipNearFarPlaneIntersect
+  FIELD OBB mOBB
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld FastWaterVisible::skipNearFarPlaneIntersect
+   0007 ldarg.0 
+   0008 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   000D ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void FastWaterVisible::CreateOBB()
+   0006 ret 
+== System.Void OnWillRenderObject() attrs=Public, HideBySig maxstack=2
+   0000 call FastWater FastWater::get_instance()
+   0005 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000A brfalse IL_004b: ret
+   000F call System.Boolean UnityEngine.Application::get_isPlaying()
+   0014 brtrue IL_004b: ret
+   0019 call UnityEngine.Camera UnityEngine.Camera::get_current()
+   001E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0023 brfalse IL_004b: ret
+   0028 call UnityEngine.Camera UnityEngine.Camera::get_current()
+   002D callvirt System.String UnityEngine.Object::get_name()
+   0032 ldstr SceneCamera
+   0037 call System.Boolean System.String::op_Equality(System.String,System.String)
+   003C brfalse IL_004b: ret
+   0041 call FastWater FastWater::get_instance()
+   0046 callvirt System.Void FastWater::UpdateWaterReflection()
+   004B ret 
+== System.Void OnDrawGizmosSelected() attrs=Private, HideBySig maxstack=8
+   0000 call UnityEngine.Color UnityEngine.Color::get_red()
+   0005 call System.Void UnityEngine.Gizmos::set_color(UnityEngine.Color)
+   000A ldarg.0 
+   000B call System.Void FastWaterVisible::CreateOBB()
+   0010 ldarg.0 
+   0011 call System.Void FastWaterVisible::DrawOBB()
+   0016 ret 
+== System.Void CreateOBB() attrs=Private, HideBySig maxstack=4
+   0000 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0005 ldarg.0 
+   0006 ldfld FastWaterVisible::oBBEuler
+   000B call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(UnityEngine.Vector3)
+   0010 call UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+   0015 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   001A call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::TRS(UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Vector3)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldloc.0 
+   0022 ldarg.0 
+   0023 ldfld FastWaterVisible::oBBSize
+   0028 ldc.r4 0.5
+   002D call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0032 ldarg.0 
+   0033 ldfld FastWaterVisible::oBBCenter
+   0038 newobj System.Void OBB::.ctor(UnityEngine.Matrix4x4,UnityEngine.Vector3,UnityEngine.Vector3)
+   003D stfld FastWaterVisible::mOBB
+   0042 ldarg.0 
+   0043 ldflda FastWaterVisible::mOBB
+   0048 ldarg.0 
+   0049 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   004E call System.Void OBB::CalcWorldPoint(UnityEngine.Transform)
+   0053 ret 
+== System.Void DrawOBB() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldflda FastWaterVisible::mOBB
+   0006 ldflda OBB::h
+   000B ldfld UnityEngine.Vector3::y
+   0010 ldc.r4 0
+   0015 bne.un IL_00b0: ldarg.0
+   001A ldc.r4 0.1
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldflda FastWaterVisible::mOBB
+   0026 ldfld OBB::p1
+   002B stloc.1 
+   002C ldarg.0 
+   002D ldflda FastWaterVisible::mOBB
+   0032 ldfld OBB::p2
+   0037 stloc.2 
+   0038 ldarg.0 
+   0039 ldflda FastWaterVisible::mOBB
+   003E ldfld OBB::p3
+   0043 stloc.3 
+   0044 ldarg.0 
+   0045 ldflda FastWaterVisible::mOBB
+   004A ldfld OBB::p4
+   004F stloc.s V_4
+   0051 ldloca.s V_1
+   0053 dup 
+   0054 ldfld UnityEngine.Vector3::y
+   0059 ldloc.0 
+   005A add 
+   005B stfld UnityEngine.Vector3::y
+   0060 ldloca.s V_2
+   0062 dup 
+   0063 ldfld UnityEngine.Vector3::y
+   0068 ldloc.0 
+   0069 add 
+   006A stfld UnityEngine.Vector3::y
+   006F ldloca.s V_3
+   0071 dup 
+   0072 ldfld UnityEngine.Vector3::y
+   0077 ldloc.0 
+   0078 add 
+   0079 stfld UnityEngine.Vector3::y
+   007E ldloca.s V_4
+   0080 dup 
+   0081 ldfld UnityEngine.Vector3::y
+   0086 ldloc.0 
+   0087 add 
+   0088 stfld UnityEngine.Vector3::y
+   008D ldloc.1 
+   008E ldloc.2 
+   008F call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   0094 ldloc.2 
+   0095 ldloc.3 
+   0096 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   009B ldloc.3 
+   009C ldloc.s V_4
+   009E call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   00A3 ldloc.s V_4
+   00A5 ldloc.1 
+   00A6 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   00AB br IL_01f4: ldarg.0
+   00B0 ldarg.0 
+   00B1 ldflda FastWaterVisible::mOBB
+   00B6 ldfld OBB::p1
+   00BB ldarg.0 
+   00BC ldflda FastWaterVisible::mOBB
+   00C1 ldfld OBB::p2
+   00C6 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   00CB ldarg.0 
+   00CC ldflda FastWaterVisible::mOBB
+   00D1 ldfld OBB::p2
+   00D6 ldarg.0 
+   00D7 ldflda FastWaterVisible::mOBB
+   00DC ldfld OBB::p3
+   00E1 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   00E6 ldarg.0 
+   00E7 ldflda FastWaterVisible::mOBB
+   00EC ldfld OBB::p3
+   00F1 ldarg.0 
+   00F2 ldflda FastWaterVisible::mOBB
+   00F7 ldfld OBB::p4
+   00FC call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   0101 ldarg.0 
+   0102 ldflda FastWaterVisible::mOBB
+   0107 ldfld OBB::p4
+   010C ldarg.0 
+   010D ldflda FastWaterVisible::mOBB
+   0112 ldfld OBB::p1
+   0117 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   011C ldarg.0 
+   011D ldflda FastWaterVisible::mOBB
+   0122 ldfld OBB::p5
+   0127 ldarg.0 
+   0128 ldflda FastWaterVisible::mOBB
+   012D ldfld OBB::p6
+   0132 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   0137 ldarg.0 
+   0138 ldflda FastWaterVisible::mOBB
+   013D ldfld OBB::p6
+   0142 ldarg.0 
+   0143 ldflda FastWaterVisible::mOBB
+   0148 ldfld OBB::p7
+   014D call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   0152 ldarg.0 
+   0153 ldflda FastWaterVisible::mOBB
+   0158 ldfld OBB::p7
+   015D ldarg.0 
+   015E ldflda FastWaterVisible::mOBB
+   0163 ldfld OBB::p8
+   0168 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   016D ldarg.0 
+   016E ldflda FastWaterVisible::mOBB
+   0173 ldfld OBB::p8
+   0178 ldarg.0 
+   0179 ldflda FastWaterVisible::mOBB
+   017E ldfld OBB::p5
+   0183 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   0188 ldarg.0 
+   0189 ldflda FastWaterVisible::mOBB
+   018E ldfld OBB::p1
+   0193 ldarg.0 
+   0194 ldflda FastWaterVisible::mOBB
+   0199 ldfld OBB::p5
+   019E call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   01A3 ldarg.0 
+   01A4 ldflda FastWaterVisible::mOBB
+   01A9 ldfld OBB::p2
+   01AE ldarg.0 
+   01AF ldflda FastWaterVisible::mOBB
+   01B4 ldfld OBB::p6
+   01B9 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   01BE ldarg.0 
+   01BF ldflda FastWaterVisible::mOBB
+   01C4 ldfld OBB::p3
+   01C9 ldarg.0 
+   01CA ldflda FastWaterVisible::mOBB
+   01CF ldfld OBB::p7
+   01D4 call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   01D9 ldarg.0 
+   01DA ldflda FastWaterVisible::mOBB
+   01DF ldfld OBB::p4
+   01E4 ldarg.0 
+   01E5 ldflda FastWaterVisible::mOBB
+   01EA ldfld OBB::p8
+   01EF call System.Void UnityEngine.Gizmos::DrawLine(UnityEngine.Vector3,UnityEngine.Vector3)
+   01F4 ldarg.0 
+   01F5 ldflda FastWaterVisible::mOBB
+   01FA ldfld OBB::p9
+   01FF ldc.r4 0.5
+   0204 call System.Void UnityEngine.Gizmos::DrawSphere(UnityEngine.Vector3,System.Single)
+   0209 ret 
+== System.Boolean IsVisible(UnityEngine.Plane[] planes) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldflda FastWaterVisible::mOBB
+   0006 ldflda OBB::h
+   000B ldfld UnityEngine.Vector3::y
+   0010 ldc.r4 0
+   0015 bne.un IL_0026: ldarg.0
+   001A ldarg.0 
+   001B ldarg.1 
+   001C call System.Boolean FastWaterVisible::IntersectOBBFrustum2D(UnityEngine.Plane[])
+   0021 br IL_002d: ret
+   0026 ldarg.0 
+   0027 ldarg.1 
+   0028 call System.Boolean FastWaterVisible::IntersectOBBFrustum(UnityEngine.Plane[])
+   002D ret 
+== System.Boolean IntersectOBBFrustum(UnityEngine.Plane[] planes) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldflda FastWaterVisible::mOBB
+   0006 ldflda OBB::m44
+   000B ldarg.0 
+   000C ldflda FastWaterVisible::mOBB
+   0011 ldflda OBB::h
+   0016 ldfld UnityEngine.Vector3::x
+   001B ldc.r4 0
+   0020 ldc.r4 0
+   0025 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   002A call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   002F stloc.0 
+   0030 ldarg.0 
+   0031 ldflda FastWaterVisible::mOBB
+   0036 ldflda OBB::m44
+   003B ldc.r4 0
+   0040 ldarg.0 
+   0041 ldflda FastWaterVisible::mOBB
+   0046 ldflda OBB::h
+   004B ldfld UnityEngine.Vector3::y
+   0050 ldc.r4 0
+   0055 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   005A call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   005F stloc.1 
+   0060 ldarg.0 
+   0061 ldflda FastWaterVisible::mOBB
+   0066 ldflda OBB::m44
+   006B ldc.r4 0
+   0070 ldc.r4 0
+   0075 ldarg.0 
+   0076 ldflda FastWaterVisible::mOBB
+   007B ldflda OBB::h
+   0080 ldfld UnityEngine.Vector3::z
+   0085 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   008A call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   008F stloc.2 
+   0090 ldarg.0 
+   0091 ldfld FastWaterVisible::skipNearFarPlaneIntersect
+   0096 brfalse IL_00a5: ldarg.1
+   009B ldarg.1 
+   009C ldlen 
+   009D conv.i4 
+   009E ldc.i4.2 
+   009F sub 
+   00A0 br IL_00a8: stloc.3
+   00A5 ldarg.1 
+   00A6 ldlen 
+   00A7 conv.i4 
+   00A8 stloc.3 
+   00A9 ldc.i4.0 
+   00AA stloc.s V_4
+   00AC br IL_0131: ldloc.s V_4
+   00B1 ldarg.1 
+   00B2 ldloc.s V_4
+   00B4 ldelema UnityEngine.Plane
+   00B9 ldobj UnityEngine.Plane
+   00BE stloc.s V_5
+   00C0 ldloca.s V_5
+   00C2 ldarg.0 
+   00C3 ldflda FastWaterVisible::mOBB
+   00C8 ldfld OBB::p9
+   00CD call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   00D2 stloc.s V_6
+   00D4 ldloc.0 
+   00D5 ldloca.s V_5
+   00D7 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   00DC call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   00E1 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   00E6 stloc.s V_7
+   00E8 ldloc.1 
+   00E9 ldloca.s V_5
+   00EB call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   00F0 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   00F5 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   00FA stloc.s V_8
+   00FC ldloc.2 
+   00FD ldloca.s V_5
+   00FF call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   0104 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0109 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   010E stloc.s V_9
+   0110 ldloc.s V_7
+   0112 ldloc.s V_8
+   0114 add 
+   0115 ldloc.s V_9
+   0117 add 
+   0118 stloc.s V_10
+   011A ldloc.s V_6
+   011C ldloc.s V_10
+   011E add 
+   011F ldc.r4 0
+   0124 bge.un IL_012b: ldloc.s V_4
+   0129 ldc.i4.0 
+   012A ret 
+   012B ldloc.s V_4
+   012D ldc.i4.1 
+   012E add 
+   012F stloc.s V_4
+   0131 ldloc.s V_4
+   0133 ldloc.3 
+   0134 blt IL_00b1: ldarg.1
+   0139 ldarg.0 
+   013A ldflda FastWaterVisible::mOBB
+   013F ldflda OBB::h
+   0144 ldfld UnityEngine.Vector3::x
+   0149 ldarg.0 
+   014A ldflda FastWaterVisible::mOBB
+   014F ldflda OBB::h
+   0154 ldfld UnityEngine.Vector3::z
+   0159 ble.un IL_0164: ldloc.2
+   015E ldloc.0 
+   015F br IL_0165: stloc.s V_11
+   0164 ldloc.2 
+   0165 stloc.s V_11
+   0167 ldarg.0 
+   0168 ldflda FastWaterVisible::mOBB
+   016D ldfld OBB::p9
+   0172 ldloc.s V_11
+   0174 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0179 stloc.s V_12
+   017B ldarg.0 
+   017C ldflda FastWaterVisible::mOBB
+   0181 ldfld OBB::p9
+   0186 ldloc.s V_11
+   0188 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   018D stloc.s V_13
+   018F ldc.i4.0 
+   0190 stloc.s V_14
+   0192 br IL_02cb: ldloc.s V_14
+   0197 ldarg.1 
+   0198 ldloc.s V_14
+   019A ldelema UnityEngine.Plane
+   019F ldobj UnityEngine.Plane
+   01A4 stloc.s V_15
+   01A6 ldloca.s V_15
+   01A8 ldloc.s V_12
+   01AA call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   01AF stloc.s V_16
+   01B1 ldloca.s V_15
+   01B3 ldloc.s V_13
+   01B5 call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   01BA stloc.s V_17
+   01BC ldarg.0 
+   01BD ldflda FastWaterVisible::mOBB
+   01C2 ldflda OBB::h
+   01C7 ldfld UnityEngine.Vector3::x
+   01CC ldarg.0 
+   01CD ldflda FastWaterVisible::mOBB
+   01D2 ldflda OBB::h
+   01D7 ldfld UnityEngine.Vector3::z
+   01DC ble.un IL_0215: ldloc.0
+   01E1 ldloc.1 
+   01E2 ldloca.s V_15
+   01E4 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   01E9 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   01EE call System.Single UnityEngine.Mathf::Abs(System.Single)
+   01F3 stloc.s V_19
+   01F5 ldloc.2 
+   01F6 ldloca.s V_15
+   01F8 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   01FD call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0202 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0207 stloc.s V_20
+   0209 ldloc.s V_19
+   020B ldloc.s V_20
+   020D add 
+   020E stloc.s V_18
+   0210 br IL_0244: ldloc.s V_16
+   0215 ldloc.0 
+   0216 ldloca.s V_15
+   0218 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   021D call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0222 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0227 stloc.s V_21
+   0229 ldloc.1 
+   022A ldloca.s V_15
+   022C call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   0231 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0236 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   023B stloc.s V_22
+   023D ldloc.s V_21
+   023F ldloc.s V_22
+   0241 add 
+   0242 stloc.s V_18
+   0244 ldloc.s V_16
+   0246 ldloc.s V_18
+   0248 neg 
+   0249 bgt.un IL_025a: ldloc.s V_16
+   024E ldloc.s V_17
+   0250 ldloc.s V_18
+   0252 neg 
+   0253 bgt.un IL_025a: ldloc.s V_16
+   0258 ldc.i4.0 
+   0259 ret 
+   025A ldloc.s V_16
+   025C ldloc.s V_18
+   025E neg 
+   025F ble.un IL_0273: ldloc.s V_14
+   0264 ldloc.s V_17
+   0266 ldloc.s V_18
+   0268 neg 
+   0269 ble.un IL_0273: ldloc.s V_14
+   026E br IL_02c5: ldloc.s V_14
+   0273 ldloc.s V_14
+   0275 ldloc.3 
+   0276 ldc.i4.1 
+   0277 sub 
+   0278 beq IL_02c5: ldloc.s V_14
+   027D ldloc.s V_18
+   027F ldloc.s V_16
+   0281 add 
+   0282 ldloca.s V_15
+   0284 ldloc.s V_12
+   0286 ldloc.s V_13
+   0288 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   028D call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   0292 div 
+   0293 stloc.s V_23
+   0295 ldloc.s V_12
+   0297 ldloc.s V_23
+   0299 ldloc.s V_13
+   029B ldloc.s V_12
+   029D call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   02A2 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(System.Single,UnityEngine.Vector3)
+   02A7 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   02AC stloc.s V_24
+   02AE ldloc.s V_16
+   02B0 ldloc.s V_18
+   02B2 neg 
+   02B3 bgt.un IL_02c1: ldloc.s V_24
+   02B8 ldloc.s V_24
+   02BA stloc.s V_12
+   02BC br IL_02c5: ldloc.s V_14
+   02C1 ldloc.s V_24
+   02C3 stloc.s V_13
+   02C5 ldloc.s V_14
+   02C7 ldc.i4.1 
+   02C8 add 
+   02C9 stloc.s V_14
+   02CB ldloc.s V_14
+   02CD ldloc.3 
+   02CE blt IL_0197: ldarg.1
+   02D3 ldc.i4.1 
+   02D4 ret 
+== System.Boolean IntersectOBBFrustum2D(UnityEngine.Plane[] planes) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldflda FastWaterVisible::mOBB
+   0006 ldflda OBB::m44
+   000B ldarg.0 
+   000C ldflda FastWaterVisible::mOBB
+   0011 ldflda OBB::h
+   0016 ldfld UnityEngine.Vector3::x
+   001B ldc.r4 0
+   0020 ldc.r4 0
+   0025 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   002A call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   002F stloc.0 
+   0030 ldarg.0 
+   0031 ldflda FastWaterVisible::mOBB
+   0036 ldflda OBB::m44
+   003B ldc.r4 0
+   0040 ldc.r4 0
+   0045 ldarg.0 
+   0046 ldflda FastWaterVisible::mOBB
+   004B ldflda OBB::h
+   0050 ldfld UnityEngine.Vector3::z
+   0055 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   005A call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   005F stloc.1 
+   0060 ldarg.0 
+   0061 ldfld FastWaterVisible::skipNearFarPlaneIntersect
+   0066 brfalse IL_0075: ldarg.1
+   006B ldarg.1 
+   006C ldlen 
+   006D conv.i4 
+   006E ldc.i4.2 
+   006F sub 
+   0070 br IL_0078: stloc.2
+   0075 ldarg.1 
+   0076 ldlen 
+   0077 conv.i4 
+   0078 stloc.2 
+   0079 ldc.i4.0 
+   007A stloc.3 
+   007B br IL_00e6: ldloc.3
+   0080 ldarg.1 
+   0081 ldloc.3 
+   0082 ldelema UnityEngine.Plane
+   0087 ldobj UnityEngine.Plane
+   008C stloc.s V_4
+   008E ldloca.s V_4
+   0090 ldarg.0 
+   0091 ldflda FastWaterVisible::mOBB
+   0096 ldfld OBB::p9
+   009B call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   00A0 stloc.s V_5
+   00A2 ldloc.0 
+   00A3 ldloca.s V_4
+   00A5 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   00AA call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   00AF call System.Single UnityEngine.Mathf::Abs(System.Single)
+   00B4 stloc.s V_6
+   00B6 ldloc.1 
+   00B7 ldloca.s V_4
+   00B9 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   00BE call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   00C3 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   00C8 stloc.s V_7
+   00CA ldloc.s V_6
+   00CC ldloc.s V_7
+   00CE add 
+   00CF stloc.s V_8
+   00D1 ldloc.s V_5
+   00D3 ldloc.s V_8
+   00D5 add 
+   00D6 ldc.r4 0
+   00DB bge.un IL_00e2: ldloc.3
+   00E0 ldc.i4.0 
+   00E1 ret 
+   00E2 ldloc.3 
+   00E3 ldc.i4.1 
+   00E4 add 
+   00E5 stloc.3 
+   00E6 ldloc.3 
+   00E7 ldloc.2 
+   00E8 blt IL_0080: ldarg.1
+   00ED ldarg.0 
+   00EE ldflda FastWaterVisible::mOBB
+   00F3 ldflda OBB::h
+   00F8 ldfld UnityEngine.Vector3::x
+   00FD ldarg.0 
+   00FE ldflda FastWaterVisible::mOBB
+   0103 ldflda OBB::h
+   0108 ldfld UnityEngine.Vector3::z
+   010D ble.un IL_0118: ldloc.1
+   0112 ldloc.0 
+   0113 br IL_0119: stloc.s V_9
+   0118 ldloc.1 
+   0119 stloc.s V_9
+   011B ldarg.0 
+   011C ldflda FastWaterVisible::mOBB
+   0121 ldfld OBB::p9
+   0126 ldloc.s V_9
+   0128 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   012D stloc.s V_10
+   012F ldarg.0 
+   0130 ldflda FastWaterVisible::mOBB
+   0135 ldfld OBB::p9
+   013A ldloc.s V_9
+   013C call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0141 stloc.s V_11
+   0143 ldc.i4.0 
+   0144 stloc.s V_12
+   0146 br IL_0251: ldloc.s V_12
+   014B ldarg.1 
+   014C ldloc.s V_12
+   014E ldelema UnityEngine.Plane
+   0153 ldobj UnityEngine.Plane
+   0158 stloc.s V_13
+   015A ldloca.s V_13
+   015C ldloc.s V_10
+   015E call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   0163 stloc.s V_14
+   0165 ldloca.s V_13
+   0167 ldloc.s V_11
+   0169 call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   016E stloc.s V_15
+   0170 ldarg.0 
+   0171 ldflda FastWaterVisible::mOBB
+   0176 ldflda OBB::h
+   017B ldfld UnityEngine.Vector3::x
+   0180 ldarg.0 
+   0181 ldflda FastWaterVisible::mOBB
+   0186 ldflda OBB::h
+   018B ldfld UnityEngine.Vector3::z
+   0190 ble.un IL_01b2: ldloc.0
+   0195 ldloc.1 
+   0196 ldloca.s V_13
+   0198 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   019D call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   01A2 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   01A7 stloc.s V_17
+   01A9 ldloc.s V_17
+   01AB stloc.s V_16
+   01AD br IL_01ca: ldloc.s V_14
+   01B2 ldloc.0 
+   01B3 ldloca.s V_13
+   01B5 call UnityEngine.Vector3 UnityEngine.Plane::get_normal()
+   01BA call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   01BF call System.Single UnityEngine.Mathf::Abs(System.Single)
+   01C4 stloc.s V_18
+   01C6 ldloc.s V_18
+   01C8 stloc.s V_16
+   01CA ldloc.s V_14
+   01CC ldloc.s V_16
+   01CE neg 
+   01CF bgt.un IL_01e0: ldloc.s V_14
+   01D4 ldloc.s V_15
+   01D6 ldloc.s V_16
+   01D8 neg 
+   01D9 bgt.un IL_01e0: ldloc.s V_14
+   01DE ldc.i4.0 
+   01DF ret 
+   01E0 ldloc.s V_14
+   01E2 ldloc.s V_16
+   01E4 neg 
+   01E5 ble.un IL_01f9: ldloc.s V_12
+   01EA ldloc.s V_15
+   01EC ldloc.s V_16
+   01EE neg 
+   01EF ble.un IL_01f9: ldloc.s V_12
+   01F4 br IL_024b: ldloc.s V_12
+   01F9 ldloc.s V_12
+   01FB ldloc.2 
+   01FC ldc.i4.1 
+   01FD sub 
+   01FE beq IL_024b: ldloc.s V_12
+   0203 ldloc.s V_16
+   0205 ldloc.s V_14
+   0207 add 
+   0208 ldloca.s V_13
+   020A ldloc.s V_10
+   020C ldloc.s V_11
+   020E call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0213 call System.Single UnityEngine.Plane::GetDistanceToPoint(UnityEngine.Vector3)
+   0218 div 
+   0219 stloc.s V_19
+   021B ldloc.s V_10
+   021D ldloc.s V_19
+   021F ldloc.s V_11
+   0221 ldloc.s V_10
+   0223 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0228 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(System.Single,UnityEngine.Vector3)
+   022D call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0232 stloc.s V_20
+   0234 ldloc.s V_14
+   0236 ldloc.s V_16
+   0238 neg 
+   0239 bgt.un IL_0247: ldloc.s V_20
+   023E ldloc.s V_20
+   0240 stloc.s V_10
+   0242 br IL_024b: ldloc.s V_12
+   0247 ldloc.s V_20
+   0249 stloc.s V_11
+   024B ldloc.s V_12
+   024D ldc.i4.1 
+   024E add 
+   024F stloc.s V_12
+   0251 ldloc.s V_12
+   0253 ldloc.2 
+   0254 blt IL_014b: ldarg.1
+   0259 ldc.i4.1 
+   025A ret 
+== System.Boolean IntersectOBBPoint2D(UnityEngine.Vector3 p) attrs=Public, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldflda FastWaterVisible::mOBB
+   0008 ldfld OBB::h
+   000D call UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+   0012 ldarg.0 
+   0013 ldflda FastWaterVisible::mOBB
+   0018 ldfld OBB::h
+   001D call System.Void AABB::.ctor(UnityEngine.Vector3,UnityEngine.Vector3)
+   0022 ldarg.0 
+   0023 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0028 ldarg.0 
+   0029 ldflda FastWaterVisible::mOBB
+   002E ldfld OBB::c
+   0033 callvirt UnityEngine.Vector3 UnityEngine.Transform::TransformPoint(UnityEngine.Vector3)
+   0038 stloc.1 
+   0039 ldarg.1 
+   003A ldloc.1 
+   003B call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0040 stloc.2 
+   0041 ldarg.0 
+   0042 ldflda FastWaterVisible::mOBB
+   0047 ldflda OBB::m44
+   004C call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_inverse()
+   0051 stloc.s V_4
+   0053 ldloca.s V_4
+   0055 ldloc.2 
+   0056 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   005B stloc.3 
+   005C ldarg.0 
+   005D ldloc.3 
+   005E ldloc.0 
+   005F call System.Boolean FastWaterVisible::IntersectAABBPoint2D(UnityEngine.Vector3,AABB)
+   0064 ret 
+== System.Boolean IntersectAABBPoint2D(UnityEngine.Vector3 p, AABB aabb) attrs=Private, HideBySig maxstack=2
+   0000 ldarga.s p
+   0002 ldfld UnityEngine.Vector3::x
+   0007 ldarga.s aabb
+   0009 ldflda AABB::min
+   000E ldfld UnityEngine.Vector3::x
+   0013 blt.un IL_0065: ldc.i4.0
+   0018 ldarga.s p
+   001A ldfld UnityEngine.Vector3::x
+   001F ldarga.s aabb
+   0021 ldflda AABB::max
+   0026 ldfld UnityEngine.Vector3::x
+   002B bgt.un IL_0065: ldc.i4.0
+   0030 ldarga.s p
+   0032 ldfld UnityEngine.Vector3::z
+   0037 ldarga.s aabb
+   0039 ldflda AABB::min
+   003E ldfld UnityEngine.Vector3::z
+   0043 blt.un IL_0062: ldc.i4.0
+   0048 ldarga.s p
+   004A ldfld UnityEngine.Vector3::z
+   004F ldarga.s aabb
+   0051 ldflda AABB::max
+   0056 ldfld UnityEngine.Vector3::z
+   005B cgt.un 
+   005D ldc.i4.0 
+   005E ceq 
+   0060 br.s IL_0063: br.s IL_0066
+   0062 ldc.i4.0 
+   0063 br.s IL_0066: ret
+   0065 ldc.i4.0 
+   0066 ret 

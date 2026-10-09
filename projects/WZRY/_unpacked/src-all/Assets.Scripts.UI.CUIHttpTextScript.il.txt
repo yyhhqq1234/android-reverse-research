@@ -1,0 +1,326 @@
+// TYPE Assets.Scripts.UI.CUIHttpTextScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD System.String m_textUrl
+  FIELD UnityEngine.GameObject m_loadingCover
+  FIELD UnityEngine.UI.ScrollRect m_scrollRectScript
+  FIELD UnityEngine.UI.Text m_titleTextScript
+  FIELD UnityEngine.UI.Text m_textScript
+  FIELD Assets.Scripts.UI.enHttpTextState m_httpTextState
+  FIELD System.Int32 m_instanceID
+  FIELD System.Collections.Generic.List`1<System.Int32> s_downloadingHttpTextList
+  FIELD System.Int32 c_downloadingHttpTextMaxCount = 5
+  FIELD System.Single c_downloadingOverTime = 30
+  FIELD System.Single m_downloadingStartTimestamp
+  FIELD System.Int32 c_downloadingRetryMaxTimes = 3
+  FIELD System.Int32 m_downloadingRetryTimes
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0006 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_00e0: ret
+   000B ldarg.0 
+   000C ldarg.0 
+   000D call System.Int32 UnityEngine.Object::GetInstanceID()
+   0012 stfld Assets.Scripts.UI.CUIHttpTextScript::m_instanceID
+   0017 ldarg.0 
+   0018 dup 
+   0019 ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   001E ldc.i4.1 
+   001F or 
+   0020 stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0025 ldarg.0 
+   0026 ldarg.1 
+   0027 call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   002C ldarg.0 
+   002D ldarg.0 
+   002E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0033 call T Assets.Scripts.UI.CUIUtility::GetComponentInChildren<UnityEngine.UI.ScrollRect>(UnityEngine.GameObject)
+   0038 stfld Assets.Scripts.UI.CUIHttpTextScript::m_scrollRectScript
+   003D ldarg.0 
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.UI.CUIHttpTextScript::m_scrollRectScript
+   0044 ldnull 
+   0045 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004A brfalse IL_0064: ldnull
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_scrollRectScript
+   0055 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005A call T Assets.Scripts.UI.CUIUtility::GetComponentInChildren<UnityEngine.UI.Text>(UnityEngine.GameObject)
+   005F br IL_0065: stfld UnityEngine.UI.Text Assets.Scripts.UI.CUIHttpTextScript::m_textScript
+   0064 ldnull 
+   0065 stfld Assets.Scripts.UI.CUIHttpTextScript::m_textScript
+   006A ldarg.0 
+   006B call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0070 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0075 ldstr Title
+   007A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   007F stloc.0 
+   0080 ldarg.0 
+   0081 ldloc.0 
+   0082 ldnull 
+   0083 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0088 brfalse IL_009d: ldnull
+   008D ldloc.0 
+   008E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0093 call T Assets.Scripts.UI.CUIUtility::GetComponentInChildren<UnityEngine.UI.Text>(UnityEngine.GameObject)
+   0098 br IL_009e: stfld UnityEngine.UI.Text Assets.Scripts.UI.CUIHttpTextScript::m_titleTextScript
+   009D ldnull 
+   009E stfld Assets.Scripts.UI.CUIHttpTextScript::m_titleTextScript
+   00A3 ldarg.0 
+   00A4 ldc.i4.0 
+   00A5 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   00AA ldarg.0 
+   00AB ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   00B0 ldnull 
+   00B1 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B6 brfalse IL_00c7: ldarg.0
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   00C1 ldc.i4.1 
+   00C2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C7 ldarg.0 
+   00C8 ldc.r4 0
+   00CD stfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingStartTimestamp
+   00D2 ldarg.0 
+   00D3 ldc.i4.0 
+   00D4 stfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingRetryTimes
+   00D9 ldarg.0 
+   00DA ldc.i4.1 
+   00DB stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   00E0 ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0055: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0011 ldc.i4.2 
+   0012 bne.un IL_001e: ldarg.0
+   0017 ldarg.0 
+   0018 ldc.i4.0 
+   0019 call System.Void Assets.Scripts.UI.CUIHttpTextScript::StopDownloading(System.Boolean)
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0025 ldarg.0 
+   0026 ldnull 
+   0027 stfld Assets.Scripts.UI.CUIHttpTextScript::m_textUrl
+   002C ldarg.0 
+   002D ldnull 
+   002E stfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   0033 ldarg.0 
+   0034 ldnull 
+   0035 stfld Assets.Scripts.UI.CUIHttpTextScript::m_scrollRectScript
+   003A ldarg.0 
+   003B ldnull 
+   003C stfld Assets.Scripts.UI.CUIHttpTextScript::m_titleTextScript
+   0041 ldarg.0 
+   0042 ldnull 
+   0043 stfld Assets.Scripts.UI.CUIHttpTextScript::m_textScript
+   0048 ldarg.0 
+   0049 call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   004E ldarg.0 
+   004F ldc.i4.0 
+   0050 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0055 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_001e: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0011 ldc.i4.2 
+   0012 bne.un IL_001e: ret
+   0017 ldarg.0 
+   0018 ldc.i4.1 
+   0019 call System.Void Assets.Scripts.UI.CUIHttpTextScript::StopDownloading(System.Boolean)
+   001E ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   000C brfalse IL_0024: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0017 ldc.i4.2 
+   0018 bne.un IL_0024: ret
+   001D ldarg.0 
+   001E ldc.i4.1 
+   001F call System.Void Assets.Scripts.UI.CUIHttpTextScript::StopDownloading(System.Boolean)
+   0024 ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_009b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 switch Mono.Cecil.Cil.Instruction[]
+   0024 br IL_0096: br IL_009b
+   0029 ldarg.0 
+   002A call System.Void Assets.Scripts.UI.CUIHttpTextScript::LoadText()
+   002F br IL_009b: ret
+   0034 ldsfld Assets.Scripts.UI.CUIHttpTextScript::s_downloadingHttpTextList
+   0039 callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   003E ldc.i4.5 
+   003F bge IL_0051: br IL_009b
+   0044 ldarg.0 
+   0045 ldarg.0 
+   0046 call System.Collections.IEnumerator Assets.Scripts.UI.CUIHttpTextScript::DownloadText()
+   004B call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0050 pop 
+   0051 br IL_009b: ret
+   0056 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingStartTimestamp
+   0061 sub 
+   0062 ldc.r4 30
+   0067 blt.un IL_0091: br IL_009b
+   006C ldarg.0 
+   006D ldc.i4.1 
+   006E call System.Void Assets.Scripts.UI.CUIHttpTextScript::StopDownloading(System.Boolean)
+   0073 ldarg.0 
+   0074 dup 
+   0075 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingRetryTimes
+   007A dup 
+   007B stloc.1 
+   007C ldc.i4.1 
+   007D add 
+   007E stfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingRetryTimes
+   0083 ldloc.1 
+   0084 ldc.i4.3 
+   0085 blt IL_0091: br IL_009b
+   008A ldarg.0 
+   008B ldc.i4.4 
+   008C stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0091 br IL_009b: ret
+   0096 br IL_009b: ret
+   009B ret 
+== System.Void SetTextUrl(System.String url, System.Boolean forceReset) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0022: ret
+   000B ldarg.1 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIHttpTextScript::m_textUrl
+   0012 call System.Boolean System.String::Equals(System.String,System.String)
+   0017 brfalse IL_0023: ldarg.0
+   001C ldarg.2 
+   001D brtrue IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldarg.1 
+   0025 stfld Assets.Scripts.UI.CUIHttpTextScript::m_textUrl
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CUIHttpTextScript::m_titleTextScript
+   0030 ldnull 
+   0031 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0036 brfalse IL_004b: ldarg.0
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_titleTextScript
+   0041 ldsfld System.String::Empty
+   0046 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.UI.CUIHttpTextScript::m_textScript
+   0051 ldnull 
+   0052 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0057 brfalse IL_006c: ldarg.0
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.UI.CUIHttpTextScript::m_textScript
+   0062 ldsfld System.String::Empty
+   0067 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0072 ldc.i4.2 
+   0073 bne.un IL_007f: ldarg.0
+   0078 ldarg.0 
+   0079 ldc.i4.0 
+   007A call System.Void Assets.Scripts.UI.CUIHttpTextScript::StopDownloading(System.Boolean)
+   007F ldarg.0 
+   0080 ldc.i4.0 
+   0081 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   008C ldnull 
+   008D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0092 brfalse IL_00a3: ldarg.0
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   009D ldc.i4.1 
+   009E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A3 ldarg.0 
+   00A4 ldc.r4 0
+   00A9 stfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingStartTimestamp
+   00AE ldarg.0 
+   00AF ldc.i4.0 
+   00B0 stfld Assets.Scripts.UI.CUIHttpTextScript::m_downloadingRetryTimes
+   00B5 ret 
+== System.Void LoadText() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_textUrl
+   0006 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000B brfalse IL_0018: ldarg.0
+   0010 ldarg.0 
+   0011 ldc.i4.3 
+   0012 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0017 ret 
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.UI.CUIHttpTextScript::TryToStartDownload()
+   001E ret 
+== System.Collections.IEnumerator DownloadText() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.UI.CUIHttpTextScript/<DownloadText>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.UI.CUIHttpTextScript/<DownloadText>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void TryToStartDownload() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0007 ret 
+== System.Void FinishDownload() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.UI.CUIHttpTextScript::s_downloadingHttpTextList
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUIHttpTextScript::m_instanceID
+   000B callvirt System.Boolean System.Collections.Generic.List`1<System.Int32>::Remove(!0)
+   0010 pop 
+   0011 ret 
+== System.Void StopDownloading(System.Boolean resetLoadState) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIHttpTextScript::FinishDownload()
+   000C ldarg.1 
+   000D brfalse IL_0036: ret
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld Assets.Scripts.UI.CUIHttpTextScript::m_httpTextState
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   001F ldnull 
+   0020 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0025 brfalse IL_0036: ret
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CUIHttpTextScript::m_loadingCover
+   0030 ldc.i4.1 
+   0031 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0036 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0005 stsfld Assets.Scripts.UI.CUIHttpTextScript::s_downloadingHttpTextList
+   000A ret 
+  NESTED Assets.Scripts.UI.CUIHttpTextScript/<DownloadText>c__Iterator0

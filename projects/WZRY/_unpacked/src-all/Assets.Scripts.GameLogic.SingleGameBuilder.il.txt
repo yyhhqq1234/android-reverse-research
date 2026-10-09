@@ -1,0 +1,284 @@
+// TYPE Assets.Scripts.GameLogic.SingleGameBuilder  base=Assets.Scripts.GameLogic.GameBuilderClientBase  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::.ctor()
+   0006 ret 
+== System.Void Initialize(Assets.Scripts.GameLogic.CLevelContext InGameContext, System.Object InMessage, System.Byte[] inDeskPool) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::Initialize(Assets.Scripts.GameLogic.CLevelContext,System.Object,System.Byte[])
+   0009 ret 
+== System.UInt32 NtfCoreStartGame() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.UInt32 Assets.Scripts.GameLogic.GameBuilderClientBase::NtfCoreStartGame()
+   0006 pop 
+   0007 ldloca.s V_0
+   0009 initobj SGW/stStartLevelExtraInfo
+   000F ldloca.s V_0
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0016 ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   001B stfld SGW/stStartLevelExtraInfo::hostPlayerId
+   0020 ldarg.0 
+   0021 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.GameBuilderClientBase::get_levelContext()
+   0026 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsLowMemoryDevice()
+   002B brfalse IL_0038: ldloca.s V_0
+   0030 ldloca.s V_0
+   0032 ldc.i4.1 
+   0033 stfld SGW/stStartLevelExtraInfo::isLowMemoryDevice
+   0038 ldloca.s V_0
+   003A call !0 MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::get_instance()
+   003F callvirt System.Int32 Assets.Scripts.GameLogic.GameLoader::GetGameLoaderOptionData()
+   0044 stfld SGW/stStartLevelExtraInfo::gameLoaderOption
+   0049 ldloca.s V_0
+   004B call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0050 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   0055 call System.Void SGW/stStartLevelExtraInfo::set_isRecovering(System.Boolean)
+   005A ldarg.0 
+   005B ldloca.s V_0
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.GameBuilderClientBase::loadMessage
+   0063 castclass CSProtocol.SCPKG_STARTSINGLEGAMERSP
+   0068 call System.UInt32 Assets.Scripts.GameLogic.SingleGameBuilder::NtfCoreBeginSoloGame(SGW/stStartLevelExtraInfo&,CSProtocol.SCPKG_STARTSINGLEGAMERSP)
+   006D stloc.1 
+   006E call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0073 ldc.i4.1 
+   0074 callvirt System.Void Assets.Scripts.Framework.GameFramework::SetGameCoreWorkMode(Assets.Scripts.Framework.GAME_CORE_WORK_MODE)
+   0079 ldloc.1 
+   007A ret 
+== System.Void BuildCSharpPlayer() attrs=Public, Virtual, HideBySig maxstack=13
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameBuilderClientBase::loadMessage
+   0006 castclass CSProtocol.SCPKG_STARTSINGLEGAMERSP
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0012 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0017 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   001C ldloc.0 
+   001D ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0022 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0027 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   002C callvirt System.Int32 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Length()
+   0031 call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   0036 stloc.1 
+   0037 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   003C callvirt System.Void Assets.Scripts.GameLogic.GamePlayerCenter::Clear()
+   0041 ldc.i4.0 
+   0042 stloc.2 
+   0043 br IL_022c: ldloc.2
+   0048 ldloc.0 
+   0049 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   004E callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0053 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0058 ldloc.2 
+   0059 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   005E stloc.3 
+   005F ldsfld CheatCommandReplayEntry::heroPerformanceTest
+   0064 brfalse IL_00ab: ldloc.3
+   0069 ldloc.3 
+   006A ldloc.0 
+   006B ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0070 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0075 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   007A ldc.i4.0 
+   007B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0080 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0085 stfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   008A ldloc.3 
+   008B ldloc.0 
+   008C ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stDetail
+   0091 callvirt CSProtocol.CSDT_BATTLE_PLAYER_BRIEF CSProtocol.CSDT_SINGLEGAME_DETAIL::get_stSingleGameSucc()
+   0096 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   009B ldc.i4.0 
+   009C callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   00A1 ldfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   00A6 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   00AB ldloc.3 
+   00AC ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   00B1 ldc.i4.1 
+   00B2 bne.un IL_00c7: ldc.i4.0
+   00B7 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   00BC ldloc.3 
+   00BD ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   00C2 callvirt System.Void Assets.Scripts.GameLogic.GamePlayerCenter::SetHostPlayerID(System.UInt32)
+   00C7 ldc.i4.0 
+   00C8 conv.i8 
+   00C9 stloc.s V_4
+   00CB ldc.i4.0 
+   00CC stloc.s V_5
+   00CE ldsfld System.String::Empty
+   00D3 stloc.s V_6
+   00D5 ldsfld System.String::Empty
+   00DA stloc.s V_7
+   00DC ldloc.3 
+   00DD ldflda CSProtocol.COMDT_PLAYERINFO::szName
+   00E2 call System.String StringHelper::UTF8BytesToStringX(System.Byte[]&)
+   00E7 stloc.s V_7
+   00E9 ldloc.3 
+   00EA ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00EF callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   00F4 brfalse IL_011d: ldloc.s V_4
+   00F9 ldloc.3 
+   00FA ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   00FF callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0104 ldfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::ullUid
+   0109 stloc.s V_4
+   010B ldloc.3 
+   010C ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0111 callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0116 ldfld CSProtocol.COMDT_PLAYERINFO_OF_ACNT::iLogicWorldID
+   011B stloc.s V_5
+   011D ldloc.s V_4
+   011F ldc.i4.0 
+   0120 conv.i8 
+   0121 bne.un IL_014e: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0126 ldloc.s V_5
+   0128 brtrue IL_014e: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   012D ldloc.3 
+   012E ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0133 callvirt CSProtocol.COMDT_PLAYERINFO_OF_ACNT CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfAcnt()
+   0138 brtrue IL_014e: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   013D ldloc.3 
+   013E ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   0143 conv.u8 
+   0144 stloc.s V_4
+   0146 ldloc.3 
+   0147 ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   014C stloc.s V_5
+   014E call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0153 ldloc.3 
+   0154 ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   0159 ldloc.s V_4
+   015B ldloc.s V_5
+   015D ldloc.s V_6
+   015F ldloc.s V_7
+   0161 ldsfld System.String::Empty
+   0166 ldc.i4.0 
+   0167 ldnull 
+   0168 ldc.i4.0 
+   0169 ldc.i4.0 
+   016A ldc.i4.0 
+   016B ldc.i4.0 
+   016C callvirt System.Void Assets.Scripts.GameLogic.GamePlayerCenter::AddPlayer(System.UInt32,System.UInt64,System.UInt32,System.String,System.String,System.String,System.Byte,CSProtocol.COMDT_CUSTOMTEAM_UNIQ,System.UInt16,System.UInt32,System.Int32,System.Int32)
+   0171 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0176 ldloc.3 
+   0177 ldfld CSProtocol.COMDT_PLAYERINFO::dwObjId
+   017C callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0181 stloc.s V_8
+   0183 ldloc.s V_8
+   0185 brfalse IL_0228: ldloc.2
+   018A ldnull 
+   018B stloc.s V_9
+   018D ldloc.0 
+   018E ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   0193 brfalse IL_01ba: ldloc.s V_8
+   0198 ldloc.0 
+   0199 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   019E callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   01A3 brfalse IL_01ba: ldloc.s V_8
+   01A8 ldloc.0 
+   01A9 ldfld CSProtocol.SCPKG_STARTSINGLEGAMERSP::stGameParam
+   01AE callvirt CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL CSProtocol.CSDT_SINGLEGAMETYPE_RSP::get_stSingleGameRspOfCombat()
+   01B3 ldfld CSProtocol.CSDT_SINGLEGAME_OF_COMBAT_DETAIL::stPveEquipInfo
+   01B8 stloc.s V_9
+   01BA ldloc.s V_8
+   01BC ldloc.3 
+   01BD ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   01C2 call !0[] Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::op_Implicit(Assets.Scripts.Common.SB_TDR_ARRAY`1<!0>)
+   01C7 ldloc.s V_9
+   01C9 callvirt System.Void Assets.Scripts.GameLogic.Player::CreatePlayerServerData(CSProtocol.COMDT_CHOICEHERO[],CSProtocol.COMDT_INBATTLE_PVE_EQUIP_DETAIL)
+   01CE ldloc.3 
+   01CF ldfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   01D4 ldc.i4.1 
+   01D5 bne.un IL_0228: ldloc.2
+   01DA call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   01DF callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   01E4 stloc.s V_10
+   01E6 ldloc.s V_8
+   01E8 ldloc.s V_10
+   01EA ldfld Assets.Scripts.GameSystem.CRoleInfo::m_userPrivacyBits
+   01EF stfld Assets.Scripts.GameLogic.Player::privacyBits
+   01F4 ldloc.s V_8
+   01F6 ldloc.s V_10
+   01F8 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_CareerTitleShowID
+   01FD stfld Assets.Scripts.GameLogic.Player::CareerTitleID
+   0202 call !0 Singleton`1<Assets.Scripts.GameSystem.RankingSystem>::get_instance()
+   0207 callvirt Assets.Scripts.GameSystem.RankingSystem/LocalRankingInfo Assets.Scripts.GameSystem.RankingSystem::GetMasterAreaRankList()
+   020C stloc.s V_11
+   020E ldloc.s V_11
+   0210 brfalse IL_0228: ldloc.2
+   0215 ldloc.s V_8
+   0217 ldloc.s V_11
+   0219 ldfld Assets.Scripts.GameSystem.RankingSystem/LocalRankingInfo::SelfInfo
+   021E ldfld CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF::dwRankNo
+   0223 stfld Assets.Scripts.GameLogic.Player::m_masterAreaRank
+   0228 ldloc.2 
+   0229 ldc.i4.1 
+   022A add 
+   022B stloc.2 
+   022C ldloc.2 
+   022D ldloc.1 
+   022E blt IL_0048: ldloc.0
+   0233 ret 
+== System.Void PreBeginPlay() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void StartFight() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::StartFight()
+   0006 ret 
+== System.Void OnLoadingProgress(System.Single Progress) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call System.Void Assets.Scripts.GameSystem.CUILoadingSystem::OnSelfLoadProcess(System.Single)
+   0006 ret 
+== System.Void PostBeginPlay() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::PostBeginPlay()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.GameBuilderClientBase::loadMessage
+   000C castclass CSProtocol.SCPKG_STARTSINGLEGAMERSP
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0018 ldarg.0 
+   0019 ldnull 
+   001A stfld Assets.Scripts.GameLogic.GameBuilderClientBase::loadMessage
+   001F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0024 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::StartFightSoloGame()
+   0029 ret 
+== System.UInt32 NtfCoreBeginSoloGame(SGW/stStartLevelExtraInfo& extraInfo, CSProtocol.SCPKG_STARTSINGLEGAMERSP InMessage) attrs=Private, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldloca.s V_1
+   0004 initobj CSProtocolWrapper.SCPKG_STARTSINGLEGAMERSP
+   000A ldloca.s V_1
+   000C ldarg.2 
+   000D call System.Void CSProtocolWrapper.SCPKG_STARTSINGLEGAMERSP::CopyFrom(CSProtocol.SCPKG_STARTSINGLEGAMERSP)
+   0012 sizeof CSProtocolWrapper.SCPKG_STARTSINGLEGAMERSP
+   0018 stloc.2 
+   0019 ldloc.2 
+   001A call System.IntPtr System.Runtime.InteropServices.Marshal::AllocHGlobal(System.Int32)
+   001F stloc.3 
+   0020 ldloca.s V_3
+   0022 call System.Void* System.IntPtr::ToPointer()
+   0027 stloc.s V_4
+   0029 ldloc.s V_4
+   002B ldarg.2 
+   002C call System.Void CSProtocolWrapper.SCPKG_STARTSINGLEGAMERSP::CopyFrom(CSProtocol.SCPKG_STARTSINGLEGAMERSP)
+   0031 ldloc.s V_4
+   0033 ldc.i4.0 
+   0034 ldc.i4.0 
+   0035 conv.u 
+   0036 ldc.i4.0 
+   0037 ldarg.1 
+   0038 ldobj SGW/stStartLevelExtraInfo
+   003D call System.UInt32 SGW::StartLevel(System.Byte*,System.Boolean,System.Byte*,System.UInt32,SGW/stStartLevelExtraInfo)
+   0042 stloc.0 
+   0043 ldloca.s V_1
+   0045 ldarg.2 
+   0046 call System.Void CSProtocolWrapper.SCPKG_STARTSINGLEGAMERSP::CopyFrom(CSProtocol.SCPKG_STARTSINGLEGAMERSP)
+   004B ldloc.3 
+   004C call System.Void System.Runtime.InteropServices.Marshal::FreeHGlobal(System.IntPtr)
+   0051 ldloc.0 
+   0052 ret 

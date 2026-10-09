@@ -1,0 +1,205 @@
+// TYPE RadialBlur  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Material material
+  FIELD UnityEngine.Vector2 center
+  FIELD System.Single falloffExp
+  FIELD System.Single blurScale
+  FIELD System.Int32 numIterations
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0006 stfld RadialBlur::center
+   000B ldarg.0 
+   000C ldc.r4 1.5
+   0011 stfld RadialBlur::falloffExp
+   0016 ldarg.0 
+   0017 ldc.r4 50
+   001C stfld RadialBlur::blurScale
+   0021 ldarg.0 
+   0022 ldc.i4.2 
+   0023 stfld RadialBlur::numIterations
+   0028 ldarg.0 
+   0029 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   002E ret 
+== System.Void LoadShaders() attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld RadialBlur::material
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_005d: ret
+   0010 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0015 ldstr Shaders/Post/RadialBlur
+   001A ldtoken UnityEngine.Shader
+   001F call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0024 ldc.i4.0 
+   0025 ldc.i4.1 
+   0026 ldc.i4.1 
+   0027 ldc.i4.0 
+   0028 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   002D ldfld CResource::m_content
+   0032 isinst UnityEngine.Shader
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003F brfalse IL_0044: ldarg.0
+   0044 ldarg.0 
+   0045 ldloc.0 
+   0046 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   004B stfld RadialBlur::material
+   0050 ldarg.0 
+   0051 ldfld RadialBlur::material
+   0056 ldc.i4.s 61
+   0058 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   005D ret 
+== System.Void Start() attrs=Family, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void RadialBlur::LoadShaders()
+   0006 ldarg.0 
+   0007 call System.Void RadialBlur::UpdateParameters()
+   000C ret 
+== System.Void UpdateParameters() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld RadialBlur::material
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldfld RadialBlur::material
+   0017 ldstr _ScreenCenter
+   001C ldarg.0 
+   001D ldflda RadialBlur::center
+   0022 ldfld UnityEngine.Vector2::x
+   0027 ldarg.0 
+   0028 ldflda RadialBlur::center
+   002D ldfld UnityEngine.Vector2::y
+   0032 ldc.r4 0
+   0037 ldc.r4 0
+   003C newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0041 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0046 ldarg.0 
+   0047 ldfld RadialBlur::material
+   004C ldstr _FalloffExp
+   0051 ldarg.0 
+   0052 ldfld RadialBlur::falloffExp
+   0057 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   005C ldarg.0 
+   005D ldfld RadialBlur::material
+   0062 ldstr _BlurScale
+   0067 ldarg.0 
+   0068 ldfld RadialBlur::blurScale
+   006D callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   0072 ret 
+== System.Void OnRenderImage(UnityEngine.RenderTexture source, UnityEngine.RenderTexture destination) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld RadialBlur::numIterations
+   0007 ldc.i4.1 
+   0008 ldc.i4.4 
+   0009 call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   000E stfld RadialBlur::numIterations
+   0013 ldarg.0 
+   0014 ldfld RadialBlur::numIterations
+   0019 ldc.i4.1 
+   001A bne.un IL_0032: ldarg.0
+   001F ldarg.1 
+   0020 ldarg.2 
+   0021 ldarg.0 
+   0022 ldfld RadialBlur::material
+   0027 ldc.i4.0 
+   0028 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   002D br IL_0101: ret
+   0032 ldarg.0 
+   0033 ldfld RadialBlur::numIterations
+   0038 ldc.i4.2 
+   0039 bne.un IL_0077: ldc.i4.2
+   003E ldarg.1 
+   003F callvirt System.Int32 UnityEngine.Texture::get_width()
+   0044 ldarg.1 
+   0045 callvirt System.Int32 UnityEngine.Texture::get_height()
+   004A call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32)
+   004F stloc.0 
+   0050 ldarg.1 
+   0051 ldloc.0 
+   0052 ldarg.0 
+   0053 ldfld RadialBlur::material
+   0058 ldc.i4.0 
+   0059 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   005E ldloc.0 
+   005F ldarg.2 
+   0060 ldarg.0 
+   0061 ldfld RadialBlur::material
+   0066 ldc.i4.0 
+   0067 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   006C ldloc.0 
+   006D call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0072 br IL_0101: ret
+   0077 ldc.i4.2 
+   0078 newarr UnityEngine.RenderTexture
+   007D dup 
+   007E ldc.i4.0 
+   007F ldarg.1 
+   0080 callvirt System.Int32 UnityEngine.Texture::get_width()
+   0085 ldarg.1 
+   0086 callvirt System.Int32 UnityEngine.Texture::get_height()
+   008B call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32)
+   0090 stelem.ref 
+   0091 dup 
+   0092 ldc.i4.1 
+   0093 ldarg.1 
+   0094 callvirt System.Int32 UnityEngine.Texture::get_width()
+   0099 ldarg.1 
+   009A callvirt System.Int32 UnityEngine.Texture::get_height()
+   009F call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32)
+   00A4 stelem.ref 
+   00A5 stloc.1 
+   00A6 ldc.i4.0 
+   00A7 stloc.2 
+   00A8 ldarg.1 
+   00A9 stloc.3 
+   00AA ldc.i4.0 
+   00AB stloc.s V_4
+   00AD br IL_00d4: ldloc.s V_4
+   00B2 ldloc.3 
+   00B3 ldloc.1 
+   00B4 ldloc.2 
+   00B5 ldelem.ref 
+   00B6 ldarg.0 
+   00B7 ldfld RadialBlur::material
+   00BC ldc.i4.0 
+   00BD call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   00C2 ldloc.1 
+   00C3 ldloc.2 
+   00C4 ldelem.ref 
+   00C5 stloc.3 
+   00C6 ldloc.2 
+   00C7 ldc.i4.1 
+   00C8 add 
+   00C9 dup 
+   00CA stloc.2 
+   00CB ldc.i4.2 
+   00CC rem 
+   00CD stloc.2 
+   00CE ldloc.s V_4
+   00D0 ldc.i4.1 
+   00D1 add 
+   00D2 stloc.s V_4
+   00D4 ldloc.s V_4
+   00D6 ldarg.0 
+   00D7 ldfld RadialBlur::numIterations
+   00DC ldc.i4.1 
+   00DD sub 
+   00DE blt IL_00b2: ldloc.3
+   00E3 ldloc.3 
+   00E4 ldarg.2 
+   00E5 ldarg.0 
+   00E6 ldfld RadialBlur::material
+   00EB ldc.i4.0 
+   00EC call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   00F1 ldloc.1 
+   00F2 ldc.i4.0 
+   00F3 ldelem.ref 
+   00F4 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   00F9 ldloc.1 
+   00FA ldc.i4.1 
+   00FB ldelem.ref 
+   00FC call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0101 ret 

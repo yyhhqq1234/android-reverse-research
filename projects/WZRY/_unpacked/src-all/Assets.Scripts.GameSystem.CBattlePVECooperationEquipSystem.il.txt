@@ -1,0 +1,2445 @@
+// TYPE Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem  base=Assets.Scripts.GameSystem.CBattleBaseEquipSystem  attrs=Public, BeforeFieldInit
+  FIELD System.String s_pveEquipFormPartPath
+  FIELD System.String s_equipPickupFormPath
+  FIELD Assets.Scripts.UI.CUIFormScript m_equipPickupFormScript
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu> m_equipPickUpDic
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu> m_pickupEquipList
+  FIELD Assets.Scripts.GameSystem.CPVECooperationEquipInfo m_selectEquipInfo
+  FIELD CoreDef.enEquipContainerType m_selectEquipContType
+  FIELD UnityEngine.Transform m_selectEquipTrans
+  FIELD System.Int32 m_selectGridPos
+  FIELD System.Boolean m_needShowPickupPanel
+  FIELD System.Boolean m_bDeadWatchMode
+  FIELD System.Int32 m_showPickupTimer
+  FIELD System.UInt16 m_medicineGuideID
+  FIELD Assets.Scripts.UI.CUIComponent m_equipPartRoot
+  FIELD SGW/stQueryShenfuEquipStatusListTypeDelegate <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::.ctor()
+   0011 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0016 ldarg.0 
+   0017 ldc.i4.3 
+   0018 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   001D ldarg.0 
+   001E ldc.i4.1 
+   001F stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_needShowPickupPanel
+   0024 ldarg.0 
+   0025 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::.ctor()
+   002A ldarg.0 
+   002B newobj System.Void Assets.Scripts.GameSystem.CEquipBagPVEUIComponent::.ctor()
+   0030 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0035 ldarg.0 
+   0036 newobj System.Void Assets.Scripts.GameSystem.CEquipInfoPVEUIComponent::.ctor()
+   003B stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0040 ldarg.0 
+   0041 newobj System.Void Assets.Scripts.GameSystem.CEquipSkillUIComponent::.ctor()
+   0046 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipSkillUIComponent
+   004B ldarg.0 
+   004C newobj System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::.ctor()
+   0051 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0056 ret 
+== System.Void RegisterEvents() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RegisterEvents()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 10100
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OpenEquipForm(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 10101
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipFormClose(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 10181
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnTabListIndexChange(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 10104
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 10121
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipUseBtnClick(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0092 ldc.i4 10122
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnBattleEquipShowActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent)
+   009E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AD ldc.i4 10123
+   00B2 ldarg.0 
+   00B3 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipDropBtnClick(Assets.Scripts.UI.CUIEvent)
+   00B9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BE callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C8 ldc.i4 10171
+   00CD ldarg.0 
+   00CE ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipDropOneBtnClick(Assets.Scripts.UI.CUIEvent)
+   00D4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E3 ldc.i4 10125
+   00E8 ldarg.0 
+   00E9 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnClosePickUp(Assets.Scripts.UI.CUIEvent)
+   00EF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FE ldc.i4 10130
+   0103 ldarg.0 
+   0104 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnShowPickUp(Assets.Scripts.UI.CUIEvent)
+   010A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   010F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0114 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0119 ldc.i4 10126
+   011E ldarg.0 
+   011F ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipPickupClicked(Assets.Scripts.UI.CUIEvent)
+   0125 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0134 ldc.i4 10172
+   0139 ldarg.0 
+   013A ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnPickupEffectPlayEnd(Assets.Scripts.UI.CUIEvent)
+   0140 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0145 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   014F ldc.i4 10174
+   0154 ldarg.0 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnPickup_ItemElement_Enable(Assets.Scripts.UI.CUIEvent)
+   015B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0160 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0165 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   016A ldc.i4.s 70
+   016C ldarg.0 
+   016D ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnHeroShenfuEquipPickInRangeChange(Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam&)
+   0173 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam>::.ctor(System.Object,System.IntPtr)
+   0178 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   017D call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0182 ldc.i4.8 
+   0183 ldarg.0 
+   0184 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   018A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   018F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0194 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0199 ldc.i4.s 109
+   019B ldarg.0 
+   019C ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   01A2 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   01A7 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   01AC call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   01B1 ldc.i4.s 116
+   01B3 ldarg.0 
+   01B4 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipSuitActiveChange(Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam&)
+   01BA newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam>::.ctor(System.Object,System.IntPtr)
+   01BF callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   01C4 ret 
+== System.Void UnRegisterEvents() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UnRegisterEvents()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 10100
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OpenEquipForm(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 10101
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipFormClose(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 10104
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 10181
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnTabListIndexChange(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 10121
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipUseBtnClick(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0092 ldc.i4 10122
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnBattleEquipShowActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent)
+   009E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AD ldc.i4 10123
+   00B2 ldarg.0 
+   00B3 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipDropBtnClick(Assets.Scripts.UI.CUIEvent)
+   00B9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BE callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C8 ldc.i4 10171
+   00CD ldarg.0 
+   00CE ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipDropOneBtnClick(Assets.Scripts.UI.CUIEvent)
+   00D4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E3 ldc.i4 10125
+   00E8 ldarg.0 
+   00E9 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnClosePickUp(Assets.Scripts.UI.CUIEvent)
+   00EF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FE ldc.i4 10130
+   0103 ldarg.0 
+   0104 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnShowPickUp(Assets.Scripts.UI.CUIEvent)
+   010A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   010F callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0114 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0119 ldc.i4 10126
+   011E ldarg.0 
+   011F ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipPickupClicked(Assets.Scripts.UI.CUIEvent)
+   0125 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012A callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0134 ldc.i4 10172
+   0139 ldarg.0 
+   013A ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnPickupEffectPlayEnd(Assets.Scripts.UI.CUIEvent)
+   0140 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0145 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   014F ldc.i4 10174
+   0154 ldarg.0 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnPickup_ItemElement_Enable(Assets.Scripts.UI.CUIEvent)
+   015B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0160 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0165 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   016A ldc.i4.s 70
+   016C ldarg.0 
+   016D ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnHeroShenfuEquipPickInRangeChange(Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam&)
+   0173 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam>::.ctor(System.Object,System.IntPtr)
+   0178 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   017D call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0182 ldc.i4.8 
+   0183 ldarg.0 
+   0184 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   018A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   018F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0194 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0199 ldc.i4.s 109
+   019B ldarg.0 
+   019C ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   01A2 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   01A7 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   01AC call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   01B1 ldc.i4.s 116
+   01B3 ldarg.0 
+   01B4 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipSuitActiveChange(Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam&)
+   01BA newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam>::.ctor(System.Object,System.IntPtr)
+   01BF callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   01C4 ret 
+== System.Void PreLoadEquipForm() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   000B ldarg.0 
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0011 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   0016 ldc.i4.1 
+   0017 ldc.i4.1 
+   0018 ldnull 
+   0019 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   001E stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0023 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0028 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   002D callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0032 ret 
+== Assets.Scripts.UI.CUIFormScript GetBattleEquipPickUpForm() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0006 ret 
+== System.Void InitBattleEquipList() attrs=Family, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0006 brtrue IL_0016: ldarg.0
+   000B ldarg.0 
+   000C newobj System.Void DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::.ctor()
+   0011 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   001C callvirt System.Void DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::Clear()
+   0021 call System.Collections.Generic.List`1<System.UInt16> Assets.Scripts.GameSystem.EquipCommonHandle::GetForidEquipList()
+   0026 stloc.0 
+   0027 call System.Collections.Generic.List`1<System.UInt16> Assets.Scripts.GameSystem.EquipCommonHandle::GetBelongEquipsList()
+   002C stloc.1 
+   002D call System.Collections.Generic.List`1<System.UInt16> Assets.Scripts.GameSystem.EquipCommonHandle::GetForbidShopEquipsList()
+   0032 stloc.2 
+   0033 call System.Collections.Generic.List`1<System.UInt16> Assets.Scripts.GameSystem.EquipCommonHandle::GetForbidReplaceShopEquipsList()
+   0038 stloc.3 
+   0039 ldloca.s V_2
+   003B ldloca.s V_3
+   003D call System.Boolean Assets.Scripts.GameSystem.EquipCommonHandle::CheckForbidReplaceShopEquipsList(System.Collections.Generic.List`1<System.UInt16>&,System.Collections.Generic.List`1<System.UInt16>&)
+   0042 brtrue IL_0047: call System.Int32 ResData.GameDataMgr/m_pveEquipInBattleDatabin::Count()
+   0047 call System.Int32 ResData.GameDataMgr/m_pveEquipInBattleDatabin::Count()
+   004C stloc.s V_4
+   004E ldc.i4.0 
+   004F stloc.s V_5
+   0051 br IL_0182: ldloc.s V_5
+   0056 ldloc.s V_5
+   0058 call ResData.ResPVEEquipInBattle ResData.GameDataMgr/m_pveEquipInBattleDatabin::GetByIndex(System.Int32)
+   005D stloc.s V_6
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0065 ldloca.s V_6
+   0067 ldfld ResData.ResPVEEquipInBattle::wID
+   006C callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::ContainsKey(!0)
+   0071 brfalse IL_0089: ldloca.s V_6
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   007C ldloca.s V_6
+   007E ldfld ResData.ResPVEEquipInBattle::wID
+   0083 callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::Remove(!0)
+   0088 pop 
+   0089 ldloca.s V_6
+   008B ldfld ResData.ResPVEEquipInBattle::bIsBelongLevel
+   0090 brtrue IL_00a7: ldloca.s V_6
+   0095 ldloc.0 
+   0096 ldloca.s V_6
+   0098 ldfld ResData.ResPVEEquipInBattle::wID
+   009D callvirt System.Boolean System.Collections.Generic.List`1<System.UInt16>::Contains(!0)
+   00A2 brfalse IL_00c5: ldc.i4.0
+   00A7 ldloca.s V_6
+   00A9 ldfld ResData.ResPVEEquipInBattle::bIsBelongLevel
+   00AE brfalse IL_017c: ldloc.s V_5
+   00B3 ldloc.1 
+   00B4 ldloca.s V_6
+   00B6 ldfld ResData.ResPVEEquipInBattle::wID
+   00BB callvirt System.Boolean System.Collections.Generic.List`1<System.UInt16>::Contains(!0)
+   00C0 brfalse IL_017c: ldloc.s V_5
+   00C5 ldc.i4.0 
+   00C6 stloc.s V_7
+   00C8 ldc.i4.0 
+   00C9 stloc.s V_8
+   00CB ldc.i4.0 
+   00CC stloc.s V_9
+   00CE br IL_0113: ldloc.s V_9
+   00D3 ldloca.s V_6
+   00D5 ldfld ResData.ResPVEEquipInBattle::wID
+   00DA ldloc.2 
+   00DB ldloc.s V_9
+   00DD callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   00E2 bne.un IL_010d: ldloc.s V_9
+   00E7 ldc.i4.1 
+   00E8 stloc.s V_7
+   00EA ldloc.s V_9
+   00EC ldloc.3 
+   00ED callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   00F2 bge IL_0104: ldloc.s V_8
+   00F7 ldloc.3 
+   00F8 ldloc.s V_9
+   00FA callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   00FF br IL_0106: stloc.s V_8
+   0104 ldloc.s V_8
+   0106 stloc.s V_8
+   0108 br IL_0120: ldarg.0
+   010D ldloc.s V_9
+   010F ldc.i4.1 
+   0110 add 
+   0111 stloc.s V_9
+   0113 ldloc.s V_9
+   0115 ldloc.2 
+   0116 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   011B blt IL_00d3: ldloca.s V_6
+   0120 ldarg.0 
+   0121 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0126 ldloca.s V_6
+   0128 ldfld ResData.ResPVEEquipInBattle::wID
+   012D ldloca.s V_6
+   012F ldfld ResData.ResPVEEquipInBattle::wID
+   0134 ldloc.s V_7
+   0136 ldloc.s V_8
+   0138 newobj System.Void Assets.Scripts.GameSystem.CPVECooperationEquipInfo::.ctor(System.UInt16,System.Boolean,System.UInt16)
+   013D callvirt System.Void DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::Add(!0,!1)
+   0142 ldloca.s V_10
+   0144 initobj SGW/stShenfuEquipInBattleStatus
+   014A ldloca.s V_10
+   014C ldloca.s V_6
+   014E ldfld ResData.ResPVEEquipInBattle::wID
+   0153 stfld SGW/stShenfuEquipInBattleStatus::m_equipID
+   0158 ldloca.s V_10
+   015A ldc.i4.0 
+   015B call System.Void SGW/stShenfuEquipInBattleStatus::set_m_isCanPick(System.Boolean)
+   0160 ldloca.s V_10
+   0162 ldc.i4.0 
+   0163 call System.Void SGW/stShenfuEquipInBattleStatus::set_m_isOwned(System.Boolean)
+   0168 ldarg.0 
+   0169 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_shenfuEquipStatusMap
+   016E ldloca.s V_6
+   0170 ldfld ResData.ResPVEEquipInBattle::wID
+   0175 ldloc.s V_10
+   0177 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt16,SGW/stShenfuEquipInBattleStatus>::Add(!0,!1)
+   017C ldloc.s V_5
+   017E ldc.i4.1 
+   017F add 
+   0180 stloc.s V_5
+   0182 ldloc.s V_5
+   0184 ldloc.s V_4
+   0186 blt IL_0056: ldloc.s V_5
+   018B ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript battleFormScript, System.Boolean enable, Assets.Scripts.GameLogic.Player hostPlayer) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::Clear()
+   0006 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_needShowPickupPanel
+   0013 ldarg.0 
+   0014 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitBattleEquipList()
+   0019 ldarg.0 
+   001A callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitEquipShenfuList()
+   001F ldarg.0 
+   0020 ldarg.1 
+   0021 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_battleFormScript
+   0026 ldarg.0 
+   0027 ldarg.2 
+   0028 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   002D ldarg.3 
+   002E brfalse IL_004f: ldarg.0
+   0033 ldarg.0 
+   0034 ldarg.3 
+   0035 ldfld Assets.Scripts.GameLogic.Player::Captain
+   003A callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   003F ldarg.0 
+   0040 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0045 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004A brtrue IL_004f: ldarg.0
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   0055 brtrue IL_005b: ldc.i4.0
+   005A ret 
+   005B ldc.i4.0 
+   005C call System.Void SGW::SetHostIsEquipSimpleMode(System.Boolean)
+   0061 ldarg.0 
+   0062 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OpenFormForFirstTime()
+   0067 ret 
+== System.Void OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Family, Virtual, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   000B brfalse IL_00a6: ldarg.1
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0020 ldc.i4.4 
+   0021 beq IL_00a6: ldarg.1
+   0026 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   002B ldarg.1 
+   002C ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::upar1
+   0031 ldc.i4.1 
+   0032 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   003E brfalse IL_0068: ldloca.s V_1
+   0043 ldloca.s V_0
+   0045 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004A callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   004F ldc.i4.4 
+   0050 bne.un IL_0068: ldloca.s V_1
+   0055 ldarg.0 
+   0056 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UpdateAllConsumeActiveEquipAmountText()
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipSkillUIComponent
+   0061 ldc.i4.1 
+   0062 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0067 ret 
+   0068 ldloca.s V_1
+   006A ldarg.1 
+   006B ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0070 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0075 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   007A ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   007F call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   0084 brfalse IL_00a1: br IL_00d8
+   0089 ldloca.s V_1
+   008B ldfld ResData.ResHeroCfgInfo::bLevelDynamicHero
+   0090 brtrue IL_00a1: br IL_00d8
+   0095 ldarg.0 
+   0096 ldarg.1 
+   0097 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   009C callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   00A1 br IL_00d8: ret
+   00A6 ldarg.1 
+   00A7 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   00AC call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   00B1 brfalse IL_00d8: ret
+   00B6 ldarg.1 
+   00B7 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   00BC call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00C1 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00C6 ldc.i4.4 
+   00C7 bne.un IL_00d8: ret
+   00CC ldarg.0 
+   00CD ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipSkillUIComponent
+   00D2 ldc.i4.0 
+   00D3 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   00D8 ret 
+== System.Void Clear() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::Clear()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   000C callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::Clear()
+   0011 ldarg.0 
+   0012 ldnull 
+   0013 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0018 ldarg.0 
+   0019 ldc.i4.3 
+   001A stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   001F ldarg.0 
+   0020 ldnull 
+   0021 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   0026 ldarg.0 
+   0027 ldc.i4.m1 
+   0028 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0033 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::Clear()
+   0038 ldarg.0 
+   0039 ldnull 
+   003A stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   003F ldarg.0 
+   0040 ldnull 
+   0041 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0046 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   004B ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   0050 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0055 ret 
+== System.Void UpdateLogic(System.Int32 delta) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void Update() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   0006 brfalse IL_001a: ret
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0010 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0015 brfalse IL_001b: ldc.i4.0
+   001A ret 
+   001B ldc.i4.0 
+   001C stloc.0 
+   001D ldc.i4.0 
+   001E stloc.1 
+   001F ldarg.0 
+   0020 ldc.i4.2 
+   0021 call System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::HasEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0026 brfalse IL_003a: ldloc.1
+   002B ldc.i4.1 
+   002C stloc.0 
+   002D ldc.i4.1 
+   002E stloc.1 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipSkillUIComponent
+   0035 callvirt System.Void Assets.Scripts.GameSystem.CEquipSkillUIComponent::OnRefresh()
+   003A ldloc.1 
+   003B brfalse IL_0057: ldloc.0
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0046 ldnull 
+   0047 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004C brfalse IL_0057: ldloc.0
+   0051 ldarg.0 
+   0052 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipForm()
+   0057 ldloc.0 
+   0058 brfalse IL_0063: ldarg.0
+   005D ldarg.0 
+   005E callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetShenfuDisplayedEquipStatus()
+   0063 ldarg.0 
+   0064 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearEquipChangeFlag()
+   0069 ret 
+== System.Void OnHostCtrlActorEquipInBattleChanged(Assets.Scripts.GameLogic.EquipChangeEvtParam& param) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   000D ldc.i4.0 
+   000E blt IL_004f: ldarg.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0019 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001E brfalse IL_004f: ldarg.0
+   0023 ldarg.0 
+   0024 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0029 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002E ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   003F callvirt System.Int32 Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipCntByPos(CoreDef.enEquipContainerType,System.Int32)
+   0044 brtrue IL_004f: ldarg.0
+   0049 ldarg.0 
+   004A call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ClearSelectData()
+   004F ldarg.0 
+   0050 ldarg.1 
+   0051 ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_changedEquipID
+   0056 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UpdateActiveEquipAmountText(System.UInt16)
+   005B ldarg.0 
+   005C ldarg.1 
+   005D call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::TriggerMedicineGuide(Assets.Scripts.GameLogic.EquipChangeEvtParam&)
+   0062 ret 
+== System.Void TriggerMedicineGuide(Assets.Scripts.GameLogic.EquipChangeEvtParam& param) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_equipOperateType
+   0006 ldc.i4.1 
+   0007 bne.un IL_0044: ret
+   000C ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_medicineGuideID
+   0011 call System.Boolean Assets.Scripts.GameSystem.CUICommonGuideSystem::IsBubbleTipsShowed(System.UInt16)
+   0016 brtrue IL_0044: ret
+   001B ldarg.0 
+   001C ldarg.1 
+   001D ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_changedEquipID
+   0022 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 call System.Boolean Assets.Scripts.GameSystem.CBattleEquipHelper::IsMedicine(Assets.Scripts.GameSystem.CEquipInfo)
+   002E brfalse IL_0044: ret
+   0033 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_medicineGuideID
+   0038 ldc.i4.0 
+   0039 ldnull 
+   003A ldnull 
+   003B ldc.i4.0 
+   003C ldc.i4.0 
+   003D ldc.i4.1 
+   003E ldc.i4.1 
+   003F call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0044 ret 
+== System.Void UpdateAllConsumeActiveEquipAmountText(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0006 brfalse IL_0077: ret
+   000B ldarga.s actor
+   000D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0012 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0017 brfalse IL_0077: ret
+   001C ldarga.s actor
+   001E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0023 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0028 ldc.i4.1 
+   0029 callvirt Assets.Scripts.GameLogic.CEquipContainer Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipContainer(CoreDef.enEquipContainerType)
+   002E stloc.0 
+   002F ldc.i4.0 
+   0030 stloc.1 
+   0031 br IL_0069: ldloc.1
+   0036 ldloc.0 
+   0037 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   003C ldloc.1 
+   003D ldelema SGW/stGridEquipInfo
+   0042 ldfld SGW/stGridEquipInfo::m_equipID
+   0047 ldc.i4.0 
+   0048 ble IL_0065: ldloc.1
+   004D ldarg.0 
+   004E ldarg.1 
+   004F ldloc.0 
+   0050 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0055 ldloc.1 
+   0056 ldelema SGW/stGridEquipInfo
+   005B ldfld SGW/stGridEquipInfo::m_equipID
+   0060 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UpdateActiveEquipAmountText(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.UInt16)
+   0065 ldloc.1 
+   0066 ldc.i4.1 
+   0067 add 
+   0068 stloc.1 
+   0069 ldloc.1 
+   006A conv.i8 
+   006B ldloc.0 
+   006C ldfld Assets.Scripts.GameLogic.CEquipContainer::m_maxGridCount
+   0071 conv.u8 
+   0072 blt IL_0036: ldloc.0
+   0077 ret 
+== System.Void OnHostCtrlActorEnabledActiveSkillEquipChanged(Assets.Scripts.GameLogic.HostCtrlActorEnabledActiveSkillEquipChangedEventParam& param) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnHostCtrlActorEnabledActiveSkillEquipChanged(Assets.Scripts.GameLogic.HostCtrlActorEnabledActiveSkillEquipChangedEventParam&)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_001e: ldarg.0
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipBagPanel()
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipSkillUIComponent
+   0024 callvirt System.Void Assets.Scripts.GameSystem.CEquipSkillUIComponent::OnRefresh()
+   0029 ret 
+== System.Void InitPickUpPanel() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0006 brfalse IL_0045: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0045: ldarg.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0028 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   002D callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::Init(UnityEngine.GameObject)
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0038 ldc.i4.0 
+   0039 ldc.i4.0 
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_bDeadWatchMode
+   0040 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::InitPickUpPanel(System.Boolean,System.Boolean,System.Boolean)
+   0045 ldarg.0 
+   0046 ldc.i4.0 
+   0047 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_showPickupTimer
+   004C ret 
+== System.Void InitEquipPanel(UnityEngine.Transform equipRoot, Assets.Scripts.UI.CUIFormScript parentScript) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0032: ret
+   000C ldarg.2 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_0032: ret
+   0018 ldarg.0 
+   0019 ldarg.1 
+   001A callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIComponent>()
+   001F stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0024 ldarg.0 
+   0025 ldarg.2 
+   0026 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   002B ldarg.0 
+   002C ldnull 
+   002D call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OpenEquipForm(Assets.Scripts.UI.CUIEvent)
+   0032 ret 
+== System.Void UnitEquipPanel() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnEquipFormClose(Assets.Scripts.UI.CUIEvent)
+   0007 ldarg.0 
+   0008 ldnull 
+   0009 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   000E ldarg.0 
+   000F ldnull 
+   0010 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0015 ret 
+== System.Void OnEquipFormClose(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ClearSelectData()
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   000B ldnull 
+   000C callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Show(Assets.Scripts.UI.CUIEvent)
+   0011 ret 
+== System.Void OpenEquipForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 ldc.i4.0 
+   0006 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DumpRecovery(System.UInt32)
+   000B ldarg.0 
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0011 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   0016 ldc.i4.1 
+   0017 ldc.i4.1 
+   0018 ldnull 
+   0019 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   001E stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_00c5: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   003A call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   003F brfalse IL_00c5: ldarg.0
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   004A ldc.i4.1 
+   004B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0050 stloc.0 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0057 ldloc.0 
+   0058 callvirt System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::Init(UnityEngine.GameObject)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0063 ldc.i4.2 
+   0064 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0069 stloc.1 
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0070 ldloc.1 
+   0071 callvirt System.Void Assets.Scripts.GameSystem.CEquipInfoUIComponent::Init(UnityEngine.GameObject)
+   0076 ldarg.0 
+   0077 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ClearSelectData()
+   007C ldarg.0 
+   007D call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipBagPanel()
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0088 ldc.i4.0 
+   0089 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   008E stloc.2 
+   008F call !0 Singleton`1<CTextManager>::GetInstance()
+   0094 stloc.3 
+   0095 ldc.i4.2 
+   0096 newarr System.String
+   009B dup 
+   009C ldc.i4.0 
+   009D ldloc.3 
+   009E ldstr PVEEquip_Tab_Bag
+   00A3 ldc.i4.1 
+   00A4 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00A9 stelem.ref 
+   00AA dup 
+   00AB ldc.i4.1 
+   00AC ldloc.3 
+   00AD ldstr PVEEquip_Tab_Total
+   00B2 ldc.i4.1 
+   00B3 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00B8 stelem.ref 
+   00B9 stloc.s V_4
+   00BB ldloc.2 
+   00BC ldloc.s V_4
+   00BE ldc.i4.0 
+   00BF ldc.i4.1 
+   00C0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::InitMenuPanel(UnityEngine.GameObject,System.String[],System.Int32,System.Boolean)
+   00C5 ldarg.0 
+   00C6 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   00CB brfalse IL_00dc: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   00D0 ldarg.0 
+   00D1 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   00D6 ldc.i4.0 
+   00D7 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::SetSalePanelVisble(System.Boolean)
+   00DC call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   00E1 ldnull 
+   00E2 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Hide(Assets.Scripts.UI.CUIEvent)
+   00E7 ret 
+== System.Void OpenFormForFirstTime() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0006 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   000B ldc.i4.1 
+   000C ldc.i4.1 
+   000D ldnull 
+   000E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0013 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0018 ldarg.0 
+   0019 ldc.i4.0 
+   001A call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanel(System.Boolean)
+   001F ldarg.0 
+   0020 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::InitPickUpPanel()
+   0025 ldarg.0 
+   0026 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitChooseSkill()
+   002B ret 
+== System.Void RefreshEquipForm() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipBagPanel()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipInfoPanel()
+   000C ret 
+== System.Void RefreshEquipInfoPanel() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0058: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0017 brtrue IL_002d: ldarg.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0022 ldc.i4.0 
+   0023 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0028 br IL_0058: ret
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0033 ldc.i4.1 
+   0034 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   003F ldc.i4.2 
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0052 ldc.i4.0 
+   0053 callvirt System.Void Assets.Scripts.GameSystem.CEquipInfoUIComponent::OnRefresh(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   0058 ret 
+== System.Void RefreshEquipTotalInfoPanel() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_006b: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0017 ldc.i4.4 
+   0018 callvirt UnityEngine.Transform Assets.Scripts.UI.CUIComponent::GetWidgetTrans(System.Int32)
+   001D stloc.0 
+   001E ldloc.0 
+   001F callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   0024 ldarg.0 
+   0025 call System.String Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::GetEquipMainProperty()
+   002A callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0035 ldc.i4.5 
+   0036 callvirt UnityEngine.Transform Assets.Scripts.UI.CUIComponent::GetWidgetTrans(System.Int32)
+   003B stloc.1 
+   003C ldloc.1 
+   003D callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   0042 ldarg.0 
+   0043 call System.String Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::GetEquipSecondProperty()
+   0048 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   0053 ldc.i4.6 
+   0054 callvirt UnityEngine.Transform Assets.Scripts.UI.CUIComponent::GetWidgetTrans(System.Int32)
+   0059 stloc.2 
+   005A ldloc.2 
+   005B callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   0060 ldarg.0 
+   0061 call System.String Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::GetEquipSuitDesc()
+   0066 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   006B ret 
+== System.String GetEquipMainProperty() attrs=Public, HideBySig maxstack=6
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldsfld System.String::Empty
+   0009 stloc.2 
+   000A call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameSystem.CBattleEquipHelper::GetHostCtrlActorLinker()
+   000F stloc.3 
+   0010 ldloc.3 
+   0011 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0016 brfalse IL_012b: ldloc.2
+   001B ldloca.s V_3
+   001D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0022 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0027 ldc.i4.0 
+   0028 callvirt Assets.Scripts.GameLogic.CEquipContainer Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipContainer(CoreDef.enEquipContainerType)
+   002D stloc.s V_4
+   002F ldsfld System.String::Empty
+   0034 stloc.s V_5
+   0036 ldc.i4.0 
+   0037 stloc.s V_6
+   0039 br IL_0090: ldloc.s V_6
+   003E ldloc.s V_4
+   0040 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0045 ldloc.s V_6
+   0047 ldelema SGW/stGridEquipInfo
+   004C ldfld SGW/stGridEquipInfo::m_equipID
+   0051 ldc.i4.0 
+   0052 ble IL_008a: ldloc.s V_6
+   0057 ldloca.s V_7
+   0059 ldloc.s V_4
+   005B ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0060 ldloc.s V_6
+   0062 ldelema SGW/stGridEquipInfo
+   0067 ldfld SGW/stGridEquipInfo::m_equipID
+   006C call System.Boolean ResData.GameDataMgr/m_pveEquipInBattleDatabin::FindByKey(ResData.ResPVEEquipInBattle&,System.UInt16)
+   0071 brfalse IL_008a: ldloc.s V_6
+   0076 ldloc.0 
+   0077 ldloca.s V_7
+   0079 ldfld ResData.ResPVEEquipInBattle::dwMagicAttack
+   007E add 
+   007F stloc.0 
+   0080 ldloc.1 
+   0081 ldloca.s V_7
+   0083 ldfld ResData.ResPVEEquipInBattle::dwPhyAttack
+   0088 add 
+   0089 stloc.1 
+   008A ldloc.s V_6
+   008C ldc.i4.1 
+   008D add 
+   008E stloc.s V_6
+   0090 ldloc.s V_6
+   0092 conv.i8 
+   0093 ldloc.s V_4
+   0095 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_maxGridCount
+   009A conv.u8 
+   009B blt IL_003e: ldloc.s V_4
+   00A0 call !0 Singleton`1<CTextManager>::GetInstance()
+   00A5 stloc.s V_8
+   00A7 ldloca.s V_3
+   00A9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00AE ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   00B3 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheHeroOnlyInfo
+   00B8 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/HeroOnlyInfo::HeroDamageType
+   00BD stloc.s V_9
+   00BF ldloc.0 
+   00C0 ldc.i4.0 
+   00C1 ble.un IL_00f5: ldloc.1
+   00C6 ldloc.s V_9
+   00C8 ldc.i4.2 
+   00C9 beq IL_00d6: ldstr "{0}+{1} {2}
+"
+   00CE ldloc.s V_9
+   00D0 ldc.i4.3 
+   00D1 bne.un IL_00f5: ldloc.1
+   00D6 ldstr {0}+{1} {2}
+
+   00DB ldloc.2 
+   00DC ldloc.0 
+   00DD box System.UInt32
+   00E2 ldloc.s V_8
+   00E4 ldstr Hero_Prop_MgcAtkPt
+   00E9 ldc.i4.1 
+   00EA callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00EF call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00F4 stloc.2 
+   00F5 ldloc.1 
+   00F6 ldc.i4.0 
+   00F7 ble.un IL_012b: ldloc.2
+   00FC ldloc.s V_9
+   00FE ldc.i4.1 
+   00FF beq IL_010c: ldstr "{0}+{1} {2}
+"
+   0104 ldloc.s V_9
+   0106 ldc.i4.3 
+   0107 bne.un IL_012b: ldloc.2
+   010C ldstr {0}+{1} {2}
+
+   0111 ldloc.2 
+   0112 ldloc.1 
+   0113 box System.UInt32
+   0118 ldloc.s V_8
+   011A ldstr Hero_Prop_PhyAtkPt
+   011F ldc.i4.1 
+   0120 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0125 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   012A stloc.2 
+   012B ldloc.2 
+   012C ret 
+== System.String GetEquipSecondProperty() attrs=Public, HideBySig maxstack=6
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 ldc.i4.0 
+   0009 stloc.2 
+   000A ldc.i4.0 
+   000B stloc.3 
+   000C ldc.i4.0 
+   000D stloc.s V_4
+   000F ldc.i4.0 
+   0010 stloc.s V_5
+   0012 ldc.i4.0 
+   0013 stloc.s V_6
+   0015 ldc.i4.0 
+   0016 stloc.s V_7
+   0018 ldc.i4.0 
+   0019 stloc.s V_8
+   001B ldc.i4.0 
+   001C stloc.s V_9
+   001E ldc.i4.0 
+   001F stloc.s V_10
+   0021 ldc.i4.0 
+   0022 stloc.s V_11
+   0024 ldc.i4.0 
+   0025 stloc.s V_12
+   0027 ldc.i4.0 
+   0028 stloc.s V_13
+   002A call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameSystem.CBattleEquipHelper::GetHostCtrlActorLinker()
+   002F stloc.s V_14
+   0031 ldloc.s V_14
+   0033 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0038 brfalse IL_03f2: ldloc.0
+   003D ldloca.s V_14
+   003F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0044 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0049 ldc.i4.0 
+   004A callvirt Assets.Scripts.GameLogic.CEquipContainer Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipContainer(CoreDef.enEquipContainerType)
+   004F stloc.s V_15
+   0051 ldsfld System.String::Empty
+   0056 stloc.s V_16
+   0058 ldc.i4.0 
+   0059 stloc.s V_17
+   005B br IL_017f: ldloc.s V_17
+   0060 ldloc.s V_15
+   0062 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0067 ldloc.s V_17
+   0069 ldelema SGW/stGridEquipInfo
+   006E ldfld SGW/stGridEquipInfo::m_equipID
+   0073 ldc.i4.0 
+   0074 ble IL_0179: ldloc.s V_17
+   0079 ldloca.s V_18
+   007B ldloc.s V_15
+   007D ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0082 ldloc.s V_17
+   0084 ldelema SGW/stGridEquipInfo
+   0089 ldfld SGW/stGridEquipInfo::m_equipID
+   008E call System.Boolean ResData.GameDataMgr/m_pveEquipInBattleDatabin::FindByKey(ResData.ResPVEEquipInBattle&,System.UInt16)
+   0093 brfalse IL_0179: ldloc.s V_17
+   0098 ldloc.1 
+   0099 ldloca.s V_18
+   009B ldfld ResData.ResPVEEquipInBattle::dwAttackIntensity
+   00A0 add 
+   00A1 stloc.1 
+   00A2 ldloc.2 
+   00A3 ldloca.s V_18
+   00A5 ldfld ResData.ResPVEEquipInBattle::dwAttackSpeed
+   00AA add 
+   00AB stloc.2 
+   00AC ldloc.3 
+   00AD ldloca.s V_18
+   00AF ldfld ResData.ResPVEEquipInBattle::dwCriticalHit
+   00B4 add 
+   00B5 stloc.3 
+   00B6 ldloc.s V_4
+   00B8 ldloca.s V_18
+   00BA ldfld ResData.ResPVEEquipInBattle::dwHealthSteal
+   00BF add 
+   00C0 stloc.s V_4
+   00C2 ldloc.s V_5
+   00C4 ldloca.s V_18
+   00C6 ldfld ResData.ResPVEEquipInBattle::dwCDReduce
+   00CB add 
+   00CC stloc.s V_5
+   00CE ldloc.s V_6
+   00D0 ldloca.s V_18
+   00D2 ldfld ResData.ResPVEEquipInBattle::dwMagicPoint
+   00D7 add 
+   00D8 stloc.s V_6
+   00DA ldloc.s V_7
+   00DC ldloca.s V_18
+   00DE ldfld ResData.ResPVEEquipInBattle::dwMagicRecover
+   00E3 add 
+   00E4 stloc.s V_7
+   00E6 ldloc.s V_8
+   00E8 ldloca.s V_18
+   00EA ldfld ResData.ResPVEEquipInBattle::dwPhyDefence
+   00EF add 
+   00F0 stloc.s V_8
+   00F2 ldloc.s V_9
+   00F4 ldloca.s V_18
+   00F6 ldfld ResData.ResPVEEquipInBattle::dwMagicDefence
+   00FB add 
+   00FC stloc.s V_9
+   00FE ldloc.s V_10
+   0100 ldloca.s V_18
+   0102 ldfld ResData.ResPVEEquipInBattle::dwHealthPoint
+   0107 add 
+   0108 stloc.s V_10
+   010A ldloc.s V_11
+   010C ldloca.s V_18
+   010E ldfld ResData.ResPVEEquipInBattle::dwHealthRecover
+   0113 add 
+   0114 stloc.s V_11
+   0116 ldloc.s V_12
+   0118 ldloca.s V_18
+   011A ldfld ResData.ResPVEEquipInBattle::dwMoveSpeedPercent
+   011F add 
+   0120 stloc.s V_12
+   0122 ldloc.s V_13
+   0124 ldloca.s V_18
+   0126 ldfld ResData.ResPVEEquipInBattle::dwMoveSpeedValue
+   012B add 
+   012C stloc.s V_13
+   012E ldloc.s V_15
+   0130 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0135 ldloc.s V_17
+   0137 ldelema SGW/stGridEquipInfo
+   013C ldfld SGW/stGridEquipInfo::m_equipID
+   0141 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleEquipHelper::GetEquipInfo(System.UInt16)
+   0146 stloc.s V_19
+   0148 ldloc.s V_19
+   014A callvirt System.String Assets.Scripts.GameSystem.CEquipInfo::GetEquipPassiveSkillDesc()
+   014F ldloc.s V_19
+   0151 callvirt System.String Assets.Scripts.GameSystem.CEquipInfo::GetEquipPassiveEftDesc()
+   0156 call System.String System.String::Concat(System.String,System.String)
+   015B stloc.s V_20
+   015D ldloc.s V_20
+   015F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0164 brtrue IL_0179: ldloc.s V_17
+   0169 ldstr {0}{1}
+   016E ldloc.s V_16
+   0170 ldloc.s V_20
+   0172 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0177 stloc.s V_16
+   0179 ldloc.s V_17
+   017B ldc.i4.1 
+   017C add 
+   017D stloc.s V_17
+   017F ldloc.s V_17
+   0181 conv.i8 
+   0182 ldloc.s V_15
+   0184 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_maxGridCount
+   0189 conv.u8 
+   018A blt IL_0060: ldloc.s V_15
+   018F call !0 Singleton`1<CTextManager>::GetInstance()
+   0194 stloc.s V_21
+   0196 ldloca.s V_14
+   0198 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   019D ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   01A2 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheHeroOnlyInfo
+   01A7 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/HeroOnlyInfo::HeroDamageType
+   01AC stloc.s V_22
+   01AE ldsfld System.String::Empty
+   01B3 stloc.s V_23
+   01B5 ldloc.1 
+   01B6 ldc.i4.0 
+   01B7 ble.un IL_01dd: ldloc.2
+   01BC ldstr {0}+{1} {2}
+
+   01C1 ldloc.s V_23
+   01C3 ldloc.1 
+   01C4 box System.UInt32
+   01C9 ldloc.s V_21
+   01CB ldstr Hero_Prop_AttackIntensity
+   01D0 ldc.i4.1 
+   01D1 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01D6 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   01DB stloc.s V_23
+   01DD ldloc.2 
+   01DE ldc.i4.0 
+   01DF ble.un IL_0208: ldloc.3
+   01E4 ldstr {0}+{1}% {2}
+
+   01E9 ldloc.s V_23
+   01EB ldloc.2 
+   01EC ldc.i4.s 100
+   01EE div.un 
+   01EF box System.UInt32
+   01F4 ldloc.s V_21
+   01F6 ldstr Hero_Prop_AtkSpd
+   01FB ldc.i4.1 
+   01FC callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0201 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0206 stloc.s V_23
+   0208 ldloc.3 
+   0209 ldc.i4.0 
+   020A ble.un IL_0233: ldloc.s V_4
+   020F ldstr {0}+{1}% {2}
+
+   0214 ldloc.s V_23
+   0216 ldloc.3 
+   0217 ldc.i4.s 100
+   0219 div.un 
+   021A box System.UInt32
+   021F ldloc.s V_21
+   0221 ldstr Hero_Prop_CritRate
+   0226 ldc.i4.1 
+   0227 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   022C call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0231 stloc.s V_23
+   0233 ldloc.s V_4
+   0235 ldc.i4.0 
+   0236 ble.un IL_0260: ldloc.s V_5
+   023B ldstr {0}+{1}% {2}
+
+   0240 ldloc.s V_23
+   0242 ldloc.s V_4
+   0244 ldc.i4.s 100
+   0246 div.un 
+   0247 box System.UInt32
+   024C ldloc.s V_21
+   024E ldstr Hero_Prop_PhyVamp
+   0253 ldc.i4.1 
+   0254 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0259 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   025E stloc.s V_23
+   0260 ldloc.s V_5
+   0262 ldc.i4.0 
+   0263 ble.un IL_028d: ldloc.s V_6
+   0268 ldstr {0}+{1}% {2}
+
+   026D ldloc.s V_23
+   026F ldloc.s V_5
+   0271 ldc.i4.s 100
+   0273 div.un 
+   0274 box System.UInt32
+   0279 ldloc.s V_21
+   027B ldstr Hero_Prop_CdReduce
+   0280 ldc.i4.1 
+   0281 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0286 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   028B stloc.s V_23
+   028D ldloc.s V_6
+   028F ldc.i4.0 
+   0290 ble.un IL_02b7: ldloc.s V_7
+   0295 ldstr {0}+{1} {2}
+
+   029A ldloc.s V_23
+   029C ldloc.s V_6
+   029E box System.UInt32
+   02A3 ldloc.s V_21
+   02A5 ldstr Hero_Prop_MaxEp
+   02AA ldc.i4.1 
+   02AB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02B0 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   02B5 stloc.s V_23
+   02B7 ldloc.s V_7
+   02B9 ldc.i4.0 
+   02BA ble.un IL_02e1: ldloc.s V_8
+   02BF ldstr {0}+{1} {2}
+
+   02C4 ldloc.s V_23
+   02C6 ldloc.s V_7
+   02C8 box System.UInt32
+   02CD ldloc.s V_21
+   02CF ldstr Hero_Prop_EpRecover
+   02D4 ldc.i4.1 
+   02D5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02DA call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   02DF stloc.s V_23
+   02E1 ldloc.s V_8
+   02E3 ldc.i4.0 
+   02E4 ble.un IL_030b: ldloc.s V_9
+   02E9 ldstr {0}+{1} {2}
+
+   02EE ldloc.s V_23
+   02F0 ldloc.s V_8
+   02F2 box System.UInt32
+   02F7 ldloc.s V_21
+   02F9 ldstr Hero_Prop_PhyDefPt
+   02FE ldc.i4.1 
+   02FF callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0304 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0309 stloc.s V_23
+   030B ldloc.s V_9
+   030D ldc.i4.0 
+   030E ble.un IL_0335: ldloc.s V_10
+   0313 ldstr {0}+{1} {2}
+
+   0318 ldloc.s V_23
+   031A ldloc.s V_9
+   031C box System.UInt32
+   0321 ldloc.s V_21
+   0323 ldstr Hero_Prop_MgcDefPt
+   0328 ldc.i4.1 
+   0329 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   032E call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0333 stloc.s V_23
+   0335 ldloc.s V_10
+   0337 ldc.i4.0 
+   0338 ble.un IL_035f: ldloc.s V_11
+   033D ldstr {0}+{1} {2}
+
+   0342 ldloc.s V_23
+   0344 ldloc.s V_10
+   0346 box System.UInt32
+   034B ldloc.s V_21
+   034D ldstr Hero_Prop_MaxHp
+   0352 ldc.i4.1 
+   0353 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0358 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   035D stloc.s V_23
+   035F ldloc.s V_11
+   0361 ldc.i4.0 
+   0362 ble.un IL_0389: ldloc.s V_12
+   0367 ldstr {0}+{1} {2}
+
+   036C ldloc.s V_23
+   036E ldloc.s V_11
+   0370 box System.UInt32
+   0375 ldloc.s V_21
+   0377 ldstr Hero_Prop_HpRecover
+   037C ldc.i4.1 
+   037D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0382 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0387 stloc.s V_23
+   0389 ldloc.s V_12
+   038B ldc.i4.0 
+   038C ble.un IL_03b6: ldloc.s V_13
+   0391 ldstr {0}+{1}% {2}
+
+   0396 ldloc.s V_23
+   0398 ldloc.s V_12
+   039A ldc.i4.s 100
+   039C div.un 
+   039D box System.UInt32
+   03A2 ldloc.s V_21
+   03A4 ldstr Hero_Prop_MoveSpd
+   03A9 ldc.i4.1 
+   03AA callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   03AF call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   03B4 stloc.s V_23
+   03B6 ldloc.s V_13
+   03B8 ldc.i4.0 
+   03B9 ble.un IL_03e3: ldstr "{0}
+{1}"
+   03BE ldstr {0}+{1} {2}
+
+   03C3 ldloc.s V_23
+   03C5 ldloc.s V_13
+   03C7 ldc.i4.s 10
+   03C9 div.un 
+   03CA box System.UInt32
+   03CF ldloc.s V_21
+   03D1 ldstr Hero_Prop_MoveSpd
+   03D6 ldc.i4.1 
+   03D7 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   03DC call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   03E1 stloc.s V_23
+   03E3 ldstr {0}
+{1}
+   03E8 ldloc.s V_23
+   03EA ldloc.s V_16
+   03EC call System.String System.String::Format(System.String,System.Object,System.Object)
+   03F1 stloc.0 
+   03F2 ldloc.0 
+   03F3 ret 
+== System.String GetEquipSuitDesc() attrs=Public, HideBySig maxstack=7
+   0000 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameSystem.CBattleEquipHelper::GetHostCtrlActorLinker()
+   0005 stloc.0 
+   0006 ldsfld System.String::Empty
+   000B stloc.1 
+   000C ldloc.0 
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brfalse IL_00e4: ldloc.1
+   0017 ldloca.s V_0
+   0019 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001E callvirt Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent Assets.Scripts.GameLogic.ActorLinker::get_pveCooperationEquipComponent()
+   0023 stloc.2 
+   0024 ldloc.2 
+   0025 brfalse IL_00e4: ldloc.1
+   002A ldsfld System.String::Empty
+   002F stloc.3 
+   0030 ldc.i4.0 
+   0031 stloc.s V_4
+   0033 br IL_00b5: ldloc.s V_4
+   0038 ldloc.2 
+   0039 ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent::m_suitInfo
+   003E ldloc.s V_4
+   0040 ldelem.ref 
+   0041 stloc.s V_5
+   0043 ldloc.s V_5
+   0045 brfalse IL_00af: ldloc.s V_4
+   004A ldloc.s V_5
+   004C ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent/EquipSuitInfo::suitId
+   0051 ldc.i4.0 
+   0052 ble IL_00af: ldloc.s V_4
+   0057 ldloc.s V_5
+   0059 ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent/EquipSuitInfo::num
+   005E ldc.i4.0 
+   005F ble IL_00af: ldloc.s V_4
+   0064 ldc.i4.0 
+   0065 stloc.s V_6
+   0067 br IL_00a1: ldloc.s V_6
+   006C ldloc.s V_5
+   006E ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent/EquipSuitInfo::suitPropActive
+   0073 ldloc.s V_6
+   0075 ldelem.u1 
+   0076 brfalse IL_009b: ldloc.s V_6
+   007B ldstr {0}{1}
+   0080 ldloc.3 
+   0081 ldloc.s V_5
+   0083 ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent/EquipSuitInfo::suitId
+   0088 ldloc.s V_6
+   008A ldc.i4.1 
+   008B add 
+   008C conv.u1 
+   008D ldc.i4.1 
+   008E ldc.i4.0 
+   008F ldc.i4.0 
+   0090 call System.String Assets.Scripts.GameSystem.CPVECooperationEquipInfo::GetSuitPropFullDescription(System.UInt16,System.Byte,System.Boolean,System.Boolean,System.Boolean)
+   0095 call System.String System.String::Format(System.String,System.Object,System.Object)
+   009A stloc.3 
+   009B ldloc.s V_6
+   009D ldc.i4.1 
+   009E add 
+   009F stloc.s V_6
+   00A1 ldloc.s V_6
+   00A3 ldloc.s V_5
+   00A5 ldfld Assets.Scripts.GameLogic.PVECooperationEquipLinkerComponent/EquipSuitInfo::num
+   00AA blt IL_006c: ldloc.s V_5
+   00AF ldloc.s V_4
+   00B1 ldc.i4.1 
+   00B2 add 
+   00B3 stloc.s V_4
+   00B5 ldloc.s V_4
+   00B7 ldc.i4.6 
+   00B8 blt IL_0038: ldloc.2
+   00BD call !0 Singleton`1<CTextManager>::GetInstance()
+   00C2 stloc.s V_7
+   00C4 ldloc.3 
+   00C5 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00CA brfalse IL_00e2: ldloc.3
+   00CF ldloc.s V_7
+   00D1 ldstr PVEEquip_None
+   00D6 ldc.i4.1 
+   00D7 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00DC stloc.1 
+   00DD br IL_00e4: ldloc.1
+   00E2 ldloc.3 
+   00E3 stloc.1 
+   00E4 ldloc.1 
+   00E5 ret 
+== System.Void ShowPickUpPanel(System.Boolean showOrNot) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0011 ret 
+   0012 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0017 stloc.0 
+   0018 ldarg.1 
+   0019 brfalse IL_0051: ldarg.0
+   001E ldloc.0 
+   001F call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0024 brfalse IL_0051: ldarg.0
+   0029 ldloca.s V_0
+   002B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0030 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0035 brfalse IL_0051: ldarg.0
+   003A ldloca.s V_0
+   003C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0041 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0046 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   004B brfalse IL_0051: ldarg.0
+   0050 ret 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0057 ldarg.1 
+   0058 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::ShowPickUpPanel(System.Boolean)
+   005D ret 
+== System.Void ShowPickUpPanelTip(System.Boolean showOrNot) attrs=Public, HideBySig maxstack=2
+   0000 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0005 stloc.1 
+   0006 ldloca.s V_1
+   0008 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   000D ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 brfalse IL_002b: ldarg.0
+   0019 ldloc.0 
+   001A brfalse IL_002b: ldarg.0
+   001F ldloc.0 
+   0020 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0025 brfalse IL_002b: ldarg.0
+   002A ret 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0031 ldarg.1 
+   0032 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::ShowPickUpPanelTip(System.Boolean)
+   0037 ret 
+== System.Void OnTabListIndexChange(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0006 castclass Assets.Scripts.UI.CUIListScript
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_006f: ret
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPartRoot
+   001E ldc.i4.3 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0024 stloc.1 
+   0025 ldloc.0 
+   0026 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   002B stloc.2 
+   002C ldloc.2 
+   002D brtrue IL_0050: ldarg.0
+   0032 ldloc.1 
+   0033 ldc.i4.0 
+   0034 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   003F ldc.i4.1 
+   0040 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0045 ldarg.0 
+   0046 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipBagPanel()
+   004B br IL_006f: ret
+   0050 ldarg.0 
+   0051 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipTotalInfoPanel()
+   0056 ldloc.1 
+   0057 ldc.i4.1 
+   0058 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0063 ldc.i4.0 
+   0064 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0069 ldarg.0 
+   006A call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ClearSelectData()
+   006F ret 
+== System.Void OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0007 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   000C ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0011 isinst Assets.Scripts.GameSystem.CPVECooperationEquipInfo
+   0016 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   001B ldarg.0 
+   001C ldarg.1 
+   001D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0022 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0027 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::contType
+   002C stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   0031 ldarg.0 
+   0032 ldarg.1 
+   0033 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0038 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   003D ldfld Assets.Scripts.GameSystem.stBattleEquipParams::pos
+   0042 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   004D ldnull 
+   004E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0053 brfalse IL_006c: ldarg.1
+   0058 ldarg.0 
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   005F ldc.i4.0 
+   0060 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::SetEquipItemSelectFlag(UnityEngine.Transform,System.Boolean)
+   0065 ldarg.0 
+   0066 ldnull 
+   0067 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   006C ldarg.1 
+   006D ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0072 ldnull 
+   0073 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0078 brfalse IL_009b: ldarg.0
+   007D ldarg.0 
+   007E ldarg.1 
+   007F ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0084 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0089 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   008E ldarg.0 
+   008F ldarg.0 
+   0090 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   0095 ldc.i4.1 
+   0096 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::SetEquipItemSelectFlag(UnityEngine.Transform,System.Boolean)
+   009B ldarg.0 
+   009C call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipInfoPanel()
+   00A1 ret 
+== System.Void ClearSelectData() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0007 ldarg.0 
+   0008 ldc.i4.3 
+   0009 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   000E ldarg.0 
+   000F ldc.i4.m1 
+   0010 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   001B ldnull 
+   001C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0021 brfalse IL_003a: ldarg.0
+   0026 ldarg.0 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   002D ldc.i4.0 
+   002E call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::SetEquipItemSelectFlag(UnityEngine.Transform,System.Boolean)
+   0033 ldarg.0 
+   0034 ldnull 
+   0035 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipTrans
+   003A ldarg.0 
+   003B call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipInfoPanel()
+   0040 ret 
+== System.Void SetEquipItemSelectFlag(UnityEngine.Transform equipItemObj, System.Boolean bSelect) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0032: ret
+   000C ldnull 
+   000D stloc.0 
+   000E ldarg.1 
+   000F ldstr selectImg
+   0014 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldnull 
+   001C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0021 brfalse IL_0032: ret
+   0026 ldloc.0 
+   0027 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002C ldarg.2 
+   002D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0032 ret 
+== System.Void OnEquipSuitActiveChange(Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam& eventParams) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0006 brfalse IL_002b: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 brtrue IL_0019: ldloc.0
+   0018 ret 
+   0019 ldloc.0 
+   001A ldfld Assets.Scripts.GameSystem.CPVECooperationEquipInfo::m_suitID
+   001F ldarg.1 
+   0020 ldfld Assets.Scripts.GameLogic.EquipSuitActiveChangeEvtParam::m_suitID
+   0025 beq IL_002b: ldarg.0
+   002A ret 
+   002B ldarg.0 
+   002C call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshEquipForm()
+   0031 ret 
+== System.Void OnEquipUseBtnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::selectIndex
+   000B call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendUseConsumeEquipFrameCommand(System.Int32)
+   0010 ret 
+== System.Void OnBattleEquipShowActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0006 brfalse IL_0049: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0011 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0016 ldc.i4.0 
+   0017 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendPlayerChooseEquipSkillFrameCommand(System.UInt16,System.Int32)
+   001C ldarg.0 
+   001D ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0022 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0027 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0032 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_activeSkill
+   0037 ldc.i4.0 
+   0038 ldelema Assets.Scripts.GameSystem.stEquipActiveSkill
+   003D ldfld Assets.Scripts.GameSystem.stEquipActiveSkill::m_skillSlotType
+   0042 ldc.i4.0 
+   0043 ldc.i4.0 
+   0044 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::RequestUseSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameSystem.enSkillJoystickMode,System.UInt32)
+   0049 ret 
+== System.Boolean GetCurEnableActiveEquipCnt(System.UInt32 equipID, System.UInt32& cnt) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.0 
+   0004 ldarg.1 
+   0005 conv.u2 
+   0006 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brfalse IL_001e: ldc.i4.0
+   0012 ldloc.0 
+   0013 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_bType
+   0018 ldc.i4.1 
+   0019 beq IL_0020: ldarg.1
+   001E ldc.i4.0 
+   001F ret 
+   0020 ldarg.1 
+   0021 ldc.i4.0 
+   0022 ble.un IL_009e: ldc.i4.1
+   0027 ldarg.0 
+   0028 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0032 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0037 ldc.i4.1 
+   0038 callvirt Assets.Scripts.GameLogic.CEquipContainer Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipContainer(CoreDef.enEquipContainerType)
+   003D stloc.1 
+   003E ldc.i4.0 
+   003F stloc.2 
+   0040 br IL_0090: ldloc.2
+   0045 ldloc.1 
+   0046 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   004B ldloc.2 
+   004C ldelema SGW/stGridEquipInfo
+   0051 ldfld SGW/stGridEquipInfo::m_equipID
+   0056 ldarg.1 
+   0057 conv.u2 
+   0058 bne.un IL_008c: ldloc.2
+   005D ldloc.1 
+   005E ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0063 ldloc.2 
+   0064 ldelema SGW/stGridEquipInfo
+   0069 ldfld SGW/stGridEquipInfo::m_maxAmount
+   006E ldc.i4.1 
+   006F bgt.un IL_0076: ldarg.2
+   0074 ldc.i4.0 
+   0075 ret 
+   0076 ldarg.2 
+   0077 ldarg.2 
+   0078 ldind.u4 
+   0079 ldloc.1 
+   007A ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   007F ldloc.2 
+   0080 ldelema SGW/stGridEquipInfo
+   0085 ldfld SGW/stGridEquipInfo::m_amount
+   008A add 
+   008B stind.i4 
+   008C ldloc.2 
+   008D ldc.i4.1 
+   008E add 
+   008F stloc.2 
+   0090 ldloc.2 
+   0091 conv.i8 
+   0092 ldloc.1 
+   0093 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_maxGridCount
+   0098 conv.u8 
+   0099 blt IL_0045: ldloc.1
+   009E ldc.i4.1 
+   009F ret 
+== System.Void CreatePickupFloatText(System.UInt32 shenfuID) attrs=Public, Virtual, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShenfuInfoDictionary
+   0006 ldarg.1 
+   0007 ldloca.s V_0
+   0009 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CShenFuInfo>::TryGetValue(!0,!1&)
+   000E brfalse IL_0040: ret
+   0013 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0018 callvirt Assets.Scripts.GameSystem.CBattleFloatDigitManager Assets.Scripts.GameSystem.CBattleSystem::get_TheFloatDigitManager()
+   001D call !0 Singleton`1<CTextManager>::GetInstance()
+   0022 ldstr FloatText_Pickup_Equip
+   0027 ldc.i4.1 
+   0028 newarr System.String
+   002D dup 
+   002E ldc.i4.0 
+   002F ldloc.0 
+   0030 ldfld Assets.Scripts.GameSystem.CShenFuInfo::szShenFuName
+   0035 stelem.ref 
+   0036 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   003B callvirt System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreatePickupFloatText(System.String)
+   0040 ret 
+== System.Void RefreshEquipBagPanel() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0006 callvirt System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::OnRefresh()
+   000B ret 
+== System.Void RefreshEquipActiveSkillCDInBag(System.UInt32 equipActiveSkillUniID, System.Int32 cd) attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0021: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brtrue IL_0022: ldarg.0
+   0021 ret 
+   0022 ldarg.0 
+   0023 ldarg.1 
+   0024 ldarg.2 
+   0025 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipActiveSkillCDInBag(System.UInt32,System.Int32)
+   002A ldarg.0 
+   002B ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0030 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0035 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   003A ldc.i4.1 
+   003B callvirt Assets.Scripts.GameLogic.CEquipContainer Assets.Scripts.GameLogic.EquipLinkerComponent::GetEquipContainer(CoreDef.enEquipContainerType)
+   0040 stloc.0 
+   0041 ldc.i4.0 
+   0042 stloc.1 
+   0043 br IL_0099: ldloc.1
+   0048 ldloc.0 
+   0049 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   004E ldloc.1 
+   004F ldelema SGW/stGridEquipInfo
+   0054 ldfld SGW/stGridEquipInfo::m_equipID
+   0059 ldc.i4.0 
+   005A ble IL_0095: ldloc.1
+   005F ldarg.0 
+   0060 ldloc.0 
+   0061 ldfld Assets.Scripts.GameLogic.CEquipContainer::m_gridEquips
+   0066 ldloc.1 
+   0067 ldelema SGW/stGridEquipInfo
+   006C ldfld SGW/stGridEquipInfo::m_equipID
+   0071 callvirt System.UInt32 Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipActiveSkillUniID(System.UInt16)
+   0076 ldarg.1 
+   0077 bne.un IL_0095: ldloc.1
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0082 brfalse IL_0095: ldloc.1
+   0087 ldarg.0 
+   0088 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   008D ldloc.1 
+   008E ldc.i4.1 
+   008F ldarg.2 
+   0090 callvirt System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::SetEquipActiveSkillCdState(System.Int32,CoreDef.enEquipContainerType,System.Int32)
+   0095 ldloc.1 
+   0096 ldc.i4.1 
+   0097 add 
+   0098 stloc.1 
+   0099 ldloc.1 
+   009A conv.i8 
+   009B ldloc.0 
+   009C ldfld Assets.Scripts.GameLogic.CEquipContainer::m_maxGridCount
+   00A1 conv.u8 
+   00A2 blt IL_0048: ldloc.0
+   00A7 ret 
+== System.Void OnPickupEffectPlayEnd(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 ldc.i4.0 
+   0007 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   000C ret 
+== System.Void OnEquipDropBtnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0006 ldc.i4.0 
+   0007 bge IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   0019 ldc.i4.m1 
+   001A call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendDropEquipFrameCommand(System.Int32,CoreDef.enEquipContainerType,System.Int16)
+   001F ret 
+== System.Void OnEquipDropOneBtnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipInfo
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   0011 ldc.i4.0 
+   0012 bge IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectGridPos
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_selectEquipContType
+   0024 ldc.i4.1 
+   0025 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendDropEquipFrameCommand(System.Int32,CoreDef.enEquipContainerType,System.Int16)
+   002A ret 
+== System.Void OnClosePickUp(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0006 ldc.i4.0 
+   0007 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::PlayPickUpDisplayAnima(System.Boolean)
+   000C call !0 Singleton`1<CTimerManager>::GetInstance()
+   0011 ldarg.0 
+   0012 ldflda Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_showPickupTimer
+   0017 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   001C ldarg.0 
+   001D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0022 ldc.i4 333
+   0027 ldc.i4.1 
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::OnClosePickUpAnimEnd(System.Int32)
+   002F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0039 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_showPickupTimer
+   003E ret 
+== System.Void OnClosePickUpAnimEnd(System.Int32 seq) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_needShowPickupPanel
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanel(System.Boolean)
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0014 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::get_Count()
+   0019 ldc.i4.0 
+   001A ble IL_0026: ret
+   001F ldarg.0 
+   0020 ldc.i4.1 
+   0021 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanelTip(System.Boolean)
+   0026 ret 
+== System.Void OnShowPickUp(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_needShowPickupPanel
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanelTip(System.Boolean)
+   000E ldarg.0 
+   000F call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshPickupPanel()
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   001A ldc.i4.1 
+   001B callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::PlayPickUpDisplayAnima(System.Boolean)
+   0020 ret 
+== System.Void OnHeroShenfuEquipPickInRangeChange(Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam& param) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_0020: ldarg.1
+   000F ldarg.1 
+   0010 ldflda Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam::src
+   0015 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001A brtrue IL_0020: ldarg.1
+   001F ret 
+   0020 ldarg.1 
+   0021 ldflda Assets.Scripts.GameLogic.ShenfuEquipPickInRangeChangedEventParam::src
+   0026 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002B ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0030 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::m_shenfuIdPickList
+   0035 stloc.0 
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   003C callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::Clear()
+   0041 ldc.i4.0 
+   0042 stloc.1 
+   0043 br IL_00db: ldloc.1
+   0048 ldloc.0 
+   0049 ldloc.1 
+   004A callvirt !0 System.Collections.Generic.List`1<SGW/stShenfuPickupInfo>::get_Item(System.Int32)
+   004F stloc.2 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   0056 ldloca.s V_2
+   0058 ldfld SGW/stShenfuPickupInfo::m_shenfuID
+   005D ldloca.s V_3
+   005F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::TryGetValue(!0,!1&)
+   0064 brfalse IL_0090: ldarg.0
+   0069 ldloca.s V_3
+   006B dup 
+   006C ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_count
+   0071 ldc.i4.1 
+   0072 add 
+   0073 stfld Assets.Scripts.GameSystem.stPickUpShenfu::m_count
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   007E ldloca.s V_2
+   0080 ldfld SGW/stShenfuPickupInfo::m_shenfuID
+   0085 ldloc.3 
+   0086 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::set_Item(!0,!1)
+   008B br IL_00d7: ldloc.1
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShenfuInfoDictionary
+   0096 ldloca.s V_2
+   0098 ldfld SGW/stShenfuPickupInfo::m_shenfuID
+   009D ldloca.s V_3
+   009F ldflda Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   00A4 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CShenFuInfo>::TryGetValue(!0,!1&)
+   00A9 brfalse IL_00d7: ldloc.1
+   00AE ldloca.s V_3
+   00B0 ldloca.s V_2
+   00B2 ldfld SGW/stShenfuPickupInfo::m_shenfuID
+   00B7 stfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuId
+   00BC ldloca.s V_3
+   00BE ldc.i4.1 
+   00BF stfld Assets.Scripts.GameSystem.stPickUpShenfu::m_count
+   00C4 ldarg.0 
+   00C5 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   00CA ldloca.s V_2
+   00CC ldfld SGW/stShenfuPickupInfo::m_shenfuID
+   00D1 ldloc.3 
+   00D2 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::Add(!0,!1)
+   00D7 ldloc.1 
+   00D8 ldc.i4.1 
+   00D9 add 
+   00DA stloc.1 
+   00DB ldloc.1 
+   00DC ldloc.0 
+   00DD callvirt System.Int32 System.Collections.Generic.List`1<SGW/stShenfuPickupInfo>::get_Count()
+   00E2 blt IL_0048: ldloc.0
+   00E7 ldarg.0 
+   00E8 ldc.i4.2 
+   00E9 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   00EE ldarg.0 
+   00EF call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshPickupPanel()
+   00F4 ret 
+== System.Void GetShenfuDisplayedEquipStatus() attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldloca.s V_0
+   0010 ret 
+   0011 ldloca.s V_0
+   0013 initobj SGW/stQueryEquipIDList
+   0019 ldloca.s V_0
+   001B ldc.i4.0 
+   001C stfld SGW/stQueryEquipIDList::m_equipIDCount
+   0021 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0026 stloc.1 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   002D callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::GetEnumerator()
+   0032 stloc.2 
+   0033 br IL_00ca: ldloca.s V_2
+   0038 ldloca.s V_2
+   003A call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::get_Current()
+   003F stloc.s V_4
+   0041 ldloca.s V_4
+   0043 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::get_Value()
+   0048 stloc.3 
+   0049 ldloca.s V_3
+   004B ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   0050 ldfld Assets.Scripts.GameSystem.CShenFuInfo::dwShenFuId
+   0055 ldc.i4.0 
+   0056 ble.un IL_00ca: ldloca.s V_2
+   005B ldloc.1 
+   005C ldloca.s V_3
+   005E ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   0063 ldfld Assets.Scripts.GameSystem.CShenFuInfo::dwShenFuId
+   0068 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::IndexOf(!0)
+   006D ldc.i4.m1 
+   006E bne.un IL_00ca: ldloca.s V_2
+   0073 ldloc.1 
+   0074 ldloca.s V_3
+   0076 ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   007B ldfld Assets.Scripts.GameSystem.CShenFuInfo::dwShenFuId
+   0080 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0085 ldloca.s V_3
+   0087 ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   008C ldfld Assets.Scripts.GameSystem.CShenFuInfo::bShenFuSubType
+   0091 ldc.i4.1 
+   0092 bne.un IL_00ca: ldloca.s V_2
+   0097 ldloca.s V_0
+   0099 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   009E ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   00A3 ldloca.s V_0
+   00A5 dup 
+   00A6 ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   00AB dup 
+   00AC stloc.s V_5
+   00AE ldc.i4.1 
+   00AF add 
+   00B0 conv.u1 
+   00B1 stfld SGW/stQueryEquipIDList::m_equipIDCount
+   00B6 ldloc.s V_5
+   00B8 conv.i 
+   00B9 ldc.i4.2 
+   00BA mul 
+   00BB add 
+   00BC ldloca.s V_3
+   00BE ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   00C3 ldfld Assets.Scripts.GameSystem.CShenFuInfo::iBufId
+   00C8 conv.u2 
+   00C9 stind.i2 
+   00CA ldloca.s V_2
+   00CC call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::MoveNext()
+   00D1 brtrue IL_0038: ldloca.s V_2
+   00D6 ldarg.0 
+   00D7 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   00DC call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00E1 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00E6 ldloca.s V_0
+   00E8 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::<>f__mg$cache0
+   00ED brtrue.s IL_0100: ldsfld SGW/stQueryShenfuEquipStatusListTypeDelegate Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::<>f__mg$cache0
+   00EF ldnull 
+   00F0 ldftn System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnGetShenfuEquipStatusListCallback(SGW/stQueryShenfuEquipStatusList&)
+   00F6 newobj System.Void SGW/stQueryShenfuEquipStatusListTypeDelegate::.ctor(System.Object,System.IntPtr)
+   00FB stsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::<>f__mg$cache0
+   0100 ldsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::<>f__mg$cache0
+   0105 call System.Void SGW::GetShenfuEquipStatusList(System.UInt32,SGW/stQueryEquipIDList&,SGW/stQueryShenfuEquipStatusListTypeDelegate)
+   010A ret 
+== System.Void OnGetShenfuEquipStatusList(SGW/stQueryShenfuEquipStatusList& list) attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnGetShenfuEquipStatusList(SGW/stQueryShenfuEquipStatusList&)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_002e: ret
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   001E callvirt System.Boolean Assets.Scripts.GameSystem.CEquipPickUpUIComponent::IsPickUpPanelShow()
+   0023 brfalse IL_002e: ret
+   0028 ldarg.0 
+   0029 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::RefreshPickupPanel()
+   002E ret 
+== System.Void RefreshPickupPanel() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0018 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::Clear()
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   0023 callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::GetEnumerator()
+   0028 stloc.0 
+   0029 br IL_0048: ldloca.s V_0
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0034 ldloca.s V_0
+   0036 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::get_Current()
+   003B stloc.1 
+   003C ldloca.s V_1
+   003E call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::get_Value()
+   0043 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::Add(!0)
+   0048 ldloca.s V_0
+   004A call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::MoveNext()
+   004F brtrue IL_002e: ldarg.0
+   0054 ldarg.0 
+   0055 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::DoRefreshPickupPanel()
+   005A ret 
+== System.Void DoRefreshPickupPanel() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_001c: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0017 brtrue IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0023 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::get_Count()
+   0028 ldc.i4.0 
+   0029 ble IL_0061: ldarg.0
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0034 callvirt System.Boolean Assets.Scripts.GameSystem.CEquipPickUpUIComponent::IsInvisible()
+   0039 brfalse IL_005c: br IL_006f
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_needShowPickupPanel
+   0044 brfalse IL_0055: ldarg.0
+   0049 ldarg.0 
+   004A ldc.i4.1 
+   004B call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanel(System.Boolean)
+   0050 br IL_005c: br IL_006f
+   0055 ldarg.0 
+   0056 ldc.i4.1 
+   0057 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanelTip(System.Boolean)
+   005C br IL_006f: ldarg.0
+   0061 ldarg.0 
+   0062 ldc.i4.0 
+   0063 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanel(System.Boolean)
+   0068 ldarg.0 
+   0069 ldc.i4.0 
+   006A call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanelTip(System.Boolean)
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   007B ldnull 
+   007C callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::OnRefresh(System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>,System.Collections.Generic.List`1<System.Int32>)
+   0081 ret 
+== System.Void OnPickup_ItemElement_Enable(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   000E callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::get_Count()
+   0013 bge IL_001f: ret
+   0018 ldloc.0 
+   0019 ldc.i4.0 
+   001A bge IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0026 ldarg.1 
+   0027 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   0032 ldloc.0 
+   0033 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::get_Item(System.Int32)
+   0038 ldc.i4.0 
+   0039 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::RefreshShenfuEquipItem(UnityEngine.GameObject,Assets.Scripts.GameSystem.stPickUpShenfu,System.Boolean)
+   003E ret 
+== System.Boolean DoPickup(System.UInt32 shenfuId, System.Int32 equipIndexInGrid, CoreDef.enEquipContainerType equipContType) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickUpDic
+   0006 ldarg.1 
+   0007 ldloca.s V_1
+   0009 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.stPickUpShenfu>::TryGetValue(!0,!1&)
+   000E brfalse IL_00e0: ldc.i4.0
+   0013 ldloca.s V_1
+   0015 ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   001A ldfld Assets.Scripts.GameSystem.CShenFuInfo::bShenFuSubType
+   001F ldc.i4.1 
+   0020 bne.un IL_00d6: ldarg.1
+   0025 ldarg.0 
+   0026 ldloca.s V_1
+   0028 ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   002D ldfld Assets.Scripts.GameSystem.CShenFuInfo::iBufId
+   0032 conv.u2 
+   0033 ldloca.s V_0
+   0035 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetShenfuEquipStatus(System.UInt16,SGW/stShenfuEquipInBattleStatus&)
+   003A brtrue IL_005b: ldarg.0
+   003F ldc.i4.0 
+   0040 ldstr RefreshShenfuEquipItem GetEquipStatus is null equipId = {0}
+   0045 ldc.i4.1 
+   0046 newarr System.Object
+   004B dup 
+   004C ldc.i4.0 
+   004D ldarg.1 
+   004E box System.UInt32
+   0053 stelem.ref 
+   0054 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0059 ldc.i4.0 
+   005A ret 
+   005B ldarg.0 
+   005C ldloca.s V_1
+   005E ldfld Assets.Scripts.GameSystem.stPickUpShenfu::m_shenfuInfo
+   0063 ldfld Assets.Scripts.GameSystem.CShenFuInfo::iBufId
+   0068 conv.u2 
+   0069 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   006E stloc.2 
+   006F ldloca.s V_0
+   0071 call System.Boolean SGW/stShenfuEquipInBattleStatus::get_m_isCanPick()
+   0076 brfalse IL_0085: ldloc.2
+   007B ldarg.1 
+   007C ldc.i4.m1 
+   007D ldc.i4.0 
+   007E call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendPickUpEquipFrameCommand(System.Int32,System.Int32,CoreDef.enEquipContainerType)
+   0083 ldc.i4.1 
+   0084 ret 
+   0085 ldloc.2 
+   0086 brfalse IL_00b8: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   008B ldloc.2 
+   008C ldfld Assets.Scripts.GameSystem.CEquipInfo::m_bType
+   0091 ldc.i4.1 
+   0092 bne.un IL_00b8: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0097 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   009C ldstr Tips_ConsumeBagIsFull
+   00A1 ldc.i4.1 
+   00A2 ldc.r4 1.5
+   00A7 ldnull 
+   00A8 ldc.i4.0 
+   00A9 newarr System.Object
+   00AE callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00B3 br IL_00d4: ldc.i4.0
+   00B8 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00BD ldstr Tips_EquipBagIsFull
+   00C2 ldc.i4.1 
+   00C3 ldc.r4 1.5
+   00C8 ldnull 
+   00C9 ldc.i4.0 
+   00CA newarr System.Object
+   00CF callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00D4 ldc.i4.0 
+   00D5 ret 
+   00D6 ldarg.1 
+   00D7 ldc.i4.m1 
+   00D8 ldc.i4.0 
+   00D9 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendPickUpEquipFrameCommand(System.Int32,System.Int32,CoreDef.enEquipContainerType)
+   00DE ldc.i4.1 
+   00DF ret 
+   00E0 ldc.i4.0 
+   00E1 ret 
+== System.Void OnEquipPickupClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_pickupEquipList
+   000E callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.stPickUpShenfu>::get_Count()
+   0013 bge IL_001f: ret
+   0018 ldloc.0 
+   0019 ldc.i4.0 
+   001A bge IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldarg.1 
+   0022 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0027 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   002C ldc.i4.m1 
+   002D ldc.i4.1 
+   002E call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::DoPickupWithPickupEffect(System.UInt32,System.Int32,CoreDef.enEquipContainerType)
+   0033 ret 
+== System.Void DoPickupWithPickupEffect(System.UInt32 shenfuId, System.Int32 equipIndexInGrid, CoreDef.enEquipContainerType equipContType) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Boolean Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::DoPickup(System.UInt32,System.Int32,CoreDef.enEquipContainerType)
+   0009 brfalse IL_004b: ret
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0014 ldnull 
+   0015 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001A brfalse IL_004b: ret
+   001F ldnull 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0026 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002B brfalse IL_004b: ret
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0036 callvirt System.Boolean Assets.Scripts.GameSystem.CEquipBaseUIComponent::IsVisible()
+   003B brtrue IL_004b: ret
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0046 callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::PlayPickUpEffectAnim()
+   004B ret 
+== System.Void OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0006 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   000B brfalse IL_001e: ret
+   0010 ldarg.0 
+   0011 ldc.i4.0 
+   0012 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanel(System.Boolean)
+   0017 ldarg.0 
+   0018 ldc.i4.0 
+   0019 call System.Void Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::ShowPickUpPanelTip(System.Boolean)
+   001E ret 
+== System.Void OnEnterDeadWatch(Assets.Scripts.GameLogic.GameCommonEventParam& eventParams) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_bDeadWatchMode
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E stfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_bDeadWatchMode
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipPickUpUIComponent
+   0019 ldc.i4.0 
+   001A callvirt System.Void Assets.Scripts.GameSystem.CEquipPickUpUIComponent::SetPickUpBtnPanel(System.Boolean)
+   001F ret 
+== System.Void ShowEquipForm(System.Boolean showOrHide) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0036: ldarg.0
+   0010 ldarg.1 
+   0011 brfalse IL_0028: ldarg.0
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   001C ldc.i4.1 
+   001D ldc.i4.1 
+   001E callvirt System.Void Assets.Scripts.UI.CUIFormScript::Appear(Assets.Scripts.UI.enFormHideFlag,System.Boolean)
+   0023 br IL_0036: ldarg.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   002E ldc.i4.1 
+   002F ldc.i4.1 
+   0030 ldc.i4.0 
+   0031 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   003C call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0041 brfalse IL_006c: ret
+   0046 ldarg.1 
+   0047 brfalse IL_005e: ldarg.0
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0052 ldc.i4.1 
+   0053 ldc.i4.1 
+   0054 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Appear(Assets.Scripts.UI.enFormHideFlag,System.Boolean)
+   0059 br IL_006c: ret
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_equipPickupFormScript
+   0064 ldc.i4.1 
+   0065 ldc.i4.1 
+   0066 ldc.i4.0 
+   0067 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   006C ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/Battle/Part/Battle_Equip_PVE_Part.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_pveEquipFormPartPath
+   000A ldstr UGUI/Form/Battle/Form_Battle_Equip_PVECooperation_Pickup.prefab
+   000F stsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::s_equipPickupFormPath
+   0014 ldc.i4.s 64
+   0016 stsfld Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem::m_medicineGuideID
+   001B ret 
+  NESTED Assets.Scripts.GameSystem.CBattlePVECooperationEquipSystem/enFormWidget

@@ -1,0 +1,295 @@
+// TYPE Assets.Scripts.Framework.BaseConnector  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD Apollo.IApolloConnector connector
+  FIELD Assets.Scripts.Framework.ConnectorParam initParam
+  FIELD System.Boolean connected
+  FIELD System.UInt32 connectTimeout
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== Assets.Scripts.Framework.ConnectorParam GetConnectionParam() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   0006 ret 
+== System.Void DestroyConnector() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0006 brfalse IL_0091: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0011 ldarg.0 
+   0012 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onConnectEvent(Apollo.ApolloResult,Apollo.ApolloLoginInfo)
+   0018 newobj System.Void Apollo.ConnectEventHandler::.ctor(System.Object,System.IntPtr)
+   001D callvirt System.Void Apollo.IApolloConnector::remove_ConnectEvent(Apollo.ConnectEventHandler)
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onReconnectEvent(Apollo.ApolloResult)
+   002F newobj System.Void Apollo.ReconnectEventHandler::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Void Apollo.IApolloConnector::remove_ReconnectEvent(Apollo.ReconnectEventHandler)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.Framework.BaseConnector::connector
+   003F ldarg.0 
+   0040 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onConnectError(Apollo.ApolloResult)
+   0046 newobj System.Void Apollo.ConnectorErrorEventHandler::.ctor(System.Object,System.IntPtr)
+   004B callvirt System.Void Apollo.IApolloConnector::remove_ErrorEvent(Apollo.ConnectorErrorEventHandler)
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0056 callvirt Apollo.ApolloResult Apollo.IApolloConnector::Disconnect()
+   005B pop 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0062 ldarg.0 
+   0063 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onDisconnectEvent(Apollo.ApolloResult)
+   0069 newobj System.Void Apollo.DisconnectEventHandler::.ctor(System.Object,System.IntPtr)
+   006E callvirt System.Void Apollo.IApolloConnector::remove_DisconnectEvent(Apollo.DisconnectEventHandler)
+   0073 call Apollo.IApollo Apollo.IApollo::get_Instance()
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   007E callvirt System.Void Apollo.IApollo::DestroyApolloConnector(Apollo.IApolloConnector)
+   0083 ldarg.0 
+   0084 ldnull 
+   0085 stfld Assets.Scripts.Framework.BaseConnector::connector
+   008A ldarg.0 
+   008B ldc.i4.0 
+   008C stfld Assets.Scripts.Framework.BaseConnector::connected
+   0091 ret 
+== System.Boolean CreateConnector(Assets.Scripts.Framework.ConnectorParam param) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 callvirt System.String ApolloHelper::GetOpenID()
+   000A stloc.0 
+   000B newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 ldstr openid
+   0017 ldloc.0 
+   0018 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   001D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0022 ldloc.1 
+   0023 ldstr isFistConn
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   002E brtrue IL_003d: ldstr "0"
+   0033 ldstr 1
+   0038 br IL_0042: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   003D ldstr 0
+   0042 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0047 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   004C ldloc.1 
+   004D ldstr httpDns
+   0052 ldarg.1 
+   0053 ldfld Assets.Scripts.Framework.ConnectorParam::httpDns
+   0058 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   005D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0062 ldloc.1 
+   0063 ldstr url
+   0068 ldarg.1 
+   0069 ldfld Assets.Scripts.Framework.ConnectorParam::url
+   006E newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0073 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0078 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   007D ldstr Begin_Client_CreateConnector
+   0082 ldloc.1 
+   0083 ldc.i4.1 
+   0084 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0089 ldarg.0 
+   008A call System.Void Assets.Scripts.Framework.BaseConnector::DestroyConnector()
+   008F ldarg.1 
+   0090 brtrue IL_0097: ldarg.0
+   0095 ldc.i4.0 
+   0096 ret 
+   0097 ldarg.0 
+   0098 ldarg.1 
+   0099 stfld Assets.Scripts.Framework.BaseConnector::initParam
+   009E ldarg.0 
+   009F ldc.i4.0 
+   00A0 stfld Assets.Scripts.Framework.BaseConnector::connected
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   00AB callvirt System.Void Assets.Scripts.Framework.ConnectorParam::DealWithHttpDNS()
+   00B0 ldarg.0 
+   00B1 call Apollo.IApollo Apollo.IApollo::get_Instance()
+   00B6 ldsfld ApolloConfig::platform
+   00BB ldc.i4 16777215
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   00C6 ldfld Assets.Scripts.Framework.ConnectorParam::url
+   00CB callvirt Apollo.IApolloConnector Apollo.IApollo::CreateApolloConnection(Apollo.ApolloPlatform,System.UInt32,System.String)
+   00D0 stfld Assets.Scripts.Framework.BaseConnector::connector
+   00D5 ldarg.0 
+   00D6 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   00DB brtrue IL_00e2: ldc.i4 759
+   00E0 ldc.i4.0 
+   00E1 ret 
+   00E2 ldc.i4 759
+   00E7 call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   00EC stloc.2 
+   00ED ldloc.2 
+   00EE ldc.i4.1 
+   00EF bne.un IL_00fa: ldc.i4.0
+   00F4 ldc.i4.1 
+   00F5 br IL_00fb: stloc.3
+   00FA ldc.i4.0 
+   00FB stloc.3 
+   00FC ldc.i4 760
+   0101 call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   0106 stloc.s V_4
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   010E ldloc.s V_4
+   0110 ldloc.3 
+   0111 callvirt System.Void Apollo.IApolloConnector::SetThreadInfo(System.Int32,System.Boolean)
+   0116 ldstr Create Connect Entered!{0}  {1}
+   011B ldsfld ApolloConfig::platform
+   0120 box Apollo.ApolloPlatform
+   0125 ldarg.0 
+   0126 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   012B ldfld Assets.Scripts.Framework.ConnectorParam::url
+   0130 call System.Void System.Console::WriteLine(System.String,System.Object,System.Object)
+   0135 ldarg.0 
+   0136 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   013B ldarg.0 
+   013C ldftn System.Void Assets.Scripts.Framework.BaseConnector::onConnectEvent(Apollo.ApolloResult,Apollo.ApolloLoginInfo)
+   0142 newobj System.Void Apollo.ConnectEventHandler::.ctor(System.Object,System.IntPtr)
+   0147 callvirt System.Void Apollo.IApolloConnector::add_ConnectEvent(Apollo.ConnectEventHandler)
+   014C ldarg.0 
+   014D ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0152 ldarg.0 
+   0153 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onDisconnectEvent(Apollo.ApolloResult)
+   0159 newobj System.Void Apollo.DisconnectEventHandler::.ctor(System.Object,System.IntPtr)
+   015E callvirt System.Void Apollo.IApolloConnector::add_DisconnectEvent(Apollo.DisconnectEventHandler)
+   0163 ldarg.0 
+   0164 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0169 ldarg.0 
+   016A ldftn System.Void Assets.Scripts.Framework.BaseConnector::onReconnectEvent(Apollo.ApolloResult)
+   0170 newobj System.Void Apollo.ReconnectEventHandler::.ctor(System.Object,System.IntPtr)
+   0175 callvirt System.Void Apollo.IApolloConnector::add_ReconnectEvent(Apollo.ReconnectEventHandler)
+   017A ldarg.0 
+   017B ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0180 ldarg.0 
+   0181 ldftn System.Void Assets.Scripts.Framework.BaseConnector::onConnectError(Apollo.ApolloResult)
+   0187 newobj System.Void Apollo.ConnectorErrorEventHandler::.ctor(System.Object,System.IntPtr)
+   018C callvirt System.Void Apollo.IApolloConnector::add_ErrorEvent(Apollo.ConnectorErrorEventHandler)
+   0191 ldarg.0 
+   0192 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0197 ldarg.0 
+   0198 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   019D ldfld Assets.Scripts.Framework.ConnectorParam::enc
+   01A2 ldarg.0 
+   01A3 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   01A8 ldfld Assets.Scripts.Framework.ConnectorParam::keyMaking
+   01AD ldsfld Assets.Scripts.Framework.ConnectorParam::DH
+   01B2 callvirt Apollo.ApolloResult Apollo.IApolloConnector::SetSecurityInfo(Apollo.ApolloEncryptMethod,Apollo.ApolloKeyMaking,System.String)
+   01B7 pop 
+   01B8 ldarg.0 
+   01B9 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   01BE ldsfld Assets.Scripts.Framework.BaseConnector::connectTimeout
+   01C3 callvirt Apollo.ApolloResult Apollo.IApolloConnector::Connect(System.UInt32)
+   01C8 brfalse IL_01cf: newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   01CD ldc.i4.0 
+   01CE ret 
+   01CF newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   01D4 stloc.s V_5
+   01D6 ldloc.s V_5
+   01D8 ldstr openid
+   01DD ldloc.0 
+   01DE newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01E3 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01E8 ldloc.s V_5
+   01EA ldstr isFistConn
+   01EF ldarg.0 
+   01F0 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   01F5 brtrue IL_0204: ldstr "0"
+   01FA ldstr 1
+   01FF br IL_0209: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0204 ldstr 0
+   0209 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   020E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0213 ldloc.s V_5
+   0215 ldstr url
+   021A ldarg.1 
+   021B ldfld Assets.Scripts.Framework.ConnectorParam::url
+   0220 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0225 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   022A call !0 Singleton`1<ApolloHelper>::GetInstance()
+   022F ldstr Client_CreateConnector
+   0234 ldloc.s V_5
+   0236 ldc.i4.1 
+   0237 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   023C ldc.i4.1 
+   023D ret 
+== System.Void RestartConnector() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.BaseConnector::DestroyConnector()
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.Framework.BaseConnector::initParam
+   000D call System.Boolean Assets.Scripts.Framework.BaseConnector::CreateConnector(Assets.Scripts.Framework.ConnectorParam)
+   0012 pop 
+   0013 ret 
+== System.Void DealConnectSucc() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void DealConnectFail(Apollo.ApolloResult result, Apollo.ApolloLoginInfo loginInfo) attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void DealConnectError(Apollo.ApolloResult result) attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void DealConnectClose(Apollo.ApolloResult result) attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void onConnectError(Apollo.ApolloResult result) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.Framework.BaseConnector::connected
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectError(Apollo.ApolloResult)
+   000E ret 
+== System.Void onConnectEvent(Apollo.ApolloResult result, Apollo.ApolloLoginInfo loginInfo) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D brtrue IL_0024: ldarg.0
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.Framework.BaseConnector::connected
+   0019 ldarg.0 
+   001A callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectSucc()
+   001F br IL_002c: ret
+   0024 ldarg.0 
+   0025 ldarg.1 
+   0026 ldarg.2 
+   0027 callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectFail(Apollo.ApolloResult,Apollo.ApolloLoginInfo)
+   002C ret 
+== System.Void onDisconnectEvent(Apollo.ApolloResult result) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_0014: ret
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 stfld Assets.Scripts.Framework.BaseConnector::connected
+   000D ldarg.0 
+   000E ldarg.1 
+   000F callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectClose(Apollo.ApolloResult)
+   0014 ret 
+== System.Void onReconnectEvent(Apollo.ApolloResult result) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.BaseConnector::connector
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D brtrue IL_0024: ldarg.0
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.Framework.BaseConnector::connected
+   0019 ldarg.0 
+   001A callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectSucc()
+   001F br IL_002c: ret
+   0024 ldarg.0 
+   0025 ldarg.1 
+   0026 ldnull 
+   0027 callvirt System.Void Assets.Scripts.Framework.BaseConnector::DealConnectFail(Apollo.ApolloResult,Apollo.ApolloLoginInfo)
+   002C ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.s 10
+   0002 stsfld Assets.Scripts.Framework.BaseConnector::connectTimeout
+   0007 ret 

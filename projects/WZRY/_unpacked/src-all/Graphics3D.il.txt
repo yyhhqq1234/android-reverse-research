@@ -1,0 +1,264 @@
+// TYPE Graphics3D  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,System.Single> s_formToWorldScaleMap
+  FIELD System.Single S_Ratio
+  FIELD System.Single s_screenWidth
+  FIELD System.Single s_screenHeight
+  FIELD System.Single c_standardWidth = 1136
+  FIELD System.Single c_standardHeight = 640
+  FIELD System.Boolean m_propchanged
+  FIELD System.Boolean m_hasRegisterToUpdateList
+  FIELD System.Int32 m_indexInUpdateList
+  FIELD System.Single m_depth
+  FIELD UnityEngine.Mesh m_mesh
+  FIELD UnityEngine.MeshRenderer m_render
+  PROP System.Single depth
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Graphics3D::m_propchanged
+   0007 ldarg.0 
+   0008 ldc.i4.m1 
+   0009 stfld Graphics3D::m_indexInUpdateList
+   000E ldarg.0 
+   000F ldc.r4 1
+   0014 stfld Graphics3D::m_depth
+   0019 ldarg.0 
+   001A call System.Void UnityEngine.MonoBehaviour::.ctor()
+   001F ret 
+== System.Single get_depth() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Graphics3D::m_depth
+   0006 ret 
+== System.Void set_depth(System.Single value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Graphics3D::m_depth
+   0007 ldarg.0 
+   0008 callvirt System.Void Graphics3D::RecaculateBoundBox()
+   000D ret 
+== System.Void ClearFormToWorldScaleMap() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Graphics3D::s_formToWorldScaleMap
+   0005 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Single>::Clear()
+   000A ret 
+== System.Single GetFormToWorldScale(UnityEngine.Camera camera) attrs=Family, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0012: ldarg.0
+   000C ldc.r4 1
+   0011 ret 
+   0012 ldarg.0 
+   0013 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0018 stloc.0 
+   0019 ldsfld Graphics3D::s_formToWorldScaleMap
+   001E ldloc.0 
+   001F ldloca.s V_1
+   0021 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Single>::TryGetValue(!0,!1&)
+   0026 brtrue IL_00ad: ldloc.1
+   002B ldarg.0 
+   002C callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0031 ldc.r4 0
+   0036 ldc.r4 0
+   003B ldc.r4 1
+   0040 callvirt UnityEngine.Vector3 UnityEngine.Transform::TransformPoint(System.Single,System.Single,System.Single)
+   0045 stloc.2 
+   0046 ldarg.0 
+   0047 ldloc.2 
+   0048 callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   004D call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   0052 stloc.3 
+   0053 ldloca.s V_4
+   0055 ldc.r4 100
+   005A ldc.r4 100
+   005F call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0064 ldloc.3 
+   0065 ldloc.s V_4
+   0067 call UnityEngine.Vector2 UnityEngine.Vector2::op_Addition(UnityEngine.Vector2,UnityEngine.Vector2)
+   006C stloc.s V_5
+   006E ldarg.0 
+   006F ldloc.s V_5
+   0071 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0076 callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToWorldPoint(UnityEngine.Vector3)
+   007B stloc.s V_6
+   007D ldloc.s V_6
+   007F ldloc.2 
+   0080 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0085 stloc.s V_8
+   0087 ldloca.s V_8
+   0089 ldfld UnityEngine.Vector3::x
+   008E stloc.s V_7
+   0090 call System.Single Graphics3D::Ratio()
+   0095 ldloc.s V_7
+   0097 mul 
+   0098 ldloca.s V_4
+   009A ldfld UnityEngine.Vector2::x
+   009F div 
+   00A0 stloc.1 
+   00A1 ldsfld Graphics3D::s_formToWorldScaleMap
+   00A6 ldloc.0 
+   00A7 ldloc.1 
+   00A8 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Single>::Add(!0,!1)
+   00AD ldloc.1 
+   00AE ret 
+== System.Single Ratio() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Graphics3D::S_Ratio
+   0005 ldc.r4 0
+   000A beq IL_002d: call System.Boolean Graphics3D::SetRatio()
+   000F ldsfld Graphics3D::s_screenWidth
+   0014 ldc.r4 0
+   0019 beq IL_002d: call System.Boolean Graphics3D::SetRatio()
+   001E ldsfld Graphics3D::s_screenHeight
+   0023 ldc.r4 0
+   0028 bne.un IL_0033: ldsfld System.Single Graphics3D::S_Ratio
+   002D call System.Boolean Graphics3D::SetRatio()
+   0032 pop 
+   0033 ldsfld Graphics3D::S_Ratio
+   0038 ret 
+== System.Boolean SetRatio() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.r4 0
+   0005 stloc.0 
+   0006 ldc.r4 0
+   000B stloc.1 
+   000C call System.Int32 UnityEngine.Screen::get_width()
+   0011 conv.r4 
+   0012 stloc.0 
+   0013 call System.Int32 UnityEngine.Screen::get_height()
+   0018 conv.r4 
+   0019 stloc.1 
+   001A ldsfld Graphics3D::s_screenWidth
+   001F ldloc.0 
+   0020 bne.un IL_0041: ldloc.1
+   0025 ldsfld Graphics3D::s_screenHeight
+   002A ldloc.1 
+   002B bne.un IL_0041: ldloc.1
+   0030 ldsfld Graphics3D::S_Ratio
+   0035 ldc.r4 0
+   003A beq IL_0041: ldloc.1
+   003F ldc.i4.0 
+   0040 ret 
+   0041 ldloc.1 
+   0042 ldc.r4 640
+   0047 div 
+   0048 ldloc.0 
+   0049 ldc.r4 1136
+   004E div 
+   004F call System.Single UnityEngine.Mathf::Min(System.Single,System.Single)
+   0054 stsfld Graphics3D::S_Ratio
+   0059 ldc.i4.1 
+   005A ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Graphics3D::Initialize()
+   0006 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Graphics3D::UnInitialize()
+   0006 ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Graphics3D::RegisterToUpdateList()
+   0006 ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Graphics3D::UnRegisterFromUpdateList()
+   0006 ret 
+== System.Void Initialize() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void UnInitialize() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void CheckPropChange() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void RecaculateBoundBox() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void MarkPropChanged() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Graphics3D::m_propchanged
+   0007 ret 
+== System.Void RegisterToUpdateList() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 callvirt System.Boolean UnityEngine.GameObject::get_activeInHierarchy()
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldfld Graphics3D::m_hasRegisterToUpdateList
+   0017 brtrue IL_002e: ret
+   001C call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0021 ldarg.0 
+   0022 callvirt System.Void Assets.Scripts.UI.C3DUIManager::RegisterGraphics3D(Graphics3D)
+   0027 ldarg.0 
+   0028 ldc.i4.1 
+   0029 stfld Graphics3D::m_hasRegisterToUpdateList
+   002E ret 
+== System.Void UnRegisterFromUpdateList() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Graphics3D::m_hasRegisterToUpdateList
+   0006 brfalse IL_001d: ret
+   000B call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0010 ldarg.0 
+   0011 callvirt System.Void Assets.Scripts.UI.C3DUIManager::UnRegisterGraphics3D(Graphics3D)
+   0016 ldarg.0 
+   0017 ldc.i4.0 
+   0018 stfld Graphics3D::m_hasRegisterToUpdateList
+   001D ret 
+== System.Void CreateMesh() attrs=Family, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Graphics3D::m_mesh
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_007f: ret
+   0011 ldarg.0 
+   0012 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0017 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.MeshFilter>()
+   001C stloc.0 
+   001D ldnull 
+   001E ldloc.0 
+   001F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_0035: ldarg.0
+   0029 ldarg.0 
+   002A call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002F callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshFilter>()
+   0034 stloc.0 
+   0035 ldarg.0 
+   0036 newobj System.Void UnityEngine.Mesh::.ctor()
+   003B stfld Graphics3D::m_mesh
+   0040 ldloc.0 
+   0041 ldarg.0 
+   0042 ldfld Graphics3D::m_mesh
+   0047 callvirt System.Void UnityEngine.MeshFilter::set_mesh(UnityEngine.Mesh)
+   004C ldarg.0 
+   004D ldarg.0 
+   004E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0053 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.MeshRenderer>()
+   0058 stfld Graphics3D::m_render
+   005D ldnull 
+   005E ldarg.0 
+   005F ldfld Graphics3D::m_render
+   0064 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0069 brfalse IL_007f: ret
+   006E ldarg.0 
+   006F ldarg.0 
+   0070 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0075 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshRenderer>()
+   007A stfld Graphics3D::m_render
+   007F ret 
+== UnityEngine.Camera GetUsedCamera() attrs=Family, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.GameFramework::IsInGameFramework
+   0005 brfalse IL_001e: call UnityEngine.Camera UnityEngine.Camera::get_main()
+   000A call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   000F callvirt Assets.Scripts.UI.C3DUIManager/IndirectCamera Assets.Scripts.UI.C3DUIManager::GetCurrentCamera()
+   0014 ldfld Assets.Scripts.UI.C3DUIManager/IndirectCamera::camera
+   0019 br IL_0023: ret
+   001E call UnityEngine.Camera UnityEngine.Camera::get_main()
+   0023 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Single>::.ctor()
+   0005 stsfld Graphics3D::s_formToWorldScaleMap
+   000A ldc.r4 0
+   000F stsfld Graphics3D::S_Ratio
+   0014 ldc.r4 0
+   0019 stsfld Graphics3D::s_screenWidth
+   001E ldc.r4 0
+   0023 stsfld Graphics3D::s_screenHeight
+   0028 ret 

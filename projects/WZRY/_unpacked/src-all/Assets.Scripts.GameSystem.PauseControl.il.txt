@@ -1,0 +1,1052 @@
+// TYPE Assets.Scripts.GameSystem.PauseControl  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Byte NoLimitTimes = 255
+  FIELD System.Byte <MaxAllowTimes>k__BackingField
+  FIELD System.Byte <CurPauseTimes>k__BackingField
+  FIELD UnityEngine.GameObject _root
+  FIELD UnityEngine.GameObject _pauseNode
+  FIELD UnityEngine.GameObject _resumeNode
+  FIELD UnityEngine.GameObject _rollbackNode
+  FIELD UnityEngine.UI.Text _passedTimeTxt
+  FIELD UnityEngine.UI.Text _pauseCampTxt
+  FIELD UnityEngine.GameObject _remainNode
+  FIELD UnityEngine.UI.Text _remainTimesTxt
+  FIELD UnityEngine.UI.Button _resumeButton
+  FIELD UnityEngine.UI.Text _resumeTimerTxt
+  FIELD UnityEngine.UI.Button _rollbackBtn
+  FIELD System.Int32 _pauseTimer
+  FIELD System.Int32 _passedSecond
+  FIELD System.Int32 _waitResumeSecond
+  FIELD UnityEngine.GameObject _rollbackSetTimeNode
+  FIELD UnityEngine.GameObject _rollbackConfirmNode
+  FIELD UnityEngine.GameObject _rollbackCutTimeNode
+  FIELD System.Int32 _rollbackToSecond
+  FIELD System.Int32 _rollbackTimer
+  FIELD System.Int32 _rollbackCutTime
+  PROP System.Byte MaxAllowTimes
+  PROP System.Byte CurPauseTimes
+  PROP System.Boolean EnablePause
+  PROP System.Boolean CanPause
+== System.Void .ctor(Assets.Scripts.UI.CUIFormScript rootForm) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ldarg.1 
+   0007 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   000C ldstr PauseResume
+   0011 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ldc.i4.0 
+   0019 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001E call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0023 stloc.1 
+   0024 ldarg.0 
+   0025 ldloc.1 
+   0026 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpRoom()
+   002B brfalse IL_0054: ldc.i4.0
+   0030 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0035 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsLiveCast()
+   003A brfalse IL_0049: ldloc.1
+   003F ldc.i4 255
+   0044 br IL_004f: br IL_0055
+   0049 ldloc.1 
+   004A ldfld Assets.Scripts.GameLogic.CLevelContext::m_pauseTimes
+   004F br IL_0055: call System.Void Assets.Scripts.GameSystem.PauseControl::set_MaxAllowTimes(System.Byte)
+   0054 ldc.i4.0 
+   0055 call System.Void Assets.Scripts.GameSystem.PauseControl::set_MaxAllowTimes(System.Byte)
+   005A ldarg.0 
+   005B call System.Byte Assets.Scripts.GameSystem.PauseControl::get_MaxAllowTimes()
+   0060 brtrue IL_006d: ldarg.0
+   0065 ldarg.0 
+   0066 ldnull 
+   0067 stfld Assets.Scripts.GameSystem.PauseControl::_root
+   006C ret 
+   006D ldarg.0 
+   006E call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0073 ldfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   0078 brfalse IL_0091: ldc.i4.0
+   007D call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0082 ldfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   0087 ldfld CSProtocol.CSDT_RECONN_GAMEINGINFO::bPauseNum
+   008C br IL_0092: call System.Void Assets.Scripts.GameSystem.PauseControl::set_CurPauseTimes(System.Byte)
+   0091 ldc.i4.0 
+   0092 call System.Void Assets.Scripts.GameSystem.PauseControl::set_CurPauseTimes(System.Byte)
+   0097 ldarg.0 
+   0098 ldloc.0 
+   0099 stfld Assets.Scripts.GameSystem.PauseControl::_root
+   009E ldarg.0 
+   009F ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   00A4 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00A9 brfalse IL_0196: ldarg.0
+   00AE ldarg.0 
+   00AF ldarg.0 
+   00B0 ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   00B5 ldstr PauseNode
+   00BA call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00BF stfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   00C4 ldarg.0 
+   00C5 ldarg.0 
+   00C6 ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   00CB ldstr ResumeNode
+   00D0 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00D5 stfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   00DA ldarg.0 
+   00DB ldarg.0 
+   00DC ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   00E1 ldstr RollbackNode
+   00E6 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   00EB stfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   00F0 ldarg.0 
+   00F1 ldarg.0 
+   00F2 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   00F7 ldstr PassedTime
+   00FC call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0101 stfld Assets.Scripts.GameSystem.PauseControl::_passedTimeTxt
+   0106 ldarg.0 
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   010D ldstr PauseCamp
+   0112 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0117 stfld Assets.Scripts.GameSystem.PauseControl::_pauseCampTxt
+   011C ldarg.0 
+   011D ldarg.0 
+   011E ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0123 ldstr ResumeButton
+   0128 call T Utility::GetComponetInChild<UnityEngine.UI.Button>(UnityEngine.GameObject,System.String)
+   012D stfld Assets.Scripts.GameSystem.PauseControl::_resumeButton
+   0132 ldarg.0 
+   0133 ldarg.0 
+   0134 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0139 ldstr ResumeButton/Text
+   013E call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0143 stfld Assets.Scripts.GameSystem.PauseControl::_resumeTimerTxt
+   0148 ldarg.0 
+   0149 ldarg.0 
+   014A ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   014F ldstr RollbackButton
+   0154 call T Utility::GetComponetInChild<UnityEngine.UI.Button>(UnityEngine.GameObject,System.String)
+   0159 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackBtn
+   015E ldarg.0 
+   015F ldarg.0 
+   0160 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0165 ldstr RemainTimes
+   016A call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   016F stfld Assets.Scripts.GameSystem.PauseControl::_remainNode
+   0174 ldarg.0 
+   0175 ldarg.0 
+   0176 ldfld Assets.Scripts.GameSystem.PauseControl::_remainNode
+   017B ldstr Times
+   0180 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0185 stfld Assets.Scripts.GameSystem.PauseControl::_remainTimesTxt
+   018A ldarg.0 
+   018B ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   0190 ldc.i4.0 
+   0191 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0196 ldarg.0 
+   0197 ldc.i4.0 
+   0198 stfld Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   019D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01A2 ldc.i4 1177
+   01A7 ldarg.0 
+   01A8 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnResumeMultiGame(Assets.Scripts.UI.CUIEvent)
+   01AE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01B3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01B8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01BD ldc.i4 13056
+   01C2 ldarg.0 
+   01C3 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackButtonClick(Assets.Scripts.UI.CUIEvent)
+   01C9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01CE callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01D3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01D8 ldc.i4 13057
+   01DD ldarg.0 
+   01DE ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackConfirm1(Assets.Scripts.UI.CUIEvent)
+   01E4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01E9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01EE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01F3 ldc.i4 13058
+   01F8 ldarg.0 
+   01F9 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackCancel1(Assets.Scripts.UI.CUIEvent)
+   01FF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0204 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0209 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   020E ldc.i4 13059
+   0213 ldarg.0 
+   0214 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackConfirm2(Assets.Scripts.UI.CUIEvent)
+   021A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   021F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0224 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0229 ldc.i4 13060
+   022E ldarg.0 
+   022F ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackCancel2(Assets.Scripts.UI.CUIEvent)
+   0235 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   023A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   023F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0244 ldc.i4 13061
+   0249 ldarg.0 
+   024A ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackGiveup(Assets.Scripts.UI.CUIEvent)
+   0250 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0255 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   025A ret 
+== System.Byte get_MaxAllowTimes() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::<MaxAllowTimes>k__BackingField
+   0006 ret 
+== System.Void set_MaxAllowTimes(System.Byte value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.PauseControl::<MaxAllowTimes>k__BackingField
+   0007 ret 
+== System.Byte get_CurPauseTimes() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::<CurPauseTimes>k__BackingField
+   0006 ret 
+== System.Void set_CurPauseTimes(System.Byte value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.PauseControl::<CurPauseTimes>k__BackingField
+   0007 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldflda Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   000B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0010 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0015 ldarg.0 
+   0016 ldflda Assets.Scripts.GameSystem.PauseControl::_rollbackTimer
+   001B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0020 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0025 ldc.i4 1177
+   002A ldarg.0 
+   002B ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnResumeMultiGame(Assets.Scripts.UI.CUIEvent)
+   0031 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0036 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0040 ldc.i4 13056
+   0045 ldarg.0 
+   0046 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackButtonClick(Assets.Scripts.UI.CUIEvent)
+   004C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0051 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0056 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005B ldc.i4 13057
+   0060 ldarg.0 
+   0061 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackConfirm1(Assets.Scripts.UI.CUIEvent)
+   0067 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0071 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0076 ldc.i4 13058
+   007B ldarg.0 
+   007C ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackCancel1(Assets.Scripts.UI.CUIEvent)
+   0082 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0087 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0091 ldc.i4 13059
+   0096 ldarg.0 
+   0097 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackConfirm2(Assets.Scripts.UI.CUIEvent)
+   009D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A2 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A7 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AC ldc.i4 13060
+   00B1 ldarg.0 
+   00B2 ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackCancel2(Assets.Scripts.UI.CUIEvent)
+   00B8 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BD callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C7 ldc.i4 13061
+   00CC ldarg.0 
+   00CD ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackGiveup(Assets.Scripts.UI.CUIEvent)
+   00D3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DD ldarg.0 
+   00DE ldnull 
+   00DF stfld Assets.Scripts.GameSystem.PauseControl::_root
+   00E4 ret 
+== System.Boolean get_EnablePause() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Byte Assets.Scripts.GameSystem.PauseControl::get_MaxAllowTimes()
+   0006 ldc.i4.0 
+   0007 cgt 
+   0009 ret 
+== System.Boolean get_CanPause() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Byte Assets.Scripts.GameSystem.PauseControl::get_CurPauseTimes()
+   0006 ldarg.0 
+   0007 call System.Byte Assets.Scripts.GameSystem.PauseControl::get_MaxAllowTimes()
+   000C blt IL_0020: ldc.i4.1
+   0011 ldarg.0 
+   0012 call System.Byte Assets.Scripts.GameSystem.PauseControl::get_MaxAllowTimes()
+   0017 ldc.i4 255
+   001C ceq 
+   001E br.s IL_0021: ret
+   0020 ldc.i4.1 
+   0021 ret 
+== System.Void RequestPause(System.Boolean isPause) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brfalse IL_0040: ldc.i4 5243
+   0006 ldarg.0 
+   0007 call System.Boolean Assets.Scripts.GameSystem.PauseControl::get_CanPause()
+   000C brfalse IL_003b: br IL_006a
+   0011 ldc.i4 5243
+   0016 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   001B stloc.0 
+   001C ldloc.0 
+   001D ldfld CSProtocol.CSPkg::stPkgData
+   0022 callvirt CSProtocol.CSPKG_PAUSE_REQ CSProtocol.CSPkgBody::get_stPauseReq()
+   0027 ldc.i4.1 
+   0028 stfld CSProtocol.CSPKG_PAUSE_REQ::bType
+   002D call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0032 ldloca.s V_0
+   0034 ldc.i4.0 
+   0035 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   003A pop 
+   003B br IL_006a: ret
+   0040 ldc.i4 5243
+   0045 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   004A stloc.1 
+   004B ldloc.1 
+   004C ldfld CSProtocol.CSPkg::stPkgData
+   0051 callvirt CSProtocol.CSPKG_PAUSE_REQ CSProtocol.CSPkgBody::get_stPauseReq()
+   0056 ldc.i4.2 
+   0057 stfld CSProtocol.CSPKG_PAUSE_REQ::bType
+   005C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0061 ldloca.s V_1
+   0063 ldc.i4.0 
+   0064 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0069 pop 
+   006A ret 
+== System.Void ResponsePause(CSProtocol.SCPKG_PAUSE_RSP pkg) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.SCPKG_PAUSE_RSP::bResult
+   0006 brfalse IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldfld CSProtocol.SCPKG_PAUSE_RSP::bType
+   0012 ldc.i4.2 
+   0013 bne.un IL_0078: ldarg.0
+   0018 call !0 Singleton`1<CTimerManager>::GetInstance()
+   001D ldarg.0 
+   001E ldflda Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   0023 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0028 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002D ldarg.0 
+   002E ldflda Assets.Scripts.GameSystem.PauseControl::_rollbackTimer
+   0033 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0038 ldarg.0 
+   0039 ldc.i4.0 
+   003A stfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   0045 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004A brfalse IL_0073: br IL_0087
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0055 ldc.i4.0 
+   0056 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   0061 ldc.i4.1 
+   0062 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   006D ldc.i4.0 
+   006E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0073 br IL_0087: ret
+   0078 ldarg.0 
+   0079 dup 
+   007A call System.Byte Assets.Scripts.GameSystem.PauseControl::get_CurPauseTimes()
+   007F ldc.i4.1 
+   0080 add 
+   0081 conv.u1 
+   0082 call System.Void Assets.Scripts.GameSystem.PauseControl::set_CurPauseTimes(System.Byte)
+   0087 ret 
+== System.Void OnResumeMultiGame(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void Assets.Scripts.GameSystem.PauseControl::RequestPause(System.Boolean)
+   0007 ret 
+== System.String FormateSeconds(System.Int32 secs, System.Boolean useHour) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 brfalse IL_003b: ldstr "{0:D2}:{1:D2}"
+   0006 ldarg.0 
+   0007 ldc.i4 3600
+   000C div 
+   000D stloc.0 
+   000E ldarg.0 
+   000F ldloc.0 
+   0010 ldc.i4 3600
+   0015 mul 
+   0016 sub 
+   0017 stloc.1 
+   0018 ldstr {0:D2}:{1:D2}:{2:D2}
+   001D ldloc.0 
+   001E box System.Int32
+   0023 ldloc.1 
+   0024 ldc.i4.s 60
+   0026 div 
+   0027 box System.Int32
+   002C ldloc.1 
+   002D ldc.i4.s 60
+   002F rem 
+   0030 box System.Int32
+   0035 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   003A ret 
+   003B ldstr {0:D2}:{1:D2}
+   0040 ldarg.0 
+   0041 ldc.i4.s 60
+   0043 div 
+   0044 box System.Int32
+   0049 ldarg.0 
+   004A ldc.i4.s 60
+   004C rem 
+   004D box System.Int32
+   0052 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0057 ret 
+== System.Void OnRollbackButtonClick(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsLiveCast()
+   000A brfalse IL_0020: ret
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   0015 ldnull 
+   0016 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001B brfalse IL_0021: ldarg.0
+   0020 ret 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0027 ldc.i4.0 
+   0028 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   0033 ldc.i4.0 
+   0034 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0039 ldarg.0 
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   0040 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0045 ldstr SetTimeNode
+   004A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   004F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0054 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   0059 ldarg.0 
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   0060 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0065 ldstr ConfirmNode
+   006A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0074 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   0079 ldarg.0 
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   0080 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0085 ldstr CutTimeNode
+   008A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   008F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0094 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   009F ldc.i4.1 
+   00A0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   00AB ldc.i4.0 
+   00AC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   00B7 ldc.i4.0 
+   00B8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   00C3 ldc.i4.1 
+   00C4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C9 ldarg.0 
+   00CA ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   00CF ldstr CurTime
+   00D4 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   00D9 stloc.0 
+   00DA ldloc.0 
+   00DB ldnull 
+   00DC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00E1 brfalse IL_00fc: ret
+   00E6 ldloc.0 
+   00E7 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00EC callvirt System.Int32 Assets.Scripts.GameLogic.BattleLogic::CalcCurrentTime()
+   00F1 ldc.i4.0 
+   00F2 call System.String Assets.Scripts.GameSystem.PauseControl::FormateSeconds(System.Int32,System.Boolean)
+   00F7 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00FC ret 
+== System.Void OnRollbackConfirm1(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   0018 ldstr HoursInput/Text
+   001D call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0022 stloc.0 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   0029 ldstr MinutesInput/Text
+   002E call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0033 stloc.1 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   003A ldstr SecondsInput/Text
+   003F call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0044 stloc.2 
+   0045 ldc.i4.0 
+   0046 stloc.3 
+   0047 ldc.i4.0 
+   0048 stloc.s V_4
+   004A ldc.i4.0 
+   004B stloc.s V_5
+   004D ldloc.0 
+   004E callvirt System.String UnityEngine.UI.Text::get_text()
+   0053 ldloca.s V_3
+   0055 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   005A pop 
+   005B ldloc.1 
+   005C callvirt System.String UnityEngine.UI.Text::get_text()
+   0061 ldloca.s V_4
+   0063 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0068 pop 
+   0069 ldloc.2 
+   006A callvirt System.String UnityEngine.UI.Text::get_text()
+   006F ldloca.s V_5
+   0071 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0076 pop 
+   0077 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   007C callvirt System.Int32 Assets.Scripts.GameLogic.BattleLogic::CalcCurrentTime()
+   0081 stloc.s V_6
+   0083 ldarg.0 
+   0084 ldloc.3 
+   0085 ldc.i4 3600
+   008A mul 
+   008B ldloc.s V_4
+   008D ldc.i4.s 60
+   008F mul 
+   0090 add 
+   0091 ldloc.s V_5
+   0093 add 
+   0094 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   009F ldc.i4.0 
+   00A0 ble IL_00c5: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   00AB ldc.i4 1200
+   00B0 add 
+   00B1 ldloc.s V_6
+   00B3 ble IL_00c5: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00B8 ldarg.0 
+   00B9 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   00BE ldloc.s V_6
+   00C0 ble IL_00e2: ldarg.0
+   00C5 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00CA ldstr InvalidRollbackTime
+   00CF ldc.i4.1 
+   00D0 ldc.r4 1.5
+   00D5 ldnull 
+   00D6 ldc.i4.0 
+   00D7 newarr System.Object
+   00DC callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00E1 ret 
+   00E2 ldarg.0 
+   00E3 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   00E8 ldstr CurTime
+   00ED call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   00F2 stloc.s V_7
+   00F4 ldarg.0 
+   00F5 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   00FA ldstr TarTime
+   00FF call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0104 stloc.s V_8
+   0106 ldloc.s V_7
+   0108 ldloc.s V_6
+   010A ldc.i4.0 
+   010B call System.String Assets.Scripts.GameSystem.PauseControl::FormateSeconds(System.Int32,System.Boolean)
+   0110 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0115 ldloc.s V_8
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   011D ldc.i4.0 
+   011E call System.String Assets.Scripts.GameSystem.PauseControl::FormateSeconds(System.Int32,System.Boolean)
+   0123 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0128 ldarg.0 
+   0129 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   012E ldc.i4.0 
+   012F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0134 ldarg.0 
+   0135 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   013A ldc.i4.1 
+   013B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0140 ldarg.0 
+   0141 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0146 ldc.i4.0 
+   0147 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   014C ret 
+== System.Void OnRollbackCancel1(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0006 ldc.i4.1 
+   0007 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   0012 ldc.i4.0 
+   0013 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   001E ldc.i4.0 
+   001F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0024 ret 
+== System.Void OnRollbackConfirm2(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0018 ldc.i4 1000
+   001D ldc.i4.m1 
+   001E ldarg.0 
+   001F ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnRollbackTimer(System.Int32)
+   0025 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   002A callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   002F stfld Assets.Scripts.GameSystem.PauseControl::_rollbackTimer
+   0034 ldarg.0 
+   0035 ldc.i4.s 30
+   0037 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0042 ldstr CurTime
+   0047 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   004C stloc.0 
+   004D ldloc.0 
+   004E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0053 callvirt System.Int32 Assets.Scripts.GameLogic.BattleLogic::CalcCurrentTime()
+   0058 ldc.i4.0 
+   0059 call System.String Assets.Scripts.GameSystem.PauseControl::FormateSeconds(System.Int32,System.Boolean)
+   005E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0069 ldstr TarTime
+   006E call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0073 stloc.1 
+   0074 ldloc.1 
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   007B ldc.i4.0 
+   007C call System.String Assets.Scripts.GameSystem.PauseControl::FormateSeconds(System.Int32,System.Boolean)
+   0081 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   008C ldstr CutTime
+   0091 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0096 stloc.2 
+   0097 ldloc.2 
+   0098 ldstr {0:D2}
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   00A3 box System.Int32
+   00A8 call System.String System.String::Format(System.String,System.Object)
+   00AD callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   00B8 ldc.i4.0 
+   00B9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BE ldarg.0 
+   00BF ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   00C4 ldc.i4.0 
+   00C5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   00D0 ldc.i4.1 
+   00D1 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D6 ret 
+== System.Void OnRollbackCancel2(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackSetTimeNode
+   0018 ldc.i4.1 
+   0019 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackConfirmNode
+   0024 ldc.i4.0 
+   0025 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0030 ldc.i4.0 
+   0031 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0036 ret 
+== System.Void OnRollbackGiveup(Assets.Scripts.UI.CUIEvent uiEvt) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldflda Assets.Scripts.GameSystem.PauseControl::_rollbackTimer
+   000B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0010 ldarg.0 
+   0011 ldc.i4.0 
+   0012 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   001D ldc.i4.1 
+   001E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   0029 ldc.i4.0 
+   002A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   0035 ldc.i4.0 
+   0036 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003B ret 
+== System.Void OnRollbackTimer(System.Int32 timeSeq) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 stfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0014 ldnull 
+   0015 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001A brfalse IL_0057: ldarg.0
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   0025 ldc.i4.0 
+   0026 blt IL_0057: ldarg.0
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTimeNode
+   0031 ldstr CutTime
+   0036 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldstr {0:D2}
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   0048 box System.Int32
+   004D call System.String System.String::Format(System.String,System.Object)
+   0052 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackCutTime
+   005D ldc.i4.0 
+   005E bge IL_0092: ret
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   0069 ldc.i4.0 
+   006A ble IL_0092: ret
+   006F ldarg.0 
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   0076 call System.Void Assets.Scripts.GameSystem.PauseControl::RequestRollback(System.UInt32)
+   007B call !0 Singleton`1<CTimerManager>::GetInstance()
+   0080 ldarg.0 
+   0081 ldflda Assets.Scripts.GameSystem.PauseControl::_rollbackTimer
+   0086 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   008B ldarg.0 
+   008C ldc.i4.0 
+   008D stfld Assets.Scripts.GameSystem.PauseControl::_rollbackToSecond
+   0092 ret 
+== System.Void OnPauseResponse(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0005 callvirt Assets.Scripts.GameSystem.PauseControl Assets.Scripts.GameSystem.CBattleSystem::get_pauseControl()
+   000A brfalse IL_0029: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0014 callvirt Assets.Scripts.GameSystem.PauseControl Assets.Scripts.GameSystem.CBattleSystem::get_pauseControl()
+   0019 ldarg.0 
+   001A ldfld CSProtocol.CSPkg::stPkgData
+   001F callvirt CSProtocol.SCPKG_PAUSE_RSP CSProtocol.CSPkgBody::get_stPauseRsp()
+   0024 callvirt System.Void Assets.Scripts.GameSystem.PauseControl::ResponsePause(CSProtocol.SCPKG_PAUSE_RSP)
+   0029 ret 
+== System.Void ExecPauseCommand(System.Byte pauseCommand, System.Byte pauseByCamp, System.Byte[] campPauseTimes) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 ceq 
+   0004 stloc.0 
+   0005 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   000A callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   000F brfalse IL_0022: ldarg.0
+   0014 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0019 ldloc.0 
+   001A ldc.i4.0 
+   001B ceq 
+   001D callvirt System.Void Assets.Scripts.GameSystem.WatchController::MarkRunning(System.Boolean)
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   0028 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002D brfalse IL_01ca: ret
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.PauseControl::_root
+   0038 ldloc.0 
+   0039 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003E ldloc.0 
+   003F brfalse IL_01ba: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0044 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0049 callvirt System.Void Assets.Scripts.GameSystem.CBattleSystem::ClosePopupForms()
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameSystem.PauseControl::_pauseNode
+   0054 ldc.i4.1 
+   0055 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.PauseControl::_resumeNode
+   0060 ldc.i4.0 
+   0061 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackNode
+   006C ldc.i4.0 
+   006D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0072 ldarg.2 
+   0073 stloc.1 
+   0074 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0079 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   007E brfalse IL_0089: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0083 ldc.i4.0 
+   0084 br IL_0093: stloc.2
+   0089 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   008E callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.GamePlayerCenter::get_hostPlayerCamp()
+   0093 stloc.2 
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseCampTxt
+   009A call !0 Singleton`1<CTextManager>::GetInstance()
+   009F ldstr PauseTips_{0}Look{1}
+   00A4 ldloc.2 
+   00A5 box System.Int32
+   00AA ldloc.1 
+   00AB box System.Int32
+   00B0 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00B5 ldc.i4.1 
+   00B6 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00BB callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00C0 ldarg.0 
+   00C1 ldc.i4.0 
+   00C2 stfld Assets.Scripts.GameSystem.PauseControl::_passedSecond
+   00C7 ldloc.1 
+   00C8 ldloc.2 
+   00C9 bne.un IL_00da: ldloca.s V_3
+   00CE ldarg.0 
+   00CF ldc.i4.0 
+   00D0 stfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   00D5 br IL_0103: ldarg.0
+   00DA ldloca.s V_3
+   00DC ldc.i4 242
+   00E1 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   00E6 stloc.s V_4
+   00E8 ldarg.0 
+   00E9 ldloc.s V_4
+   00EB brfalse IL_00fc: ldc.i4.s 60
+   00F0 ldloca.s V_3
+   00F2 ldfld ResData.ResGlobalInfo::dwConfValue
+   00F7 br IL_00fe: stfld System.Int32 Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   00FC ldc.i4.s 60
+   00FE stfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0103 ldarg.0 
+   0104 call System.Void Assets.Scripts.GameSystem.PauseControl::ValidateTimerState()
+   0109 ldloc.2 
+   010A brfalse IL_0159: ldarg.0
+   010F ldarg.0 
+   0110 ldfld Assets.Scripts.GameSystem.PauseControl::_remainNode
+   0115 ldc.i4.1 
+   0116 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   011B call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0120 stloc.s V_5
+   0122 ldloc.s V_5
+   0124 ldfld Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   0129 ldc.i4.2 
+   012A div 
+   012B ldarg.0 
+   012C call System.Byte Assets.Scripts.GameSystem.PauseControl::get_MaxAllowTimes()
+   0131 mul 
+   0132 stloc.s V_6
+   0134 ldarg.0 
+   0135 ldfld Assets.Scripts.GameSystem.PauseControl::_remainTimesTxt
+   013A ldloc.s V_6
+   013C ldarg.3 
+   013D ldloc.2 
+   013E ldelem.u1 
+   013F sub 
+   0140 stloc.s V_7
+   0142 ldloca.s V_7
+   0144 constrained. System.Int32
+   014A callvirt System.String System.Object::ToString()
+   014F callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0154 br IL_0165: ldarg.0
+   0159 ldarg.0 
+   015A ldfld Assets.Scripts.GameSystem.PauseControl::_remainNode
+   015F ldc.i4.0 
+   0160 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0165 ldarg.0 
+   0166 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackBtn
+   016B ldnull 
+   016C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0171 brfalse IL_0187: ldarg.0
+   0176 ldarg.0 
+   0177 ldfld Assets.Scripts.GameSystem.PauseControl::_rollbackBtn
+   017C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0181 ldc.i4.1 
+   0182 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0187 ldarg.0 
+   0188 ldfld Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   018D brtrue IL_01b5: br IL_01ca
+   0192 ldarg.0 
+   0193 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0198 ldc.i4 1000
+   019D ldc.i4.m1 
+   019E ldarg.0 
+   019F ldftn System.Void Assets.Scripts.GameSystem.PauseControl::OnPauseTimer(System.Int32)
+   01A5 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   01AA ldc.i4.0 
+   01AB callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler,System.Boolean)
+   01B0 stfld Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   01B5 br IL_01ca: ret
+   01BA call !0 Singleton`1<CTimerManager>::GetInstance()
+   01BF ldarg.0 
+   01C0 ldflda Assets.Scripts.GameSystem.PauseControl::_pauseTimer
+   01C5 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   01CA ret 
+== System.Void OnPauseTimer(System.Int32 timeSeq) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameSystem.PauseControl::_passedSecond
+   0007 ldc.i4.1 
+   0008 add 
+   0009 stfld Assets.Scripts.GameSystem.PauseControl::_passedSecond
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0014 ldc.i4.0 
+   0015 ble IL_0028: ldarg.0
+   001A ldarg.0 
+   001B dup 
+   001C ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0021 ldc.i4.1 
+   0022 sub 
+   0023 stfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0028 ldarg.0 
+   0029 call System.Void Assets.Scripts.GameSystem.PauseControl::ValidateTimerState()
+   002E ret 
+== System.Void ValidateTimerState() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PauseControl::_passedTimeTxt
+   0006 call !0 Singleton`1<CTextManager>::GetInstance()
+   000B ldstr PauseTimeFormate
+   0010 ldc.i4.1 
+   0011 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.PauseControl::_passedSecond
+   001C ldc.i4.s 60
+   001E div 
+   001F box System.Int32
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.PauseControl::_passedSecond
+   002A ldc.i4.s 60
+   002C rem 
+   002D box System.Int32
+   0032 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0037 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0042 ldc.i4.0 
+   0043 clt 
+   0045 ldc.i4.0 
+   0046 ceq 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A brfalse IL_00e3: ldarg.0
+   004F call !0 Singleton`1<CTextManager>::GetInstance()
+   0054 ldstr ResumeGame
+   0059 ldc.i4.1 
+   005A callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   005F stloc.1 
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   0066 ldc.i4.0 
+   0067 ble IL_00a9: ldarg.0
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameSystem.PauseControl::_resumeTimerTxt
+   0072 ldc.i4.4 
+   0073 newarr System.Object
+   0078 dup 
+   0079 ldc.i4.0 
+   007A ldloc.1 
+   007B stelem.ref 
+   007C dup 
+   007D ldc.i4.1 
+   007E ldstr (
+   0083 stelem.ref 
+   0084 dup 
+   0085 ldc.i4.2 
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   008C box System.Int32
+   0091 stelem.ref 
+   0092 dup 
+   0093 ldc.i4.3 
+   0094 ldstr )
+   0099 stelem.ref 
+   009A call System.String System.String::Concat(System.Object[])
+   009F callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00A4 br IL_00b5: ldarg.0
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameSystem.PauseControl::_resumeTimerTxt
+   00AF ldloc.1 
+   00B0 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.PauseControl::_waitResumeSecond
+   00BB ldc.i4.0 
+   00BC ceq 
+   00BE stloc.2 
+   00BF ldarg.0 
+   00C0 ldfld Assets.Scripts.GameSystem.PauseControl::_resumeButton
+   00C5 ldloc.2 
+   00C6 ldloc.2 
+   00C7 ldc.i4.1 
+   00C8 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnable(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean)
+   00CD ldarg.0 
+   00CE ldfld Assets.Scripts.GameSystem.PauseControl::_resumeButton
+   00D3 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D8 ldc.i4.1 
+   00D9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00DE br IL_00f4: ret
+   00E3 ldarg.0 
+   00E4 ldfld Assets.Scripts.GameSystem.PauseControl::_resumeButton
+   00E9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00EE ldc.i4.0 
+   00EF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00F4 ret 
+== System.Void RequestRollback(System.UInt32 timeSec) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsLiveCast()
+   000A brfalse IL_0039: ret
+   000F ldc.i4 6600
+   0014 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldfld CSProtocol.CSPkg::stPkgData
+   0020 callvirt CSProtocol.CSPKG_ROLLBACK_REQ CSProtocol.CSPkgBody::get_stRollBackReq()
+   0025 ldarg.1 
+   0026 stfld CSProtocol.CSPKG_ROLLBACK_REQ::dwTimeStamp
+   002B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0030 ldloca.s V_0
+   0032 ldc.i4.0 
+   0033 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0038 pop 
+   0039 ret 
+== System.Void OnRollbackResponse(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldstr goingToLoading
+   000A ldc.i4.1 
+   000B ldc.r4 1.5
+   0010 ldnull 
+   0011 ldc.i4.0 
+   0012 newarr System.Object
+   0017 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   001C ret 

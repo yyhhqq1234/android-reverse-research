@@ -1,0 +1,1104 @@
+// TYPE SGameGraphicRaycaster  base=UnityEngine.UI.GraphicRaycaster  attrs=Public, BeforeFieldInit
+  FIELD System.Collections.Generic.List`1<UnityEngine.UI.Image> s_tempImageList
+  FIELD System.Boolean ignoreScrollRect
+  FIELD UnityEngine.Canvas canvas_
+  FIELD DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item> m_allItems
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,System.Byte> m_disableInputGameObjects
+  FIELD System.Int32 TileCount = 4
+  FIELD SGameGraphicRaycaster/Tile[] m_tiles
+  FIELD System.Int32 m_tileSizeX
+  FIELD System.Int32 m_tileSizeY
+  FIELD System.Int32 m_screenWidth
+  FIELD System.Int32 m_screenHeight
+  FIELD UnityEngine.Vector3[] corners
+  FIELD System.Boolean tilesDirty
+  FIELD SGameGraphicRaycaster/RaycastMode raycastMode
+  FIELD System.Boolean m_isInitialized
+  FIELD System.Collections.Generic.List`1<UnityEngine.UI.Graphic> m_RaycastResults
+  FIELD System.Comparison`1<UnityEngine.UI.Graphic> <>f__am$cache0
+  PROP UnityEngine.Canvas canvas
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld SGameGraphicRaycaster::ignoreScrollRect
+   0007 ldarg.0 
+   0008 newobj System.Void DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::.ctor()
+   000D stfld SGameGraphicRaycaster::m_allItems
+   0012 ldarg.0 
+   0013 newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::.ctor()
+   0018 stfld SGameGraphicRaycaster::m_disableInputGameObjects
+   001D ldarg.0 
+   001E ldc.i4.4 
+   001F newarr UnityEngine.Vector3
+   0024 stfld SGameGraphicRaycaster::corners
+   0029 ldarg.0 
+   002A ldc.i4.1 
+   002B stfld SGameGraphicRaycaster::raycastMode
+   0030 ldarg.0 
+   0031 newobj System.Void System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::.ctor()
+   0036 stfld SGameGraphicRaycaster::m_RaycastResults
+   003B ldarg.0 
+   003C call System.Void UnityEngine.UI.GraphicRaycaster::.ctor()
+   0041 ret 
+== UnityEngine.Canvas get_canvas() attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::canvas_
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0018: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld SGameGraphicRaycaster::canvas_
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldarg.0 
+   001A call !!0 UnityEngine.Component::GetComponent<UnityEngine.Canvas>()
+   001F stfld SGameGraphicRaycaster::canvas_
+   0024 ldarg.0 
+   0025 ldfld SGameGraphicRaycaster::canvas_
+   002A ret 
+== System.Void Raycast(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult> resultAppendList) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::raycastMode
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse IL_0020: ldarg.0
+   000D ldloc.0 
+   000E ldc.i4.1 
+   000F beq IL_002d: ldarg.0
+   0014 ldloc.0 
+   0015 ldc.i4.2 
+   0016 beq IL_003b: ldarg.0
+   001B br IL_0049: ret
+   0020 ldarg.0 
+   0021 ldarg.1 
+   0022 ldarg.2 
+   0023 call System.Void UnityEngine.UI.GraphicRaycaster::Raycast(UnityEngine.EventSystems.PointerEventData,System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>)
+   0028 br IL_0049: ret
+   002D ldarg.0 
+   002E ldarg.1 
+   002F ldarg.2 
+   0030 ldc.i4.0 
+   0031 call System.Void SGameGraphicRaycaster::Raycast2(UnityEngine.EventSystems.PointerEventData,System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>,System.Boolean)
+   0036 br IL_0049: ret
+   003B ldarg.0 
+   003C ldarg.1 
+   003D ldarg.2 
+   003E ldc.i4.1 
+   003F call System.Void SGameGraphicRaycaster::Raycast2(UnityEngine.EventSystems.PointerEventData,System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>,System.Boolean)
+   0044 br IL_0049: ret
+   0049 ret 
+== System.Void CalcItemCoord(SGameGraphicRaycaster/Coord& coord, SGameGraphicRaycaster/Item item) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 ldfld SGameGraphicRaycaster/Item::m_rectTransform
+   0006 ldarg.0 
+   0007 ldfld SGameGraphicRaycaster::corners
+   000C callvirt System.Void UnityEngine.RectTransform::GetWorldCorners(UnityEngine.Vector3[])
+   0011 ldc.i4 2147483647
+   0016 stloc.0 
+   0017 ldc.i4 -2147483648
+   001C stloc.1 
+   001D ldc.i4 2147483647
+   0022 stloc.2 
+   0023 ldc.i4 -2147483648
+   0028 stloc.3 
+   0029 ldarg.0 
+   002A call UnityEngine.Canvas SGameGraphicRaycaster::get_canvas()
+   002F callvirt UnityEngine.Camera UnityEngine.Canvas::get_worldCamera()
+   0034 stloc.s V_4
+   0036 ldc.i4.0 
+   0037 stloc.s V_5
+   0039 br IL_00a0: ldloc.s V_5
+   003E ldloc.s V_4
+   0040 ldarg.0 
+   0041 ldfld SGameGraphicRaycaster::corners
+   0046 ldloc.s V_5
+   0048 ldelema UnityEngine.Vector3
+   004D ldobj UnityEngine.Vector3
+   0052 call UnityEngine.Vector2 Assets.Scripts.UI.CUIUtility::WorldToScreenPoint(UnityEngine.Camera,UnityEngine.Vector3)
+   0057 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   005C stloc.s V_6
+   005E ldloca.s V_6
+   0060 ldfld UnityEngine.Vector3::x
+   0065 conv.i4 
+   0066 ldloc.0 
+   0067 call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   006C stloc.0 
+   006D ldloca.s V_6
+   006F ldfld UnityEngine.Vector3::x
+   0074 conv.i4 
+   0075 ldloc.1 
+   0076 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   007B stloc.1 
+   007C ldloca.s V_6
+   007E ldfld UnityEngine.Vector3::y
+   0083 conv.i4 
+   0084 ldloc.2 
+   0085 call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   008A stloc.2 
+   008B ldloca.s V_6
+   008D ldfld UnityEngine.Vector3::y
+   0092 conv.i4 
+   0093 ldloc.3 
+   0094 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   0099 stloc.3 
+   009A ldloc.s V_5
+   009C ldc.i4.1 
+   009D add 
+   009E stloc.s V_5
+   00A0 ldloc.s V_5
+   00A2 ldarg.0 
+   00A3 ldfld SGameGraphicRaycaster::corners
+   00A8 ldlen 
+   00A9 conv.i4 
+   00AA blt IL_003e: ldloc.s V_4
+   00AF ldarg.1 
+   00B0 ldloc.0 
+   00B1 ldarg.0 
+   00B2 ldfld SGameGraphicRaycaster::m_tileSizeX
+   00B7 div 
+   00B8 ldc.i4.0 
+   00B9 ldc.i4.3 
+   00BA call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   00BF stfld SGameGraphicRaycaster/Coord::x
+   00C4 ldarg.1 
+   00C5 ldloc.1 
+   00C6 ldarg.0 
+   00C7 ldfld SGameGraphicRaycaster::m_tileSizeX
+   00CC div 
+   00CD ldc.i4.0 
+   00CE ldc.i4.3 
+   00CF call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   00D4 ldarg.1 
+   00D5 ldfld SGameGraphicRaycaster/Coord::x
+   00DA sub 
+   00DB ldc.i4.1 
+   00DC add 
+   00DD stfld SGameGraphicRaycaster/Coord::numX
+   00E2 ldarg.1 
+   00E3 ldloc.2 
+   00E4 ldarg.0 
+   00E5 ldfld SGameGraphicRaycaster::m_tileSizeY
+   00EA div 
+   00EB ldc.i4.0 
+   00EC ldc.i4.3 
+   00ED call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   00F2 stfld SGameGraphicRaycaster/Coord::y
+   00F7 ldarg.1 
+   00F8 ldloc.3 
+   00F9 ldarg.0 
+   00FA ldfld SGameGraphicRaycaster::m_tileSizeY
+   00FF div 
+   0100 ldc.i4.0 
+   0101 ldc.i4.3 
+   0102 call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   0107 ldarg.1 
+   0108 ldfld SGameGraphicRaycaster/Coord::y
+   010D sub 
+   010E ldc.i4.1 
+   010F add 
+   0110 stfld SGameGraphicRaycaster/Coord::numY
+   0115 ret 
+== System.Void AddToTileList(SGameGraphicRaycaster/Item item) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda SGameGraphicRaycaster/Item::m_coord
+   0006 ldfld SGameGraphicRaycaster/Coord::x
+   000B ldarg.1 
+   000C ldflda SGameGraphicRaycaster/Item::m_coord
+   0011 ldfld SGameGraphicRaycaster/Coord::y
+   0016 ldc.i4.4 
+   0017 mul 
+   0018 add 
+   0019 stloc.0 
+   001A ldc.i4.0 
+   001B stloc.1 
+   001C br IL_005c: ldloc.1
+   0021 ldc.i4.0 
+   0022 stloc.2 
+   0023 br IL_0047: ldloc.2
+   0028 ldloc.2 
+   0029 ldc.i4.4 
+   002A mul 
+   002B ldloc.1 
+   002C add 
+   002D ldloc.0 
+   002E add 
+   002F stloc.3 
+   0030 ldarg.0 
+   0031 ldfld SGameGraphicRaycaster::m_tiles
+   0036 ldloc.3 
+   0037 ldelem.ref 
+   0038 ldfld SGameGraphicRaycaster/Tile::items
+   003D ldarg.1 
+   003E callvirt System.Void ListView`1<SGameGraphicRaycaster/Item>::Add(!0)
+   0043 ldloc.2 
+   0044 ldc.i4.1 
+   0045 add 
+   0046 stloc.2 
+   0047 ldloc.2 
+   0048 ldarg.1 
+   0049 ldflda SGameGraphicRaycaster/Item::m_coord
+   004E ldfld SGameGraphicRaycaster/Coord::numY
+   0053 blt IL_0028: ldloc.2
+   0058 ldloc.1 
+   0059 ldc.i4.1 
+   005A add 
+   005B stloc.1 
+   005C ldloc.1 
+   005D ldarg.1 
+   005E ldflda SGameGraphicRaycaster/Item::m_coord
+   0063 ldfld SGameGraphicRaycaster/Coord::numX
+   0068 blt IL_0021: ldc.i4.0
+   006D ret 
+== System.Void RemoveFromTileList(SGameGraphicRaycaster/Item item) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda SGameGraphicRaycaster/Item::m_coord
+   0006 call System.Boolean SGameGraphicRaycaster/Coord::IsValid()
+   000B brfalse IL_0089: ret
+   0010 ldarg.1 
+   0011 ldflda SGameGraphicRaycaster/Item::m_coord
+   0016 ldfld SGameGraphicRaycaster/Coord::x
+   001B ldarg.1 
+   001C ldflda SGameGraphicRaycaster/Item::m_coord
+   0021 ldfld SGameGraphicRaycaster/Coord::y
+   0026 ldc.i4.4 
+   0027 mul 
+   0028 add 
+   0029 stloc.0 
+   002A ldc.i4.0 
+   002B stloc.1 
+   002C br IL_006d: ldloc.1
+   0031 ldc.i4.0 
+   0032 stloc.2 
+   0033 br IL_0058: ldloc.2
+   0038 ldloc.2 
+   0039 ldc.i4.4 
+   003A mul 
+   003B ldloc.1 
+   003C add 
+   003D ldloc.0 
+   003E add 
+   003F stloc.3 
+   0040 ldarg.0 
+   0041 ldfld SGameGraphicRaycaster::m_tiles
+   0046 ldloc.3 
+   0047 ldelem.ref 
+   0048 ldfld SGameGraphicRaycaster/Tile::items
+   004D ldarg.1 
+   004E callvirt System.Boolean ListView`1<SGameGraphicRaycaster/Item>::Remove(!0)
+   0053 pop 
+   0054 ldloc.2 
+   0055 ldc.i4.1 
+   0056 add 
+   0057 stloc.2 
+   0058 ldloc.2 
+   0059 ldarg.1 
+   005A ldflda SGameGraphicRaycaster/Item::m_coord
+   005F ldfld SGameGraphicRaycaster/Coord::numY
+   0064 blt IL_0038: ldloc.2
+   0069 ldloc.1 
+   006A ldc.i4.1 
+   006B add 
+   006C stloc.1 
+   006D ldloc.1 
+   006E ldarg.1 
+   006F ldflda SGameGraphicRaycaster/Item::m_coord
+   0074 ldfld SGameGraphicRaycaster/Coord::numX
+   0079 blt IL_0031: ldc.i4.0
+   007E ldarg.1 
+   007F ldsfld SGameGraphicRaycaster/Coord::Invalid
+   0084 stfld SGameGraphicRaycaster/Item::m_coord
+   0089 ret 
+== System.Void InitTiles() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::m_tiles
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.s 16
+   000F newarr SGameGraphicRaycaster/Tile
+   0014 stfld SGameGraphicRaycaster::m_tiles
+   0019 ldc.i4.0 
+   001A stloc.0 
+   001B br IL_0031: ldloc.0
+   0020 ldarg.0 
+   0021 ldfld SGameGraphicRaycaster::m_tiles
+   0026 ldloc.0 
+   0027 newobj System.Void SGameGraphicRaycaster/Tile::.ctor()
+   002C stelem.ref 
+   002D ldloc.0 
+   002E ldc.i4.1 
+   002F add 
+   0030 stloc.0 
+   0031 ldloc.0 
+   0032 ldarg.0 
+   0033 ldfld SGameGraphicRaycaster::m_tiles
+   0038 ldlen 
+   0039 conv.i4 
+   003A blt IL_0020: ldarg.0
+   003F ldarg.0 
+   0040 call System.Int32 UnityEngine.Screen::get_width()
+   0045 stfld SGameGraphicRaycaster::m_screenWidth
+   004A ldarg.0 
+   004B call System.Int32 UnityEngine.Screen::get_height()
+   0050 stfld SGameGraphicRaycaster::m_screenHeight
+   0055 ldarg.0 
+   0056 ldarg.0 
+   0057 ldfld SGameGraphicRaycaster::m_screenWidth
+   005C ldc.i4.4 
+   005D div 
+   005E stfld SGameGraphicRaycaster::m_tileSizeX
+   0063 ldarg.0 
+   0064 ldarg.0 
+   0065 ldfld SGameGraphicRaycaster::m_screenHeight
+   006A ldc.i4.4 
+   006B div 
+   006C stfld SGameGraphicRaycaster::m_tileSizeY
+   0071 ret 
+== System.Void UpdateTiles(System.Boolean forceUpdate) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::raycastMode
+   0006 ldc.i4.2 
+   0007 beq IL_000d: ldsfld SGameGraphicRaycaster/Coord SGameGraphicRaycaster/Coord::Invalid
+   000C ret 
+   000D ldsfld SGameGraphicRaycaster/Coord::Invalid
+   0012 stloc.0 
+   0013 ldarg.0 
+   0014 ldfld SGameGraphicRaycaster::m_allItems
+   0019 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::GetEnumerator()
+   001E stloc.1 
+   001F br IL_007c: ldloca.s V_1
+   0024 ldloca.s V_1
+   0026 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::get_Current()
+   002B stloc.3 
+   002C ldloca.s V_3
+   002E call !1 System.Collections.Generic.KeyValuePair`2<System.Int32,SGameGraphicRaycaster/Item>::get_Value()
+   0033 stloc.2 
+   0034 ldarg.1 
+   0035 brtrue IL_0045: ldarg.0
+   003A ldloc.2 
+   003B ldfld SGameGraphicRaycaster/Item::m_needUpdate
+   0040 brfalse IL_007c: ldloca.s V_1
+   0045 ldarg.0 
+   0046 ldloca.s V_0
+   0048 ldloc.2 
+   0049 call System.Void SGameGraphicRaycaster::CalcItemCoord(SGameGraphicRaycaster/Coord&,SGameGraphicRaycaster/Item)
+   004E ldloca.s V_0
+   0050 ldloc.2 
+   0051 ldflda SGameGraphicRaycaster/Item::m_coord
+   0056 call System.Boolean SGameGraphicRaycaster/Coord::Equals(SGameGraphicRaycaster/Coord&)
+   005B brtrue IL_0075: ldloc.2
+   0060 ldarg.0 
+   0061 ldloc.2 
+   0062 call System.Void SGameGraphicRaycaster::RemoveFromTileList(SGameGraphicRaycaster/Item)
+   0067 ldloc.2 
+   0068 ldloc.0 
+   0069 stfld SGameGraphicRaycaster/Item::m_coord
+   006E ldarg.0 
+   006F ldloc.2 
+   0070 call System.Void SGameGraphicRaycaster::AddToTileList(SGameGraphicRaycaster/Item)
+   0075 ldloc.2 
+   0076 ldc.i4.0 
+   0077 stfld SGameGraphicRaycaster/Item::m_needUpdate
+   007C ldloca.s V_1
+   007E call System.Boolean DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::MoveNext()
+   0083 brtrue IL_0024: ldloca.s V_1
+   0088 ret 
+== System.Boolean IsInitialized() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::m_isInitialized
+   0006 ret 
+== System.Boolean IsUseSGameMode() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::raycastMode
+   0006 ldc.i4.1 
+   0007 beq IL_0017: ldc.i4.1
+   000C ldarg.0 
+   000D ldfld SGameGraphicRaycaster::raycastMode
+   0012 ldc.i4.2 
+   0013 ceq 
+   0015 br.s IL_0018: ret
+   0017 ldc.i4.1 
+   0018 ret 
+== System.Void Start() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.EventSystems.UIBehaviour::Start()
+   0006 ldarg.0 
+   0007 call System.Void SGameGraphicRaycaster::InitializeAllItems()
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E stfld SGameGraphicRaycaster::m_isInitialized
+   0013 ret 
+== System.Void InitializeAllItems() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::raycastMode
+   0006 ldc.i4.1 
+   0007 beq IL_0019: ldarg.0
+   000C ldarg.0 
+   000D ldfld SGameGraphicRaycaster::raycastMode
+   0012 ldc.i4.2 
+   0013 beq IL_0019: ldarg.0
+   0018 ret 
+   0019 ldarg.0 
+   001A ldfld SGameGraphicRaycaster::m_allItems
+   001F callvirt System.Void DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::Clear()
+   0024 ldarg.0 
+   0025 ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   002A callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::Clear()
+   002F ldsfld SGameGraphicRaycaster::s_tempImageList
+   0034 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Image>::Clear()
+   0039 ldarg.0 
+   003A call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003F ldc.i4.1 
+   0040 ldsfld SGameGraphicRaycaster::s_tempImageList
+   0045 callvirt System.Void UnityEngine.GameObject::GetComponentsInChildren<UnityEngine.UI.Image>(System.Boolean,System.Collections.Generic.List`1<!!0>)
+   004A ldc.i4.0 
+   004B stloc.0 
+   004C br IL_00aa: ldloc.0
+   0051 ldsfld SGameGraphicRaycaster::s_tempImageList
+   0056 ldloc.0 
+   0057 callvirt !0 System.Collections.Generic.List`1<UnityEngine.UI.Image>::get_Item(System.Int32)
+   005C stloc.1 
+   005D ldloc.1 
+   005E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0063 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0068 stloc.2 
+   0069 ldarg.0 
+   006A ldloc.1 
+   006B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0070 call System.Boolean SGameGraphicRaycaster::IsGameObjectHandleInput(UnityEngine.GameObject)
+   0075 brfalse IL_0099: ldarg.0
+   007A ldloc.1 
+   007B call SGameGraphicRaycaster/Item SGameGraphicRaycaster/Item::Create(UnityEngine.UI.Image)
+   0080 stloc.3 
+   0081 ldloc.3 
+   0082 brfalse IL_0094: br IL_00a6
+   0087 ldarg.0 
+   0088 ldfld SGameGraphicRaycaster::m_allItems
+   008D ldloc.2 
+   008E ldloc.3 
+   008F callvirt System.Void DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::Add(!0,!1)
+   0094 br IL_00a6: ldloc.0
+   0099 ldarg.0 
+   009A ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   009F ldloc.2 
+   00A0 ldc.i4.0 
+   00A1 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::Add(!0,!1)
+   00A6 ldloc.0 
+   00A7 ldc.i4.1 
+   00A8 add 
+   00A9 stloc.0 
+   00AA ldloc.0 
+   00AB ldsfld SGameGraphicRaycaster::s_tempImageList
+   00B0 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.UI.Image>::get_Count()
+   00B5 blt IL_0051: ldsfld System.Collections.Generic.List`1<UnityEngine.UI.Image> SGameGraphicRaycaster::s_tempImageList
+   00BA ldarg.0 
+   00BB ldfld SGameGraphicRaycaster::raycastMode
+   00C0 ldc.i4.2 
+   00C1 bne.un IL_0113: ldsfld System.Collections.Generic.List`1<UnityEngine.UI.Image> SGameGraphicRaycaster::s_tempImageList
+   00C6 ldarg.0 
+   00C7 call System.Void SGameGraphicRaycaster::InitTiles()
+   00CC ldarg.0 
+   00CD ldfld SGameGraphicRaycaster::m_allItems
+   00D2 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::GetEnumerator()
+   00D7 stloc.s V_4
+   00D9 br IL_0107: ldloca.s V_4
+   00DE ldloca.s V_4
+   00E0 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::get_Current()
+   00E5 stloc.s V_6
+   00E7 ldloca.s V_6
+   00E9 call !1 System.Collections.Generic.KeyValuePair`2<System.Int32,SGameGraphicRaycaster/Item>::get_Value()
+   00EE stloc.s V_5
+   00F0 ldarg.0 
+   00F1 ldloc.s V_5
+   00F3 ldflda SGameGraphicRaycaster/Item::m_coord
+   00F8 ldloc.s V_5
+   00FA call System.Void SGameGraphicRaycaster::CalcItemCoord(SGameGraphicRaycaster/Coord&,SGameGraphicRaycaster/Item)
+   00FF ldarg.0 
+   0100 ldloc.s V_5
+   0102 call System.Void SGameGraphicRaycaster::AddToTileList(SGameGraphicRaycaster/Item)
+   0107 ldloca.s V_4
+   0109 call System.Boolean DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::MoveNext()
+   010E brtrue IL_00de: ldloca.s V_4
+   0113 ldsfld SGameGraphicRaycaster::s_tempImageList
+   0118 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Image>::Clear()
+   011D ret 
+== System.Void RemoveGameObject(UnityEngine.GameObject go) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::m_isInitialized
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0013 brtrue IL_0023: ret
+   0018 ldarg.0 
+   0019 ldfld SGameGraphicRaycaster::m_allItems
+   001E brtrue IL_0024: ldarg.1
+   0023 ret 
+   0024 ldarg.1 
+   0025 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   002A stloc.0 
+   002B ldnull 
+   002C stloc.1 
+   002D ldarg.0 
+   002E ldfld SGameGraphicRaycaster::m_allItems
+   0033 ldloc.0 
+   0034 ldloca.s V_1
+   0036 callvirt System.Boolean DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::TryGetValue(!0,!1&)
+   003B brfalse IL_0065: ldarg.0
+   0040 ldarg.0 
+   0041 ldfld SGameGraphicRaycaster::raycastMode
+   0046 ldc.i4.2 
+   0047 bne.un IL_0053: ldarg.0
+   004C ldarg.0 
+   004D ldloc.1 
+   004E call System.Void SGameGraphicRaycaster::RemoveFromTileList(SGameGraphicRaycaster/Item)
+   0053 ldarg.0 
+   0054 ldfld SGameGraphicRaycaster::m_allItems
+   0059 ldloc.0 
+   005A callvirt System.Boolean DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::Remove(!0)
+   005F pop 
+   0060 br IL_0083: ldc.i4.0
+   0065 ldarg.0 
+   0066 ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   006B ldloc.0 
+   006C callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::ContainsKey(!0)
+   0071 brfalse IL_0083: ldc.i4.0
+   0076 ldarg.0 
+   0077 ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   007C ldloc.0 
+   007D callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::Remove(!0)
+   0082 pop 
+   0083 ldc.i4.0 
+   0084 stloc.2 
+   0085 br IL_00a5: ldloc.2
+   008A ldarg.0 
+   008B ldarg.1 
+   008C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0091 ldloc.2 
+   0092 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0097 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009C call System.Void SGameGraphicRaycaster::RemoveGameObject(UnityEngine.GameObject)
+   00A1 ldloc.2 
+   00A2 ldc.i4.1 
+   00A3 add 
+   00A4 stloc.2 
+   00A5 ldloc.2 
+   00A6 ldarg.1 
+   00A7 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00AC callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   00B1 blt IL_008a: ldarg.0
+   00B6 ret 
+== System.Void RefreshGameObject(UnityEngine.GameObject go) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SGameGraphicRaycaster::m_isInitialized
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld SGameGraphicRaycaster::raycastMode
+   0012 ldc.i4.1 
+   0013 beq IL_0025: ldarg.1
+   0018 ldarg.0 
+   0019 ldfld SGameGraphicRaycaster::raycastMode
+   001E ldc.i4.2 
+   001F beq IL_0025: ldarg.1
+   0024 ret 
+   0025 ldarg.1 
+   0026 ldnull 
+   0027 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002C brtrue IL_003c: ret
+   0031 ldarg.0 
+   0032 ldfld SGameGraphicRaycaster::m_allItems
+   0037 brtrue IL_003d: ldsfld System.Collections.Generic.List`1<UnityEngine.UI.Image> SGameGraphicRaycaster::s_tempImageList
+   003C ret 
+   003D ldsfld SGameGraphicRaycaster::s_tempImageList
+   0042 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Image>::Clear()
+   0047 ldarg.1 
+   0048 ldc.i4.1 
+   0049 ldsfld SGameGraphicRaycaster::s_tempImageList
+   004E callvirt System.Void UnityEngine.GameObject::GetComponentsInChildren<UnityEngine.UI.Image>(System.Boolean,System.Collections.Generic.List`1<!!0>)
+   0053 ldc.i4.0 
+   0054 stloc.0 
+   0055 br IL_00ec: ldloc.0
+   005A ldsfld SGameGraphicRaycaster::s_tempImageList
+   005F ldloc.0 
+   0060 callvirt !0 System.Collections.Generic.List`1<UnityEngine.UI.Image>::get_Item(System.Int32)
+   0065 stloc.1 
+   0066 ldloc.1 
+   0067 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   006C callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0071 stloc.2 
+   0072 ldnull 
+   0073 stloc.3 
+   0074 ldarg.0 
+   0075 ldfld SGameGraphicRaycaster::m_allItems
+   007A ldloc.2 
+   007B ldloca.s V_3
+   007D callvirt System.Boolean DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::TryGetValue(!0,!1&)
+   0082 brfalse IL_0093: ldarg.0
+   0087 ldloc.3 
+   0088 ldc.i4.1 
+   0089 stfld SGameGraphicRaycaster/Item::m_needUpdate
+   008E br IL_00e8: ldloc.0
+   0093 ldarg.0 
+   0094 ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   0099 ldloc.2 
+   009A callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::ContainsKey(!0)
+   009F brtrue IL_00e8: ldloc.0
+   00A4 ldarg.0 
+   00A5 ldloc.1 
+   00A6 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AB call System.Boolean SGameGraphicRaycaster::IsGameObjectHandleInput(UnityEngine.GameObject)
+   00B0 brfalse IL_00db: ldarg.0
+   00B5 ldloc.1 
+   00B6 call SGameGraphicRaycaster/Item SGameGraphicRaycaster/Item::Create(UnityEngine.UI.Image)
+   00BB stloc.3 
+   00BC ldloc.3 
+   00BD brfalse IL_00d6: br IL_00e8
+   00C2 ldloc.3 
+   00C3 ldc.i4.1 
+   00C4 stfld SGameGraphicRaycaster/Item::m_needUpdate
+   00C9 ldarg.0 
+   00CA ldfld SGameGraphicRaycaster::m_allItems
+   00CF ldloc.2 
+   00D0 ldloc.3 
+   00D1 callvirt System.Void DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::Add(!0,!1)
+   00D6 br IL_00e8: ldloc.0
+   00DB ldarg.0 
+   00DC ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   00E1 ldloc.2 
+   00E2 ldc.i4.0 
+   00E3 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::Add(!0,!1)
+   00E8 ldloc.0 
+   00E9 ldc.i4.1 
+   00EA add 
+   00EB stloc.0 
+   00EC ldloc.0 
+   00ED ldsfld SGameGraphicRaycaster::s_tempImageList
+   00F2 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.UI.Image>::get_Count()
+   00F7 blt IL_005a: ldsfld System.Collections.Generic.List`1<UnityEngine.UI.Image> SGameGraphicRaycaster::s_tempImageList
+   00FC ldarg.0 
+   00FD ldfld SGameGraphicRaycaster::raycastMode
+   0102 ldc.i4.2 
+   0103 bne.un IL_010f: ldsfld System.Collections.Generic.List`1<UnityEngine.UI.Image> SGameGraphicRaycaster::s_tempImageList
+   0108 ldarg.0 
+   0109 ldc.i4.0 
+   010A call System.Void SGameGraphicRaycaster::UpdateTiles(System.Boolean)
+   010F ldsfld SGameGraphicRaycaster::s_tempImageList
+   0114 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Image>::Clear()
+   0119 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.EventSystems.UIBehaviour::OnDestroy()
+   0006 ldarg.0 
+   0007 ldfld SGameGraphicRaycaster::m_allItems
+   000C callvirt System.Void DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::Clear()
+   0011 ldarg.0 
+   0012 ldfld SGameGraphicRaycaster::m_disableInputGameObjects
+   0017 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Byte>::Clear()
+   001C ldarg.0 
+   001D ldfld SGameGraphicRaycaster::m_RaycastResults
+   0022 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::Clear()
+   0027 ldarg.0 
+   0028 ldfld SGameGraphicRaycaster::m_tiles
+   002D brfalse IL_0064: ret
+   0032 ldc.i4.0 
+   0033 stloc.0 
+   0034 br IL_004f: ldloc.0
+   0039 ldarg.0 
+   003A ldfld SGameGraphicRaycaster::m_tiles
+   003F ldloc.0 
+   0040 ldelem.ref 
+   0041 ldfld SGameGraphicRaycaster/Tile::items
+   0046 callvirt System.Void ListViewBase::Clear()
+   004B ldloc.0 
+   004C ldc.i4.1 
+   004D add 
+   004E stloc.0 
+   004F ldloc.0 
+   0050 ldarg.0 
+   0051 ldfld SGameGraphicRaycaster::m_tiles
+   0056 ldlen 
+   0057 conv.i4 
+   0058 blt IL_0039: ldarg.0
+   005D ldarg.0 
+   005E ldnull 
+   005F stfld SGameGraphicRaycaster::m_tiles
+   0064 ret 
+== System.Void Raycast2(UnityEngine.EventSystems.PointerEventData eventData, System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult> resultAppendList, System.Boolean useTiles) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call UnityEngine.Canvas SGameGraphicRaycaster::get_canvas()
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 callvirt UnityEngine.Camera UnityEngine.EventSystems.BaseRaycaster::get_eventCamera()
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A ldnull 
+   001B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0020 brfalse IL_005b: ldloc.1
+   0025 ldloca.s V_0
+   0027 ldarg.1 
+   0028 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   002D stloc.2 
+   002E ldloca.s V_2
+   0030 ldfld UnityEngine.Vector2::x
+   0035 call System.Int32 UnityEngine.Screen::get_width()
+   003A conv.r4 
+   003B div 
+   003C ldarg.1 
+   003D callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0042 stloc.3 
+   0043 ldloca.s V_3
+   0045 ldfld UnityEngine.Vector2::y
+   004A call System.Int32 UnityEngine.Screen::get_height()
+   004F conv.r4 
+   0050 div 
+   0051 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0056 br IL_0072: ldloca.s V_0
+   005B ldloc.1 
+   005C ldarg.1 
+   005D callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0062 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0067 callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToViewportPoint(UnityEngine.Vector3)
+   006C call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   0071 stloc.0 
+   0072 ldloca.s V_0
+   0074 ldfld UnityEngine.Vector2::x
+   0079 ldc.r4 0
+   007E blt IL_00b6: ret
+   0083 ldloca.s V_0
+   0085 ldfld UnityEngine.Vector2::x
+   008A ldc.r4 1
+   008F bgt IL_00b6: ret
+   0094 ldloca.s V_0
+   0096 ldfld UnityEngine.Vector2::y
+   009B ldc.r4 0
+   00A0 blt IL_00b6: ret
+   00A5 ldloca.s V_0
+   00A7 ldfld UnityEngine.Vector2::y
+   00AC ldc.r4 1
+   00B1 ble.un IL_00b7: ldc.r4 3.4028235E+38
+   00B6 ret 
+   00B7 ldc.r4 3.4028235E+38
+   00BC stloc.s V_4
+   00BE ldloca.s V_5
+   00C0 initobj UnityEngine.Ray
+   00C6 ldloc.1 
+   00C7 ldnull 
+   00C8 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00CD brfalse IL_00e5: ldarg.0
+   00D2 ldloc.1 
+   00D3 ldarg.1 
+   00D4 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   00D9 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   00DE callvirt UnityEngine.Ray UnityEngine.Camera::ScreenPointToRay(UnityEngine.Vector3)
+   00E3 stloc.s V_5
+   00E5 ldarg.0 
+   00E6 ldfld SGameGraphicRaycaster::m_RaycastResults
+   00EB callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::Clear()
+   00F0 ldarg.1 
+   00F1 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   00F6 stloc.s V_6
+   00F8 ldarg.3 
+   00F9 brfalse IL_018a: ldarg.0
+   00FE ldarg.0 
+   00FF ldfld SGameGraphicRaycaster::m_tiles
+   0104 brfalse IL_018a: ldarg.0
+   0109 ldloca.s V_6
+   010B ldfld UnityEngine.Vector2::x
+   0110 conv.i4 
+   0111 ldarg.0 
+   0112 ldfld SGameGraphicRaycaster::m_tileSizeX
+   0117 div 
+   0118 ldc.i4.0 
+   0119 ldc.i4.3 
+   011A call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   011F stloc.s V_7
+   0121 ldloca.s V_6
+   0123 ldfld UnityEngine.Vector2::y
+   0128 conv.i4 
+   0129 ldarg.0 
+   012A ldfld SGameGraphicRaycaster::m_tileSizeY
+   012F div 
+   0130 ldc.i4.0 
+   0131 ldc.i4.3 
+   0132 call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   0137 stloc.s V_8
+   0139 ldloc.s V_8
+   013B ldc.i4.4 
+   013C mul 
+   013D ldloc.s V_7
+   013F add 
+   0140 stloc.s V_9
+   0142 ldarg.0 
+   0143 ldfld SGameGraphicRaycaster::m_tiles
+   0148 ldloc.s V_9
+   014A ldelem.ref 
+   014B ldfld SGameGraphicRaycaster/Tile::items
+   0150 stloc.s V_10
+   0152 ldc.i4.0 
+   0153 stloc.s V_11
+   0155 br IL_0177: ldloc.s V_11
+   015A ldloc.s V_10
+   015C ldloc.s V_11
+   015E callvirt !0 ListView`1<SGameGraphicRaycaster/Item>::get_Item(System.Int32)
+   0163 ldarg.0 
+   0164 ldfld SGameGraphicRaycaster::m_RaycastResults
+   0169 ldloc.s V_6
+   016B ldloc.1 
+   016C callvirt System.Void SGameGraphicRaycaster/Item::Raycast(System.Collections.Generic.List`1<UnityEngine.UI.Graphic>,UnityEngine.Vector2,UnityEngine.Camera)
+   0171 ldloc.s V_11
+   0173 ldc.i4.1 
+   0174 add 
+   0175 stloc.s V_11
+   0177 ldloc.s V_11
+   0179 ldloc.s V_10
+   017B callvirt System.Int32 ListViewBase::get_Count()
+   0180 blt IL_015a: ldloc.s V_10
+   0185 br IL_01c6: ldarg.0
+   018A ldarg.0 
+   018B ldfld SGameGraphicRaycaster::m_allItems
+   0190 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.Int32,SGameGraphicRaycaster/Item>::GetEnumerator()
+   0195 stloc.s V_12
+   0197 br IL_01ba: ldloca.s V_12
+   019C ldloca.s V_12
+   019E call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::get_Current()
+   01A3 stloc.s V_13
+   01A5 ldloca.s V_13
+   01A7 call !1 System.Collections.Generic.KeyValuePair`2<System.Int32,SGameGraphicRaycaster/Item>::get_Value()
+   01AC ldarg.0 
+   01AD ldfld SGameGraphicRaycaster::m_RaycastResults
+   01B2 ldloc.s V_6
+   01B4 ldloc.1 
+   01B5 callvirt System.Void SGameGraphicRaycaster/Item::Raycast(System.Collections.Generic.List`1<UnityEngine.UI.Graphic>,UnityEngine.Vector2,UnityEngine.Camera)
+   01BA ldloca.s V_12
+   01BC call System.Boolean DictionaryView`2/Enumerator<System.Int32,SGameGraphicRaycaster/Item>::MoveNext()
+   01C1 brtrue IL_019c: ldloca.s V_12
+   01C6 ldarg.0 
+   01C7 ldfld SGameGraphicRaycaster::m_RaycastResults
+   01CC ldsfld SGameGraphicRaycaster::<>f__am$cache0
+   01D1 brtrue.s IL_01e4: ldsfld System.Comparison`1<UnityEngine.UI.Graphic> SGameGraphicRaycaster::<>f__am$cache0
+   01D3 ldnull 
+   01D4 ldftn System.Int32 SGameGraphicRaycaster::<Raycast2>m__0(UnityEngine.UI.Graphic,UnityEngine.UI.Graphic)
+   01DA newobj System.Void System.Comparison`1<UnityEngine.UI.Graphic>::.ctor(System.Object,System.IntPtr)
+   01DF stsfld SGameGraphicRaycaster::<>f__am$cache0
+   01E4 ldsfld SGameGraphicRaycaster::<>f__am$cache0
+   01E9 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::Sort(System.Comparison`1<!0>)
+   01EE ldarg.0 
+   01EF ldloca.s V_5
+   01F1 ldloc.s V_4
+   01F3 ldarg.2 
+   01F4 ldarg.0 
+   01F5 ldfld SGameGraphicRaycaster::m_RaycastResults
+   01FA call System.Void SGameGraphicRaycaster::AppendResultList(UnityEngine.Ray&,System.Single,System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>,System.Collections.Generic.List`1<UnityEngine.UI.Graphic>)
+   01FF ret 
+== System.Boolean IsGameObjectHandleInput(UnityEngine.GameObject go) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_00a1: ldc.i4.1
+   0011 ldarg.1 
+   0012 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIMiniEventScript>()
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001D brtrue IL_00a1: ldc.i4.1
+   0022 ldarg.1 
+   0023 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIMiniEventWithDragScript>()
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brtrue IL_00a1: ldc.i4.1
+   0033 ldarg.1 
+   0034 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIToggleEventScript>()
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003F brtrue IL_00a1: ldc.i4.1
+   0044 ldarg.1 
+   0045 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIJoystickScript>()
+   004A ldnull 
+   004B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0050 brtrue IL_00a1: ldc.i4.1
+   0055 ldarg.1 
+   0056 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUISliderEventScript>()
+   005B ldnull 
+   005C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0061 brtrue IL_00a1: ldc.i4.1
+   0066 ldarg.1 
+   0067 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.InputField>()
+   006C ldnull 
+   006D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0072 brtrue IL_00a1: ldc.i4.1
+   0077 ldarg.0 
+   0078 ldfld SGameGraphicRaycaster::ignoreScrollRect
+   007D brtrue IL_0093: ldarg.1
+   0082 ldarg.1 
+   0083 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.ScrollRect>()
+   0088 ldnull 
+   0089 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008E brtrue IL_00a1: ldc.i4.1
+   0093 ldarg.1 
+   0094 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScriptWithDragAndDrop>()
+   0099 ldnull 
+   009A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   009F br.s IL_00a2: ret
+   00A1 ldc.i4.1 
+   00A2 ret 
+== System.Void AppendResultList(UnityEngine.Ray& ray, System.Single hitDistance, System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult> resultAppendList, System.Collections.Generic.List`1<UnityEngine.UI.Graphic> raycastResults) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_01b3: ldloc.0
+   0007 ldarg.s raycastResults
+   0009 ldloc.0 
+   000A callvirt !0 System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::get_Item(System.Int32)
+   000F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0014 stloc.1 
+   0015 ldc.i4.1 
+   0016 stloc.2 
+   0017 ldarg.0 
+   0018 call System.Boolean UnityEngine.UI.GraphicRaycaster::get_ignoreReversedGraphics()
+   001D brfalse IL_00a5: ldloc.2
+   0022 ldarg.0 
+   0023 callvirt UnityEngine.Camera UnityEngine.EventSystems.BaseRaycaster::get_eventCamera()
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0061: ldarg.0
+   0033 ldloc.1 
+   0034 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0039 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   003E call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   0043 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   0048 stloc.3 
+   0049 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   004E ldloc.3 
+   004F call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0054 ldc.r4 0
+   0059 cgt 
+   005B stloc.2 
+   005C br IL_00a5: ldloc.2
+   0061 ldarg.0 
+   0062 callvirt UnityEngine.Camera UnityEngine.EventSystems.BaseRaycaster::get_eventCamera()
+   0067 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   006C callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0071 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   0076 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   007B stloc.s V_4
+   007D ldloc.1 
+   007E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0083 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0088 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   008D call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   0092 stloc.s V_5
+   0094 ldloc.s V_4
+   0096 ldloc.s V_5
+   0098 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   009D ldc.r4 0
+   00A2 cgt 
+   00A4 stloc.2 
+   00A5 ldloc.2 
+   00A6 brfalse IL_01af: ldloc.0
+   00AB ldc.r4 0
+   00B0 stloc.s V_6
+   00B2 ldarg.0 
+   00B3 callvirt UnityEngine.Camera UnityEngine.EventSystems.BaseRaycaster::get_eventCamera()
+   00B8 ldnull 
+   00B9 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00BE brtrue IL_00d3: ldc.r4 0
+   00C3 ldarg.0 
+   00C4 call UnityEngine.Canvas SGameGraphicRaycaster::get_canvas()
+   00C9 callvirt UnityEngine.RenderMode UnityEngine.Canvas::get_renderMode()
+   00CE brtrue IL_00df: ldloc.1
+   00D3 ldc.r4 0
+   00D8 stloc.s V_6
+   00DA br IL_012f: ldloc.s V_6
+   00DF ldloc.1 
+   00E0 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00E5 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   00EA ldloc.1 
+   00EB callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00F0 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00F5 ldarg.1 
+   00F6 call UnityEngine.Vector3 UnityEngine.Ray::get_origin()
+   00FB call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0100 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   0105 ldloc.1 
+   0106 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   010B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   0110 ldarg.1 
+   0111 call UnityEngine.Vector3 UnityEngine.Ray::get_direction()
+   0116 call System.Single UnityEngine.Vector3::Dot(UnityEngine.Vector3,UnityEngine.Vector3)
+   011B div 
+   011C stloc.s V_6
+   011E ldloc.s V_6
+   0120 ldc.r4 0
+   0125 bge.un IL_012f: ldloc.s V_6
+   012A br IL_01af: ldloc.0
+   012F ldloc.s V_6
+   0131 ldarg.2 
+   0132 blt.un IL_013c: ldloca.s V_8
+   0137 br IL_01af: ldloc.0
+   013C ldloca.s V_8
+   013E initobj UnityEngine.EventSystems.RaycastResult
+   0144 ldloca.s V_8
+   0146 ldloc.1 
+   0147 call System.Void UnityEngine.EventSystems.RaycastResult::set_gameObject(UnityEngine.GameObject)
+   014C ldloca.s V_8
+   014E ldarg.0 
+   014F stfld UnityEngine.EventSystems.RaycastResult::module
+   0154 ldloca.s V_8
+   0156 ldloc.s V_6
+   0158 stfld UnityEngine.EventSystems.RaycastResult::distance
+   015D ldloca.s V_8
+   015F ldarg.3 
+   0160 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>::get_Count()
+   0165 conv.r4 
+   0166 stfld UnityEngine.EventSystems.RaycastResult::index
+   016B ldloca.s V_8
+   016D ldarg.s raycastResults
+   016F ldloc.0 
+   0170 callvirt !0 System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::get_Item(System.Int32)
+   0175 callvirt System.Int32 UnityEngine.UI.Graphic::get_depth()
+   017A stfld UnityEngine.EventSystems.RaycastResult::depth
+   017F ldloca.s V_8
+   0181 ldarg.0 
+   0182 call UnityEngine.Canvas SGameGraphicRaycaster::get_canvas()
+   0187 callvirt System.Int32 UnityEngine.Canvas::get_sortingLayerID()
+   018C stfld UnityEngine.EventSystems.RaycastResult::sortingLayer
+   0191 ldloca.s V_8
+   0193 ldarg.0 
+   0194 call UnityEngine.Canvas SGameGraphicRaycaster::get_canvas()
+   0199 callvirt System.Int32 UnityEngine.Canvas::get_sortingOrder()
+   019E stfld UnityEngine.EventSystems.RaycastResult::sortingOrder
+   01A3 ldloc.s V_8
+   01A5 stloc.s V_7
+   01A7 ldarg.3 
+   01A8 ldloc.s V_7
+   01AA callvirt System.Void System.Collections.Generic.List`1<UnityEngine.EventSystems.RaycastResult>::Add(!0)
+   01AF ldloc.0 
+   01B0 ldc.i4.1 
+   01B1 add 
+   01B2 stloc.0 
+   01B3 ldloc.0 
+   01B4 ldarg.s raycastResults
+   01B6 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.UI.Graphic>::get_Count()
+   01BB blt IL_0007: ldarg.s raycastResults
+   01C0 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void System.Collections.Generic.List`1<UnityEngine.UI.Image>::.ctor()
+   0005 stsfld SGameGraphicRaycaster::s_tempImageList
+   000A ret 
+== System.Int32 <Raycast2>m__0(UnityEngine.UI.Graphic g1, UnityEngine.UI.Graphic g2) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.Int32 UnityEngine.UI.Graphic::get_depth()
+   0006 stloc.0 
+   0007 ldloca.s V_0
+   0009 ldarg.0 
+   000A callvirt System.Int32 UnityEngine.UI.Graphic::get_depth()
+   000F call System.Int32 System.Int32::CompareTo(System.Int32)
+   0014 ret 
+  NESTED SGameGraphicRaycaster/RaycastMode
+  NESTED SGameGraphicRaycaster/Coord
+  NESTED SGameGraphicRaycaster/Item
+  NESTED SGameGraphicRaycaster/Tile

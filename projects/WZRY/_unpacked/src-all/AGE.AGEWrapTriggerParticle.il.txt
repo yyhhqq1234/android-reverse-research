@@ -1,0 +1,1158 @@
+// TYPE AGE.AGEWrapTriggerParticle  base=AGE.AGEWrapBase  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Vector3 offsetPosition
+  FIELD UnityEngine.Transform followTransform
+  FIELD UnityEngine.Transform vehicleTransform
+  FIELD System.Boolean bOnlyFollowPos
+  FIELD CPooledGameObjectScript particleObject
+  FIELD System.UInt32 m_particleObjectID
+  FIELD UnityEngine.Transform particleTransform
+  FIELD System.Int32 particleScaleGrow
+  FIELD UnityEngine.ParticleSystem[] particleSystem
+  FIELD System.Single[] particleSystemSize
+  FIELD UnityEngine.MeshRenderer[] particleMeshRender
+  FIELD UnityEngine.Vector3[] particleMeshRenderScale
+  FIELD System.Boolean bDelayDisappear
+  FIELD System.Boolean bPartyDelayDisppear
+  FIELD System.Boolean bAffectedByParentLogic
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_parentActor
+  FIELD UnityEngine.ParticleSystem/Particle[] _dynamicSizeParticles
+  FIELD System.UInt32 MAX_DYNAMIC_PARTICLES = 5
+  FIELD System.Single dynamicScale
+  FIELD System.UInt32 particleDuration
+  FIELD System.Single lastScale
+  FIELD System.UInt32 MinForceCreateDuration = 2000
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 stfld AGE.AGEWrapTriggerParticle::lastScale
+   000B ldarg.0 
+   000C call System.Void AGE.AGEWrapBase::.ctor()
+   0011 ret 
+== System.Void Init(System.UInt32 particleObjectID, SGW/AgeTriggerParticleInfo info) attrs=Public, HideBySig maxstack=9
+   0000 ldsfld CheatCommandCommonEntry::PARTICLE_ENABLE
+   0005 brtrue IL_000b: ldarg.0
+   000A ret 
+   000B ldarg.0 
+   000C ldarg.1 
+   000D stfld AGE.AGEWrapTriggerParticle::m_particleObjectID
+   0012 ldarg.0 
+   0013 ldarga.s info
+   0015 call System.Boolean SGW/AgeTriggerParticleInfo::get_bDelayDisappear()
+   001A stfld AGE.AGEWrapTriggerParticle::bDelayDisappear
+   001F ldarg.0 
+   0020 ldarga.s info
+   0022 call System.Boolean SGW/AgeTriggerParticleInfo::get_bPartyDelayDisppear()
+   0027 stfld AGE.AGEWrapTriggerParticle::bPartyDelayDisppear
+   002C ldarg.0 
+   002D ldarga.s info
+   002F call System.Boolean SGW/AgeTriggerParticleInfo::get_bAffectedByParentLogic()
+   0034 stfld AGE.AGEWrapTriggerParticle::bAffectedByParentLogic
+   0039 ldarga.s info
+   003B ldfld SGW/AgeTriggerParticleInfo::bindPosOffset
+   0040 stloc.0 
+   0041 ldarga.s info
+   0043 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   0048 stloc.1 
+   0049 call !0 Singleton`1<UnityObjMgr>::get_instance()
+   004E ldarga.s info
+   0050 ldfld SGW/AgeTriggerParticleInfo::targetObjectVirtualID
+   0055 callvirt UnityEngine.GameObject UnityObjMgr::GetGameObject(System.UInt32)
+   005A stloc.2 
+   005B call !0 Singleton`1<UnityObjMgr>::get_instance()
+   0060 ldarga.s info
+   0062 ldfld SGW/AgeTriggerParticleInfo::objectSpaceVirtualID
+   0067 callvirt UnityEngine.GameObject UnityObjMgr::GetGameObject(System.UInt32)
+   006C stloc.3 
+   006D call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   0072 ldarga.s info
+   0074 ldfld SGW/AgeTriggerParticleInfo::vehicleObjId
+   0079 ldc.i4.0 
+   007A callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   007F stloc.s V_4
+   0081 ldnull 
+   0082 stloc.s V_5
+   0084 ldnull 
+   0085 stloc.s V_6
+   0087 ldarg.0 
+   0088 ldarga.s info
+   008A ldfld SGW/AgeTriggerParticleInfo::particleDuration
+   008F stfld AGE.AGEWrapTriggerParticle::particleDuration
+   0094 ldarg.0 
+   0095 ldarga.s info
+   0097 ldfld SGW/AgeTriggerParticleInfo::dynamicScale
+   009C stfld AGE.AGEWrapTriggerParticle::dynamicScale
+   00A1 ldarg.0 
+   00A2 ldarga.s info
+   00A4 call System.Boolean SGW/AgeTriggerParticleInfo::get_bOnlyFollowPos()
+   00A9 stfld AGE.AGEWrapTriggerParticle::bOnlyFollowPos
+   00AE ldarg.0 
+   00AF ldfld AGE.AGEWrapTriggerParticle::dynamicScale
+   00B4 ldc.r4 1
+   00B9 beq IL_00cb: ldarga.s info
+   00BE ldarg.0 
+   00BF ldc.i4.5 
+   00C0 conv.u 
+   00C1 newarr UnityEngine.ParticleSystem/Particle
+   00C6 stfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   00CB ldarga.s info
+   00CD ldflda SGW/AgeTriggerParticleInfo::bindPointName
+   00D2 constrained. StringId
+   00D8 callvirt System.String System.Object::ToString()
+   00DD call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00E2 brfalse IL_0121: ldnull
+   00E7 ldloc.2 
+   00E8 ldnull 
+   00E9 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00EE brfalse IL_0108: ldloc.3
+   00F3 ldloc.2 
+   00F4 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00F9 stloc.s V_5
+   00FB ldarg.0 
+   00FC ldloc.s V_5
+   00FE stfld AGE.AGEWrapTriggerParticle::followTransform
+   0103 br IL_011c: br IL_01c5
+   0108 ldloc.3 
+   0109 ldnull 
+   010A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   010F brfalse IL_011c: br IL_01c5
+   0114 ldloc.3 
+   0115 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   011A stloc.s V_6
+   011C br IL_01c5: ldarga.s info
+   0121 ldnull 
+   0122 stloc.s V_7
+   0124 ldloc.2 
+   0125 ldnull 
+   0126 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   012B brfalse IL_017d: ldloc.3
+   0130 ldloc.2 
+   0131 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0136 ldarga.s info
+   0138 ldfld SGW/AgeTriggerParticleInfo::bindPointName
+   013D call System.String StringId::op_Implicit(StringId)
+   0142 call UnityEngine.GameObject AGE.SubObject::FindSubObject(UnityEngine.Transform,System.String)
+   0147 stloc.s V_7
+   0149 ldloc.s V_7
+   014B ldnull 
+   014C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0151 brfalse IL_0164: ldloc.2
+   0156 ldloc.s V_7
+   0158 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   015D stloc.s V_5
+   015F br IL_0178: br IL_01c5
+   0164 ldloc.2 
+   0165 ldnull 
+   0166 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   016B brfalse IL_0178: br IL_01c5
+   0170 ldloc.2 
+   0171 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0176 stloc.s V_5
+   0178 br IL_01c5: ldarga.s info
+   017D ldloc.3 
+   017E ldnull 
+   017F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0184 brfalse IL_01c5: ldarga.s info
+   0189 ldloc.3 
+   018A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   018F ldarga.s info
+   0191 ldfld SGW/AgeTriggerParticleInfo::bindPointName
+   0196 call System.String StringId::op_Implicit(StringId)
+   019B call UnityEngine.GameObject AGE.SubObject::FindSubObject(UnityEngine.Transform,System.String)
+   01A0 stloc.s V_7
+   01A2 ldloc.s V_7
+   01A4 ldnull 
+   01A5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01AA brfalse IL_01bd: ldloc.3
+   01AF ldloc.s V_7
+   01B1 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01B6 stloc.s V_6
+   01B8 br IL_01c5: ldarga.s info
+   01BD ldloc.3 
+   01BE callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01C3 stloc.s V_6
+   01C5 ldarga.s info
+   01C7 call System.Boolean SGW/AgeTriggerParticleInfo::get_bEnableOptCull()
+   01CC brfalse IL_0203: ldarga.s info
+   01D1 ldloc.s V_6
+   01D3 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   01D8 brfalse IL_0203: ldarga.s info
+   01DD ldloc.s V_6
+   01DF callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01E4 callvirt System.Int32 UnityEngine.GameObject::get_layer()
+   01E9 ldstr Hide
+   01EE call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   01F3 bne.un IL_0203: ldarga.s info
+   01F8 call System.Boolean FogOfWar::get_enable()
+   01FD brtrue IL_0203: ldarga.s info
+   0202 ret 
+   0203 ldarga.s info
+   0205 call System.Boolean SGW/AgeTriggerParticleInfo::get_bBulletPos()
+   020A brfalse IL_0255: ldloc.s V_5
+   020F ldarga.s info
+   0211 ldfld SGW/AgeTriggerParticleInfo::bindPosOffset
+   0216 stloc.0 
+   0217 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   021C stloc.1 
+   021D ldarga.s info
+   021F call System.Boolean SGW/AgeTriggerParticleInfo::get_bBulletDir()
+   0224 brfalse IL_0250: br IL_036d
+   0229 ldarga.s info
+   022B ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   0230 stloc.s V_8
+   0232 ldloc.s V_8
+   0234 ldsfld VInt3::zero
+   0239 call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   023E brfalse IL_0250: br IL_036d
+   0243 ldloc.s V_8
+   0245 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   024A call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   024F stloc.1 
+   0250 br IL_036d: ldarga.s info
+   0255 ldloc.s V_5
+   0257 ldnull 
+   0258 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   025D brfalse IL_0293: ldloc.s V_6
+   0262 ldloc.s V_5
+   0264 callvirt UnityEngine.Matrix4x4 UnityEngine.Transform::get_localToWorldMatrix()
+   0269 stloc.s V_9
+   026B ldloca.s V_9
+   026D ldarga.s info
+   026F ldfld SGW/AgeTriggerParticleInfo::bindPosOffset
+   0274 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   0279 stloc.0 
+   027A ldloc.s V_5
+   027C callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0281 ldarga.s info
+   0283 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   0288 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   028D stloc.1 
+   028E br IL_036d: ldarga.s info
+   0293 ldloc.s V_6
+   0295 ldnull 
+   0296 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   029B brfalse IL_036d: ldarga.s info
+   02A0 ldloc.3 
+   02A1 ldnull 
+   02A2 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   02A7 brfalse IL_02f4: ldloc.s V_6
+   02AC ldarga.s info
+   02AE ldfld SGW/AgeTriggerParticleInfo::bindPosOffset
+   02B3 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   02B8 ldarga.s info
+   02BA ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   02BF ldarga.s info
+   02C1 ldfld SGW/AgeTriggerParticleInfo::actorLocation
+   02C6 call VInt3 IntMath::Transform(VInt3,VInt3,VInt3)
+   02CB call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   02D0 stloc.0 
+   02D1 ldarga.s info
+   02D3 ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   02D8 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   02DD call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   02E2 ldarga.s info
+   02E4 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   02E9 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   02EE stloc.1 
+   02EF br IL_0320: ldarga.s info
+   02F4 ldloc.s V_6
+   02F6 callvirt UnityEngine.Matrix4x4 UnityEngine.Transform::get_localToWorldMatrix()
+   02FB stloc.s V_10
+   02FD ldloca.s V_10
+   02FF ldarga.s info
+   0301 ldfld SGW/AgeTriggerParticleInfo::bindPosOffset
+   0306 call UnityEngine.Vector3 UnityEngine.Matrix4x4::MultiplyPoint(UnityEngine.Vector3)
+   030B stloc.0 
+   030C ldloc.s V_6
+   030E callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0313 ldarga.s info
+   0315 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   031A call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   031F stloc.1 
+   0320 ldarga.s info
+   0322 call System.Boolean SGW/AgeTriggerParticleInfo::get_bBulletDir()
+   0327 brtrue IL_0338: ldarga.s info
+   032C ldarga.s info
+   032E call System.Boolean SGW/AgeTriggerParticleInfo::get_bBullerPosDir()
+   0333 brfalse IL_036d: ldarga.s info
+   0338 ldarga.s info
+   033A ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   033F stloc.s V_11
+   0341 ldloc.s V_11
+   0343 ldsfld VInt3::zero
+   0348 call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   034D brfalse IL_036d: ldarga.s info
+   0352 ldloc.s V_11
+   0354 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   0359 call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   035E stloc.1 
+   035F ldloc.1 
+   0360 ldarga.s info
+   0362 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   0367 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   036C stloc.1 
+   036D ldarga.s info
+   036F call System.Boolean SGW/AgeTriggerParticleInfo::get_bUseIndicatorDir()
+   0374 brfalse IL_03ae: ldarga.s info
+   0379 ldarga.s info
+   037B ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   0380 stloc.s V_12
+   0382 ldloc.s V_12
+   0384 ldsfld VInt3::zero
+   0389 call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   038E brfalse IL_03ae: ldarga.s info
+   0393 ldloc.s V_12
+   0395 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   039A call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   039F stloc.1 
+   03A0 ldloc.1 
+   03A1 ldarga.s info
+   03A3 ldfld SGW/AgeTriggerParticleInfo::bindRotOffset
+   03A8 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   03AD stloc.1 
+   03AE ldarga.s info
+   03B0 call System.Boolean SGW/AgeTriggerParticleInfo::get_bEnableOptCull()
+   03B5 brfalse IL_0410: call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   03BA call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   03BF ldfld GlobalConfig::bEnableParticleCullOptimize
+   03C4 brfalse IL_0410: call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   03C9 ldarga.s info
+   03CB ldfld SGW/AgeTriggerParticleInfo::particleDuration
+   03D0 ldc.i4 2000
+   03D5 bge.un IL_0410: call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   03DA call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   03DF ldloc.0 
+   03E0 ldarga.s info
+   03E2 ldfld SGW/AgeTriggerParticleInfo::extend
+   03E7 conv.r.un 
+   03E8 conv.r4 
+   03E9 ldarga.s info
+   03EB ldfld SGW/AgeTriggerParticleInfo::extend
+   03F0 conv.r.un 
+   03F1 conv.r4 
+   03F2 ldarga.s info
+   03F4 ldfld SGW/AgeTriggerParticleInfo::extend
+   03F9 conv.r.un 
+   03FA conv.r4 
+   03FB newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0400 newobj System.Void UnityEngine.Bounds::.ctor(UnityEngine.Vector3,UnityEngine.Vector3)
+   0405 callvirt System.Boolean CameraSystem::CheckVisiblity(UnityEngine.Bounds)
+   040A brtrue IL_0410: call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   040F ret 
+   0410 call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   0415 stloc.s V_13
+   0417 ldloc.s V_13
+   0419 ldarga.s info
+   041B ldfld SGW/AgeTriggerParticleInfo::resourceName
+   0420 callvirt System.Boolean ParticleCullManager::CanAdd(StringId)
+   0425 stloc.s V_14
+   0427 ldloc.s V_14
+   0429 brtrue IL_042f: ldarga.s info
+   042E ret 
+   042F ldarga.s info
+   0431 call System.Boolean SGW/AgeTriggerParticleInfo::get_bOnlyFollowPos()
+   0436 brfalse IL_0462: ldc.i4.0
+   043B ldarga.s info
+   043D ldfld SGW/AgeTriggerParticleInfo::virtualParent_supperDir
+   0442 stloc.s V_15
+   0444 ldloc.s V_15
+   0446 ldsfld VInt3::zero
+   044B call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   0450 brfalse IL_0462: ldc.i4.0
+   0455 ldloc.s V_15
+   0457 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   045C call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   0461 stloc.1 
+   0462 ldc.i4.0 
+   0463 stloc.s V_16
+   0465 ldarg.0 
+   0466 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   046B ldarga.s info
+   046D ldfld SGW/AgeTriggerParticleInfo::resourceName
+   0472 call System.String StringId::op_Implicit(StringId)
+   0477 ldc.i4.1 
+   0478 ldc.i4.s 10
+   047A ldloc.0 
+   047B ldloc.1 
+   047C ldloca.s V_16
+   047E ldarga.s info
+   0480 ldfld SGW/AgeTriggerParticleInfo::reserveResourceName
+   0485 call System.String StringId::op_Implicit(StringId)
+   048A callvirt CPooledGameObjectScript SceneMgr::GetPooledGameObj(System.String,System.Boolean,SceneObjType,UnityEngine.Vector3,UnityEngine.Quaternion,System.Boolean&,System.String)
+   048F stfld AGE.AGEWrapTriggerParticle::particleObject
+   0494 ldarg.0 
+   0495 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   049A brtrue IL_04a0: ldc.i4.0
+   049F ret 
+   04A0 ldc.i4.0 
+   04A1 stloc.s V_17
+   04A3 ldloc.s V_5
+   04A5 ldnull 
+   04A6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   04AB brfalse IL_05cd: ldloc.s V_17
+   04B0 ldarga.s info
+   04B2 call System.Boolean SGW/AgeTriggerParticleInfo::get_bOnlyFollowPos()
+   04B7 brtrue IL_0587: ldarg.0
+   04BC ldarg.0 
+   04BD ldfld AGE.AGEWrapTriggerParticle::particleObject
+   04C2 ldfld CPooledGameObjectScript::Trans
+   04C7 ldloc.s V_5
+   04C9 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   04CE ldc.i4.1 
+   04CF stloc.s V_17
+   04D1 ldarga.s info
+   04D3 ldfld SGW/AgeTriggerParticleInfo::targetActorObjId
+   04D8 brfalse IL_0582: br IL_059a
+   04DD ldarg.0 
+   04DE call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   04E3 ldarga.s info
+   04E5 ldfld SGW/AgeTriggerParticleInfo::targetActorObjId
+   04EA ldc.i4.1 
+   04EB callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   04F0 stfld AGE.AGEWrapTriggerParticle::m_parentActor
+   04F5 ldarg.0 
+   04F6 ldfld AGE.AGEWrapTriggerParticle::m_parentActor
+   04FB call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0500 brfalse IL_0582: br IL_059a
+   0505 ldarg.0 
+   0506 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   050B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0510 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0515 ldc.i4.5 
+   0516 bne.un IL_0536: ldarg.0
+   051B ldarg.0 
+   051C ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   0521 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0526 ldarg.0 
+   0527 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   052C callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::AddSubMeshList(CPooledGameObjectScript)
+   0531 br IL_0561: ldarg.0
+   0536 ldarg.0 
+   0537 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   053C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0541 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0546 brtrue IL_0561: ldarg.0
+   054B ldarg.0 
+   054C ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   0551 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0556 ldarg.0 
+   0557 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   055C callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::AddParticleSystemList(CPooledGameObjectScript)
+   0561 ldarg.0 
+   0562 ldfld AGE.AGEWrapTriggerParticle::bAffectedByParentLogic
+   0567 brfalse IL_0582: br IL_059a
+   056C ldarg.0 
+   056D ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   0572 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0577 ldarg.0 
+   0578 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   057D callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::AddLogicParticleSystemList(CPooledGameObjectScript)
+   0582 br IL_059a: ldarga.s info
+   0587 ldarg.0 
+   0588 ldloc.0 
+   0589 ldloc.s V_5
+   058B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0590 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0595 stfld AGE.AGEWrapTriggerParticle::offsetPosition
+   059A ldarga.s info
+   059C call System.Boolean SGW/AgeTriggerParticleInfo::get_bDirNotFollowedByParent()
+   05A1 brfalse IL_05cd: ldloc.s V_17
+   05A6 ldarg.0 
+   05A7 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   05AC ldfld CPooledGameObjectScript::Trans
+   05B1 callvirt !!0 UnityEngine.Component::GetComponent<RotateInWorldSpace>()
+   05B6 stloc.s V_18
+   05B8 ldloc.s V_18
+   05BA ldnull 
+   05BB call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   05C0 brfalse IL_05cd: ldloc.s V_17
+   05C5 ldloc.s V_18
+   05C7 ldloc.1 
+   05C8 callvirt System.Void RotateInWorldSpace::SetRotateQuaternion(UnityEngine.Quaternion)
+   05CD ldloc.s V_17
+   05CF brtrue IL_060e: ldarg.0
+   05D4 ldloc.s V_4
+   05D6 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   05DB brfalse IL_060e: ldarg.0
+   05E0 ldarg.0 
+   05E1 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   05E6 ldfld CPooledGameObjectScript::Trans
+   05EB ldloca.s V_4
+   05ED call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   05F2 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   05F7 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   05FC ldloca.s V_4
+   05FE call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0603 ldarg.0 
+   0604 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0609 callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::AddSubMeshList(CPooledGameObjectScript)
+   060E ldarg.0 
+   060F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0614 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0619 brfalse IL_07a4: ldarg.0
+   061E ldarg.0 
+   061F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0624 callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   0629 brfalse IL_07a4: ldarg.0
+   062E ldarg.0 
+   062F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0634 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0639 ldlen 
+   063A conv.i4 
+   063B brfalse IL_07a4: ldarg.0
+   0640 ldc.i4.0 
+   0641 stloc.s V_19
+   0643 br IL_0790: ldloc.s V_19
+   0648 ldarg.0 
+   0649 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   064E callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0653 ldloc.s V_19
+   0655 ldelem.ref 
+   0656 ldarg.0 
+   0657 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   065C callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   0661 ldloc.s V_19
+   0663 ldelema PoolObjectComponentsCache/ParticleInitState
+   0668 ldfld PoolObjectComponentsCache/ParticleInitState::StartSize
+   066D ldarga.s info
+   066F ldflda SGW/AgeTriggerParticleInfo::scaling
+   0674 ldfld UnityEngine.Vector3::x
+   0679 mul 
+   067A callvirt System.Void UnityEngine.ParticleSystem::set_startSize(System.Single)
+   067F ldarg.0 
+   0680 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0685 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   068A ldloc.s V_19
+   068C ldelem.ref 
+   068D ldarg.0 
+   068E ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0693 callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   0698 ldloc.s V_19
+   069A ldelema PoolObjectComponentsCache/ParticleInitState
+   069F ldfld PoolObjectComponentsCache/ParticleInitState::StartLifeTime
+   06A4 ldarga.s info
+   06A6 ldflda SGW/AgeTriggerParticleInfo::scaling
+   06AB ldfld UnityEngine.Vector3::y
+   06B0 mul 
+   06B1 callvirt System.Void UnityEngine.ParticleSystem::set_startLifetime(System.Single)
+   06B6 ldarg.0 
+   06B7 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   06BC callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   06C1 ldloc.s V_19
+   06C3 ldelem.ref 
+   06C4 ldarg.0 
+   06C5 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   06CA callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   06CF ldloc.s V_19
+   06D1 ldelema PoolObjectComponentsCache/ParticleInitState
+   06D6 ldfld PoolObjectComponentsCache/ParticleInitState::StartSpeed
+   06DB ldarga.s info
+   06DD ldflda SGW/AgeTriggerParticleInfo::scaling
+   06E2 ldfld UnityEngine.Vector3::z
+   06E7 mul 
+   06E8 callvirt System.Void UnityEngine.ParticleSystem::set_startSpeed(System.Single)
+   06ED ldarg.0 
+   06EE ldfld AGE.AGEWrapTriggerParticle::particleObject
+   06F3 callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   06F8 ldloc.s V_19
+   06FA ldelema PoolObjectComponentsCache/ParticleInitState
+   06FF ldfld PoolObjectComponentsCache/ParticleInitState::Trans
+   0704 ldarg.0 
+   0705 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   070A callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   070F ldloc.s V_19
+   0711 ldelema PoolObjectComponentsCache/ParticleInitState
+   0716 ldfld PoolObjectComponentsCache/ParticleInitState::LocalScale
+   071B ldarga.s info
+   071D ldflda SGW/AgeTriggerParticleInfo::scaling
+   0722 ldfld UnityEngine.Vector3::x
+   0727 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   072C callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0731 ldarg.0 
+   0732 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0737 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   073C ldloc.s V_19
+   073E ldelem.ref 
+   073F callvirt System.Boolean UnityEngine.ParticleSystem::get_enableEmission()
+   0744 ldarg.0 
+   0745 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   074A callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   074F ldloc.s V_19
+   0751 ldelema PoolObjectComponentsCache/ParticleInitState
+   0756 ldfld PoolObjectComponentsCache/ParticleInitState::EmmitState
+   075B beq IL_078a: ldloc.s V_19
+   0760 ldarg.0 
+   0761 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0766 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   076B ldloc.s V_19
+   076D ldelem.ref 
+   076E ldarg.0 
+   076F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0774 callvirt PoolObjectComponentsCache/ParticleInitState[] CPooledGameObjectScript::get_ParticleInitStates()
+   0779 ldloc.s V_19
+   077B ldelema PoolObjectComponentsCache/ParticleInitState
+   0780 ldfld PoolObjectComponentsCache/ParticleInitState::EmmitState
+   0785 callvirt System.Void UnityEngine.ParticleSystem::set_enableEmission(System.Boolean)
+   078A ldloc.s V_19
+   078C ldc.i4.1 
+   078D add 
+   078E stloc.s V_19
+   0790 ldloc.s V_19
+   0792 ldarg.0 
+   0793 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0798 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   079D ldlen 
+   079E conv.i4 
+   079F blt IL_0648: ldarg.0
+   07A4 ldarg.0 
+   07A5 ldarga.s info
+   07A7 ldfld SGW/AgeTriggerParticleInfo::scale
+   07AC call System.Void AGE.AGEWrapTriggerParticle::SetParticleScale(System.Single)
+   07B1 ldstr Particles
+   07B6 stloc.s V_20
+   07B8 ldarg.0 
+   07B9 ldfld AGE.AGEWrapTriggerParticle::m_parentActor
+   07BE call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   07C3 brfalse IL_07fe: ldloc.s V_5
+   07C8 ldarg.0 
+   07C9 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   07CE call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   07D3 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   07D8 brtrue IL_07fe: ldloc.s V_5
+   07DD ldarg.0 
+   07DE ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   07E3 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   07E8 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_MeshVisible()
+   07ED brfalse IL_07fe: ldloc.s V_5
+   07F2 ldstr Hide
+   07F7 stloc.s V_20
+   07F9 br IL_0860: ldarg.0
+   07FE ldloc.s V_5
+   0800 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0805 brfalse IL_0831: ldloc.s V_6
+   080A ldloc.s V_5
+   080C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0811 callvirt System.Int32 UnityEngine.GameObject::get_layer()
+   0816 ldstr Hide
+   081B call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   0820 bne.un IL_082c: br IL_0860
+   0825 ldstr Hide
+   082A stloc.s V_20
+   082C br IL_0860: ldarg.0
+   0831 ldloc.s V_6
+   0833 ldnull 
+   0834 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0839 brfalse IL_0860: ldarg.0
+   083E ldloc.s V_6
+   0840 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0845 callvirt System.Int32 UnityEngine.GameObject::get_layer()
+   084A ldstr Hide
+   084F call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   0854 bne.un IL_0860: ldarg.0
+   0859 ldstr Hide
+   085E stloc.s V_20
+   0860 ldarg.0 
+   0861 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0866 ldfld CPooledGameObjectScript::Go
+   086B ldloc.s V_20
+   086D ldc.i4.0 
+   086E ldc.i4.0 
+   086F call System.Void MMGame_Math::SetLayer(UnityEngine.GameObject,System.String,System.Boolean,System.Boolean)
+   0874 ldarg.0 
+   0875 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   087A callvirt System.Void CPooledGameObjectScript::PlayAllParticles()
+   087F call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   0884 ldarg.1 
+   0885 ldarg.0 
+   0886 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   088B ldfld CPooledGameObjectScript::Go
+   0890 callvirt System.Boolean UnityObjMgr::ReplaceGameObject(System.UInt32,UnityEngine.GameObject)
+   0895 pop 
+   0896 ldloc.s V_13
+   0898 ldarga.s info
+   089A ldfld SGW/AgeTriggerParticleInfo::resourceName
+   089F ldarg.1 
+   08A0 callvirt System.Void ParticleCullManager::AddParticleCnt(StringId,System.UInt32)
+   08A5 ret 
+== System.Void SetParticleScale(System.Single scale) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.r4 0.99999
+   0006 ble.un IL_0017: ldarg.0
+   000B ldarg.1 
+   000C ldc.r4 1.000001
+   0011 bge.un IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   001D brtrue IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldarg.0 
+   0025 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   002A callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   002F stfld AGE.AGEWrapTriggerParticle::particleSystem
+   0034 ldarg.0 
+   0035 ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   003A brtrue IL_0080: ldc.i4.0
+   003F ldarg.0 
+   0040 ldarg.0 
+   0041 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   0046 ldlen 
+   0047 conv.i4 
+   0048 newarr System.Single
+   004D stfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   0052 ldc.i4.0 
+   0053 stloc.0 
+   0054 br IL_0072: ldloc.0
+   0059 ldarg.0 
+   005A ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   005F ldloc.0 
+   0060 ldarg.0 
+   0061 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   0066 ldloc.0 
+   0067 ldelem.ref 
+   0068 callvirt System.Single UnityEngine.ParticleSystem::get_startSize()
+   006D stelem.r4 
+   006E ldloc.0 
+   006F ldc.i4.1 
+   0070 add 
+   0071 stloc.0 
+   0072 ldloc.0 
+   0073 ldarg.0 
+   0074 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   0079 ldlen 
+   007A conv.i4 
+   007B blt IL_0059: ldarg.0
+   0080 ldc.i4.0 
+   0081 stloc.1 
+   0082 br IL_00a2: ldloc.1
+   0087 ldarg.0 
+   0088 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   008D ldloc.1 
+   008E ldelem.ref 
+   008F ldarg.0 
+   0090 ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   0095 ldloc.1 
+   0096 ldelem.r4 
+   0097 ldarg.1 
+   0098 mul 
+   0099 callvirt System.Void UnityEngine.ParticleSystem::set_startSize(System.Single)
+   009E ldloc.1 
+   009F ldc.i4.1 
+   00A0 add 
+   00A1 stloc.1 
+   00A2 ldloc.1 
+   00A3 ldarg.0 
+   00A4 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   00A9 ldlen 
+   00AA conv.i4 
+   00AB blt IL_0087: ldarg.0
+   00B0 ldarg.0 
+   00B1 ldarg.0 
+   00B2 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   00B7 callvirt UnityEngine.MeshRenderer[] CPooledGameObjectScript::get_MeshRenderers()
+   00BC stfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   00C1 ldarg.0 
+   00C2 ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   00C7 brtrue IL_011b: ldc.i4.0
+   00CC ldarg.0 
+   00CD ldarg.0 
+   00CE ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   00D3 ldlen 
+   00D4 conv.i4 
+   00D5 newarr UnityEngine.Vector3
+   00DA stfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   00DF ldc.i4.0 
+   00E0 stloc.2 
+   00E1 br IL_010d: ldloc.2
+   00E6 ldarg.0 
+   00E7 ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   00EC ldloc.2 
+   00ED ldelema UnityEngine.Vector3
+   00F2 ldarg.0 
+   00F3 ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   00F8 ldloc.2 
+   00F9 ldelem.ref 
+   00FA callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00FF callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0104 stobj UnityEngine.Vector3
+   0109 ldloc.2 
+   010A ldc.i4.1 
+   010B add 
+   010C stloc.2 
+   010D ldloc.2 
+   010E ldarg.0 
+   010F ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0114 ldlen 
+   0115 conv.i4 
+   0116 blt IL_00e6: ldarg.0
+   011B ldc.i4.0 
+   011C stloc.3 
+   011D br IL_014f: ldloc.3
+   0122 ldarg.0 
+   0123 ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0128 ldloc.3 
+   0129 ldelem.ref 
+   012A callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   012F ldarg.0 
+   0130 ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   0135 ldloc.3 
+   0136 ldelema UnityEngine.Vector3
+   013B ldobj UnityEngine.Vector3
+   0140 ldarg.1 
+   0141 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0146 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   014B ldloc.3 
+   014C ldc.i4.1 
+   014D add 
+   014E stloc.3 
+   014F ldloc.3 
+   0150 ldarg.0 
+   0151 ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0156 ldlen 
+   0157 conv.i4 
+   0158 blt IL_0122: ldarg.0
+   015D ret 
+== System.Void ResetParticleScale() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   0006 brfalse IL_0052: ldarg.0
+   000B ldarg.0 
+   000C ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   0011 brfalse IL_0052: ldarg.0
+   0016 ldc.i4.0 
+   0017 stloc.0 
+   0018 br IL_0036: ldloc.0
+   001D ldarg.0 
+   001E ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   0023 ldloc.0 
+   0024 ldelem.ref 
+   0025 ldarg.0 
+   0026 ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   002B ldloc.0 
+   002C ldelem.r4 
+   002D callvirt System.Void UnityEngine.ParticleSystem::set_startSize(System.Single)
+   0032 ldloc.0 
+   0033 ldc.i4.1 
+   0034 add 
+   0035 stloc.0 
+   0036 ldloc.0 
+   0037 ldarg.0 
+   0038 ldfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   003D ldlen 
+   003E conv.i4 
+   003F bge IL_0052: ldarg.0
+   0044 ldloc.0 
+   0045 ldarg.0 
+   0046 ldfld AGE.AGEWrapTriggerParticle::particleSystem
+   004B ldlen 
+   004C conv.i4 
+   004D blt IL_001d: ldarg.0
+   0052 ldarg.0 
+   0053 ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   0058 brfalse IL_00b2: ret
+   005D ldarg.0 
+   005E ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0063 brfalse IL_00b2: ret
+   0068 ldc.i4.0 
+   0069 stloc.1 
+   006A br IL_0096: ldloc.1
+   006F ldarg.0 
+   0070 ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0075 ldloc.1 
+   0076 ldelem.ref 
+   0077 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   007C ldarg.0 
+   007D ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   0082 ldloc.1 
+   0083 ldelema UnityEngine.Vector3
+   0088 ldobj UnityEngine.Vector3
+   008D callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0092 ldloc.1 
+   0093 ldc.i4.1 
+   0094 add 
+   0095 stloc.1 
+   0096 ldloc.1 
+   0097 ldarg.0 
+   0098 ldfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   009D ldlen 
+   009E conv.i4 
+   009F bge IL_00b2: ret
+   00A4 ldloc.1 
+   00A5 ldarg.0 
+   00A6 ldfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   00AB ldlen 
+   00AC conv.i4 
+   00AD blt IL_006f: ldarg.0
+   00B2 ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::OnUse()
+   0006 ldarg.0 
+   0007 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   000C stfld AGE.AGEWrapTriggerParticle::offsetPosition
+   0011 ldarg.0 
+   0012 ldnull 
+   0013 stfld AGE.AGEWrapTriggerParticle::followTransform
+   0018 ldarg.0 
+   0019 ldnull 
+   001A stfld AGE.AGEWrapTriggerParticle::vehicleTransform
+   001F ldarg.0 
+   0020 ldc.i4.0 
+   0021 stfld AGE.AGEWrapTriggerParticle::bOnlyFollowPos
+   0026 ldarg.0 
+   0027 ldnull 
+   0028 stfld AGE.AGEWrapTriggerParticle::particleObject
+   002D ldarg.0 
+   002E ldnull 
+   002F stfld AGE.AGEWrapTriggerParticle::particleTransform
+   0034 ldarg.0 
+   0035 ldc.i4.0 
+   0036 stfld AGE.AGEWrapTriggerParticle::particleScaleGrow
+   003B ldarg.0 
+   003C ldnull 
+   003D stfld AGE.AGEWrapTriggerParticle::particleSystem
+   0042 ldarg.0 
+   0043 ldnull 
+   0044 stfld AGE.AGEWrapTriggerParticle::particleSystemSize
+   0049 ldarg.0 
+   004A ldnull 
+   004B stfld AGE.AGEWrapTriggerParticle::particleMeshRender
+   0050 ldarg.0 
+   0051 ldnull 
+   0052 stfld AGE.AGEWrapTriggerParticle::particleMeshRenderScale
+   0057 ldarg.0 
+   0058 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   005D call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   0062 ret 
+== System.Void Start() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void End() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 call !0 Singleton`1<ParticleCullManager>::GetInstance()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 ldfld AGE.AGEWrapTriggerParticle::m_particleObjectID
+   000D callvirt System.Void ParticleCullManager::RemoveParticleCnt(System.UInt32)
+   0012 ldarg.0 
+   0013 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0018 brfalse IL_0134: ret
+   001D ldarg.0 
+   001E call System.Void AGE.AGEWrapTriggerParticle::ResetParticleScale()
+   0023 ldarg.0 
+   0024 ldfld AGE.AGEWrapTriggerParticle::bDelayDisappear
+   0029 brfalse IL_0081: ldarg.0
+   002E ldarg.0 
+   002F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0034 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0039 brfalse IL_0081: ldarg.0
+   003E ldarg.0 
+   003F ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0044 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0049 ldlen 
+   004A conv.i4 
+   004B brfalse IL_0081: ldarg.0
+   0050 ldc.i4.0 
+   0051 stloc.1 
+   0052 br IL_006e: ldloc.1
+   0057 ldarg.0 
+   0058 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   005D callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   0062 ldloc.1 
+   0063 ldelem.ref 
+   0064 ldc.i4.0 
+   0065 callvirt System.Void UnityEngine.ParticleSystem::set_enableEmission(System.Boolean)
+   006A ldloc.1 
+   006B ldc.i4.1 
+   006C add 
+   006D stloc.1 
+   006E ldloc.1 
+   006F ldarg.0 
+   0070 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0075 callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   007A ldlen 
+   007B conv.i4 
+   007C blt IL_0057: ldarg.0
+   0081 ldarg.0 
+   0082 ldfld AGE.AGEWrapTriggerParticle::bDelayDisappear
+   0087 brfalse IL_00a7: ldarg.0
+   008C ldarg.0 
+   008D ldfld AGE.AGEWrapTriggerParticle::bPartyDelayDisppear
+   0092 brfalse IL_00a7: ldarg.0
+   0097 ldarg.0 
+   0098 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   009D ldstr BulletTail
+   00A2 callvirt System.Void CPooledGameObjectScript::HideGameObjWithNoTag(System.String)
+   00A7 ldarg.0 
+   00A8 ldfld AGE.AGEWrapTriggerParticle::m_parentActor
+   00AD call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00B2 brfalse IL_0134: ret
+   00B7 ldarg.0 
+   00B8 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   00BD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00C2 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00C7 ldc.i4.5 
+   00C8 bne.un IL_00e8: ldarg.0
+   00CD ldarg.0 
+   00CE ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   00D3 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00D8 ldarg.0 
+   00D9 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   00DE callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::RemoveSubMeshList(CPooledGameObjectScript)
+   00E3 br IL_0113: ldarg.0
+   00E8 ldarg.0 
+   00E9 ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   00EE call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00F3 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00F8 brtrue IL_0113: ldarg.0
+   00FD ldarg.0 
+   00FE ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   0103 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0108 ldarg.0 
+   0109 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   010E callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::RemoveParticleSystemList(CPooledGameObjectScript)
+   0113 ldarg.0 
+   0114 ldfld AGE.AGEWrapTriggerParticle::bAffectedByParentLogic
+   0119 brfalse IL_0134: ret
+   011E ldarg.0 
+   011F ldflda AGE.AGEWrapTriggerParticle::m_parentActor
+   0124 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0129 ldarg.0 
+   012A ldfld AGE.AGEWrapTriggerParticle::particleObject
+   012F callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::RemoveLogicParticleSystemList(CPooledGameObjectScript)
+   0134 ret 
+== System.Void ExpandParticleSize() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapTriggerParticle::particleDuration
+   0006 ldc.i4.0 
+   0007 ble.un IL_0017: ret
+   000C ldarg.0 
+   000D ldfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   0012 brtrue IL_0018: ldc.r4 1
+   0017 ret 
+   0018 ldc.r4 1
+   001D ldarg.0 
+   001E ldfld AGE.AGEWrapTriggerParticle::dynamicScale
+   0023 ldarg.0 
+   0024 ldfld AGE.AGEWrapBase::_curTick
+   0029 conv.r4 
+   002A ldarg.0 
+   002B ldfld AGE.AGEWrapTriggerParticle::particleDuration
+   0030 conv.r.un 
+   0031 conv.r4 
+   0032 div 
+   0033 call System.Single UnityEngine.Mathf::Lerp(System.Single,System.Single,System.Single)
+   0038 stloc.0 
+   0039 ldarg.0 
+   003A ldfld AGE.AGEWrapTriggerParticle::particleObject
+   003F brfalse IL_00c5: ldarg.0
+   0044 ldarg.0 
+   0045 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   004A callvirt UnityEngine.ParticleSystem[] CPooledGameObjectScript::get_Particles()
+   004F stloc.1 
+   0050 ldc.i4.0 
+   0051 stloc.2 
+   0052 br IL_00bc: ldloc.2
+   0057 ldloc.1 
+   0058 ldloc.2 
+   0059 ldelem.ref 
+   005A ldarg.0 
+   005B ldfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   0060 callvirt System.Int32 UnityEngine.ParticleSystem::GetParticles(UnityEngine.ParticleSystem/Particle[])
+   0065 stloc.3 
+   0066 ldc.i4.0 
+   0067 stloc.s V_4
+   0069 br IL_00a1: ldloc.s V_4
+   006E ldarg.0 
+   006F ldfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   0074 ldloc.s V_4
+   0076 ldelema UnityEngine.ParticleSystem/Particle
+   007B ldarg.0 
+   007C ldfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   0081 ldloc.s V_4
+   0083 ldelema UnityEngine.ParticleSystem/Particle
+   0088 call System.Single UnityEngine.ParticleSystem/Particle::get_size()
+   008D ldarg.0 
+   008E ldfld AGE.AGEWrapTriggerParticle::lastScale
+   0093 div 
+   0094 ldloc.0 
+   0095 mul 
+   0096 call System.Void UnityEngine.ParticleSystem/Particle::set_size(System.Single)
+   009B ldloc.s V_4
+   009D ldc.i4.1 
+   009E add 
+   009F stloc.s V_4
+   00A1 ldloc.s V_4
+   00A3 ldloc.3 
+   00A4 blt IL_006e: ldarg.0
+   00A9 ldloc.1 
+   00AA ldloc.2 
+   00AB ldelem.ref 
+   00AC ldarg.0 
+   00AD ldfld AGE.AGEWrapTriggerParticle::_dynamicSizeParticles
+   00B2 ldloc.3 
+   00B3 callvirt System.Void UnityEngine.ParticleSystem::SetParticles(UnityEngine.ParticleSystem/Particle[],System.Int32)
+   00B8 ldloc.2 
+   00B9 ldc.i4.1 
+   00BA add 
+   00BB stloc.2 
+   00BC ldloc.2 
+   00BD ldloc.1 
+   00BE ldlen 
+   00BF conv.i4 
+   00C0 blt IL_0057: ldloc.1
+   00C5 ldarg.0 
+   00C6 ldloc.0 
+   00C7 stfld AGE.AGEWrapTriggerParticle::lastScale
+   00CC ret 
+== System.Void Update(System.Int32 nDelta) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   0006 brfalse IL_0080: ldarg.0
+   000B ldarg.0 
+   000C ldfld AGE.AGEWrapTriggerParticle::bOnlyFollowPos
+   0011 brfalse IL_0080: ldarg.0
+   0016 ldarg.0 
+   0017 ldfld AGE.AGEWrapTriggerParticle::followTransform
+   001C ldnull 
+   001D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0022 brfalse IL_0080: ldarg.0
+   0027 ldarg.0 
+   0028 ldfld AGE.AGEWrapTriggerParticle::particleObject
+   002D ldfld CPooledGameObjectScript::Trans
+   0032 ldarg.0 
+   0033 ldfld AGE.AGEWrapTriggerParticle::followTransform
+   0038 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   003D ldarg.0 
+   003E ldfld AGE.AGEWrapTriggerParticle::offsetPosition
+   0043 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0048 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   004D ldarg.0 
+   004E ldfld AGE.AGEWrapTriggerParticle::particleTransform
+   0053 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0058 brfalse IL_0080: ldarg.0
+   005D ldarg.0 
+   005E ldfld AGE.AGEWrapTriggerParticle::particleTransform
+   0063 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0068 ldarg.0 
+   0069 ldfld AGE.AGEWrapTriggerParticle::followTransform
+   006E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0073 call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableOutline()
+   0078 ldc.i4.0 
+   0079 ceq 
+   007B call System.Void MMGame_Math::SetVisibleSameAs(UnityEngine.GameObject,UnityEngine.GameObject,System.Boolean)
+   0080 ldarg.0 
+   0081 ldfld AGE.AGEWrapTriggerParticle::dynamicScale
+   0086 ldc.r4 1
+   008B beq IL_0096: ret
+   0090 ldarg.0 
+   0091 call System.Void AGE.AGEWrapTriggerParticle::ExpandParticleSize()
+   0096 ret 
+== System.Void OnDelayRecycleParticleCallback(UnityEngine.GameObject recycleObj) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0006 ldc.r4 10000
+   000B ldc.r4 10000
+   0010 ldc.r4 10000
+   0015 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   001A callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   001F ret 

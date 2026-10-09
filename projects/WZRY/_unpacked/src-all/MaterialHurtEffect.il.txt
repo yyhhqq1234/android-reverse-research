@@ -1,0 +1,1503 @@
+// TYPE MaterialHurtEffect  base=Assets.Scripts.GameLogic.ActorComponent  attrs=Public, BeforeFieldInit
+  FIELD RGBCurve hurtCurve
+  FIELD UnityEngine.Texture2D freezeTex
+  FIELD UnityEngine.Texture2D stoneTex
+  FIELD UnityEngine.Texture2D dissolveMaskTex
+  FIELD UnityEngine.Texture2D dissolveRingTex
+  FIELD DictionaryView`2<System.String,MaterialHurtEffect/stMaterialParam> materialParamMap
+  FIELD ListView`1<UnityEngine.Material> mats
+  FIELD ListView`1<MaterialHurtEffect/MaterialState> matsCurrentStats
+  FIELD ListView`1<MaterialHurtEffect/MaterialState> matsInitStats
+  FIELD ListView`1<UnityEngine.Material> oldMats
+  FIELD ListView`1<MaterialHurtEffect/MaterialState> oldMatsInitStats
+  FIELD ListView`1<MaterialHurtEffect/MaterialState> oldMatsCurrentStats
+  FIELD ListView`1<SMaterialEffect_Base> playingEffects
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator> coroutineMap
+  FIELD System.Single playerId
+  FIELD System.Int32 s_playerId
+  FIELD System.Single SMaterialEffectTranslucentMiniAlpha = 0.5
+  FIELD System.Int32[] m_effectCounter
+  FIELD System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor> hlcList
+  FIELD System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor> phantomList
+  FIELD System.Int32 hlcIndex
+  FIELD System.Int32 ptIndex
+  FIELD UnityEngine.WaitForEndOfFrame s_WaitForEndOfFrame
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void DictionaryView`2<System.String,MaterialHurtEffect/stMaterialParam>::.ctor()
+   0006 stfld MaterialHurtEffect::materialParamMap
+   000B ldarg.0 
+   000C newobj System.Void ListView`1<MaterialHurtEffect/MaterialState>::.ctor()
+   0011 stfld MaterialHurtEffect::matsCurrentStats
+   0016 ldarg.0 
+   0017 newobj System.Void ListView`1<MaterialHurtEffect/MaterialState>::.ctor()
+   001C stfld MaterialHurtEffect::matsInitStats
+   0021 ldarg.0 
+   0022 newobj System.Void ListView`1<MaterialHurtEffect/MaterialState>::.ctor()
+   0027 stfld MaterialHurtEffect::oldMatsInitStats
+   002C ldarg.0 
+   002D newobj System.Void ListView`1<MaterialHurtEffect/MaterialState>::.ctor()
+   0032 stfld MaterialHurtEffect::oldMatsCurrentStats
+   0037 ldarg.0 
+   0038 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::.ctor()
+   003D stfld MaterialHurtEffect::coroutineMap
+   0042 ldarg.0 
+   0043 ldc.i4.6 
+   0044 newarr System.Int32
+   0049 stfld MaterialHurtEffect::m_effectCounter
+   004E ldarg.0 
+   004F newobj System.Void System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::.ctor()
+   0054 stfld MaterialHurtEffect::hlcList
+   0059 ldarg.0 
+   005A newobj System.Void System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::.ctor()
+   005F stfld MaterialHurtEffect::phantomList
+   0064 ldarg.0 
+   0065 call System.Void Assets.Scripts.GameLogic.ActorComponent::.ctor()
+   006A ret 
+== System.Collections.IEnumerator PreloadResource() attrs=Public, Static, HideBySig maxstack=1
+   0000 newobj System.Void MaterialHurtEffect/<PreloadResource>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ret 
+== System.Void Born(Assets.Scripts.GameLogic.ActorLinker owner) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameLogic.ActorComponent::Born(Assets.Scripts.GameLogic.ActorLinker)
+   0007 ldarg.0 
+   0008 ldfld MaterialHurtEffect::hurtCurve
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_0045: ldarg.0
+   0018 ldarg.0 
+   0019 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001E ldstr Shaders/RGBCurve_Hurt.asset
+   0023 ldtoken RGBCurve
+   0028 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   002D ldc.i4.0 
+   002E ldc.i4.1 
+   002F ldc.i4.0 
+   0030 ldc.i4.0 
+   0031 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0036 ldfld CResource::m_content
+   003B isinst RGBCurve
+   0040 stfld MaterialHurtEffect::hurtCurve
+   0045 ldarg.0 
+   0046 ldfld MaterialHurtEffect::freezeTex
+   004B ldnull 
+   004C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0051 brfalse IL_0083: ldarg.0
+   0056 ldarg.0 
+   0057 call !0 Singleton`1<CResourceManager>::GetInstance()
+   005C ldstr Prefab_Characters/Z_Other/Textures/Hero_BingDong.tga
+   0061 ldtoken UnityEngine.Texture2D
+   0066 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   006B ldc.i4.0 
+   006C ldc.i4.1 
+   006D ldc.i4.0 
+   006E ldc.i4.0 
+   006F callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0074 ldfld CResource::m_content
+   0079 isinst UnityEngine.Texture2D
+   007E stfld MaterialHurtEffect::freezeTex
+   0083 ldarg.0 
+   0084 ldfld MaterialHurtEffect::stoneTex
+   0089 ldnull 
+   008A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   008F brfalse IL_00c1: ldarg.0
+   0094 ldarg.0 
+   0095 call !0 Singleton`1<CResourceManager>::GetInstance()
+   009A ldstr Prefab_Characters/Z_Other/Textures/Hero_ShiHua.tga
+   009F ldtoken UnityEngine.Texture2D
+   00A4 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00A9 ldc.i4.0 
+   00AA ldc.i4.1 
+   00AB ldc.i4.0 
+   00AC ldc.i4.0 
+   00AD callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   00B2 ldfld CResource::m_content
+   00B7 isinst UnityEngine.Texture2D
+   00BC stfld MaterialHurtEffect::stoneTex
+   00C1 ldarg.0 
+   00C2 ldfld MaterialHurtEffect::dissolveMaskTex
+   00C7 ldnull 
+   00C8 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00CD brfalse IL_00ff: ldarg.0
+   00D2 ldarg.0 
+   00D3 call !0 Singleton`1<CResourceManager>::GetInstance()
+   00D8 ldstr Prefab_Characters/Z_Other/Textures/Hero_Dissolve_Mask.tga
+   00DD ldtoken UnityEngine.Texture2D
+   00E2 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00E7 ldc.i4.0 
+   00E8 ldc.i4.1 
+   00E9 ldc.i4.0 
+   00EA ldc.i4.0 
+   00EB callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   00F0 ldfld CResource::m_content
+   00F5 isinst UnityEngine.Texture2D
+   00FA stfld MaterialHurtEffect::dissolveMaskTex
+   00FF ldarg.0 
+   0100 ldfld MaterialHurtEffect::dissolveRingTex
+   0105 ldnull 
+   0106 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   010B brfalse IL_013d: ldsfld System.Int32 MaterialHurtEffect::s_playerId
+   0110 ldarg.0 
+   0111 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0116 ldstr Prefab_Characters/Z_Other/Textures/Hero_Dissolve_Ring.png
+   011B ldtoken UnityEngine.Texture2D
+   0120 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0125 ldc.i4.0 
+   0126 ldc.i4.1 
+   0127 ldc.i4.0 
+   0128 ldc.i4.0 
+   0129 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   012E ldfld CResource::m_content
+   0133 isinst UnityEngine.Texture2D
+   0138 stfld MaterialHurtEffect::dissolveRingTex
+   013D ldsfld MaterialHurtEffect::s_playerId
+   0142 dup 
+   0143 ldc.i4.1 
+   0144 add 
+   0145 stsfld MaterialHurtEffect::s_playerId
+   014A ldc.i4 255
+   014F rem 
+   0150 ldc.i4.1 
+   0151 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   0156 stloc.0 
+   0157 ldarg.0 
+   0158 ldloc.0 
+   0159 conv.r4 
+   015A ldc.r4 255
+   015F div 
+   0160 stfld MaterialHurtEffect::playerId
+   0165 ldarg.0 
+   0166 call System.Boolean MaterialHurtEffect::CheckMats()
+   016B pop 
+   016C ret 
+== System.Void OnMeshChanged() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld MaterialHurtEffect::mats
+   0007 stfld MaterialHurtEffect::oldMats
+   000C ldarg.0 
+   000D ldnull 
+   000E stfld MaterialHurtEffect::mats
+   0013 ldarg.0 
+   0014 ldfld MaterialHurtEffect::oldMatsInitStats
+   0019 callvirt System.Void ListViewBase::Clear()
+   001E ldarg.0 
+   001F ldfld MaterialHurtEffect::oldMatsInitStats
+   0024 ldarg.0 
+   0025 ldfld MaterialHurtEffect::matsInitStats
+   002A callvirt System.Void ListView`1<MaterialHurtEffect/MaterialState>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   002F ldarg.0 
+   0030 ldfld MaterialHurtEffect::matsInitStats
+   0035 callvirt System.Void ListViewBase::Clear()
+   003A ldarg.0 
+   003B ldfld MaterialHurtEffect::oldMatsCurrentStats
+   0040 callvirt System.Void ListViewBase::Clear()
+   0045 ldarg.0 
+   0046 ldfld MaterialHurtEffect::oldMatsCurrentStats
+   004B ldarg.0 
+   004C ldfld MaterialHurtEffect::matsCurrentStats
+   0051 callvirt System.Void ListView`1<MaterialHurtEffect/MaterialState>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   0056 ldarg.0 
+   0057 ldfld MaterialHurtEffect::matsCurrentStats
+   005C callvirt System.Void ListViewBase::Clear()
+   0061 ret 
+== System.Void Clear() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void MaterialHurtEffect::StopAllEffects()
+   0006 ldarg.0 
+   0007 ldfld MaterialHurtEffect::materialParamMap
+   000C callvirt System.Void DictionaryView`2<System.String,MaterialHurtEffect/stMaterialParam>::Clear()
+   0011 ldarg.0 
+   0012 ldfld MaterialHurtEffect::hlcList
+   0017 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::Clear()
+   001C ldarg.0 
+   001D ldfld MaterialHurtEffect::phantomList
+   0022 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::Clear()
+   0027 ldarg.0 
+   0028 ldfld MaterialHurtEffect::mats
+   002D brfalse IL_0044: ldarg.0
+   0032 ldarg.0 
+   0033 ldfld MaterialHurtEffect::mats
+   0038 callvirt System.Void ListViewBase::Clear()
+   003D ldarg.0 
+   003E ldnull 
+   003F stfld MaterialHurtEffect::mats
+   0044 ldarg.0 
+   0045 ldfld MaterialHurtEffect::oldMats
+   004A brfalse IL_0061: ldarg.0
+   004F ldarg.0 
+   0050 ldfld MaterialHurtEffect::oldMats
+   0055 callvirt System.Void ListViewBase::Clear()
+   005A ldarg.0 
+   005B ldnull 
+   005C stfld MaterialHurtEffect::oldMats
+   0061 ldarg.0 
+   0062 ldfld MaterialHurtEffect::matsInitStats
+   0067 callvirt System.Void ListViewBase::Clear()
+   006C ldarg.0 
+   006D ldfld MaterialHurtEffect::oldMatsInitStats
+   0072 callvirt System.Void ListViewBase::Clear()
+   0077 ldarg.0 
+   0078 ldfld MaterialHurtEffect::matsCurrentStats
+   007D callvirt System.Void ListViewBase::Clear()
+   0082 ldarg.0 
+   0083 ldfld MaterialHurtEffect::oldMatsCurrentStats
+   0088 callvirt System.Void ListViewBase::Clear()
+   008D ldarg.0 
+   008E ldfld MaterialHurtEffect::coroutineMap
+   0093 callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::GetEnumerator()
+   0098 stloc.0 
+   0099 br IL_00b7: ldloca.s V_0
+   009E call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   00A3 ldloca.s V_0
+   00A5 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,System.Collections.IEnumerator>::get_Current()
+   00AA stloc.1 
+   00AB ldloca.s V_1
+   00AD call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,System.Collections.IEnumerator>::get_Value()
+   00B2 callvirt System.Void CMonoCouroutineManager::StopCoroutine(System.Collections.IEnumerator)
+   00B7 ldloca.s V_0
+   00B9 call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,System.Collections.IEnumerator>::MoveNext()
+   00BE brtrue IL_009e: call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   00C3 ldarg.0 
+   00C4 ldfld MaterialHurtEffect::coroutineMap
+   00C9 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::Clear()
+   00CE ret 
+== System.Void Prepare() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.ActorComponent::Prepare()
+   0006 ldarg.0 
+   0007 call System.Void MaterialHurtEffect::Clear()
+   000C ret 
+== System.Void Deactive() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void MaterialHurtEffect::Clear()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.ActorComponent::Deactive()
+   000C ret 
+== System.Void Fight() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.ActorComponent::Fight()
+   0006 ret 
+== System.Void OnGet() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.ActorComponent::OnGet()
+   0006 ret 
+== System.Void OnRecycle() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void MaterialHurtEffect::Clear()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.ActorComponent::OnRecycle()
+   000C ret 
+== System.Boolean CheckMats() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::mats
+   0006 brtrue IL_0011: ldarg.0
+   000B ldarg.0 
+   000C call System.Void MaterialHurtEffect::InitMats()
+   0011 ldarg.0 
+   0012 ldfld MaterialHurtEffect::mats
+   0017 ldnull 
+   0018 ceq 
+   001A ldc.i4.0 
+   001B ceq 
+   001D ret 
+== System.Void InitMats() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld MaterialHurtEffect::mats
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.ActorComponent::actor
+   000D brfalse IL_0022: ret
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.ActorComponent::actor
+   0018 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   001D brtrue IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.ActorComponent::actor
+   0029 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   002E callvirt UnityEngine.MeshRenderer[] CPooledGameObjectScript::get_MeshRenderers()
+   0033 stloc.0 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.ActorComponent::actor
+   003A ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   003F callvirt UnityEngine.SkinnedMeshRenderer[] CPooledGameObjectScript::get_SkinnedRenderers()
+   0044 stloc.1 
+   0045 ldloc.0 
+   0046 brfalse IL_00c4: ldloc.1
+   004B ldloc.0 
+   004C ldlen 
+   004D conv.i4 
+   004E brfalse IL_00c4: ldloc.1
+   0053 ldc.i4.0 
+   0054 stloc.2 
+   0055 br IL_00bb: ldloc.2
+   005A ldloc.0 
+   005B ldloc.2 
+   005C ldelem.ref 
+   005D stloc.3 
+   005E ldloc.3 
+   005F ldnull 
+   0060 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0065 brfalse IL_00b7: ldloc.2
+   006A ldloc.3 
+   006B callvirt UnityEngine.Material UnityEngine.Renderer::get_sharedMaterial()
+   0070 ldnull 
+   0071 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0076 brfalse IL_00b7: ldloc.2
+   007B ldloc.3 
+   007C callvirt UnityEngine.Material UnityEngine.Renderer::get_sharedMaterial()
+   0081 ldstr _HurtColor
+   0086 callvirt System.Boolean UnityEngine.Material::HasProperty(System.String)
+   008B brfalse IL_00b7: ldloc.2
+   0090 ldarg.0 
+   0091 ldfld MaterialHurtEffect::mats
+   0096 brtrue IL_00a6: ldarg.0
+   009B ldarg.0 
+   009C newobj System.Void ListView`1<UnityEngine.Material>::.ctor()
+   00A1 stfld MaterialHurtEffect::mats
+   00A6 ldarg.0 
+   00A7 ldfld MaterialHurtEffect::mats
+   00AC ldloc.3 
+   00AD callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   00B2 callvirt System.Void ListView`1<UnityEngine.Material>::Add(!0)
+   00B7 ldloc.2 
+   00B8 ldc.i4.1 
+   00B9 add 
+   00BA stloc.2 
+   00BB ldloc.2 
+   00BC ldloc.0 
+   00BD ldlen 
+   00BE conv.i4 
+   00BF blt IL_005a: ldloc.0
+   00C4 ldloc.1 
+   00C5 brfalse IL_014d: ldarg.0
+   00CA ldloc.1 
+   00CB ldlen 
+   00CC conv.i4 
+   00CD brfalse IL_014d: ldarg.0
+   00D2 ldc.i4.0 
+   00D3 stloc.s V_4
+   00D5 br IL_0143: ldloc.s V_4
+   00DA ldloc.1 
+   00DB ldloc.s V_4
+   00DD ldelem.ref 
+   00DE stloc.s V_5
+   00E0 ldloc.s V_5
+   00E2 ldnull 
+   00E3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00E8 brfalse IL_013d: ldloc.s V_4
+   00ED ldloc.s V_5
+   00EF callvirt UnityEngine.Material UnityEngine.Renderer::get_sharedMaterial()
+   00F4 ldnull 
+   00F5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00FA brfalse IL_013d: ldloc.s V_4
+   00FF ldloc.s V_5
+   0101 callvirt UnityEngine.Material UnityEngine.Renderer::get_sharedMaterial()
+   0106 ldstr _HurtColor
+   010B callvirt System.Boolean UnityEngine.Material::HasProperty(System.String)
+   0110 brfalse IL_013d: ldloc.s V_4
+   0115 ldarg.0 
+   0116 ldfld MaterialHurtEffect::mats
+   011B brtrue IL_012b: ldarg.0
+   0120 ldarg.0 
+   0121 newobj System.Void ListView`1<UnityEngine.Material>::.ctor()
+   0126 stfld MaterialHurtEffect::mats
+   012B ldarg.0 
+   012C ldfld MaterialHurtEffect::mats
+   0131 ldloc.s V_5
+   0133 callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   0138 callvirt System.Void ListView`1<UnityEngine.Material>::Add(!0)
+   013D ldloc.s V_4
+   013F ldc.i4.1 
+   0140 add 
+   0141 stloc.s V_4
+   0143 ldloc.s V_4
+   0145 ldloc.1 
+   0146 ldlen 
+   0147 conv.i4 
+   0148 blt IL_00da: ldloc.1
+   014D ldarg.0 
+   014E ldfld MaterialHurtEffect::mats
+   0153 brfalse IL_0258: ret
+   0158 ldc.i4.0 
+   0159 stloc.s V_6
+   015B br IL_0246: ldloc.s V_6
+   0160 ldarg.0 
+   0161 ldfld MaterialHurtEffect::mats
+   0166 ldloc.s V_6
+   0168 callvirt !0 ListView`1<UnityEngine.Material>::get_Item(System.Int32)
+   016D stloc.s V_7
+   016F ldloc.s V_7
+   0171 ldstr _PlayerId
+   0176 ldarg.0 
+   0177 ldfld MaterialHurtEffect::playerId
+   017C callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   0181 newobj System.Void MaterialHurtEffect/MaterialState::.ctor()
+   0186 stloc.s V_8
+   0188 ldloc.s V_7
+   018A callvirt UnityEngine.Shader UnityEngine.Material::get_shader()
+   018F callvirt System.String UnityEngine.Object::get_name()
+   0194 ldloc.s V_8
+   0196 ldflda MaterialHurtEffect/MaterialState::enableShadow
+   019B ldloc.s V_8
+   019D ldflda MaterialHurtEffect/MaterialState::enableTranslucent
+   01A2 ldloc.s V_8
+   01A4 ldflda MaterialHurtEffect/MaterialState::enableOcclusion
+   01A9 ldloc.s V_8
+   01AB ldflda MaterialHurtEffect/MaterialState::enableDissolve
+   01B0 call System.Void HeroMaterialUtility::GetShaderProperty(System.String,System.Boolean&,System.Boolean&,System.Boolean&,System.Boolean&)
+   01B5 ldarg.0 
+   01B6 ldfld MaterialHurtEffect::matsInitStats
+   01BB ldloc.s V_8
+   01BD callvirt System.Void ListView`1<MaterialHurtEffect/MaterialState>::Add(!0)
+   01C2 ldarg.0 
+   01C3 ldfld MaterialHurtEffect::matsCurrentStats
+   01C8 ldloc.s V_8
+   01CA callvirt MaterialHurtEffect/MaterialState MaterialHurtEffect/MaterialState::Clone()
+   01CF callvirt System.Void ListView`1<MaterialHurtEffect/MaterialState>::Add(!0)
+   01D4 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   01D9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   01DE brfalse IL_0240: ldloc.s V_6
+   01E3 ldstr Hero_Battle_Occlusion
+   01E8 ldloc.s V_8
+   01EA ldfld MaterialHurtEffect/MaterialState::enableShadow
+   01EF ldloc.s V_8
+   01F1 ldfld MaterialHurtEffect/MaterialState::enableTranslucent
+   01F6 ldloc.s V_8
+   01F8 ldfld MaterialHurtEffect/MaterialState::enableOcclusion
+   01FD ldloc.s V_8
+   01FF ldfld MaterialHurtEffect/MaterialState::enableDissolve
+   0204 call System.String HeroMaterialUtility::MakeShaderName(System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0209 stloc.s V_9
+   020B ldloc.s V_7
+   020D call !0 Singleton`1<CResourceManager>::GetInstance()
+   0212 ldstr Shaders/Hero/
+   0217 ldloc.s V_9
+   0219 call System.String System.String::Concat(System.String,System.String)
+   021E ldtoken UnityEngine.Shader
+   0223 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0228 ldc.i4.0 
+   0229 ldc.i4.1 
+   022A ldc.i4.1 
+   022B ldc.i4.0 
+   022C callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0231 ldfld CResource::m_content
+   0236 isinst UnityEngine.Shader
+   023B callvirt System.Void UnityEngine.Material::set_shader(UnityEngine.Shader)
+   0240 ldloc.s V_6
+   0242 ldc.i4.1 
+   0243 add 
+   0244 stloc.s V_6
+   0246 ldloc.s V_6
+   0248 ldarg.0 
+   0249 ldfld MaterialHurtEffect::mats
+   024E callvirt System.Int32 ListViewBase::get_Count()
+   0253 blt IL_0160: ldarg.0
+   0258 ret 
+== SMaterialEffect_Base FindEffect(eMaterialEffectClassType type) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::playingEffects
+   0006 brtrue IL_000d: ldc.i4.0
+   000B ldnull 
+   000C ret 
+   000D ldc.i4.0 
+   000E stloc.0 
+   000F br IL_003c: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld MaterialHurtEffect::playingEffects
+   001A ldloc.0 
+   001B callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   0020 ldfld SMaterialEffect_Base::classType
+   0025 ldarg.1 
+   0026 bne.un IL_0038: ldloc.0
+   002B ldarg.0 
+   002C ldfld MaterialHurtEffect::playingEffects
+   0031 ldloc.0 
+   0032 callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   0037 ret 
+   0038 ldloc.0 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldarg.0 
+   003E ldfld MaterialHurtEffect::playingEffects
+   0043 callvirt System.Int32 ListViewBase::get_Count()
+   0048 blt IL_0014: ldarg.0
+   004D ldnull 
+   004E ret 
+== T FindOrCreateEffect(eMaterialEffectClassType type) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::playingEffects
+   0006 brfalse IL_0074: call !0 Assets.Scripts.Common.ClassObjPool`1<T>::Get()
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0063: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld MaterialHurtEffect::playingEffects
+   0018 ldloc.0 
+   0019 callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   001E stloc.1 
+   001F ldloc.1 
+   0020 ldfld SMaterialEffect_Base::classType
+   0025 ldarg.1 
+   0026 bne.un IL_005f: ldloc.0
+   002B ldloc.1 
+   002C isinst T
+   0031 brtrue IL_0053: ldloc.1
+   0036 ldloc.1 
+   0037 callvirt System.Void SMaterialEffect_Base::Stop()
+   003C ldloc.1 
+   003D callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0042 ldarg.0 
+   0043 ldfld MaterialHurtEffect::playingEffects
+   0048 ldloc.0 
+   0049 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   004E br IL_0074: call !0 Assets.Scripts.Common.ClassObjPool`1<T>::Get()
+   0053 ldloc.1 
+   0054 isinst T
+   0059 unbox.any T
+   005E ret 
+   005F ldloc.0 
+   0060 ldc.i4.1 
+   0061 add 
+   0062 stloc.0 
+   0063 ldloc.0 
+   0064 ldarg.0 
+   0065 ldfld MaterialHurtEffect::playingEffects
+   006A callvirt System.Int32 ListViewBase::get_Count()
+   006F blt IL_0012: ldarg.0
+   0074 call !0 Assets.Scripts.Common.ClassObjPool`1<T>::Get()
+   0079 stloc.2 
+   007A ldloc.2 
+   007B box T
+   0080 ldarg.1 
+   0081 stfld SMaterialEffect_Base::classType
+   0086 ldloc.2 
+   0087 box T
+   008C ldarg.0 
+   008D stfld SMaterialEffect_Base::owner
+   0092 ldloc.2 
+   0093 box T
+   0098 ldc.i4.0 
+   0099 stfld Assets.Scripts.Common.PooledClassObject::bChkReset
+   009E ldloca.s V_2
+   00A0 constrained. T
+   00A6 callvirt System.Void SMaterialEffect_Base::AllocId()
+   00AB ldarg.0 
+   00AC ldfld MaterialHurtEffect::playingEffects
+   00B1 brtrue IL_00c1: ldarg.0
+   00B6 ldarg.0 
+   00B7 newobj System.Void ListView`1<SMaterialEffect_Base>::.ctor()
+   00BC stfld MaterialHurtEffect::playingEffects
+   00C1 ldarg.0 
+   00C2 ldfld MaterialHurtEffect::playingEffects
+   00C7 ldloc.2 
+   00C8 box T
+   00CD callvirt System.Void ListView`1<SMaterialEffect_Base>::Add(!0)
+   00D2 ldloc.2 
+   00D3 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 pop 
+   0007 ldarg.0 
+   0008 ldfld MaterialHurtEffect::playingEffects
+   000D brtrue IL_0018: ldarg.0
+   0012 ldc.i4.0 
+   0013 br IL_0023: stloc.0
+   0018 ldarg.0 
+   0019 ldfld MaterialHurtEffect::playingEffects
+   001E callvirt System.Int32 ListViewBase::get_Count()
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 ldfld MaterialHurtEffect::oldMats
+   002A brfalse IL_0083: ldloc.0
+   002F ldarg.0 
+   0030 ldfld MaterialHurtEffect::mats
+   0035 brfalse IL_0083: ldloc.0
+   003A ldloc.0 
+   003B ldc.i4.0 
+   003C ble IL_007c: ldarg.0
+   0041 ldc.i4.0 
+   0042 stloc.1 
+   0043 br IL_006b: ldloc.1
+   0048 ldarg.0 
+   0049 ldfld MaterialHurtEffect::playingEffects
+   004E ldloc.1 
+   004F callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   0054 stloc.2 
+   0055 ldloc.2 
+   0056 ldarg.0 
+   0057 ldfld MaterialHurtEffect::oldMats
+   005C ldarg.0 
+   005D ldfld MaterialHurtEffect::mats
+   0062 callvirt System.Void SMaterialEffect_Base::OnMeshChanged(ListView`1<UnityEngine.Material>,ListView`1<UnityEngine.Material>)
+   0067 ldloc.1 
+   0068 ldc.i4.1 
+   0069 add 
+   006A stloc.1 
+   006B ldloc.1 
+   006C ldarg.0 
+   006D ldfld MaterialHurtEffect::playingEffects
+   0072 callvirt System.Int32 ListViewBase::get_Count()
+   0077 blt IL_0048: ldarg.0
+   007C ldarg.0 
+   007D ldnull 
+   007E stfld MaterialHurtEffect::oldMats
+   0083 ldloc.0 
+   0084 ldc.i4.0 
+   0085 ble IL_00db: ret
+   008A ldc.i4.0 
+   008B stloc.3 
+   008C br IL_00ca: ldloc.3
+   0091 ldarg.0 
+   0092 ldfld MaterialHurtEffect::playingEffects
+   0097 ldloc.3 
+   0098 callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   009D stloc.s V_4
+   009F ldloc.s V_4
+   00A1 callvirt System.Boolean SMaterialEffect_Base::Update()
+   00A6 brfalse IL_00c6: ldloc.3
+   00AB ldloc.s V_4
+   00AD callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   00B2 ldarg.0 
+   00B3 ldfld MaterialHurtEffect::playingEffects
+   00B8 ldloc.3 
+   00B9 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00BE ldloc.3 
+   00BF ldc.i4.1 
+   00C0 sub 
+   00C1 stloc.3 
+   00C2 ldloc.0 
+   00C3 ldc.i4.1 
+   00C4 sub 
+   00C5 stloc.0 
+   00C6 ldloc.3 
+   00C7 ldc.i4.1 
+   00C8 add 
+   00C9 stloc.3 
+   00CA ldloc.3 
+   00CB ldarg.0 
+   00CC ldfld MaterialHurtEffect::playingEffects
+   00D1 callvirt System.Int32 ListViewBase::get_Count()
+   00D6 blt IL_0091: ldarg.0
+   00DB ret 
+== System.Void ModifyParams(System.Single duration, StringId[] names, System.Single[] values, System.String pattern) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 ldarg.3 
+   0009 ldarg.s pattern
+   000B ldc.i4.1 
+   000C ldc.i4.0 
+   000D call System.Collections.IEnumerator MaterialHurtEffect::ModifyParamsCoroutine(System.Single,StringId[],System.Single[],System.String,System.Boolean,System.Boolean)
+   0012 callvirt UnityEngine.Coroutine CMonoCouroutineManager::StartCoroutine(System.Collections.IEnumerator)
+   0017 pop 
+   0018 ret 
+== System.Void ModifyParamsDurationStart(System.UInt32 seq, System.Single duration, StringId[] names, System.Single[] values, System.String pattern) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 ldarg.3 
+   0003 ldarg.s values
+   0005 ldarg.s pattern
+   0007 ldc.i4.0 
+   0008 ldc.i4.0 
+   0009 call System.Collections.IEnumerator MaterialHurtEffect::ModifyParamsCoroutine(System.Single,StringId[],System.Single[],System.String,System.Boolean,System.Boolean)
+   000E stloc.0 
+   000F call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   0014 ldloc.0 
+   0015 callvirt UnityEngine.Coroutine CMonoCouroutineManager::StartCoroutine(System.Collections.IEnumerator)
+   001A pop 
+   001B ldarg.0 
+   001C ldfld MaterialHurtEffect::coroutineMap
+   0021 ldarg.1 
+   0022 ldloc.0 
+   0023 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::Add(!0,!1)
+   0028 ret 
+== System.Void ModifyParamsDurationEnd(System.UInt32 seq, System.Single duration, StringId[] names, System.Single[] values, System.String pattern, System.Boolean bCheckInGrass) attrs=Public, HideBySig maxstack=8
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld MaterialHurtEffect::coroutineMap
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::TryGetValue(!0,!1&)
+   0010 brfalse IL_0032: ldstr "ModifyParamsDuration������һ�ԣ�"
+   0015 call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   001A ldloc.0 
+   001B callvirt System.Void CMonoCouroutineManager::StopCoroutine(System.Collections.IEnumerator)
+   0020 ldarg.0 
+   0021 ldfld MaterialHurtEffect::coroutineMap
+   0026 ldarg.1 
+   0027 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.IEnumerator>::Remove(!0)
+   002C pop 
+   002D br IL_003c: call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   0032 ldstr ModifyParamsDuration������һ�ԣ�
+   0037 call System.Void UnityEngine.Debug::LogError(System.Object)
+   003C call !0 Singleton`1<CMonoCouroutineManager>::GetInstance()
+   0041 ldarg.0 
+   0042 ldarg.2 
+   0043 ldarg.3 
+   0044 ldarg.s values
+   0046 ldarg.s pattern
+   0048 ldc.i4.1 
+   0049 ldarg.s bCheckInGrass
+   004B call System.Collections.IEnumerator MaterialHurtEffect::ModifyParamsCoroutine(System.Single,StringId[],System.Single[],System.String,System.Boolean,System.Boolean)
+   0050 callvirt UnityEngine.Coroutine CMonoCouroutineManager::StartCoroutine(System.Collections.IEnumerator)
+   0055 pop 
+   0056 ret 
+== System.Collections.IEnumerator ModifyParamsCoroutine(System.Single duration, StringId[] names, System.Single[] values, System.String pattern, System.Boolean autoExit, System.Boolean bCheckInGrass) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.2 
+   0008 stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::names
+   000D ldloc.0 
+   000E ldarg.3 
+   000F stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::values
+   0014 ldloc.0 
+   0015 ldarg.s pattern
+   0017 stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::pattern
+   001C ldloc.0 
+   001D ldarg.1 
+   001E stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::duration
+   0023 ldloc.0 
+   0024 ldarg.s bCheckInGrass
+   0026 stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::bCheckInGrass
+   002B ldloc.0 
+   002C ldarg.s autoExit
+   002E stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::autoExit
+   0033 ldloc.0 
+   0034 ldarg.0 
+   0035 stfld MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1::$this
+   003A ldloc.0 
+   003B ret 
+== System.Void PlayHurtEffect() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::hurtCurve
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 call System.Boolean MaterialHurtEffect::CheckMats()
+   0018 brtrue IL_001e: ldarg.0
+   001D ret 
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Curve>(eMaterialEffectClassType)
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldfld SMaterialEffect_Curve::curve
+   002C ldnull 
+   002D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0032 brfalse IL_0038: ldloc.0
+   0037 ret 
+   0038 ldloc.0 
+   0039 ldarg.0 
+   003A ldfld MaterialHurtEffect::hurtCurve
+   003F stfld SMaterialEffect_Curve::curve
+   0044 ldloc.0 
+   0045 ldstr _HurtColor
+   004A stfld SMaterialEffect_Curve::paramName
+   004F ldloc.0 
+   0050 ldstr _HURT_EFFECT_ON
+   0055 stfld SMaterialEffect_Base::shaderKeyword
+   005A ldloc.0 
+   005B callvirt System.Void SMaterialEffect_Base::Play()
+   0060 ret 
+== System.Int32 PlayHighLitEffect(UnityEngine.Vector3 color) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld MaterialHurtEffect::m_effectCounter
+   0013 ldc.i4.3 
+   0014 ldelema System.Int32
+   0019 dup 
+   001A ldind.i4 
+   001B ldc.i4.1 
+   001C add 
+   001D stind.i4 
+   001E ldarg.0 
+   001F ldc.i4.3 
+   0020 call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_HighLit>(eMaterialEffectClassType)
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldarg.1 
+   0028 stfld SMaterialEffect_HighLit::color
+   002D ldloc.0 
+   002E callvirt System.Void SMaterialEffect_Base::Play()
+   0033 ldloca.s V_1
+   0035 initobj MaterialHurtEffect/HighLitColor
+   003B ldloca.s V_1
+   003D ldarg.0 
+   003E dup 
+   003F ldfld MaterialHurtEffect::hlcIndex
+   0044 ldc.i4.1 
+   0045 add 
+   0046 dup 
+   0047 stloc.2 
+   0048 stfld MaterialHurtEffect::hlcIndex
+   004D ldloc.2 
+   004E stfld MaterialHurtEffect/HighLitColor::id
+   0053 ldloca.s V_1
+   0055 ldarg.1 
+   0056 stfld MaterialHurtEffect/HighLitColor::color
+   005B ldarg.0 
+   005C ldfld MaterialHurtEffect::hlcList
+   0061 ldloc.1 
+   0062 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::Add(!0)
+   0067 ldloca.s V_1
+   0069 ldfld MaterialHurtEffect/HighLitColor::id
+   006E ret 
+== System.Void StopHighLitEffect(System.Int32 id) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldc.i4.0 
+   000E ble IL_005a: ldarg.0
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 br IL_0049: ldloc.0
+   001A ldarg.0 
+   001B ldfld MaterialHurtEffect::hlcList
+   0020 ldloc.0 
+   0021 callvirt !0 System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::get_Item(System.Int32)
+   0026 stloc.1 
+   0027 ldloca.s V_1
+   0029 ldfld MaterialHurtEffect/HighLitColor::id
+   002E ldarg.1 
+   002F bne.un IL_0045: ldloc.0
+   0034 ldarg.0 
+   0035 ldfld MaterialHurtEffect::hlcList
+   003A ldloc.0 
+   003B callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::RemoveAt(System.Int32)
+   0040 br IL_005a: ldarg.0
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ldarg.0 
+   004B ldfld MaterialHurtEffect::hlcList
+   0050 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::get_Count()
+   0055 blt IL_001a: ldarg.0
+   005A ldarg.0 
+   005B ldfld MaterialHurtEffect::m_effectCounter
+   0060 ldc.i4.3 
+   0061 ldelema System.Int32
+   0066 dup 
+   0067 ldind.i4 
+   0068 ldc.i4.1 
+   0069 sub 
+   006A stind.i4 
+   006B ldarg.0 
+   006C ldc.i4.3 
+   006D call SMaterialEffect_Base MaterialHurtEffect::FindEffect(eMaterialEffectClassType)
+   0072 isinst SMaterialEffect_HighLit
+   0077 stloc.2 
+   0078 ldloc.2 
+   0079 brtrue IL_007f: ldarg.0
+   007E ret 
+   007F ldarg.0 
+   0080 ldfld MaterialHurtEffect::hlcList
+   0085 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::get_Count()
+   008A ldc.i4.0 
+   008B ble IL_00bd: ldarg.0
+   0090 ldarg.1 
+   0091 ldc.i4.0 
+   0092 ble IL_00bd: ldarg.0
+   0097 ldloc.2 
+   0098 ldarg.0 
+   0099 ldfld MaterialHurtEffect::hlcList
+   009E ldarg.0 
+   009F ldfld MaterialHurtEffect::hlcList
+   00A4 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::get_Count()
+   00A9 ldc.i4.1 
+   00AA sub 
+   00AB callvirt !0 System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::get_Item(System.Int32)
+   00B0 stloc.3 
+   00B1 ldloca.s V_3
+   00B3 ldfld MaterialHurtEffect/HighLitColor::color
+   00B8 stfld SMaterialEffect_HighLit::color
+   00BD ldarg.0 
+   00BE ldfld MaterialHurtEffect::m_effectCounter
+   00C3 ldc.i4.3 
+   00C4 ldelem.i4 
+   00C5 ldc.i4.0 
+   00C6 ble IL_00cc: ldarg.0
+   00CB ret 
+   00CC ldarg.0 
+   00CD ldloc.2 
+   00CE call System.Void MaterialHurtEffect::StopEffect(SMaterialEffect_Base)
+   00D3 ldarg.0 
+   00D4 ldc.i4.0 
+   00D5 stfld MaterialHurtEffect::hlcIndex
+   00DA ldarg.0 
+   00DB ldfld MaterialHurtEffect::hlcList
+   00E0 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/HighLitColor>::Clear()
+   00E5 ret 
+== System.Int32 PlayPhantomEffect(UnityEngine.Vector3 color) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld MaterialHurtEffect::m_effectCounter
+   0013 ldc.i4.5 
+   0014 ldelema System.Int32
+   0019 dup 
+   001A ldind.i4 
+   001B ldc.i4.1 
+   001C add 
+   001D stind.i4 
+   001E ldarg.0 
+   001F ldc.i4.5 
+   0020 call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Phantom>(eMaterialEffectClassType)
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldarg.1 
+   0028 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   002D stfld SMaterialEffect_Phantom::color
+   0032 ldloc.0 
+   0033 callvirt System.Void SMaterialEffect_Base::Play()
+   0038 ldloca.s V_1
+   003A initobj MaterialHurtEffect/PhantomColor
+   0040 ldloca.s V_1
+   0042 ldarg.0 
+   0043 dup 
+   0044 ldfld MaterialHurtEffect::ptIndex
+   0049 ldc.i4.1 
+   004A add 
+   004B dup 
+   004C stloc.2 
+   004D stfld MaterialHurtEffect::ptIndex
+   0052 ldloc.2 
+   0053 stfld MaterialHurtEffect/PhantomColor::id
+   0058 ldloca.s V_1
+   005A ldarg.1 
+   005B stfld MaterialHurtEffect/PhantomColor::color
+   0060 ldarg.0 
+   0061 ldfld MaterialHurtEffect::phantomList
+   0066 ldloc.1 
+   0067 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::Add(!0)
+   006C ldloca.s V_1
+   006E ldfld MaterialHurtEffect/PhantomColor::id
+   0073 ret 
+== System.Void StopPhantomEffect(System.Int32 id) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldc.i4.0 
+   000E ble IL_005a: ldarg.0
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 br IL_0049: ldloc.0
+   001A ldarg.0 
+   001B ldfld MaterialHurtEffect::phantomList
+   0020 ldloc.0 
+   0021 callvirt !0 System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::get_Item(System.Int32)
+   0026 stloc.1 
+   0027 ldloca.s V_1
+   0029 ldfld MaterialHurtEffect/PhantomColor::id
+   002E ldarg.1 
+   002F bne.un IL_0045: ldloc.0
+   0034 ldarg.0 
+   0035 ldfld MaterialHurtEffect::phantomList
+   003A ldloc.0 
+   003B callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::RemoveAt(System.Int32)
+   0040 br IL_005a: ldarg.0
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ldarg.0 
+   004B ldfld MaterialHurtEffect::phantomList
+   0050 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::get_Count()
+   0055 blt IL_001a: ldarg.0
+   005A ldarg.0 
+   005B ldfld MaterialHurtEffect::m_effectCounter
+   0060 ldc.i4.5 
+   0061 ldelema System.Int32
+   0066 dup 
+   0067 ldind.i4 
+   0068 ldc.i4.1 
+   0069 sub 
+   006A stind.i4 
+   006B ldarg.0 
+   006C ldc.i4.5 
+   006D call SMaterialEffect_Base MaterialHurtEffect::FindEffect(eMaterialEffectClassType)
+   0072 isinst SMaterialEffect_Phantom
+   0077 stloc.2 
+   0078 ldloc.2 
+   0079 brtrue IL_007f: ldarg.0
+   007E ret 
+   007F ldarg.0 
+   0080 ldfld MaterialHurtEffect::phantomList
+   0085 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::get_Count()
+   008A ldc.i4.0 
+   008B ble IL_00c2: ldarg.0
+   0090 ldarg.1 
+   0091 ldc.i4.0 
+   0092 ble IL_00c2: ldarg.0
+   0097 ldloc.2 
+   0098 ldarg.0 
+   0099 ldfld MaterialHurtEffect::phantomList
+   009E ldarg.0 
+   009F ldfld MaterialHurtEffect::phantomList
+   00A4 callvirt System.Int32 System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::get_Count()
+   00A9 ldc.i4.1 
+   00AA sub 
+   00AB callvirt !0 System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::get_Item(System.Int32)
+   00B0 stloc.3 
+   00B1 ldloca.s V_3
+   00B3 ldfld MaterialHurtEffect/PhantomColor::color
+   00B8 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   00BD stfld SMaterialEffect_Phantom::color
+   00C2 ldarg.0 
+   00C3 ldfld MaterialHurtEffect::m_effectCounter
+   00C8 ldc.i4.5 
+   00C9 ldelem.i4 
+   00CA ldc.i4.0 
+   00CB ble IL_00d1: ldarg.0
+   00D0 ret 
+   00D1 ldarg.0 
+   00D2 ldloc.2 
+   00D3 call System.Void MaterialHurtEffect::StopEffect(SMaterialEffect_Base)
+   00D8 ldarg.0 
+   00D9 ldc.i4.0 
+   00DA stfld MaterialHurtEffect::ptIndex
+   00DF ldarg.0 
+   00E0 ldfld MaterialHurtEffect::phantomList
+   00E5 callvirt System.Void System.Collections.Generic.List`1<MaterialHurtEffect/PhantomColor>::Clear()
+   00EA ret 
+== System.Int32 PlayTexEffect(UnityEngine.Texture2D tex, eMaterialEffectType effectType, eMaterialEffectClassType classType) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000e: ldarg.0
+   000C ldc.i4.m1 
+   000D ret 
+   000E ldarg.0 
+   000F call System.Boolean MaterialHurtEffect::CheckMats()
+   0014 brtrue IL_001b: ldarg.0
+   0019 ldc.i4.m1 
+   001A ret 
+   001B ldarg.0 
+   001C ldarg.3 
+   001D call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Tex>(eMaterialEffectClassType)
+   0022 stloc.0 
+   0023 ldloc.0 
+   0024 ldarg.2 
+   0025 stfld SMaterialEffect_Base::effectType
+   002A ldloc.0 
+   002B ldfld SMaterialEffect_Tex::tex
+   0030 ldnull 
+   0031 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0036 brfalse IL_0047: ldloc.0
+   003B ldloc.0 
+   003C ldarg.1 
+   003D callvirt System.Void SMaterialEffect_Tex::Replay(UnityEngine.Texture)
+   0042 br IL_0099: ldloc.0
+   0047 ldloc.0 
+   0048 ldarg.1 
+   0049 stfld SMaterialEffect_Tex::tex
+   004E ldloc.0 
+   004F ldstr _EffectTex
+   0054 stfld SMaterialEffect_Tex::texParamName
+   0059 ldloc.0 
+   005A ldstr _EFFECT_TEX_ON
+   005F stfld SMaterialEffect_Base::shaderKeyword
+   0064 ldloc.0 
+   0065 ldc.i4.1 
+   0066 stfld SMaterialEffect_Tex::enableFade
+   006B ldloc.0 
+   006C ldc.i4.1 
+   006D stfld SMaterialEffect_Tex::hasFadeFactor
+   0072 ldloc.0 
+   0073 ldc.r4 0.08
+   0078 stfld SMaterialEffect_Tex::fadeInterval
+   007D ldloc.0 
+   007E ldstr _EffectFactor
+   0083 stfld SMaterialEffect_Tex::fadeParamName
+   0088 ldloc.0 
+   0089 ldc.r4 0.85
+   008E stfld SMaterialEffect_Tex::factorScale
+   0093 ldloc.0 
+   0094 callvirt System.Void SMaterialEffect_Base::Play()
+   0099 ldloc.0 
+   009A ldfld SMaterialEffect_Base::playingId
+   009F ret 
+== System.Void StopTexEffect(eMaterialEffectType effectType, eMaterialEffectClassType classType) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 call SMaterialEffect_Base MaterialHurtEffect::FindEffect(eMaterialEffectClassType)
+   0007 isinst SMaterialEffect_Tex
+   000C stloc.0 
+   000D ldloc.0 
+   000E brtrue IL_0014: ldloc.0
+   0013 ret 
+   0014 ldloc.0 
+   0015 ldfld SMaterialEffect_Base::effectType
+   001A ldarg.1 
+   001B beq IL_0021: ldloc.0
+   0020 ret 
+   0021 ldloc.0 
+   0022 ldfld SMaterialEffect_Tex::enableFade
+   0027 brfalse IL_0037: ldarg.0
+   002C ldloc.0 
+   002D callvirt System.Void SMaterialEffect_Tex::BeginFadeOut()
+   0032 br IL_003e: ret
+   0037 ldarg.0 
+   0038 ldloc.0 
+   0039 call System.Void MaterialHurtEffect::StopEffect(SMaterialEffect_Base)
+   003E ret 
+== System.Int32 PlayFreezeEffect() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.0 
+   0007 ldelema System.Int32
+   000C dup 
+   000D ldind.i4 
+   000E ldc.i4.1 
+   000F add 
+   0010 stind.i4 
+   0011 ldarg.0 
+   0012 ldarg.0 
+   0013 ldfld MaterialHurtEffect::freezeTex
+   0018 ldc.i4.0 
+   0019 ldc.i4.1 
+   001A call System.Int32 MaterialHurtEffect::PlayTexEffect(UnityEngine.Texture2D,eMaterialEffectType,eMaterialEffectClassType)
+   001F ret 
+== System.Int32 PlayStoneEffect() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.1 
+   0007 ldelema System.Int32
+   000C dup 
+   000D ldind.i4 
+   000E ldc.i4.1 
+   000F add 
+   0010 stind.i4 
+   0011 ldarg.0 
+   0012 ldarg.0 
+   0013 ldfld MaterialHurtEffect::stoneTex
+   0018 ldc.i4.1 
+   0019 ldc.i4.1 
+   001A call System.Int32 MaterialHurtEffect::PlayTexEffect(UnityEngine.Texture2D,eMaterialEffectType,eMaterialEffectClassType)
+   001F ret 
+== System.Void StopFreezeEffect(System.Int32 playingId) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.0 
+   0007 ldelema System.Int32
+   000C dup 
+   000D ldind.i4 
+   000E ldc.i4.1 
+   000F sub 
+   0010 stind.i4 
+   0011 ldarg.0 
+   0012 ldfld MaterialHurtEffect::m_effectCounter
+   0017 ldc.i4.0 
+   0018 ldelem.i4 
+   0019 ldc.i4.0 
+   001A bgt IL_0027: ret
+   001F ldarg.0 
+   0020 ldc.i4.0 
+   0021 ldc.i4.1 
+   0022 call System.Void MaterialHurtEffect::StopTexEffect(eMaterialEffectType,eMaterialEffectClassType)
+   0027 ret 
+== System.Void StopStoneEffect(System.Int32 playingId) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.1 
+   0007 ldelema System.Int32
+   000C dup 
+   000D ldind.i4 
+   000E ldc.i4.1 
+   000F sub 
+   0010 stind.i4 
+   0011 ldarg.0 
+   0012 ldfld MaterialHurtEffect::m_effectCounter
+   0017 ldc.i4.1 
+   0018 ldelem.i4 
+   0019 ldc.i4.0 
+   001A bgt IL_0027: ret
+   001F ldarg.0 
+   0020 ldc.i4.1 
+   0021 ldc.i4.1 
+   0022 call System.Void MaterialHurtEffect::StopTexEffect(eMaterialEffectType,eMaterialEffectClassType)
+   0027 ret 
+== System.Void ForceSetTranslucent() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean MaterialHurtEffect::CheckMats()
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.2 
+   000E call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Translucent>(eMaterialEffectClassType)
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 ldc.i4.1 
+   0016 stfld SMaterialEffect_Translucent::enableFade
+   001B ldloc.0 
+   001C ldc.r4 0.1
+   0021 stfld SMaterialEffect_Translucent::fadeInterval
+   0026 ldloc.0 
+   0027 ldc.r4 0.5
+   002C stfld SMaterialEffect_Translucent::minAlpha
+   0031 ldloc.0 
+   0032 callvirt System.Void SMaterialEffect_Base::Play()
+   0037 ret 
+== System.Void SetTranslucent(System.Boolean b, System.Boolean bForbidFade) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.2 
+   0007 ldelem.i4 
+   0008 stloc.0 
+   0009 ldarg.0 
+   000A ldfld MaterialHurtEffect::m_effectCounter
+   000F ldc.i4.2 
+   0010 ldelema System.Int32
+   0015 dup 
+   0016 ldind.i4 
+   0017 ldarg.1 
+   0018 brfalse IL_0023: ldc.i4.m1
+   001D ldc.i4.1 
+   001E br IL_0024: add
+   0023 ldc.i4.m1 
+   0024 add 
+   0025 stind.i4 
+   0026 ldloc.0 
+   0027 ldc.i4.0 
+   0028 cgt 
+   002A ldarg.0 
+   002B ldfld MaterialHurtEffect::m_effectCounter
+   0030 ldc.i4.2 
+   0031 ldelem.i4 
+   0032 ldc.i4.0 
+   0033 cgt 
+   0035 bne.un IL_003b: ldarg.0
+   003A ret 
+   003B ldarg.0 
+   003C call System.Boolean MaterialHurtEffect::CheckMats()
+   0041 brtrue IL_0047: ldarg.0
+   0046 ret 
+   0047 ldarg.0 
+   0048 ldfld MaterialHurtEffect::m_effectCounter
+   004D ldc.i4.2 
+   004E ldelem.i4 
+   004F ldc.i4.0 
+   0050 ble IL_0085: ldarg.0
+   0055 ldarg.0 
+   0056 ldc.i4.2 
+   0057 call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Translucent>(eMaterialEffectClassType)
+   005C stloc.1 
+   005D ldloc.1 
+   005E ldc.i4.1 
+   005F stfld SMaterialEffect_Translucent::enableFade
+   0064 ldloc.1 
+   0065 ldc.r4 0.1
+   006A stfld SMaterialEffect_Translucent::fadeInterval
+   006F ldloc.1 
+   0070 ldc.r4 0.5
+   0075 stfld SMaterialEffect_Translucent::minAlpha
+   007A ldloc.1 
+   007B callvirt System.Void SMaterialEffect_Base::Play()
+   0080 br IL_00bc: ret
+   0085 ldarg.0 
+   0086 ldc.i4.2 
+   0087 call SMaterialEffect_Base MaterialHurtEffect::FindEffect(eMaterialEffectClassType)
+   008C isinst SMaterialEffect_Translucent
+   0091 stloc.2 
+   0092 ldloc.2 
+   0093 brtrue IL_0099: ldloc.2
+   0098 ret 
+   0099 ldloc.2 
+   009A ldfld SMaterialEffect_Translucent::enableFade
+   009F brfalse IL_00b5: ldarg.0
+   00A4 ldarg.2 
+   00A5 brtrue IL_00b5: ldarg.0
+   00AA ldloc.2 
+   00AB callvirt System.Void SMaterialEffect_Translucent::BeginFadeOut()
+   00B0 br IL_00bc: ret
+   00B5 ldarg.0 
+   00B6 ldloc.2 
+   00B7 call System.Void MaterialHurtEffect::StopEffect(SMaterialEffect_Base)
+   00BC ret 
+== System.Void SetDissolve(System.Boolean b, System.Single duration, System.Boolean bForbidFade) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldc.i4.4 
+   0007 ldelem.i4 
+   0008 stloc.0 
+   0009 ldarg.0 
+   000A ldfld MaterialHurtEffect::m_effectCounter
+   000F ldc.i4.4 
+   0010 ldelema System.Int32
+   0015 dup 
+   0016 ldind.i4 
+   0017 ldarg.1 
+   0018 brfalse IL_0023: ldc.i4.m1
+   001D ldc.i4.1 
+   001E br IL_0024: add
+   0023 ldc.i4.m1 
+   0024 add 
+   0025 stind.i4 
+   0026 ldloc.0 
+   0027 ldc.i4.0 
+   0028 cgt 
+   002A ldarg.0 
+   002B ldfld MaterialHurtEffect::m_effectCounter
+   0030 ldc.i4.4 
+   0031 ldelem.i4 
+   0032 ldc.i4.0 
+   0033 cgt 
+   0035 bne.un IL_003b: ldarg.0
+   003A ret 
+   003B ldarg.0 
+   003C call System.Boolean MaterialHurtEffect::CheckMats()
+   0041 brtrue IL_0047: ldarg.0
+   0046 ret 
+   0047 ldarg.0 
+   0048 ldfld MaterialHurtEffect::m_effectCounter
+   004D ldc.i4.4 
+   004E ldelem.i4 
+   004F ldc.i4.0 
+   0050 ble IL_008e: ldarg.0
+   0055 ldarg.0 
+   0056 ldc.i4.4 
+   0057 call T MaterialHurtEffect::FindOrCreateEffect<SMaterialEffect_Dissolve>(eMaterialEffectClassType)
+   005C stloc.1 
+   005D ldloc.1 
+   005E ldc.i4.1 
+   005F stfld SMaterialEffect_Dissolve::enableFade
+   0064 ldloc.1 
+   0065 ldarg.2 
+   0066 stfld SMaterialEffect_Dissolve::fadeInterval
+   006B ldloc.1 
+   006C ldarg.0 
+   006D ldfld MaterialHurtEffect::dissolveMaskTex
+   0072 stfld SMaterialEffect_Dissolve::dissolveMaskTex
+   0077 ldloc.1 
+   0078 ldarg.0 
+   0079 ldfld MaterialHurtEffect::dissolveRingTex
+   007E stfld SMaterialEffect_Dissolve::dissolveRingTex
+   0083 ldloc.1 
+   0084 callvirt System.Void SMaterialEffect_Base::Play()
+   0089 br IL_00c5: ret
+   008E ldarg.0 
+   008F ldc.i4.4 
+   0090 call SMaterialEffect_Base MaterialHurtEffect::FindEffect(eMaterialEffectClassType)
+   0095 isinst SMaterialEffect_Dissolve
+   009A stloc.2 
+   009B ldloc.2 
+   009C brtrue IL_00a2: ldloc.2
+   00A1 ret 
+   00A2 ldloc.2 
+   00A3 ldfld SMaterialEffect_Dissolve::enableFade
+   00A8 brfalse IL_00be: ldarg.0
+   00AD ldarg.3 
+   00AE brtrue IL_00be: ldarg.0
+   00B3 ldloc.2 
+   00B4 callvirt System.Void SMaterialEffect_Dissolve::BeginFadeOut()
+   00B9 br IL_00c5: ret
+   00BE ldarg.0 
+   00BF ldloc.2 
+   00C0 call System.Void MaterialHurtEffect::StopEffect(SMaterialEffect_Base)
+   00C5 ret 
+== System.Void StopEffect(SMaterialEffect_Base effect) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 callvirt System.Void SMaterialEffect_Base::Stop()
+   0006 ldarg.1 
+   0007 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   000C ldarg.0 
+   000D ldfld MaterialHurtEffect::playingEffects
+   0012 ldarg.1 
+   0013 callvirt System.Boolean ListView`1<SMaterialEffect_Base>::Remove(!0)
+   0018 pop 
+   0019 ret 
+== System.Void StopAllEffects() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::m_effectCounter
+   0006 ldlen 
+   0007 conv.i4 
+   0008 stloc.0 
+   0009 ldc.i4.0 
+   000A stloc.1 
+   000B br IL_001d: ldloc.1
+   0010 ldarg.0 
+   0011 ldfld MaterialHurtEffect::m_effectCounter
+   0016 ldloc.1 
+   0017 ldc.i4.0 
+   0018 stelem.i4 
+   0019 ldloc.1 
+   001A ldc.i4.1 
+   001B add 
+   001C stloc.1 
+   001D ldloc.1 
+   001E ldloc.0 
+   001F blt IL_0010: ldarg.0
+   0024 ldarg.0 
+   0025 ldfld MaterialHurtEffect::playingEffects
+   002A brfalse IL_0070: ret
+   002F br IL_005f: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld MaterialHurtEffect::playingEffects
+   003A ldc.i4.0 
+   003B callvirt !0 ListView`1<SMaterialEffect_Base>::get_Item(System.Int32)
+   0040 stloc.2 
+   0041 ldloc.2 
+   0042 brfalse IL_0053: ldarg.0
+   0047 ldloc.2 
+   0048 callvirt System.Void SMaterialEffect_Base::Stop()
+   004D ldloc.2 
+   004E callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0053 ldarg.0 
+   0054 ldfld MaterialHurtEffect::playingEffects
+   0059 ldc.i4.0 
+   005A callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   005F ldarg.0 
+   0060 ldfld MaterialHurtEffect::playingEffects
+   0065 callvirt System.Int32 ListViewBase::get_Count()
+   006A ldc.i4.0 
+   006B bgt IL_0034: ldarg.0
+   0070 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld MaterialHurtEffect::mats
+   0006 brfalse IL_001d: ret
+   000B ldarg.0 
+   000C ldfld MaterialHurtEffect::mats
+   0011 callvirt System.Void ListViewBase::Clear()
+   0016 ldarg.0 
+   0017 ldnull 
+   0018 stfld MaterialHurtEffect::mats
+   001D ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld MaterialHurtEffect::s_playerId
+   0006 newobj System.Void UnityEngine.WaitForEndOfFrame::.ctor()
+   000B stsfld MaterialHurtEffect::s_WaitForEndOfFrame
+   0010 ret 
+  NESTED MaterialHurtEffect/MaterialState
+  NESTED MaterialHurtEffect/stMaterialParam
+  NESTED MaterialHurtEffect/HighLitColor
+  NESTED MaterialHurtEffect/PhantomColor
+  NESTED MaterialHurtEffect/<PreloadResource>c__Iterator0
+  NESTED MaterialHurtEffect/<ModifyParamsCoroutine>c__Iterator1

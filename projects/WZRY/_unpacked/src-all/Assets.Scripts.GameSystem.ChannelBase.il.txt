@@ -1,0 +1,957 @@
+// TYPE Assets.Scripts.GameSystem.ChannelBase  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean isActive
+  FIELD System.Int32 ParserMaxWidth
+  FIELD Assets.Scripts.GameSystem.NewChatSystem _chatSys
+  FIELD Assets.Scripts.GameSystem.EChatChannel _channelType
+  FIELD System.Boolean _showChatPeopleList
+  FIELD System.Boolean _isP2PChat
+  FIELD System.UInt32 _chatCD
+  FIELD System.UInt32 _lastSendChatTime
+  FIELD System.UInt32 _lastTimeStamp
+  FIELD ListView`1<Assets.Scripts.GameSystem.CChatEntity> _entityQueue
+  FIELD System.UInt32 _maxEntityHoldNum
+  FIELD ListView`1<Assets.Scripts.GameSystem.CChatEntity> _tempEntityQueue
+== System.Void .ctor(Assets.Scripts.GameSystem.NewChatSystem chatSys, Assets.Scripts.GameSystem.EChatChannel channelTyep, System.Boolean showChatPeopleList, System.Boolean isP2PChat, System.Int32 ParserMaxWidth) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.ChannelBase::isActive
+   0007 ldarg.0 
+   0008 ldc.i4.s 16
+   000A stfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   000F ldarg.0 
+   0010 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::.ctor()
+   0015 stfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   001A ldarg.0 
+   001B ldc.i4.s 50
+   001D stfld Assets.Scripts.GameSystem.ChannelBase::_maxEntityHoldNum
+   0022 ldarg.0 
+   0023 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::.ctor()
+   0028 stfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   002D ldarg.0 
+   002E call System.Void System.Object::.ctor()
+   0033 ldarg.0 
+   0034 ldarg.1 
+   0035 stfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   003A ldarg.0 
+   003B ldarg.2 
+   003C stfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   0041 ldarg.0 
+   0042 ldarg.3 
+   0043 stfld Assets.Scripts.GameSystem.ChannelBase::_showChatPeopleList
+   0048 ldarg.0 
+   0049 ldarg.s isP2PChat
+   004B stfld Assets.Scripts.GameSystem.ChannelBase::_isP2PChat
+   0050 ldarg.0 
+   0051 ldc.i4.0 
+   0052 stfld Assets.Scripts.GameSystem.ChannelBase::isActive
+   0057 ldarg.0 
+   0058 ldarg.s ParserMaxWidth
+   005A stfld Assets.Scripts.GameSystem.ChannelBase::ParserMaxWidth
+   005F ret 
+== System.Void ResetClear() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0024: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   001A ldloc.1 
+   001B callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::CollectDiscardEntity(Assets.Scripts.GameSystem.CChatEntity)
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   002B callvirt System.Int32 ListViewBase::get_Count()
+   0030 blt IL_0007: ldarg.0
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   003B callvirt System.Void ListViewBase::Clear()
+   0040 ret 
+== System.Void AddNewChatEntity(Assets.Scripts.GameSystem.CChatEntity ent, System.Boolean bAutoSetUnread) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   0006 ldarg.1 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.ChannelBase::ParserMaxWidth
+   000D ldc.i4.0 
+   000E callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::TextImgMixedParser(Assets.Scripts.GameSystem.CChatEntity,System.Int32,System.Boolean)
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0019 ldarg.1 
+   001A callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0025 callvirt System.Int32 ListViewBase::get_Count()
+   002A conv.i8 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.ChannelBase::_maxEntityHoldNum
+   0031 conv.u8 
+   0032 ble IL_005c: ldarg.2
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   003D ldc.i4.0 
+   003E callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0043 stloc.0 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   004A ldc.i4.0 
+   004B callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   0056 ldloc.0 
+   0057 callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::CollectDiscardEntity(Assets.Scripts.GameSystem.CChatEntity)
+   005C ldarg.2 
+   005D brfalse IL_0091: ret
+   0062 ldarg.1 
+   0063 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0068 brfalse IL_008a: ldarg.1
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   0073 ldarg.1 
+   0074 callvirt System.Boolean Assets.Scripts.GameSystem.NewChatSystem::IsCreatedByPeople(Assets.Scripts.GameSystem.CChatEntity)
+   0079 brfalse IL_008a: ldarg.1
+   007E ldarg.1 
+   007F ldc.i4.0 
+   0080 stfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   0085 br IL_0091: ret
+   008A ldarg.1 
+   008B ldc.i4.1 
+   008C stfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   0091 ret 
+== System.UInt32 AddNewChatData(Assets.Scripts.GameSystem.SvrChatData svrData, System.Boolean ignoreSpecialTextAdding) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=7
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 conv.i8 
+   0004 stloc.1 
+   0005 ldc.i4.0 
+   0006 stloc.2 
+   0007 ldarg.1 
+   0008 ldfld Assets.Scripts.GameSystem.SvrChatData::ChatSender
+   000D brfalse IL_002f: ldarg.1
+   0012 ldarg.1 
+   0013 ldfld Assets.Scripts.GameSystem.SvrChatData::ChatSender
+   0018 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::ullUid
+   001D stloc.1 
+   001E ldarg.1 
+   001F ldfld Assets.Scripts.GameSystem.SvrChatData::ChatSender
+   0024 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::iLogicWorldID
+   0029 stloc.2 
+   002A br IL_005c: call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   002F ldarg.1 
+   0030 ldfld Assets.Scripts.GameSystem.SvrChatData::ChatRoomSender
+   0035 brfalse IL_005c: call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   003A ldarg.1 
+   003B ldfld Assets.Scripts.GameSystem.SvrChatData::ChatRoomSender
+   0040 ldfld CSProtocol.COMDT_CHATROOM_PLAYERINFO::stBaseInfo
+   0045 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::ullUid
+   004A stloc.1 
+   004B ldarg.1 
+   004C ldfld Assets.Scripts.GameSystem.SvrChatData::ChatRoomSender
+   0051 ldfld CSProtocol.COMDT_CHATROOM_PLAYERINFO::stBaseInfo
+   0056 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::iLogicWorldID
+   005B stloc.2 
+   005C call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0061 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0066 ldloc.1 
+   0067 ldloc.2 
+   0068 callvirt System.Boolean Assets.Scripts.GameSystem.CFriendModel::IsBlack(System.UInt64,System.UInt32)
+   006D brfalse IL_0074: ldarg.0
+   0072 ldc.i4.0 
+   0073 ret 
+   0074 ldarg.0 
+   0075 ldc.i4.s 11
+   0077 callvirt Assets.Scripts.GameSystem.CChatEntity Assets.Scripts.GameSystem.ChannelBase::GetNewestChatEntity(Assets.Scripts.GameSystem.EChaterType)
+   007C stloc.3 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   0083 callvirt Assets.Scripts.GameSystem.CChatEntity Assets.Scripts.GameSystem.NewChatSystem::GenerateEmptyEntity()
+   0088 stloc.s V_4
+   008A ldloc.s V_4
+   008C ldloc.1 
+   008D stfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0092 ldloc.s V_4
+   0094 ldloc.2 
+   0095 stfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   009A ldarg.1 
+   009B ldfld Assets.Scripts.GameSystem.SvrChatData::ChatReceiver
+   00A0 brfalse IL_00c9: ldloc.s V_4
+   00A5 ldloc.s V_4
+   00A7 ldarg.1 
+   00A8 ldfld Assets.Scripts.GameSystem.SvrChatData::ChatReceiver
+   00AD ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::ullUid
+   00B2 stfld Assets.Scripts.GameSystem.CChatEntity::receiverUid
+   00B7 ldloc.s V_4
+   00B9 ldarg.1 
+   00BA ldfld Assets.Scripts.GameSystem.SvrChatData::ChatReceiver
+   00BF ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::iLogicWorldID
+   00C4 stfld Assets.Scripts.GameSystem.CChatEntity::receiverWorldId
+   00C9 ldloc.s V_4
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   00D1 stfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   00D6 ldloc.s V_4
+   00D8 ldarg.0 
+   00D9 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   00DE ldloc.1 
+   00DF ldloc.2 
+   00E0 ldc.i4.0 
+   00E1 callvirt Assets.Scripts.GameSystem.ChaterBasicInfo Assets.Scripts.GameSystem.NewChatSystem::GetChaterPlayerInfo(System.UInt64,System.UInt32,System.Boolean)
+   00E6 stfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   00EB ldloc.s V_4
+   00ED ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   00F2 brfalse IL_0119: ldloc.s V_4
+   00F7 ldloc.1 
+   00F8 call Assets.Scripts.GameSystem.GuildMemInfo Assets.Scripts.GameSystem.CGuildHelper::GetGuildMemberInfoByUid(System.UInt64)
+   00FD stloc.s V_5
+   00FF ldloc.s V_5
+   0101 brfalse IL_0119: ldloc.s V_4
+   0106 ldloc.s V_4
+   0108 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   010D ldloc.s V_5
+   010F ldfld Assets.Scripts.GameSystem.GuildMemInfo::enPosition
+   0114 stfld Assets.Scripts.GameSystem.ChaterBasicInfo::enPosition
+   0119 ldloc.s V_4
+   011B ldarg.1 
+   011C ldfld Assets.Scripts.GameSystem.SvrChatData::Content
+   0121 stfld Assets.Scripts.GameSystem.CChatEntity::text
+   0126 ldloc.s V_4
+   0128 ldarg.1 
+   0129 ldfld Assets.Scripts.GameSystem.SvrChatData::ChaterType
+   012E stfld Assets.Scripts.GameSystem.CChatEntity::type
+   0133 ldloc.s V_4
+   0135 ldarg.1 
+   0136 ldfld Assets.Scripts.GameSystem.SvrChatData::VoiceMsg
+   013B callvirt System.Void Assets.Scripts.GameSystem.CChatEntity::AddVoiceInfo(CSProtocol.COMDT_VOICE_MSG)
+   0140 ldloc.s V_4
+   0142 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0147 stfld Assets.Scripts.GameSystem.CChatEntity::time
+   014C ldloc.s V_4
+   014E ldarg.1 
+   014F ldfld Assets.Scripts.GameSystem.SvrChatData::bNeedTeamInfo
+   0154 stfld Assets.Scripts.GameSystem.CChatEntity::bNeedTeamInfo
+   0159 ldloc.s V_4
+   015B ldarg.1 
+   015C ldfld Assets.Scripts.GameSystem.SvrChatData::InviteJoinTeamInfo
+   0161 stfld Assets.Scripts.GameSystem.CChatEntity::InviteJoinTeamInfo
+   0166 ldloc.s V_4
+   0168 ldarg.1 
+   0169 ldfld Assets.Scripts.GameSystem.SvrChatData::guildRecruitInfo
+   016E stfld Assets.Scripts.GameSystem.CChatEntity::guildRecruitInfo
+   0173 ldloc.3 
+   0174 brfalse IL_01ab: ldarg.0
+   0179 ldloc.3 
+   017A ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   017F ldc.i4.8 
+   0180 bne.un IL_01ab: ldarg.0
+   0185 ldloc.s V_4
+   0187 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   018C ldc.i4.8 
+   018D bne.un IL_01ab: ldarg.0
+   0192 ldloc.3 
+   0193 ldfld Assets.Scripts.GameSystem.CChatEntity::text
+   0198 ldloc.s V_4
+   019A ldfld Assets.Scripts.GameSystem.CChatEntity::text
+   019F call System.Boolean System.String::op_Equality(System.String,System.String)
+   01A4 brfalse IL_01ab: ldarg.0
+   01A9 ldc.i4.0 
+   01AA ret 
+   01AB ldarg.0 
+   01AC ldfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   01B1 ldc.i4.2 
+   01B2 beq IL_0260: ldarg.0
+   01B7 ldloc.3 
+   01B8 brfalse IL_0260: ldarg.0
+   01BD ldloc.s V_4
+   01BF ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   01C4 ldc.i4.3 
+   01C5 beq IL_0260: ldarg.0
+   01CA ldloc.s V_4
+   01CC ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   01D1 ldc.i4.5 
+   01D2 beq IL_0260: ldarg.0
+   01D7 ldloc.3 
+   01D8 ldfld Assets.Scripts.GameSystem.CChatEntity::time
+   01DD brfalse IL_0260: ldarg.0
+   01E2 ldloc.3 
+   01E3 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   01E8 ldc.i4.3 
+   01E9 beq IL_0260: ldarg.0
+   01EE ldloc.s V_4
+   01F0 ldfld Assets.Scripts.GameSystem.CChatEntity::time
+   01F5 ldloc.3 
+   01F6 ldfld Assets.Scripts.GameSystem.CChatEntity::time
+   01FB sub 
+   01FC ldc.i4.s 60
+   01FE ble IL_0260: ldarg.0
+   0203 ldloc.s V_4
+   0205 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   020A brfalse IL_0220: ldc.i4.0
+   020F ldloc.s V_4
+   0211 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   0216 ldfld Assets.Scripts.GameSystem.ChaterBasicInfo::Uid
+   021B br IL_0222: stloc.s V_6
+   0220 ldc.i4.0 
+   0221 conv.i8 
+   0222 stloc.s V_6
+   0224 ldloc.s V_4
+   0226 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   022B brfalse IL_0241: ldc.i4.0
+   0230 ldloc.s V_4
+   0232 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   0237 ldfld Assets.Scripts.GameSystem.ChaterBasicInfo::worldId
+   023C br IL_0242: stloc.s V_7
+   0241 ldc.i4.0 
+   0242 stloc.s V_7
+   0244 ldarg.0 
+   0245 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   024A ldarg.0 
+   024B ldfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   0250 ldc.i4.3 
+   0251 ldnull 
+   0252 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0257 ldloc.s V_6
+   0259 ldloc.s V_7
+   025B callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::AddSpecialTextData(Assets.Scripts.GameSystem.EChatChannel,Assets.Scripts.GameSystem.EChaterType,System.String,System.Int32,System.UInt64,System.UInt32)
+   0260 ldarg.0 
+   0261 ldloc.s V_4
+   0263 ldc.i4.1 
+   0264 call System.Void Assets.Scripts.GameSystem.ChannelBase::AddNewChatEntity(Assets.Scripts.GameSystem.CChatEntity,System.Boolean)
+   0269 ldloc.s V_4
+   026B callvirt Assets.Scripts.GameSystem.CChatEntity/VoiceFlag Assets.Scripts.GameSystem.CChatEntity::IsVoice()
+   0270 ldc.i4.0 
+   0271 ceq 
+   0273 stloc.s V_8
+   0275 ldloc.s V_4
+   0277 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   027C brfalse IL_02a7: ldc.i4.1
+   0281 ldloc.s V_4
+   0283 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0288 ldc.i4.1 
+   0289 beq IL_02a7: ldc.i4.1
+   028E ldloc.s V_4
+   0290 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0295 ldc.i4.4 
+   0296 beq IL_02a7: ldc.i4.1
+   029B ldloc.s V_4
+   029D ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   02A2 ldc.i4.2 
+   02A3 ceq 
+   02A5 br.s IL_02a8: stloc.s V_9
+   02A7 ldc.i4.1 
+   02A8 stloc.s V_9
+   02AA ldloc.s V_4
+   02AC ldfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   02B1 ldc.i4.2 
+   02B2 beq IL_02d1: ldc.i4.1
+   02B7 ldloc.s V_4
+   02B9 ldfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   02BE ldc.i4.4 
+   02BF beq IL_02d1: ldc.i4.1
+   02C4 ldloc.s V_4
+   02C6 ldfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   02CB ldc.i4.s 12
+   02CD ceq 
+   02CF br.s IL_02d2: stloc.s V_10
+   02D1 ldc.i4.1 
+   02D2 stloc.s V_10
+   02D4 ldloc.s V_10
+   02D6 brfalse IL_02fc: ldloc.s V_4
+   02DB ldloc.s V_9
+   02DD brfalse IL_02fc: ldloc.s V_4
+   02E2 ldloc.s V_8
+   02E4 brfalse IL_02fc: ldloc.s V_4
+   02E9 call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::GetInstance()
+   02EE ldloc.s V_4
+   02F0 ldfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   02F5 ldloc.s V_4
+   02F7 callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::AddChatRecordData(Assets.Scripts.GameSystem.EChatChannel,Assets.Scripts.GameSystem.CChatEntity)
+   02FC ldloc.s V_4
+   02FE ldfld Assets.Scripts.GameSystem.CChatEntity::UID
+   0303 stloc.0 
+   0304 ldloc.0 
+   0305 ret 
+== Assets.Scripts.GameSystem.EChatChannel GetChannelType() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   0006 ret 
+== System.Void RemoveTailEntity(System.UInt32 count) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 conv.u8 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D conv.i8 
+   000E call System.Int64 System.Math::Min(System.Int64,System.Int64)
+   0013 conv.u4 
+   0014 starg.s count
+   0016 ldarg.1 
+   0017 ldc.i4.0 
+   0018 ble.un IL_0038: ret
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0023 callvirt System.Int32 ListViewBase::get_Count()
+   0028 ldarg.1 
+   0029 sub 
+   002A stloc.0 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0031 ldloc.0 
+   0032 ldarg.1 
+   0033 callvirt System.Void ListViewBase::RemoveRange(System.Int32,System.Int32)
+   0038 ret 
+== ListView`1<Assets.Scripts.GameSystem.CChatEntity> GetNewestChatEntity(System.UInt32 cout, Assets.Scripts.GameSystem.EChaterType filterType, System.Boolean onlyMeanful, System.Boolean copy) attrs=Public, HideBySig maxstack=2
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   000C callvirt System.Int32 ListViewBase::get_Count()
+   0011 ldc.i4.0 
+   0012 ble IL_009f: ldloc.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   001D callvirt System.Int32 ListViewBase::get_Count()
+   0022 ldc.i4.1 
+   0023 sub 
+   0024 stloc.1 
+   0025 br IL_0091: ldloc.1
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0030 ldloc.1 
+   0031 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0036 stloc.2 
+   0037 ldarg.2 
+   0038 ldc.i4.s 11
+   003A beq IL_004b: ldarg.3
+   003F ldarg.2 
+   0040 ldloc.2 
+   0041 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0046 bne.un IL_008d: ldloc.1
+   004B ldarg.3 
+   004C brfalse IL_0062: ldarg.s copy
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   0057 ldloc.2 
+   0058 callvirt System.Boolean Assets.Scripts.GameSystem.NewChatSystem::IsMeaningful(Assets.Scripts.GameSystem.CChatEntity)
+   005D brfalse IL_008d: ldloc.1
+   0062 ldarg.s copy
+   0064 brfalse IL_0081: ldloc.0
+   0069 ldloc.2 
+   006A callvirt System.Object Assets.Scripts.GameSystem.CChatEntity::Clone()
+   006F isinst Assets.Scripts.GameSystem.CChatEntity
+   0074 stloc.3 
+   0075 ldloc.0 
+   0076 ldloc.3 
+   0077 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   007C br IL_0088: ldarg.1
+   0081 ldloc.0 
+   0082 ldloc.2 
+   0083 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   0088 ldarg.1 
+   0089 ldc.i4.1 
+   008A sub 
+   008B starg.s cout
+   008D ldloc.1 
+   008E ldc.i4.1 
+   008F sub 
+   0090 stloc.1 
+   0091 ldloc.1 
+   0092 ldc.i4.0 
+   0093 blt IL_009f: ldloc.0
+   0098 ldarg.1 
+   0099 ldc.i4.0 
+   009A bgt.un IL_002a: ldarg.0
+   009F ldloc.0 
+   00A0 callvirt System.Void ListViewBase::Reverse()
+   00A5 ldloc.0 
+   00A6 ret 
+== Assets.Scripts.GameSystem.CChatEntity GetNewestChatEntity(Assets.Scripts.GameSystem.EChaterType filterType) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D ldc.i4.0 
+   000E ble IL_0057: ldloc.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0019 callvirt System.Int32 ListViewBase::get_Count()
+   001E ldc.i4.1 
+   001F sub 
+   0020 stloc.1 
+   0021 br IL_0050: ldloc.1
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   002C ldloc.1 
+   002D callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0032 stloc.0 
+   0033 ldarg.1 
+   0034 ldc.i4.s 11
+   0036 beq IL_0047: br IL_0057
+   003B ldarg.1 
+   003C ldloc.0 
+   003D ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0042 bne.un IL_004c: ldloc.1
+   0047 br IL_0057: ldloc.0
+   004C ldloc.1 
+   004D ldc.i4.1 
+   004E sub 
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ldc.i4.0 
+   0052 bge IL_0026: ldarg.0
+   0057 ldloc.0 
+   0058 ret 
+== ListView`1<Assets.Scripts.GameSystem.CChatEntity> GetAllChatEntity(System.UInt64 filterPlayerUid, System.Int32 filterWorldId, System.Boolean bExceptSystemMessage) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0084: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0018 ldloc.0 
+   0019 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   001E stloc.1 
+   001F ldarg.1 
+   0020 ldc.i4.0 
+   0021 conv.i8 
+   0022 bne.un IL_002d: ldloc.1
+   0027 ldarg.2 
+   0028 brfalse IL_005d: ldarg.3
+   002D ldloc.1 
+   002E ldfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0033 ldarg.1 
+   0034 bne.un IL_0045: ldloc.1
+   0039 ldloc.1 
+   003A ldfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   003F ldarg.2 
+   0040 beq IL_005d: ldarg.3
+   0045 ldloc.1 
+   0046 ldfld Assets.Scripts.GameSystem.CChatEntity::receiverUid
+   004B ldarg.1 
+   004C bne.un IL_0080: ldloc.0
+   0051 ldloc.1 
+   0052 ldfld Assets.Scripts.GameSystem.CChatEntity::receiverWorldId
+   0057 ldarg.2 
+   0058 bne.un IL_0080: ldloc.0
+   005D ldarg.3 
+   005E brfalse IL_0074: ldarg.0
+   0063 ldloc.1 
+   0064 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0069 ldc.i4.5 
+   006A bne.un IL_0074: ldarg.0
+   006F br IL_0080: ldloc.0
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   007A ldloc.1 
+   007B callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   0080 ldloc.0 
+   0081 ldc.i4.1 
+   0082 add 
+   0083 stloc.0 
+   0084 ldloc.0 
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   008B callvirt System.Int32 ListViewBase::get_Count()
+   0090 blt IL_0012: ldarg.0
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   009B ret 
+== System.Void ClearTargetFriendChatEntity(System.UInt64 filterPlayerUid, System.Int32 filterWorldId) attrs=Public, HideBySig maxstack=2
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::.ctor()
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 br IL_005a: ldloc.1
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0013 ldloc.1 
+   0014 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0019 stloc.2 
+   001A ldloc.2 
+   001B ldfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0020 ldarg.1 
+   0021 bne.un IL_0032: ldloc.2
+   0026 ldloc.2 
+   0027 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   002C ldarg.2 
+   002D beq IL_004a: br IL_0056
+   0032 ldloc.2 
+   0033 ldfld Assets.Scripts.GameSystem.CChatEntity::receiverUid
+   0038 ldarg.1 
+   0039 bne.un IL_004f: ldloc.0
+   003E ldloc.2 
+   003F ldfld Assets.Scripts.GameSystem.CChatEntity::receiverWorldId
+   0044 ldarg.2 
+   0045 bne.un IL_004f: ldloc.0
+   004A br IL_0056: ldloc.1
+   004F ldloc.0 
+   0050 ldloc.2 
+   0051 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   0056 ldloc.1 
+   0057 ldc.i4.1 
+   0058 add 
+   0059 stloc.1 
+   005A ldloc.1 
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0061 callvirt System.Int32 ListViewBase::get_Count()
+   0066 blt IL_000d: ldarg.0
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0071 callvirt System.Void ListViewBase::Clear()
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   007C ldloc.0 
+   007D callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   0082 ret 
+== ListView`1<Assets.Scripts.GameSystem.CChatEntity> GetNewestChatEntitys(System.UInt32 count, System.UInt64 filterPlayerUid, System.Int32 filterWorldId, System.Boolean onlyMeaningful) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldarg.1 
+   000C conv.u8 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0013 callvirt System.Int32 ListViewBase::get_Count()
+   0018 conv.i8 
+   0019 call System.Int64 System.Math::Min(System.Int64,System.Int64)
+   001E conv.u4 
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0026 callvirt System.Int32 ListViewBase::get_Count()
+   002B conv.i8 
+   002C ldloc.0 
+   002D conv.u8 
+   002E sub 
+   002F conv.i4 
+   0030 stloc.1 
+   0031 ldloc.1 
+   0032 stloc.2 
+   0033 br IL_00aa: ldloc.2
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   003E ldloc.2 
+   003F callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0044 stloc.3 
+   0045 ldarg.2 
+   0046 ldc.i4.0 
+   0047 conv.i8 
+   0048 bne.un IL_0053: ldloc.3
+   004D ldarg.3 
+   004E brfalse IL_0083: ldarg.s onlyMeaningful
+   0053 ldloc.3 
+   0054 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0059 ldarg.2 
+   005A bne.un IL_006b: ldloc.3
+   005F ldloc.3 
+   0060 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   0065 ldarg.3 
+   0066 beq IL_0083: ldarg.s onlyMeaningful
+   006B ldloc.3 
+   006C ldfld Assets.Scripts.GameSystem.CChatEntity::receiverUid
+   0071 ldarg.2 
+   0072 bne.un IL_00a6: ldloc.2
+   0077 ldloc.3 
+   0078 ldfld Assets.Scripts.GameSystem.CChatEntity::receiverWorldId
+   007D ldarg.3 
+   007E bne.un IL_00a6: ldloc.2
+   0083 ldarg.s onlyMeaningful
+   0085 brfalse IL_009a: ldarg.0
+   008A call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   008F ldloc.3 
+   0090 callvirt System.Boolean Assets.Scripts.GameSystem.NewChatSystem::IsCreatedByPeople(Assets.Scripts.GameSystem.CChatEntity)
+   0095 brfalse IL_00a6: ldloc.2
+   009A ldarg.0 
+   009B ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   00A0 ldloc.3 
+   00A1 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CChatEntity>::Add(!0)
+   00A6 ldloc.2 
+   00A7 ldc.i4.1 
+   00A8 sub 
+   00A9 stloc.2 
+   00AA ldloc.2 
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   00B1 callvirt System.Int32 ListViewBase::get_Count()
+   00B6 bge IL_00c2: ldarg.0
+   00BB ldloc.2 
+   00BC ldc.i4.0 
+   00BD bge IL_0038: ldarg.0
+   00C2 ldarg.0 
+   00C3 ldfld Assets.Scripts.GameSystem.ChannelBase::_tempEntityQueue
+   00C8 ret 
+== System.UInt32 GetUnReadMsgCount() attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldc.i4.0 
+   0004 conv.i8 
+   0005 ldc.i4.0 
+   0006 ldc.i4.0 
+   0007 call ListView`1<Assets.Scripts.GameSystem.CChatEntity> Assets.Scripts.GameSystem.ChannelBase::GetAllChatEntity(System.UInt64,System.Int32,System.Boolean)
+   000C stloc.1 
+   000D ldc.i4.0 
+   000E stloc.2 
+   000F br IL_002d: ldloc.2
+   0014 ldloc.1 
+   0015 ldloc.2 
+   0016 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   001B ldfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   0020 brtrue IL_0029: ldloc.2
+   0025 ldloc.0 
+   0026 ldc.i4.1 
+   0027 add 
+   0028 stloc.0 
+   0029 ldloc.2 
+   002A ldc.i4.1 
+   002B add 
+   002C stloc.2 
+   002D ldloc.2 
+   002E ldloc.1 
+   002F callvirt System.Int32 ListViewBase::get_Count()
+   0034 blt IL_0014: ldloc.1
+   0039 ldloc.0 
+   003A ret 
+== System.UInt32 GetUnReadMsgOnSpecailSender(System.UInt64 uid, System.Int32 worldID) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldarg.1 
+   0004 ldarg.2 
+   0005 ldc.i4.0 
+   0006 call ListView`1<Assets.Scripts.GameSystem.CChatEntity> Assets.Scripts.GameSystem.ChannelBase::GetAllChatEntity(System.UInt64,System.Int32,System.Boolean)
+   000B stloc.1 
+   000C ldc.i4.0 
+   000D stloc.2 
+   000E br IL_003e: ldloc.2
+   0013 ldloc.1 
+   0014 ldloc.2 
+   0015 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   001A ldfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   001F brtrue IL_003a: ldloc.2
+   0024 ldloc.1 
+   0025 ldloc.2 
+   0026 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   002B ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0030 ldc.i4.1 
+   0031 bne.un IL_003a: ldloc.2
+   0036 ldloc.0 
+   0037 ldc.i4.1 
+   0038 add 
+   0039 stloc.0 
+   003A ldloc.2 
+   003B ldc.i4.1 
+   003C add 
+   003D stloc.2 
+   003E ldloc.2 
+   003F ldloc.1 
+   0040 callvirt System.Int32 ListViewBase::get_Count()
+   0045 blt IL_0013: ldloc.1
+   004A ldloc.0 
+   004B ret 
+== System.UInt32 GetUnReadMsgCountSinceIndex(System.Int32 startIndex) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 stloc.1 
+   0004 br IL_003a: ldloc.1
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   000F ldloc.1 
+   0010 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0015 stloc.2 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatSys
+   001C ldloc.2 
+   001D callvirt System.Boolean Assets.Scripts.GameSystem.NewChatSystem::IsCreatedByPeople(Assets.Scripts.GameSystem.CChatEntity)
+   0022 brfalse IL_0036: ldloc.1
+   0027 ldloc.2 
+   0028 ldfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   002D brtrue IL_0036: ldloc.1
+   0032 ldloc.0 
+   0033 ldc.i4.1 
+   0034 add 
+   0035 stloc.0 
+   0036 ldloc.1 
+   0037 ldc.i4.1 
+   0038 add 
+   0039 stloc.1 
+   003A ldloc.1 
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0041 callvirt System.Int32 ListViewBase::get_Count()
+   0046 bge IL_0052: ldloc.0
+   004B ldloc.1 
+   004C ldc.i4.0 
+   004D bge IL_0009: ldarg.0
+   0052 ldloc.0 
+   0053 ret 
+== System.Void ReadAllOnSpecailSender(System.UInt64 uid, System.Int32 worldID) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldc.i4.0 
+   0004 conv.i8 
+   0005 beq IL_0010: ret
+   000A ldarg.2 
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldarg.1 
+   0013 ldarg.2 
+   0014 ldc.i4.0 
+   0015 call ListView`1<Assets.Scripts.GameSystem.CChatEntity> Assets.Scripts.GameSystem.ChannelBase::GetAllChatEntity(System.UInt64,System.Int32,System.Boolean)
+   001A stloc.1 
+   001B ldc.i4.0 
+   001C stloc.2 
+   001D br IL_005a: ldloc.2
+   0022 ldloc.1 
+   0023 ldloc.2 
+   0024 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0029 ldfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   002E brtrue IL_0056: ldloc.2
+   0033 ldloc.1 
+   0034 ldloc.2 
+   0035 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   003A ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   003F ldc.i4.1 
+   0040 bne.un IL_0056: ldloc.2
+   0045 ldloc.1 
+   0046 ldloc.2 
+   0047 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   004C ldc.i4.1 
+   004D stfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   0052 ldloc.0 
+   0053 ldc.i4.1 
+   0054 add 
+   0055 stloc.0 
+   0056 ldloc.2 
+   0057 ldc.i4.1 
+   0058 add 
+   0059 stloc.2 
+   005A ldloc.2 
+   005B ldloc.1 
+   005C callvirt System.Int32 ListViewBase::get_Count()
+   0061 blt IL_0022: ldloc.1
+   0066 ret 
+== System.Void ReadAll() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001f: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.CChatEntity>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldc.i4.1 
+   0016 stfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   001B ldloc.0 
+   001C ldc.i4.1 
+   001D add 
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.ChannelBase::_entityQueue
+   0026 callvirt System.Int32 ListViewBase::get_Count()
+   002B blt IL_0007: ldarg.0
+   0030 ret 
+== System.Void StartInputCD() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0012 stfld Assets.Scripts.GameSystem.ChannelBase::_lastSendChatTime
+   0017 ret 
+== System.Void SetInputCD() attrs=Public, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0007 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000C callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PvpLevel()
+   0011 call System.Boolean ResData.GameDataMgr/acntExpDatabin::FindByKey(ResData.ResAcntExpInfo&,System.UInt32)
+   0016 pop 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.ChannelBase::_channelType
+   001D ldc.i4.s 14
+   001F bne.un IL_0036: ldarg.0
+   0024 ldarg.0 
+   0025 ldloca.s V_0
+   0027 ldfld ResData.ResAcntExpInfo::dwBattleZoneChatCD
+   002C stfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0031 br IL_0043: ldarg.0
+   0036 ldarg.0 
+   0037 ldloca.s V_0
+   0039 ldfld ResData.ResAcntExpInfo::dwChatCD
+   003E stfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0049 ldc.i4.0 
+   004A ble.un IL_0061: ldarg.0
+   004F ldarg.0 
+   0050 dup 
+   0051 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0056 ldc.i4 2000
+   005B add 
+   005C stfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0061 ldarg.0 
+   0062 dup 
+   0063 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0068 ldc.i4 1000
+   006D div.un 
+   006E stfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   0073 ret 
+== System.Boolean IsInputValid() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_lastSendChatTime
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   000C add 
+   000D conv.u8 
+   000E call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0013 conv.i8 
+   0014 cgt 
+   0016 ldc.i4.0 
+   0017 ceq 
+   0019 ret 
+== System.Void ClearCd() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.ChannelBase::_lastSendChatTime
+   0007 ret 
+== System.Int32 GetLeftCDTime() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 conv.i8 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.ChannelBase::_lastSendChatTime
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.ChannelBase::_chatCD
+   000E add 
+   000F conv.u8 
+   0010 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0015 conv.i8 
+   0016 sub 
+   0017 call System.Int64 System.Math::Max(System.Int64,System.Int64)
+   001C conv.i4 
+   001D ret 
+== System.Void SetLastGetTimeStamp(System.UInt32 timeStamp) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.ChannelBase::_lastTimeStamp
+   0007 ret 
+== System.UInt32 GetLastSendTimeStamp() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.ChannelBase::_lastTimeStamp
+   0006 ret 

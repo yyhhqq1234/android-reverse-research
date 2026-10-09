@@ -1,0 +1,1721 @@
+// TYPE ARController  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.String TAG = unity LabSlam : 
+  FIELD System.Int32 VideoBackgroundLayer = 8
+  FIELD System.String VideoBackgroundMeshNameID = Video Background Mesh
+  FIELD System.String VideoBackgroundCameraNameID = Video Background Camera
+  FIELD UnityEngine.Camera mVideoBackgroundCamera
+  FIELD UnityEngine.Texture2D mVideoBackgroundTexture
+  FIELD UnityEngine.GameObject goVideoBackgroundMesh
+  FIELD UnityEngine.GameObject goVideoBackgroundCamera
+  FIELD System.Boolean bARStarted
+  FIELD System.Int32 mPreviewWidth
+  FIELD System.Int32 mPreviewHeight
+  FIELD System.Int64 timeStamp
+  FIELD System.Boolean hasNewFrame
+  FIELD UnityEngine.WebCamTexture cameraTexture
+  FIELD System.Threading.Thread processImageThread
+  FIELD System.Boolean useUnitySensor
+  FIELD System.Boolean useThread
+  FIELD System.Boolean useUnityCamera
+  FIELD UnityEngine.Color32[] image_data_0
+  FIELD System.IntPtr cameraPixels_0
+  FIELD System.Runtime.InteropServices.GCHandle image_handle_0
+  FIELD UnityEngine.Color32[] image_data_1
+  FIELD System.IntPtr cameraPixels_1
+  FIELD System.Runtime.InteropServices.GCHandle image_handle_1
+  FIELD UnityEngine.Color32[] image_data_2
+  FIELD System.IntPtr cameraPixels_2
+  FIELD System.Runtime.InteropServices.GCHandle image_handle_2
+  FIELD System.Single mesh_width
+  FIELD System.Single mesh_height
+  FIELD UnityEngine.GameObject ar_camera
+  FIELD System.Int32 image_count
+  FIELD System.Object thisLock
+  FIELD System.Int64 mFrameCount
+  FIELD System.Int64 mLastFrameTime
+  FIELD System.Int64 mLastFps
+  FIELD UnityEngine.GUIStyle guiStyle
+  FIELD System.Int32 count
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 stfld ARController::mesh_width
+   000B ldarg.0 
+   000C ldc.r4 1
+   0011 stfld ARController::mesh_height
+   0016 ldarg.0 
+   0017 newobj System.Void System.Object::.ctor()
+   001C stfld ARController::thisLock
+   0021 ldarg.0 
+   0022 newobj System.Void UnityEngine.GUIStyle::.ctor()
+   0027 stfld ARController::guiStyle
+   002C ldarg.0 
+   002D call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0032 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=4
+   0000 ldstr 
+			{
+			    "camera": {
+			        "resolution_width": 640,
+			        "resolution_height": 480,
+			        "lense_facing": "back",
+			        "af": "fixed",
+			        "ae": false,
+			        "aw": false,
+			        "fps": 30
+			    },
+			    "sensors": "rv",
+			    "intrinsics": {
+			        "resolution_width": 640,
+			        "resolution_height": 480,
+			        "fx": 491.0999353630226,
+			        "fy": 491.0263913625013,
+			        "cx": 315.3122452084,
+			        "cy": 240.1076217952912
+			    },
+                "algorithm": "Marker",
+                "use_which_algorithm": 7,
+                "camera_rate_hz": 30,
+                "camera_width": 640,
+                "camera_height": 480,
+                "camera_fx": 491.0999353630226,
+                "camera_fy": 491.0263913625013,
+                "camera_cx": 315.3122452084,
+                "camera_cy": 240.1076217952912,
+                "camera_distort_paras": "314.21523250201324,-0.19166734199121396,0.0005268574127700506,0.000991805837953766",
+                "imu_rate_hz": 200,
+                "acc_noise_density": 2.0e-01,
+                "acc_random_walk": 3.0e-01,
+                "acc_bias":  "0.2776,-0.1345,0.1210",
+                "gyr_noise_density": 1.69e-02,
+                "gyr_random_walk": 1.93e-03,
+                "gyr_bias":  "0.0,0.0,0.0",
+                "time_delay_i2c": 0.0423,
+                "Ric": "0.0,-1.0,0.0,-1.0,0.0,0.0,0.0,0.0,-1.0",
+                "Tic": "-0.0,0.0,0.0",
+                "use_relocation": 1,
+                "use_thread": false
+			}
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld ARController::ar_camera
+   000C callvirt !!0 UnityEngine.GameObject::GetComponent<ARWatchAndroidCamera>()
+   0011 ldsfld ARController::useUnitySensor
+   0016 callvirt System.Void ARWatchAndroidCamera::setUpdateRot(System.Boolean)
+   001B ldc.i4.6 
+   001C newarr System.Object
+   0021 dup 
+   0022 ldc.i4.0 
+   0023 ldstr  unity_sensor :  
+   0028 stelem.ref 
+   0029 dup 
+   002A ldc.i4.1 
+   002B ldsfld ARController::useUnitySensor
+   0030 box System.Boolean
+   0035 stelem.ref 
+   0036 dup 
+   0037 ldc.i4.2 
+   0038 ldstr  unity_camera : 
+   003D stelem.ref 
+   003E dup 
+   003F ldc.i4.3 
+   0040 ldsfld ARController::useUnityCamera
+   0045 box System.Boolean
+   004A stelem.ref 
+   004B dup 
+   004C ldc.i4.4 
+   004D ldstr  unity_thread 
+   0052 stelem.ref 
+   0053 dup 
+   0054 ldc.i4.5 
+   0055 ldsfld ARController::useThread
+   005A box System.Boolean
+   005F stelem.ref 
+   0060 call System.String System.String::Concat(System.Object[])
+   0065 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   006A ldloc.0 
+   006B ldloca.s V_1
+   006D initobj System.IntPtr
+   0073 ldloc.1 
+   0074 call System.Boolean AiSlamWrapper::Initialize(System.String,System.IntPtr)
+   0079 brtrue IL_0083: ret
+   007E call System.Void UnityEngine.Application::Quit()
+   0083 ret 
+== System.Boolean matchJsonString(System.String base_str, System.String search_str) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 callvirt System.Boolean System.String::Contains(System.String)
+   0007 brtrue IL_001e: ldarg.1
+   000C ldarg.2 
+   000D ldstr 0
+   0012 call System.String System.String::Concat(System.String,System.String)
+   0017 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   001C ldc.i4.0 
+   001D ret 
+   001E ldarg.1 
+   001F ldarg.2 
+   0020 callvirt System.Int32 System.String::IndexOf(System.String)
+   0025 stloc.1 
+   0026 ldloc.1 
+   0027 ldarg.2 
+   0028 callvirt System.Int32 System.String::get_Length()
+   002D add 
+   002E ldc.i4.7 
+   002F add 
+   0030 ldarg.1 
+   0031 callvirt System.Int32 System.String::get_Length()
+   0036 blt IL_0053: ldarg.1
+   003B ldarg.2 
+   003C call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0041 ldarg.2 
+   0042 ldstr 1
+   0047 call System.String System.String::Concat(System.String,System.String)
+   004C call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0051 ldc.i4.0 
+   0052 ret 
+   0053 ldarg.1 
+   0054 ldloc.1 
+   0055 ldarg.2 
+   0056 callvirt System.Int32 System.String::get_Length()
+   005B add 
+   005C ldc.i4.7 
+   005D callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0062 stloc.0 
+   0063 ldloc.0 
+   0064 ldstr true
+   0069 callvirt System.Boolean System.String::Contains(System.String)
+   006E brfalse IL_0075: ldarg.2
+   0073 ldc.i4.1 
+   0074 ret 
+   0075 ldarg.2 
+   0076 ldstr  
+   007B ldloc.0 
+   007C ldstr 2
+   0081 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   0086 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   008B ldc.i4.0 
+   008C ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=5
+   0000 call System.Boolean UnityEngine.Application::get_isPlaying()
+   0005 brfalse IL_01a3: ldarg.0
+   000A ldarg.0 
+   000B ldarg.0 
+   000C call System.Boolean ARController::StartARSession()
+   0011 stfld ARController::bARStarted
+   0016 ldarg.0 
+   0017 ldfld ARController::bARStarted
+   001C brtrue IL_0026: ldsfld System.Boolean ARController::useUnityCamera
+   0021 call System.Void UnityEngine.Application::Quit()
+   0026 ldsfld ARController::useUnityCamera
+   002B brfalse IL_0159: ldarg.0
+   0030 call UnityEngine.WebCamDevice[] UnityEngine.WebCamTexture::get_devices()
+   0035 stloc.0 
+   0036 ldloc.0 
+   0037 ldlen 
+   0038 conv.i4 
+   0039 brtrue IL_003f: ldarg.0
+   003E ret 
+   003F ldarg.0 
+   0040 ldfld ARController::cameraTexture
+   0045 ldnull 
+   0046 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   004B brfalse IL_0097: ldarg.0
+   0050 ldarg.0 
+   0051 ldloc.0 
+   0052 ldc.i4.0 
+   0053 ldelema UnityEngine.WebCamDevice
+   0058 call System.String UnityEngine.WebCamDevice::get_name()
+   005D ldsfld ARController::mPreviewWidth
+   0062 ldsfld ARController::mPreviewHeight
+   0067 ldc.i4.s 30
+   0069 newobj System.Void UnityEngine.WebCamTexture::.ctor(System.String,System.Int32,System.Int32,System.Int32)
+   006E stfld ARController::cameraTexture
+   0073 ldarg.0 
+   0074 ldfld ARController::cameraTexture
+   0079 ldc.i4.2 
+   007A callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   007F ldarg.0 
+   0080 ldfld ARController::cameraTexture
+   0085 ldc.i4.1 
+   0086 callvirt System.Void UnityEngine.Texture::set_wrapMode(UnityEngine.TextureWrapMode)
+   008B ldarg.0 
+   008C ldfld ARController::cameraTexture
+   0091 ldc.i4.0 
+   0092 callvirt System.Void UnityEngine.Texture::set_anisoLevel(System.Int32)
+   0097 ldarg.0 
+   0098 ldfld ARController::cameraTexture
+   009D callvirt System.Void UnityEngine.WebCamTexture::Play()
+   00A2 ldarg.0 
+   00A3 ldc.i4.0 
+   00A4 stfld ARController::hasNewFrame
+   00A9 ldarg.0 
+   00AA ldsfld ARController::mPreviewWidth
+   00AF ldsfld ARController::mPreviewHeight
+   00B4 mul 
+   00B5 newarr UnityEngine.Color32
+   00BA stfld ARController::image_data_0
+   00BF ldarg.0 
+   00C0 ldarg.0 
+   00C1 ldfld ARController::image_data_0
+   00C6 ldc.i4.3 
+   00C7 call System.Runtime.InteropServices.GCHandle System.Runtime.InteropServices.GCHandle::Alloc(System.Object,System.Runtime.InteropServices.GCHandleType)
+   00CC stfld ARController::image_handle_0
+   00D1 ldarg.0 
+   00D2 ldarg.0 
+   00D3 ldflda ARController::image_handle_0
+   00D8 call System.IntPtr System.Runtime.InteropServices.GCHandle::AddrOfPinnedObject()
+   00DD stfld ARController::cameraPixels_0
+   00E2 ldarg.0 
+   00E3 ldsfld ARController::mPreviewWidth
+   00E8 ldsfld ARController::mPreviewHeight
+   00ED mul 
+   00EE newarr UnityEngine.Color32
+   00F3 stfld ARController::image_data_1
+   00F8 ldarg.0 
+   00F9 ldarg.0 
+   00FA ldfld ARController::image_data_1
+   00FF ldc.i4.3 
+   0100 call System.Runtime.InteropServices.GCHandle System.Runtime.InteropServices.GCHandle::Alloc(System.Object,System.Runtime.InteropServices.GCHandleType)
+   0105 stfld ARController::image_handle_1
+   010A ldarg.0 
+   010B ldarg.0 
+   010C ldflda ARController::image_handle_1
+   0111 call System.IntPtr System.Runtime.InteropServices.GCHandle::AddrOfPinnedObject()
+   0116 stfld ARController::cameraPixels_1
+   011B ldarg.0 
+   011C ldsfld ARController::mPreviewWidth
+   0121 ldsfld ARController::mPreviewHeight
+   0126 mul 
+   0127 newarr UnityEngine.Color32
+   012C stfld ARController::image_data_2
+   0131 ldarg.0 
+   0132 ldarg.0 
+   0133 ldfld ARController::image_data_2
+   0138 ldc.i4.3 
+   0139 call System.Runtime.InteropServices.GCHandle System.Runtime.InteropServices.GCHandle::Alloc(System.Object,System.Runtime.InteropServices.GCHandleType)
+   013E stfld ARController::image_handle_2
+   0143 ldarg.0 
+   0144 ldarg.0 
+   0145 ldflda ARController::image_handle_2
+   014A call System.IntPtr System.Runtime.InteropServices.GCHandle::AddrOfPinnedObject()
+   014F stfld ARController::cameraPixels_2
+   0154 br IL_01a3: ldarg.0
+   0159 ldarg.0 
+   015A ldfld ARController::mVideoBackgroundTexture
+   015F ldnull 
+   0160 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0165 brfalse IL_01a3: ldarg.0
+   016A ldarg.0 
+   016B ldsfld ARController::mPreviewWidth
+   0170 ldsfld ARController::mPreviewHeight
+   0175 newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32)
+   017A stfld ARController::mVideoBackgroundTexture
+   017F ldarg.0 
+   0180 ldfld ARController::mVideoBackgroundTexture
+   0185 ldc.i4.2 
+   0186 callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   018B ldarg.0 
+   018C ldfld ARController::mVideoBackgroundTexture
+   0191 ldc.i4.1 
+   0192 callvirt System.Void UnityEngine.Texture::set_wrapMode(UnityEngine.TextureWrapMode)
+   0197 ldarg.0 
+   0198 ldfld ARController::mVideoBackgroundTexture
+   019D ldc.i4.0 
+   019E callvirt System.Void UnityEngine.Texture::set_anisoLevel(System.Int32)
+   01A3 ldarg.0 
+   01A4 call System.Void ARController::SetupARCamera()
+   01A9 ldarg.0 
+   01AA ldc.i4.8 
+   01AB call System.Void ARController::SetupVideoBackgroundMeshGameObject(System.Int32)
+   01B0 ldarg.0 
+   01B1 ldc.i4.8 
+   01B2 call System.Void ARController::SetupVideoBackgroundCameraGameObject(System.Int32)
+   01B7 ldsfld ARController::useThread
+   01BC brfalse IL_01e3: ldsfld System.Boolean ARController::useUnitySensor
+   01C1 ldarg.0 
+   01C2 ldarg.0 
+   01C3 ldftn System.Void ARController::processImage()
+   01C9 newobj System.Void System.Threading.ThreadStart::.ctor(System.Object,System.IntPtr)
+   01CE newobj System.Void System.Threading.Thread::.ctor(System.Threading.ThreadStart)
+   01D3 stfld ARController::processImageThread
+   01D8 ldarg.0 
+   01D9 ldfld ARController::processImageThread
+   01DE callvirt System.Void System.Threading.Thread::Start()
+   01E3 ldsfld ARController::useUnitySensor
+   01E8 brfalse IL_0207: ret
+   01ED call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   01F2 ldc.i4.1 
+   01F3 callvirt System.Void UnityEngine.Gyroscope::set_enabled(System.Boolean)
+   01F8 call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   01FD ldc.r4 0.001
+   0202 callvirt System.Void UnityEngine.Gyroscope::set_updateInterval(System.Single)
+   0207 ret 
+== System.Void processImage() attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 conv.i8 
+   0002 stloc.0 
+   0003 ldc.i4.0 
+   0004 stloc.1 
+   0005 br IL_0125: call System.Boolean UnityEngine.Application::get_isPlaying()
+   000A ldarg.0 
+   000B ldfld ARController::thisLock
+   0010 stloc.2 
+   0011 ldloc.2 
+   0012 call System.Void System.Threading.Monitor::Enter(System.Object)
+   0017 ldloc.0 
+   0018 ldarg.0 
+   0019 ldfld ARController::image_count
+   001E conv.i8 
+   001F bne.un IL_002b: ldarg.0
+   0024 ldc.i4.m1 
+   0025 stloc.1 
+   0026 br IL_0073: leave IL_007f
+   002B ldarg.0 
+   002C ldfld ARController::image_count
+   0031 ldc.i4.3 
+   0032 rem 
+   0033 stloc.1 
+   0034 ldarg.0 
+   0035 ldfld ARController::image_count
+   003A conv.i8 
+   003B stloc.0 
+   003C ldc.i4.4 
+   003D newarr System.Object
+   0042 dup 
+   0043 ldc.i4.0 
+   0044 ldstr yuzuo3 image count
+   0049 stelem.ref 
+   004A dup 
+   004B ldc.i4.1 
+   004C ldarg.0 
+   004D ldfld ARController::image_count
+   0052 box System.Int32
+   0057 stelem.ref 
+   0058 dup 
+   0059 ldc.i4.2 
+   005A ldstr  thread count
+   005F stelem.ref 
+   0060 dup 
+   0061 ldc.i4.3 
+   0062 ldloc.0 
+   0063 box System.Int64
+   0068 stelem.ref 
+   0069 call System.String System.String::Concat(System.Object[])
+   006E call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0073 leave IL_007f: ldloc.1
+   0078 ldloc.2 
+   0079 call System.Void System.Threading.Monitor::Exit(System.Object)
+   007E endfinally 
+   007F ldloc.1 
+   0080 ldc.i4.0 
+   0081 blt IL_0114: ldc.i4.s 10
+   0086 ldloc.1 
+   0087 brfalse IL_009f: ldarg.0
+   008C ldloc.1 
+   008D ldc.i4.1 
+   008E beq IL_00bf: ldarg.0
+   0093 ldloc.1 
+   0094 ldc.i4.2 
+   0095 beq IL_00df: ldarg.0
+   009A br IL_00ff: ldarg.0
+   009F ldarg.0 
+   00A0 ldfld ARController::timeStamp
+   00A5 ldsfld ARController::mPreviewWidth
+   00AA ldsfld ARController::mPreviewHeight
+   00AF ldarg.0 
+   00B0 ldfld ARController::cameraPixels_0
+   00B5 call System.Void AiSlamWrapper::AcceptVideoImage(System.Int64,System.Int32,System.Int32,System.IntPtr)
+   00BA br IL_00ff: ldarg.0
+   00BF ldarg.0 
+   00C0 ldfld ARController::timeStamp
+   00C5 ldsfld ARController::mPreviewWidth
+   00CA ldsfld ARController::mPreviewHeight
+   00CF ldarg.0 
+   00D0 ldfld ARController::cameraPixels_1
+   00D5 call System.Void AiSlamWrapper::AcceptVideoImage(System.Int64,System.Int32,System.Int32,System.IntPtr)
+   00DA br IL_00ff: ldarg.0
+   00DF ldarg.0 
+   00E0 ldfld ARController::timeStamp
+   00E5 ldsfld ARController::mPreviewWidth
+   00EA ldsfld ARController::mPreviewHeight
+   00EF ldarg.0 
+   00F0 ldfld ARController::cameraPixels_2
+   00F5 call System.Void AiSlamWrapper::AcceptVideoImage(System.Int64,System.Int32,System.Int32,System.IntPtr)
+   00FA br IL_00ff: ldarg.0
+   00FF ldarg.0 
+   0100 ldfld ARController::ar_camera
+   0105 callvirt !!0 UnityEngine.GameObject::GetComponent<ARWatchAndroidCamera>()
+   010A callvirt System.Void ARWatchAndroidCamera::UpdateCameraPose()
+   010F br IL_0125: call System.Boolean UnityEngine.Application::get_isPlaying()
+   0114 ldc.i4.s 10
+   0116 call System.Void System.Threading.Thread::Sleep(System.Int32)
+   011B ldstr Waiting for new frame!
+   0120 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0125 call System.Boolean UnityEngine.Application::get_isPlaying()
+   012A brtrue IL_000a: ldarg.0
+   012F ret 
+== System.Collections.IEnumerator Process_Image_Coroutine() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void ARController/<Process_Image_Coroutine>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld ARController/<Process_Image_Coroutine>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void UpdateTick() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld ARController::mFrameCount
+   0007 ldc.i4.1 
+   0008 conv.i8 
+   0009 add 
+   000A stfld ARController::mFrameCount
+   000F call System.DateTime System.DateTime::get_Now()
+   0014 stloc.1 
+   0015 ldloca.s V_1
+   0017 call System.Int64 System.DateTime::get_Ticks()
+   001C call System.Int64 ARController::TickToMilliSec(System.Int64)
+   0021 stloc.0 
+   0022 ldarg.0 
+   0023 ldfld ARController::mLastFrameTime
+   0028 ldc.i4.0 
+   0029 conv.i8 
+   002A bne.un IL_0047: ldloc.0
+   002F ldarg.0 
+   0030 call System.DateTime System.DateTime::get_Now()
+   0035 stloc.2 
+   0036 ldloca.s V_2
+   0038 call System.Int64 System.DateTime::get_Ticks()
+   003D call System.Int64 ARController::TickToMilliSec(System.Int64)
+   0042 stfld ARController::mLastFrameTime
+   0047 ldloc.0 
+   0048 ldarg.0 
+   0049 ldfld ARController::mLastFrameTime
+   004E sub 
+   004F ldc.i4 1000
+   0054 conv.i8 
+   0055 blt IL_008e: ret
+   005A ldarg.0 
+   005B ldfld ARController::mFrameCount
+   0060 conv.r4 
+   0061 ldc.r4 1
+   0066 mul 
+   0067 ldloc.0 
+   0068 ldarg.0 
+   0069 ldfld ARController::mLastFrameTime
+   006E sub 
+   006F conv.r4 
+   0070 ldc.r4 1000
+   0075 div 
+   0076 div 
+   0077 conv.i8 
+   0078 stloc.3 
+   0079 ldloc.3 
+   007A stsfld ARController::mLastFps
+   007F ldarg.0 
+   0080 ldc.i4.0 
+   0081 conv.i8 
+   0082 stfld ARController::mFrameCount
+   0087 ldarg.0 
+   0088 ldloc.0 
+   0089 stfld ARController::mLastFrameTime
+   008E ret 
+== System.Int64 TickToMilliSec(System.Int64 tick) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 10000
+   0006 conv.i8 
+   0007 div 
+   0008 ret 
+== System.Void DrawFps() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld ARController::guiStyle
+   0006 ldc.i4 200
+   000B callvirt System.Void UnityEngine.GUIStyle::set_fontSize(System.Int32)
+   0010 ldarg.0 
+   0011 ldfld ARController::guiStyle
+   0016 callvirt UnityEngine.GUIStyleState UnityEngine.GUIStyle::get_normal()
+   001B call UnityEngine.Color UnityEngine.Color::get_red()
+   0020 callvirt System.Void UnityEngine.GUIStyleState::set_textColor(UnityEngine.Color)
+   0025 ldc.r4 50
+   002A ldc.r4 32
+   002F ldc.r4 100
+   0034 ldc.r4 100
+   0039 newobj System.Void UnityEngine.Rect::.ctor(System.Single,System.Single,System.Single,System.Single)
+   003E ldstr fps: 
+   0043 ldsfld ARController::mLastFps
+   0048 box System.Int64
+   004D call System.String System.String::Concat(System.Object,System.Object)
+   0052 ldarg.0 
+   0053 ldfld ARController::guiStyle
+   0058 call System.Void UnityEngine.GUI::Label(UnityEngine.Rect,System.String,UnityEngine.GUIStyle)
+   005D ret 
+== System.Void OnGUI() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void ARController::DrawFps()
+   0006 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void ARController::UpdateTick()
+   0006 call System.Boolean UnityEngine.Application::get_isPlaying()
+   000B brfalse IL_0021: ret
+   0010 ldarg.0 
+   0011 ldfld ARController::bARStarted
+   0016 brfalse IL_0021: ret
+   001B ldarg.0 
+   001C call System.Void ARController::UpdateARSession()
+   0021 ret 
+== System.Void FixedUpdate() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld ARController::useUnitySensor
+   0005 brfalse IL_0010: ret
+   000A ldarg.0 
+   000B call System.Void ARController::TakeGyro()
+   0010 ret 
+== System.Void OnApplicationPause(System.Boolean paused) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_0017: ret
+   0006 ldarg.0 
+   0007 ldfld ARController::bARStarted
+   000C brfalse IL_0017: ret
+   0011 ldarg.0 
+   0012 call System.Void ARController::StopARSession()
+   0017 ret 
+== System.Void OnApplicationQuit() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void ARController::StopARSession()
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 stfld ARController::bARStarted
+   000D ret 
+== System.Boolean StartARSession() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ARController::bARStarted
+   0006 brfalse IL_0017: ldc.i4.1
+   000B ldstr unity LabSlam :  WARNING: StartRunning() called while already running. Ignoring.
+   0010 call System.Void UnityEngine.Debug::Log(System.Object)
+   0015 ldc.i4.0 
+   0016 ret 
+   0017 ldc.i4.1 
+   0018 ret 
+== System.Void StopARSession() attrs=Public, HideBySig maxstack=8
+   0000 call System.Boolean AiSlamWrapper::Shutdown()
+   0005 brtrue IL_0014: ldarg.0
+   000A ldstr unity LabSlam :  ERROR: Shutdown() failed.
+   000F call System.Void UnityEngine.Debug::Log(System.Object)
+   0014 ldarg.0 
+   0015 call System.Void ARController::DestroyVideoBackground()
+   001A ret 
+== System.Void UpdateARSession() attrs=Public, HideBySig maxstack=2
+   0000 ldsfld ARController::useUnityCamera
+   0005 brfalse IL_0015: ldstr "Texture ID:"
+   000A ldarg.0 
+   000B call System.Void ARController::TakePhoto()
+   0010 br IL_004f: ldsfld System.Boolean ARController::useThread
+   0015 ldstr Texture ID:
+   001A ldarg.0 
+   001B ldfld ARController::mVideoBackgroundTexture
+   0020 callvirt System.IntPtr UnityEngine.Texture::GetNativeTexturePtr()
+   0025 call System.Int32 System.IntPtr::op_Explicit(System.IntPtr)
+   002A box System.Int32
+   002F call System.String System.String::Concat(System.Object,System.Object)
+   0034 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0039 ldarg.0 
+   003A ldfld ARController::mVideoBackgroundTexture
+   003F callvirt System.IntPtr UnityEngine.Texture::GetNativeTexturePtr()
+   0044 call System.Int32 System.IntPtr::op_Explicit(System.IntPtr)
+   0049 call System.Boolean AiSlamWrapper::UpdateVideoTexture(System.Int32)
+   004E pop 
+   004F ldsfld ARController::useThread
+   0054 brtrue IL_0069: ret
+   0059 ldarg.0 
+   005A ldfld ARController::ar_camera
+   005F callvirt !!0 UnityEngine.GameObject::GetComponent<ARWatchAndroidCamera>()
+   0064 callvirt System.Void ARWatchAndroidCamera::UpdateCameraPose()
+   0069 ret 
+== System.Void TakeGyro() attrs=Private, HideBySig maxstack=7
+   0000 call System.Int64 AiSlamWrapper::nanoTime()
+   0005 stloc.0 
+   0006 call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   000B callvirt UnityEngine.Quaternion UnityEngine.Gyroscope::get_attitude()
+   0010 stloc.1 
+   0011 ldloca.s V_1
+   0013 call UnityEngine.Vector3 UnityEngine.Quaternion::get_eulerAngles()
+   0018 stloc.2 
+   0019 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   001E ldc.i4.3 
+   001F bne.un IL_0044: call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0024 ldloc.2 
+   0025 ldc.r4 0
+   002A ldc.r4 0
+   002F ldc.r4 90
+   0034 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0039 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   003E stloc.2 
+   003F br IL_0095: ldloc.2
+   0044 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0049 ldc.i4.4 
+   004A bne.un IL_006f: call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   004F ldloc.2 
+   0050 ldc.r4 0
+   0055 ldc.r4 0
+   005A ldc.r4 -90
+   005F newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0064 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0069 stloc.2 
+   006A br IL_0095: ldloc.2
+   006F call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0074 ldc.i4.2 
+   0075 bne.un IL_0095: ldloc.2
+   007A ldloc.2 
+   007B ldc.r4 0
+   0080 ldc.r4 0
+   0085 ldc.r4 180
+   008A newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   008F call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0094 stloc.2 
+   0095 ldloc.2 
+   0096 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(UnityEngine.Vector3)
+   009B stloc.3 
+   009C ldloc.0 
+   009D ldloca.s V_3
+   009F ldfld UnityEngine.Quaternion::w
+   00A4 ldloca.s V_3
+   00A6 ldfld UnityEngine.Quaternion::x
+   00AB ldloca.s V_3
+   00AD ldfld UnityEngine.Quaternion::y
+   00B2 ldloca.s V_3
+   00B4 ldfld UnityEngine.Quaternion::z
+   00B9 call System.Void AiSlamWrapper::AcceptRotationVector(System.Int64,System.Single,System.Single,System.Single,System.Single)
+   00BE ldc.r4 0
+   00C3 ldc.r4 0
+   00C8 ldc.r4 0
+   00CD newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00D2 ldloc.3 
+   00D3 ldc.r4 1
+   00D8 ldc.r4 1
+   00DD ldc.r4 1
+   00E2 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00E7 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::TRS(UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Vector3)
+   00EC stloc.s V_4
+   00EE ldloca.s V_5
+   00F0 initobj UnityEngine.Matrix4x4
+   00F6 ldloca.s V_5
+   00F8 ldc.i4.0 
+   00F9 ldc.r4 1
+   00FE ldc.r4 0
+   0103 ldc.r4 0
+   0108 ldc.r4 0
+   010D newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0112 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   0117 ldloca.s V_5
+   0119 ldc.i4.1 
+   011A ldc.r4 0
+   011F ldc.r4 0
+   0124 ldc.r4 -1
+   0129 ldc.r4 0
+   012E newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0133 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   0138 ldloca.s V_5
+   013A ldc.i4.2 
+   013B ldc.r4 0
+   0140 ldc.r4 1
+   0145 ldc.r4 0
+   014A ldc.r4 0
+   014F newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0154 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   0159 ldloca.s V_5
+   015B ldc.i4.3 
+   015C ldc.r4 0
+   0161 ldc.r4 0
+   0166 ldc.r4 0
+   016B ldc.r4 1
+   0170 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0175 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   017A ldloca.s V_6
+   017C initobj UnityEngine.Matrix4x4
+   0182 ldloca.s V_6
+   0184 ldc.i4.0 
+   0185 ldc.r4 0
+   018A ldc.r4 -1
+   018F ldc.r4 0
+   0194 ldc.r4 0
+   0199 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   019E call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   01A3 ldloca.s V_6
+   01A5 ldc.i4.1 
+   01A6 ldc.r4 -1
+   01AB ldc.r4 0
+   01B0 ldc.r4 0
+   01B5 ldc.r4 0
+   01BA newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   01BF call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   01C4 ldloca.s V_6
+   01C6 ldc.i4.2 
+   01C7 ldc.r4 0
+   01CC ldc.r4 0
+   01D1 ldc.r4 -1
+   01D6 ldc.r4 0
+   01DB newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   01E0 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   01E5 ldloca.s V_6
+   01E7 ldc.i4.3 
+   01E8 ldc.r4 0
+   01ED ldc.r4 0
+   01F2 ldc.r4 0
+   01F7 ldc.r4 1
+   01FC newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0201 call System.Void UnityEngine.Matrix4x4::SetRow(System.Int32,UnityEngine.Vector4)
+   0206 ldloc.s V_5
+   0208 ldloc.s V_4
+   020A call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   020F ldloc.s V_6
+   0211 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0216 stloc.s V_4
+   0218 ldstr LabSlam : localRotation_imu = 
+
+   021D ldloc.s V_4
+   021F box UnityEngine.Matrix4x4
+   0224 call System.String System.String::Concat(System.Object,System.Object)
+   0229 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   022E ldloca.s V_7
+   0230 initobj UnityEngine.Quaternion
+   0236 ldloca.s V_7
+   0238 ldc.i4.3 
+   0239 ldc.r4 0
+   023E ldc.r4 1
+   0243 ldloca.s V_4
+   0245 ldc.i4.0 
+   0246 ldc.i4.0 
+   0247 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   024C add 
+   024D ldloca.s V_4
+   024F ldc.i4.1 
+   0250 ldc.i4.1 
+   0251 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0256 add 
+   0257 ldloca.s V_4
+   0259 ldc.i4.2 
+   025A ldc.i4.2 
+   025B call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0260 add 
+   0261 call System.Single System.Math::Max(System.Single,System.Single)
+   0266 conv.r8 
+   0267 call System.Double System.Math::Sqrt(System.Double)
+   026C ldc.r8 2
+   0275 div 
+   0276 conv.r4 
+   0277 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   027C ldloca.s V_7
+   027E ldc.i4.0 
+   027F ldc.r4 0
+   0284 ldc.r4 1
+   0289 ldloca.s V_4
+   028B ldc.i4.0 
+   028C ldc.i4.0 
+   028D call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0292 add 
+   0293 ldloca.s V_4
+   0295 ldc.i4.1 
+   0296 ldc.i4.1 
+   0297 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   029C sub 
+   029D ldloca.s V_4
+   029F ldc.i4.2 
+   02A0 ldc.i4.2 
+   02A1 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   02A6 sub 
+   02A7 call System.Single System.Math::Max(System.Single,System.Single)
+   02AC conv.r8 
+   02AD call System.Double System.Math::Sqrt(System.Double)
+   02B2 ldc.r8 2
+   02BB div 
+   02BC conv.r4 
+   02BD call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   02C2 ldloca.s V_7
+   02C4 ldc.i4.1 
+   02C5 ldc.r4 0
+   02CA ldc.r4 1
+   02CF ldloca.s V_4
+   02D1 ldc.i4.0 
+   02D2 ldc.i4.0 
+   02D3 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   02D8 sub 
+   02D9 ldloca.s V_4
+   02DB ldc.i4.1 
+   02DC ldc.i4.1 
+   02DD call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   02E2 add 
+   02E3 ldloca.s V_4
+   02E5 ldc.i4.2 
+   02E6 ldc.i4.2 
+   02E7 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   02EC sub 
+   02ED call System.Single System.Math::Max(System.Single,System.Single)
+   02F2 conv.r8 
+   02F3 call System.Double System.Math::Sqrt(System.Double)
+   02F8 ldc.r8 2
+   0301 div 
+   0302 conv.r4 
+   0303 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   0308 ldloca.s V_7
+   030A ldc.i4.2 
+   030B ldc.r4 0
+   0310 ldc.r4 1
+   0315 ldloca.s V_4
+   0317 ldc.i4.0 
+   0318 ldc.i4.0 
+   0319 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   031E sub 
+   031F ldloca.s V_4
+   0321 ldc.i4.1 
+   0322 ldc.i4.1 
+   0323 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0328 sub 
+   0329 ldloca.s V_4
+   032B ldc.i4.2 
+   032C ldc.i4.2 
+   032D call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0332 add 
+   0333 call System.Single System.Math::Max(System.Single,System.Single)
+   0338 conv.r8 
+   0339 call System.Double System.Math::Sqrt(System.Double)
+   033E ldc.r8 2
+   0347 div 
+   0348 conv.r4 
+   0349 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   034E ldloca.s V_7
+   0350 ldc.i4.0 
+   0351 ldloca.s V_7
+   0353 ldc.i4.0 
+   0354 call System.Single UnityEngine.Quaternion::get_Item(System.Int32)
+   0359 call System.Single System.Math::Abs(System.Single)
+   035E ldloca.s V_4
+   0360 ldc.i4.2 
+   0361 ldc.i4.1 
+   0362 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0367 ldloca.s V_4
+   0369 ldc.i4.1 
+   036A ldc.i4.2 
+   036B call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0370 sub 
+   0371 call System.Int32 System.Math::Sign(System.Single)
+   0376 conv.r4 
+   0377 mul 
+   0378 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   037D ldloca.s V_7
+   037F ldc.i4.1 
+   0380 ldloca.s V_7
+   0382 ldc.i4.1 
+   0383 call System.Single UnityEngine.Quaternion::get_Item(System.Int32)
+   0388 call System.Single System.Math::Abs(System.Single)
+   038D ldloca.s V_4
+   038F ldc.i4.0 
+   0390 ldc.i4.2 
+   0391 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   0396 ldloca.s V_4
+   0398 ldc.i4.2 
+   0399 ldc.i4.0 
+   039A call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   039F sub 
+   03A0 call System.Int32 System.Math::Sign(System.Single)
+   03A5 conv.r4 
+   03A6 mul 
+   03A7 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   03AC ldloca.s V_7
+   03AE ldc.i4.2 
+   03AF ldloca.s V_7
+   03B1 ldc.i4.2 
+   03B2 call System.Single UnityEngine.Quaternion::get_Item(System.Int32)
+   03B7 call System.Single System.Math::Abs(System.Single)
+   03BC ldloca.s V_4
+   03BE ldc.i4.1 
+   03BF ldc.i4.0 
+   03C0 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   03C5 ldloca.s V_4
+   03C7 ldc.i4.0 
+   03C8 ldc.i4.1 
+   03C9 call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   03CE sub 
+   03CF call System.Int32 System.Math::Sign(System.Single)
+   03D4 conv.r4 
+   03D5 mul 
+   03D6 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   03DB ldloca.s V_7
+   03DD ldc.i4.1 
+   03DE ldloca.s V_7
+   03E0 ldc.i4.1 
+   03E1 call System.Single UnityEngine.Quaternion::get_Item(System.Int32)
+   03E6 neg 
+   03E7 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   03EC ldloca.s V_7
+   03EE ldc.i4.3 
+   03EF ldloca.s V_7
+   03F1 ldc.i4.3 
+   03F2 call System.Single UnityEngine.Quaternion::get_Item(System.Int32)
+   03F7 neg 
+   03F8 call System.Void UnityEngine.Quaternion::set_Item(System.Int32,System.Single)
+   03FD ret 
+== UnityEngine.Quaternion ConvertRotation(UnityEngine.Quaternion q) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarga.s q
+   0002 ldfld UnityEngine.Quaternion::x
+   0007 ldarga.s q
+   0009 ldfld UnityEngine.Quaternion::y
+   000E ldarga.s q
+   0010 ldfld UnityEngine.Quaternion::z
+   0015 neg 
+   0016 ldarga.s q
+   0018 ldfld UnityEngine.Quaternion::w
+   001D neg 
+   001E newobj System.Void UnityEngine.Quaternion::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0023 ret 
+== UnityEngine.Quaternion GetRotFix() attrs=Private, HideBySig maxstack=3
+   0000 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0005 ldc.i4.1 
+   0006 bne.un IL_0011: call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   000B call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0010 ret 
+   0011 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0016 ldc.i4.3 
+   0017 beq IL_0027: ldc.r4 0
+   001C call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0021 ldc.i4.3 
+   0022 bne.un IL_003c: call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0027 ldc.r4 0
+   002C ldc.r4 0
+   0031 ldc.r4 -90
+   0036 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   003B ret 
+   003C call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0041 ldc.i4.4 
+   0042 bne.un IL_005c: call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0047 ldc.r4 0
+   004C ldc.r4 0
+   0051 ldc.r4 90
+   0056 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   005B ret 
+   005C call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0061 ldc.i4.2 
+   0062 bne.un IL_007c: call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0067 ldc.r4 0
+   006C ldc.r4 0
+   0071 ldc.r4 180
+   0076 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   007B ret 
+   007C call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0081 ret 
+== System.Void TakePhoto() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Int64 AiSlamWrapper::nanoTime()
+   0006 stfld ARController::timeStamp
+   000B ldstr yuzuo_camera_time 
+   0010 ldarg.0 
+   0011 ldfld ARController::timeStamp
+   0016 box System.Int64
+   001B call System.String System.String::Concat(System.Object,System.Object)
+   0020 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0025 ldsfld ARController::useThread
+   002A brtrue IL_0061: ldc.i4.m1
+   002F ldarg.0 
+   0030 ldfld ARController::cameraTexture
+   0035 ldarg.0 
+   0036 ldfld ARController::image_data_0
+   003B callvirt UnityEngine.Color32[] UnityEngine.WebCamTexture::GetPixels32(UnityEngine.Color32[])
+   0040 pop 
+   0041 ldarg.0 
+   0042 ldfld ARController::timeStamp
+   0047 ldsfld ARController::mPreviewWidth
+   004C ldsfld ARController::mPreviewHeight
+   0051 ldarg.0 
+   0052 ldfld ARController::cameraPixels_0
+   0057 call System.Void AiSlamWrapper::AcceptVideoImage(System.Int64,System.Int32,System.Int32,System.IntPtr)
+   005C br IL_00f1: ret
+   0061 ldc.i4.m1 
+   0062 stloc.0 
+   0063 ldarg.0 
+   0064 ldfld ARController::image_count
+   0069 ldc.i4.3 
+   006A rem 
+   006B stloc.0 
+   006C ldloc.0 
+   006D ldc.i4.2 
+   006E beq IL_0085: ldarg.0
+   0073 ldloc.0 
+   0074 ldc.i4.1 
+   0075 beq IL_009c: ldarg.0
+   007A ldloc.0 
+   007B brfalse IL_00b3: ldarg.0
+   0080 br IL_00ca: ldarg.0
+   0085 ldarg.0 
+   0086 ldfld ARController::cameraTexture
+   008B ldarg.0 
+   008C ldfld ARController::image_data_0
+   0091 callvirt UnityEngine.Color32[] UnityEngine.WebCamTexture::GetPixels32(UnityEngine.Color32[])
+   0096 pop 
+   0097 br IL_00ca: ldarg.0
+   009C ldarg.0 
+   009D ldfld ARController::cameraTexture
+   00A2 ldarg.0 
+   00A3 ldfld ARController::image_data_2
+   00A8 callvirt UnityEngine.Color32[] UnityEngine.WebCamTexture::GetPixels32(UnityEngine.Color32[])
+   00AD pop 
+   00AE br IL_00ca: ldarg.0
+   00B3 ldarg.0 
+   00B4 ldfld ARController::cameraTexture
+   00B9 ldarg.0 
+   00BA ldfld ARController::image_data_1
+   00BF callvirt UnityEngine.Color32[] UnityEngine.WebCamTexture::GetPixels32(UnityEngine.Color32[])
+   00C4 pop 
+   00C5 br IL_00ca: ldarg.0
+   00CA ldarg.0 
+   00CB ldfld ARController::thisLock
+   00D0 stloc.1 
+   00D1 ldloc.1 
+   00D2 call System.Void System.Threading.Monitor::Enter(System.Object)
+   00D7 ldarg.0 
+   00D8 dup 
+   00D9 ldfld ARController::image_count
+   00DE ldc.i4.1 
+   00DF add 
+   00E0 stfld ARController::image_count
+   00E5 leave IL_00f1: ret
+   00EA ldloc.1 
+   00EB call System.Void System.Threading.Monitor::Exit(System.Object)
+   00F0 endfinally 
+   00F1 ret 
+== System.Void SetupARCamera() attrs=Public, HideBySig maxstack=3
+   0000 ldc.r4 0.03
+   0005 ldc.r4 1000
+   000A call UnityEngine.Matrix4x4 AiSlamWrapper::GetCameraProjectionMatrix(System.Single,System.Single)
+   000F stloc.0 
+   0010 ldarg.0 
+   0011 ldfld ARController::ar_camera
+   0016 callvirt !!0 UnityEngine.GameObject::GetComponent<ARWatchAndroidCamera>()
+   001B ldc.i4.8 
+   001C ldloc.0 
+   001D callvirt System.Void ARWatchAndroidCamera::SetupARCamera(System.Int32,UnityEngine.Matrix4x4)
+   0022 ret 
+== System.Void SetupVideoBackgroundMeshGameObject(System.Int32 layer) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld ARController::goVideoBackgroundMesh
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0021: ldarg.0
+   0011 ldarg.0 
+   0012 ldstr Video Background Mesh
+   0017 newobj System.Void UnityEngine.GameObject::.ctor(System.String)
+   001C stfld ARController::goVideoBackgroundMesh
+   0021 ldarg.0 
+   0022 ldfld ARController::goVideoBackgroundMesh
+   0027 ldarg.1 
+   0028 callvirt System.Void UnityEngine.GameObject::set_layer(System.Int32)
+   002D ldarg.0 
+   002E ldfld ARController::goVideoBackgroundMesh
+   0033 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.MeshFilter>()
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A ldnull 
+   003B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0040 brfalse IL_039b: ldarg.0
+   0045 ldarg.0 
+   0046 ldfld ARController::goVideoBackgroundMesh
+   004B callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshFilter>()
+   0050 stloc.0 
+   0051 ldloc.0 
+   0052 newobj System.Void UnityEngine.Mesh::.ctor()
+   0057 callvirt System.Void UnityEngine.MeshFilter::set_mesh(UnityEngine.Mesh)
+   005C ldc.i4.4 
+   005D newarr System.Object
+   0062 dup 
+   0063 ldc.i4.0 
+   0064 ldstr  yuzuo2 screen height: 
+   0069 stelem.ref 
+   006A dup 
+   006B ldc.i4.1 
+   006C call System.Int32 UnityEngine.Screen::get_height()
+   0071 box System.Int32
+   0076 stelem.ref 
+   0077 dup 
+   0078 ldc.i4.2 
+   0079 ldstr  width  
+   007E stelem.ref 
+   007F dup 
+   0080 ldc.i4.3 
+   0081 call System.Int32 UnityEngine.Screen::get_width()
+   0086 box System.Int32
+   008B stelem.ref 
+   008C call System.String System.String::Concat(System.Object[])
+   0091 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0096 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   009B ldc.i4.1 
+   009C bne.un IL_00ce: ldc.r4 1
+   00A1 ldc.r4 1
+   00A6 call System.Int32 UnityEngine.Screen::get_width()
+   00AB conv.r4 
+   00AC mul 
+   00AD ldsfld ARController::mPreviewHeight
+   00B2 conv.r4 
+   00B3 div 
+   00B4 stloc.1 
+   00B5 ldc.r4 1
+   00BA call System.Int32 UnityEngine.Screen::get_height()
+   00BF conv.r4 
+   00C0 mul 
+   00C1 ldsfld ARController::mPreviewWidth
+   00C6 conv.r4 
+   00C7 div 
+   00C8 stloc.2 
+   00C9 br IL_00f6: ldloc.2
+   00CE ldc.r4 1
+   00D3 call System.Int32 UnityEngine.Screen::get_height()
+   00D8 conv.r4 
+   00D9 mul 
+   00DA ldsfld ARController::mPreviewHeight
+   00DF conv.r4 
+   00E0 div 
+   00E1 stloc.1 
+   00E2 ldc.r4 1
+   00E7 call System.Int32 UnityEngine.Screen::get_width()
+   00EC conv.r4 
+   00ED mul 
+   00EE ldsfld ARController::mPreviewWidth
+   00F3 conv.r4 
+   00F4 div 
+   00F5 stloc.2 
+   00F6 ldloc.2 
+   00F7 ldloc.1 
+   00F8 bge.un IL_010b: ldarg.0
+   00FD ldarg.0 
+   00FE ldloc.1 
+   00FF ldloc.2 
+   0100 div 
+   0101 stfld ARController::mesh_height
+   0106 br IL_0114: ldloc.0
+   010B ldarg.0 
+   010C ldloc.2 
+   010D ldloc.1 
+   010E div 
+   010F stfld ARController::mesh_width
+   0114 ldloc.0 
+   0115 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   011A ldc.i4.4 
+   011B newarr UnityEngine.Vector3
+   0120 dup 
+   0121 ldc.i4.0 
+   0122 ldelema UnityEngine.Vector3
+   0127 ldarg.0 
+   0128 ldfld ARController::mesh_width
+   012D ldarg.0 
+   012E ldfld ARController::mesh_height
+   0133 ldc.r4 1
+   0138 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   013D stobj UnityEngine.Vector3
+   0142 dup 
+   0143 ldc.i4.1 
+   0144 ldelema UnityEngine.Vector3
+   0149 ldarg.0 
+   014A ldfld ARController::mesh_width
+   014F ldarg.0 
+   0150 ldfld ARController::mesh_height
+   0155 neg 
+   0156 ldc.r4 1
+   015B newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0160 stobj UnityEngine.Vector3
+   0165 dup 
+   0166 ldc.i4.2 
+   0167 ldelema UnityEngine.Vector3
+   016C ldarg.0 
+   016D ldfld ARController::mesh_width
+   0172 neg 
+   0173 ldarg.0 
+   0174 ldfld ARController::mesh_height
+   0179 neg 
+   017A ldc.r4 1
+   017F newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0184 stobj UnityEngine.Vector3
+   0189 dup 
+   018A ldc.i4.3 
+   018B ldelema UnityEngine.Vector3
+   0190 ldarg.0 
+   0191 ldfld ARController::mesh_width
+   0196 neg 
+   0197 ldarg.0 
+   0198 ldfld ARController::mesh_height
+   019D ldc.r4 1
+   01A2 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   01A7 stobj UnityEngine.Vector3
+   01AC callvirt System.Void UnityEngine.Mesh::set_vertices(UnityEngine.Vector3[])
+   01B1 ldc.i4.4 
+   01B2 newarr System.Object
+   01B7 dup 
+   01B8 ldc.i4.0 
+   01B9 ldstr yuzuo1 height 
+   01BE stelem.ref 
+   01BF dup 
+   01C0 ldc.i4.1 
+   01C1 ldarg.0 
+   01C2 ldfld ARController::mesh_height
+   01C7 box System.Single
+   01CC stelem.ref 
+   01CD dup 
+   01CE ldc.i4.2 
+   01CF ldstr  yuzuo width 
+   01D4 stelem.ref 
+   01D5 dup 
+   01D6 ldc.i4.3 
+   01D7 ldarg.0 
+   01D8 ldfld ARController::mesh_width
+   01DD box System.Single
+   01E2 stelem.ref 
+   01E3 call System.String System.String::Concat(System.Object[])
+   01E8 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   01ED ldloc.0 
+   01EE callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   01F3 ldc.i4.6 
+   01F4 newarr System.Int32
+   01F9 dup 
+   01FA ldtoken <PrivateImplementationDetails>::$field-623271246A2B98A2A69885ADA8BCE756B53822F7
+   01FF call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0204 callvirt System.Void UnityEngine.Mesh::set_triangles(System.Int32[])
+   0209 ldloca.s V_3
+   020B ldc.r4 0
+   0210 ldc.r4 0
+   0215 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   021A ldloca.s V_4
+   021C ldc.r4 0
+   0221 ldc.r4 1
+   0226 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   022B ldloca.s V_5
+   022D ldc.r4 1
+   0232 ldc.r4 0
+   0237 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   023C ldloca.s V_6
+   023E ldc.r4 1
+   0243 ldc.r4 1
+   0248 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   024D call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   0252 ldc.i4.1 
+   0253 bne.un IL_02fc: ldsfld System.Boolean ARController::useUnityCamera
+   0258 ldsfld ARController::useUnityCamera
+   025D brtrue IL_02af: ldloc.0
+   0262 ldloc.0 
+   0263 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   0268 ldc.i4.4 
+   0269 newarr UnityEngine.Vector2
+   026E dup 
+   026F ldc.i4.0 
+   0270 ldelema UnityEngine.Vector2
+   0275 ldloc.3 
+   0276 stobj UnityEngine.Vector2
+   027B dup 
+   027C ldc.i4.1 
+   027D ldelema UnityEngine.Vector2
+   0282 ldloc.s V_5
+   0284 stobj UnityEngine.Vector2
+   0289 dup 
+   028A ldc.i4.2 
+   028B ldelema UnityEngine.Vector2
+   0290 ldloc.s V_6
+   0292 stobj UnityEngine.Vector2
+   0297 dup 
+   0298 ldc.i4.3 
+   0299 ldelema UnityEngine.Vector2
+   029E ldloc.s V_4
+   02A0 stobj UnityEngine.Vector2
+   02A5 callvirt System.Void UnityEngine.Mesh::set_uv(UnityEngine.Vector2[])
+   02AA br IL_02f7: br IL_039b
+   02AF ldloc.0 
+   02B0 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   02B5 ldc.i4.4 
+   02B6 newarr UnityEngine.Vector2
+   02BB dup 
+   02BC ldc.i4.0 
+   02BD ldelema UnityEngine.Vector2
+   02C2 ldloc.s V_4
+   02C4 stobj UnityEngine.Vector2
+   02C9 dup 
+   02CA ldc.i4.1 
+   02CB ldelema UnityEngine.Vector2
+   02D0 ldloc.s V_6
+   02D2 stobj UnityEngine.Vector2
+   02D7 dup 
+   02D8 ldc.i4.2 
+   02D9 ldelema UnityEngine.Vector2
+   02DE ldloc.s V_5
+   02E0 stobj UnityEngine.Vector2
+   02E5 dup 
+   02E6 ldc.i4.3 
+   02E7 ldelema UnityEngine.Vector2
+   02EC ldloc.3 
+   02ED stobj UnityEngine.Vector2
+   02F2 callvirt System.Void UnityEngine.Mesh::set_uv(UnityEngine.Vector2[])
+   02F7 br IL_039b: ldarg.0
+   02FC ldsfld ARController::useUnityCamera
+   0301 brtrue IL_0353: ldloc.0
+   0306 ldloc.0 
+   0307 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   030C ldc.i4.4 
+   030D newarr UnityEngine.Vector2
+   0312 dup 
+   0313 ldc.i4.0 
+   0314 ldelema UnityEngine.Vector2
+   0319 ldloc.s V_5
+   031B stobj UnityEngine.Vector2
+   0320 dup 
+   0321 ldc.i4.1 
+   0322 ldelema UnityEngine.Vector2
+   0327 ldloc.s V_6
+   0329 stobj UnityEngine.Vector2
+   032E dup 
+   032F ldc.i4.2 
+   0330 ldelema UnityEngine.Vector2
+   0335 ldloc.s V_4
+   0337 stobj UnityEngine.Vector2
+   033C dup 
+   033D ldc.i4.3 
+   033E ldelema UnityEngine.Vector2
+   0343 ldloc.3 
+   0344 stobj UnityEngine.Vector2
+   0349 callvirt System.Void UnityEngine.Mesh::set_uv(UnityEngine.Vector2[])
+   034E br IL_039b: ldarg.0
+   0353 ldloc.0 
+   0354 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   0359 ldc.i4.4 
+   035A newarr UnityEngine.Vector2
+   035F dup 
+   0360 ldc.i4.0 
+   0361 ldelema UnityEngine.Vector2
+   0366 ldloc.s V_6
+   0368 stobj UnityEngine.Vector2
+   036D dup 
+   036E ldc.i4.1 
+   036F ldelema UnityEngine.Vector2
+   0374 ldloc.s V_5
+   0376 stobj UnityEngine.Vector2
+   037B dup 
+   037C ldc.i4.2 
+   037D ldelema UnityEngine.Vector2
+   0382 ldloc.3 
+   0383 stobj UnityEngine.Vector2
+   0388 dup 
+   0389 ldc.i4.3 
+   038A ldelema UnityEngine.Vector2
+   038F ldloc.s V_4
+   0391 stobj UnityEngine.Vector2
+   0396 callvirt System.Void UnityEngine.Mesh::set_uv(UnityEngine.Vector2[])
+   039B ldarg.0 
+   039C ldfld ARController::goVideoBackgroundMesh
+   03A1 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.MeshRenderer>()
+   03A6 stloc.s V_7
+   03A8 ldloc.s V_7
+   03AA ldnull 
+   03AB call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   03B0 brfalse IL_03d2: ldstr "VideoPlaneNoLight"
+   03B5 ldarg.0 
+   03B6 ldfld ARController::goVideoBackgroundMesh
+   03BB callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshRenderer>()
+   03C0 stloc.s V_7
+   03C2 ldloc.s V_7
+   03C4 ldc.i4.0 
+   03C5 callvirt System.Void UnityEngine.Renderer::set_shadowCastingMode(UnityEngine.Rendering.ShadowCastingMode)
+   03CA ldloc.s V_7
+   03CC ldc.i4.0 
+   03CD callvirt System.Void UnityEngine.Renderer::set_receiveShadows(System.Boolean)
+   03D2 ldstr VideoPlaneNoLight
+   03D7 call UnityEngine.Shader UnityEngine.Shader::Find(System.String)
+   03DC stloc.s V_8
+   03DE ldloc.s V_8
+   03E0 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   03E5 stloc.s V_9
+   03E7 ldloc.s V_9
+   03E9 ldc.i4.s 61
+   03EB callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   03F0 ldsfld ARController::useUnityCamera
+   03F5 brfalse IL_040c: ldloc.s V_9
+   03FA ldloc.s V_9
+   03FC ldarg.0 
+   03FD ldfld ARController::cameraTexture
+   0402 callvirt System.Void UnityEngine.Material::set_mainTexture(UnityEngine.Texture)
+   0407 br IL_0419: ldarg.0
+   040C ldloc.s V_9
+   040E ldarg.0 
+   040F ldfld ARController::mVideoBackgroundTexture
+   0414 callvirt System.Void UnityEngine.Material::set_mainTexture(UnityEngine.Texture)
+   0419 ldarg.0 
+   041A ldfld ARController::goVideoBackgroundMesh
+   041F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Renderer>()
+   0424 ldloc.s V_9
+   0426 callvirt System.Void UnityEngine.Renderer::set_material(UnityEngine.Material)
+   042B ldc.i4.4 
+   042C newarr System.Object
+   0431 dup 
+   0432 ldc.i4.0 
+   0433 ldstr yuzuo1 material_height 
+   0438 stelem.ref 
+   0439 dup 
+   043A ldc.i4.1 
+   043B ldloc.s V_9
+   043D callvirt UnityEngine.Texture UnityEngine.Material::get_mainTexture()
+   0442 callvirt System.Int32 UnityEngine.Texture::get_height()
+   0447 box System.Int32
+   044C stelem.ref 
+   044D dup 
+   044E ldc.i4.2 
+   044F ldstr  yuzuo width 
+   0454 stelem.ref 
+   0455 dup 
+   0456 ldc.i4.3 
+   0457 ldloc.s V_9
+   0459 callvirt UnityEngine.Texture UnityEngine.Material::get_mainTexture()
+   045E callvirt System.Int32 UnityEngine.Texture::get_width()
+   0463 box System.Int32
+   0468 stelem.ref 
+   0469 call System.String System.String::Concat(System.Object[])
+   046E call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0473 ret 
+== System.Void SetupVideoBackgroundCameraGameObject(System.Int32 layer) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld ARController::goVideoBackgroundCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0021: ldarg.0
+   0011 ldarg.0 
+   0012 ldstr Video Background Camera
+   0017 newobj System.Void UnityEngine.GameObject::.ctor(System.String)
+   001C stfld ARController::goVideoBackgroundCamera
+   0021 ldarg.0 
+   0022 ldarg.0 
+   0023 ldfld ARController::goVideoBackgroundCamera
+   0028 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Camera>()
+   002D stfld ARController::mVideoBackgroundCamera
+   0032 ldarg.0 
+   0033 ldfld ARController::mVideoBackgroundCamera
+   0038 ldnull 
+   0039 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003E brfalse IL_0054: ldarg.0
+   0043 ldarg.0 
+   0044 ldarg.0 
+   0045 ldfld ARController::goVideoBackgroundCamera
+   004A callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.Camera>()
+   004F stfld ARController::mVideoBackgroundCamera
+   0054 ldarg.0 
+   0055 ldfld ARController::mVideoBackgroundCamera
+   005A ldc.i4.0 
+   005B callvirt System.Void UnityEngine.Camera::set_orthographic(System.Boolean)
+   0060 call System.Int32 UnityEngine.Screen::get_width()
+   0065 conv.r4 
+   0066 ldc.r4 1
+   006B mul 
+   006C call System.Int32 UnityEngine.Screen::get_height()
+   0071 conv.r4 
+   0072 div 
+   0073 stloc.0 
+   0074 ldarg.0 
+   0075 ldfld ARController::mesh_width
+   007A ldloc.0 
+   007B div 
+   007C ldc.r4 1
+   0081 div 
+   0082 conv.r8 
+   0083 stloc.1 
+   0084 ldc.r8 2
+   008D ldloc.1 
+   008E call System.Double System.Math::Atan(System.Double)
+   0093 mul 
+   0094 ldc.r8 180
+   009D mul 
+   009E ldc.r8 3.141592653589793
+   00A7 div 
+   00A8 stloc.2 
+   00A9 ldarg.0 
+   00AA ldfld ARController::mVideoBackgroundCamera
+   00AF ldloc.2 
+   00B0 conv.r4 
+   00B1 callvirt System.Void UnityEngine.Camera::set_fieldOfView(System.Single)
+   00B6 ldarg.0 
+   00B7 ldfld ARController::mVideoBackgroundCamera
+   00BC ldc.r4 0.01
+   00C1 callvirt System.Void UnityEngine.Camera::set_nearClipPlane(System.Single)
+   00C6 ldarg.0 
+   00C7 ldfld ARController::mVideoBackgroundCamera
+   00CC ldc.r4 100
+   00D1 callvirt System.Void UnityEngine.Camera::set_farClipPlane(System.Single)
+   00D6 ldstr  yuzuo1 tan value: 
+   00DB ldloc.1 
+   00DC box System.Double
+   00E1 call System.String System.String::Concat(System.Object,System.Object)
+   00E6 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   00EB ldstr  yuzuo1 mVideoBackgroundCamera fov: 
+   00F0 ldarg.0 
+   00F1 ldfld ARController::mVideoBackgroundCamera
+   00F6 callvirt System.Single UnityEngine.Camera::get_fieldOfView()
+   00FB box System.Single
+   0100 call System.String System.String::Concat(System.Object,System.Object)
+   0105 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   010A ldstr  yuzuo1 projectionMatrix
+   010F ldarg.0 
+   0110 ldfld ARController::mVideoBackgroundCamera
+   0115 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   011A box UnityEngine.Matrix4x4
+   011F call System.String System.String::Concat(System.Object,System.Object)
+   0124 call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0129 ldc.i4.4 
+   012A newarr System.Object
+   012F dup 
+   0130 ldc.i4.0 
+   0131 ldstr  yuzuo1 mVideoBackgroundCamera aspect: 
+   0136 stelem.ref 
+   0137 dup 
+   0138 ldc.i4.1 
+   0139 ldarg.0 
+   013A ldfld ARController::mVideoBackgroundCamera
+   013F callvirt System.Single UnityEngine.Camera::get_aspect()
+   0144 box System.Single
+   0149 stelem.ref 
+   014A dup 
+   014B ldc.i4.2 
+   014C ldstr   arcamera_aspect 
+   0151 stelem.ref 
+   0152 dup 
+   0153 ldc.i4.3 
+   0154 ldarg.0 
+   0155 ldfld ARController::ar_camera
+   015A callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Camera>()
+   015F callvirt System.Single UnityEngine.Camera::get_aspect()
+   0164 box System.Single
+   0169 stelem.ref 
+   016A call System.String System.String::Concat(System.Object[])
+   016F call System.Void UnityEngine.MonoBehaviour::print(System.Object)
+   0174 ldarg.0 
+   0175 ldfld ARController::mVideoBackgroundCamera
+   017A callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   017F ldc.r4 10000
+   0184 ldc.r4 0
+   0189 ldc.r4 0
+   018E newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0193 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0198 ldarg.0 
+   0199 ldfld ARController::goVideoBackgroundMesh
+   019E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01A3 ldc.r4 10000
+   01A8 ldc.r4 0
+   01AD ldc.r4 0
+   01B2 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   01B7 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   01BC ldarg.0 
+   01BD ldfld ARController::mVideoBackgroundCamera
+   01C2 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01C7 ldc.r4 0
+   01CC ldc.r4 0
+   01D1 ldc.r4 0
+   01D6 ldc.r4 1
+   01DB newobj System.Void UnityEngine.Quaternion::.ctor(System.Single,System.Single,System.Single,System.Single)
+   01E0 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   01E5 ldarg.0 
+   01E6 ldfld ARController::mVideoBackgroundCamera
+   01EB callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   01F0 ldc.r4 1
+   01F5 ldc.r4 1
+   01FA ldc.r4 1
+   01FF newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0204 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0209 ldarg.0 
+   020A ldfld ARController::mVideoBackgroundCamera
+   020F ldc.i4.3 
+   0210 callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   0215 ldarg.0 
+   0216 ldfld ARController::mVideoBackgroundCamera
+   021B ldc.i4.1 
+   021C ldarg.1 
+   021D ldc.i4.s 31
+   021F and 
+   0220 shl 
+   0221 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0226 ldarg.0 
+   0227 ldfld ARController::mVideoBackgroundCamera
+   022C ldc.r4 -10
+   0231 callvirt System.Void UnityEngine.Camera::set_depth(System.Single)
+   0236 ldarg.0 
+   0237 ldfld ARController::mVideoBackgroundCamera
+   023C ldc.r4 0
+   0241 ldc.r4 0
+   0246 call System.Int32 UnityEngine.Screen::get_width()
+   024B conv.r4 
+   024C call System.Int32 UnityEngine.Screen::get_height()
+   0251 conv.r4 
+   0252 newobj System.Void UnityEngine.Rect::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0257 callvirt System.Void UnityEngine.Camera::set_pixelRect(UnityEngine.Rect)
+   025C ret 
+== System.Void DestroyVideoBackground() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld ARController::mVideoBackgroundCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0023: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld ARController::mVideoBackgroundCamera
+   0017 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   001C ldarg.0 
+   001D ldnull 
+   001E stfld ARController::mVideoBackgroundCamera
+   0023 ldarg.0 
+   0024 ldfld ARController::mVideoBackgroundTexture
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_0046: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld ARController::mVideoBackgroundTexture
+   003A call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   003F ldarg.0 
+   0040 ldnull 
+   0041 stfld ARController::mVideoBackgroundTexture
+   0046 ldarg.0 
+   0047 ldfld ARController::cameraTexture
+   004C ldnull 
+   004D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0052 brfalse IL_0069: ldarg.0
+   0057 ldarg.0 
+   0058 ldfld ARController::cameraTexture
+   005D call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0062 ldarg.0 
+   0063 ldnull 
+   0064 stfld ARController::cameraTexture
+   0069 ldarg.0 
+   006A ldfld ARController::goVideoBackgroundCamera
+   006F ldnull 
+   0070 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0075 brfalse IL_008c: ldarg.0
+   007A ldarg.0 
+   007B ldfld ARController::goVideoBackgroundCamera
+   0080 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0085 ldarg.0 
+   0086 ldnull 
+   0087 stfld ARController::goVideoBackgroundCamera
+   008C ldarg.0 
+   008D ldfld ARController::goVideoBackgroundMesh
+   0092 ldnull 
+   0093 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0098 brfalse IL_00af: ldarg.0
+   009D ldarg.0 
+   009E ldfld ARController::goVideoBackgroundMesh
+   00A3 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00A8 ldarg.0 
+   00A9 ldnull 
+   00AA stfld ARController::goVideoBackgroundMesh
+   00AF ldarg.0 
+   00B0 ldflda ARController::image_handle_0
+   00B5 call System.Void System.Runtime.InteropServices.GCHandle::Free()
+   00BA call UnityEngine.AsyncOperation UnityEngine.Resources::UnloadUnusedAssets()
+   00BF pop 
+   00C0 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4 640
+   0005 stsfld ARController::mPreviewWidth
+   000A ldc.i4 480
+   000F stsfld ARController::mPreviewHeight
+   0014 ldc.i4.1 
+   0015 stsfld ARController::useUnitySensor
+   001A ldc.i4.1 
+   001B stsfld ARController::useThread
+   0020 ldc.i4.1 
+   0021 stsfld ARController::useUnityCamera
+   0026 ret 
+  NESTED ARController/<Process_Image_Coroutine>c__Iterator0

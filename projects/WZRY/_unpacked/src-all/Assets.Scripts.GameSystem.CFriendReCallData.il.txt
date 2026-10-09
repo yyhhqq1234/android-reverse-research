@@ -1,0 +1,215 @@
+// TYPE Assets.Scripts.GameSystem.CFriendReCallData  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD ListView`1<Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData> _reCallList
+  FIELD System.UInt32 inviteLimitSec
+  PROP System.UInt32 InviteLimitSec
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   000B ldarg.0 
+   000C call System.Void System.Object::.ctor()
+   0011 ret 
+== System.UInt32 get_InviteLimitSec() attrs=Private, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CFriendReCallData::inviteLimitSec
+   0005 brtrue IL_001f: ldsfld System.UInt32 Assets.Scripts.GameSystem.CFriendReCallData::inviteLimitSec
+   000A ldc.i4 86400
+   000F ldc.i4 158
+   0014 call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0019 mul 
+   001A stsfld Assets.Scripts.GameSystem.CFriendReCallData::inviteLimitSec
+   001F ldsfld Assets.Scripts.GameSystem.CFriendReCallData::inviteLimitSec
+   0024 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ret 
+== System.Void Add(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData Assets.Scripts.GameSystem.CFriendReCallData::GetFriendData(System.UInt64,System.UInt32,CSProtocol.COM_FRIEND_TYPE)
+   0009 stloc.0 
+   000A ldloc.0 
+   000B brfalse IL_0019: newobj System.Void Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::.ctor()
+   0010 ldarg.0 
+   0011 ldarg.1 
+   0012 ldarg.2 
+   0013 ldarg.3 
+   0014 call System.Void Assets.Scripts.GameSystem.CFriendReCallData::RemoveFriendReCallData(System.UInt64,System.UInt32,CSProtocol.COM_FRIEND_TYPE)
+   0019 newobj System.Void Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::.ctor()
+   001E stloc.1 
+   001F ldloc.1 
+   0020 ldarg.1 
+   0021 stfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::ullUid
+   0026 ldloc.1 
+   0027 ldarg.2 
+   0028 stfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::dwLogicWorldId
+   002D ldloc.1 
+   002E ldarg.3 
+   002F stfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::friendType
+   0034 ldloc.1 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   003B call System.Void Assets.Scripts.GameSystem.UT::Add2List<Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData>(T,ListView`1<T>)
+   0040 ret 
+== System.Boolean BLose(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.2 
+   0003 ldc.i4.1 
+   0004 bne.un IL_0021: ldarg.2
+   0009 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   000E ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0013 ldc.i4.1 
+   0014 ldarg.0 
+   0015 ldarg.1 
+   0016 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetInfo(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   001B stloc.0 
+   001C br IL_003b: ldloc.0
+   0021 ldarg.2 
+   0022 ldc.i4.2 
+   0023 bne.un IL_003b: ldloc.0
+   0028 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   002D ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0032 ldc.i4.4 
+   0033 ldarg.0 
+   0034 ldarg.1 
+   0035 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetInfo(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   003A stloc.0 
+   003B ldloc.0 
+   003C brfalse IL_005b: ldc.i4.0
+   0041 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0046 conv.i8 
+   0047 ldloc.0 
+   0048 ldfld Assets.Scripts.GameSystem.BasicFriendData::LastLoginTime
+   004D conv.u8 
+   004E sub 
+   004F call System.UInt32 Assets.Scripts.GameSystem.CFriendReCallData::get_InviteLimitSec()
+   0054 conv.u8 
+   0055 clt 
+   0057 ldc.i4.0 
+   0058 ceq 
+   005A ret 
+   005B ldc.i4.0 
+   005C ret 
+== System.Int32 GetLoseTime(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldarg.2 
+   0005 ldc.i4.1 
+   0006 bne.un IL_0023: ldarg.2
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0010 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0015 ldc.i4.1 
+   0016 ldarg.0 
+   0017 ldarg.1 
+   0018 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetInfo(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   001D stloc.0 
+   001E br IL_003d: ldloc.0
+   0023 ldarg.2 
+   0024 ldc.i4.2 
+   0025 bne.un IL_003d: ldloc.0
+   002A call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   002F ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0034 ldc.i4.4 
+   0035 ldarg.0 
+   0036 ldarg.1 
+   0037 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetInfo(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   003C stloc.0 
+   003D ldloc.0 
+   003E brfalse IL_0050: ldloc.1
+   0043 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0048 ldloc.0 
+   0049 ldfld Assets.Scripts.GameSystem.BasicFriendData::LastLoginTime
+   004E sub 
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ret 
+== System.Boolean BInCd(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Int32 Assets.Scripts.GameSystem.CFriendReCallData::GetFriendReCallDataIndex(System.UInt64,System.UInt32,CSProtocol.COM_FRIEND_TYPE)
+   0009 stloc.0 
+   000A ldloc.0 
+   000B ldc.i4.m1 
+   000C ceq 
+   000E ldc.i4.0 
+   000F ceq 
+   0011 ret 
+== Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData GetFriendData(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Int32 Assets.Scripts.GameSystem.CFriendReCallData::GetFriendReCallDataIndex(System.UInt64,System.UInt32,CSProtocol.COM_FRIEND_TYPE)
+   0009 stloc.0 
+   000A ldloc.0 
+   000B ldc.i4.m1 
+   000C bne.un IL_0013: ldarg.0
+   0011 ldnull 
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   0019 ldloc.0 
+   001A callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData>::get_Item(System.Int32)
+   001F ret 
+== System.Void RemoveFriendReCallData(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Int32 Assets.Scripts.GameSystem.CFriendReCallData::GetFriendReCallDataIndex(System.UInt64,System.UInt32,CSProtocol.COM_FRIEND_TYPE)
+   0009 stloc.0 
+   000A ldloc.0 
+   000B ldc.i4.m1 
+   000C beq IL_001d: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   0017 ldloc.0 
+   0018 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   001D ret 
+== System.Int32 GetFriendReCallDataIndex(System.UInt64 uid, System.UInt32 worldId, CSProtocol.COM_FRIEND_TYPE friendType) attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_0040: ldloc.1
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   000F ldloc.1 
+   0010 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData>::get_Item(System.Int32)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::ullUid
+   001C ldarg.1 
+   001D bne.un IL_003c: ldloc.1
+   0022 ldloc.0 
+   0023 ldfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::dwLogicWorldId
+   0028 ldarg.2 
+   0029 bne.un IL_003c: ldloc.1
+   002E ldloc.0 
+   002F ldfld Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData::friendType
+   0034 ldarg.3 
+   0035 bne.un IL_003c: ldloc.1
+   003A ldloc.1 
+   003B ret 
+   003C ldloc.1 
+   003D ldc.i4.1 
+   003E add 
+   003F stloc.1 
+   0040 ldloc.1 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CFriendReCallData::_reCallList
+   0047 callvirt System.Int32 ListViewBase::get_Count()
+   004C blt IL_0009: ldarg.0
+   0051 ldc.i4.m1 
+   0052 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 
+  NESTED Assets.Scripts.GameSystem.CFriendReCallData/CDFriendReCallData

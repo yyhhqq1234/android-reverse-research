@@ -1,0 +1,312 @@
+// TYPE Assets.Scripts.UI.CUIFitZoneScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.UI.enFitZoneType m_fitZoneType
+  FIELD System.Single m_fixedWidth
+  FIELD UnityEngine.RectTransform m_rectTransform
+  FIELD System.Single m_screenWidth
+  FIELD System.Single m_screenHeight
+  FIELD System.Single s_targetWithHeightRate
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0006 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_007b: ret
+   000B ldarg.0 
+   000C dup 
+   000D ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0012 ldc.i4.1 
+   0013 or 
+   0014 stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0019 ldarg.0 
+   001A ldarg.1 
+   001B call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0020 ldarg.0 
+   0021 ldarg.0 
+   0022 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0027 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002C isinst UnityEngine.RectTransform
+   0031 stfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0036 ldarg.0 
+   0037 call System.Int32 UnityEngine.Screen::get_width()
+   003C conv.r4 
+   003D call System.Int32 UnityEngine.Screen::get_height()
+   0042 conv.r4 
+   0043 call System.Void Assets.Scripts.UI.CUIFitZoneScript::Fit(System.Single,System.Single)
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fitZoneType
+   004E ldc.i4.2 
+   004F beq IL_0074: ldarg.0
+   0054 ldarg.0 
+   0055 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   005A ldstr imgMaskBattle
+   005F callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0064 ldstr UGUI/Sprite/Battle/Global_Bg_DangBanBattle
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   006F call System.Void Assets.Scripts.UI.CUIUtility::SetObjImage(UnityEngine.Transform,System.String,Assets.Scripts.UI.CUIFormScript)
+   0074 ldarg.0 
+   0075 ldc.i4.1 
+   0076 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   007B ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0018: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0018 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_screenWidth
+   0006 call System.Int32 UnityEngine.Screen::get_width()
+   000B conv.r4 
+   000C bne.un IL_0022: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_screenHeight
+   0017 call System.Int32 UnityEngine.Screen::get_height()
+   001C conv.r4 
+   001D beq IL_0034: ret
+   0022 ldarg.0 
+   0023 call System.Int32 UnityEngine.Screen::get_width()
+   0028 conv.r4 
+   0029 call System.Int32 UnityEngine.Screen::get_height()
+   002E conv.r4 
+   002F call System.Void Assets.Scripts.UI.CUIFitZoneScript::Fit(System.Single,System.Single)
+   0034 ret 
+== System.Single CalculateFixedWidth(Assets.Scripts.UI.CUIFormScript formScript, System.Single screenWidth, System.Single screenHeight) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0060: ldarg.0
+   000C ldarg.2 
+   000D ldarg.3 
+   000E ldsfld Assets.Scripts.UI.CUIFitZoneScript::s_targetWithHeightRate
+   0013 mul 
+   0014 blt.un IL_0060: ldarg.0
+   0019 ldarg.0 
+   001A ldarg.2 
+   001B ldarg.1 
+   001C ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   0021 ldfld UnityEngine.Vector2::y
+   0026 mul 
+   0027 ldarg.3 
+   0028 div 
+   0029 ldarg.1 
+   002A ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   002F ldfld UnityEngine.Vector2::y
+   0034 ldsfld Assets.Scripts.UI.CUIFitZoneScript::s_targetWithHeightRate
+   0039 mul 
+   003A sub 
+   003B stfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   0046 ldc.r4 0
+   004B bge.un IL_005b: br IL_006b
+   0050 ldarg.0 
+   0051 ldc.r4 0
+   0056 stfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   005B br IL_006b: ldarg.0
+   0060 ldarg.0 
+   0061 ldc.r4 0
+   0066 stfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   0071 ret 
+== System.Void TryGetHeightRateForDeviceBin() attrs=Public, Static, HideBySig maxstack=2
+   0000 call System.Single Assets.Scripts.UI.CUIFitZoneScript::GetDeviceUIHeightRateConfig()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldc.r4 1.8
+   000C ble.un IL_0017: ret
+   0011 ldloc.0 
+   0012 stsfld Assets.Scripts.UI.CUIFitZoneScript::s_targetWithHeightRate
+   0017 ret 
+== System.Single GetDeviceUIHeightRateConfig() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.String UnityEngine.SystemInfo::get_deviceModel()
+   0005 stloc.0 
+   0006 call System.Int32 ResData.GameDataMgr/androidDevicFuncConfigDatabin::Count()
+   000B stloc.1 
+   000C ldc.i4.1 
+   000D stloc.2 
+   000E br IL_0045: ldloc.2
+   0013 ldloc.2 
+   0014 call ResData.ResDevicFuncConfigInfo ResData.GameDataMgr/androidDevicFuncConfigDatabin::GetByIndex(System.Int32)
+   0019 stloc.3 
+   001A ldloca.s V_3
+   001C call System.String ResData.ResDevicFuncConfigInfo::get_szDeviceName()
+   0021 brfalse IL_0041: ldloc.2
+   0026 ldloc.0 
+   0027 ldloca.s V_3
+   0029 call System.String ResData.ResDevicFuncConfigInfo::get_szDeviceName()
+   002E ldc.i4.1 
+   002F call System.Boolean StringExtension::isWildCardMatch(System.String,System.String,System.Boolean)
+   0034 brfalse IL_0041: ldloc.2
+   0039 ldloca.s V_3
+   003B ldfld ResData.ResDevicFuncConfigInfo::fSafeAreaConfig
+   0040 ret 
+   0041 ldloc.2 
+   0042 ldc.i4.1 
+   0043 add 
+   0044 stloc.2 
+   0045 ldloc.2 
+   0046 ldloc.1 
+   0047 blt IL_0013: ldloc.2
+   004C ldc.r4 0
+   0051 ret 
+== System.Void Fit(System.Single screenWidth, System.Single screenHeight) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0007 ldarg.1 
+   0008 ldarg.2 
+   0009 call System.Single Assets.Scripts.UI.CUIFitZoneScript::CalculateFixedWidth(Assets.Scripts.UI.CUIFormScript,System.Single,System.Single)
+   000E pop 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fitZoneType
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 switch Mono.Cecil.Cil.Instruction[]
+   0028 br IL_01cc: br IL_01d1
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0033 ldc.r4 0
+   0038 ldc.r4 0.5
+   003D newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0042 callvirt System.Void UnityEngine.RectTransform::set_pivot(UnityEngine.Vector2)
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   004D call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0052 callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   005D ldc.r4 0
+   0062 ldc.r4 1
+   0067 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   006C callvirt System.Void UnityEngine.RectTransform::set_anchorMax(UnityEngine.Vector2)
+   0071 ldarg.0 
+   0072 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0077 ldc.r4 0
+   007C ldc.r4 0
+   0081 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0086 callvirt System.Void UnityEngine.RectTransform::set_offsetMin(UnityEngine.Vector2)
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   0097 ldc.r4 2
+   009C div 
+   009D ldc.r4 0
+   00A2 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00A7 callvirt System.Void UnityEngine.RectTransform::set_offsetMax(UnityEngine.Vector2)
+   00AC br IL_01d1: ldarg.0
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   00B7 ldc.r4 1
+   00BC ldc.r4 0.5
+   00C1 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00C6 callvirt System.Void UnityEngine.RectTransform::set_pivot(UnityEngine.Vector2)
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   00D1 ldc.r4 1
+   00D6 ldc.r4 0
+   00DB newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00E0 callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   00EB ldc.r4 1
+   00F0 ldc.r4 1
+   00F5 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00FA callvirt System.Void UnityEngine.RectTransform::set_anchorMax(UnityEngine.Vector2)
+   00FF ldarg.0 
+   0100 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0105 ldarg.0 
+   0106 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   010B neg 
+   010C ldc.r4 2
+   0111 div 
+   0112 ldc.r4 0
+   0117 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   011C callvirt System.Void UnityEngine.RectTransform::set_offsetMin(UnityEngine.Vector2)
+   0121 ldarg.0 
+   0122 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0127 ldc.r4 0
+   012C ldc.r4 0
+   0131 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0136 callvirt System.Void UnityEngine.RectTransform::set_offsetMax(UnityEngine.Vector2)
+   013B br IL_01d1: ldarg.0
+   0140 ldarg.0 
+   0141 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0146 ldc.r4 0.5
+   014B ldc.r4 0.5
+   0150 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0155 callvirt System.Void UnityEngine.RectTransform::set_pivot(UnityEngine.Vector2)
+   015A ldarg.0 
+   015B ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0160 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0165 callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   016A ldarg.0 
+   016B ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   0170 ldc.r4 1
+   0175 ldc.r4 1
+   017A newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   017F callvirt System.Void UnityEngine.RectTransform::set_anchorMax(UnityEngine.Vector2)
+   0184 ldarg.0 
+   0185 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   018A ldarg.0 
+   018B ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   0190 ldc.r4 2
+   0195 div 
+   0196 ldc.r4 0
+   019B newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   01A0 callvirt System.Void UnityEngine.RectTransform::set_offsetMin(UnityEngine.Vector2)
+   01A5 ldarg.0 
+   01A6 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_rectTransform
+   01AB ldarg.0 
+   01AC ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   01B1 neg 
+   01B2 ldc.r4 2
+   01B7 div 
+   01B8 ldc.r4 0
+   01BD newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   01C2 callvirt System.Void UnityEngine.RectTransform::set_offsetMax(UnityEngine.Vector2)
+   01C7 br IL_01d1: ldarg.0
+   01CC br IL_01d1: ldarg.0
+   01D1 ldarg.0 
+   01D2 ldarg.1 
+   01D3 stfld Assets.Scripts.UI.CUIFitZoneScript::m_screenWidth
+   01D8 ldarg.0 
+   01D9 ldarg.2 
+   01DA stfld Assets.Scripts.UI.CUIFitZoneScript::m_screenHeight
+   01DF ldarg.0 
+   01E0 ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fitZoneType
+   01E5 ldc.i4.2 
+   01E6 beq IL_0218: ret
+   01EB ldarg.0 
+   01EC ldfld Assets.Scripts.UI.CUIFitZoneScript::m_fixedWidth
+   01F1 ldc.r4 0
+   01F6 bgt.un IL_020c: ldarg.0
+   01FB ldarg.0 
+   01FC call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0201 ldc.i4.0 
+   0202 call System.Void Assets.Scripts.UI.CUIUtility::ActiveChilds(UnityEngine.Transform,System.Boolean)
+   0207 br IL_0218: ret
+   020C ldarg.0 
+   020D call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0212 ldc.i4.1 
+   0213 call System.Void Assets.Scripts.UI.CUIUtility::ActiveChilds(UnityEngine.Transform,System.Boolean)
+   0218 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.r4 2
+   0005 stsfld Assets.Scripts.UI.CUIFitZoneScript::s_targetWithHeightRate
+   000A ret 

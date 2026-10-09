@@ -1,0 +1,3225 @@
+// TYPE Assets.Scripts.GameSystem.BattleStatView  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String k_dragonIconPrefix = DragonIcon
+  FIELD System.Boolean m_battleKDAChanged
+  FIELD System.Boolean m_battleHeroPropertyChange
+  FIELD System.Int32 _defaultSelectIndex
+  FIELD ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>[] m_heroListCamp
+  FIELD ListView`1<Assets.Scripts.GameLogic.Player>[] m_playerListCamp
+  FIELD DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>> m_TaoShaShenFuBuffDic
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32> m_TaoShaGrowValueDic
+  FIELD System.Collections.Generic.List`1<System.Int32> m_campRankList
+  FIELD System.Boolean m_sortByCoin
+  FIELD System.UInt32 survivePeopleNum
+  FIELD System.UInt32 taoShaTeamScore
+  FIELD System.Collections.Generic.List`1<System.Int32> shenFuBuffIdList
+  FIELD Assets.Scripts.GameSystem.ShowBuffFilter m_buffFilter
+  FIELD UnityEngine.GameObject _root
+  FIELD UnityEngine.GameObject heroView
+  FIELD UnityEngine.GameObject matchInfo
+  FIELD UnityEngine.GameObject valueInfo
+  FIELD UnityEngine.GameObject sortByCoinBtn
+  FIELD Assets.Scripts.UI.CUIListScript list
+  FIELD Assets.Scripts.GameSystem.BattleStatView/ChartView chartView
+  FIELD Assets.Scripts.GameSystem.BattleStatView/HeroItem[][] _heroList
+  FIELD System.Int32 HERO_MAX_NUM = 5
+  FIELD Assets.Scripts.UI.CUIFormScript m_statViewFormScript
+  FIELD System.Int32 _curShowingHeroIndex
+  PROP System.Boolean SortByCoin
+  PROP System.String s_battleStateViewUIForm
+  PROP System.Boolean Visible
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 40
+   0003 newarr ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>
+   0008 stfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   000D ldarg.0 
+   000E ldc.i4.s 40
+   0010 newarr ListView`1<Assets.Scripts.GameLogic.Player>
+   0015 stfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   001A ldarg.0 
+   001B newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0020 stfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0025 ldarg.0 
+   0026 ldc.i4.s 40
+   0028 newarr Assets.Scripts.GameSystem.BattleStatView/HeroItem[]
+   002D stfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0032 ldarg.0 
+   0033 call System.Void System.Object::.ctor()
+   0038 ret 
+== System.Void Preload(Assets.Scripts.GameLogic.PreloadResTypeDelegate loadFunc) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldc.i4.4 
+   0002 ldstr {0}BattleSettle_EquipmentSpaceNew
+   0007 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Talent_Dir
+   000C call System.String System.String::Format(System.String,System.Object)
+   0011 ldc.i4.0 
+   0012 conv.i8 
+   0013 ldnull 
+   0014 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   0019 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   001E callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 brfalse IL_0086: ret
+   002A ldloc.0 
+   002B callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0030 brfalse IL_0086: ret
+   0035 ldc.i4.1 
+   0036 stloc.1 
+   0037 br IL_007e: ldloc.1
+   003C ldarg.0 
+   003D ldc.i4.4 
+   003E ldstr {0}0{1}
+   0043 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_TeamIcon_Dir
+   0048 ldloc.1 
+   0049 box System.Int32
+   004E call System.String System.String::Format(System.String,System.Object,System.Object)
+   0053 ldc.i4.0 
+   0054 conv.i8 
+   0055 ldnull 
+   0056 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   005B ldarg.0 
+   005C ldc.i4.4 
+   005D ldstr {0}0{1}
+   0062 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_TeamIconBg_Dir
+   0067 ldloc.1 
+   0068 box System.Int32
+   006D call System.String System.String::Format(System.String,System.Object,System.Object)
+   0072 ldc.i4.0 
+   0073 conv.i8 
+   0074 ldnull 
+   0075 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   007A ldloc.1 
+   007B ldc.i4.1 
+   007C add 
+   007D stloc.1 
+   007E ldloc.1 
+   007F ldc.i4.s 41
+   0081 blt IL_003c: ldarg.0
+   0086 ret 
+== System.Boolean get_SortByCoin() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   0006 ret 
+== System.Void set_SortByCoin(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 stfld Assets.Scripts.GameSystem.BattleStatView::m_battleHeroPropertyChange
+   000E ldarg.0 
+   000F call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateSortBtn()
+   0014 ldarg.0 
+   0015 call System.Void Assets.Scripts.GameSystem.BattleStatView::SortHeroAndPlayer()
+   001A ldarg.0 
+   001B call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   0020 ldarg.0 
+   0021 ldnull 
+   0022 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   0027 ldarg.0 
+   0028 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::RefreshVoiceStateIfNess()
+   002D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0032 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 brtrue IL_003f: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   003E ret 
+   003F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0044 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0049 stloc.1 
+   004A ldloc.1 
+   004B brfalse IL_0087: ldstr "Sgmae_Battle_SortByCoin_{0}"
+   0050 ldloc.1 
+   0051 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0056 brfalse IL_0087: ldstr "Sgmae_Battle_SortByCoin_{0}"
+   005B ldstr Sgmae_Battle_SortByCoin_WuJun{0}
+   0060 ldloc.0 
+   0061 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0066 box System.UInt64
+   006B call System.String System.String::Format(System.String,System.Object)
+   0070 ldarg.1 
+   0071 brfalse IL_007c: ldc.i4.0
+   0076 ldc.i4.1 
+   0077 br IL_007d: call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   007C ldc.i4.0 
+   007D call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0082 br IL_00ae: call System.Void UnityEngine.PlayerPrefs::Save()
+   0087 ldstr Sgmae_Battle_SortByCoin_{0}
+   008C ldloc.0 
+   008D callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0092 box System.UInt64
+   0097 call System.String System.String::Format(System.String,System.Object)
+   009C ldarg.1 
+   009D brfalse IL_00a8: ldc.i4.0
+   00A2 ldc.i4.1 
+   00A3 br IL_00a9: call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   00A8 ldc.i4.0 
+   00A9 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   00AE call System.Void UnityEngine.PlayerPrefs::Save()
+   00B3 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleStatistic>::GetInstance()
+   00B8 ldc.i4.1 
+   00B9 ldc.i4.0 
+   00BA callvirt System.Void Assets.Scripts.GameLogic.BattleStatistic::ReqPlayerBehavior(System.Byte,Assets.Scripts.GameLogic.BehaviorType)
+   00BF ret 
+== System.String get_s_battleStateViewUIForm() attrs=Public, Static, HideBySig, SpecialName maxstack=1
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0022: ldloc.0
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0017 brfalse IL_0022: ldloc.0
+   001C ldstr UGUI/Form/Battle/Form_BattleStateView_WuJun.prefab
+   0021 ret 
+   0022 ldloc.0 
+   0023 brfalse IL_0039: ldstr "UGUI/Form/Battle/Form_BattleStateView.prefab"
+   0028 ldloc.0 
+   0029 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   002E brfalse IL_0039: ldstr "UGUI/Form/Battle/Form_BattleStateView.prefab"
+   0033 ldstr UGUI/Form/Battle/Form_BattleStateView_TaoSha.prefab
+   0038 ret 
+   0039 ldstr UGUI/Form/Battle/Form_BattleStateView.prefab
+   003E ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_003e: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0023 ldloc.0 
+   0024 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0029 brfalse IL_003d: ret
+   002E call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0033 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   0038 brtrue IL_003e: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003D ret 
+   003E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0043 call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   0048 ldc.i4.1 
+   0049 ldc.i4.1 
+   004A ldnull 
+   004B callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0050 stloc.1 
+   0051 ldarg.0 
+   0052 ldloc.1 
+   0053 stfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0058 ldloc.1 
+   0059 ldc.i4.0 
+   005A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   005F ldc.i4.0 
+   0060 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0065 ldloc.1 
+   0066 ldc.i4.1 
+   0067 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   006C ldc.i4.0 
+   006D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0072 ldloc.1 
+   0073 ldc.i4.3 
+   0074 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0079 call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::GetInstance()
+   007E callvirt System.Boolean Assets.Scripts.GameSystem.InBattleMsgMgr::IsMultiGame()
+   0083 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0088 ldloc.1 
+   0089 ldc.i4.4 
+   008A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   008F call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::GetInstance()
+   0094 callvirt System.Boolean Assets.Scripts.GameSystem.InBattleMsgMgr::IsMultiGame()
+   0099 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   009E ldloc.1 
+   009F ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   00A4 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A9 ldstr Center/BattleStatView/ChartView/CmpBar/diagram/TextXl
+   00AE callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00B3 call System.Void Assets.Scripts.UI.CUIUtility::SetInActiveForENVersion(UnityEngine.Transform)
+   00B8 ldloc.1 
+   00B9 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   00BE callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C3 ldstr Center/BattleStatView/ChartView/CmpBar/diagram/TextDl
+   00C8 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00CD call System.Void Assets.Scripts.UI.CUIUtility::SetInActiveForENVersion(UnityEngine.Transform)
+   00D2 ldarg.0 
+   00D3 ldloc.1 
+   00D4 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   00D9 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00DE ldstr BattleStatView
+   00E3 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00E8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00ED stfld Assets.Scripts.GameSystem.BattleStatView::_root
+   00F2 ldarg.0 
+   00F3 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   00F8 ldnull 
+   00F9 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00FE brfalse IL_0104: ldarg.0
+   0103 ret 
+   0104 ldarg.0 
+   0105 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   010A callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   010F ldc.i4.0 
+   0110 stloc.2 
+   0111 br IL_018c: ldloc.2
+   0116 ldarg.0 
+   0117 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   011C ldloc.2 
+   011D ldelem.ref 
+   011E brtrue IL_0135: ldarg.0
+   0123 ldarg.0 
+   0124 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0129 ldloc.2 
+   012A newobj System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::.ctor()
+   012F stelem.ref 
+   0130 br IL_0142: ldarg.0
+   0135 ldarg.0 
+   0136 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   013B ldloc.2 
+   013C ldelem.ref 
+   013D callvirt System.Void ListViewBase::Clear()
+   0142 ldarg.0 
+   0143 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0148 ldloc.2 
+   0149 ldelem.ref 
+   014A brtrue IL_0161: ldarg.0
+   014F ldarg.0 
+   0150 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0155 ldloc.2 
+   0156 newobj System.Void ListView`1<Assets.Scripts.GameLogic.Player>::.ctor()
+   015B stelem.ref 
+   015C br IL_016e: ldarg.0
+   0161 ldarg.0 
+   0162 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0167 ldloc.2 
+   0168 ldelem.ref 
+   0169 callvirt System.Void ListViewBase::Clear()
+   016E ldarg.0 
+   016F ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0174 ldloc.2 
+   0175 ldc.i4.5 
+   0176 newarr Assets.Scripts.GameSystem.BattleStatView/HeroItem
+   017B stelem.ref 
+   017C ldarg.0 
+   017D ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0182 ldloc.2 
+   0183 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0188 ldloc.2 
+   0189 ldc.i4.1 
+   018A add 
+   018B stloc.2 
+   018C ldloc.2 
+   018D ldc.i4.s 40
+   018F blt IL_0116: ldarg.0
+   0194 ldarg.0 
+   0195 ldarg.0 
+   0196 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   019B ldstr HeroView
+   01A0 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01A5 stfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   01AA ldarg.0 
+   01AB ldarg.0 
+   01AC ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   01B1 ldstr BattleMatchInfo
+   01B6 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01BB stfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   01C0 ldarg.0 
+   01C1 ldarg.0 
+   01C2 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   01C7 ldstr HeroValueInfo
+   01CC call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01D1 stfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   01D6 ldarg.0 
+   01D7 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   01DC ldstr ChartView
+   01E1 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   01E6 stloc.3 
+   01E7 ldloc.3 
+   01E8 ldc.i4.0 
+   01E9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01EE call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   01F3 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   01F8 brfalse IL_0209: ldarg.0
+   01FD ldarg.0 
+   01FE ldloc.3 
+   01FF newobj System.Void Assets.Scripts.GameSystem.BattleStatView/ChartView::.ctor(UnityEngine.GameObject)
+   0204 stfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   0209 ldarg.0 
+   020A ldloc.1 
+   020B ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0210 ldstr TopCommon/SortByCoin
+   0215 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   021A stfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   021F ldloc.0 
+   0220 brfalse IL_0240: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0225 ldloc.1 
+   0226 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   022B ldstr TopCommon/BtnNextHero
+   0230 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0235 ldloc.0 
+   0236 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   023B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0240 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0245 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   024A stloc.s V_4
+   024C ldloc.s V_4
+   024E brfalse IL_02c5: ldarg.0
+   0253 ldloc.0 
+   0254 brfalse IL_0297: ldarg.0
+   0259 ldloc.0 
+   025A callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   025F brfalse IL_0297: ldarg.0
+   0264 ldarg.0 
+   0265 ldstr Sgmae_Battle_SortByCoin_WuJun{0}
+   026A ldloc.s V_4
+   026C callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0271 box System.UInt64
+   0276 call System.String System.String::Format(System.String,System.Object)
+   027B call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   0280 ldc.i4.0 
+   0281 ble IL_028c: ldc.i4.0
+   0286 ldc.i4.1 
+   0287 br IL_028d: stfld System.Boolean Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   028C ldc.i4.0 
+   028D stfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   0292 br IL_02c5: ldarg.0
+   0297 ldarg.0 
+   0298 ldstr Sgmae_Battle_SortByCoin_{0}
+   029D ldloc.s V_4
+   029F callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   02A4 box System.UInt64
+   02A9 call System.String System.String::Format(System.String,System.Object)
+   02AE call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   02B3 ldc.i4.0 
+   02B4 ble IL_02bf: ldc.i4.0
+   02B9 ldc.i4.1 
+   02BA br IL_02c0: stfld System.Boolean Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   02BF ldc.i4.0 
+   02C0 stfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   02C5 ldarg.0 
+   02C6 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateSortBtn()
+   02CB ldarg.0 
+   02CC ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   02D1 ldnull 
+   02D2 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   02D7 brtrue IL_02fe: ret
+   02DC ldarg.0 
+   02DD ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   02E2 ldnull 
+   02E3 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   02E8 brtrue IL_02fe: ret
+   02ED ldarg.0 
+   02EE ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   02F3 ldnull 
+   02F4 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   02F9 brfalse IL_02ff: ldarg.0
+   02FE ret 
+   02FF ldarg.0 
+   0300 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   0305 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   030A callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.Animation>()
+   030F stloc.s V_5
+   0311 ldloc.s V_5
+   0313 ldnull 
+   0314 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0319 brfalse IL_0357: ldloc.0
+   031E ldloc.0 
+   031F brfalse IL_034f: ldloc.s V_5
+   0324 ldloc.0 
+   0325 ldfld Assets.Scripts.GameLogic.CLevelContext::m_bEnableOrnamentSlot
+   032A brfalse IL_033a: ldloc.s V_5
+   032F ldloc.0 
+   0330 ldfld Assets.Scripts.GameLogic.CLevelContext::m_bEnableShopHorizonTab
+   0335 brtrue IL_034f: ldloc.s V_5
+   033A ldloc.s V_5
+   033C ldc.i4.1 
+   033D callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0342 ldloc.s V_5
+   0344 callvirt System.Boolean UnityEngine.Animation::Play()
+   0349 pop 
+   034A br IL_0357: ldloc.0
+   034F ldloc.s V_5
+   0351 ldc.i4.0 
+   0352 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0357 ldloc.0 
+   0358 brfalse IL_040d: ldc.i4.0
+   035D ldloc.0 
+   035E callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0363 brfalse IL_040d: ldc.i4.0
+   0368 ldc.i4.0 
+   0369 stloc.s V_10
+   036B br IL_0400: ldloc.s V_10
+   0370 ldstr HeroList_{0}/{1}
+   0375 ldc.i4.0 
+   0376 box System.Int32
+   037B ldloc.s V_10
+   037D box System.Int32
+   0382 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0387 stloc.s V_6
+   0389 ldarg.0 
+   038A ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   038F ldloc.s V_6
+   0391 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0396 stloc.s V_7
+   0398 ldarg.0 
+   0399 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   039E ldloc.s V_6
+   03A0 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03A5 stloc.s V_8
+   03A7 ldarg.0 
+   03A8 ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   03AD ldloc.s V_6
+   03AF call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03B4 stloc.s V_9
+   03B6 ldloc.s V_7
+   03B8 ldnull 
+   03B9 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03BE brfalse IL_03fa: ldloc.s V_10
+   03C3 ldloc.s V_8
+   03C5 ldnull 
+   03C6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03CB brfalse IL_03fa: ldloc.s V_10
+   03D0 ldloc.s V_9
+   03D2 ldnull 
+   03D3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03D8 brfalse IL_03fa: ldloc.s V_10
+   03DD ldarg.0 
+   03DE ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   03E3 ldarg.0 
+   03E4 call CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameSystem.BattleStatView::GetTaoShaShowCamp()
+   03E9 ldc.i4.1 
+   03EA sub 
+   03EB ldelem.ref 
+   03EC ldloc.s V_10
+   03EE ldloc.s V_7
+   03F0 ldloc.s V_8
+   03F2 ldloc.s V_9
+   03F4 newobj System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::.ctor(UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.GameObject)
+   03F9 stelem.ref 
+   03FA ldloc.s V_10
+   03FC ldc.i4.1 
+   03FD add 
+   03FE stloc.s V_10
+   0400 ldloc.s V_10
+   0402 ldc.i4.5 
+   0403 blt IL_0370: ldstr "HeroList_{0}/{1}"
+   0408 br IL_04bf: ldloc.1
+   040D ldc.i4.0 
+   040E stloc.s V_11
+   0410 br IL_04b6: ldloc.s V_11
+   0415 ldc.i4.0 
+   0416 stloc.s V_12
+   0418 br IL_04a8: ldloc.s V_12
+   041D ldstr HeroList_{0}/{1}
+   0422 ldloc.s V_11
+   0424 box System.Int32
+   0429 ldloc.s V_12
+   042B box System.Int32
+   0430 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0435 stloc.s V_6
+   0437 ldarg.0 
+   0438 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   043D ldloc.s V_6
+   043F call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0444 stloc.s V_7
+   0446 ldarg.0 
+   0447 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   044C ldloc.s V_6
+   044E call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0453 stloc.s V_8
+   0455 ldarg.0 
+   0456 ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   045B ldloc.s V_6
+   045D call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0462 stloc.s V_9
+   0464 ldloc.s V_7
+   0466 ldnull 
+   0467 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   046C brfalse IL_04a2: ldloc.s V_12
+   0471 ldloc.s V_8
+   0473 ldnull 
+   0474 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0479 brfalse IL_04a2: ldloc.s V_12
+   047E ldloc.s V_9
+   0480 ldnull 
+   0481 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0486 brfalse IL_04a2: ldloc.s V_12
+   048B ldarg.0 
+   048C ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0491 ldloc.s V_11
+   0493 ldelem.ref 
+   0494 ldloc.s V_12
+   0496 ldloc.s V_7
+   0498 ldloc.s V_8
+   049A ldloc.s V_9
+   049C newobj System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::.ctor(UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.GameObject)
+   04A1 stelem.ref 
+   04A2 ldloc.s V_12
+   04A4 ldc.i4.1 
+   04A5 add 
+   04A6 stloc.s V_12
+   04A8 ldloc.s V_12
+   04AA ldc.i4.5 
+   04AB blt IL_041d: ldstr "HeroList_{0}/{1}"
+   04B0 ldloc.s V_11
+   04B2 ldc.i4.1 
+   04B3 add 
+   04B4 stloc.s V_11
+   04B6 ldloc.s V_11
+   04B8 ldc.i4.s 40
+   04BA blt IL_0415: ldc.i4.0
+   04BF ldloc.1 
+   04C0 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   04C5 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   04CA ldstr TopCommon/Panel_Menu/ListMenu
+   04CF callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   04D4 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   04D9 stloc.s V_13
+   04DB ldloc.s V_13
+   04DD ldnull 
+   04DE call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   04E3 brfalse IL_04e9: ldarg.0
+   04E8 ret 
+   04E9 ldarg.0 
+   04EA ldloc.s V_13
+   04EC callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   04F1 stfld Assets.Scripts.GameSystem.BattleStatView::list
+   04F6 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   04FB callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   0500 brfalse IL_0569: ldc.i4.2
+   0505 ldloc.0 
+   0506 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   050B brtrue IL_0569: ldc.i4.2
+   0510 ldc.i4.4 
+   0511 newarr System.String
+   0516 dup 
+   0517 ldc.i4.0 
+   0518 call !0 Singleton`1<CTextManager>::GetInstance()
+   051D ldstr BattleStateView_MatchInfo
+   0522 ldc.i4.1 
+   0523 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0528 stelem.ref 
+   0529 dup 
+   052A ldc.i4.1 
+   052B call !0 Singleton`1<CTextManager>::GetInstance()
+   0530 ldstr BattleStateView_HeroInfo
+   0535 ldc.i4.1 
+   0536 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   053B stelem.ref 
+   053C dup 
+   053D ldc.i4.2 
+   053E call !0 Singleton`1<CTextManager>::GetInstance()
+   0543 ldstr BattleStateView_ExpTrend
+   0548 ldc.i4.1 
+   0549 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   054E stelem.ref 
+   054F dup 
+   0550 ldc.i4.3 
+   0551 call !0 Singleton`1<CTextManager>::GetInstance()
+   0556 ldstr BattleStateView_EcoTrend
+   055B ldc.i4.1 
+   055C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0561 stelem.ref 
+   0562 stloc.s V_14
+   0564 br IL_0597: ldarg.0
+   0569 ldc.i4.2 
+   056A newarr System.String
+   056F dup 
+   0570 ldc.i4.0 
+   0571 call !0 Singleton`1<CTextManager>::GetInstance()
+   0576 ldstr BattleStateView_MatchInfo
+   057B ldc.i4.1 
+   057C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0581 stelem.ref 
+   0582 dup 
+   0583 ldc.i4.1 
+   0584 call !0 Singleton`1<CTextManager>::GetInstance()
+   0589 ldstr BattleStateView_HeroInfo
+   058E ldc.i4.1 
+   058F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0594 stelem.ref 
+   0595 stloc.s V_14
+   0597 ldarg.0 
+   0598 ldc.i4.0 
+   0599 stfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   059E ldloc.0 
+   059F brfalse IL_0667: ldloc.s V_13
+   05A4 ldloc.0 
+   05A5 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   05AA brfalse IL_0667: ldloc.s V_13
+   05AF ldarg.0 
+   05B0 ldsfld Assets.Scripts.GameSystem.BattleStatView::shenFuBuffIdList
+   05B5 newobj System.Void Assets.Scripts.GameSystem.ShowBuffFilter::.ctor(System.Collections.Generic.List`1<System.Int32>)
+   05BA stfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   05BF ldarg.0 
+   05C0 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   05C5 brtrue IL_05da: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   05CA ldarg.0 
+   05CB newobj System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::.ctor()
+   05D0 stfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   05D5 br IL_05f4: ldarg.0
+   05DA call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   05DF callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   05E4 brtrue IL_05f4: ldarg.0
+   05E9 ldarg.0 
+   05EA ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   05EF callvirt System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::Clear()
+   05F4 ldarg.0 
+   05F5 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   05FA brtrue IL_060f: ldarg.0
+   05FF ldarg.0 
+   0600 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::.ctor()
+   0605 stfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   060A br IL_061a: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   060F ldarg.0 
+   0610 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   0615 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Clear()
+   061A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   061F ldfld Assets.Scripts.GameLogic.BattleLogic::mapLogic
+   0624 callvirt Assets.Scripts.GameLogic.LevelLogicBase Assets.Scripts.GameLogic.MapWrapper::GetLevelLogic()
+   0629 isinst Assets.Scripts.GameLogic.ChijiLevelLogic
+   062E stloc.s V_15
+   0630 ldloc.s V_15
+   0632 brfalse IL_0644: ldarg.0
+   0637 ldarg.0 
+   0638 ldloc.s V_15
+   063A callvirt System.Int32 Assets.Scripts.GameLogic.ChijiLevelLogic::get_NumHeroLive()
+   063F stfld Assets.Scripts.GameSystem.BattleStatView::survivePeopleNum
+   0644 ldarg.0 
+   0645 call CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameSystem.BattleStatView::GetTaoShaShowCamp()
+   064A stloc.s V_16
+   064C ldarg.0 
+   064D call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0652 ldloc.s V_16
+   0654 callvirt SGW/stCampInfo Assets.Scripts.GameLogic.CKdaDataManager::GetCampInfo(CSProtocol.COM_PLAYERCAMP)
+   0659 stloc.s V_17
+   065B ldloca.s V_17
+   065D ldfld SGW/stCampInfo::campScore
+   0662 stfld Assets.Scripts.GameSystem.BattleStatView::taoShaTeamScore
+   0667 ldloc.s V_13
+   0669 ldloc.s V_14
+   066B ldarg.0 
+   066C ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   0671 ldc.i4.1 
+   0672 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::InitMenuPanel(UnityEngine.GameObject,System.String[],System.Int32,System.Boolean)
+   0677 ldarg.0 
+   0678 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   067D ldc.i4.1 
+   067E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0683 ldarg.0 
+   0684 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   0689 ldc.i4.1 
+   068A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   068F ldarg.0 
+   0690 ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   0695 ldc.i4.0 
+   0696 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   069B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   06A0 ldc.i4 1111
+   06A5 ldarg.0 
+   06A6 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onCloseClick(Assets.Scripts.UI.CUIEvent)
+   06AC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   06B1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   06B6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   06BB ldc.i4 2281
+   06C0 ldarg.0 
+   06C1 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBttleMatchInfoTabChange(Assets.Scripts.UI.CUIEvent)
+   06C7 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   06CC callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   06D1 call !0 Singleton`1<EventRouter>::get_instance()
+   06D6 ldsfld EventID::BATTLE_KDA_CHANGED
+   06DB ldarg.0 
+   06DC ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleKDAChanged()
+   06E2 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   06E7 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   06EC call !0 Singleton`1<EventRouter>::get_instance()
+   06F1 ldsfld EventID::BATTLE_HERO_PROPERTY_CHANGED
+   06F6 ldarg.0 
+   06F7 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleHeroPropertyChange()
+   06FD newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0702 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   0707 call !0 Singleton`1<EventRouter>::get_instance()
+   070C ldsfld EventID::NumHeroLiveChange
+   0711 ldarg.0 
+   0712 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnNumHeroLiveChange(System.Int32)
+   0718 newobj System.Void System.Action`1<System.Int32>::.ctor(System.Object,System.IntPtr)
+   071D callvirt System.Void EventRouter::AddEventHandler<System.Int32>(System.Int32,System.Action`1<!!0>)
+   0722 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0727 ldc.i4.s 67
+   0729 ldarg.0 
+   072A ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerBuffChange(Assets.Scripts.GameLogic.BuffChangeEventParam&)
+   0730 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.BuffChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0735 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   073A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   073F ldc.i4 1174
+   0744 ldarg.0 
+   0745 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnSortClick(Assets.Scripts.UI.CUIEvent)
+   074B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0750 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0755 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   075A ldc.i4 1260
+   075F ldarg.0 
+   0760 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnChangeSecondHero(Assets.Scripts.UI.CUIEvent)
+   0766 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   076B callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0770 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0775 ldc.i4 1099
+   077A ldarg.0 
+   077B ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_StateViewClickHeroIcon(Assets.Scripts.UI.CUIEvent)
+   0781 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0786 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   078B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0790 ldc.i4 1291
+   0795 ldarg.0 
+   0796 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_ClickVoiceAndTextChat(Assets.Scripts.UI.CUIEvent)
+   079C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   07A1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   07A6 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   07AB ldc.i4.s 77
+   07AD ldarg.0 
+   07AE ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   07B4 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   07B9 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   07BE call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   07C3 ldc.i4.s 75
+   07C5 ldarg.0 
+   07C6 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerGrowValueChange(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   07CC newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   07D1 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   07D6 ldarg.0 
+   07D7 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::Hide()
+   07DC ret 
+== System.Void SetTimeNow(UnityEngine.Transform transTime) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_001e: ldarg.1
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.OfflineGamePlayMgr::IsOfflineMode()
+   0019 brfalse IL_002a: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   001E ldarg.1 
+   001F ldc.i4.0 
+   0020 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0025 br IL_0099: ret
+   002A call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002F conv.i8 
+   0030 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0035 stloc.0 
+   0036 ldstr {0}/{1:d2}/{2:d2}  {3:d2}:{4:d2}
+   003B ldc.i4.5 
+   003C newarr System.Object
+   0041 dup 
+   0042 ldc.i4.0 
+   0043 ldloca.s V_0
+   0045 call System.Int32 System.DateTime::get_Year()
+   004A box System.Int32
+   004F stelem.ref 
+   0050 dup 
+   0051 ldc.i4.1 
+   0052 ldloca.s V_0
+   0054 call System.Int32 System.DateTime::get_Month()
+   0059 box System.Int32
+   005E stelem.ref 
+   005F dup 
+   0060 ldc.i4.2 
+   0061 ldloca.s V_0
+   0063 call System.Int32 System.DateTime::get_Day()
+   0068 box System.Int32
+   006D stelem.ref 
+   006E dup 
+   006F ldc.i4.3 
+   0070 ldloca.s V_0
+   0072 call System.Int32 System.DateTime::get_Hour()
+   0077 box System.Int32
+   007C stelem.ref 
+   007D dup 
+   007E ldc.i4.4 
+   007F ldloca.s V_0
+   0081 call System.Int32 System.DateTime::get_Minute()
+   0086 box System.Int32
+   008B stelem.ref 
+   008C call System.String System.String::Format(System.String,System.Object[])
+   0091 stloc.1 
+   0092 ldarg.1 
+   0093 ldloc.1 
+   0094 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0099 ret 
+== System.Void OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   0017 ret 
+== System.Void OnBattle_StateViewClickHeroIcon(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt64Param1
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0010 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0015 ldfld Assets.Scripts.GameLogic.Player::PlayerUId
+   001A bne.un IL_0020: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   001F ret 
+   0020 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0025 ldarg.1 
+   0026 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   002B ldfld Assets.Scripts.UI.stUIEventParams::commonUInt64Param1
+   0030 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::SwitchForbidden(System.UInt64)
+   0035 ldarg.0 
+   0036 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::RefreshVoiceStateIfNess()
+   003B ret 
+== System.Void OnBattle_ClickVoiceAndTextChat(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt64Param1
+   000B stloc.0 
+   000C ldloc.0 
+   000D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0012 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0017 ldfld Assets.Scripts.GameLogic.Player::PlayerUId
+   001C bne.un IL_0022: call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0021 ret 
+   0022 call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0027 ldfld Assets.Scripts.GameSystem.InBattleMsgMgr::m_InputChat
+   002C ldloc.0 
+   002D callvirt System.Boolean InBattleInputChat::IsForbid(System.UInt64)
+   0032 brtrue IL_0068: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0037 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   003C ldloc.0 
+   003D callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::IsForbid(System.UInt64)
+   0042 brtrue IL_0063: br IL_0094
+   0047 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   004C ldloc.0 
+   004D callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::SwitchForbidden(System.UInt64)
+   0052 call !0 Singleton`1<DataReportSys>::get_instance()
+   0057 ldloc.0 
+   0058 ldc.i4.1 
+   0059 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   005E callvirt System.Void DataReportSys::AddChatOpData(System.UInt64,System.Int32,System.Int32)
+   0063 br IL_0094: call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0068 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   006D ldloc.0 
+   006E callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::IsForbid(System.UInt64)
+   0073 brfalse IL_0094: call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0078 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   007D ldloc.0 
+   007E callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::SwitchForbidden(System.UInt64)
+   0083 call !0 Singleton`1<DataReportSys>::get_instance()
+   0088 ldloc.0 
+   0089 ldc.i4.2 
+   008A call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   008F callvirt System.Void DataReportSys::AddChatOpData(System.UInt64,System.Int32,System.Int32)
+   0094 call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0099 ldfld Assets.Scripts.GameSystem.InBattleMsgMgr::m_InputChat
+   009E ldloc.0 
+   009F callvirt System.Void InBattleInputChat::SwitchForbidden(System.UInt64)
+   00A4 ldarg.0 
+   00A5 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::RefreshVoiceStateIfNess()
+   00AA ret 
+== System.Void TaoShaSwitchTeamClear() attrs=Public, HideBySig maxstack=4
+   0000 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::ClearInBattleForbidMember()
+   000A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000F ldc.i4 1174
+   0014 ldarg.0 
+   0015 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnSortClick(Assets.Scripts.UI.CUIEvent)
+   001B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0020 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0025 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   002A ldc.i4 1111
+   002F ldarg.0 
+   0030 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onCloseClick(Assets.Scripts.UI.CUIEvent)
+   0036 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   003B callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0040 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0045 ldc.i4 2281
+   004A ldarg.0 
+   004B ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBttleMatchInfoTabChange(Assets.Scripts.UI.CUIEvent)
+   0051 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0056 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   005B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0060 ldc.i4 1099
+   0065 ldarg.0 
+   0066 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_StateViewClickHeroIcon(Assets.Scripts.UI.CUIEvent)
+   006C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0071 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0076 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   007B ldc.i4 1291
+   0080 ldarg.0 
+   0081 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_ClickVoiceAndTextChat(Assets.Scripts.UI.CUIEvent)
+   0087 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   008C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0091 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0096 ldc.i4 1260
+   009B ldarg.0 
+   009C ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnChangeSecondHero(Assets.Scripts.UI.CUIEvent)
+   00A2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00AC call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00B1 ldc.i4.s 77
+   00B3 ldarg.0 
+   00B4 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00BA newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00BF callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00C4 call !0 Singleton`1<EventRouter>::get_instance()
+   00C9 ldsfld EventID::BATTLE_KDA_CHANGED
+   00CE ldarg.0 
+   00CF ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleKDAChanged()
+   00D5 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00DA callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00DF call !0 Singleton`1<EventRouter>::get_instance()
+   00E4 ldsfld EventID::BATTLE_HERO_PROPERTY_CHANGED
+   00E9 ldarg.0 
+   00EA ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleHeroPropertyChange()
+   00F0 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00F5 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00FA call !0 Singleton`1<EventRouter>::get_instance()
+   00FF ldsfld EventID::NumHeroLiveChange
+   0104 ldarg.0 
+   0105 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnNumHeroLiveChange(System.Int32)
+   010B newobj System.Void System.Action`1<System.Int32>::.ctor(System.Object,System.IntPtr)
+   0110 callvirt System.Void EventRouter::RemoveEventHandler<System.Int32>(System.Int32,System.Action`1<!!0>)
+   0115 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   011A ldc.i4.s 67
+   011C ldarg.0 
+   011D ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerBuffChange(Assets.Scripts.GameLogic.BuffChangeEventParam&)
+   0123 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.BuffChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0128 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   012D call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0132 ldc.i4.s 75
+   0134 ldarg.0 
+   0135 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerGrowValueChange(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   013B newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0140 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0145 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   014A call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   014F callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0154 ldarg.0 
+   0155 ldnull 
+   0156 stfld Assets.Scripts.GameSystem.BattleStatView::_root
+   015B ldc.i4.0 
+   015C stloc.0 
+   015D br IL_0189: ldloc.0
+   0162 ldarg.0 
+   0163 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0168 ldloc.0 
+   0169 ldnull 
+   016A stelem.ref 
+   016B ldarg.0 
+   016C ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0171 ldloc.0 
+   0172 ldelem.ref 
+   0173 callvirt System.Void ListViewBase::Clear()
+   0178 ldarg.0 
+   0179 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   017E ldloc.0 
+   017F ldelem.ref 
+   0180 callvirt System.Void ListViewBase::Clear()
+   0185 ldloc.0 
+   0186 ldc.i4.1 
+   0187 add 
+   0188 stloc.0 
+   0189 ldloc.0 
+   018A ldc.i4.s 40
+   018C blt IL_0162: ldarg.0
+   0191 ldarg.0 
+   0192 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0197 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   019C ldarg.0 
+   019D ldnull 
+   019E stfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   01A3 ldarg.0 
+   01A4 ldc.i4.0 
+   01A5 stfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   01AA ldarg.0 
+   01AB ldc.i4.0 
+   01AC stfld Assets.Scripts.GameSystem.BattleStatView::taoShaTeamScore
+   01B1 ldarg.0 
+   01B2 ldc.i4.0 
+   01B3 stfld Assets.Scripts.GameSystem.BattleStatView::survivePeopleNum
+   01B8 ldarg.0 
+   01B9 ldnull 
+   01BA stfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   01BF ldarg.0 
+   01C0 ldnull 
+   01C1 stfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   01C6 ldarg.0 
+   01C7 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   01CC brfalse IL_01dc: ldarg.0
+   01D1 ldarg.0 
+   01D2 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   01D7 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Clear()
+   01DC ldarg.0 
+   01DD ldc.i4.0 
+   01DE stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   01E3 ret 
+== System.Void Clear() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::ClearInBattleForbidMember()
+   000A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000F ldc.i4 1174
+   0014 ldarg.0 
+   0015 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnSortClick(Assets.Scripts.UI.CUIEvent)
+   001B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0020 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0025 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   002A ldc.i4 1111
+   002F ldarg.0 
+   0030 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onCloseClick(Assets.Scripts.UI.CUIEvent)
+   0036 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   003B callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0040 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0045 ldc.i4 2281
+   004A ldarg.0 
+   004B ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBttleMatchInfoTabChange(Assets.Scripts.UI.CUIEvent)
+   0051 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0056 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   005B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0060 ldc.i4 1099
+   0065 ldarg.0 
+   0066 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_StateViewClickHeroIcon(Assets.Scripts.UI.CUIEvent)
+   006C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0071 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0076 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   007B ldc.i4 1291
+   0080 ldarg.0 
+   0081 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattle_ClickVoiceAndTextChat(Assets.Scripts.UI.CUIEvent)
+   0087 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   008C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0091 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0096 ldc.i4 1260
+   009B ldarg.0 
+   009C ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnChangeSecondHero(Assets.Scripts.UI.CUIEvent)
+   00A2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00AC call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00B1 ldc.i4.s 77
+   00B3 ldarg.0 
+   00B4 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00BA newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00BF callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00C4 call !0 Singleton`1<EventRouter>::get_instance()
+   00C9 ldsfld EventID::BATTLE_KDA_CHANGED
+   00CE ldarg.0 
+   00CF ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleKDAChanged()
+   00D5 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00DA callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00DF call !0 Singleton`1<EventRouter>::get_instance()
+   00E4 ldsfld EventID::BATTLE_HERO_PROPERTY_CHANGED
+   00E9 ldarg.0 
+   00EA ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnBattleHeroPropertyChange()
+   00F0 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00F5 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00FA call !0 Singleton`1<EventRouter>::get_instance()
+   00FF ldsfld EventID::NumHeroLiveChange
+   0104 ldarg.0 
+   0105 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnNumHeroLiveChange(System.Int32)
+   010B newobj System.Void System.Action`1<System.Int32>::.ctor(System.Object,System.IntPtr)
+   0110 callvirt System.Void EventRouter::RemoveEventHandler<System.Int32>(System.Int32,System.Action`1<!!0>)
+   0115 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   011A ldc.i4.s 67
+   011C ldarg.0 
+   011D ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerBuffChange(Assets.Scripts.GameLogic.BuffChangeEventParam&)
+   0123 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.BuffChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0128 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.BuffChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   012D call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0132 ldc.i4.s 75
+   0134 ldarg.0 
+   0135 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::OnPlayerGrowValueChange(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   013B newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0140 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0145 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   014A call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   014F callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0154 ldarg.0 
+   0155 ldnull 
+   0156 stfld Assets.Scripts.GameSystem.BattleStatView::_root
+   015B ldc.i4.0 
+   015C stloc.0 
+   015D br IL_0189: ldloc.0
+   0162 ldarg.0 
+   0163 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0168 ldloc.0 
+   0169 ldnull 
+   016A stelem.ref 
+   016B ldarg.0 
+   016C ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0171 ldloc.0 
+   0172 ldelem.ref 
+   0173 callvirt System.Void ListViewBase::Clear()
+   0178 ldarg.0 
+   0179 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   017E ldloc.0 
+   017F ldelem.ref 
+   0180 callvirt System.Void ListViewBase::Clear()
+   0185 ldloc.0 
+   0186 ldc.i4.1 
+   0187 add 
+   0188 stloc.0 
+   0189 ldloc.0 
+   018A ldc.i4.s 40
+   018C blt IL_0162: ldarg.0
+   0191 ldarg.0 
+   0192 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0197 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   019C ldarg.0 
+   019D ldnull 
+   019E stfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   01A3 ldarg.0 
+   01A4 ldc.i4.0 
+   01A5 stfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   01AA ldarg.0 
+   01AB ldc.i4.0 
+   01AC stfld Assets.Scripts.GameSystem.BattleStatView::taoShaTeamScore
+   01B1 ldarg.0 
+   01B2 ldc.i4.0 
+   01B3 stfld Assets.Scripts.GameSystem.BattleStatView::survivePeopleNum
+   01B8 ldarg.0 
+   01B9 ldnull 
+   01BA stfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   01BF ldarg.0 
+   01C0 ldnull 
+   01C1 stfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   01C6 ldarg.0 
+   01C7 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   01CC brfalse IL_01dc: ldarg.0
+   01D1 ldarg.0 
+   01D2 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   01D7 callvirt System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::Clear()
+   01DC ldarg.0 
+   01DD ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   01E2 brfalse IL_01f2: ldarg.0
+   01E7 ldarg.0 
+   01E8 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   01ED callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Clear()
+   01F2 ldarg.0 
+   01F3 ldc.i4.0 
+   01F4 stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   01F9 ret 
+== System.Void LateUpdate() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_003a: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.BattleStatView::m_battleKDAChanged
+   0017 brfalse IL_003a: ret
+   001C ldarg.0 
+   001D call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   0022 ldloc.0 
+   0023 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0028 brfalse IL_0033: ldarg.0
+   002D ldarg.0 
+   002E call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateTaoShaBattleInfo()
+   0033 ldarg.0 
+   0034 ldc.i4.0 
+   0035 stfld Assets.Scripts.GameSystem.BattleStatView::m_battleKDAChanged
+   003A ret 
+== System.Void Show() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0011 ret 
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0017 callvirt System.Void Assets.Scripts.GameLogic.CKdaDataManager::SyncAllKdaData()
+   001C call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0021 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0026 stloc.0 
+   0027 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   002C callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   0031 brfalse IL_005e: ldarg.0
+   0036 ldloc.0 
+   0037 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   003C brfalse IL_005e: ldarg.0
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0047 ldnull 
+   0048 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004D brfalse IL_005e: ldarg.0
+   0052 ldarg.0 
+   0053 call System.Void Assets.Scripts.GameSystem.BattleStatView::TaoShaSwitchTeamClear()
+   0058 ldarg.0 
+   0059 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::Init()
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0064 ldnull 
+   0065 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   006A brfalse IL_0070: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   006F ret 
+   0070 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0075 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   007A stloc.1 
+   007B ldloc.1 
+   007C ldflda Assets.Scripts.GameLogic.Player::Captain
+   0081 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0086 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   008B ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   0090 stloc.2 
+   0091 ldc.i4.0 
+   0092 stloc.3 
+   0093 ldc.i4.0 
+   0094 stloc.s V_4
+   0096 br IL_00cf: ldloc.s V_4
+   009B ldloc.1 
+   009C ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   00A1 ldloc.s V_4
+   00A3 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   00A8 stloc.s V_5
+   00AA ldloca.s V_5
+   00AC call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B1 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   00B6 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00BB ldloc.2 
+   00BC bne.un IL_00c9: ldloc.s V_4
+   00C1 ldloc.s V_4
+   00C3 stloc.3 
+   00C4 br IL_00e1: ldarg.0
+   00C9 ldloc.s V_4
+   00CB ldc.i4.1 
+   00CC add 
+   00CD stloc.s V_4
+   00CF ldloc.s V_4
+   00D1 ldloc.1 
+   00D2 ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   00D7 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   00DC blt IL_009b: ldloc.1
+   00E1 ldarg.0 
+   00E2 ldloc.3 
+   00E3 stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   00E8 ldarg.0 
+   00E9 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   00EE ldc.i4.1 
+   00EF ldc.i4.1 
+   00F0 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Appear(Assets.Scripts.UI.enFormHideFlag,System.Boolean)
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameSystem.BattleStatView::list
+   00FB ldnull 
+   00FC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0101 brfalse IL_0125: ldarg.0
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameSystem.BattleStatView::list
+   010C ldc.i4.m1 
+   010D ldc.i4.1 
+   010E callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   0113 ldarg.0 
+   0114 ldfld Assets.Scripts.GameSystem.BattleStatView::list
+   0119 ldarg.0 
+   011A ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   011F ldc.i4.1 
+   0120 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   0125 ldarg.0 
+   0126 call System.Void Assets.Scripts.GameSystem.BattleStatView::SortHeroAndPlayer()
+   012B ldarg.0 
+   012C ldnull 
+   012D call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   0132 ldarg.0 
+   0133 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   0138 ldloc.0 
+   0139 brfalse IL_014f: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   013E ldloc.0 
+   013F callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0144 brfalse IL_014f: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0149 ldarg.0 
+   014A call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateTaoShaBattleInfo()
+   014F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0154 ldc.i4 1199
+   0159 ldarg.0 
+   015A ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   0160 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0165 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   016A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   016F ldc.i4 1199
+   0174 ldarg.0 
+   0175 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   017B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0180 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0185 call !0 Singleton`1<EventRouter>::GetInstance()
+   018A ldsfld EventID::HERO_SOUL_LEVEL_CHANGE
+   018F ldarg.0 
+   0190 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onSoulLvlChange(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   0196 newobj System.Void System.Action`2<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>::.ctor(System.Object,System.IntPtr)
+   019B callvirt System.Void EventRouter::RemoveEventHandler<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>(System.Int32,System.Action`2<!!0,!!1>)
+   01A0 call !0 Singleton`1<EventRouter>::GetInstance()
+   01A5 ldsfld EventID::HERO_SOUL_LEVEL_CHANGE
+   01AA ldarg.0 
+   01AB ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onSoulLvlChange(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   01B1 newobj System.Void System.Action`2<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>::.ctor(System.Object,System.IntPtr)
+   01B6 callvirt System.Void EventRouter::AddEventHandler<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>(System.Int32,System.Action`2<!!0,!!1>)
+   01BB ldarg.0 
+   01BC callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::RefreshVoiceStateIfNess()
+   01C1 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   01C6 ldnull 
+   01C7 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Hide(Assets.Scripts.UI.CUIEvent)
+   01CC ldc.i4.s 61
+   01CE ldc.i4.0 
+   01CF newarr System.UInt32
+   01D4 call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   01D9 pop 
+   01DA ldarg.0 
+   01DB ldarg.0 
+   01DC ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   01E1 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   01E6 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01EB ldstr TopCommon/lblTime
+   01F0 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01F5 call System.Void Assets.Scripts.GameSystem.BattleStatView::SetTimeNow(UnityEngine.Transform)
+   01FA ret 
+== System.Void RefreshVoiceStateIfNess() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0006 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   000B brtrue IL_00a9: ret
+   0010 ldnull 
+   0011 stloc.0 
+   0012 ldnull 
+   0013 stloc.1 
+   0014 ldc.i4.0 
+   0015 stloc.2 
+   0016 br IL_0098: ldloc.2
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0021 ldloc.2 
+   0022 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0027 stloc.3 
+   0028 ldc.i4.0 
+   0029 stloc.s V_4
+   002B br IL_0080: ldloc.s V_4
+   0030 ldloc.s V_4
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0038 ldloc.2 
+   0039 ldelem.ref 
+   003A ldlen 
+   003B conv.i4 
+   003C blt IL_0046: ldarg.0
+   0041 br IL_0094: ldloc.2
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   004C ldloc.3 
+   004D ldelem.ref 
+   004E ldloc.s V_4
+   0050 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0055 stloc.0 
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   005C ldloc.2 
+   005D ldelem.ref 
+   005E ldloc.s V_4
+   0060 ldelem.ref 
+   0061 stloc.1 
+   0062 ldloc.1 
+   0063 brfalse IL_006e: br IL_007a
+   0068 ldloc.0 
+   0069 brtrue IL_0073: ldloc.1
+   006E br IL_007a: ldloc.s V_4
+   0073 ldloc.1 
+   0074 ldloc.0 
+   0075 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateHeroVoiceState(Assets.Scripts.GameLogic.Player)
+   007A ldloc.s V_4
+   007C ldc.i4.1 
+   007D add 
+   007E stloc.s V_4
+   0080 ldloc.s V_4
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0088 ldloc.3 
+   0089 ldelem.ref 
+   008A callvirt System.Int32 ListViewBase::get_Count()
+   008F blt IL_0030: ldloc.s V_4
+   0094 ldloc.2 
+   0095 ldc.i4.1 
+   0096 add 
+   0097 stloc.2 
+   0098 ldloc.2 
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   009F callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   00A4 blt IL_001b: ldarg.0
+   00A9 ret 
+== System.Void BattleStatViewGetActorValueCallback(SGW/stValueDataInfoList& list) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_00b2: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   000D ldloc.0 
+   000E callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldc.i4.0 
+   0015 stloc.2 
+   0016 br IL_009b: ldloc.2
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0021 ldloc.1 
+   0022 ldelem.ref 
+   0023 ldloc.2 
+   0024 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0029 callvirt ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>> Assets.Scripts.GameLogic.Player::GetAllHeroes()
+   002E stloc.3 
+   002F ldc.i4.0 
+   0030 stloc.s V_4
+   0032 br IL_0089: ldloc.s V_4
+   0037 ldloca.s V_3
+   0039 ldloc.s V_4
+   003B call !0 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0040 stloc.s V_5
+   0042 ldloca.s V_5
+   0044 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0049 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   004E ldarg.1 
+   004F ldc.i4.0 
+   0050 call SGW/stValueDataInfo SGW/stValueDataInfoList::getValueList(System.Int32)
+   0055 stloc.s V_6
+   0057 ldloca.s V_6
+   0059 ldfld SGW/stValueDataInfo::actorID
+   005E bne.un IL_0083: ldloc.s V_4
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0069 ldloc.0 
+   006A ldelem.ref 
+   006B ldloc.2 
+   006C ldelem.ref 
+   006D brfalse IL_0083: ldloc.s V_4
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0078 ldloc.0 
+   0079 ldelem.ref 
+   007A ldloc.2 
+   007B ldelem.ref 
+   007C ldarg.1 
+   007D callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateHeroValueCallback(SGW/stValueDataInfoList&)
+   0082 ret 
+   0083 ldloc.s V_4
+   0085 ldc.i4.1 
+   0086 add 
+   0087 stloc.s V_4
+   0089 ldloc.s V_4
+   008B ldloca.s V_3
+   008D call System.Int32 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   0092 blt IL_0037: ldloca.s V_3
+   0097 ldloc.2 
+   0098 ldc.i4.1 
+   0099 add 
+   009A stloc.2 
+   009B ldloc.2 
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   00A2 ldloc.1 
+   00A3 ldelem.ref 
+   00A4 callvirt System.Int32 ListViewBase::get_Count()
+   00A9 blt IL_001b: ldarg.0
+   00AE ldloc.0 
+   00AF ldc.i4.1 
+   00B0 add 
+   00B1 stloc.0 
+   00B2 ldloc.0 
+   00B3 ldarg.0 
+   00B4 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   00B9 callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   00BE blt IL_0007: ldarg.0
+   00C3 ret 
+== System.Void UpdateBattleState(Assets.Scripts.UI.CUIEvent evt) attrs=Private, HideBySig maxstack=4
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0018 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   001D brtrue IL_00db: ret
+   0022 ldnull 
+   0023 stloc.0 
+   0024 ldnull 
+   0025 stloc.1 
+   0026 ldc.i4.0 
+   0027 stloc.2 
+   0028 br IL_00ca: ldloc.2
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0033 ldloc.2 
+   0034 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0039 stloc.3 
+   003A ldc.i4.0 
+   003B stloc.s V_4
+   003D br IL_00b2: ldloc.s V_4
+   0042 ldloc.s V_4
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   004A ldloc.2 
+   004B ldelem.ref 
+   004C ldlen 
+   004D conv.i4 
+   004E blt IL_0058: ldarg.0
+   0053 br IL_00c6: ldloc.2
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   005E ldloc.3 
+   005F ldelem.ref 
+   0060 ldloc.s V_4
+   0062 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0067 stloc.0 
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   006E ldloc.2 
+   006F ldelem.ref 
+   0070 ldloc.s V_4
+   0072 ldelem.ref 
+   0073 stloc.1 
+   0074 ldloc.0 
+   0075 brfalse IL_0080: br IL_00ac
+   007A ldloc.1 
+   007B brtrue IL_0085: ldloc.1
+   0080 br IL_00ac: ldloc.s V_4
+   0085 ldloc.1 
+   0086 ldloc.0 
+   0087 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateReviceCD(Assets.Scripts.GameLogic.Player)
+   008C ldloc.1 
+   008D ldloc.0 
+   008E ldarg.0 
+   008F ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   009A callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateTalentSkillCD(Assets.Scripts.GameLogic.Player,Assets.Scripts.UI.CUIFormScript,System.Int32)
+   009F ldloc.1 
+   00A0 ldloc.0 
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   00A7 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateHeroValue(Assets.Scripts.GameLogic.Player,System.Int32)
+   00AC ldloc.s V_4
+   00AE ldc.i4.1 
+   00AF add 
+   00B0 stloc.s V_4
+   00B2 ldloc.s V_4
+   00B4 ldarg.0 
+   00B5 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   00BA ldloc.3 
+   00BB ldelem.ref 
+   00BC callvirt System.Int32 ListViewBase::get_Count()
+   00C1 blt IL_0042: ldloc.s V_4
+   00C6 ldloc.2 
+   00C7 ldc.i4.1 
+   00C8 add 
+   00C9 stloc.2 
+   00CA ldloc.2 
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   00D1 callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   00D6 blt IL_002d: ldarg.0
+   00DB ret 
+== System.Void SortHeroAndPlayer() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 callvirt System.Boolean Assets.Scripts.GameSystem.BattleStatView::get_Visible()
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateListCamp()
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0017 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001C stloc.0 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   0023 brfalse IL_00de: ldloc.0
+   0028 ldloc.0 
+   0029 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   002E brfalse IL_0094: ldc.i4.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0039 ldarg.0 
+   003A ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByCoinAndPos(System.Int32,System.Int32)
+   0040 newobj System.Void System.Comparison`1<System.Int32>::.ctor(System.Object,System.IntPtr)
+   0045 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Sort(System.Comparison`1<!0>)
+   004A ldc.i4.0 
+   004B stloc.1 
+   004C br IL_0087: ldloc.1
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0057 ldloc.1 
+   0058 ldelem.ref 
+   0059 ldarg.0 
+   005A ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(Assets.Scripts.GameLogic.CKdaPlayerPtr,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0060 newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::.ctor(System.Object,System.IntPtr)
+   0065 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::Sort(System.Comparison`1<!0>)
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0070 ldloc.1 
+   0071 ldelem.ref 
+   0072 ldarg.0 
+   0073 ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(Assets.Scripts.GameLogic.Player,Assets.Scripts.GameLogic.Player)
+   0079 newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.Player>::.ctor(System.Object,System.IntPtr)
+   007E callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Sort(System.Comparison`1<!0>)
+   0083 ldloc.1 
+   0084 ldc.i4.1 
+   0085 add 
+   0086 stloc.1 
+   0087 ldloc.1 
+   0088 ldc.i4.s 40
+   008A blt IL_0051: ldarg.0
+   008F br IL_00d9: br IL_0145
+   0094 ldc.i4.0 
+   0095 stloc.2 
+   0096 br IL_00d1: ldloc.2
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   00A1 ldloc.2 
+   00A2 ldelem.ref 
+   00A3 ldarg.0 
+   00A4 ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByCoinAndPos(Assets.Scripts.GameLogic.CKdaPlayerPtr,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   00AA newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::.ctor(System.Object,System.IntPtr)
+   00AF callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::Sort(System.Comparison`1<!0>)
+   00B4 ldarg.0 
+   00B5 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   00BA ldloc.2 
+   00BB ldelem.ref 
+   00BC ldarg.0 
+   00BD ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByCoinAndPos(Assets.Scripts.GameLogic.Player,Assets.Scripts.GameLogic.Player)
+   00C3 newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.Player>::.ctor(System.Object,System.IntPtr)
+   00C8 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Sort(System.Comparison`1<!0>)
+   00CD ldloc.2 
+   00CE ldc.i4.1 
+   00CF add 
+   00D0 stloc.2 
+   00D1 ldloc.2 
+   00D2 ldc.i4.s 40
+   00D4 blt IL_009b: ldarg.0
+   00D9 br IL_0145: ret
+   00DE ldloc.0 
+   00DF callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   00E4 brfalse IL_0100: ldc.i4.0
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   00EF ldarg.0 
+   00F0 ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(System.Int32,System.Int32)
+   00F6 newobj System.Void System.Comparison`1<System.Int32>::.ctor(System.Object,System.IntPtr)
+   00FB callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Sort(System.Comparison`1<!0>)
+   0100 ldc.i4.0 
+   0101 stloc.3 
+   0102 br IL_013d: ldloc.3
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   010D ldloc.3 
+   010E ldelem.ref 
+   010F ldarg.0 
+   0110 ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(Assets.Scripts.GameLogic.CKdaPlayerPtr,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0116 newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::.ctor(System.Object,System.IntPtr)
+   011B callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::Sort(System.Comparison`1<!0>)
+   0120 ldarg.0 
+   0121 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0126 ldloc.3 
+   0127 ldelem.ref 
+   0128 ldarg.0 
+   0129 ldftn System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(Assets.Scripts.GameLogic.Player,Assets.Scripts.GameLogic.Player)
+   012F newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.Player>::.ctor(System.Object,System.IntPtr)
+   0134 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Sort(System.Comparison`1<!0>)
+   0139 ldloc.3 
+   013A ldc.i4.1 
+   013B add 
+   013C stloc.3 
+   013D ldloc.3 
+   013E ldc.i4.s 40
+   0140 blt IL_0107: ldarg.0
+   0145 ret 
+== System.Void UpdateKDAView() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldnull 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0023 ldnull 
+   0024 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse IL_017e: ret
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0034 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   0039 brtrue IL_017e: ret
+   003E ldc.i4.0 
+   003F stloc.1 
+   0040 br IL_016d: ldloc.1
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   004B ldloc.1 
+   004C callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0051 stloc.2 
+   0052 ldc.i4.0 
+   0053 stloc.3 
+   0054 ldc.i4.0 
+   0055 stloc.3 
+   0056 br IL_011e: ldloc.3
+   005B ldloc.3 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0062 ldloc.1 
+   0063 ldelem.ref 
+   0064 ldlen 
+   0065 conv.i4 
+   0066 bge IL_011a: ldloc.3
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0071 ldloc.1 
+   0072 ldelem.ref 
+   0073 ldloc.3 
+   0074 ldelem.ref 
+   0075 brfalse IL_011a: ldloc.3
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0080 ldloc.1 
+   0081 ldelem.ref 
+   0082 ldloc.3 
+   0083 ldelem.ref 
+   0084 ldc.i4.1 
+   0085 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::set_Visible(System.Boolean)
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0090 ldloc.1 
+   0091 ldelem.ref 
+   0092 ldloc.3 
+   0093 ldelem.ref 
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   009A ldloc.2 
+   009B ldelem.ref 
+   009C ldloc.3 
+   009D callvirt !0 ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::get_Item(System.Int32)
+   00A2 ldarg.0 
+   00A3 ldfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   00A8 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::Validate(Assets.Scripts.GameLogic.CKdaPlayerPtr,System.Int32)
+   00AD ldloc.0 
+   00AE callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   00B3 brfalse IL_011a: ldloc.3
+   00B8 ldnull 
+   00B9 stloc.s V_4
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   00C7 ldloc.1 
+   00C8 ldelem.ref 
+   00C9 ldloc.3 
+   00CA ldelem.ref 
+   00CB ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::playerId
+   00D0 ldloca.s V_4
+   00D2 callvirt System.Boolean DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::TryGetValue(!0,!1&)
+   00D7 pop 
+   00D8 ldarg.0 
+   00D9 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   00DE ldloc.1 
+   00DF ldelem.ref 
+   00E0 ldloc.3 
+   00E1 ldelem.ref 
+   00E2 ldloc.s V_4
+   00E4 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateTaoShaShenFuState(System.Collections.Generic.List`1<System.Int16>)
+   00E9 ldc.i4.0 
+   00EA stloc.s V_5
+   00EC ldarg.0 
+   00ED ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   00F2 ldarg.0 
+   00F3 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   00F8 ldloc.1 
+   00F9 ldelem.ref 
+   00FA ldloc.3 
+   00FB ldelem.ref 
+   00FC ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::playerId
+   0101 ldloca.s V_5
+   0103 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::TryGetValue(!0,!1&)
+   0108 pop 
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   010F ldloc.1 
+   0110 ldelem.ref 
+   0111 ldloc.3 
+   0112 ldelem.ref 
+   0113 ldloc.s V_5
+   0115 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::updateGrowValue(System.UInt32)
+   011A ldloc.3 
+   011B ldc.i4.1 
+   011C add 
+   011D stloc.3 
+   011E ldloc.3 
+   011F ldarg.0 
+   0120 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0125 ldloc.2 
+   0126 ldelem.ref 
+   0127 callvirt System.Int32 ListViewBase::get_Count()
+   012C blt IL_005b: ldloc.3
+   0131 br IL_0159: ldloc.3
+   0136 ldarg.0 
+   0137 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   013C ldloc.1 
+   013D ldelem.ref 
+   013E ldloc.3 
+   013F ldelem.ref 
+   0140 brfalse IL_0155: ldloc.3
+   0145 ldarg.0 
+   0146 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   014B ldloc.1 
+   014C ldelem.ref 
+   014D ldloc.3 
+   014E ldelem.ref 
+   014F ldc.i4.0 
+   0150 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::set_Visible(System.Boolean)
+   0155 ldloc.3 
+   0156 ldc.i4.1 
+   0157 add 
+   0158 stloc.3 
+   0159 ldloc.3 
+   015A ldarg.0 
+   015B ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0160 ldloc.1 
+   0161 ldelem.ref 
+   0162 ldlen 
+   0163 conv.i4 
+   0164 blt IL_0136: ldarg.0
+   0169 ldloc.1 
+   016A ldc.i4.1 
+   016B add 
+   016C stloc.1 
+   016D ldloc.1 
+   016E ldarg.0 
+   016F ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0174 callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   0179 blt IL_0045: ldarg.0
+   017E ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.BattleStatView::ResetSomeData()
+   0006 ldnull 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   000D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_0018: ldnull
+   0017 ret 
+   0018 ldnull 
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   001F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_002a: ldarg.0
+   0029 ret 
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0030 ldc.i4.1 
+   0031 ldc.i4.1 
+   0032 ldc.i4.0 
+   0033 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   0038 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003D ldc.i4 1199
+   0042 ldarg.0 
+   0043 ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   0049 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004E callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0053 call !0 Singleton`1<EventRouter>::GetInstance()
+   0058 ldsfld EventID::HERO_SOUL_LEVEL_CHANGE
+   005D ldarg.0 
+   005E ldftn System.Void Assets.Scripts.GameSystem.BattleStatView::onSoulLvlChange(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   0064 newobj System.Void System.Action`2<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>::.ctor(System.Object,System.IntPtr)
+   0069 callvirt System.Void EventRouter::RemoveEventHandler<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32>(System.Int32,System.Action`2<!!0,!!1>)
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   0074 brfalse IL_0084: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   007F callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/ChartView::Hide()
+   0084 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0089 ldnull 
+   008A callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Show(Assets.Scripts.UI.CUIEvent)
+   008F ret 
+== System.Void OnBttleMatchInfoTabChange(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0011 stloc.1 
+   0012 ldarg.1 
+   0013 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0018 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   001D stloc.2 
+   001E ldloc.2 
+   001F ldnull 
+   0020 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0025 brfalse IL_002b: ldloc.2
+   002A ret 
+   002B ldloc.2 
+   002C callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0031 stloc.3 
+   0032 ldloc.3 
+   0033 ldc.i4.0 
+   0034 blt IL_0045: ret
+   0039 ldloc.3 
+   003A ldloc.2 
+   003B callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   0040 blt IL_0046: ldarg.0
+   0045 ret 
+   0046 ldarg.0 
+   0047 ldloc.3 
+   0048 stfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0053 stloc.s V_4
+   0055 ldloc.s V_4
+   0057 ldnull 
+   0058 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   005D brfalse IL_0063: ldloc.s V_4
+   0062 ret 
+   0063 ldloc.s V_4
+   0065 ldnull 
+   0066 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006B brfalse IL_0281: ret
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   0076 ldnull 
+   0077 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   007C brfalse IL_00a4: ldarg.0
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   0087 ldnull 
+   0088 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   008D brfalse IL_00a4: ldarg.0
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   0098 ldnull 
+   0099 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   009E brfalse IL_00a4: ldarg.0
+   00A3 ret 
+   00A4 ldarg.0 
+   00A5 call System.Void Assets.Scripts.GameSystem.BattleStatView::SortHeroAndPlayer()
+   00AA ldarg.0 
+   00AB ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   00B0 brtrue IL_0109: ldarg.0
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   00BB ldc.i4.1 
+   00BC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   00C7 ldc.i4.1 
+   00C8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00CD ldarg.0 
+   00CE ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   00D3 ldc.i4.0 
+   00D4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D9 ldarg.0 
+   00DA ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   00DF ldloc.1 
+   00E0 ldc.i4.0 
+   00E1 ceq 
+   00E3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00E8 ldarg.0 
+   00E9 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   00EE ldarg.0 
+   00EF ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   00F4 brfalse IL_0104: br IL_0281
+   00F9 ldarg.0 
+   00FA ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   00FF callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/ChartView::Hide()
+   0104 br IL_0281: ret
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   010F ldc.i4.1 
+   0110 bne.un IL_0171: ldarg.0
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   011B ldc.i4.1 
+   011C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0121 ldarg.0 
+   0122 ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   0127 ldc.i4.0 
+   0128 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   012D ldarg.0 
+   012E ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   0133 ldc.i4.1 
+   0134 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0139 ldarg.0 
+   013A ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   013F ldloc.1 
+   0140 ldc.i4.0 
+   0141 ceq 
+   0143 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0148 ldarg.0 
+   0149 ldc.i4.1 
+   014A stfld Assets.Scripts.GameSystem.BattleStatView::m_battleHeroPropertyChange
+   014F ldarg.0 
+   0150 ldnull 
+   0151 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   0156 ldarg.0 
+   0157 ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   015C brfalse IL_016c: br IL_0281
+   0161 ldarg.0 
+   0162 ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   0167 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/ChartView::Hide()
+   016C br IL_0281: ret
+   0171 ldarg.0 
+   0172 ldfld Assets.Scripts.GameSystem.BattleStatView::heroView
+   0177 ldc.i4.0 
+   0178 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   017D ldarg.0 
+   017E ldfld Assets.Scripts.GameSystem.BattleStatView::matchInfo
+   0183 ldc.i4.0 
+   0184 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0189 ldarg.0 
+   018A ldfld Assets.Scripts.GameSystem.BattleStatView::valueInfo
+   018F ldc.i4.0 
+   0190 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0195 ldarg.0 
+   0196 ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   019B ldc.i4.0 
+   019C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01A1 ldarg.0 
+   01A2 ldc.i4.0 
+   01A3 stfld Assets.Scripts.GameSystem.BattleStatView::m_battleHeroPropertyChange
+   01A8 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   01AD callvirt Assets.Scripts.GameSystem.WatchForm Assets.Scripts.GameSystem.CBattleSystem::get_WatchForm()
+   01B2 stloc.s V_5
+   01B4 ldloc.s V_5
+   01B6 brfalse IL_0281: ret
+   01BB ldarg.0 
+   01BC ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   01C1 brfalse IL_0281: ret
+   01C6 ldarg.0 
+   01C7 ldfld Assets.Scripts.GameSystem.BattleStatView::chartView
+   01CC ldarg.0 
+   01CD ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   01D2 ldc.i4.2 
+   01D3 bne.un IL_01de: ldc.i4.2
+   01D8 ldc.i4.1 
+   01D9 br IL_01df: ldarg.0
+   01DE ldc.i4.2 
+   01DF ldarg.0 
+   01E0 ldfld Assets.Scripts.GameSystem.BattleStatView::_defaultSelectIndex
+   01E5 ldc.i4.2 
+   01E6 bne.un IL_01f7: ldloc.s V_5
+   01EB ldloc.s V_5
+   01ED callvirt Assets.Scripts.GameSystem.SampleData Assets.Scripts.GameSystem.WatchForm::get_expSample()
+   01F2 br IL_01fe: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   01F7 ldloc.s V_5
+   01F9 callvirt Assets.Scripts.GameSystem.SampleData Assets.Scripts.GameSystem.WatchForm::get_moneySample()
+   01FE call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0203 call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   0208 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   020D ldloc.s V_5
+   020F ldfld Assets.Scripts.GameSystem.WatchForm::dragonKillInfos
+   0214 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/ChartView::Show(Assets.Scripts.GameSystem.BattleStatView/ChartView/ChartType,Assets.Scripts.GameSystem.SampleData,Assets.Scripts.UI.CUIFormScript,System.Collections.ArrayList)
+   0219 ldloc.s V_4
+   021B ldc.i4.0 
+   021C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0221 stloc.s V_6
+   0223 ldc.i4.0 
+   0224 stloc.s V_7
+   0226 br IL_0269: ldloc.s V_7
+   022B ldloc.s V_6
+   022D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0232 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0237 ldloc.s V_7
+   0239 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   023E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0243 stloc.s V_8
+   0245 ldloc.s V_8
+   0247 callvirt System.String UnityEngine.Object::get_name()
+   024C ldstr DragonIcon
+   0251 callvirt System.Boolean System.String::Contains(System.String)
+   0256 brfalse IL_0263: ldloc.s V_7
+   025B ldloc.s V_8
+   025D ldc.i4.0 
+   025E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0263 ldloc.s V_7
+   0265 ldc.i4.1 
+   0266 add 
+   0267 stloc.s V_7
+   0269 ldloc.s V_7
+   026B ldloc.s V_6
+   026D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0272 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0277 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   027C blt IL_022b: ldloc.s V_6
+   0281 ret 
+== System.Boolean get_Visible() attrs=Public, Virtual, HideBySig, VtableLayoutMask, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0021: ldc.i4.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   0017 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   001C ldc.i4.0 
+   001D ceq 
+   001F br.s IL_0022: ret
+   0021 ldc.i4.0 
+   0022 ret 
+== System.Void Toggle() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsCooperationPlayMode()
+   000F brfalse IL_0015: ldarg.0
+   0014 ret 
+   0015 ldarg.0 
+   0016 callvirt System.Boolean Assets.Scripts.GameSystem.BattleStatView::get_Visible()
+   001B brfalse IL_002b: ldarg.0
+   0020 ldarg.0 
+   0021 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::Hide()
+   0026 br IL_0031: ret
+   002B ldarg.0 
+   002C callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::Show()
+   0031 ret 
+== System.Void onCloseClick(Assets.Scripts.UI.CUIEvent evt) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::Hide()
+   0006 ret 
+== System.Void onSoulLvlChange(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> act, System.Int32 curVal) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::_root
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldc.i4.0
+   0010 ret 
+   0011 ldc.i4.0 
+   0012 stloc.0 
+   0013 br IL_0082: ldloc.0
+   0018 ldc.i4.0 
+   0019 stloc.1 
+   001A br IL_006e: ldloc.1
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0025 ldloc.0 
+   0026 ldelem.ref 
+   0027 ldloc.1 
+   0028 ldelem.ref 
+   0029 stloc.2 
+   002A ldloc.2 
+   002B brfalse IL_006a: ldloc.1
+   0030 ldloc.2 
+   0031 callvirt System.Boolean Assets.Scripts.GameSystem.BattleStatView/HeroItem::get_Visible()
+   0036 brfalse IL_006a: ldloc.1
+   003B ldloc.2 
+   003C ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::playerId
+   0041 ldarga.s act
+   0043 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0048 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   004D bne.un IL_006a: ldloc.1
+   0052 ldloc.2 
+   0053 ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::level
+   0058 ldarga.s curVal
+   005A constrained. System.Int32
+   0060 callvirt System.String System.Object::ToString()
+   0065 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   006A ldloc.1 
+   006B ldc.i4.1 
+   006C add 
+   006D stloc.1 
+   006E ldloc.1 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0075 ldloc.0 
+   0076 ldelem.ref 
+   0077 ldlen 
+   0078 conv.i4 
+   0079 blt IL_001f: ldarg.0
+   007E ldloc.0 
+   007F ldc.i4.1 
+   0080 add 
+   0081 stloc.0 
+   0082 ldloc.0 
+   0083 ldc.i4.s 40
+   0085 blt IL_0018: ldc.i4.0
+   008A ret 
+== System.Void OnBattleKDAChanged() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.BattleStatView::m_battleKDAChanged
+   0007 ldc.i4.0 
+   0008 stloc.0 
+   0009 br IL_003e: ldloc.0
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0014 ldloc.0 
+   0015 ldelem.ref 
+   0016 brfalse IL_002d: ldarg.0
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0021 ldloc.0 
+   0022 ldelem.ref 
+   0023 callvirt System.Void ListViewBase::Clear()
+   0028 br IL_003a: ldloc.0
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0033 ldloc.0 
+   0034 newobj System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::.ctor()
+   0039 stelem.ref 
+   003A ldloc.0 
+   003B ldc.i4.1 
+   003C add 
+   003D stloc.0 
+   003E ldloc.0 
+   003F ldc.i4.s 40
+   0041 blt IL_000e: ldarg.0
+   0046 ldc.i4.0 
+   0047 stloc.1 
+   0048 br IL_0096: ldloc.1
+   004D call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0052 ldloc.1 
+   0053 callvirt Assets.Scripts.GameLogic.CKdaPlayerPtr Assets.Scripts.GameLogic.CKdaDataManager::GetPlayerKDAInfoByIndex(System.Int32)
+   0058 stloc.2 
+   0059 ldloc.2 
+   005A ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::playerID
+   005F brfalse IL_0092: ldloc.1
+   0064 ldloc.2 
+   0065 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::camp
+   006A ldc.i4.0 
+   006B ble IL_0092: ldloc.1
+   0070 ldloc.2 
+   0071 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::camp
+   0076 ldc.i4.s 41
+   0078 bge IL_0092: ldloc.1
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   0083 ldloc.2 
+   0084 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::camp
+   0089 ldc.i4.1 
+   008A sub 
+   008B ldelem.ref 
+   008C ldloc.2 
+   008D callvirt System.Void ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::Add(!0)
+   0092 ldloc.1 
+   0093 ldc.i4.1 
+   0094 add 
+   0095 stloc.1 
+   0096 ldloc.1 
+   0097 ldc.i4.s 40
+   0099 blt IL_004d: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   009E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00A3 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   00A8 stloc.3 
+   00A9 ldloc.3 
+   00AA brfalse IL_00dd: ldarg.0
+   00AF ldloc.3 
+   00B0 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   00B5 brfalse IL_00dd: ldarg.0
+   00BA ldarg.0 
+   00BB call CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameSystem.BattleStatView::GetTaoShaShowCamp()
+   00C0 stloc.s V_4
+   00C2 ldarg.0 
+   00C3 call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   00C8 ldloc.s V_4
+   00CA callvirt SGW/stCampInfo Assets.Scripts.GameLogic.CKdaDataManager::GetCampInfo(CSProtocol.COM_PLAYERCAMP)
+   00CF stloc.s V_5
+   00D1 ldloca.s V_5
+   00D3 ldfld SGW/stCampInfo::campScore
+   00D8 stfld Assets.Scripts.GameSystem.BattleStatView::taoShaTeamScore
+   00DD ldarg.0 
+   00DE call System.Void Assets.Scripts.GameSystem.BattleStatView::SortHeroAndPlayer()
+   00E3 ret 
+== System.Void OnBattleHeroPropertyChange() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.BattleStatView::m_battleHeroPropertyChange
+   0007 ret 
+== System.Void UpdateListCamp() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   0006 ldc.i4.0 
+   0007 ldelem.ref 
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D brtrue IL_0075: ret
+   0012 ldc.i4.0 
+   0013 stloc.0 
+   0014 br IL_002a: ldloc.0
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   001F ldloc.0 
+   0020 ldelem.ref 
+   0021 callvirt System.Void ListViewBase::Clear()
+   0026 ldloc.0 
+   0027 ldc.i4.1 
+   0028 add 
+   0029 stloc.0 
+   002A ldloc.0 
+   002B ldc.i4.s 40
+   002D blt IL_0019: ldarg.0
+   0032 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0037 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllPlayers()
+   003C stloc.1 
+   003D ldc.i4.0 
+   003E stloc.2 
+   003F br IL_0069: ldloc.2
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.BattleStatView::m_playerListCamp
+   004A ldloc.1 
+   004B ldloc.2 
+   004C callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0051 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0056 ldc.i4.1 
+   0057 sub 
+   0058 ldelem.ref 
+   0059 ldloc.1 
+   005A ldloc.2 
+   005B callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0060 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.Player>::Add(!0)
+   0065 ldloc.2 
+   0066 ldc.i4.1 
+   0067 add 
+   0068 stloc.2 
+   0069 ldloc.2 
+   006A ldloc.1 
+   006B callvirt System.Int32 ListViewBase::get_Count()
+   0070 blt IL_0044: ldarg.0
+   0075 ret 
+== System.Int32 SortByCoinAndPos(Assets.Scripts.GameLogic.CKdaPlayerPtr left, Assets.Scripts.GameLogic.CKdaPlayerPtr right) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0005 ldarg.1 
+   0006 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   000B ldc.i4.0 
+   000C ldelem.ref 
+   000D ldflda Assets.Scripts.GameLogic.CKdaHeroPtr::heroKda
+   0012 ldfld SGW/stHeroKDAInfo::objID
+   0017 ldc.i4.1 
+   0018 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   001D stloc.0 
+   001E call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0023 ldarg.2 
+   0024 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   0029 ldc.i4.0 
+   002A ldelem.ref 
+   002B ldflda Assets.Scripts.GameLogic.CKdaHeroPtr::heroKda
+   0030 ldfld SGW/stHeroKDAInfo::objID
+   0035 ldc.i4.1 
+   0036 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   003B stloc.1 
+   003C ldloca.s V_1
+   003E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0043 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0048 ldfld Assets.Scripts.GameLogic.ValueLinkerComponent::actorIncomingGoldCoin
+   004D ldloca.s V_0
+   004F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0054 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0059 ldfld Assets.Scripts.GameLogic.ValueLinkerComponent::actorIncomingGoldCoin
+   005E sub 
+   005F ldc.i4.s 10
+   0061 mul 
+   0062 ldarg.1 
+   0063 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::pos
+   0068 ldarg.2 
+   0069 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::pos
+   006E sub 
+   006F add 
+   0070 ret 
+== System.Int32 SortByPos(Assets.Scripts.GameLogic.CKdaPlayerPtr left, Assets.Scripts.GameLogic.CKdaPlayerPtr right) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::pos
+   0006 ldarg.2 
+   0007 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::pos
+   000C sub 
+   000D ret 
+== System.Int32 SortByPos(System.Int32 left, System.Int32 right) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 sub 
+   0003 ret 
+== System.Int32 SortByCoinAndPos(System.Int32 left, System.Int32 right) attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0036: ldarg.0
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0017 brfalse IL_0036: ldarg.0
+   001C call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0021 stloc.1 
+   0022 ldloc.1 
+   0023 ldarg.1 
+   0024 ldc.i4.1 
+   0025 add 
+   0026 callvirt System.Int32 Assets.Scripts.GameLogic.CKdaDataManager::GetCamp_Rank(CSProtocol.COM_PLAYERCAMP)
+   002B ldloc.1 
+   002C ldarg.2 
+   002D ldc.i4.1 
+   002E add 
+   002F callvirt System.Int32 Assets.Scripts.GameLogic.CKdaDataManager::GetCamp_Rank(CSProtocol.COM_PLAYERCAMP)
+   0034 sub 
+   0035 ret 
+   0036 ldarg.0 
+   0037 ldarg.1 
+   0038 ldarg.2 
+   0039 call System.Int32 Assets.Scripts.GameSystem.BattleStatView::SortByPos(System.Int32,System.Int32)
+   003E ret 
+== System.Void UpdateSortBtn() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00b7: ret
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0016 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001B stloc.0 
+   001C ldloc.0 
+   001D callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0022 brfalse IL_0038: ldarg.0
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   002D ldc.i4.0 
+   002E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0033 br IL_00b7: ret
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.BattleStatView::sortByCoinBtn
+   003E ldstr Text
+   0043 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0048 stloc.1 
+   0049 ldloc.1 
+   004A ldnull 
+   004B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0050 brfalse IL_00b7: ret
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.BattleStatView::m_sortByCoin
+   005B brfalse IL_007b: ldloc.0
+   0060 ldloc.1 
+   0061 call !0 Singleton`1<CTextManager>::get_instance()
+   0066 ldstr Battle_Statistic_Sort_Coin
+   006B ldc.i4.1 
+   006C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0071 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0076 br IL_00b7: ret
+   007B ldloc.0 
+   007C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0081 brfalse IL_00a1: ldloc.1
+   0086 ldloc.1 
+   0087 call !0 Singleton`1<CTextManager>::get_instance()
+   008C ldstr Battle_Statistic_Sort_Rank
+   0091 ldc.i4.1 
+   0092 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0097 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   009C br IL_00b7: ret
+   00A1 ldloc.1 
+   00A2 call !0 Singleton`1<CTextManager>::get_instance()
+   00A7 ldstr Battle_Statistic_Sort_Common
+   00AC ldc.i4.1 
+   00AD callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00B2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00B7 ret 
+== System.Int32 SortByCoinAndPos(Assets.Scripts.GameLogic.Player left, Assets.Scripts.GameLogic.Player right) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0005 ldarg.1 
+   0006 ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   000B ldc.i4.0 
+   000C callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0011 stloc.1 
+   0012 ldloca.s V_1
+   0014 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0019 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   001E ldc.i4.1 
+   001F callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0024 stloc.0 
+   0025 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   002A ldarg.2 
+   002B ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   0030 ldc.i4.0 
+   0031 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0036 stloc.3 
+   0037 ldloca.s V_3
+   0039 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0043 ldc.i4.1 
+   0044 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0049 stloc.2 
+   004A ldloca.s V_2
+   004C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0051 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0056 ldfld Assets.Scripts.GameLogic.ValueLinkerComponent::actorIncomingGoldCoin
+   005B ldloca.s V_0
+   005D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0062 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0067 ldfld Assets.Scripts.GameLogic.ValueLinkerComponent::actorIncomingGoldCoin
+   006C sub 
+   006D ldc.i4.s 10
+   006F mul 
+   0070 ldarg.1 
+   0071 ldfld Assets.Scripts.GameLogic.Player::campPos
+   0076 ldarg.2 
+   0077 ldfld Assets.Scripts.GameLogic.Player::campPos
+   007C sub 
+   007D add 
+   007E ret 
+== System.Int32 SortByPos(Assets.Scripts.GameLogic.Player left, Assets.Scripts.GameLogic.Player right) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.Player::campPos
+   0006 ldarg.2 
+   0007 ldfld Assets.Scripts.GameLogic.Player::campPos
+   000C sub 
+   000D ret 
+== System.Void OnSortClick(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call System.Boolean Assets.Scripts.GameSystem.BattleStatView::get_SortByCoin()
+   0007 ldc.i4.0 
+   0008 ceq 
+   000A call System.Void Assets.Scripts.GameSystem.BattleStatView::set_SortByCoin(System.Boolean)
+   000F ret 
+== System.Void ResetSomeData() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   0007 ret 
+== System.Void OnChangeSecondHero(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   0006 brtrue IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   0012 br IL_001e: ldarg.0
+   0017 ldarg.0 
+   0018 ldc.i4.0 
+   0019 stfld Assets.Scripts.GameSystem.BattleStatView::_curShowingHeroIndex
+   001E ldarg.0 
+   001F call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateKDAView()
+   0024 ldarg.0 
+   0025 ldnull 
+   0026 call System.Void Assets.Scripts.GameSystem.BattleStatView::UpdateBattleState(Assets.Scripts.UI.CUIEvent)
+   002B ret 
+== System.Void PaintLineBegin(System.Int32 segIdx) attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void PaintLineEnd(System.Int32 segIdx, UnityEngine.Vector3 pos) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldc.i4.2 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 stloc.1 
+   0025 ldloc.0 
+   0026 ldc.i4.0 
+   0027 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   002C stloc.2 
+   002D ldloc.0 
+   002E ldc.i4.1 
+   002F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0034 stloc.3 
+   0035 ldloc.2 
+   0036 stloc.s V_4
+   0038 ldloc.0 
+   0039 callvirt UnityEngine.Camera Assets.Scripts.UI.CUIFormScript::GetCamera()
+   003E ldloc.1 
+   003F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0044 isinst UnityEngine.RectTransform
+   0049 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   004E call UnityEngine.Vector2 Assets.Scripts.UI.CUIUtility::WorldToScreenPoint(UnityEngine.Camera,UnityEngine.Vector3)
+   0053 stloc.s V_5
+   0055 ldloc.1 
+   0056 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   005B ldstr TopMark
+   0060 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0065 isinst UnityEngine.RectTransform
+   006A stloc.s V_6
+   006C ldloc.1 
+   006D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0072 ldstr BottomMark
+   0077 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   007C isinst UnityEngine.RectTransform
+   0081 stloc.s V_7
+   0083 ldarg.0 
+   0084 ldc.i4.0 
+   0085 ble IL_01e7: ret
+   008A ldstr DragonIcon
+   008F ldarg.0 
+   0090 box System.Int32
+   0095 call System.String System.String::Concat(System.Object,System.Object)
+   009A stloc.s V_8
+   009C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00A1 callvirt Assets.Scripts.GameSystem.WatchForm Assets.Scripts.GameSystem.CBattleSystem::get_WatchForm()
+   00A6 stloc.s V_9
+   00A8 ldarg.0 
+   00A9 ldloc.s V_9
+   00AB ldfld Assets.Scripts.GameSystem.WatchForm::dragonKillInfos
+   00B0 callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   00B5 bgt IL_00df: ldloc.2
+   00BA ldloc.s V_9
+   00BC ldfld Assets.Scripts.GameSystem.WatchForm::dragonKillInfos
+   00C1 ldarg.0 
+   00C2 ldc.i4.1 
+   00C3 sub 
+   00C4 callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   00C9 isinst Assets.Scripts.GameSystem.DragonKillInfo
+   00CE stloc.s V_10
+   00D0 ldloc.s V_10
+   00D2 ldfld Assets.Scripts.GameSystem.DragonKillInfo::dragonType
+   00D7 brtrue IL_00df: ldloc.2
+   00DC ldloc.3 
+   00DD stloc.s V_4
+   00DF ldloc.2 
+   00E0 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00E5 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   00EA ldloc.s V_8
+   00EC callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00F1 stloc.s V_11
+   00F3 ldnull 
+   00F4 stloc.s V_12
+   00F6 ldloc.s V_11
+   00F8 ldnull 
+   00F9 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00FE brfalse IL_0124: ldloc.s V_4
+   0103 ldloc.s V_11
+   0105 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   010A stloc.s V_12
+   010C ldloc.s V_12
+   010E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0113 ldloc.s V_4
+   0115 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   011A call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.UI.Image)
+   011F br IL_0144: ldloc.s V_12
+   0124 ldloc.s V_4
+   0126 call UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::DuplicateGO(UnityEngine.GameObject)
+   012B stloc.s V_12
+   012D ldloc.s V_12
+   012F ldstr DragonIcon
+   0134 ldarg.0 
+   0135 box System.Int32
+   013A call System.String System.String::Concat(System.Object,System.Object)
+   013F callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0144 ldloc.s V_12
+   0146 ldc.i4.1 
+   0147 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   014C ldloca.s V_13
+   014E initobj UnityEngine.Vector2
+   0154 ldloca.s V_13
+   0156 ldarga.s pos
+   0158 ldfld UnityEngine.Vector3::x
+   015D stfld UnityEngine.Vector2::x
+   0162 ldloca.s V_13
+   0164 ldarga.s pos
+   0166 ldfld UnityEngine.Vector3::y
+   016B stfld UnityEngine.Vector2::y
+   0170 ldloca.s V_13
+   0172 ldfld UnityEngine.Vector2::y
+   0177 ldloca.s V_5
+   0179 ldfld UnityEngine.Vector2::y
+   017E cgt 
+   0180 stloc.s V_14
+   0182 ldloc.0 
+   0183 callvirt UnityEngine.Camera Assets.Scripts.UI.CUIFormScript::GetCamera()
+   0188 ldloc.s V_13
+   018A ldloc.s V_4
+   018C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0191 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0196 stloc.s V_16
+   0198 ldloca.s V_16
+   019A ldfld UnityEngine.Vector3::z
+   019F call UnityEngine.Vector3 Assets.Scripts.UI.CUIUtility::ScreenToWorldPoint(UnityEngine.Camera,UnityEngine.Vector2,System.Single)
+   01A4 stloc.s V_15
+   01A6 ldloca.s V_15
+   01A8 ldloc.s V_14
+   01AA brfalse IL_01c4: ldloc.s V_7
+   01AF ldloc.s V_6
+   01B1 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   01B6 stloc.s V_17
+   01B8 ldloca.s V_17
+   01BA ldfld UnityEngine.Vector3::y
+   01BF br IL_01d4: stfld System.Single UnityEngine.Vector3::y
+   01C4 ldloc.s V_7
+   01C6 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   01CB stloc.s V_18
+   01CD ldloca.s V_18
+   01CF ldfld UnityEngine.Vector3::y
+   01D4 stfld UnityEngine.Vector3::y
+   01D9 ldloc.s V_12
+   01DB callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01E0 ldloc.s V_15
+   01E2 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   01E7 ret 
+== System.Void OnNumHeroLiveChange(System.Int32 prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.BattleStatView::survivePeopleNum
+   0007 ret 
+== System.Void UpdateTaoShaBattleInfo() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 call System.String Assets.Scripts.GameSystem.BattleStatView::get_s_battleStateViewUIForm()
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldc.i4.7 
+   0012 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0017 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   001C stloc.1 
+   001D ldloc.0 
+   001E ldc.i4.5 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0029 stloc.2 
+   002A ldloc.0 
+   002B ldc.i4.6 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0036 stloc.3 
+   0037 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   003C callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0041 stloc.s V_4
+   0043 ldloc.s V_4
+   0045 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaRevive()
+   004A brfalse IL_0144: ldloc.1
+   004F ldloc.1 
+   0050 call !0 Singleton`1<CTextManager>::GetInstance()
+   0055 ldstr Form_TaoShaBattleResult_2_2_1_2_0_11_
+   005A ldc.i4.1 
+   005B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0060 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0065 ldloc.2 
+   0066 ldnull 
+   0067 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006C brfalse IL_013f: br IL_017d
+   0071 ldc.i4.1 
+   0072 stloc.s V_5
+   0074 ldc.i4.0 
+   0075 stloc.s V_6
+   0077 br IL_00b2: ldloc.s V_6
+   007C call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   0081 ldloc.s V_6
+   0083 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.CKdaDataManager::GetRank_Camp(System.Int32)
+   0088 stloc.s V_7
+   008A call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   008F ldloc.s V_7
+   0091 callvirt SGW/stCampInfo Assets.Scripts.GameLogic.CKdaDataManager::GetCampInfo(CSProtocol.COM_PLAYERCAMP)
+   0096 stloc.s V_8
+   0098 ldloca.s V_8
+   009A ldfld SGW/stCampInfo::campScore
+   009F brtrue IL_00ac: ldloc.s V_6
+   00A4 ldc.i4.0 
+   00A5 stloc.s V_5
+   00A7 br IL_00ba: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   00AC ldloc.s V_6
+   00AE ldc.i4.1 
+   00AF add 
+   00B0 stloc.s V_6
+   00B2 ldloc.s V_6
+   00B4 ldc.i4.3 
+   00B5 blt IL_007c: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   00BA call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   00BF callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   00C4 stloc.s V_9
+   00C6 ldloc.s V_9
+   00C8 brfalse IL_013f: br IL_017d
+   00CD call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   00D2 ldloc.s V_9
+   00D4 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   00D9 callvirt System.Int32 Assets.Scripts.GameLogic.CKdaDataManager::GetCamp_Rank(CSProtocol.COM_PLAYERCAMP)
+   00DE stloc.s V_10
+   00E0 call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::get_instance()
+   00E5 ldloc.s V_9
+   00E7 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   00EC callvirt SGW/stCampInfo Assets.Scripts.GameLogic.CKdaDataManager::GetCampInfo(CSProtocol.COM_PLAYERCAMP)
+   00F1 stloc.s V_11
+   00F3 ldloc.s V_5
+   00F5 brtrue IL_010e: ldloc.2
+   00FA ldloc.s V_10
+   00FC ldc.i4.3 
+   00FD bge IL_0138: ldloc.2
+   0102 ldloca.s V_11
+   0104 ldfld SGW/stCampInfo::campScore
+   0109 brfalse IL_0138: ldloc.2
+   010E ldloc.2 
+   010F ldstr {0}/{1}
+   0114 ldloc.s V_10
+   0116 ldc.i4.1 
+   0117 add 
+   0118 box System.Int32
+   011D ldloc.s V_4
+   011F ldfld Assets.Scripts.GameLogic.CLevelContext::campCount
+   0124 box System.Int32
+   0129 call System.String System.String::Format(System.String,System.Object,System.Object)
+   012E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0133 br IL_013f: br IL_017d
+   0138 ldloc.2 
+   0139 ldnull 
+   013A callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   013F br IL_017d: ldloc.3
+   0144 ldloc.1 
+   0145 call !0 Singleton`1<CTextManager>::GetInstance()
+   014A ldstr Form_BattleStateView_TaoSha_3_2_2_0_
+   014F ldc.i4.1 
+   0150 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0155 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   015A ldloc.2 
+   015B ldnull 
+   015C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0161 brfalse IL_017d: ldloc.3
+   0166 ldloc.2 
+   0167 ldarg.0 
+   0168 ldflda Assets.Scripts.GameSystem.BattleStatView::survivePeopleNum
+   016D constrained. System.UInt32
+   0173 callvirt System.String System.Object::ToString()
+   0178 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   017D ldloc.3 
+   017E ldnull 
+   017F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0184 brfalse IL_01a0: ldarg.0
+   0189 ldloc.3 
+   018A ldarg.0 
+   018B ldflda Assets.Scripts.GameSystem.BattleStatView::taoShaTeamScore
+   0190 constrained. System.UInt32
+   0196 callvirt System.String System.Object::ToString()
+   019B callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01A0 ldarg.0 
+   01A1 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   01A6 ldnull 
+   01A7 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01AC brfalse IL_030b: ret
+   01B1 ldarg.0 
+   01B2 ldfld Assets.Scripts.GameSystem.BattleStatView::m_statViewFormScript
+   01B7 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   01BC brtrue IL_030b: ret
+   01C1 ldc.i4.0 
+   01C2 stloc.s V_12
+   01C4 br IL_02f9: ldloc.s V_12
+   01C9 ldarg.0 
+   01CA ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   01CF ldloc.s V_12
+   01D1 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   01D6 stloc.s V_13
+   01D8 ldc.i4.0 
+   01D9 stloc.s V_14
+   01DB ldc.i4.0 
+   01DC stloc.s V_14
+   01DE br IL_029e: ldloc.s V_14
+   01E3 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   01E8 ldarg.0 
+   01E9 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   01EE ldloc.s V_13
+   01F0 ldelem.ref 
+   01F1 ldloc.s V_14
+   01F3 callvirt !0 ListView`1<Assets.Scripts.GameLogic.CKdaPlayerPtr>::get_Item(System.Int32)
+   01F8 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   01FD ldc.i4.0 
+   01FE ldelem.ref 
+   01FF ldflda Assets.Scripts.GameLogic.CKdaHeroPtr::heroKda
+   0204 ldfld SGW/stHeroKDAInfo::objID
+   0209 ldc.i4.1 
+   020A callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   020F stloc.s V_15
+   0211 ldloc.s V_14
+   0213 ldarg.0 
+   0214 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0219 ldloc.s V_12
+   021B ldelem.ref 
+   021C ldlen 
+   021D conv.i4 
+   021E bge IL_0298: ldloc.s V_14
+   0223 ldarg.0 
+   0224 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   0229 ldloc.s V_12
+   022B ldelem.ref 
+   022C ldloc.s V_14
+   022E ldelem.ref 
+   022F brfalse IL_0298: ldloc.s V_14
+   0234 ldarg.0 
+   0235 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   023A ldloc.s V_12
+   023C ldelem.ref 
+   023D ldloc.s V_14
+   023F ldelem.ref 
+   0240 ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::growNum_matchInfo
+   0245 ldloca.s V_15
+   0247 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   024C ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0251 ldflda Assets.Scripts.GameLogic.ValueLinkerComponent::m_growValue
+   0256 constrained. System.Int32
+   025C callvirt System.String System.Object::ToString()
+   0261 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0266 ldarg.0 
+   0267 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   026C ldloc.s V_12
+   026E ldelem.ref 
+   026F ldloc.s V_14
+   0271 ldelem.ref 
+   0272 ldfld Assets.Scripts.GameSystem.BattleStatView/HeroItem::growNum_valueInfo
+   0277 ldloca.s V_15
+   0279 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   027E ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0283 ldflda Assets.Scripts.GameLogic.ValueLinkerComponent::m_growValue
+   0288 constrained. System.Int32
+   028E callvirt System.String System.Object::ToString()
+   0293 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0298 ldloc.s V_14
+   029A ldc.i4.1 
+   029B add 
+   029C stloc.s V_14
+   029E ldloc.s V_14
+   02A0 ldarg.0 
+   02A1 ldfld Assets.Scripts.GameSystem.BattleStatView::m_heroListCamp
+   02A6 ldloc.s V_13
+   02A8 ldelem.ref 
+   02A9 callvirt System.Int32 ListViewBase::get_Count()
+   02AE blt IL_01e3: call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   02B3 br IL_02e1: ldloc.s V_14
+   02B8 ldarg.0 
+   02B9 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   02BE ldloc.s V_12
+   02C0 ldelem.ref 
+   02C1 ldloc.s V_14
+   02C3 ldelem.ref 
+   02C4 brfalse IL_02db: ldloc.s V_14
+   02C9 ldarg.0 
+   02CA ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   02CF ldloc.s V_12
+   02D1 ldelem.ref 
+   02D2 ldloc.s V_14
+   02D4 ldelem.ref 
+   02D5 ldc.i4.0 
+   02D6 callvirt System.Void Assets.Scripts.GameSystem.BattleStatView/HeroItem::set_Visible(System.Boolean)
+   02DB ldloc.s V_14
+   02DD ldc.i4.1 
+   02DE add 
+   02DF stloc.s V_14
+   02E1 ldloc.s V_14
+   02E3 ldarg.0 
+   02E4 ldfld Assets.Scripts.GameSystem.BattleStatView::_heroList
+   02E9 ldloc.s V_12
+   02EB ldelem.ref 
+   02EC ldlen 
+   02ED conv.i4 
+   02EE blt IL_02b8: ldarg.0
+   02F3 ldloc.s V_12
+   02F5 ldc.i4.1 
+   02F6 add 
+   02F7 stloc.s V_12
+   02F9 ldloc.s V_12
+   02FB ldarg.0 
+   02FC ldfld Assets.Scripts.GameSystem.BattleStatView::m_campRankList
+   0301 callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   0306 blt IL_01c9: ldarg.0
+   030B ret 
+== System.Void OnPlayerGrowValueChange(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   000B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   0010 stloc.0 
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   0019 brtrue IL_001f: ldarg.0
+   001E ret 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   0025 ldloc.0 
+   0026 ldloca.s V_1
+   0028 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::TryGetValue(!0,!1&)
+   002D stloc.2 
+   002E ldloc.2 
+   002F brfalse IL_004b: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   003A ldloc.0 
+   003B ldarg.1 
+   003C ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::par1
+   0041 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::set_Item(!0,!1)
+   0046 br IL_005d: ret
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaGrowValueDic
+   0051 ldloc.0 
+   0052 ldarg.1 
+   0053 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::par1
+   0058 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Add(!0,!1)
+   005D ret 
+== System.Void OnPlayerBuffChange(Assets.Scripts.GameLogic.BuffChangeEventParam& prm) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   0006 brfalse IL_001b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   0011 ldfld Assets.Scripts.GameSystem.ShowBuffFilter::enable
+   0016 brtrue IL_001c: ldarg.0
+   001B ret 
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.BattleStatView::m_buffFilter
+   0022 ldarg.1 
+   0023 ldflda Assets.Scripts.GameLogic.BuffChangeEventParam::buff
+   0028 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::get_handle()
+   002D ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   0032 callvirt System.Boolean Assets.Scripts.GameSystem.ShowBuffFilter::isRemain(System.Int32)
+   0037 brtrue IL_003d: ldnull
+   003C ret 
+   003D ldnull 
+   003E stloc.0 
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   0045 ldarg.1 
+   0046 ldflda Assets.Scripts.GameLogic.BuffChangeEventParam::target
+   004B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0050 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   0055 ldloca.s V_0
+   0057 callvirt System.Boolean DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::TryGetValue(!0,!1&)
+   005C stloc.1 
+   005D ldloc.1 
+   005E brtrue IL_0083: ldc.i4.0
+   0063 newobj System.Void System.Collections.Generic.List`1<System.Int16>::.ctor()
+   0068 stloc.0 
+   0069 ldc.i4.0 
+   006A stloc.2 
+   006B br IL_007b: ldloc.2
+   0070 ldloc.0 
+   0071 ldc.i4.0 
+   0072 callvirt System.Void System.Collections.Generic.List`1<System.Int16>::Add(!0)
+   0077 ldloc.2 
+   0078 ldc.i4.1 
+   0079 add 
+   007A stloc.2 
+   007B ldloc.2 
+   007C ldc.i4.s 15
+   007E blt IL_0070: ldloc.0
+   0083 ldc.i4.0 
+   0084 stloc.3 
+   0085 br IL_00d7: ldloc.3
+   008A ldarg.1 
+   008B ldflda Assets.Scripts.GameLogic.BuffChangeEventParam::buff
+   0090 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.BuffLinker>::get_handle()
+   0095 ldfld Assets.Scripts.GameLogic.BuffLinker::id
+   009A ldsfld Assets.Scripts.GameSystem.BattleStatView::shenFuBuffIdList
+   009F ldloc.3 
+   00A0 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   00A5 bne.un IL_00d3: ldloc.3
+   00AA ldarg.1 
+   00AB ldfld Assets.Scripts.GameLogic.BuffChangeEventParam::isAdd
+   00B0 brfalse IL_00d3: ldloc.3
+   00B5 ldloc.0 
+   00B6 dup 
+   00B7 stloc.s V_4
+   00B9 ldloc.3 
+   00BA dup 
+   00BB stloc.s V_5
+   00BD ldloc.s V_4
+   00BF ldloc.s V_5
+   00C1 callvirt !0 System.Collections.Generic.List`1<System.Int16>::get_Item(System.Int32)
+   00C6 ldc.i4.1 
+   00C7 add 
+   00C8 conv.i2 
+   00C9 callvirt System.Void System.Collections.Generic.List`1<System.Int16>::set_Item(System.Int32,!0)
+   00CE br IL_00e7: ldloc.1
+   00D3 ldloc.3 
+   00D4 ldc.i4.1 
+   00D5 add 
+   00D6 stloc.3 
+   00D7 ldloc.3 
+   00D8 ldsfld Assets.Scripts.GameSystem.BattleStatView::shenFuBuffIdList
+   00DD callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   00E2 blt IL_008a: ldarg.1
+   00E7 ldloc.1 
+   00E8 brtrue IL_0109: ldarg.0
+   00ED ldarg.0 
+   00EE ldfld Assets.Scripts.GameSystem.BattleStatView::m_TaoShaShenFuBuffDic
+   00F3 ldarg.1 
+   00F4 ldflda Assets.Scripts.GameLogic.BuffChangeEventParam::target
+   00F9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00FE callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   0103 ldloc.0 
+   0104 callvirt System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.Int16>>::Add(!0,!1)
+   0109 ldarg.0 
+   010A ldc.i4.1 
+   010B stfld Assets.Scripts.GameSystem.BattleStatView::m_battleKDAChanged
+   0110 ret 
+== CSProtocol.COM_PLAYERCAMP GetTaoShaShowCamp() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0014: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0011 ldc.i4.s 41
+   0013 ret 
+   0014 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0019 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   001E brfalse IL_006f: ldloc.0
+   0023 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0028 callvirt Assets.Scripts.GameSystem.TaoShaWatchForm Assets.Scripts.GameSystem.CBattleSystem::get_TaoShaWatchForm()
+   002D brfalse IL_006c: ldc.i4.s 41
+   0032 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   0037 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   003C callvirt Assets.Scripts.GameSystem.TaoShaWatchForm Assets.Scripts.GameSystem.CBattleSystem::get_TaoShaWatchForm()
+   0041 callvirt System.UInt32 Assets.Scripts.GameSystem.TaoShaWatchForm::get_TargetHeroObjId()
+   0046 ldc.i4.1 
+   0047 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   004C stloc.1 
+   004D ldloc.1 
+   004E call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0053 brtrue IL_005f: ldloca.s V_1
+   0058 ldloc.0 
+   0059 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   005E ret 
+   005F ldloca.s V_1
+   0061 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0066 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   006B ret 
+   006C ldc.i4.s 41
+   006E ret 
+   006F ldloc.0 
+   0070 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0075 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldc.i4 60093
+   000C callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0011 ldloc.0 
+   0012 ldc.i4 60094
+   0017 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   001C ldloc.0 
+   001D ldc.i4 60095
+   0022 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0027 ldloc.0 
+   0028 ldc.i4 60096
+   002D callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0032 ldloc.0 
+   0033 ldc.i4 60097
+   0038 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   003D ldloc.0 
+   003E ldc.i4 60112
+   0043 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0048 ldloc.0 
+   0049 ldc.i4 60113
+   004E callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0053 ldloc.0 
+   0054 ldc.i4 60114
+   0059 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   005E ldloc.0 
+   005F ldc.i4 60115
+   0064 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0069 ldloc.0 
+   006A ldc.i4 60116
+   006F callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0074 ldloc.0 
+   0075 ldc.i4 60117
+   007A callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   007F ldloc.0 
+   0080 ldc.i4 60118
+   0085 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   008A ldloc.0 
+   008B ldc.i4 60119
+   0090 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0095 ldloc.0 
+   0096 ldc.i4 60120
+   009B callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   00A0 ldloc.0 
+   00A1 ldc.i4 60121
+   00A6 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   00AB ldloc.0 
+   00AC stsfld Assets.Scripts.GameSystem.BattleStatView::shenFuBuffIdList
+   00B1 ret 
+  NESTED Assets.Scripts.GameSystem.BattleStatView/enTaoShaShenFuBuff
+  NESTED Assets.Scripts.GameSystem.BattleStatView/HeroItem
+  NESTED Assets.Scripts.GameSystem.BattleStatView/ChartView

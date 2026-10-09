@@ -1,0 +1,120 @@
+// TYPE Assets.Scripts.GameLogic.Mass  base=Assets.Scripts.GameLogic.EnergyLogic  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 targetOffset
+  FIELD System.Int32 curOffset
+  FIELD System.Int32 incHudLimit
+  FIELD System.Int32 offsetLerpSpeed
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.EnergyLogic::.ctor()
+   0006 ret 
+== System.Void Init(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, ResData.ResHeroEnergyInfo& cfgData) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 call System.Void Assets.Scripts.GameLogic.EnergyLogic::Init(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,ResData.ResHeroEnergyInfo&)
+   0008 ldarg.0 
+   0009 ldarg.2 
+   000A ldc.i4.3 
+   000B call ResData.ResDT_IntParamArrayNode ResData.ResHeroEnergyInfo::astParams(System.Int32)
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 ldfld ResData.ResDT_IntParamArrayNode::iParam
+   0018 stfld Assets.Scripts.GameLogic.Mass::incHudLimit
+   001D ldarg.0 
+   001E ldarg.2 
+   001F ldc.i4.4 
+   0020 call ResData.ResDT_IntParamArrayNode ResData.ResHeroEnergyInfo::astParams(System.Int32)
+   0025 stloc.1 
+   0026 ldloca.s V_1
+   0028 ldfld ResData.ResDT_IntParamArrayNode::iParam
+   002D stfld Assets.Scripts.GameLogic.Mass::offsetLerpSpeed
+   0032 ret 
+== System.Void OnEnergyChange(System.Int32 curEp, System.Int32 totalEp, System.Int32 totalEpExtra) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Void Assets.Scripts.GameLogic.EnergyLogic::OnEnergyChange(System.Int32,System.Int32,System.Int32)
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameLogic.EnergyLogic::_actorEpTotal
+   000F ldc.i4.0 
+   0010 ble IL_0029: ldc.r4 0
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameLogic.EnergyLogic::_actorEp
+   001B conv.r4 
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.EnergyLogic::_actorEpTotal
+   0022 conv.r4 
+   0023 div 
+   0024 br IL_002e: stloc.0
+   0029 ldc.r4 0
+   002E stloc.0 
+   002F ldarg.0 
+   0030 ldflda Assets.Scripts.GameLogic.EnergyLogic::_actor
+   0035 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003A ldloc.0 
+   003B ldc.r4 0.2
+   0040 callvirt System.Void Assets.Scripts.GameLogic.ActorLinker::ScaleTo(System.Single,System.Single)
+   0045 ldarg.0 
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameLogic.Mass::incHudLimit
+   004C conv.r4 
+   004D ldloc.0 
+   004E mul 
+   004F conv.i4 
+   0050 stfld Assets.Scripts.GameLogic.Mass::targetOffset
+   0055 ret 
+== System.Void LateUpdate(System.Int32 delta) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.Mass::targetOffset
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.Mass::curOffset
+   000C bne.un IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.Mass::targetOffset
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameLogic.Mass::curOffset
+   001E sub 
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.Mass::offsetLerpSpeed
+   0026 ldarg.1 
+   0027 mul 
+   0028 conv.r4 
+   0029 ldc.r4 0.001
+   002E mul 
+   002F ldloc.0 
+   0030 ldc.i4.0 
+   0031 ble IL_003c: ldc.i4.m1
+   0036 ldc.i4.1 
+   0037 br IL_003d: conv.r4
+   003C ldc.i4.m1 
+   003D conv.r4 
+   003E mul 
+   003F conv.i4 
+   0040 stloc.1 
+   0041 ldloc.1 
+   0042 call System.Int32 System.Math::Abs(System.Int32)
+   0047 ldloc.0 
+   0048 call System.Int32 System.Math::Abs(System.Int32)
+   004D bge IL_0065: ldarg.0
+   0052 ldarg.0 
+   0053 dup 
+   0054 ldfld Assets.Scripts.GameLogic.Mass::curOffset
+   0059 ldloc.1 
+   005A add 
+   005B stfld Assets.Scripts.GameLogic.Mass::curOffset
+   0060 br IL_0071: ldarg.0
+   0065 ldarg.0 
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameLogic.Mass::targetOffset
+   006C stfld Assets.Scripts.GameLogic.Mass::curOffset
+   0071 ldarg.0 
+   0072 ldflda Assets.Scripts.GameLogic.EnergyLogic::_actor
+   0077 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   007C ldfld Assets.Scripts.GameLogic.ActorLinker::HudControl
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameLogic.Mass::curOffset
+   0087 callvirt System.Void Assets.Scripts.GameLogic.HudComponent3D::IncHudHeight(System.Int32)
+   008C ret 

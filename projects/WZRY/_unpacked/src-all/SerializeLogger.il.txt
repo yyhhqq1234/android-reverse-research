@@ -1,0 +1,69 @@
+// TYPE SerializeLogger  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.IO.StreamWriter logWriter
+  FIELD System.IO.FileStream fs
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void StartLog(System.String name) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldsfld SerializeLogger::fs
+   0005 brfalse IL_000f: ldstr "{0}/../{1}"
+   000A call System.Void SerializeLogger::EndLog()
+   000F ldstr {0}/../{1}
+   0014 call System.String UnityEngine.Application::get_dataPath()
+   0019 ldarg.0 
+   001A call System.String System.String::Format(System.String,System.Object,System.Object)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldc.i4.2 
+   0022 ldc.i4.2 
+   0023 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   0028 stsfld SerializeLogger::fs
+   002D ldsfld SerializeLogger::fs
+   0032 newobj System.Void System.IO.StreamWriter::.ctor(System.IO.Stream)
+   0037 stsfld SerializeLogger::logWriter
+   003C ldstr startTime:{0}
+   0041 ldc.i4.1 
+   0042 newarr System.Object
+   0047 dup 
+   0048 ldc.i4.0 
+   0049 call System.DateTime System.DateTime::get_Now()
+   004E box System.DateTime
+   0053 stelem.ref 
+   0054 call System.Void SerializeLogger::Write(System.String,System.Object[])
+   0059 ret 
+== System.Void Write(System.String format, System.Object[] args) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld SerializeLogger::logWriter
+   0005 brfalse IL_0025: ret
+   000A ldsfld SerializeLogger::logWriter
+   000F ldarg.0 
+   0010 ldarg.1 
+   0011 call System.String System.String::Format(System.String,System.Object[])
+   0016 ldstr 
+
+   001B call System.String System.String::Concat(System.String,System.String)
+   0020 callvirt System.Void System.IO.TextWriter::Write(System.String)
+   0025 ret 
+== System.Void EndLog() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldstr endTime:{0}
+   0005 ldc.i4.1 
+   0006 newarr System.Object
+   000B dup 
+   000C ldc.i4.0 
+   000D call System.DateTime System.DateTime::get_Now()
+   0012 box System.DateTime
+   0017 stelem.ref 
+   0018 call System.Void SerializeLogger::Write(System.String,System.Object[])
+   001D ldsfld SerializeLogger::logWriter
+   0022 callvirt System.Void System.IO.TextWriter::Flush()
+   0027 ldsfld SerializeLogger::fs
+   002C callvirt System.Void System.IO.Stream::Flush()
+   0031 ldsfld SerializeLogger::fs
+   0036 callvirt System.Void System.IO.Stream::Close()
+   003B ldnull 
+   003C stsfld SerializeLogger::fs
+   0041 ldnull 
+   0042 stsfld SerializeLogger::logWriter
+   0047 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

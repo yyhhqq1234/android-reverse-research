@@ -1,0 +1,243 @@
+// TYPE GoogleARCoreInternal.TrackableManager  base=System.Object  attrs=BeforeFieldInit
+  FIELD System.Collections.Generic.Dictionary`2<System.IntPtr,GoogleARCore.Trackable> m_TrackableDict
+  FIELD GoogleARCoreInternal.NativeSession m_NativeSession
+  FIELD System.Int32 m_LastUpdateFrame
+  FIELD System.Collections.Generic.List`1<GoogleARCore.Trackable> m_NewTrackables
+  FIELD System.Collections.Generic.List`1<GoogleARCore.Trackable> m_AllTrackables
+  FIELD System.Collections.Generic.List`1<GoogleARCore.Trackable> m_UpdatedTrackables
+  FIELD System.Collections.Generic.HashSet`1<GoogleARCore.Trackable> m_OldTrackables
+== System.Void .ctor(GoogleARCoreInternal.NativeSession nativeSession) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void GoogleARCoreInternal.IntPtrEqualityComparer::.ctor()
+   0006 newobj System.Void System.Collections.Generic.Dictionary`2<System.IntPtr,GoogleARCore.Trackable>::.ctor(System.Collections.Generic.IEqualityComparer`1<!0>)
+   000B stfld GoogleARCoreInternal.TrackableManager::m_TrackableDict
+   0010 ldarg.0 
+   0011 ldc.i4.m1 
+   0012 stfld GoogleARCoreInternal.TrackableManager::m_LastUpdateFrame
+   0017 ldarg.0 
+   0018 newobj System.Void System.Collections.Generic.List`1<GoogleARCore.Trackable>::.ctor()
+   001D stfld GoogleARCoreInternal.TrackableManager::m_NewTrackables
+   0022 ldarg.0 
+   0023 newobj System.Void System.Collections.Generic.List`1<GoogleARCore.Trackable>::.ctor()
+   0028 stfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   002D ldarg.0 
+   002E newobj System.Void System.Collections.Generic.List`1<GoogleARCore.Trackable>::.ctor()
+   0033 stfld GoogleARCoreInternal.TrackableManager::m_UpdatedTrackables
+   0038 ldarg.0 
+   0039 newobj System.Void System.Collections.Generic.HashSet`1<GoogleARCore.Trackable>::.ctor()
+   003E stfld GoogleARCoreInternal.TrackableManager::m_OldTrackables
+   0043 ldarg.0 
+   0044 call System.Void System.Object::.ctor()
+   0049 ldarg.0 
+   004A ldarg.1 
+   004B stfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   0050 ret 
+== GoogleARCore.Trackable TrackableFactory(System.IntPtr nativeHandle) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldsfld System.IntPtr::Zero
+   0006 call System.Boolean System.IntPtr::op_Equality(System.IntPtr,System.IntPtr)
+   000B brfalse IL_0012: ldarg.0
+   0010 ldnull 
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld GoogleARCoreInternal.TrackableManager::m_TrackableDict
+   0018 ldarg.1 
+   0019 ldloca.s V_0
+   001B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.IntPtr,GoogleARCore.Trackable>::TryGetValue(!0,!1&)
+   0020 brfalse IL_0038: ldarg.0
+   0025 ldarg.0 
+   0026 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   002B callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   0030 ldarg.1 
+   0031 callvirt System.Void GoogleARCoreInternal.TrackableApi::Release(System.IntPtr)
+   0036 ldloc.0 
+   0037 ret 
+   0038 ldarg.0 
+   0039 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   003E callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   0043 ldarg.1 
+   0044 callvirt GoogleARCoreInternal.ApiTrackableType GoogleARCoreInternal.TrackableApi::GetType(System.IntPtr)
+   0049 stloc.1 
+   004A ldloc.1 
+   004B ldc.i4 1095893249
+   0050 bne.un IL_0067: ldloc.1
+   0055 ldarg.1 
+   0056 ldarg.0 
+   0057 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   005C newobj System.Void GoogleARCore.TrackedPlane::.ctor(System.IntPtr,GoogleARCoreInternal.NativeSession)
+   0061 stloc.0 
+   0062 br IL_00ce: ldloc.0
+   0067 ldloc.1 
+   0068 ldc.i4 1095893250
+   006D bne.un IL_0084: ldloc.1
+   0072 ldarg.1 
+   0073 ldarg.0 
+   0074 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   0079 newobj System.Void GoogleARCore.TrackedPoint::.ctor(System.IntPtr,GoogleARCoreInternal.NativeSession)
+   007E stloc.0 
+   007F br IL_00ce: ldloc.0
+   0084 ldloc.1 
+   0085 ldc.i4 1095893252
+   008A bne.un IL_00a1: call GoogleARCoreInternal.ExperimentManager GoogleARCoreInternal.ExperimentManager::get_Instance()
+   008F ldarg.1 
+   0090 ldarg.0 
+   0091 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   0096 newobj System.Void GoogleARCore.AugmentedImage::.ctor(System.IntPtr,GoogleARCoreInternal.NativeSession)
+   009B stloc.0 
+   009C br IL_00ce: ldloc.0
+   00A1 call GoogleARCoreInternal.ExperimentManager GoogleARCoreInternal.ExperimentManager::get_Instance()
+   00A6 ldloc.1 
+   00A7 callvirt System.Boolean GoogleARCoreInternal.ExperimentManager::IsManagingTrackableType(System.Int32)
+   00AC brfalse IL_00c3: ldstr "TrackableFactory::No constructor for requested trackable type."
+   00B1 call GoogleARCoreInternal.ExperimentManager GoogleARCoreInternal.ExperimentManager::get_Instance()
+   00B6 ldloc.1 
+   00B7 ldarg.1 
+   00B8 callvirt GoogleARCore.Trackable GoogleARCoreInternal.ExperimentManager::TrackableFactory(System.Int32,System.IntPtr)
+   00BD stloc.0 
+   00BE br IL_00ce: ldloc.0
+   00C3 ldstr TrackableFactory::No constructor for requested trackable type.
+   00C8 newobj System.Void System.NotImplementedException::.ctor(System.String)
+   00CD throw 
+   00CE ldloc.0 
+   00CF brfalse IL_00e1: ldloc.0
+   00D4 ldarg.0 
+   00D5 ldfld GoogleARCoreInternal.TrackableManager::m_TrackableDict
+   00DA ldarg.1 
+   00DB ldloc.0 
+   00DC callvirt System.Void System.Collections.Generic.Dictionary`2<System.IntPtr,GoogleARCore.Trackable>::Add(!0,!1)
+   00E1 ldloc.0 
+   00E2 ret 
+== System.Void GetTrackables(System.Collections.Generic.List`1<T> trackables, GoogleARCore.TrackableQueryFilter filter) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld GoogleARCoreInternal.TrackableManager::m_LastUpdateFrame
+   0006 call System.Int32 UnityEngine.Time::get_frameCount()
+   000B bge IL_00a5: ldarg.1
+   0010 ldarg.0 
+   0011 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   0016 callvirt GoogleARCoreInternal.FrameApi GoogleARCoreInternal.NativeSession::get_FrameApi()
+   001B ldarg.0 
+   001C ldfld GoogleARCoreInternal.TrackableManager::m_UpdatedTrackables
+   0021 callvirt System.Void GoogleARCoreInternal.FrameApi::GetUpdatedTrackables(System.Collections.Generic.List`1<GoogleARCore.Trackable>)
+   0026 ldarg.0 
+   0027 ldfld GoogleARCoreInternal.TrackableManager::m_NativeSession
+   002C callvirt GoogleARCoreInternal.SessionApi GoogleARCoreInternal.NativeSession::get_SessionApi()
+   0031 ldarg.0 
+   0032 ldfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   0037 callvirt System.Void GoogleARCoreInternal.SessionApi::GetAllTrackables(System.Collections.Generic.List`1<GoogleARCore.Trackable>)
+   003C ldarg.0 
+   003D ldfld GoogleARCoreInternal.TrackableManager::m_NewTrackables
+   0042 callvirt System.Void System.Collections.Generic.List`1<GoogleARCore.Trackable>::Clear()
+   0047 ldc.i4.0 
+   0048 stloc.0 
+   0049 br IL_0089: ldloc.0
+   004E ldarg.0 
+   004F ldfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   0054 ldloc.0 
+   0055 callvirt !0 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Item(System.Int32)
+   005A stloc.1 
+   005B ldarg.0 
+   005C ldfld GoogleARCoreInternal.TrackableManager::m_OldTrackables
+   0061 ldloc.1 
+   0062 callvirt System.Boolean System.Collections.Generic.HashSet`1<GoogleARCore.Trackable>::Contains(!0)
+   0067 brtrue IL_0085: ldloc.0
+   006C ldarg.0 
+   006D ldfld GoogleARCoreInternal.TrackableManager::m_NewTrackables
+   0072 ldloc.1 
+   0073 callvirt System.Void System.Collections.Generic.List`1<GoogleARCore.Trackable>::Add(!0)
+   0078 ldarg.0 
+   0079 ldfld GoogleARCoreInternal.TrackableManager::m_OldTrackables
+   007E ldloc.1 
+   007F callvirt System.Boolean System.Collections.Generic.HashSet`1<GoogleARCore.Trackable>::Add(!0)
+   0084 pop 
+   0085 ldloc.0 
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.0 
+   0089 ldloc.0 
+   008A ldarg.0 
+   008B ldfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   0090 callvirt System.Int32 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Count()
+   0095 blt IL_004e: ldarg.0
+   009A ldarg.0 
+   009B call System.Int32 UnityEngine.Time::get_frameCount()
+   00A0 stfld GoogleARCoreInternal.TrackableManager::m_LastUpdateFrame
+   00A5 ldarg.1 
+   00A6 callvirt System.Void System.Collections.Generic.List`1<T>::Clear()
+   00AB ldarg.2 
+   00AC brtrue IL_00e5: ldarg.2
+   00B1 ldc.i4.0 
+   00B2 stloc.2 
+   00B3 br IL_00cf: ldloc.2
+   00B8 ldarg.0 
+   00B9 ldarg.0 
+   00BA ldfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   00BF ldloc.2 
+   00C0 callvirt !0 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Item(System.Int32)
+   00C5 ldarg.1 
+   00C6 call System.Void GoogleARCoreInternal.TrackableManager::_SafeAdd<T>(GoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   00CB ldloc.2 
+   00CC ldc.i4.1 
+   00CD add 
+   00CE stloc.2 
+   00CF ldloc.2 
+   00D0 ldarg.0 
+   00D1 ldfld GoogleARCoreInternal.TrackableManager::m_AllTrackables
+   00D6 callvirt System.Int32 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Count()
+   00DB blt IL_00b8: ldarg.0
+   00E0 br IL_015b: ret
+   00E5 ldarg.2 
+   00E6 ldc.i4.1 
+   00E7 bne.un IL_0120: ldarg.2
+   00EC ldc.i4.0 
+   00ED stloc.3 
+   00EE br IL_010a: ldloc.3
+   00F3 ldarg.0 
+   00F4 ldarg.0 
+   00F5 ldfld GoogleARCoreInternal.TrackableManager::m_NewTrackables
+   00FA ldloc.3 
+   00FB callvirt !0 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Item(System.Int32)
+   0100 ldarg.1 
+   0101 call System.Void GoogleARCoreInternal.TrackableManager::_SafeAdd<T>(GoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   0106 ldloc.3 
+   0107 ldc.i4.1 
+   0108 add 
+   0109 stloc.3 
+   010A ldloc.3 
+   010B ldarg.0 
+   010C ldfld GoogleARCoreInternal.TrackableManager::m_NewTrackables
+   0111 callvirt System.Int32 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Count()
+   0116 blt IL_00f3: ldarg.0
+   011B br IL_015b: ret
+   0120 ldarg.2 
+   0121 ldc.i4.2 
+   0122 bne.un IL_015b: ret
+   0127 ldc.i4.0 
+   0128 stloc.s V_4
+   012A br IL_0149: ldloc.s V_4
+   012F ldarg.0 
+   0130 ldarg.0 
+   0131 ldfld GoogleARCoreInternal.TrackableManager::m_UpdatedTrackables
+   0136 ldloc.s V_4
+   0138 callvirt !0 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Item(System.Int32)
+   013D ldarg.1 
+   013E call System.Void GoogleARCoreInternal.TrackableManager::_SafeAdd<T>(GoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   0143 ldloc.s V_4
+   0145 ldc.i4.1 
+   0146 add 
+   0147 stloc.s V_4
+   0149 ldloc.s V_4
+   014B ldarg.0 
+   014C ldfld GoogleARCoreInternal.TrackableManager::m_UpdatedTrackables
+   0151 callvirt System.Int32 System.Collections.Generic.List`1<GoogleARCore.Trackable>::get_Count()
+   0156 blt IL_012f: ldarg.0
+   015B ret 
+== System.Void _SafeAdd(GoogleARCore.Trackable trackable, System.Collections.Generic.List`1<T> trackables) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 isinst T
+   0006 brfalse IL_001c: ret
+   000B ldarg.2 
+   000C ldarg.1 
+   000D isinst T
+   0012 unbox.any T
+   0017 callvirt System.Void System.Collections.Generic.List`1<T>::Add(!0)
+   001C ret 

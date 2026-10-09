@@ -1,0 +1,365 @@
+// TYPE Assets.Scripts.GameSystem.MiniMapEffectModule  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String teleportUIEft_src
+  FIELD System.String teleportUIEft_dst
+  FIELD System.String teleportUIEft_src_enemy
+  FIELD System.String teleportUIEft_dst_enemy
+  FIELD System.String EyePerishEft
+  FIELD System.String teleportEft
+  FIELD ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element> followEffectList
+  FIELD ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement> followGOList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   000B ldarg.0 
+   000C newobj System.Void ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::.ctor()
+   0011 stfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   0016 ldarg.0 
+   0017 call System.Void System.Object::.ctor()
+   001C ret 
+== UnityEngine.GameObject PlaySceneEffect(System.String eft, System.Int32 msTime, UnityEngine.Vector3 worldpos) attrs=Public, HideBySig maxstack=5
+   0000 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0005 ldarg.1 
+   0006 ldc.i4.1 
+   0007 ldc.i4.s 11
+   0009 ldarg.3 
+   000A callvirt CPooledGameObjectScript SceneMgr::GetPooledGameObjLOD(System.String,System.Boolean,SceneObjType,UnityEngine.Vector3)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 brfalse IL_0022: newobj System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/TimerElement::.ctor()
+   0016 ldloc.0 
+   0017 ldfld CPooledGameObjectScript::Go
+   001C ldc.i4.1 
+   001D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0022 newobj System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/TimerElement::.ctor()
+   0027 stloc.1 
+   0028 ldloc.1 
+   0029 ldloc.0 
+   002A ldarg.2 
+   002B callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/TimerElement::SetData(CPooledGameObjectScript,System.Int32)
+   0030 ldloc.0 
+   0031 ldfld CPooledGameObjectScript::Go
+   0036 ret 
+== System.Void PlayScreenPosEffect(System.String eft, System.Single time, UnityEngine.Vector2 screenPos) attrs=Public, HideBySig maxstack=9
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000c: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0011 ldarg.1 
+   0012 ldarg.2 
+   0013 ldarg.3 
+   0014 ldloca.s V_0
+   0016 initobj System.Nullable`1<UnityEngine.Quaternion>
+   001C ldloc.0 
+   001D ldc.i4.1 
+   001E ldc.i4.1 
+   001F ldc.i4.0 
+   0020 ldloca.s V_1
+   0022 initobj UnityEngine.Vector3
+   0028 ldloc.1 
+   0029 callvirt Assets.Scripts.GameSystem.UIParticleInfo Assets.Scripts.GameSystem.CUIParticleSystem::AddParticle(System.String,System.Single,UnityEngine.Vector2,System.Nullable`1<UnityEngine.Quaternion>,System.Boolean,System.Boolean,System.Boolean,UnityEngine.Vector3)
+   002E pop 
+   002F ret 
+== System.Void PlayFollowGameObjectEffect(System.String eft, System.Single time, System.UInt32 virualID, System.UInt32 particleObjectID) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D ldarg.2 
+   000E ldarg.3 
+   000F ldarg.s particleObjectID
+   0011 newobj System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::.ctor(System.String,System.Single,System.UInt32,System.UInt32)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 brfalse IL_0047: ldarg.0
+   001D ldloc.0 
+   001E ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::uiParticleInfo
+   0023 brfalse IL_0047: ldarg.0
+   0028 ldarg.s particleObjectID
+   002A brfalse IL_0047: ldarg.0
+   002F call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   0034 ldarg.s particleObjectID
+   0036 ldloc.0 
+   0037 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::uiParticleInfo
+   003C ldfld Assets.Scripts.GameSystem.UIParticleInfo::parObj
+   0041 callvirt System.Boolean UnityObjMgr::ReplaceGameObject(System.UInt32,UnityEngine.GameObject)
+   0046 pop 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   004D ldloc.0 
+   004E callvirt System.Boolean ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::Contains(!0)
+   0053 brtrue IL_0064: ret
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   005E ldloc.0 
+   005F callvirt System.Void ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::Add(!0)
+   0064 ret 
+== System.Void StopFollowGameObjectEffect(System.UInt32 virualID, System.UInt32 particleObjectID) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_003c: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::virId
+   001A ldarg.1 
+   001B bne.un IL_0038: ldloc.0
+   0020 ldarg.2 
+   0021 brfalse IL_0032: ldloc.1
+   0026 ldloc.1 
+   0027 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::particleId
+   002C ldarg.2 
+   002D bne.un IL_0038: ldloc.0
+   0032 ldloc.1 
+   0033 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::Clear()
+   0038 ldloc.0 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   0043 callvirt System.Int32 ListViewBase::get_Count()
+   0048 blt IL_0007: ldarg.0
+   004D ret 
+== System.Void PlayFollowActorEffect(System.String eft, System.Single time, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> relatedActor) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0016: ret
+   000B ldarg.3 
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldarg.1 
+   0019 ldarg.2 
+   001A ldarg.3 
+   001B call Assets.Scripts.GameSystem.MiniMapEffectModule/Element Assets.Scripts.GameSystem.MiniMapEffectModule::GetFollowEffect(System.String,System.Single,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0020 stloc.0 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0027 ldloc.0 
+   0028 callvirt System.Boolean ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::Contains(!0)
+   002D brtrue IL_003e: ldarg.3
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0038 ldloc.0 
+   0039 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::Add(!0)
+   003E ldarg.3 
+   003F call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0044 brfalse IL_009b: ret
+   0049 ldarga.s relatedActor
+   004B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0050 brfalse IL_009b: ret
+   0055 ldarga.s relatedActor
+   0057 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005C ldfld Assets.Scripts.GameLogic.ActorLinker::miniMap
+   0061 brfalse IL_009b: ret
+   0066 ldarga.s relatedActor
+   0068 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006D ldfld Assets.Scripts.GameLogic.ActorLinker::miniMap
+   0072 ldc.i4.s 16
+   0074 callvirt System.Void Assets.Scripts.GameLogic.MinimapComponent::ExternalAddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0079 ldarga.s relatedActor
+   007B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0080 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Clipped()
+   0085 brfalse IL_009b: ret
+   008A ldarga.s relatedActor
+   008C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0091 ldfld Assets.Scripts.GameLogic.ActorLinker::miniMap
+   0096 callvirt System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessFlags()
+   009B ret 
+== System.Void StopFollowActorEffect(System.UInt32 inSanpshotId) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B ldc.i4.1 
+   000C sub 
+   000D stloc.0 
+   000E br IL_0042: ldloc.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0019 ldloc.0 
+   001A callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::get_Item(System.Int32)
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/Element::uid
+   0026 ldarg.1 
+   0027 bne.un IL_003e: ldloc.0
+   002C ldloc.1 
+   002D callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::Clear()
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0038 ldloc.0 
+   0039 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   003E ldloc.0 
+   003F ldc.i4.1 
+   0040 sub 
+   0041 stloc.0 
+   0042 ldloc.0 
+   0043 ldc.i4.0 
+   0044 bge IL_0013: ldarg.0
+   0049 ret 
+== System.Void SetFollowActorEffectVisible(System.UInt32 inSanpshotId, System.Boolean visible) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_002b: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule/Element::uid
+   001A ldarg.1 
+   001B bne.un IL_0027: ldloc.0
+   0020 ldloc.1 
+   0021 ldarg.2 
+   0022 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::SetVisible(System.Boolean)
+   0027 ldloc.0 
+   0028 ldc.i4.1 
+   0029 add 
+   002A stloc.0 
+   002B ldloc.0 
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0032 callvirt System.Int32 ListViewBase::get_Count()
+   0037 blt IL_0007: ldarg.0
+   003C ret 
+== System.Void Update(System.Single deltaTime) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001f: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldarg.1 
+   0016 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::Update(System.Single)
+   001B ldloc.0 
+   001C ldc.i4.1 
+   001D add 
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0026 callvirt System.Int32 ListViewBase::get_Count()
+   002B blt IL_0007: ldarg.0
+   0030 ldc.i4.0 
+   0031 stloc.2 
+   0032 br IL_004f: ldloc.2
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   003D ldloc.2 
+   003E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::get_Item(System.Int32)
+   0043 stloc.3 
+   0044 ldloc.3 
+   0045 ldarg.1 
+   0046 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::Update(System.Single)
+   004B ldloc.2 
+   004C ldc.i4.1 
+   004D add 
+   004E stloc.2 
+   004F ldloc.2 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   0056 callvirt System.Int32 ListViewBase::get_Count()
+   005B blt IL_0037: ldarg.0
+   0060 ret 
+== System.Void ResizeEffects() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001e: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::ResizeEffect()
+   001A ldloc.0 
+   001B ldc.i4.1 
+   001C add 
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0025 callvirt System.Int32 ListViewBase::get_Count()
+   002A blt IL_0007: ldarg.0
+   002F ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001e: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/Element>::get_Item(System.Int32)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::Clear()
+   001A ldloc.0 
+   001B ldc.i4.1 
+   001C add 
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0025 callvirt System.Int32 ListViewBase::get_Count()
+   002A blt IL_0007: ldarg.0
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followEffectList
+   0035 callvirt System.Void ListViewBase::Clear()
+   003A ldc.i4.0 
+   003B stloc.2 
+   003C br IL_0058: ldloc.2
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   0047 ldloc.2 
+   0048 callvirt !0 ListView`1<Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement>::get_Item(System.Int32)
+   004D stloc.3 
+   004E ldloc.3 
+   004F callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement::Clear()
+   0054 ldloc.2 
+   0055 ldc.i4.1 
+   0056 add 
+   0057 stloc.2 
+   0058 ldloc.2 
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   005F callvirt System.Int32 ListViewBase::get_Count()
+   0064 blt IL_0041: ldarg.0
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameSystem.MiniMapEffectModule::followGOList
+   006F callvirt System.Void ListViewBase::Clear()
+   0074 ret 
+== Assets.Scripts.GameSystem.MiniMapEffectModule/Element GetFollowEffect(System.String eft, System.Single time, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> relatedActor) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 ldarg.3 
+   0003 newobj System.Void Assets.Scripts.GameSystem.MiniMapEffectModule/Element::.ctor(System.String,System.Single,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0008 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_cx_ui
+   0005 stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::teleportUIEft_src
+   000A ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_cx_ui_sf
+   000F stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::teleportUIEft_dst
+   0014 ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_cx_ui_red
+   0019 stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::teleportUIEft_src_enemy
+   001E ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_cx_ui_sf_red
+   0023 stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::teleportUIEft_dst_enemy
+   0028 ldstr Prefab_Skill_Effects/tongyong_effects/Indicator/yan_ui_01
+   002D stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::EyePerishEft
+   0032 ldstr Prefab_Skill_Effects/tongyong_effects/Sence_Effeft/Chuansong_jiantou_ui
+   0037 stsfld Assets.Scripts.GameSystem.MiniMapEffectModule::teleportEft
+   003C ret 
+  NESTED Assets.Scripts.GameSystem.MiniMapEffectModule/TimerElement
+  NESTED Assets.Scripts.GameSystem.MiniMapEffectModule/Element
+  NESTED Assets.Scripts.GameSystem.MiniMapEffectModule/FollowGameObjectElement

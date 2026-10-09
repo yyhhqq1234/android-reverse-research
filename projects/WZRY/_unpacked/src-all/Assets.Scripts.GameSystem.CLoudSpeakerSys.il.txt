@@ -1,0 +1,1471 @@
+// TYPE Assets.Scripts.GameSystem.CLoudSpeakerSys  base=Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>  attrs=Public, BeforeFieldInit
+  FIELD System.String SPEAKER_FORM_PATH
+  FIELD System.Int32 SPEAKER_ID = 10041
+  FIELD System.Int32 LOUDSPEAKER_ID = 10042
+  FIELD ResData.ResHornInfo speakerRes
+  FIELD System.Boolean speakerResDone
+  FIELD ResData.ResHornInfo loudSpeakerRes
+  FIELD System.Boolean loudSpeakerResDone
+  FIELD System.Int32 REQ_TIME_DELTA = 5
+  FIELD System.Int32 m_timerReq
+  FIELD System.Int32 m_timerSpeaker
+  FIELD System.Int32 m_timerLoudSpeaker
+  FIELD System.UInt32 m_lastSpeakerBeginSec
+  FIELD System.UInt32 m_lastLoudSpeakerBeginSec
+  FIELD System.UInt32 m_itemID
+  FIELD System.UInt32 m_characterLimit
+  FIELD System.String s_characterLimitString
+  FIELD ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo> speakerList
+  FIELD ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo> loudSpeakerList
+  FIELD Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo CurSpekaer
+  FIELD Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo CurLoudSpeaker
+  FIELD Assets.Scripts.GameSystem.SvrChatData _tempSvrChatData
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.m1 
+   0002 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   0007 ldarg.0 
+   0008 ldc.i4.m1 
+   0009 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   000E ldarg.0 
+   000F ldc.i4.m1 
+   0010 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0015 ldarg.0 
+   0016 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::.ctor()
+   001B stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   0020 ldarg.0 
+   0021 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::.ctor()
+   0026 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   002B ldarg.0 
+   002C newobj System.Void Assets.Scripts.GameSystem.SvrChatData::.ctor()
+   0031 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   0036 ldarg.0 
+   0037 call System.Void Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::.ctor()
+   003C ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::Init()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 4200
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerFormOpen(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 4201
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerFormClose(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 4202
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerSend(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 4268
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnUpdateCharacterLimitText(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 4269
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnOpenFactoryShop(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<EventRouter>::get_instance()
+   0092 ldsfld EventID::BAG_ITEMS_UPDATE
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerNumUpdate()
+   009E newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   00A8 call !0 Singleton`1<CTextManager>::get_instance()
+   00AD ldstr Speaker_CharacterLimit
+   00B2 ldc.i4.1 
+   00B3 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00B8 stsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::s_characterLimitString
+   00BD ret 
+== ResData.ResHornInfo GetRes(System.Int32 speakerID) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4 10041
+   0006 bne.un IL_002f: ldarg.0
+   000B ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerResDone
+   0010 brtrue IL_0029: ldsfld ResData.ResHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerRes
+   0015 ldsflda Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerRes
+   001A ldc.i4 10041
+   001F call System.Boolean ResData.GameDataMgr/speakerDatabin::FindByKey(ResData.ResHornInfo&,System.UInt32)
+   0024 stsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerResDone
+   0029 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerRes
+   002E ret 
+   002F ldarg.0 
+   0030 ldc.i4 10042
+   0035 bne.un IL_005e: ldloca.s V_0
+   003A ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerResDone
+   003F brtrue IL_0058: ldsfld ResData.ResHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerRes
+   0044 ldsflda Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerRes
+   0049 ldc.i4 10042
+   004E call System.Boolean ResData.GameDataMgr/speakerDatabin::FindByKey(ResData.ResHornInfo&,System.UInt32)
+   0053 stsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerResDone
+   0058 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerRes
+   005D ret 
+   005E ldloca.s V_0
+   0060 initobj ResData.ResHornInfo
+   0066 ldloc.0 
+   0067 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 4200
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerFormOpen(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 4201
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerFormClose(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 4202
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerSend(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 4268
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnUpdateCharacterLimitText(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 4269
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnOpenFactoryShop(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<EventRouter>::get_instance()
+   008C ldsfld EventID::BAG_ITEMS_UPDATE
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerNumUpdate()
+   0098 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   00A2 ldarg.0 
+   00A3 call System.Void Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::UnInit()
+   00A8 ret 
+== System.Void StartReqTimer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   0006 ldc.i4.m1 
+   0007 beq IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E call !0 Singleton`1<CTimerManager>::get_instance()
+   0013 ldc.i4 5000
+   0018 ldc.i4.0 
+   0019 ldarg.0 
+   001A ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnTimerReq(System.Int32)
+   0020 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0025 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   002A stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   002F ldarg.0 
+   0030 ldc.i4.0 
+   0031 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnTimerReq(System.Int32)
+   0036 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   0006 ldc.i4.m1 
+   0007 beq IL_001c: ldarg.0
+   000C call !0 Singleton`1<CTimerManager>::get_instance()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   0017 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001C ldarg.0 
+   001D ldc.i4.m1 
+   001E stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerReq
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0029 ldc.i4.m1 
+   002A beq IL_003f: ldarg.0
+   002F call !0 Singleton`1<CTimerManager>::get_instance()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   003A callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   003F ldarg.0 
+   0040 ldc.i4.m1 
+   0041 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   004C ldc.i4.m1 
+   004D beq IL_0062: ldarg.0
+   0052 call !0 Singleton`1<CTimerManager>::get_instance()
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   005D callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0062 ldarg.0 
+   0063 ldc.i4.m1 
+   0064 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0069 ldarg.0 
+   006A ldc.i4.0 
+   006B stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   0070 ldarg.0 
+   0071 ldc.i4.0 
+   0072 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   0077 ldarg.0 
+   0078 ldc.i4.0 
+   0079 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_itemID
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   0084 callvirt System.Void ListViewBase::Clear()
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   008F callvirt System.Void ListViewBase::Clear()
+   0094 ldarg.0 
+   0095 ldnull 
+   0096 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   009B ldarg.0 
+   009C ldnull 
+   009D stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   00A2 ret 
+== System.Void OnSpeakerFormOpen(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldloc.0 
+   000E call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OpenSpeakerForm(System.UInt32)
+   0013 ret 
+== System.Void OnOpenFactoryShop(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4 1501
+   0006 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::get_instance()
+   0010 ldarg.1 
+   0011 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   0016 ldarg.1 
+   0017 ldc.i4 6015
+   001C stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::get_instance()
+   0026 ldarg.1 
+   0027 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   002C ret 
+== System.Void OnSpeakerNumUpdate() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::ShowSpeakerNum()
+   0006 ret 
+== System.Void ShowSpeakerNum() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.CChatController::view
+   000A ldfld CChatView::toolBar
+   000F call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostSpeakerNum()
+   0014 call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostLoudSpeakerNum()
+   0019 callvirt System.Void Assets.Scripts.GameSystem.CChatToolBar::SetSpeakerNum(System.Int32,System.Int32)
+   001E ret 
+== System.UInt32 GetHostLoudSpeakerNum() attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldc.i4.1 
+   0015 callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   001A stloc.1 
+   001B ldloc.1 
+   001C brtrue IL_0023: ldloc.1
+   0021 ldc.i4.0 
+   0022 ret 
+   0023 ldloc.1 
+   0024 ldc.i4.2 
+   0025 ldc.i4 10042
+   002A callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   002F ret 
+== System.UInt32 GetHostSpeakerNum() attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldc.i4.1 
+   0015 callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   001A stloc.1 
+   001B ldloc.1 
+   001C brtrue IL_0023: ldloc.1
+   0021 ldc.i4.0 
+   0022 ret 
+   0023 ldloc.1 
+   0024 ldc.i4.2 
+   0025 ldc.i4 10041
+   002A callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   002F ret 
+== System.Void OpenSpeakerForm(System.UInt32 itemID) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldc.i4 10041
+   0006 beq IL_0016: ldc.i4.0
+   000B ldarg.1 
+   000C ldc.i4 10042
+   0011 bne.un IL_027d: ret
+   0016 ldc.i4.0 
+   0017 stloc.0 
+   0018 ldarg.1 
+   0019 ldc.i4 10041
+   001E bne.un IL_002e: call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostLoudSpeakerNum()
+   0023 call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostSpeakerNum()
+   0028 stloc.0 
+   0029 br IL_0034: ldloc.0
+   002E call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostLoudSpeakerNum()
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 brtrue IL_00bf: ldloca.s V_3
+   003A ldnull 
+   003B stloc.1 
+   003C ldarg.1 
+   003D ldc.i4 10041
+   0042 bne.un IL_0061: call !0 Singleton`1<Assets.Scripts.GameSystem.CMallFactoryShopController>::GetInstance()
+   0047 call !0 Singleton`1<Assets.Scripts.GameSystem.CMallFactoryShopController>::GetInstance()
+   004C ldc.i4 212
+   0051 call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0056 callvirt Assets.Scripts.GameSystem.CMallFactoryShopController/ShopProduct Assets.Scripts.GameSystem.CMallFactoryShopController::GetProduct(System.UInt32)
+   005B stloc.1 
+   005C br IL_0076: ldloc.1
+   0061 call !0 Singleton`1<Assets.Scripts.GameSystem.CMallFactoryShopController>::GetInstance()
+   0066 ldc.i4 211
+   006B call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0070 callvirt Assets.Scripts.GameSystem.CMallFactoryShopController/ShopProduct Assets.Scripts.GameSystem.CMallFactoryShopController::GetProduct(System.UInt32)
+   0075 stloc.1 
+   0076 ldloc.1 
+   0077 brfalse IL_00be: ret
+   007C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0081 callvirt Assets.Scripts.UI.CUIEvent Assets.Scripts.UI.CUIEventManager::GetUIEvent()
+   0086 stloc.2 
+   0087 ldloc.2 
+   0088 ldc.i4 6094
+   008D stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0092 ldloc.2 
+   0093 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0098 ldloc.1 
+   0099 callvirt System.UInt32 Assets.Scripts.GameSystem.CMallFactoryShopController/ShopProduct::get_Key()
+   009E conv.u8 
+   009F stfld Assets.Scripts.UI.stUIEventParams::commonUInt64Param1
+   00A4 ldloc.2 
+   00A5 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   00AA ldc.i4.1 
+   00AB stfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   00B0 call !0 Singleton`1<Assets.Scripts.GameSystem.CMallFactoryShopController>::GetInstance()
+   00B5 ldloc.1 
+   00B6 ldc.i4.1 
+   00B7 ldc.i4.1 
+   00B8 ldloc.2 
+   00B9 callvirt System.Void Assets.Scripts.GameSystem.CMallFactoryShopController::BuyShopProduct(Assets.Scripts.GameSystem.CMallFactoryShopController/ShopProduct,System.UInt32,System.Boolean,Assets.Scripts.UI.CUIEvent)
+   00BE ret 
+   00BF ldloca.s V_3
+   00C1 ldarg.1 
+   00C2 call System.Boolean ResData.GameDataMgr/speakerDatabin::FindByKey(ResData.ResHornInfo&,System.UInt32)
+   00C7 brtrue IL_00cd: ldarg.0
+   00CC ret 
+   00CD ldarg.0 
+   00CE ldarg.1 
+   00CF stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_itemID
+   00D4 ldarg.0 
+   00D5 ldloca.s V_3
+   00D7 ldfld ResData.ResHornInfo::dwWordLimit
+   00DC stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_characterLimit
+   00E1 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00E6 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   00EB ldc.i4.0 
+   00EC ldc.i4.0 
+   00ED ldnull 
+   00EE callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   00F3 stloc.s V_4
+   00F5 ldloc.s V_4
+   00F7 ldnull 
+   00F8 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00FD brtrue IL_0114: ret
+   0102 ldloc.s V_4
+   0104 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0109 ldnull 
+   010A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   010F brfalse IL_0115: ldloc.s V_4
+   0114 ret 
+   0115 ldloc.s V_4
+   0117 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   011C ldstr pnlBg/Title/speakerText
+   0121 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0126 stloc.s V_5
+   0128 ldloc.s V_4
+   012A ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   012F ldstr pnlBg/Title/loudSpeakerText
+   0134 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0139 stloc.s V_6
+   013B ldloc.s V_4
+   013D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0142 ldstr pnlBg/Model/speaker
+   0147 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   014C stloc.s V_7
+   014E ldloc.s V_4
+   0150 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0155 ldstr pnlBg/Model/loudspeaker
+   015A call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   015F stloc.s V_8
+   0161 ldloc.s V_4
+   0163 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0168 ldstr pnlBg/Panel_Main/InputField
+   016D call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   0172 stloc.s V_9
+   0174 ldloc.s V_4
+   0176 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   017B ldstr Timer
+   0180 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUITimerScript>(UnityEngine.GameObject,System.String)
+   0185 stloc.s V_10
+   0187 ldloc.s V_4
+   0189 ldc.i4.2 
+   018A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   018F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0194 stloc.s V_11
+   0196 ldarg.1 
+   0197 ldc.i4 10041
+   019C bne.un IL_01d9: ldloc.s V_11
+   01A1 ldloc.s V_11
+   01A3 call !0 Singleton`1<CTextManager>::get_instance()
+   01A8 ldstr Form_LoudSpeaker_Tips1
+   01AD ldc.i4.1 
+   01AE newarr System.String
+   01B3 dup 
+   01B4 ldc.i4.0 
+   01B5 call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostSpeakerNum()
+   01BA stloc.s V_12
+   01BC ldloca.s V_12
+   01BE constrained. System.UInt32
+   01C4 callvirt System.String System.Object::ToString()
+   01C9 stelem.ref 
+   01CA callvirt System.String CTextManager::GetText(System.String,System.String[])
+   01CF callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01D4 br IL_020c: ldloc.s V_10
+   01D9 ldloc.s V_11
+   01DB call !0 Singleton`1<CTextManager>::get_instance()
+   01E0 ldstr Form_LoudSpeaker_Tips1
+   01E5 ldc.i4.1 
+   01E6 newarr System.String
+   01EB dup 
+   01EC ldc.i4.0 
+   01ED call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetHostLoudSpeakerNum()
+   01F2 stloc.s V_13
+   01F4 ldloca.s V_13
+   01F6 constrained. System.UInt32
+   01FC callvirt System.String System.Object::ToString()
+   0201 stelem.ref 
+   0202 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0207 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   020C ldloc.s V_10
+   020E callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   0213 ldarg.1 
+   0214 ldc.i4 10041
+   0219 bne.un IL_0250: ldloc.s V_5
+   021E ldloc.s V_5
+   0220 ldc.i4.1 
+   0221 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0226 ldloc.s V_6
+   0228 ldc.i4.0 
+   0229 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   022E ldloc.s V_7
+   0230 ldc.i4.1 
+   0231 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0236 ldloc.s V_8
+   0238 ldc.i4.0 
+   0239 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   023E ldloc.s V_9
+   0240 ldarg.0 
+   0241 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_characterLimit
+   0246 callvirt System.Void UnityEngine.UI.InputField::set_characterLimit(System.Int32)
+   024B br IL_027d: ret
+   0250 ldloc.s V_5
+   0252 ldc.i4.0 
+   0253 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0258 ldloc.s V_6
+   025A ldc.i4.1 
+   025B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0260 ldloc.s V_7
+   0262 ldc.i4.0 
+   0263 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0268 ldloc.s V_8
+   026A ldc.i4.1 
+   026B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0270 ldloc.s V_9
+   0272 ldarg.0 
+   0273 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_characterLimit
+   0278 callvirt System.Void UnityEngine.UI.InputField::set_characterLimit(System.Int32)
+   027D ret 
+== System.Void OnSpeakerFormClose(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F ret 
+== System.Void OnSpeakerSend(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.String Assets.Scripts.GameSystem.CLoudSpeakerSys::GetInputText()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000D brfalse IL_002f: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0012 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0017 ldstr Chat_Common_Tips_10
+   001C ldc.i4.1 
+   001D ldc.r4 1.5
+   0022 ldnull 
+   0023 ldc.i4.0 
+   0024 newarr System.Object
+   0029 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002E ret 
+   002F call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0034 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0039 ldc.i4.1 
+   003A callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   003F stloc.1 
+   0040 ldloc.1 
+   0041 ldc.i4.2 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_itemID
+   0048 callvirt Assets.Scripts.GameSystem.CUseable Assets.Scripts.GameSystem.CUseableContainer::GetUseableByBaseID(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   004D stloc.2 
+   004E ldloc.2 
+   004F brtrue IL_0055: ldarg.0
+   0054 ret 
+   0055 ldarg.0 
+   0056 ldloc.0 
+   0057 ldloc.2 
+   0058 ldfld Assets.Scripts.GameSystem.CUseable::m_objID
+   005D call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerSend(System.String,System.UInt64)
+   0062 ret 
+== System.Void OnUpdateCharacterLimitText(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brtrue IL_002d: ret
+   001C ldloc.0 
+   001D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0022 ldnull 
+   0023 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0028 brfalse IL_002e: ldloc.0
+   002D ret 
+   002E ldloc.0 
+   002F ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0034 ldstr pnlBg/Panel_Main/CharLimitTxt
+   0039 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   003E stloc.1 
+   003F ldloc.1 
+   0040 ldnull 
+   0041 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0046 brfalse IL_004c: ldloc.0
+   004B ret 
+   004C ldloc.0 
+   004D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0052 ldstr pnlBg/Panel_Main/InputField
+   0057 call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   005C stloc.2 
+   005D ldloc.2 
+   005E ldnull 
+   005F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0064 brfalse IL_006a: ldarg.0
+   0069 ret 
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_characterLimit
+   0070 ldloc.2 
+   0071 callvirt System.String UnityEngine.UI.InputField::get_text()
+   0076 callvirt System.Int32 System.String::get_Length()
+   007B sub 
+   007C stloc.3 
+   007D ldloc.3 
+   007E ldc.i4.0 
+   007F bge IL_0086: ldloc.1
+   0084 ldc.i4.0 
+   0085 stloc.3 
+   0086 ldloc.1 
+   0087 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::s_characterLimitString
+   008C ldloc.3 
+   008D box System.Int32
+   0092 call System.String System.String::Format(System.String,System.Object)
+   0097 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   009C ret 
+== System.String GetInputText() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brtrue IL_002d: ldsfld System.String System.String::Empty
+   001C ldloc.0 
+   001D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0022 ldnull 
+   0023 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0028 brfalse IL_0033: ldloc.0
+   002D ldsfld System.String::Empty
+   0032 ret 
+   0033 ldloc.0 
+   0034 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0039 ldstr pnlBg/Panel_Main/InputField
+   003E call T Utility::GetComponetInChild<UnityEngine.UI.InputField>(UnityEngine.GameObject,System.String)
+   0043 stloc.1 
+   0044 ldloc.1 
+   0045 callvirt System.String UnityEngine.UI.InputField::get_text()
+   004A call System.String Assets.Scripts.UI.CUIUtility::RemoveEmoji(System.String)
+   004F stloc.2 
+   0050 ldloc.2 
+   0051 ret 
+== System.Void OnSpeakerSend(System.String content, System.UInt64 uniqueID) attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4 1123
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseReq()
+   0016 ldarg.2 
+   0017 stfld CSProtocol.CSPKG_CMD_HORNUSE::ullUniqueID
+   001C ldarg.1 
+   001D call System.Byte[] Utility::BytesConvert(System.String)
+   0022 stloc.1 
+   0023 ldloc.0 
+   0024 ldfld CSProtocol.CSPkg::stPkgData
+   0029 callvirt CSProtocol.CSPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseReq()
+   002E ldfld CSProtocol.CSPKG_CMD_HORNUSE::szContent
+   0033 stloc.2 
+   0034 ldloc.1 
+   0035 ldloc.2 
+   0036 ldloc.1 
+   0037 ldlen 
+   0038 conv.i4 
+   0039 ldloc.2 
+   003A ldlen 
+   003B conv.i4 
+   003C call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   0041 call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+   0046 ldloc.2 
+   0047 ldloc.2 
+   0048 ldlen 
+   0049 conv.i4 
+   004A ldc.i4.1 
+   004B sub 
+   004C ldc.i4.0 
+   004D stelem.i1 
+   004E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0053 ldloca.s V_0
+   0055 ldc.i4.1 
+   0056 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   005B pop 
+   005C ret 
+== System.Void AddSpeakerArray(CSProtocol.CS_HORN_TYPE type, CSProtocol.COMDT_CHAT_MSG_HORN[] astMsgInfo, System.UInt32 len) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo> Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerList(CSProtocol.CS_HORN_TYPE)
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldarg.1 
+   000A call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetLastSpeakerBeginSec(CSProtocol.CS_HORN_TYPE)
+   000F stloc.1 
+   0010 ldc.i4.0 
+   0011 stloc.2 
+   0012 br IL_015a: ldloc.2
+   0017 ldloc.1 
+   0018 ldarg.2 
+   0019 ldloc.2 
+   001A ldelem.ref 
+   001B ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwBeginShowSec
+   0020 bge IL_0156: ldloc.2
+   0025 newobj System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::.ctor()
+   002A stloc.3 
+   002B ldarg.1 
+   002C brtrue IL_012d: ldarg.0
+   0031 ldarg.2 
+   0032 ldloc.2 
+   0033 ldelem.ref 
+   0034 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::stFrom
+   0039 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::ullUid
+   003E call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0043 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0048 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   004D ceq 
+   004F stloc.s V_4
+   0051 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0056 ldfld Assets.Scripts.GameSystem.CChatController::view
+   005B brfalse IL_0088: ldarg.0
+   0060 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0065 ldfld Assets.Scripts.GameSystem.CChatController::view
+   006A call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   006F ldfld Assets.Scripts.GameSystem.CChatController::view
+   0074 callvirt System.Boolean CChatView::IsCheckHistory()
+   0079 brfalse IL_0082: ldc.i4.1
+   007E ldloc.s V_4
+   0080 br.s IL_0083: stfld System.Boolean CChatView::bBigListAutoMove2Next
+   0082 ldc.i4.1 
+   0083 stfld CChatView::bBigListAutoMove2Next
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   008E callvirt System.Void Assets.Scripts.GameSystem.SvrChatData::SetEmpty()
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   0099 ldarg.2 
+   009A ldloc.2 
+   009B ldelem.ref 
+   009C ldfld CSProtocol.COMDT_CHAT_MSG_HORN::stFrom
+   00A1 stfld Assets.Scripts.GameSystem.SvrChatData::ChatSender
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   00AC ldarg.2 
+   00AD ldloc.2 
+   00AE ldelem.ref 
+   00AF ldfld CSProtocol.COMDT_CHAT_MSG_HORN::szContent
+   00B4 call System.String Assets.Scripts.GameSystem.UT::Bytes2String(System.Byte[])
+   00B9 stfld Assets.Scripts.GameSystem.SvrChatData::Content
+   00BE ldarg.0 
+   00BF ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   00C4 ldc.i4.8 
+   00C5 stfld Assets.Scripts.GameSystem.SvrChatData::ChannelType
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   00D0 ldc.i4.2 
+   00D1 stfld Assets.Scripts.GameSystem.SvrChatData::ChatContentType
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   00DC ldc.i4.6 
+   00DD stfld Assets.Scripts.GameSystem.SvrChatData::ChaterType
+   00E2 ldloc.3 
+   00E3 call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   00E8 ldc.i4.8 
+   00E9 ldnull 
+   00EA ldc.i4.1 
+   00EB ldc.i4.1 
+   00EC ldarg.0 
+   00ED ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::_tempSvrChatData
+   00F2 ldc.i4.0 
+   00F3 callvirt System.UInt32 Assets.Scripts.GameSystem.NewChatSystem::AddSvrChatData(Assets.Scripts.GameSystem.EChatChannel,CSProtocol.COMDT_CHAT_INFO,System.Boolean,System.Boolean,Assets.Scripts.GameSystem.SvrChatData,System.Boolean)
+   00F8 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::uid
+   00FD call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   0102 ldc.i4.8 
+   0103 ldc.i4.s 10
+   0105 ldc.i4.1 
+   0106 ldc.i4.1 
+   0107 ldc.i4.1 
+   0108 ldc.i4.1 
+   0109 ldc.i4.0 
+   010A callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::TransferChatData(Assets.Scripts.GameSystem.EChatChannel,Assets.Scripts.GameSystem.EChatChannel,System.UInt32,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   010F ldarg.0 
+   0110 ldarg.2 
+   0111 ldloc.2 
+   0112 ldelem.ref 
+   0113 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwBeginShowSec
+   0118 ldarg.0 
+   0119 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   011E call System.UInt32 System.Math::Max(System.UInt32,System.UInt32)
+   0123 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   0128 br IL_0146: ldloc.3
+   012D ldarg.0 
+   012E ldarg.2 
+   012F ldloc.2 
+   0130 ldelem.ref 
+   0131 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwBeginShowSec
+   0136 ldarg.0 
+   0137 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   013C call System.UInt32 System.Math::Max(System.UInt32,System.UInt32)
+   0141 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   0146 ldloc.3 
+   0147 ldarg.2 
+   0148 ldloc.2 
+   0149 ldelem.ref 
+   014A stfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   014F ldloc.0 
+   0150 ldloc.3 
+   0151 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::Add(!0)
+   0156 ldloc.2 
+   0157 ldc.i4.1 
+   0158 add 
+   0159 stloc.2 
+   015A ldloc.2 
+   015B conv.i8 
+   015C ldarg.3 
+   015D conv.u8 
+   015E blt IL_0017: ldloc.1
+   0163 ldarg.3 
+   0164 ldc.i4.0 
+   0165 ble.un IL_0188: ret
+   016A ldarg.1 
+   016B brtrue IL_017b: ldarg.1
+   0170 ldarg.0 
+   0171 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnSpeakerNodeOpen()
+   0176 br IL_0188: ret
+   017B ldarg.1 
+   017C ldc.i4.1 
+   017D bne.un IL_0188: ret
+   0182 ldarg.0 
+   0183 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnLoudSpeakerTipsOpen()
+   0188 ret 
+== ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo> GetSpeakerList(CSProtocol.CS_HORN_TYPE type) attrs=Private, HideBySig maxstack=1
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 brtrue IL_0014: ldarg.0
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   000E stloc.0 
+   000F br IL_001b: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   001A stloc.0 
+   001B ldloc.0 
+   001C ret 
+== System.UInt32 GetLastSpeakerBeginSec(CSProtocol.CS_HORN_TYPE type) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_000d: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   000C ret 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   0013 ret 
+== Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo PopSpeakerList(CSProtocol.CS_HORN_TYPE type) attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldarg.1 
+   0004 call ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo> Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerList(CSProtocol.CS_HORN_TYPE)
+   0009 stloc.1 
+   000A ldloc.1 
+   000B callvirt System.Int32 ListViewBase::get_Count()
+   0010 ldc.i4.0 
+   0011 ble IL_0025: ldloc.0
+   0016 ldloc.1 
+   0017 ldc.i4.0 
+   0018 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::get_Item(System.Int32)
+   001D stloc.0 
+   001E ldloc.1 
+   001F ldc.i4.0 
+   0020 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0025 ldloc.0 
+   0026 ret 
+== System.Void OnSpeakerSendRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   000B ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   0010 brtrue IL_0029: ldarg.0
+   0015 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   001A ldsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   001F callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0024 br IL_0139: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0029 ldarg.0 
+   002A ldfld CSProtocol.CSPkg::stPkgData
+   002F callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   0034 ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   0039 ldc.i4.2 
+   003A bne.un IL_0060: ldarg.0
+   003F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0044 ldstr Speaker_Use_Err_2
+   0049 ldc.i4.1 
+   004A ldc.r4 1.5
+   004F ldnull 
+   0050 ldc.i4.0 
+   0051 newarr System.Object
+   0056 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   005B br IL_0139: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0060 ldarg.0 
+   0061 ldfld CSProtocol.CSPkg::stPkgData
+   0066 callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   006B ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   0070 ldc.i4.3 
+   0071 bne.un IL_0097: ldarg.0
+   0076 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   007B ldstr Speaker_Use_Err_3
+   0080 ldc.i4.1 
+   0081 ldc.r4 1.5
+   0086 ldnull 
+   0087 ldc.i4.0 
+   0088 newarr System.Object
+   008D callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0092 br IL_0139: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0097 ldarg.0 
+   0098 ldfld CSProtocol.CSPkg::stPkgData
+   009D callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   00A2 ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   00A7 ldc.i4.4 
+   00A8 bne.un IL_00ce: ldarg.0
+   00AD call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00B2 ldstr Speaker_Use_Err_4
+   00B7 ldc.i4.1 
+   00B8 ldc.r4 1.5
+   00BD ldnull 
+   00BE ldc.i4.0 
+   00BF newarr System.Object
+   00C4 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00C9 br IL_0139: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00CE ldarg.0 
+   00CF ldfld CSProtocol.CSPkg::stPkgData
+   00D4 callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   00D9 ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   00DE ldc.i4.5 
+   00DF bne.un IL_0105: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00E4 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00E9 ldstr Speaker_Use_Err_5
+   00EE ldc.i4.1 
+   00EF ldc.r4 1.5
+   00F4 ldnull 
+   00F5 ldc.i4.0 
+   00F6 newarr System.Object
+   00FB callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0100 br IL_0139: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0105 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   010A ldstr Speaker_Use_Err_1
+   010F ldc.i4.1 
+   0110 ldc.r4 1
+   0115 ldnull 
+   0116 ldc.i4.1 
+   0117 newarr System.Object
+   011C dup 
+   011D ldc.i4.0 
+   011E ldarg.0 
+   011F ldfld CSProtocol.CSPkg::stPkgData
+   0124 callvirt CSProtocol.SCPKG_CMD_HORNUSE CSProtocol.CSPkgBody::get_stHornUseRsp()
+   0129 ldfld CSProtocol.SCPKG_CMD_HORNUSE::iResult
+   012E box System.Int32
+   0133 stelem.ref 
+   0134 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0139 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   013E callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   0143 ret 
+== System.Void OnTimerReq(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   0016 callvirt System.Int32 ListViewBase::get_Count()
+   001B ldc.i4.2 
+   001C bgt IL_002e: ldarg.0
+   0021 ldarg.0 
+   0022 ldc.i4.0 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   0029 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerMsg(CSProtocol.CS_HORN_TYPE,System.UInt32)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   0034 callvirt System.Int32 ListViewBase::get_Count()
+   0039 ldc.i4.2 
+   003A bgt IL_004c: ret
+   003F ldarg.0 
+   0040 ldc.i4.1 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   0047 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerMsg(CSProtocol.CS_HORN_TYPE,System.UInt32)
+   004C ret 
+== System.Void GetSpeakerMsg(CSProtocol.CS_HORN_TYPE type, System.UInt32 beginSec) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4 1305
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgReq()
+   0016 ldarg.1 
+   0017 conv.u1 
+   0018 stfld CSProtocol.CSPKG_CMD_GET_HORNMSG::bHornType
+   001D ldloc.0 
+   001E ldfld CSProtocol.CSPkg::stPkgData
+   0023 callvirt CSProtocol.CSPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgReq()
+   0028 ldarg.2 
+   0029 stfld CSProtocol.CSPKG_CMD_GET_HORNMSG::dwBeginShowSec
+   002E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0033 ldloca.s V_0
+   0035 ldc.i4.0 
+   0036 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   003B pop 
+   003C ret 
+== System.Void OnGetSpeakerMsgRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgRsp()
+   000B ldfld CSProtocol.SCPKG_CMD_GET_HORNMSG::bHornType
+   0010 stloc.0 
+   0011 call !0 Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::get_instance()
+   0016 ldloc.0 
+   0017 ldarg.0 
+   0018 ldfld CSProtocol.CSPkg::stPkgData
+   001D callvirt CSProtocol.SCPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgRsp()
+   0022 ldfld CSProtocol.SCPKG_CMD_GET_HORNMSG::astMsgInfo
+   0027 call !0[] Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHAT_MSG_HORN>::op_Implicit(Assets.Scripts.Common.SB_TDR_ARRAY`1<!0>)
+   002C ldarg.0 
+   002D ldfld CSProtocol.CSPkg::stPkgData
+   0032 callvirt CSProtocol.SCPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgRsp()
+   0037 ldfld CSProtocol.SCPKG_CMD_GET_HORNMSG::wMsgCnt
+   003C callvirt System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::AddSpeakerArray(CSProtocol.CS_HORN_TYPE,CSProtocol.COMDT_CHAT_MSG_HORN[],System.UInt32)
+   0041 ldloc.0 
+   0042 brtrue IL_006c: ret
+   0047 ldarg.0 
+   0048 ldfld CSProtocol.CSPkg::stPkgData
+   004D callvirt CSProtocol.SCPKG_CMD_GET_HORNMSG CSProtocol.CSPkgBody::get_stGetHornMsgRsp()
+   0052 ldfld CSProtocol.SCPKG_CMD_GET_HORNMSG::wMsgCnt
+   0057 ldc.i4.0 
+   0058 ble IL_006c: ret
+   005D call !0 Singleton`1<EventRouter>::GetInstance()
+   0062 ldsfld Assets.Scripts.GameSystem.CChatController/Chat_Model_EventID::Chat_LobbyChatData_Change
+   0067 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   006C ret 
+== System.Boolean IsLoudSpeakerShowing() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0006 ldc.i4.m1 
+   0007 beq IL_0042: ldc.i4.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   0012 brfalse IL_0042: ldc.i4.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   001D ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0022 brfalse IL_0042: ldc.i4.0
+   0027 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002C conv.i8 
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   0033 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0038 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwEndShowSec
+   003D conv.u8 
+   003E clt 
+   0040 br.s IL_0043: ret
+   0042 ldc.i4.0 
+   0043 ret 
+== System.UInt32 GetShowingSpeakerId() attrs=Public, HideBySig maxstack=1
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0008 brfalse IL_0019: ldloc.0
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0013 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::uid
+   0018 ret 
+   0019 ldloc.0 
+   001A ret 
+== System.Boolean IsSpeakerShowing() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0006 ldc.i4.m1 
+   0007 beq IL_0042: ldc.i4.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0012 brfalse IL_0042: ldc.i4.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   001D ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0022 brfalse IL_0042: ldc.i4.0
+   0027 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002C conv.i8 
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0033 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0038 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwEndShowSec
+   003D conv.u8 
+   003E clt 
+   0040 br.s IL_0043: ret
+   0042 ldc.i4.0 
+   0043 ret 
+== System.Void ShowLoudSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo data) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 brfalse IL_0130: ret
+   0006 ldarg.1 
+   0007 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   000C brfalse IL_0130: ret
+   0011 ldarg.0 
+   0012 call !0 Singleton`1<CTimerManager>::get_instance()
+   0017 ldc.i4 1000
+   001C ldc.i4.0 
+   001D ldarg.0 
+   001E ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnTimerLoudSpeaker(System.Int32)
+   0024 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0029 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   002E stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0033 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0038 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   003D brfalse IL_0052: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   0048 callvirt System.Void ListViewBase::Clear()
+   004D br IL_0130: ret
+   0052 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0057 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   005C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0061 stloc.0 
+   0062 ldloc.0 
+   0063 ldnull 
+   0064 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0069 brfalse IL_006f: ldloc.0
+   006E ret 
+   006F ldloc.0 
+   0070 ldc.i4.5 
+   0071 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0076 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIAutoScroller>()
+   007B stloc.1 
+   007C ldloc.1 
+   007D ldnull 
+   007E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0083 brfalse IL_0089: ldloc.0
+   0088 ret 
+   0089 ldloc.0 
+   008A ldc.i4.6 
+   008B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0090 stloc.2 
+   0091 ldloc.2 
+   0092 ldnull 
+   0093 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0098 brfalse IL_009e: ldarg.1
+   009D ret 
+   009E ldarg.1 
+   009F ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00A4 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::szContent
+   00A9 call System.String Assets.Scripts.GameSystem.UT::Bytes2String(System.Byte[])
+   00AE stloc.3 
+   00AF call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   00B4 ldarg.1 
+   00B5 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00BA ldfld CSProtocol.COMDT_CHAT_MSG_HORN::stFrom
+   00BF ldnull 
+   00C0 callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::AddChaterPlayerInfo(CSProtocol.COMDT_CHAT_PLAYER_INFO,CSProtocol.COMDT_CHATROOM_PLAYERINFO)
+   00C5 ldarg.1 
+   00C6 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00CB ldfld CSProtocol.COMDT_CHAT_MSG_HORN::stFrom
+   00D0 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::ullUid
+   00D5 ldarg.1 
+   00D6 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00DB ldfld CSProtocol.COMDT_CHAT_MSG_HORN::stFrom
+   00E0 ldfld CSProtocol.COMDT_CHAT_PLAYER_INFO::iLogicWorldID
+   00E5 ldloc.3 
+   00E6 call System.String Assets.Scripts.GameSystem.CChatUT::Build_4_LoudSpeaker_EntryString(System.UInt64,System.UInt32,System.String)
+   00EB stloc.s V_4
+   00ED ldloc.1 
+   00EE ldloc.s V_4
+   00F0 call System.String Assets.Scripts.UI.CUIUtility::RemoveEmoji(System.String)
+   00F5 callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::SetText(System.String)
+   00FA ldloc.1 
+   00FB callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0100 ldc.i4.1 
+   0101 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0106 ldloc.2 
+   0107 ldc.i4.1 
+   0108 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   010D ldloc.1 
+   010E callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::StopAutoScroll()
+   0113 ldloc.1 
+   0114 ldc.i4.1 
+   0115 callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::StartAutoScroll(System.Boolean)
+   011A call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   011F ldfld Assets.Scripts.GameSystem.CChatController::view
+   0124 ldc.i4.1 
+   0125 ldarg.1 
+   0126 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   012B callvirt System.Void CChatView::ShowLoudSpeaker(System.Boolean,CSProtocol.COMDT_CHAT_MSG_HORN)
+   0130 ret 
+== System.Void ShowSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo data) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<CTimerManager>::get_instance()
+   0006 ldc.i4 1000
+   000B ldc.i4.0 
+   000C ldarg.0 
+   000D ldftn System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::OnTimerSpeaker(System.Int32)
+   0013 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0018 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   001D stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0022 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0027 ldfld Assets.Scripts.GameSystem.CChatController::model
+   002C ldfld Assets.Scripts.GameSystem.CChatModel::channelMgr
+   0031 ldfld Assets.Scripts.GameSystem.CChatChannelMgr::ChatTab
+   0036 brfalse IL_0089: call !0 Singleton`1<EventRouter>::GetInstance()
+   003B call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0040 ldfld Assets.Scripts.GameSystem.CChatController::model
+   0045 ldfld Assets.Scripts.GameSystem.CChatModel::channelMgr
+   004A ldfld Assets.Scripts.GameSystem.CChatChannelMgr::ChatTab
+   004F ldc.i4.7 
+   0050 beq IL_0089: call !0 Singleton`1<EventRouter>::GetInstance()
+   0055 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   005A ldfld Assets.Scripts.GameSystem.CChatController::model
+   005F ldfld Assets.Scripts.GameSystem.CChatModel::channelMgr
+   0064 ldfld Assets.Scripts.GameSystem.CChatChannelMgr::ChatTab
+   0069 ldc.i4.6 
+   006A beq IL_0089: call !0 Singleton`1<EventRouter>::GetInstance()
+   006F call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0074 ldfld Assets.Scripts.GameSystem.CChatController::model
+   0079 ldfld Assets.Scripts.GameSystem.CChatModel::channelMgr
+   007E ldfld Assets.Scripts.GameSystem.CChatChannelMgr::ChatTab
+   0083 ldc.i4.5 
+   0084 bne.un IL_0098: ret
+   0089 call !0 Singleton`1<EventRouter>::GetInstance()
+   008E ldsfld Assets.Scripts.GameSystem.CChatController/Chat_Model_EventID::Chat_ChatEntry_Change
+   0093 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0098 ret 
+== System.Void OnTimerSpeaker(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=3
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 conv.i8 
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerEndTime(CSProtocol.CS_HORN_TYPE)
+   000D conv.u8 
+   000E blt IL_0071: ret
+   0013 call !0 Singleton`1<CTimerManager>::get_instance()
+   0018 ldarg.1 
+   0019 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001E ldarg.0 
+   001F ldc.i4.m1 
+   0020 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0025 ldarg.0 
+   0026 ldnull 
+   0027 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   002C ldarg.0 
+   002D ldarg.0 
+   002E ldc.i4.0 
+   002F call Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::PopSpeakerList(CSProtocol.CS_HORN_TYPE)
+   0034 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   003F brfalse IL_0055: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0044 ldarg.0 
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   004B call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::ShowSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo)
+   0050 br IL_0071: ret
+   0055 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005A ldc.i4 4267
+   005F callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   0064 ldarg.0 
+   0065 ldc.i4.0 
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastSpeakerBeginSec
+   006C call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerMsg(CSProtocol.CS_HORN_TYPE,System.UInt32)
+   0071 ret 
+== System.UInt32 GetSpeakerEndTime(CSProtocol.CS_HORN_TYPE type) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brtrue IL_0072: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   000C callvirt System.Int32 ListViewBase::get_Count()
+   0011 ldc.i4.0 
+   0012 ble IL_0044: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   001D ldc.i4.0 
+   001E callvirt !0 ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::get_Item(System.Int32)
+   0023 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0028 brfalse IL_0044: ldarg.0
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::speakerList
+   0033 ldc.i4.0 
+   0034 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::get_Item(System.Int32)
+   0039 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   003E ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwBeginShowSec
+   0043 ret 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   004A brfalse IL_0070: ldc.i4.0
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0055 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   005A brfalse IL_0070: ldc.i4.0
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0065 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   006A ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwEndShowSec
+   006F ret 
+   0070 ldc.i4.0 
+   0071 ret 
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   0078 callvirt System.Int32 ListViewBase::get_Count()
+   007D ldc.i4.0 
+   007E ble IL_00b0: ldarg.0
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   0089 ldc.i4.0 
+   008A callvirt !0 ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::get_Item(System.Int32)
+   008F ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   0094 brfalse IL_00b0: ldarg.0
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::loudSpeakerList
+   009F ldc.i4.0 
+   00A0 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo>::get_Item(System.Int32)
+   00A5 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00AA ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwBeginShowSec
+   00AF ret 
+   00B0 ldarg.0 
+   00B1 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00B6 brfalse IL_00dc: ldc.i4.0
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00C1 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00C6 brfalse IL_00dc: ldc.i4.0
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00D1 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo::info
+   00D6 ldfld CSProtocol.COMDT_CHAT_MSG_HORN::dwEndShowSec
+   00DB ret 
+   00DC ldc.i4.0 
+   00DD ret 
+== System.Void OnTimerLoudSpeaker(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=3
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 conv.i8 
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 call System.UInt32 Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerEndTime(CSProtocol.CS_HORN_TYPE)
+   000D conv.u8 
+   000E blt IL_00fa: ret
+   0013 call !0 Singleton`1<CTimerManager>::get_instance()
+   0018 ldarg.1 
+   0019 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001E ldarg.0 
+   001F ldc.i4.m1 
+   0020 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0025 ldarg.0 
+   0026 ldnull 
+   0027 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   002C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0031 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   0036 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldnull 
+   003E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0043 brfalse IL_0049: ldloc.0
+   0048 ret 
+   0049 ldloc.0 
+   004A ldc.i4.5 
+   004B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0050 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIAutoScroller>()
+   0055 stloc.1 
+   0056 ldloc.1 
+   0057 ldnull 
+   0058 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   005D brfalse IL_0063: ldloc.0
+   0062 ret 
+   0063 ldloc.0 
+   0064 ldc.i4.6 
+   0065 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   006A stloc.2 
+   006B ldloc.2 
+   006C ldnull 
+   006D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0072 brfalse IL_0078: ldloc.1
+   0077 ret 
+   0078 ldloc.1 
+   0079 callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::StopAutoScroll()
+   007E call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0083 ldfld Assets.Scripts.GameSystem.CChatController::view
+   0088 brfalse IL_009e: ldarg.0
+   008D call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0092 ldfld Assets.Scripts.GameSystem.CChatController::view
+   0097 ldc.i4.0 
+   0098 ldnull 
+   0099 callvirt System.Void CChatView::ShowLoudSpeaker(System.Boolean,CSProtocol.COMDT_CHAT_MSG_HORN)
+   009E ldarg.0 
+   009F ldarg.0 
+   00A0 ldc.i4.1 
+   00A1 call Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::PopSpeakerList(CSProtocol.CS_HORN_TYPE)
+   00A6 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00B1 brtrue IL_00db: ldloc.1
+   00B6 ldloc.1 
+   00B7 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00BC ldc.i4.0 
+   00BD call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C2 ldloc.2 
+   00C3 ldc.i4.0 
+   00C4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C9 ldarg.0 
+   00CA ldc.i4.1 
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_lastLoudSpeakerBeginSec
+   00D1 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::GetSpeakerMsg(CSProtocol.CS_HORN_TYPE,System.UInt32)
+   00D6 br IL_00fa: ret
+   00DB ldloc.1 
+   00DC callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E1 ldc.i4.1 
+   00E2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00E7 ldloc.2 
+   00E8 ldc.i4.1 
+   00E9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EE ldarg.0 
+   00EF ldarg.0 
+   00F0 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   00F5 call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::ShowLoudSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo)
+   00FA ret 
+== System.Void OnLoudSpeakerTipsOpen() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.CLoudSpeakerSys::IsLoudSpeakerShowing()
+   0006 brtrue IL_0053: ret
+   000B ldarg.0 
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E call Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::PopSpeakerList(CSProtocol.CS_HORN_TYPE)
+   0013 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   001E brtrue IL_0024: ldarg.0
+   0023 ret 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   002A ldc.i4.m1 
+   002B beq IL_0047: ldarg.0
+   0030 call !0 Singleton`1<CTimerManager>::get_instance()
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   003B callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0040 ldarg.0 
+   0041 ldc.i4.m1 
+   0042 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerLoudSpeaker
+   0047 ldarg.0 
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurLoudSpeaker
+   004E call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::ShowLoudSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo)
+   0053 ret 
+== System.Void OnSpeakerNodeOpen() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.CLoudSpeakerSys::IsSpeakerShowing()
+   0006 brtrue IL_0053: ret
+   000B ldarg.0 
+   000C ldarg.0 
+   000D ldc.i4.0 
+   000E call Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo Assets.Scripts.GameSystem.CLoudSpeakerSys::PopSpeakerList(CSProtocol.CS_HORN_TYPE)
+   0013 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   001E brtrue IL_0024: ldarg.0
+   0023 ret 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   002A ldc.i4.m1 
+   002B beq IL_0047: ldarg.0
+   0030 call !0 Singleton`1<CTimerManager>::get_instance()
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   003B callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0040 ldarg.0 
+   0041 ldc.i4.m1 
+   0042 stfld Assets.Scripts.GameSystem.CLoudSpeakerSys::m_timerSpeaker
+   0047 ldarg.0 
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.CLoudSpeakerSys::CurSpekaer
+   004E call System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::ShowSpeaker(Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo)
+   0053 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/LoudSpeaker/Form_LoudSpeaker.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::SPEAKER_FORM_PATH
+   000A ldsfld System.String::Empty
+   000F stsfld Assets.Scripts.GameSystem.CLoudSpeakerSys::s_characterLimitString
+   0014 ret 
+  NESTED Assets.Scripts.GameSystem.CLoudSpeakerSys/SpeakerHornInfo

@@ -1,0 +1,110 @@
+// TYPE SenseGoogleARCore.AsyncTask  base=System.Object  attrs=Public
+  FIELD System.Collections.Generic.Queue`1<System.Action> s_UpdateActionQueue
+  FIELD System.Collections.Generic.Queue`1<System.Action> s_UiThreadActionQueue
+  FIELD UnityEngine.AndroidJavaObject s_Activity
+  FIELD UnityEngine.AndroidJavaRunnable s_CallOnUIThread
+  FIELD System.Object s_LockObject
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 newobj System.Void System.Collections.Generic.Queue`1<System.Action>::.ctor()
+   0005 stsfld SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   000A newobj System.Void System.Collections.Generic.Queue`1<System.Action>::.ctor()
+   000F stsfld SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0014 newobj System.Void System.Object::.ctor()
+   0019 stsfld SenseGoogleARCore.AsyncTask::s_LockObject
+   001E ldstr com.unity3d.player.UnityPlayer
+   0023 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ldstr currentActivity
+   002F callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<UnityEngine.AndroidJavaObject>(System.String)
+   0034 stsfld SenseGoogleARCore.AsyncTask::s_Activity
+   0039 ldnull 
+   003A ldftn System.Void SenseGoogleARCore.AsyncTask::<AsyncTask>m__0()
+   0040 newobj System.Void UnityEngine.AndroidJavaRunnable::.ctor(System.Object,System.IntPtr)
+   0045 stsfld SenseGoogleARCore.AsyncTask::s_CallOnUIThread
+   004A ret 
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void PerformActionInUIThread(System.Action action) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld SenseGoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C ldsfld SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0011 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Action>::get_Count()
+   0016 brtrue IL_0038: ldsfld System.Collections.Generic.Queue`1<System.Action> SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   001B ldsfld SenseGoogleARCore.AsyncTask::s_Activity
+   0020 ldstr runOnUiThread
+   0025 ldc.i4.1 
+   0026 newarr System.Object
+   002B dup 
+   002C ldc.i4.0 
+   002D ldsfld SenseGoogleARCore.AsyncTask::s_CallOnUIThread
+   0032 stelem.ref 
+   0033 callvirt System.Void UnityEngine.AndroidJavaObject::Call(System.String,System.Object[])
+   0038 ldsfld SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   003D ldarg.0 
+   003E callvirt System.Void System.Collections.Generic.Queue`1<System.Action>::Enqueue(!0)
+   0043 leave IL_004f: ret
+   0048 ldloc.0 
+   0049 call System.Void System.Threading.Monitor::Exit(System.Object)
+   004E endfinally 
+   004F ret 
+== System.Void PerformActionInUpdate(System.Action action) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld SenseGoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C ldsfld SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   0011 ldarg.0 
+   0012 callvirt System.Void System.Collections.Generic.Queue`1<System.Action>::Enqueue(!0)
+   0017 leave IL_0023: ret
+   001C ldloc.0 
+   001D call System.Void System.Threading.Monitor::Exit(System.Object)
+   0022 endfinally 
+   0023 ret 
+== System.Void OnUpdate() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld SenseGoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C br IL_0022: ldsfld System.Collections.Generic.Queue`1<System.Action> SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   0011 ldsfld SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   0016 callvirt !0 System.Collections.Generic.Queue`1<System.Action>::Dequeue()
+   001B stloc.1 
+   001C ldloc.1 
+   001D callvirt System.Void System.Action::Invoke()
+   0022 ldsfld SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   0027 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Action>::get_Count()
+   002C ldc.i4.0 
+   002D bgt IL_0011: ldsfld System.Collections.Generic.Queue`1<System.Action> SenseGoogleARCore.AsyncTask::s_UpdateActionQueue
+   0032 leave IL_003e: ret
+   0037 ldloc.0 
+   0038 call System.Void System.Threading.Monitor::Exit(System.Object)
+   003D endfinally 
+   003E ret 
+== System.Void OnUIThread() attrs=Private, Static, HideBySig maxstack=2
+   0000 ldsfld SenseGoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C br IL_0022: ldsfld System.Collections.Generic.Queue`1<System.Action> SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0011 ldsfld SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0016 callvirt !0 System.Collections.Generic.Queue`1<System.Action>::Dequeue()
+   001B stloc.1 
+   001C ldloc.1 
+   001D callvirt System.Void System.Action::Invoke()
+   0022 ldsfld SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0027 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Action>::get_Count()
+   002C ldc.i4.0 
+   002D bgt IL_0011: ldsfld System.Collections.Generic.Queue`1<System.Action> SenseGoogleARCore.AsyncTask::s_UiThreadActionQueue
+   0032 leave IL_003e: ret
+   0037 ldloc.0 
+   0038 call System.Void System.Threading.Monitor::Exit(System.Object)
+   003D endfinally 
+   003E ret 
+== System.Void <AsyncTask>m__0() attrs=Private, Static, HideBySig maxstack=8
+   0000 call System.Void SenseGoogleARCore.AsyncTask::OnUIThread()
+   0005 ret 

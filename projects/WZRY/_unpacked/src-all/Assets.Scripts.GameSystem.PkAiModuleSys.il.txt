@@ -1,0 +1,98 @@
+// TYPE Assets.Scripts.GameSystem.PkAiModuleSys  base=Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.GameSystem.PkAiModuleData pkAiModuleData
+  FIELD Assets.Scripts.GameSystem.PkAiModuleUIHandler pkAiModuleUIHandler
+  FIELD System.Int32 PkAIRuleID = 129
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void Assets.Scripts.GameSystem.PkAiModuleData::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   000B ldarg.0 
+   000C ldarg.0 
+   000D newobj System.Void Assets.Scripts.GameSystem.PkAiModuleUIHandler::.ctor(Assets.Scripts.GameSystem.PkAiModuleSys)
+   0012 stfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleUIHandler
+   0017 ldarg.0 
+   0018 call System.Void Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::Init()
+   001D ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::UnInit()
+   0006 ret 
+== System.Void SendPkAiLevInfoReq() attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 2050
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 ldloca.s V_0
+   0012 ldc.i4.1 
+   0013 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0018 pop 
+   0019 ret 
+== System.Void SendBuyGameCntReq() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   0006 brtrue IL_000c: ldc.i4 1113
+   000B ret 
+   000C ldc.i4 1113
+   0011 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ldfld CSProtocol.CSPkg::stPkgData
+   001D callvirt CSProtocol.CSPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyReq()
+   0022 ldc.i4.s 14
+   0024 stfld CSProtocol.CSPKG_CMD_SHOPBUY::iBuyType
+   0029 ldloc.0 
+   002A ldfld CSProtocol.CSPkg::stPkgData
+   002F callvirt CSProtocol.CSPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyReq()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   003A ldfld Assets.Scripts.GameSystem.PkAiModuleData::buyGameCnt
+   003F ldc.i4.1 
+   0040 add 
+   0041 stfld CSProtocol.CSPKG_CMD_SHOPBUY::iBuySubType
+   0046 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   004B ldloca.s V_0
+   004D ldc.i4.1 
+   004E callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0053 pop 
+   0054 ret 
+== System.Void GetPkAiLevInfoRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A call !0 Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::GetInstance()
+   000F ldfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   0014 brtrue IL_0038: call !0 Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::GetInstance()
+   0019 call !0 Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::GetInstance()
+   001E ldarg.0 
+   001F ldfld CSProtocol.CSPkg::stPkgData
+   0024 callvirt CSProtocol.SCPKG_PKAI_LEVEL_CONF_RSP CSProtocol.CSPkgBody::get_stPkAILevelConfRsp()
+   0029 newobj System.Void Assets.Scripts.GameSystem.PkAiModuleData::.ctor(CSProtocol.SCPKG_PKAI_LEVEL_CONF_RSP)
+   002E stfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   0033 br IL_0052: call !0 Singleton`1<EventRouter>::GetInstance()
+   0038 call !0 Singleton`1<Assets.Scripts.GameSystem.PkAiModuleSys>::GetInstance()
+   003D ldfld Assets.Scripts.GameSystem.PkAiModuleSys::pkAiModuleData
+   0042 ldarg.0 
+   0043 ldfld CSProtocol.CSPkg::stPkgData
+   0048 callvirt CSProtocol.SCPKG_PKAI_LEVEL_CONF_RSP CSProtocol.CSPkgBody::get_stPkAILevelConfRsp()
+   004D callvirt System.Void Assets.Scripts.GameSystem.PkAiModuleData::Initialize(CSProtocol.SCPKG_PKAI_LEVEL_CONF_RSP)
+   0052 call !0 Singleton`1<EventRouter>::GetInstance()
+   0057 ldsfld EventID::GetPkAiLevelConfRsp
+   005C callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0061 ret 
+== System.String GetPkAiLevelName(System.UInt32 levelId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 call !0 Singleton`1<CTextManager>::GetInstance()
+   000B ldstr PkAILevelName_Format
+   0010 ldc.i4.1 
+   0011 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0016 ldarga.s levelId
+   0018 constrained. System.UInt32
+   001E callvirt System.String System.Object::ToString()
+   0023 call System.String System.String::Format(System.String,System.Object)
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ret 

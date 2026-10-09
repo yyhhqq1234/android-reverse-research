@@ -1,0 +1,110 @@
+// TYPE AkAudioListenerManager  base=MonoSingleton`1<AkAudioListenerManager>  attrs=Public, BeforeFieldInit
+  FIELD AkAudioDefaultListener DefaultListener
+  FIELD System.Collections.Generic.List`1<IAkAudioListener> Listeners
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<IAkAudioListener>::.ctor()
+   0006 stfld AkAudioListenerManager::Listeners
+   000B ldarg.0 
+   000C call System.Void MonoSingleton`1<AkAudioListenerManager>::.ctor()
+   0011 ret 
+== System.Void Awake() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void MonoSingleton`1<AkAudioListenerManager>::Awake()
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   000D callvirt !!0 UnityEngine.GameObject::AddComponent<AkAudioDefaultListener>()
+   0012 stfld AkAudioListenerManager::DefaultListener
+   0017 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void MonoSingleton`1<AkAudioListenerManager>::OnDestroy()
+   0006 ret 
+== System.Void RegisterUserListener(IAkAudioListener InListener) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_0017: ret
+   0006 ldarg.0 
+   0007 ldfld AkAudioListenerManager::Listeners
+   000C ldarg.1 
+   000D callvirt System.Boolean System.Collections.Generic.List`1<IAkAudioListener>::Contains(!0)
+   0012 brfalse IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldfld AkAudioListenerManager::Listeners
+   001E callvirt System.Collections.Generic.List`1/Enumerator<!0> System.Collections.Generic.List`1<IAkAudioListener>::GetEnumerator()
+   0023 stloc.1 
+   0024 br IL_003d: ldloca.s V_1
+   0029 ldloca.s V_1
+   002B call !0 System.Collections.Generic.List`1/Enumerator<IAkAudioListener>::get_Current()
+   0030 stloc.0 
+   0031 ldloc.0 
+   0032 callvirt UnityEngine.GameObject IAkAudioListener::get_bindGameObject()
+   0037 call AKRESULT AkSoundEngine::RemoveDefaultListener(UnityEngine.GameObject)
+   003C pop 
+   003D ldloca.s V_1
+   003F call System.Boolean System.Collections.Generic.List`1/Enumerator<IAkAudioListener>::MoveNext()
+   0044 brtrue IL_0029: ldloca.s V_1
+   0049 leave IL_005c: ldarg.0
+   004E ldloca.s V_1
+   0050 constrained. System.Collections.Generic.List`1/Enumerator<IAkAudioListener>
+   0056 callvirt System.Void System.IDisposable::Dispose()
+   005B endfinally 
+   005C ldarg.0 
+   005D ldfld AkAudioListenerManager::Listeners
+   0062 ldarg.1 
+   0063 callvirt System.Void System.Collections.Generic.List`1<IAkAudioListener>::Add(!0)
+   0068 ldarg.1 
+   0069 callvirt UnityEngine.GameObject IAkAudioListener::get_bindGameObject()
+   006E call AKRESULT AkSoundEngine::AddDefaultListener(UnityEngine.GameObject)
+   0073 pop 
+   0074 ret 
+== System.Void UnRegisterUserListener(IAkAudioListener InListener) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brtrue IL_0007: ldarg.0
+   0006 ret 
+   0007 ldarg.0 
+   0008 ldfld AkAudioListenerManager::Listeners
+   000D callvirt System.Int32 System.Collections.Generic.List`1<IAkAudioListener>::get_Count()
+   0012 ldc.i4.0 
+   0013 ble IL_0042: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld AkAudioListenerManager::Listeners
+   001E ldarg.0 
+   001F ldfld AkAudioListenerManager::Listeners
+   0024 callvirt System.Int32 System.Collections.Generic.List`1<IAkAudioListener>::get_Count()
+   0029 ldc.i4.1 
+   002A sub 
+   002B callvirt !0 System.Collections.Generic.List`1<IAkAudioListener>::get_Item(System.Int32)
+   0030 ldarg.1 
+   0031 bne.un IL_0042: ldarg.0
+   0036 ldarg.1 
+   0037 callvirt UnityEngine.GameObject IAkAudioListener::get_bindGameObject()
+   003C call AKRESULT AkSoundEngine::RemoveDefaultListener(UnityEngine.GameObject)
+   0041 pop 
+   0042 ldarg.0 
+   0043 ldfld AkAudioListenerManager::Listeners
+   0048 ldarg.1 
+   0049 callvirt System.Boolean System.Collections.Generic.List`1<IAkAudioListener>::Remove(!0)
+   004E pop 
+   004F ldarg.0 
+   0050 ldfld AkAudioListenerManager::Listeners
+   0055 callvirt System.Int32 System.Collections.Generic.List`1<IAkAudioListener>::get_Count()
+   005A ldc.i4.0 
+   005B ble IL_0085: ret
+   0060 ldarg.0 
+   0061 ldfld AkAudioListenerManager::Listeners
+   0066 ldarg.0 
+   0067 ldfld AkAudioListenerManager::Listeners
+   006C callvirt System.Int32 System.Collections.Generic.List`1<IAkAudioListener>::get_Count()
+   0071 ldc.i4.1 
+   0072 sub 
+   0073 callvirt !0 System.Collections.Generic.List`1<IAkAudioListener>::get_Item(System.Int32)
+   0078 stloc.0 
+   0079 ldloc.0 
+   007A callvirt UnityEngine.GameObject IAkAudioListener::get_bindGameObject()
+   007F call AKRESULT AkSoundEngine::AddDefaultListener(UnityEngine.GameObject)
+   0084 pop 
+   0085 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ret 

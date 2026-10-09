@@ -1,0 +1,76 @@
+// TYPE Assets.Scripts.GameSystem.CFakeTaoShaHelper  base=System.Object  attrs=BeforeFieldInit
+  FIELD System.Int32 TAOSHA_CONFIRM_TIMEOUT = 4
+  FIELD System.Int32 SELECT_HERO_TIMER_COUNT = 60
+  FIELD System.Int32 MAX_ROOKIE_LEVEL = 6
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache0
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void StartFakeConfirm() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.1 
+   0001 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeConfirm
+   0006 call !0 Singleton`1<CTimerManager>::GetInstance()
+   000B ldc.i4 4000
+   0010 ldc.i4.1 
+   0011 ldsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache0
+   0016 brtrue.s IL_0029: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache0
+   0018 ldnull 
+   0019 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnConfirmTimout(System.Int32)
+   001F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0024 stsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache0
+   0029 ldsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache0
+   002E callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0033 pop 
+   0034 ret 
+== System.Void OnConfirmTimout() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::GotoHeroSelectPage()
+   0005 ret 
+== System.Void BeginFakeSelectHero() attrs=Public, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0005 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0021: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0017 ldfld Assets.Scripts.GameSystem.RoomAttrib::bWarmBattle
+   001C brtrue IL_0022: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0021 ret 
+   0022 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0027 ldc.i4 60000
+   002C ldc.i4.1 
+   002D ldsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache1
+   0032 brtrue.s IL_0045: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache1
+   0034 ldnull 
+   0035 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnSelectHeroTimeout(System.Int32)
+   003B newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0040 stsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache1
+   0045 ldsfld Assets.Scripts.GameSystem.CFakeTaoShaHelper::<>f__mg$cache1
+   004A callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   004F pop 
+   0050 ldc.i4.1 
+   0051 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeSelect
+   0056 ret 
+== System.Void OnSelfHeroConfirmed() attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0005 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0012: ldloc.0
+   0011 ret 
+   0012 ldloc.0 
+   0013 ldloc.0 
+   0014 ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0019 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::ullUid
+   001E callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMemberInfo(System.UInt64)
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 brtrue IL_002b: ldloc.1
+   002A ret 
+   002B ldloc.1 
+   002C ldc.i4.1 
+   002D stfld Assets.Scripts.GameSystem.MemberInfo::isPrepare
+   0032 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::ReqStartSingleWarmBattle()
+   0037 ret 

@@ -1,0 +1,140 @@
+// TYPE Assets.Scripts.UI.CUILiteShowScript  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.String m_startTimeTxtKey
+  FIELD System.String m_endTimeTxtKey
+  FIELD System.Boolean m_isNeedTimerCheck
+  FIELD System.UInt32 m_loopCount
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUILiteShowScript::m_isNeedTimerCheck
+   0007 ldarg.0 
+   0008 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   000D ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUILiteShowScript::CheckShow()
+   0006 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUILiteShowScript::m_isNeedTimerCheck
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D dup 
+   000E ldfld Assets.Scripts.UI.CUILiteShowScript::m_loopCount
+   0013 ldc.i4.1 
+   0014 add 
+   0015 stfld Assets.Scripts.UI.CUILiteShowScript::m_loopCount
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.UI.CUILiteShowScript::m_loopCount
+   0020 ldc.i4.s 120
+   0022 rem.un 
+   0023 brtrue IL_002e: ret
+   0028 ldarg.0 
+   0029 call System.Void Assets.Scripts.UI.CUILiteShowScript::CheckShow()
+   002E ret 
+== System.Void CheckShow() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.UI.CUILiteShowScript::CheckIsInTime()
+   0006 brfalse IL_0048: ldc.i4.0
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_002d: ldloc.0
+   0012 ldarg.0 
+   0013 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0018 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   001D ldloc.0 
+   001E callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0023 ldc.i4.1 
+   0024 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0029 ldloc.0 
+   002A ldc.i4.1 
+   002B add 
+   002C stloc.0 
+   002D ldloc.0 
+   002E ldarg.0 
+   002F call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0034 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0039 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   003E blt IL_0012: ldarg.0
+   0043 br IL_0080: leave IL_008b
+   0048 ldc.i4.0 
+   0049 stloc.1 
+   004A br IL_006a: ldloc.1
+   004F ldarg.0 
+   0050 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0055 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   005A ldloc.1 
+   005B callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0060 ldc.i4.0 
+   0061 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0066 ldloc.1 
+   0067 ldc.i4.1 
+   0068 add 
+   0069 stloc.1 
+   006A ldloc.1 
+   006B ldarg.0 
+   006C call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0071 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0076 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   007B blt IL_004f: ldarg.0
+   0080 leave IL_008b: ret
+   0085 pop 
+   0086 leave IL_008b: ret
+   008B ret 
+== System.Boolean CheckIsInTime() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<CTextManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUILiteShowScript::m_startTimeTxtKey
+   000B ldc.i4.1 
+   000C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0011 stloc.0 
+   0012 call !0 Singleton`1<CTextManager>::GetInstance()
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUILiteShowScript::m_endTimeTxtKey
+   001D ldc.i4.1 
+   001E callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0023 stloc.1 
+   0024 ldloc.0 
+   0025 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   002A brtrue IL_003a: ldc.i4.0
+   002F ldloc.1 
+   0030 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0035 brfalse IL_0041: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   003A ldc.i4.0 
+   003B stloc.2 
+   003C leave IL_0099: ldloc.2
+   0041 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0046 conv.i8 
+   0047 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   004C stloc.3 
+   004D ldloc.0 
+   004E ldsfld System.DateTime::MinValue
+   0053 call System.DateTime Utility::StringToDateTime(System.String,System.DateTime)
+   0058 stloc.s V_4
+   005A ldloc.1 
+   005B ldsfld System.DateTime::MaxValue
+   0060 call System.DateTime Utility::StringToDateTime(System.String,System.DateTime)
+   0065 stloc.s V_5
+   0067 ldloc.s V_4
+   0069 ldloc.3 
+   006A call System.Int32 System.DateTime::Compare(System.DateTime,System.DateTime)
+   006F ldc.i4.0 
+   0070 bge IL_008a: ldc.i4.0
+   0075 ldloc.s V_5
+   0077 ldloc.3 
+   0078 call System.Int32 System.DateTime::Compare(System.DateTime,System.DateTime)
+   007D ldc.i4.0 
+   007E ble IL_008a: ldc.i4.0
+   0083 ldc.i4.1 
+   0084 stloc.2 
+   0085 leave IL_0099: ldloc.2
+   008A ldc.i4.0 
+   008B stloc.2 
+   008C leave IL_0099: ldloc.2
+   0091 pop 
+   0092 leave IL_0097: ldc.i4.0
+   0097 ldc.i4.0 
+   0098 ret 
+   0099 ldloc.2 
+   009A ret 

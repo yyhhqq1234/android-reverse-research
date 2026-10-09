@@ -1,0 +1,754 @@
+// TYPE Assets.Scripts.GameSystem.CHeroDataFactory  base=System.Object  attrs=Public
+  FIELD System.Collections.Generic.List`1<System.UInt32> m_CfgHeroList
+  FIELD System.Collections.Generic.List`1<System.UInt32> m_CfgHeroShopList
+  FIELD ListView`1<Assets.Scripts.GameSystem.IHeroData> m_banHeroList
+  FIELD ListView`1<Assets.Scripts.GameSystem.IHeroData> m_AllHeroDataList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== Assets.Scripts.GameSystem.IHeroData CreateHeroData(System.UInt32 id, System.UInt32 heroSelectType, System.Boolean needSortBySvrInfo) attrs=Public, Static, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse.s IL_002f: ldarg.0
+   000E ldloc.0 
+   000F ldarg.0 
+   0010 ldloca.s V_1
+   0012 ldc.i4.1 
+   0013 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfo(System.UInt32,Assets.Scripts.GameSystem.CHeroInfo&,System.Boolean)
+   0018 brfalse.s IL_002f: ldarg.0
+   001A ldloc.1 
+   001B newobj System.Void Assets.Scripts.GameSystem.CHeroInfoData::.ctor(Assets.Scripts.GameSystem.CHeroInfo)
+   0020 dup 
+   0021 ldarg.1 
+   0022 stfld Assets.Scripts.GameSystem.CHeroInfoData::m_svrHeroSelectType
+   0027 dup 
+   0028 ldarg.2 
+   0029 stfld Assets.Scripts.GameSystem.CHeroInfoData::m_isNeedSortBySvrInfo
+   002E ret 
+   002F ldarg.0 
+   0030 newobj System.Void Assets.Scripts.GameSystem.CHeroCfgData::.ctor(System.UInt32)
+   0035 stloc.2 
+   0036 ldloc.2 
+   0037 ldarg.1 
+   0038 stfld Assets.Scripts.GameSystem.CHeroCfgData::m_svrHeroSelectType
+   003D ldloc.2 
+   003E ldarg.2 
+   003F stfld Assets.Scripts.GameSystem.CHeroCfgData::m_isNeedSortBySvrInfo
+   0044 ldloc.0 
+   0045 brfalse.s IL_006e: ldloc.2
+   0047 ldloc.0 
+   0048 ldarg.0 
+   0049 callvirt CSProtocol.COMDT_HERO_PROFICIENCY Assets.Scripts.GameSystem.CRoleInfo::GetNotHaveHeroProficiency(System.UInt32)
+   004E stloc.3 
+   004F ldloc.3 
+   0050 brfalse.s IL_0066: ldloc.2
+   0052 ldloc.2 
+   0053 ldloc.3 
+   0054 ldfld CSProtocol.COMDT_HERO_PROFICIENCY::dwProficiency
+   0059 ldloc.3 
+   005A ldfld CSProtocol.COMDT_HERO_PROFICIENCY::bLv
+   005F callvirt System.Void Assets.Scripts.GameSystem.CHeroCfgData::initSvrProficiency(System.UInt32,System.Byte)
+   0064 br.s IL_006e: ldloc.2
+   0066 ldloc.2 
+   0067 ldc.i4.0 
+   0068 ldc.i4.0 
+   0069 callvirt System.Void Assets.Scripts.GameSystem.CHeroCfgData::initSvrProficiency(System.UInt32,System.Byte)
+   006E ldloc.2 
+   006F ret 
+== Assets.Scripts.GameSystem.IHeroData CreateCustomHeroData(System.UInt32 id, System.Boolean needGetShopInfo) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 newobj System.Void Assets.Scripts.GameSystem.CCustomHeroData::.ctor(System.UInt32,System.Boolean)
+   0007 ret 
+== System.Boolean IsHeroCanUse(System.UInt32 heroID) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0007 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000C stloc.1 
+   000D ldloc.1 
+   000E brtrue.s IL_0012: ldloc.1
+   0010 ldloc.0 
+   0011 ret 
+   0012 ldloc.1 
+   0013 callvirt DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo> Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfoDic()
+   0018 ldarg.0 
+   0019 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::ContainsKey(!0)
+   001E brfalse.s IL_0024: ldloc.1
+   0020 ldc.i4.1 
+   0021 stloc.0 
+   0022 br.s IL_002f: ldloc.0
+   0024 ldloc.1 
+   0025 ldarg.0 
+   0026 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsFreeHero(System.UInt32)
+   002B brfalse.s IL_002f: ldloc.0
+   002D ldc.i4.1 
+   002E stloc.0 
+   002F ldloc.0 
+   0030 ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetHeroList(Assets.Scripts.GameSystem.CHeroDataFactory/FilterCondition fc, Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0005 stloc.0 
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   000B callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 brtrue.s IL_0016: ldloc.1
+   0014 ldloc.0 
+   0015 ret 
+   0016 ldloc.1 
+   0017 callvirt DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo> Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfoDic()
+   001C callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::GetEnumerator()
+   0021 stloc.2 
+   0022 br.s IL_0097: ldloca.s V_2
+   0024 ldc.i4.1 
+   0025 stloc.3 
+   0026 call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bLobbyEntryBlocked()
+   002B brfalse.s IL_004b: ldloc.3
+   002D ldloca.s V_2
+   002F call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0034 stloc.s V_4
+   0036 ldloca.s V_4
+   0038 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Value()
+   003D ldflda Assets.Scripts.GameSystem.CHeroInfo::cfgInfo
+   0042 ldfld ResData.ResHeroCfgInfo::bIOSHide
+   0047 ldc.i4.0 
+   0048 ceq 
+   004A stloc.3 
+   004B ldloc.3 
+   004C brfalse.s IL_0097: ldloca.s V_2
+   004E ldloca.s V_2
+   0050 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0055 stloc.s V_5
+   0057 ldloca.s V_5
+   0059 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   005E stloc.s V_6
+   0060 ldloca.s V_2
+   0062 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0067 stloc.s V_7
+   0069 ldarg.0 
+   006A ldloc.s V_6
+   006C ldloca.s V_7
+   006E call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Value()
+   0073 callvirt System.Boolean Assets.Scripts.GameSystem.CHeroDataFactory/FilterCondition::Invoke(System.UInt32,Assets.Scripts.GameSystem.CHeroInfo)
+   0078 brfalse.s IL_0097: ldloca.s V_2
+   007A ldloc.0 
+   007B ldloca.s V_2
+   007D call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0082 stloc.s V_8
+   0084 ldloca.s V_8
+   0086 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   008B ldc.i4.1 
+   008C ldc.i4.0 
+   008D call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   0092 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   0097 ldloca.s V_2
+   0099 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::MoveNext()
+   009E brtrue.s IL_0024: ldc.i4.1
+   00A0 ldloca.s V_0
+   00A2 ldarg.1 
+   00A3 ldc.i4.0 
+   00A4 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   00A9 ldloc.0 
+   00AA ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetHostHeroList(System.Boolean isIncludeValidExperienceHero, Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0005 stloc.0 
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   000B callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 brtrue.s IL_0016: ldloc.1
+   0014 ldloc.0 
+   0015 ret 
+   0016 ldloc.1 
+   0017 callvirt DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo> Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfoDic()
+   001C callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::GetEnumerator()
+   0021 stloc.2 
+   0022 br IL_00ad: ldloca.s V_2
+   0027 ldarg.0 
+   0028 brfalse.s IL_0078: ldloc.1
+   002A ldloc.1 
+   002B ldloca.s V_2
+   002D call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0032 stloc.3 
+   0033 ldloca.s V_3
+   0035 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   003A callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsOwnHero(System.UInt32)
+   003F brtrue.s IL_0059: ldloc.0
+   0041 ldloc.1 
+   0042 ldloca.s V_2
+   0044 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0049 stloc.s V_5
+   004B ldloca.s V_5
+   004D call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   0052 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsValidExperienceHero(System.UInt32)
+   0057 brfalse.s IL_00ad: ldloca.s V_2
+   0059 ldloc.0 
+   005A ldloca.s V_2
+   005C call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0061 stloc.s V_4
+   0063 ldloca.s V_4
+   0065 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   006A ldc.i4.1 
+   006B ldc.i4.0 
+   006C call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   0071 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   0076 br.s IL_00ad: ldloca.s V_2
+   0078 ldloc.1 
+   0079 ldloca.s V_2
+   007B call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0080 stloc.s V_6
+   0082 ldloca.s V_6
+   0084 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   0089 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsOwnHero(System.UInt32)
+   008E brfalse.s IL_00ad: ldloca.s V_2
+   0090 ldloc.0 
+   0091 ldloca.s V_2
+   0093 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   0098 stloc.s V_7
+   009A ldloca.s V_7
+   009C call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   00A1 ldc.i4.1 
+   00A2 ldc.i4.0 
+   00A3 call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   00A8 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   00AD ldloca.s V_2
+   00AF call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::MoveNext()
+   00B4 brtrue IL_0027: ldarg.0
+   00B9 call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bLobbyEntryBlocked()
+   00BE brfalse.s IL_00ff: ldloca.s V_0
+   00C0 ldloc.0 
+   00C1 callvirt System.Int32 ListViewBase::get_Count()
+   00C6 ldc.i4.1 
+   00C7 sub 
+   00C8 stloc.s V_8
+   00CA br.s IL_00fa: ldloc.s V_8
+   00CC ldloc.0 
+   00CD ldloc.s V_8
+   00CF callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   00D4 stloc.s V_9
+   00D6 ldloc.s V_9
+   00D8 ldloca.s V_10
+   00DA callvirt System.Boolean Assets.Scripts.GameSystem.IHeroData::GetHeroCfgInfo(ResData.ResHeroCfgInfo&)
+   00DF brfalse.s IL_00f4: ldloc.s V_8
+   00E1 ldloc.s V_10
+   00E3 ldfld ResData.ResHeroCfgInfo::bIOSHide
+   00E8 ldc.i4.0 
+   00E9 ble.s IL_00f4: ldloc.s V_8
+   00EB ldloc.0 
+   00EC ldloc.s V_9
+   00EE callvirt System.Boolean ListView`1<Assets.Scripts.GameSystem.IHeroData>::Remove(!0)
+   00F3 pop 
+   00F4 ldloc.s V_8
+   00F6 ldc.i4.1 
+   00F7 sub 
+   00F8 stloc.s V_8
+   00FA ldloc.s V_8
+   00FC ldc.i4.0 
+   00FD bge.s IL_00cc: ldloc.0
+   00FF ldloca.s V_0
+   0101 ldarg.1 
+   0102 ldc.i4.0 
+   0103 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   0108 ldloc.0 
+   0109 ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetPvPHeroList(Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0005 stloc.0 
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   000B callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 brtrue.s IL_0016: ldloc.1
+   0014 ldloc.0 
+   0015 ret 
+   0016 ldloc.1 
+   0017 callvirt DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo> Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfoDic()
+   001C callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::GetEnumerator()
+   0021 stloc.3 
+   0022 br.s IL_0060: ldloca.s V_3
+   0024 ldloca.s V_3
+   0026 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Current()
+   002B stloc.s V_4
+   002D ldloca.s V_4
+   002F call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Value()
+   0034 ldfld Assets.Scripts.GameSystem.CHeroInfo::MaskBits
+   0039 ldc.i4.2 
+   003A and 
+   003B ldc.i4.0 
+   003C ble.un.s IL_0060: ldloca.s V_3
+   003E ldloca.s V_4
+   0040 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   0045 call System.Boolean Assets.Scripts.GameSystem.CHeroDataFactory::IsOneKeyHideHero(System.UInt32)
+   004A brtrue.s IL_0060: ldloca.s V_3
+   004C ldloc.0 
+   004D ldloca.s V_4
+   004F call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::get_Key()
+   0054 ldc.i4.1 
+   0055 ldc.i4.0 
+   0056 call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   005B callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   0060 ldloca.s V_3
+   0062 call System.Boolean DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::MoveNext()
+   0067 brtrue.s IL_0024: ldloca.s V_3
+   0069 leave.s IL_0079: ldc.i4.0
+   006B ldloca.s V_3
+   006D constrained. DictionaryView`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>
+   0073 callvirt System.Void System.IDisposable::Dispose()
+   0078 endfinally 
+   0079 ldc.i4.0 
+   007A stloc.s V_5
+   007C br.s IL_00c2: ldloc.s V_5
+   007E ldloc.1 
+   007F callvirt DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo> Assets.Scripts.GameSystem.CRoleInfo::GetHeroInfoDic()
+   0084 ldloc.1 
+   0085 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   008A ldloc.s V_5
+   008C callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   0091 ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   0096 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CHeroInfo>::ContainsKey(!0)
+   009B brtrue.s IL_00bc: ldloc.s V_5
+   009D ldloc.0 
+   009E ldloc.1 
+   009F ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   00A4 ldloc.s V_5
+   00A6 callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   00AB ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   00B0 ldc.i4.1 
+   00B1 ldc.i4.0 
+   00B2 call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   00B7 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   00BC ldloc.s V_5
+   00BE ldc.i4.1 
+   00BF add 
+   00C0 stloc.s V_5
+   00C2 ldloc.s V_5
+   00C4 ldloc.1 
+   00C5 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   00CA callvirt System.Int32 ListViewBase::get_Count()
+   00CF blt.s IL_007e: ldloc.1
+   00D1 ldc.i4.0 
+   00D2 stloc.2 
+   00D3 ldstr Assets.Scripts.Framework.CSysDynamicBlock
+   00D8 call System.Type System.Type::GetType(System.String)
+   00DD stloc.s V_6
+   00DF ldloc.s V_6
+   00E1 brfalse.s IL_0104: leave.s IL_010b
+   00E3 ldloc.s V_6
+   00E5 ldstr bLobbyEntryBlocked
+   00EA callvirt System.Reflection.PropertyInfo System.Type::GetProperty(System.String)
+   00EF stloc.s V_7
+   00F1 ldloc.s V_7
+   00F3 brfalse.s IL_0104: leave.s IL_010b
+   00F5 ldloc.s V_7
+   00F7 ldnull 
+   00F8 ldnull 
+   00F9 callvirt System.Object System.Reflection.PropertyInfo::GetValue(System.Object,System.Object[])
+   00FE unbox.any System.Boolean
+   0103 stloc.2 
+   0104 leave.s IL_010b: ldloc.2
+   0106 pop 
+   0107 ldc.i4.0 
+   0108 stloc.2 
+   0109 leave.s IL_010b: ldloc.2
+   010B ldloc.2 
+   010C brfalse.s IL_014d: ldloca.s V_0
+   010E ldloc.0 
+   010F callvirt System.Int32 ListViewBase::get_Count()
+   0114 ldc.i4.1 
+   0115 sub 
+   0116 stloc.s V_8
+   0118 br.s IL_0148: ldloc.s V_8
+   011A ldloc.0 
+   011B ldloc.s V_8
+   011D callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   0122 stloc.s V_9
+   0124 ldloc.s V_9
+   0126 ldloca.s V_10
+   0128 callvirt System.Boolean Assets.Scripts.GameSystem.IHeroData::GetHeroCfgInfo(ResData.ResHeroCfgInfo&)
+   012D brfalse.s IL_0142: ldloc.s V_8
+   012F ldloc.s V_10
+   0131 ldfld ResData.ResHeroCfgInfo::bIOSHide
+   0136 ldc.i4.0 
+   0137 ble.s IL_0142: ldloc.s V_8
+   0139 ldloc.0 
+   013A ldloc.s V_9
+   013C callvirt System.Boolean ListView`1<Assets.Scripts.GameSystem.IHeroData>::Remove(!0)
+   0141 pop 
+   0142 ldloc.s V_8
+   0144 ldc.i4.1 
+   0145 sub 
+   0146 stloc.s V_8
+   0148 ldloc.s V_8
+   014A ldc.i4.0 
+   014B bge.s IL_011a: ldloc.0
+   014D ldloca.s V_0
+   014F ldarg.0 
+   0150 ldc.i4.0 
+   0151 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   0156 ldloc.0 
+   0157 ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetTrainingHeroList(Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0005 stloc.0 
+   0006 call System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CHeroDataFactory::GetAllHeroList()
+   000B stloc.1 
+   000C ldc.i4.0 
+   000D stloc.2 
+   000E br.s IL_0028: ldloc.2
+   0010 ldloc.0 
+   0011 ldloc.1 
+   0012 ldloc.2 
+   0013 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0018 ldc.i4.1 
+   0019 ldc.i4.0 
+   001A call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateHeroData(System.UInt32,System.UInt32,System.Boolean)
+   001F callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   0024 ldloc.2 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.2 
+   0028 ldloc.2 
+   0029 ldloc.1 
+   002A callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   002F blt.s IL_0010: ldloc.0
+   0031 ldloc.0 
+   0032 ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetPkAIAllCanUseHero(ListView`1<Assets.Scripts.GameSystem.IHeroData> filterList, Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=8
+   0000 newobj System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::.ctor()
+   0005 dup 
+   0006 ldarg.0 
+   0007 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::filterList
+   000C dup 
+   000D newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0012 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::res
+   0017 dup 
+   0018 ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::<GetPkAIAllCanUseHero>b__0(ResData.ResHeroShop)
+   001E newobj System.Void System.Action`1<ResData.ResHeroShop>::.ctor(System.Object,System.IntPtr)
+   0023 call System.Void ResData.GameDataMgr/heroShopInfoDatabin::Accept(System.Action`1<ResData.ResHeroShop>)
+   0028 dup 
+   0029 ldflda Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::res
+   002E ldarg.1 
+   002F ldc.i4.0 
+   0030 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   0035 ldfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0::res
+   003A ret 
+== System.Boolean IsPkAIAllHeroID(System.UInt32 heroID) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldloca.s V_1
+   0004 ldarg.0 
+   0005 call System.Boolean ResData.GameDataMgr/heroShopInfoDatabin::FindByKey(ResData.ResHeroShop&,System.UInt32)
+   000A brfalse.s IL_0035: ldloc.0
+   000C ldloc.1 
+   000D ldfld ResData.ResHeroShop::bIsPkAIUse
+   0012 ldc.i4.0 
+   0013 ble.s IL_0035: ldloc.0
+   0015 ldloc.1 
+   0016 ldfld ResData.ResHeroShop::dwOnTimeGen
+   001B conv.u8 
+   001C call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0021 conv.i8 
+   0022 bgt.un.s IL_0035: ldloc.0
+   0024 ldloc.1 
+   0025 ldfld ResData.ResHeroShop::dwOffTimeGen
+   002A conv.u8 
+   002B call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0030 conv.i8 
+   0031 blt.un.s IL_0035: ldloc.0
+   0033 ldc.i4.1 
+   0034 stloc.0 
+   0035 ldloc.0 
+   0036 ret 
+== System.Collections.Generic.List`1<System.UInt32> GetAllHeroList() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0005 brtrue.s IL_0011: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0007 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   000C stsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0011 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0016 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   001B ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__10_0
+   0020 dup 
+   0021 brtrue.s IL_003a: call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   0023 pop 
+   0024 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9
+   0029 ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<GetAllHeroList>b__10_0(ResData.ResHeroCfgInfo)
+   002F newobj System.Void System.Action`1<ResData.ResHeroCfgInfo>::.ctor(System.Object,System.IntPtr)
+   0034 dup 
+   0035 stsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__10_0
+   003A call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   003F ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0044 ret 
+== System.Collections.Generic.List`1<System.UInt32> GetAllHeroListWitSort(Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType sortType) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0005 brtrue.s IL_0011: ldsfld ListView`1<Assets.Scripts.GameSystem.IHeroData> Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0007 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   000C stsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0011 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0016 callvirt System.Int32 ListViewBase::get_Count()
+   001B ldc.i4.0 
+   001C ble.s IL_0028: ldsfld System.Action`1<ResData.ResHeroCfgInfo> Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__11_0
+   001E ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0023 callvirt System.Void ListViewBase::Clear()
+   0028 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__11_0
+   002D dup 
+   002E brtrue.s IL_0047: call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   0030 pop 
+   0031 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9
+   0036 ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<GetAllHeroListWitSort>b__11_0(ResData.ResHeroCfgInfo)
+   003C newobj System.Void System.Action`1<ResData.ResHeroCfgInfo>::.ctor(System.Object,System.IntPtr)
+   0041 dup 
+   0042 stsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__11_0
+   0047 call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   004C ldsflda Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0051 ldarg.0 
+   0052 ldc.i4.0 
+   0053 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   0058 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   005D stloc.0 
+   005E ldc.i4.0 
+   005F stloc.1 
+   0060 br.s IL_007c: ldloc.1
+   0062 ldloc.0 
+   0063 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0068 ldloc.1 
+   0069 callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   006E callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   0073 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0078 ldloc.1 
+   0079 ldc.i4.1 
+   007A add 
+   007B stloc.1 
+   007C ldloc.1 
+   007D ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_AllHeroDataList
+   0082 callvirt System.Int32 ListViewBase::get_Count()
+   0087 blt.s IL_0062: ldloc.0
+   0089 ldloc.0 
+   008A ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetBanHeroList() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0005 brtrue.s IL_0011: ldsfld ListView`1<Assets.Scripts.GameSystem.IHeroData> Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0007 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   000C stsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0011 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0016 callvirt System.Int32 ListViewBase::get_Count()
+   001B ldc.i4.0 
+   001C ble.s IL_0028: ldsfld System.Action`1<ResData.ResHeroCfgInfo> Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__12_0
+   001E ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0023 callvirt System.Void ListViewBase::Clear()
+   0028 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__12_0
+   002D dup 
+   002E brtrue.s IL_0047: call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   0030 pop 
+   0031 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9
+   0036 ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<GetBanHeroList>b__12_0(ResData.ResHeroCfgInfo)
+   003C newobj System.Void System.Action`1<ResData.ResHeroCfgInfo>::.ctor(System.Object,System.IntPtr)
+   0041 dup 
+   0042 stsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__12_0
+   0047 call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   004C call !0 Singleton`1<CTextManager>::get_instance()
+   0051 ldstr NotBanHeroIDList
+   0056 ldc.i4.1 
+   0057 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   005C ldc.i4.1 
+   005D newarr System.Char
+   0062 dup 
+   0063 ldc.i4.0 
+   0064 ldc.i4.s 124
+   0066 stelem.i2 
+   0067 callvirt System.String[] System.String::Split(System.Char[])
+   006C stloc.0 
+   006D ldc.i4.0 
+   006E stloc.1 
+   006F br.s IL_00b7: ldloc.1
+   0071 ldc.i4.0 
+   0072 stloc.2 
+   0073 ldloc.0 
+   0074 ldloc.1 
+   0075 ldelem.ref 
+   0076 ldloca.s V_2
+   0078 call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   007D pop 
+   007E ldc.i4.0 
+   007F stloc.3 
+   0080 br.s IL_00a6: ldloc.3
+   0082 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   0087 ldloc.3 
+   0088 callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   008D callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   0092 ldloc.2 
+   0093 bne.un.s IL_00a2: ldloc.3
+   0095 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   009A ldloc.3 
+   009B callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00A0 br.s IL_00b3: ldloc.1
+   00A2 ldloc.3 
+   00A3 ldc.i4.1 
+   00A4 add 
+   00A5 stloc.3 
+   00A6 ldloc.3 
+   00A7 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   00AC callvirt System.Int32 ListViewBase::get_Count()
+   00B1 blt.s IL_0082: ldsfld ListView`1<Assets.Scripts.GameSystem.IHeroData> Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   00B3 ldloc.1 
+   00B4 ldc.i4.1 
+   00B5 add 
+   00B6 stloc.1 
+   00B7 ldloc.1 
+   00B8 ldloc.0 
+   00B9 ldlen 
+   00BA conv.i4 
+   00BB blt.s IL_0071: ldc.i4.0
+   00BD ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_banHeroList
+   00C2 ret 
+== System.Collections.Generic.List`1<System.UInt32> GetAllHeroListAtShop() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0005 brtrue.s IL_0011: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0007 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   000C stsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0011 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0016 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   001B ldc.i4.0 
+   001C ble.s IL_0028: ldsfld System.Action`1<ResData.ResHeroCfgInfo> Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__13_0
+   001E ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0023 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   0028 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__13_0
+   002D dup 
+   002E brtrue.s IL_0047: call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   0030 pop 
+   0031 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9
+   0036 ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<GetAllHeroListAtShop>b__13_0(ResData.ResHeroCfgInfo)
+   003C newobj System.Void System.Action`1<ResData.ResHeroCfgInfo>::.ctor(System.Object,System.IntPtr)
+   0041 dup 
+   0042 stsfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c::<>9__13_0
+   0047 call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   004C ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0051 ret 
+== System.Void ResetBufferList() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0005 brfalse.s IL_001e: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0007 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   000C callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0011 ldc.i4.0 
+   0012 ble.s IL_001e: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0014 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroList
+   0019 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   001E ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0023 brfalse.s IL_003c: ret
+   0025 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   002A callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   002F ldc.i4.0 
+   0030 ble.s IL_003c: ret
+   0032 ldsfld Assets.Scripts.GameSystem.CHeroDataFactory::m_CfgHeroShopList
+   0037 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   003C ret 
+== System.Boolean IsHeroListContainsHeroId(ListView`1<Assets.Scripts.GameSystem.IHeroData> heroList, System.UInt32 heroId) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 brfalse.s IL_0029: ldloc.0
+   0005 ldc.i4.0 
+   0006 stloc.1 
+   0007 br.s IL_0020: ldloc.1
+   0009 ldarg.0 
+   000A ldloc.1 
+   000B callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   0010 callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   0015 ldarg.1 
+   0016 bne.un.s IL_001c: ldloc.1
+   0018 ldc.i4.1 
+   0019 stloc.0 
+   001A br.s IL_0029: ldloc.0
+   001C ldloc.1 
+   001D ldc.i4.1 
+   001E add 
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldarg.0 
+   0022 callvirt System.Int32 ListViewBase::get_Count()
+   0027 blt.s IL_0009: ldarg.0
+   0029 ldloc.0 
+   002A ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetHeroProficiencyViewHeroList(System.Int32 listType) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::listType
+   000D ldloc.0 
+   000E newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0013 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::res
+   0018 ldloc.0 
+   0019 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   001E callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0023 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::masterRoleInfo
+   0028 ldloc.0 
+   0029 ldfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::masterRoleInfo
+   002E brtrue.s IL_0037: ldloc.0
+   0030 ldloc.0 
+   0031 ldfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::res
+   0036 ret 
+   0037 ldloc.0 
+   0038 ldc.i4.0 
+   0039 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::lobbyEntryBlocked
+   003E ldstr Assets.Scripts.Framework.CSysDynamicBlock
+   0043 call System.Type System.Type::GetType(System.String)
+   0048 stloc.1 
+   0049 ldloc.1 
+   004A brfalse.s IL_006e: leave.s IL_007a
+   004C ldloc.1 
+   004D ldstr bLobbyEntryBlocked
+   0052 callvirt System.Reflection.PropertyInfo System.Type::GetProperty(System.String)
+   0057 stloc.2 
+   0058 ldloc.2 
+   0059 brfalse.s IL_006e: leave.s IL_007a
+   005B ldloc.0 
+   005C ldloc.2 
+   005D ldnull 
+   005E ldnull 
+   005F callvirt System.Object System.Reflection.PropertyInfo::GetValue(System.Object,System.Object[])
+   0064 unbox.any System.Boolean
+   0069 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::lobbyEntryBlocked
+   006E leave.s IL_007a: ldloc.0
+   0070 pop 
+   0071 ldloc.0 
+   0072 ldc.i4.0 
+   0073 stfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::lobbyEntryBlocked
+   0078 leave.s IL_007a: ldloc.0
+   007A ldloc.0 
+   007B ldftn System.Void Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::<GetHeroProficiencyViewHeroList>b__0(ResData.ResHeroCfgInfo)
+   0081 newobj System.Void System.Action`1<ResData.ResHeroCfgInfo>::.ctor(System.Object,System.IntPtr)
+   0086 call System.Void ResData.GameDataMgr/heroDatabin::Accept(System.Action`1<ResData.ResHeroCfgInfo>)
+   008B ldloc.0 
+   008C ldflda Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::res
+   0091 ldc.i4.2 
+   0092 ldc.i4.0 
+   0093 call System.Void Assets.Scripts.GameSystem.CHeroOverviewSystem::SortHeroList(ListView`1<Assets.Scripts.GameSystem.IHeroData>&,Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType,System.Boolean)
+   0098 ldloc.0 
+   0099 ldfld Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0::res
+   009E ret 
+== System.Boolean IsOneKeyHideHero(System.UInt32 heroID) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldloca.s V_1
+   0004 ldarg.0 
+   0005 call System.Boolean ResData.GameDataMgr/heroShopInfoDatabin::FindByKey(ResData.ResHeroShop&,System.UInt32)
+   000A brfalse.s IL_0017: ldloc.0
+   000C ldloc.1 
+   000D ldfld ResData.ResHeroShop::bIsBanOneKey
+   0012 ldc.i4.1 
+   0013 bne.un.s IL_0017: ldloc.0
+   0015 ldc.i4.1 
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 
+  NESTED Assets.Scripts.GameSystem.CHeroDataFactory/FilterCondition
+  NESTED Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass8_0
+  NESTED Assets.Scripts.GameSystem.CHeroDataFactory/<>c
+  NESTED Assets.Scripts.GameSystem.CHeroDataFactory/<>c__DisplayClass16_0

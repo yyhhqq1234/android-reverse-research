@@ -1,0 +1,1391 @@
+// TYPE WeatherEffectWorldSpaceParticle  base=IWeatherEffect  attrs=Public, Abstract, BeforeFieldInit
+  FIELD UnityEngine.Mesh[] particlePatchMesh_
+  FIELD WorldSpaceParticleParameterContainer parameterContainer_
+  FIELD ParticleParameter parameter_
+  FIELD System.Int32 timerSeq_
+  FIELD SnowParameterLerper[] lerpers_
+  FIELD System.Boolean paused_
+  FIELD System.Int32 layerMask_
+  FIELD System.Single[] speedScale_
+  FIELD UnityEngine.Vector3[] offset_
+  FIELD UnityEngine.Vector3[] random_
+  FIELD UnityEngine.Vector3[] wind_
+  FIELD UnityEngine.Material[] passMaterial_
+  FIELD UnityEngine.Transform cameraTransform_
+  FIELD UnityEngine.Vector3 lastCameraPosition_
+  FIELD UnityEngine.Vector3 noiseSize_
+  FIELD System.Single noiseStep_ = 0.005
+  FIELD System.Boolean prepared_
+== System.Void .ctor() attrs=Family, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld WeatherEffectWorldSpaceParticle::paused_
+   0007 ldarg.0 
+   0008 ldc.r4 0
+   000D ldc.r4 20000
+   0012 ldc.r4 10000
+   0017 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   001C stfld WeatherEffectWorldSpaceParticle::noiseSize_
+   0021 ldarg.0 
+   0022 call System.Void IWeatherEffect::.ctor()
+   0027 ret 
+== System.Void Play(System.Int32 withLerper, System.Boolean ignoreContinueTime) attrs=Public, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::prepared_
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.0 
+   000E stfld WeatherEffectWorldSpaceParticle::paused_
+   0013 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_0057: ldarg.0
+   0023 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0028 ldfld CameraSystem::MobaCamera
+   002D ldnull 
+   002E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0033 brfalse IL_0057: ldarg.0
+   0038 ldarg.0 
+   0039 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   003E ldfld CameraSystem::MobaCamera
+   0043 callvirt UnityEngine.Camera Moba_Camera::GetCamera()
+   0048 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   004D stfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   0052 br IL_0067: ldarg.0
+   0057 ldarg.0 
+   0058 call UnityEngine.Camera UnityEngine.Camera::get_main()
+   005D callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0062 stfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   0067 ldarg.0 
+   0068 ldarg.0 
+   0069 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   006E callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0073 stfld WeatherEffectWorldSpaceParticle::lastCameraPosition_
+   0078 ldarg.0 
+   0079 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   007E brfalse IL_00f4: ldarg.0
+   0083 ldc.i4.0 
+   0084 stloc.0 
+   0085 br IL_00b6: ldloc.0
+   008A ldarg.0 
+   008B ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0090 ldloc.0 
+   0091 ldelem.ref 
+   0092 brfalse IL_00b2: ldloc.0
+   0097 ldarg.0 
+   0098 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   009D ldloc.0 
+   009E ldelem.ref 
+   009F callvirt System.Void SnowParameterLerper::Reset()
+   00A4 ldarg.0 
+   00A5 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   00AA ldloc.0 
+   00AB ldelem.ref 
+   00AC ldc.i4.1 
+   00AD stfld SnowParameterLerper::Stoped
+   00B2 ldloc.0 
+   00B3 ldc.i4.1 
+   00B4 add 
+   00B5 stloc.0 
+   00B6 ldloc.0 
+   00B7 ldarg.0 
+   00B8 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   00BD ldlen 
+   00BE conv.i4 
+   00BF blt IL_008a: ldarg.0
+   00C4 ldarg.1 
+   00C5 ldc.i4.0 
+   00C6 blt IL_00f4: ldarg.0
+   00CB ldarg.1 
+   00CC ldarg.0 
+   00CD ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   00D2 ldlen 
+   00D3 conv.i4 
+   00D4 bge IL_00f4: ldarg.0
+   00D9 ldarg.0 
+   00DA ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   00DF ldarg.1 
+   00E0 ldelem.ref 
+   00E1 brfalse IL_00f4: ldarg.0
+   00E6 ldarg.0 
+   00E7 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   00EC ldarg.1 
+   00ED ldelem.ref 
+   00EE ldc.i4.0 
+   00EF stfld SnowParameterLerper::Stoped
+   00F4 ldarg.0 
+   00F5 ldfld WeatherEffectWorldSpaceParticle::timerSeq_
+   00FA brfalse IL_0116: ldarg.0
+   00FF call !0 Singleton`1<CTimerManager>::GetInstance()
+   0104 ldarg.0 
+   0105 ldflda WeatherEffectWorldSpaceParticle::timerSeq_
+   010A callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   010F ldarg.0 
+   0110 ldc.i4.0 
+   0111 stfld WeatherEffectWorldSpaceParticle::timerSeq_
+   0116 ldarg.0 
+   0117 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   011C ldfld WorldSpaceParticleParameterContainer::ParticleContinueTime
+   0121 ldc.r4 0
+   0126 blt.un IL_0160: ret
+   012B ldarg.2 
+   012C brtrue IL_0160: ret
+   0131 ldarg.0 
+   0132 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0137 ldarg.0 
+   0138 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   013D ldfld WorldSpaceParticleParameterContainer::ParticleContinueTime
+   0142 ldc.r4 1000
+   0147 mul 
+   0148 conv.i4 
+   0149 ldc.i4.1 
+   014A ldarg.0 
+   014B ldftn System.Void WeatherEffectWorldSpaceParticle::OnTimeUpHandler(System.Int32)
+   0151 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0156 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   015B stfld WeatherEffectWorldSpaceParticle::timerSeq_
+   0160 ret 
+== System.Void Stop() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::prepared_
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E stfld WeatherEffectWorldSpaceParticle::paused_
+   0013 ldarg.0 
+   0014 ldfld WeatherEffectWorldSpaceParticle::timerSeq_
+   0019 brfalse IL_002e: ret
+   001E call !0 Singleton`1<CTimerManager>::GetInstance()
+   0023 ldarg.0 
+   0024 ldflda WeatherEffectWorldSpaceParticle::timerSeq_
+   0029 callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   002E ret 
+== System.Boolean IsAutomaticPlay() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::prepared_
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0013 ldfld WorldSpaceParticleParameterContainer::AutomaticPlay
+   0018 ret 
+== System.Void OnTimeUpHandler(System.Int32 timerSequence) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0006 brfalse IL_0033: call !0 Singleton`1<CTimerManager>::GetInstance()
+   000B ldarg.0 
+   000C ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0011 ldlen 
+   0012 conv.i4 
+   0013 ldc.i4.0 
+   0014 ble IL_0033: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0019 ldarg.0 
+   001A ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   001F ldc.i4.0 
+   0020 ldelem.ref 
+   0021 brfalse IL_0033: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0026 ldarg.0 
+   0027 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   002C ldc.i4.0 
+   002D ldelem.ref 
+   002E callvirt System.Void SnowParameterLerper::Reset()
+   0033 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0038 ldarg.0 
+   0039 ldflda WeatherEffectWorldSpaceParticle::timerSeq_
+   003E callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0043 ldarg.0 
+   0044 ldc.i4.0 
+   0045 stfld WeatherEffectWorldSpaceParticle::timerSeq_
+   004A ret 
+== System.Void Update() attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::paused_
+   0006 brtrue IL_0016: ret
+   000B ldarg.0 
+   000C ldfld WeatherEffectWorldSpaceParticle::prepared_
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   001D brfalse IL_0067: ldarg.0
+   0022 ldc.i4.0 
+   0023 stloc.0 
+   0024 br IL_0059: ldloc.0
+   0029 ldarg.0 
+   002A ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   002F ldloc.0 
+   0030 ldelem.ref 
+   0031 brfalse IL_0055: ldloc.0
+   0036 ldarg.0 
+   0037 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   003C ldloc.0 
+   003D ldelem.ref 
+   003E ldfld SnowParameterLerper::Stoped
+   0043 brtrue IL_0055: ldloc.0
+   0048 ldarg.0 
+   0049 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   004E ldloc.0 
+   004F ldelem.ref 
+   0050 callvirt System.Void SnowParameterLerper::Update()
+   0055 ldloc.0 
+   0056 ldc.i4.1 
+   0057 add 
+   0058 stloc.0 
+   0059 ldloc.0 
+   005A ldarg.0 
+   005B ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0060 ldlen 
+   0061 conv.i4 
+   0062 blt IL_0029: ldarg.0
+   0067 ldarg.0 
+   0068 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   006D ldfld ParticleParameter::Density
+   0072 ldc.r4 0.999
+   0077 add 
+   0078 conv.i4 
+   0079 ldc.i4.0 
+   007A ldarg.0 
+   007B ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0080 ldfld ParticleParameter::MaxPass
+   0085 call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   008A stloc.1 
+   008B ldloc.1 
+   008C brtrue IL_0092: ldarg.0
+   0091 ret 
+   0092 ldarg.0 
+   0093 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0098 ldfld ParticleParameter::MaxPass
+   009D ldc.i4.5 
+   009E div 
+   009F stloc.2 
+   00A0 ldarg.0 
+   00A1 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   00A6 ldfld ParticleParameter::Wind
+   00AB ldloc.2 
+   00AC conv.r4 
+   00AD div 
+   00AE stloc.3 
+   00AF ldarg.0 
+   00B0 ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   00B5 call System.Single UnityEngine.Time::get_deltaTime()
+   00BA ldc.r4 500
+   00BF mul 
+   00C0 stfld UnityEngine.Vector3::x
+   00C5 ldarg.0 
+   00C6 ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   00CB call System.Single UnityEngine.Time::get_deltaTime()
+   00D0 ldc.r4 500
+   00D5 mul 
+   00D6 stfld UnityEngine.Vector3::y
+   00DB ldarg.0 
+   00DC ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   00E1 call System.Single UnityEngine.Time::get_deltaTime()
+   00E6 ldc.r4 500
+   00EB mul 
+   00EC stfld UnityEngine.Vector3::z
+   00F1 ldloca.s V_4
+   00F3 ldarg.0 
+   00F4 ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   00F9 ldfld UnityEngine.Vector3::x
+   00FE conv.i4 
+   00FF call System.Single Perlin::SoftNoise1D(System.Int32)
+   0104 ldarg.0 
+   0105 ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   010A ldfld UnityEngine.Vector3::y
+   010F conv.i4 
+   0110 call System.Single Perlin::SoftNoise1D(System.Int32)
+   0115 ldc.r4 0.5
+   011A mul 
+   011B ldarg.0 
+   011C ldflda WeatherEffectWorldSpaceParticle::noiseSize_
+   0121 ldfld UnityEngine.Vector3::z
+   0126 conv.i4 
+   0127 call System.Single Perlin::SoftNoise1D(System.Int32)
+   012C call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0131 ldarg.0 
+   0132 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0137 ldfld ParticleParameter::Density
+   013C stloc.s V_5
+   013E ldarg.0 
+   013F ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0144 ldfld ParticleParameter::Length
+   0149 ldarg.0 
+   014A ldfld WeatherEffectWorldSpaceParticle::parameter_
+   014F ldfld ParticleParameter::Speed
+   0154 call System.Single UnityEngine.Time::get_deltaTime()
+   0159 mul 
+   015A div 
+   015B stloc.s V_6
+   015D ldc.r4 1
+   0162 stloc.s V_7
+   0164 ldarg.0 
+   0165 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   016A ldfld ParticleParameter::Width
+   016F ldloc.s V_7
+   0171 mul 
+   0172 stloc.s V_8
+   0174 ldloca.s V_9
+   0176 ldloc.s V_8
+   0178 ldloc.s V_6
+   017A call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   017F ldarg.0 
+   0180 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0185 ldfld ParticleParameter::RangeSize
+   018A ldc.r4 0.5
+   018F mul 
+   0190 stloc.s V_10
+   0192 ldarg.0 
+   0193 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   0198 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   019D ldloc.s V_10
+   019F call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   01A4 stloc.s V_11
+   01A6 ldarg.0 
+   01A7 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   01AC callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   01B1 ldarg.0 
+   01B2 ldfld WeatherEffectWorldSpaceParticle::lastCameraPosition_
+   01B7 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   01BC stloc.s V_12
+   01BE ldarg.0 
+   01BF ldarg.0 
+   01C0 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   01C5 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   01CA stfld WeatherEffectWorldSpaceParticle::lastCameraPosition_
+   01CF ldloca.s V_12
+   01D1 call System.Single UnityEngine.Vector3::get_sqrMagnitude()
+   01D6 ldc.r4 0.05
+   01DB ble.un IL_01e7: ldc.i4.0
+   01E0 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   01E5 stloc.s V_12
+   01E7 ldc.i4.0 
+   01E8 stloc.s V_13
+   01EA br IL_057d: ldloc.s V_13
+   01EF ldarg.0 
+   01F0 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   01F5 ldfld ParticleParameter::Speed
+   01FA call System.Single UnityEngine.Time::get_deltaTime()
+   01FF mul 
+   0200 ldarg.0 
+   0201 ldfld WeatherEffectWorldSpaceParticle::speedScale_
+   0206 ldloc.s V_13
+   0208 ldelem.r4 
+   0209 mul 
+   020A stloc.s V_14
+   020C ldarg.0 
+   020D ldfld WeatherEffectWorldSpaceParticle::wind_
+   0212 ldloc.s V_13
+   0214 ldelema UnityEngine.Vector3
+   0219 ldloc.s V_4
+   021B ldloc.3 
+   021C call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0221 ldloc.s V_13
+   0223 ldc.i4.1 
+   0224 add 
+   0225 ldloc.2 
+   0226 rem 
+   0227 conv.r4 
+   0228 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   022D stobj UnityEngine.Vector3
+   0232 ldarg.0 
+   0233 ldfld WeatherEffectWorldSpaceParticle::offset_
+   0238 ldloc.s V_13
+   023A ldelema UnityEngine.Vector3
+   023F dup 
+   0240 ldobj UnityEngine.Vector3
+   0245 ldarg.0 
+   0246 ldfld WeatherEffectWorldSpaceParticle::wind_
+   024B ldloc.s V_13
+   024D ldelema UnityEngine.Vector3
+   0252 ldobj UnityEngine.Vector3
+   0257 call System.Single UnityEngine.Time::get_deltaTime()
+   025C call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0261 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0266 stobj UnityEngine.Vector3
+   026B ldarg.0 
+   026C ldfld WeatherEffectWorldSpaceParticle::offset_
+   0271 ldloc.s V_13
+   0273 ldelema UnityEngine.Vector3
+   0278 dup 
+   0279 ldobj UnityEngine.Vector3
+   027E ldc.r4 0
+   0283 ldloc.s V_14
+   0285 ldc.r4 0
+   028A newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   028F call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0294 stobj UnityEngine.Vector3
+   0299 ldarg.0 
+   029A ldfld WeatherEffectWorldSpaceParticle::offset_
+   029F ldloc.s V_13
+   02A1 ldelema UnityEngine.Vector3
+   02A6 ldfld UnityEngine.Vector3::y
+   02AB ldarg.0 
+   02AC ldfld WeatherEffectWorldSpaceParticle::parameter_
+   02B1 ldfld ParticleParameter::RangeSize
+   02B6 ble.un IL_02d7: ldarg.0
+   02BB ldarg.0 
+   02BC ldfld WeatherEffectWorldSpaceParticle::offset_
+   02C1 ldloc.s V_13
+   02C3 ldelema UnityEngine.Vector3
+   02C8 ldc.r4 0
+   02CD stfld UnityEngine.Vector3::y
+   02D2 br IL_0310: ldarg.0
+   02D7 ldarg.0 
+   02D8 ldfld WeatherEffectWorldSpaceParticle::offset_
+   02DD ldloc.s V_13
+   02DF ldelema UnityEngine.Vector3
+   02E4 ldfld UnityEngine.Vector3::y
+   02E9 ldc.r4 0
+   02EE bge.un IL_0310: ldarg.0
+   02F3 ldarg.0 
+   02F4 ldfld WeatherEffectWorldSpaceParticle::offset_
+   02F9 ldloc.s V_13
+   02FB ldelema UnityEngine.Vector3
+   0300 ldarg.0 
+   0301 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0306 ldfld ParticleParameter::RangeSize
+   030B stfld UnityEngine.Vector3::y
+   0310 ldarg.0 
+   0311 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   0316 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   031B ldarg.0 
+   031C ldfld WeatherEffectWorldSpaceParticle::random_
+   0321 ldloc.s V_13
+   0323 ldelema UnityEngine.Vector3
+   0328 ldobj UnityEngine.Vector3
+   032D call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0332 ldarg.0 
+   0333 ldfld WeatherEffectWorldSpaceParticle::offset_
+   0338 ldloc.s V_13
+   033A ldelema UnityEngine.Vector3
+   033F ldobj UnityEngine.Vector3
+   0344 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0349 ldloc.s V_11
+   034B call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0350 stloc.s V_15
+   0352 ldloca.s V_16
+   0354 ldloca.s V_15
+   0356 ldfld UnityEngine.Vector3::x
+   035B ldarg.0 
+   035C ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0361 ldfld ParticleParameter::RangeSize
+   0366 rem 
+   0367 ldloca.s V_15
+   0369 ldfld UnityEngine.Vector3::y
+   036E ldarg.0 
+   036F ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0374 ldfld ParticleParameter::RangeSize
+   0379 rem 
+   037A ldloca.s V_15
+   037C ldfld UnityEngine.Vector3::z
+   0381 ldarg.0 
+   0382 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0387 ldfld ParticleParameter::RangeSize
+   038C rem 
+   038D call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0392 ldloc.s V_5
+   0394 ldarg.0 
+   0395 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   039A ldfld ParticleParameter::Alpha
+   039F mul 
+   03A0 stloc.s V_5
+   03A2 ldarg.0 
+   03A3 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   03A8 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   03AD ldarg.0 
+   03AE ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03B3 ldflda ParticleParameter::FinalOffset
+   03B8 ldfld UnityEngine.Vector3::z
+   03BD call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   03C2 stloc.s V_17
+   03C4 ldloca.s V_18
+   03C6 ldarg.0 
+   03C7 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03CC ldflda ParticleParameter::FinalOffset
+   03D1 ldfld UnityEngine.Vector3::x
+   03D6 ldloca.s V_17
+   03D8 ldfld UnityEngine.Vector3::x
+   03DD add 
+   03DE ldarg.0 
+   03DF ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03E4 ldflda ParticleParameter::FinalOffset
+   03E9 ldfld UnityEngine.Vector3::y
+   03EE ldloca.s V_17
+   03F0 ldfld UnityEngine.Vector3::y
+   03F5 add 
+   03F6 ldloca.s V_17
+   03F8 ldfld UnityEngine.Vector3::z
+   03FD call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0402 ldloca.s V_19
+   0404 ldarg.0 
+   0405 ldfld WeatherEffectWorldSpaceParticle::wind_
+   040A ldloc.s V_13
+   040C ldelema UnityEngine.Vector3
+   0411 ldfld UnityEngine.Vector3::x
+   0416 call System.Single UnityEngine.Time::get_deltaTime()
+   041B mul 
+   041C ldloca.s V_12
+   041E ldfld UnityEngine.Vector3::x
+   0423 add 
+   0424 ldarg.0 
+   0425 ldfld WeatherEffectWorldSpaceParticle::wind_
+   042A ldloc.s V_13
+   042C ldelema UnityEngine.Vector3
+   0431 ldfld UnityEngine.Vector3::y
+   0436 call System.Single UnityEngine.Time::get_deltaTime()
+   043B mul 
+   043C ldarg.0 
+   043D ldfld WeatherEffectWorldSpaceParticle::speedScale_
+   0442 ldloc.s V_13
+   0444 ldelem.r4 
+   0445 ldarg.0 
+   0446 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   044B ldfld ParticleParameter::Speed
+   0450 mul 
+   0451 call System.Single UnityEngine.Time::get_deltaTime()
+   0456 mul 
+   0457 add 
+   0458 ldarg.0 
+   0459 ldfld WeatherEffectWorldSpaceParticle::wind_
+   045E ldloc.s V_13
+   0460 ldelema UnityEngine.Vector3
+   0465 ldfld UnityEngine.Vector3::z
+   046A call System.Single UnityEngine.Time::get_deltaTime()
+   046F mul 
+   0470 ldloca.s V_12
+   0472 ldfld UnityEngine.Vector3::z
+   0477 add 
+   0478 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   047D ldarg.0 
+   047E ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0483 ldloc.s V_13
+   0485 ldelem.ref 
+   0486 ldstr _WeatherSizeScale
+   048B ldloc.s V_9
+   048D call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector2)
+   0492 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0497 ldarg.0 
+   0498 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   049D ldloc.s V_13
+   049F ldelem.ref 
+   04A0 ldstr _WeatherViewPostion
+   04A5 ldarg.0 
+   04A6 ldfld WeatherEffectWorldSpaceParticle::cameraTransform_
+   04AB callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   04B0 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   04B5 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   04BA ldarg.0 
+   04BB ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   04C0 ldloc.s V_13
+   04C2 ldelem.ref 
+   04C3 ldstr _WeatherForward
+   04C8 ldloc.s V_11
+   04CA call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   04CF callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   04D4 ldarg.0 
+   04D5 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   04DA ldloc.s V_13
+   04DC ldelem.ref 
+   04DD ldstr _RangeSize
+   04E2 ldarg.0 
+   04E3 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   04E8 ldfld ParticleParameter::RangeSize
+   04ED callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   04F2 ldarg.0 
+   04F3 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   04F8 ldloc.s V_13
+   04FA ldelem.ref 
+   04FB ldstr _WeatherPositionOffset
+   0500 ldloc.s V_16
+   0502 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   0507 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   050C ldarg.0 
+   050D ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0512 ldloc.s V_13
+   0514 ldelem.ref 
+   0515 ldstr _WeatherVelocity
+   051A ldloc.s V_19
+   051C call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   0521 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0526 ldarg.0 
+   0527 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   052C ldloc.s V_13
+   052E ldelem.ref 
+   052F ldstr _WeatherAlpha
+   0534 ldloc.s V_5
+   0536 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   053B ldarg.0 
+   053C ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0541 ldloc.s V_13
+   0543 ldelem.ref 
+   0544 ldstr _FinalOffset
+   0549 ldloc.s V_18
+   054B call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   0550 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0555 ldarg.0 
+   0556 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   055B ldloc.s V_13
+   055D ldelem.ref 
+   055E call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_identity()
+   0563 ldarg.0 
+   0564 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0569 ldloc.s V_13
+   056B ldelem.ref 
+   056C ldarg.0 
+   056D ldfld WeatherEffectWorldSpaceParticle::layerMask_
+   0572 call System.Void UnityEngine.Graphics::DrawMesh(UnityEngine.Mesh,UnityEngine.Matrix4x4,UnityEngine.Material,System.Int32)
+   0577 ldloc.s V_13
+   0579 ldc.i4.1 
+   057A add 
+   057B stloc.s V_13
+   057D ldloc.s V_13
+   057F ldloc.1 
+   0580 blt IL_01ef: ldarg.0
+   0585 ret 
+== System.Void PrepareResources(ParameterContainer config) attrs=Public, Virtual, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 callvirt System.Void IWeatherEffect::Clear()
+   0006 ldarg.1 
+   0007 ldnull 
+   0008 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000D brfalse IL_0013: ldarg.0
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldarg.1 
+   0015 isinst WorldSpaceParticleParameterContainer
+   001A stfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   001F ldarg.0 
+   0020 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0025 ldnull 
+   0026 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002B brtrue IL_0053: ret
+   0030 ldarg.0 
+   0031 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0036 ldfld WorldSpaceParticleParameterContainer::Parameters
+   003B brfalse IL_0053: ret
+   0040 ldarg.0 
+   0041 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0046 ldfld WorldSpaceParticleParameterContainer::Parameters
+   004B ldlen 
+   004C conv.i4 
+   004D ldc.i4.1 
+   004E bge IL_0054: ldarg.0
+   0053 ret 
+   0054 ldarg.0 
+   0055 newobj System.Void ParticleParameter::.ctor()
+   005A stfld WeatherEffectWorldSpaceParticle::parameter_
+   005F ldarg.0 
+   0060 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0065 ldarg.0 
+   0066 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   006B ldfld WorldSpaceParticleParameterContainer::Parameters
+   0070 ldc.i4.0 
+   0071 ldelem.ref 
+   0072 ldfld ParticleParameter::Density
+   0077 stfld ParticleParameter::Density
+   007C ldarg.0 
+   007D ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0082 ldarg.0 
+   0083 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0088 ldfld WorldSpaceParticleParameterContainer::Parameters
+   008D ldc.i4.0 
+   008E ldelem.ref 
+   008F ldfld ParticleParameter::Speed
+   0094 stfld ParticleParameter::Speed
+   0099 ldarg.0 
+   009A ldfld WeatherEffectWorldSpaceParticle::parameter_
+   009F ldarg.0 
+   00A0 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   00A5 ldfld WorldSpaceParticleParameterContainer::Parameters
+   00AA ldc.i4.0 
+   00AB ldelem.ref 
+   00AC ldfld ParticleParameter::Length
+   00B1 stfld ParticleParameter::Length
+   00B6 ldarg.0 
+   00B7 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   00BC ldarg.0 
+   00BD ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   00C2 ldfld WorldSpaceParticleParameterContainer::Parameters
+   00C7 ldc.i4.0 
+   00C8 ldelem.ref 
+   00C9 ldfld ParticleParameter::Width
+   00CE stfld ParticleParameter::Width
+   00D3 ldarg.0 
+   00D4 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   00D9 ldarg.0 
+   00DA ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   00DF ldfld WorldSpaceParticleParameterContainer::Parameters
+   00E4 ldc.i4.0 
+   00E5 ldelem.ref 
+   00E6 ldfld ParticleParameter::Alpha
+   00EB stfld ParticleParameter::Alpha
+   00F0 ldarg.0 
+   00F1 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   00F6 ldarg.0 
+   00F7 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   00FC ldfld WorldSpaceParticleParameterContainer::Parameters
+   0101 ldc.i4.0 
+   0102 ldelem.ref 
+   0103 ldfld ParticleParameter::Wind
+   0108 stfld ParticleParameter::Wind
+   010D ldarg.0 
+   010E ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0113 ldarg.0 
+   0114 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0119 ldfld WorldSpaceParticleParameterContainer::Parameters
+   011E ldc.i4.0 
+   011F ldelem.ref 
+   0120 ldfld ParticleParameter::RenderLayer
+   0125 stfld ParticleParameter::RenderLayer
+   012A ldarg.0 
+   012B ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0130 ldarg.0 
+   0131 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0136 ldfld WorldSpaceParticleParameterContainer::Parameters
+   013B ldc.i4.0 
+   013C ldelem.ref 
+   013D ldfld ParticleParameter::MaxPass
+   0142 stfld ParticleParameter::MaxPass
+   0147 ldarg.0 
+   0148 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   014D ldarg.0 
+   014E ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0153 ldfld WorldSpaceParticleParameterContainer::Parameters
+   0158 ldc.i4.0 
+   0159 ldelem.ref 
+   015A ldfld ParticleParameter::RangeSize
+   015F stfld ParticleParameter::RangeSize
+   0164 ldarg.0 
+   0165 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   016A ldarg.0 
+   016B ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0170 ldfld WorldSpaceParticleParameterContainer::Parameters
+   0175 ldc.i4.0 
+   0176 ldelem.ref 
+   0177 ldfld ParticleParameter::Particles
+   017C stfld ParticleParameter::Particles
+   0181 ldarg.0 
+   0182 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0187 ldarg.0 
+   0188 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   018D ldfld WorldSpaceParticleParameterContainer::Parameters
+   0192 ldc.i4.0 
+   0193 ldelem.ref 
+   0194 ldfld ParticleParameter::FinalOffset
+   0199 stfld ParticleParameter::FinalOffset
+   019E ldarg.0 
+   019F ldfld WeatherEffectWorldSpaceParticle::parameter_
+   01A4 ldarg.0 
+   01A5 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   01AA ldfld WorldSpaceParticleParameterContainer::Parameters
+   01AF ldc.i4.0 
+   01B0 ldelem.ref 
+   01B1 ldfld ParticleParameter::Materials
+   01B6 ldlen 
+   01B7 conv.i4 
+   01B8 newarr UnityEngine.Material
+   01BD stfld ParticleParameter::Materials
+   01C2 ldc.i4.0 
+   01C3 stloc.0 
+   01C4 br IL_01ee: ldloc.0
+   01C9 ldarg.0 
+   01CA ldfld WeatherEffectWorldSpaceParticle::parameter_
+   01CF ldfld ParticleParameter::Materials
+   01D4 ldloc.0 
+   01D5 ldarg.0 
+   01D6 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   01DB ldfld WorldSpaceParticleParameterContainer::Parameters
+   01E0 ldc.i4.0 
+   01E1 ldelem.ref 
+   01E2 ldfld ParticleParameter::Materials
+   01E7 ldloc.0 
+   01E8 ldelem.ref 
+   01E9 stelem.ref 
+   01EA ldloc.0 
+   01EB ldc.i4.1 
+   01EC add 
+   01ED stloc.0 
+   01EE ldloc.0 
+   01EF ldarg.0 
+   01F0 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   01F5 ldfld ParticleParameter::Materials
+   01FA ldlen 
+   01FB conv.i4 
+   01FC blt IL_01c9: ldarg.0
+   0201 ldarg.0 
+   0202 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0207 ldfld WorldSpaceParticleParameterContainer::Lerps
+   020C brfalse IL_02e8: ldarg.0
+   0211 ldarg.0 
+   0212 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0217 ldfld WorldSpaceParticleParameterContainer::Lerps
+   021C ldlen 
+   021D conv.i4 
+   021E ldc.i4.0 
+   021F ble IL_02e8: ldarg.0
+   0224 ldarg.0 
+   0225 ldarg.0 
+   0226 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   022B ldfld WorldSpaceParticleParameterContainer::Lerps
+   0230 ldlen 
+   0231 conv.i4 
+   0232 newarr SnowParameterLerper
+   0237 stfld WeatherEffectWorldSpaceParticle::lerpers_
+   023C ldc.i4.0 
+   023D stloc.1 
+   023E br IL_02da: ldloc.1
+   0243 ldarg.0 
+   0244 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0249 ldfld WorldSpaceParticleParameterContainer::Lerps
+   024E ldloc.1 
+   024F ldelem.ref 
+   0250 ldarg.0 
+   0251 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0256 ldfld WorldSpaceParticleParameterContainer::Parameters
+   025B ldlen 
+   025C conv.i4 
+   025D callvirt System.Boolean ParticleParamLerp::Validate(System.Int32)
+   0262 brfalse IL_02d6: ldloc.1
+   0267 ldarg.0 
+   0268 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   026D ldloc.1 
+   026E ldarg.0 
+   026F ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0274 ldarg.0 
+   0275 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   027A ldfld WorldSpaceParticleParameterContainer::Parameters
+   027F ldarg.0 
+   0280 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0285 ldfld WorldSpaceParticleParameterContainer::Lerps
+   028A ldloc.1 
+   028B ldelem.ref 
+   028C ldfld ParticleParamLerp::From
+   0291 ldelem.ref 
+   0292 ldarg.0 
+   0293 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   0298 ldfld WorldSpaceParticleParameterContainer::Parameters
+   029D ldarg.0 
+   029E ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   02A3 ldfld WorldSpaceParticleParameterContainer::Lerps
+   02A8 ldloc.1 
+   02A9 ldelem.ref 
+   02AA ldfld ParticleParamLerp::To
+   02AF ldelem.ref 
+   02B0 ldarg.0 
+   02B1 ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   02B6 ldfld WorldSpaceParticleParameterContainer::Lerps
+   02BB ldloc.1 
+   02BC ldelem.ref 
+   02BD ldfld ParticleParamLerp::LerpTime
+   02C2 newobj System.Void SnowParameterLerper::.ctor(ParticleParameter,ParticleParameter,ParticleParameter,System.Single)
+   02C7 stelem.ref 
+   02C8 ldarg.0 
+   02C9 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   02CE ldloc.1 
+   02CF ldelem.ref 
+   02D0 ldc.i4.1 
+   02D1 stfld SnowParameterLerper::Stoped
+   02D6 ldloc.1 
+   02D7 ldc.i4.1 
+   02D8 add 
+   02D9 stloc.1 
+   02DA ldloc.1 
+   02DB ldarg.0 
+   02DC ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   02E1 ldlen 
+   02E2 conv.i4 
+   02E3 blt IL_0243: ldarg.0
+   02E8 ldarg.0 
+   02E9 ldarg.0 
+   02EA ldfld WeatherEffectWorldSpaceParticle::parameter_
+   02EF ldfld ParticleParameter::MaxPass
+   02F4 newarr System.Single
+   02F9 stfld WeatherEffectWorldSpaceParticle::speedScale_
+   02FE ldarg.0 
+   02FF ldarg.0 
+   0300 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0305 ldfld ParticleParameter::MaxPass
+   030A newarr UnityEngine.Vector3
+   030F stfld WeatherEffectWorldSpaceParticle::offset_
+   0314 ldarg.0 
+   0315 ldarg.0 
+   0316 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   031B ldfld ParticleParameter::MaxPass
+   0320 newarr UnityEngine.Vector3
+   0325 stfld WeatherEffectWorldSpaceParticle::random_
+   032A ldarg.0 
+   032B ldarg.0 
+   032C ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0331 ldfld ParticleParameter::MaxPass
+   0336 newarr UnityEngine.Vector3
+   033B stfld WeatherEffectWorldSpaceParticle::wind_
+   0340 ldarg.0 
+   0341 ldarg.0 
+   0342 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0347 ldfld ParticleParameter::MaxPass
+   034C newarr UnityEngine.Material
+   0351 stfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0356 ldarg.0 
+   0357 ldarg.0 
+   0358 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   035D ldfld ParticleParameter::RenderLayer
+   0362 call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   0367 stfld WeatherEffectWorldSpaceParticle::layerMask_
+   036C ldc.i4.0 
+   036D stloc.2 
+   036E br IL_0415: ldloc.2
+   0373 ldarg.0 
+   0374 ldfld WeatherEffectWorldSpaceParticle::speedScale_
+   0379 ldloc.2 
+   037A ldc.r4 0.75
+   037F ldc.r4 0
+   0384 ldc.r4 0.5
+   0389 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   038E add 
+   038F stelem.r4 
+   0390 ldarg.0 
+   0391 ldfld WeatherEffectWorldSpaceParticle::random_
+   0396 ldloc.2 
+   0397 ldelema UnityEngine.Vector3
+   039C ldc.r4 0
+   03A1 ldarg.0 
+   03A2 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03A7 ldfld ParticleParameter::RangeSize
+   03AC call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   03B1 ldc.r4 0
+   03B6 ldarg.0 
+   03B7 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03BC ldfld ParticleParameter::RangeSize
+   03C1 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   03C6 ldc.r4 0
+   03CB ldarg.0 
+   03CC ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03D1 ldfld ParticleParameter::RangeSize
+   03D6 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   03DB newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   03E0 stobj UnityEngine.Vector3
+   03E5 ldarg.0 
+   03E6 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   03EB ldloc.2 
+   03EC ldarg.0 
+   03ED ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03F2 ldfld ParticleParameter::Materials
+   03F7 ldc.i4.0 
+   03F8 ldarg.0 
+   03F9 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   03FE ldfld ParticleParameter::Materials
+   0403 ldlen 
+   0404 conv.i4 
+   0405 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   040A ldelem.ref 
+   040B call !!0 UnityEngine.Object::Instantiate<UnityEngine.Material>(!!0)
+   0410 stelem.ref 
+   0411 ldloc.2 
+   0412 ldc.i4.1 
+   0413 add 
+   0414 stloc.2 
+   0415 ldloc.2 
+   0416 ldarg.0 
+   0417 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   041C ldfld ParticleParameter::MaxPass
+   0421 blt IL_0373: ldarg.0
+   0426 ldarg.0 
+   0427 ldarg.0 
+   0428 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   042D ldfld ParticleParameter::MaxPass
+   0432 newarr UnityEngine.Mesh
+   0437 stfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   043C ldarg.0 
+   043D ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0442 ldfld ParticleParameter::Particles
+   0447 ldc.i4.4 
+   0448 mul 
+   0449 newarr UnityEngine.Vector3
+   044E stloc.3 
+   044F ldarg.0 
+   0450 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0455 ldfld ParticleParameter::Particles
+   045A ldc.i4.6 
+   045B mul 
+   045C newarr System.Int32
+   0461 stloc.s V_4
+   0463 ldarg.0 
+   0464 ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0469 ldfld ParticleParameter::Particles
+   046E ldc.i4.4 
+   046F mul 
+   0470 newarr UnityEngine.Vector2
+   0475 stloc.s V_5
+   0477 ldc.i4.0 
+   0478 stloc.s V_6
+   047A br IL_069c: ldloc.s V_6
+   047F ldc.i4.0 
+   0480 stloc.s V_7
+   0482 br IL_0619: ldloc.s V_7
+   0487 ldloca.s V_8
+   0489 ldarg.0 
+   048A ldfld WeatherEffectWorldSpaceParticle::parameter_
+   048F ldfld ParticleParameter::RangeSize
+   0494 ldc.r4 2
+   0499 ldarg.0 
+   049A ldfld WeatherEffectWorldSpaceParticle::parameter_
+   049F ldfld ParticleParameter::RangeSize
+   04A4 mul 
+   04A5 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   04AA ldarg.0 
+   04AB ldfld WeatherEffectWorldSpaceParticle::parameter_
+   04B0 ldfld ParticleParameter::RangeSize
+   04B5 ldc.r4 2
+   04BA ldarg.0 
+   04BB ldfld WeatherEffectWorldSpaceParticle::parameter_
+   04C0 ldfld ParticleParameter::RangeSize
+   04C5 mul 
+   04C6 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   04CB ldarg.0 
+   04CC ldfld WeatherEffectWorldSpaceParticle::parameter_
+   04D1 ldfld ParticleParameter::RangeSize
+   04D6 ldc.r4 2
+   04DB ldarg.0 
+   04DC ldfld WeatherEffectWorldSpaceParticle::parameter_
+   04E1 ldfld ParticleParameter::RangeSize
+   04E6 mul 
+   04E7 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   04EC call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   04F1 ldloc.3 
+   04F2 ldloc.s V_7
+   04F4 ldc.i4.4 
+   04F5 mul 
+   04F6 ldelema UnityEngine.Vector3
+   04FB ldloc.s V_8
+   04FD stobj UnityEngine.Vector3
+   0502 ldloc.3 
+   0503 ldloc.s V_7
+   0505 ldc.i4.4 
+   0506 mul 
+   0507 ldc.i4.1 
+   0508 add 
+   0509 ldelema UnityEngine.Vector3
+   050E ldloc.s V_8
+   0510 stobj UnityEngine.Vector3
+   0515 ldloc.3 
+   0516 ldloc.s V_7
+   0518 ldc.i4.4 
+   0519 mul 
+   051A ldc.i4.2 
+   051B add 
+   051C ldelema UnityEngine.Vector3
+   0521 ldloc.s V_8
+   0523 stobj UnityEngine.Vector3
+   0528 ldloc.3 
+   0529 ldloc.s V_7
+   052B ldc.i4.4 
+   052C mul 
+   052D ldc.i4.3 
+   052E add 
+   052F ldelema UnityEngine.Vector3
+   0534 ldloc.s V_8
+   0536 stobj UnityEngine.Vector3
+   053B ldloc.s V_5
+   053D ldloc.s V_7
+   053F ldc.i4.4 
+   0540 mul 
+   0541 ldelema UnityEngine.Vector2
+   0546 ldc.r4 0
+   054B ldc.r4 0
+   0550 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0555 stobj UnityEngine.Vector2
+   055A ldloc.s V_5
+   055C ldloc.s V_7
+   055E ldc.i4.4 
+   055F mul 
+   0560 ldc.i4.1 
+   0561 add 
+   0562 ldelema UnityEngine.Vector2
+   0567 ldc.r4 1
+   056C ldc.r4 0
+   0571 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0576 stobj UnityEngine.Vector2
+   057B ldloc.s V_5
+   057D ldloc.s V_7
+   057F ldc.i4.4 
+   0580 mul 
+   0581 ldc.i4.2 
+   0582 add 
+   0583 ldelema UnityEngine.Vector2
+   0588 ldc.r4 0
+   058D ldc.r4 1
+   0592 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0597 stobj UnityEngine.Vector2
+   059C ldloc.s V_5
+   059E ldloc.s V_7
+   05A0 ldc.i4.4 
+   05A1 mul 
+   05A2 ldc.i4.3 
+   05A3 add 
+   05A4 ldelema UnityEngine.Vector2
+   05A9 ldc.r4 1
+   05AE ldc.r4 1
+   05B3 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   05B8 stobj UnityEngine.Vector2
+   05BD ldloc.s V_4
+   05BF ldloc.s V_7
+   05C1 ldc.i4.6 
+   05C2 mul 
+   05C3 ldloc.s V_7
+   05C5 ldc.i4.4 
+   05C6 mul 
+   05C7 stelem.i4 
+   05C8 ldloc.s V_4
+   05CA ldloc.s V_7
+   05CC ldc.i4.6 
+   05CD mul 
+   05CE ldc.i4.1 
+   05CF add 
+   05D0 ldloc.s V_7
+   05D2 ldc.i4.4 
+   05D3 mul 
+   05D4 ldc.i4.1 
+   05D5 add 
+   05D6 stelem.i4 
+   05D7 ldloc.s V_4
+   05D9 ldloc.s V_7
+   05DB ldc.i4.6 
+   05DC mul 
+   05DD ldc.i4.2 
+   05DE add 
+   05DF ldloc.s V_7
+   05E1 ldc.i4.4 
+   05E2 mul 
+   05E3 ldc.i4.2 
+   05E4 add 
+   05E5 stelem.i4 
+   05E6 ldloc.s V_4
+   05E8 ldloc.s V_7
+   05EA ldc.i4.6 
+   05EB mul 
+   05EC ldc.i4.3 
+   05ED add 
+   05EE ldloc.s V_7
+   05F0 ldc.i4.4 
+   05F1 mul 
+   05F2 ldc.i4.2 
+   05F3 add 
+   05F4 stelem.i4 
+   05F5 ldloc.s V_4
+   05F7 ldloc.s V_7
+   05F9 ldc.i4.6 
+   05FA mul 
+   05FB ldc.i4.4 
+   05FC add 
+   05FD ldloc.s V_7
+   05FF ldc.i4.4 
+   0600 mul 
+   0601 ldc.i4.1 
+   0602 add 
+   0603 stelem.i4 
+   0604 ldloc.s V_4
+   0606 ldloc.s V_7
+   0608 ldc.i4.6 
+   0609 mul 
+   060A ldc.i4.5 
+   060B add 
+   060C ldloc.s V_7
+   060E ldc.i4.4 
+   060F mul 
+   0610 ldc.i4.3 
+   0611 add 
+   0612 stelem.i4 
+   0613 ldloc.s V_7
+   0615 ldc.i4.1 
+   0616 add 
+   0617 stloc.s V_7
+   0619 ldloc.s V_7
+   061B ldarg.0 
+   061C ldfld WeatherEffectWorldSpaceParticle::parameter_
+   0621 ldfld ParticleParameter::Particles
+   0626 blt IL_0487: ldloca.s V_8
+   062B ldarg.0 
+   062C ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   0631 ldloc.s V_6
+   0633 newobj System.Void UnityEngine.Mesh::.ctor()
+   0638 stelem.ref 
+   0639 ldarg.0 
+   063A ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   063F ldloc.s V_6
+   0641 ldelem.ref 
+   0642 ldloc.3 
+   0643 callvirt System.Void UnityEngine.Mesh::set_vertices(UnityEngine.Vector3[])
+   0648 ldarg.0 
+   0649 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   064E ldloc.s V_6
+   0650 ldelem.ref 
+   0651 ldloc.s V_4
+   0653 ldc.i4.0 
+   0654 ldc.i4.0 
+   0655 callvirt System.Void UnityEngine.Mesh::SetIndices(System.Int32[],UnityEngine.MeshTopology,System.Int32)
+   065A ldarg.0 
+   065B ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   0660 ldloc.s V_6
+   0662 ldelem.ref 
+   0663 ldloc.s V_5
+   0665 callvirt System.Void UnityEngine.Mesh::set_uv(UnityEngine.Vector2[])
+   066A ldarg.0 
+   066B ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   0670 ldloc.s V_6
+   0672 ldelem.ref 
+   0673 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0678 ldc.r4 10000
+   067D ldc.r4 10000
+   0682 ldc.r4 10000
+   0687 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   068C newobj System.Void UnityEngine.Bounds::.ctor(UnityEngine.Vector3,UnityEngine.Vector3)
+   0691 callvirt System.Void UnityEngine.Mesh::set_bounds(UnityEngine.Bounds)
+   0696 ldloc.s V_6
+   0698 ldc.i4.1 
+   0699 add 
+   069A stloc.s V_6
+   069C ldloc.s V_6
+   069E ldarg.0 
+   069F ldfld WeatherEffectWorldSpaceParticle::parameter_
+   06A4 ldfld ParticleParameter::MaxPass
+   06A9 blt IL_047f: ldc.i4.0
+   06AE ldarg.0 
+   06AF ldc.i4.1 
+   06B0 stfld WeatherEffectWorldSpaceParticle::prepared_
+   06B5 ret 
+== System.Void Clear() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   0006 brfalse IL_0044: ldarg.0
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0036: ldloc.0
+   0012 ldnull 
+   0013 ldarg.0 
+   0014 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   0019 ldloc.0 
+   001A ldelem.ref 
+   001B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0020 brfalse IL_0032: ldloc.0
+   0025 ldarg.0 
+   0026 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   002B ldloc.0 
+   002C ldelem.ref 
+   002D call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0032 ldloc.0 
+   0033 ldc.i4.1 
+   0034 add 
+   0035 stloc.0 
+   0036 ldloc.0 
+   0037 ldarg.0 
+   0038 ldfld WeatherEffectWorldSpaceParticle::particlePatchMesh_
+   003D ldlen 
+   003E conv.i4 
+   003F blt IL_0012: ldnull
+   0044 ldarg.0 
+   0045 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   004A brfalse IL_0088: ldnull
+   004F ldc.i4.0 
+   0050 stloc.1 
+   0051 br IL_007a: ldloc.1
+   0056 ldnull 
+   0057 ldarg.0 
+   0058 ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   005D ldloc.1 
+   005E ldelem.ref 
+   005F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0064 brfalse IL_0076: ldloc.1
+   0069 ldarg.0 
+   006A ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   006F ldloc.1 
+   0070 ldelem.ref 
+   0071 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0076 ldloc.1 
+   0077 ldc.i4.1 
+   0078 add 
+   0079 stloc.1 
+   007A ldloc.1 
+   007B ldarg.0 
+   007C ldfld WeatherEffectWorldSpaceParticle::passMaterial_
+   0081 ldlen 
+   0082 conv.i4 
+   0083 blt IL_0056: ldnull
+   0088 ldnull 
+   0089 ldarg.0 
+   008A ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   008F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0094 brfalse IL_00a9: ldarg.0
+   0099 ldarg.0 
+   009A ldfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   009F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A4 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00A9 ldarg.0 
+   00AA ldnull 
+   00AB stfld WeatherEffectWorldSpaceParticle::parameterContainer_
+   00B0 ldarg.0 
+   00B1 ldnull 
+   00B2 stfld WeatherEffectWorldSpaceParticle::parameter_
+   00B7 ldarg.0 
+   00B8 ldnull 
+   00B9 stfld WeatherEffectWorldSpaceParticle::lerpers_
+   00BE ldarg.0 
+   00BF ldc.i4.0 
+   00C0 stfld WeatherEffectWorldSpaceParticle::prepared_
+   00C5 ret 
+== System.Void TriggerLerper(System.Int32 lerper) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0006 brfalse IL_007c: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_003e: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0018 ldloc.0 
+   0019 ldelem.ref 
+   001A brfalse IL_003a: ldloc.0
+   001F ldarg.0 
+   0020 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0025 ldloc.0 
+   0026 ldelem.ref 
+   0027 callvirt System.Void SnowParameterLerper::Reset()
+   002C ldarg.0 
+   002D ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0032 ldloc.0 
+   0033 ldelem.ref 
+   0034 ldc.i4.1 
+   0035 stfld SnowParameterLerper::Stoped
+   003A ldloc.0 
+   003B ldc.i4.1 
+   003C add 
+   003D stloc.0 
+   003E ldloc.0 
+   003F ldarg.0 
+   0040 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0045 ldlen 
+   0046 conv.i4 
+   0047 blt IL_0012: ldarg.0
+   004C ldarg.1 
+   004D ldc.i4.0 
+   004E blt IL_007c: ret
+   0053 ldarg.1 
+   0054 ldarg.0 
+   0055 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   005A ldlen 
+   005B conv.i4 
+   005C bge IL_007c: ret
+   0061 ldarg.0 
+   0062 ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0067 ldarg.1 
+   0068 ldelem.ref 
+   0069 brfalse IL_007c: ret
+   006E ldarg.0 
+   006F ldfld WeatherEffectWorldSpaceParticle::lerpers_
+   0074 ldarg.1 
+   0075 ldelem.ref 
+   0076 ldc.i4.0 
+   0077 stfld SnowParameterLerper::Stoped
+   007C ret 

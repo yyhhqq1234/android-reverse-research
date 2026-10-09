@@ -1,0 +1,339 @@
+// TYPE Gif.GifFrame  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD Gif.CommentExtensionData _CME_data
+  FIELD Gif.GraphicControlExtensionData _GCE_data
+  FIELD Gif.Image _image
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== Gif.ERROR Load(System.IO.BinaryReader reader) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.1 
+   0002 ldc.i4.0 
+   0003 stloc.2 
+   0004 ldarg.1 
+   0005 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldc.i4.s 33
+   000E ble IL_0043: ldloc.0
+   0013 ldloc.0 
+   0014 ldc.i4.s 44
+   0016 beq IL_0028: ldarg.0
+   001B ldloc.0 
+   001C ldc.i4.s 59
+   001E beq IL_0037: ldc.i4.1
+   0023 br IL_003e: br IL_005e
+   0028 ldarg.0 
+   0029 ldarg.1 
+   002A call Gif.ERROR Gif.GifFrame::LoadImage(System.IO.BinaryReader)
+   002F stloc.2 
+   0030 ldc.i4.1 
+   0031 stloc.1 
+   0032 br IL_0060: ldloc.2
+   0037 ldc.i4.1 
+   0038 stloc.2 
+   0039 br IL_0060: ldloc.2
+   003E br IL_005e: ldc.i4.4
+   0043 ldloc.0 
+   0044 brfalse IL_0004: ldarg.1
+   0049 ldloc.0 
+   004A ldc.i4.s 33
+   004C bne.un IL_005e: ldc.i4.4
+   0051 ldarg.0 
+   0052 ldarg.1 
+   0053 call Gif.ERROR Gif.GifFrame::LoadExtension(System.IO.BinaryReader)
+   0058 stloc.2 
+   0059 br IL_0060: ldloc.2
+   005E ldc.i4.4 
+   005F stloc.2 
+   0060 ldloc.2 
+   0061 brtrue IL_0071: ldloc.2
+   0066 ldloc.1 
+   0067 brtrue IL_0071: ldloc.2
+   006C br IL_0004: ldarg.1
+   0071 ldloc.2 
+   0072 ret 
+== Gif.ERROR LoadApplicationExtension(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call Gif.ERROR Gif.Loader::SkipBlock(System.IO.BinaryReader)
+   0006 pop 
+   0007 ldc.i4.0 
+   0008 ret 
+== Gif.ERROR LoadCommentExtension(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 call System.Byte[] Gif.Loader::ReadBlock(System.IO.BinaryReader)
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldflda Gif.GifFrame::_CME_data
+   000D call System.Text.Encoding System.Text.Encoding::get_Default()
+   0012 ldloc.0 
+   0013 callvirt System.String System.Text.Encoding::GetString(System.Byte[])
+   0018 stfld Gif.CommentExtensionData::comment
+   001D ldc.i4.0 
+   001E ret 
+== Gif.ERROR LoadExtension(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldc.i4 254
+   000D beq IL_003c: ldarg.0
+   0012 ldloc.0 
+   0013 ldc.i4 255
+   0018 beq IL_0044: ldarg.0
+   001D ldloc.0 
+   001E ldc.i4.1 
+   001F beq IL_0034: ldarg.0
+   0024 ldloc.0 
+   0025 ldc.i4 249
+   002A beq IL_004c: ldarg.0
+   002F br IL_0054: ldc.i4.5
+   0034 ldarg.0 
+   0035 ldarg.1 
+   0036 call Gif.ERROR Gif.GifFrame::LoadPlainTextExtension(System.IO.BinaryReader)
+   003B ret 
+   003C ldarg.0 
+   003D ldarg.1 
+   003E call Gif.ERROR Gif.GifFrame::LoadCommentExtension(System.IO.BinaryReader)
+   0043 ret 
+   0044 ldarg.0 
+   0045 ldarg.1 
+   0046 call Gif.ERROR Gif.GifFrame::LoadApplicationExtension(System.IO.BinaryReader)
+   004B ret 
+   004C ldarg.0 
+   004D ldarg.1 
+   004E call Gif.ERROR Gif.GifFrame::LoadGraphicControlExtension(System.IO.BinaryReader)
+   0053 ret 
+   0054 ldc.i4.5 
+   0055 ret 
+== Gif.ERROR LoadGraphicControlExtension(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0006 pop 
+   0007 ldarg.1 
+   0008 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   000D stloc.0 
+   000E ldarg.0 
+   000F ldflda Gif.GifFrame::_GCE_data
+   0014 ldc.i4.1 
+   0015 ldloc.0 
+   0016 and 
+   0017 ldc.i4.1 
+   0018 ceq 
+   001A stfld Gif.GraphicControlExtensionData::transparent_color_flag
+   001F ldarg.0 
+   0020 ldflda Gif.GifFrame::_GCE_data
+   0025 ldc.i4.s 16
+   0027 ldloc.0 
+   0028 and 
+   0029 ldc.i4.1 
+   002A shr 
+   002B ldc.i4.1 
+   002C ceq 
+   002E stfld Gif.GraphicControlExtensionData::user_input_flag
+   0033 ldarg.0 
+   0034 ldflda Gif.GifFrame::_GCE_data
+   0039 ldc.i4.s 28
+   003B ldloc.0 
+   003C and 
+   003D ldc.i4.2 
+   003E shr 
+   003F stfld Gif.GraphicControlExtensionData::disposal_method
+   0044 ldarg.0 
+   0045 ldflda Gif.GifFrame::_GCE_data
+   004A ldarg.1 
+   004B callvirt System.Int16 System.IO.BinaryReader::ReadInt16()
+   0050 stfld Gif.GraphicControlExtensionData::delay_time
+   0055 ldarg.0 
+   0056 ldflda Gif.GifFrame::_GCE_data
+   005B ldfld Gif.GraphicControlExtensionData::transparent_color_flag
+   0060 brfalse IL_0076: ldarg.1
+   0065 ldarg.0 
+   0066 ldflda Gif.GifFrame::_GCE_data
+   006B ldarg.1 
+   006C callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   0071 stfld Gif.GraphicControlExtensionData::transparent_color
+   0076 ldarg.1 
+   0077 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   007C pop 
+   007D ldc.i4.0 
+   007E ret 
+== Gif.ERROR LoadImage(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldarg.1 
+   0004 call Gif.ERROR Gif.GifFrame::LoadImageDescriptor(System.IO.BinaryReader)
+   0009 stloc.0 
+   000A ldloc.0 
+   000B brtrue IL_0018: ldloc.0
+   0010 ldarg.0 
+   0011 ldarg.1 
+   0012 call Gif.ERROR Gif.GifFrame::LoadImageData(System.IO.BinaryReader)
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ret 
+== Gif.ERROR LoadImageData(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=5
+   0000 newobj System.Void Gif.LZW_Decompress::.ctor()
+   0005 ldarg.0 
+   0006 ldflda Gif.GifFrame::_image
+   000B ldflda Gif.Image::desc
+   0010 ldfld Gif.ImageDesc::image_width
+   0015 ldarg.0 
+   0016 ldflda Gif.GifFrame::_image
+   001B ldflda Gif.Image::desc
+   0020 ldfld Gif.ImageDesc::image_height
+   0025 ldarg.0 
+   0026 ldflda Gif.GifFrame::_image
+   002B ldflda Gif.Image::data
+   0030 ldarg.1 
+   0031 call Gif.ERROR Gif.LZW_Decompress::Decompress(System.Int32,System.Int32,System.Byte[]&,System.IO.BinaryReader)
+   0036 stloc.0 
+   0037 ldarg.1 
+   0038 call Gif.ERROR Gif.Loader::SkipBlock(System.IO.BinaryReader)
+   003D pop 
+   003E ldloc.0 
+   003F ret 
+== Gif.ERROR LoadImageDescriptor(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldflda Gif.GifFrame::_image
+   0006 ldflda Gif.Image::desc
+   000B ldarg.1 
+   000C callvirt System.Int16 System.IO.BinaryReader::ReadInt16()
+   0011 stfld Gif.ImageDesc::image_left
+   0016 ldarg.0 
+   0017 ldflda Gif.GifFrame::_image
+   001C ldflda Gif.Image::desc
+   0021 ldarg.1 
+   0022 callvirt System.Int16 System.IO.BinaryReader::ReadInt16()
+   0027 stfld Gif.ImageDesc::image_top
+   002C ldarg.0 
+   002D ldflda Gif.GifFrame::_image
+   0032 ldflda Gif.Image::desc
+   0037 ldarg.1 
+   0038 callvirt System.Int16 System.IO.BinaryReader::ReadInt16()
+   003D stfld Gif.ImageDesc::image_width
+   0042 ldarg.0 
+   0043 ldflda Gif.GifFrame::_image
+   0048 ldflda Gif.Image::desc
+   004D ldarg.1 
+   004E callvirt System.Int16 System.IO.BinaryReader::ReadInt16()
+   0053 stfld Gif.ImageDesc::image_height
+   0058 ldarg.1 
+   0059 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   005E stloc.0 
+   005F ldc.i4.0 
+   0060 stloc.1 
+   0061 ldc.i4.7 
+   0062 ldloc.0 
+   0063 and 
+   0064 stloc.1 
+   0065 ldarg.0 
+   0066 ldflda Gif.GifFrame::_image
+   006B ldflda Gif.Image::desc
+   0070 ldsfld Gif.Loader::POW
+   0075 ldloc.1 
+   0076 ldc.i4.1 
+   0077 add 
+   0078 ldelem.i4 
+   0079 stfld Gif.ImageDesc::local_color_table_size
+   007E ldarg.0 
+   007F ldflda Gif.GifFrame::_image
+   0084 ldflda Gif.Image::desc
+   0089 ldc.i4.s 32
+   008B ldloc.0 
+   008C and 
+   008D ldc.i4.5 
+   008E shr 
+   008F ldc.i4.1 
+   0090 ceq 
+   0092 stfld Gif.ImageDesc::sort_flag
+   0097 ldarg.0 
+   0098 ldflda Gif.GifFrame::_image
+   009D ldflda Gif.Image::desc
+   00A2 ldc.i4.s 64
+   00A4 ldloc.0 
+   00A5 and 
+   00A6 ldc.i4.6 
+   00A7 shr 
+   00A8 ldc.i4.1 
+   00A9 ceq 
+   00AB stfld Gif.ImageDesc::interlace_flag
+   00B0 ldarg.0 
+   00B1 ldflda Gif.GifFrame::_image
+   00B6 ldflda Gif.Image::desc
+   00BB ldc.i4 128
+   00C0 ldloc.0 
+   00C1 and 
+   00C2 ldc.i4.7 
+   00C3 shr 
+   00C4 ldc.i4.1 
+   00C5 ceq 
+   00C7 stfld Gif.ImageDesc::local_color_table_flag
+   00CC ldarg.0 
+   00CD ldflda Gif.GifFrame::_image
+   00D2 ldflda Gif.Image::desc
+   00D7 ldnull 
+   00D8 stfld Gif.ImageDesc::local_color_table
+   00DD ldarg.0 
+   00DE ldflda Gif.GifFrame::_image
+   00E3 ldflda Gif.Image::desc
+   00E8 ldfld Gif.ImageDesc::local_color_table_flag
+   00ED brfalse IL_018e: ldc.i4.0
+   00F2 ldarg.0 
+   00F3 ldflda Gif.GifFrame::_image
+   00F8 ldflda Gif.Image::desc
+   00FD ldfld Gif.ImageDesc::local_color_table_size
+   0102 stloc.2 
+   0103 ldarg.0 
+   0104 ldflda Gif.GifFrame::_image
+   0109 ldflda Gif.Image::desc
+   010E ldloc.2 
+   010F newarr Gif.Color
+   0114 stfld Gif.ImageDesc::local_color_table
+   0119 ldc.i4.0 
+   011A stloc.3 
+   011B br IL_0187: ldloc.3
+   0120 ldarg.0 
+   0121 ldflda Gif.GifFrame::_image
+   0126 ldflda Gif.Image::desc
+   012B ldfld Gif.ImageDesc::local_color_table
+   0130 ldloc.3 
+   0131 ldelema Gif.Color
+   0136 ldarg.1 
+   0137 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   013C stfld Gif.Color::r
+   0141 ldarg.0 
+   0142 ldflda Gif.GifFrame::_image
+   0147 ldflda Gif.Image::desc
+   014C ldfld Gif.ImageDesc::local_color_table
+   0151 ldloc.3 
+   0152 ldelema Gif.Color
+   0157 ldarg.1 
+   0158 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   015D stfld Gif.Color::g
+   0162 ldarg.0 
+   0163 ldflda Gif.GifFrame::_image
+   0168 ldflda Gif.Image::desc
+   016D ldfld Gif.ImageDesc::local_color_table
+   0172 ldloc.3 
+   0173 ldelema Gif.Color
+   0178 ldarg.1 
+   0179 callvirt System.Byte System.IO.BinaryReader::ReadByte()
+   017E stfld Gif.Color::b
+   0183 ldloc.3 
+   0184 ldc.i4.1 
+   0185 add 
+   0186 stloc.3 
+   0187 ldloc.3 
+   0188 ldloc.2 
+   0189 blt IL_0120: ldarg.0
+   018E ldc.i4.0 
+   018F ret 
+== Gif.ERROR LoadPlainTextExtension(System.IO.BinaryReader reader) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call Gif.ERROR Gif.Loader::SkipBlock(System.IO.BinaryReader)
+   0006 pop 
+   0007 ldc.i4.0 
+   0008 ret 

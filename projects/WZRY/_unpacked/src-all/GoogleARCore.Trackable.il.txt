@@ -1,0 +1,111 @@
+// TYPE GoogleARCore.Trackable  base=System.Object  attrs=Public, Abstract, BeforeFieldInit
+  FIELD System.IntPtr m_TrackableNativeHandle
+  FIELD GoogleARCoreInternal.NativeSession m_NativeSession
+  FIELD System.Boolean m_IsSessionDestroyed
+  PROP GoogleARCore.TrackingState TrackingState
+== System.Void .ctor() attrs=Assembly, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldsfld System.IntPtr::Zero
+   0006 stfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   000B ldarg.0 
+   000C call System.Void System.Object::.ctor()
+   0011 ret 
+== System.Void .ctor(System.IntPtr trackableNativeHandle, GoogleARCoreInternal.NativeSession nativeSession) attrs=Assembly, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldsfld System.IntPtr::Zero
+   0006 stfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   000B ldarg.0 
+   000C call System.Void System.Object::.ctor()
+   0011 ldarg.0 
+   0012 ldarg.1 
+   0013 stfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   0018 ldarg.0 
+   0019 ldarg.2 
+   001A stfld GoogleARCore.Trackable::m_NativeSession
+   001F ret 
+== System.Void Finalize() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld GoogleARCore.Trackable::m_NativeSession
+   0006 callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   000B ldarg.0 
+   000C ldfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   0011 callvirt System.Void GoogleARCoreInternal.TrackableApi::Release(System.IntPtr)
+   0016 leave IL_0022: ret
+   001B ldarg.0 
+   001C call System.Void System.Object::Finalize()
+   0021 endfinally 
+   0022 ret 
+== GoogleARCore.TrackingState get_TrackingState() attrs=Public, Virtual, HideBySig, VtableLayoutMask, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean GoogleARCore.Trackable::_IsSessionDestroyed()
+   0006 brfalse IL_000d: ldarg.0
+   000B ldc.i4.2 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld GoogleARCore.Trackable::m_NativeSession
+   0013 callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   0018 ldarg.0 
+   0019 ldfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   001E callvirt GoogleARCore.TrackingState GoogleARCoreInternal.TrackableApi::GetTrackingState(System.IntPtr)
+   0023 ret 
+== GoogleARCore.Anchor CreateAnchor(UnityEngine.Pose pose) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean GoogleARCore.Trackable::_IsSessionDestroyed()
+   0006 brfalse IL_0017: ldarg.0
+   000B ldstr CreateAnchor:: Trying to access a session that has already been destroyed.
+   0010 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0015 ldnull 
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld GoogleARCore.Trackable::m_NativeSession
+   001D callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   0022 ldarg.0 
+   0023 ldfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   0028 ldarg.1 
+   0029 ldloca.s V_0
+   002B callvirt System.Boolean GoogleARCoreInternal.TrackableApi::AcquireNewAnchor(System.IntPtr,UnityEngine.Pose,System.IntPtr&)
+   0030 brtrue IL_0041: ldarg.0
+   0035 ldstr Failed to create anchor on trackable.
+   003A call System.Void UnityEngine.Debug::Log(System.Object)
+   003F ldnull 
+   0040 ret 
+   0041 ldarg.0 
+   0042 ldfld GoogleARCore.Trackable::m_NativeSession
+   0047 ldloc.0 
+   0048 ldc.i4.1 
+   0049 call GoogleARCore.Anchor GoogleARCore.Anchor::Factory(GoogleARCoreInternal.NativeSession,System.IntPtr,System.Boolean)
+   004E ret 
+== System.Void GetAllAnchors(System.Collections.Generic.List`1<GoogleARCore.Anchor> anchors) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean GoogleARCore.Trackable::_IsSessionDestroyed()
+   0006 brfalse IL_001c: ldarg.0
+   000B ldstr GetAllAnchors:: Trying to access a session that has already been destroyed.
+   0010 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0015 ldarg.1 
+   0016 callvirt System.Void System.Collections.Generic.List`1<GoogleARCore.Anchor>::Clear()
+   001B ret 
+   001C ldarg.0 
+   001D ldfld GoogleARCore.Trackable::m_NativeSession
+   0022 callvirt GoogleARCoreInternal.TrackableApi GoogleARCoreInternal.NativeSession::get_TrackableApi()
+   0027 ldarg.0 
+   0028 ldfld GoogleARCore.Trackable::m_TrackableNativeHandle
+   002D ldarg.1 
+   002E callvirt System.Void GoogleARCoreInternal.TrackableApi::GetAnchors(System.IntPtr,System.Collections.Generic.List`1<GoogleARCore.Anchor>)
+   0033 ret 
+== System.Boolean _IsSessionDestroyed() attrs=Family, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld GoogleARCore.Trackable::m_IsSessionDestroyed
+   0006 brtrue IL_0029: ldarg.0
+   000B call GoogleARCoreInternal.ILifecycleManager GoogleARCoreInternal.LifecycleManager::get_Instance()
+   0010 callvirt GoogleARCoreInternal.NativeSession GoogleARCoreInternal.ILifecycleManager::get_NativeSession()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldarg.0 
+   0018 ldfld GoogleARCore.Trackable::m_NativeSession
+   001D beq IL_0029: ldarg.0
+   0022 ldarg.0 
+   0023 ldc.i4.1 
+   0024 stfld GoogleARCore.Trackable::m_IsSessionDestroyed
+   0029 ldarg.0 
+   002A ldfld GoogleARCore.Trackable::m_IsSessionDestroyed
+   002F ret 

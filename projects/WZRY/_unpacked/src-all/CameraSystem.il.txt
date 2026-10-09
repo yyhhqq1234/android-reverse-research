@@ -1,0 +1,1141 @@
+// TYPE CameraSystem  base=MonoSingleton`1<CameraSystem>  attrs=Public, BeforeFieldInit
+  FIELD Moba_Camera MobaCamera
+  FIELD System.Boolean bFreeCamera
+  FIELD System.Boolean bFreeRotate
+  FIELD UnityEngine.Plane[] CachedFrustum
+  FIELD System.Single s_CameraMoveScale
+  FIELD System.Boolean bEnableCameraMovment
+  FIELD System.Single LastUpdateTime
+  FIELD System.Single CurrentSpeed
+  FIELD TssSdtFloat zoomRateFromAge
+  FIELD UnityEngine.Camera m_mainCamera
+  FIELD UnityEngine.Transform m_mainCameraTrans
+  FIELD CameraUpdater cameraUpdater
+  PROP UnityEngine.Camera mainCamera
+  PROP UnityEngine.Transform mainCameraTrans
+  PROP System.Boolean enableLockedCamera
+  PROP System.Boolean enableAbsoluteLocationLockCamera
+  PROP System.Single ZoomRateFromAge
+  PROP System.Boolean enableCameraMovement
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   000B stfld CameraSystem::zoomRateFromAge
+   0010 ldarg.0 
+   0011 call System.Void MonoSingleton`1<CameraSystem>::.ctor()
+   0016 ret 
+== UnityEngine.Camera get_mainCamera() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld CameraSystem::m_mainCamera
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0018: call UnityEngine.Camera UnityEngine.Camera::get_main()
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::m_mainCamera
+   0017 ret 
+   0018 call UnityEngine.Camera UnityEngine.Camera::get_main()
+   001D ret 
+== UnityEngine.Transform get_mainCameraTrans() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldnull 
+   0001 ldarg.0 
+   0002 ldfld CameraSystem::m_mainCameraTrans
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0018: call UnityEngine.Camera UnityEngine.Camera::get_main()
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::m_mainCameraTrans
+   0017 ret 
+   0018 call UnityEngine.Camera UnityEngine.Camera::get_main()
+   001D callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0022 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld CameraSystem::MobaCamera
+   0007 ldnull 
+   0008 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000D brfalse IL_0022: ldnull
+   0012 ldarg.0 
+   0013 ldfld CameraSystem::MobaCamera
+   0018 callvirt UnityEngine.Plane[] Moba_Camera::get_frustum()
+   001D br IL_0023: stfld UnityEngine.Plane[] CameraSystem::CachedFrustum
+   0022 ldnull 
+   0023 stfld CameraSystem::CachedFrustum
+   0028 ldarg.0 
+   0029 ldfld CameraSystem::CachedFrustum
+   002E brfalse IL_0069: ret
+   0033 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   0038 ldarg.0 
+   0039 ldfld CameraSystem::CachedFrustum
+   003E ldarg.0 
+   003F call UnityEngine.Transform CameraSystem::get_mainCameraTrans()
+   0044 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0049 callvirt System.Void UnityObjMgr::UpdateObjVisibleStatus(UnityEngine.Plane[],UnityEngine.Vector3)
+   004E call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0053 ldarg.0 
+   0054 ldfld CameraSystem::CachedFrustum
+   0059 ldarg.0 
+   005A call UnityEngine.Transform CameraSystem::get_mainCameraTrans()
+   005F callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0064 callvirt System.Void SceneMgr::UpdateVisibleStatus(UnityEngine.Plane[],UnityEngine.Vector3)
+   0069 ret 
+== System.Void PrepareFight() attrs=Public, HideBySig maxstack=4
+   0000 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetHostCtrlActor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000C brfalse IL_0019: ldarg.0
+   0011 ldarg.0 
+   0012 ldloc.0 
+   0013 ldc.i4.0 
+   0014 call System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0019 ldarg.0 
+   001A ldc.r4 1
+   001F call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   0024 stfld CameraSystem::zoomRateFromAge
+   0029 ldarg.0 
+   002A ldfld CameraSystem::MobaCamera
+   002F ldnull 
+   0030 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0035 brfalse IL_0046: ldarg.0
+   003A ldarg.0 
+   003B ldfld CameraSystem::MobaCamera
+   0040 ldnull 
+   0041 callvirt System.Void Moba_Camera::ResetGyro(Assets.Scripts.UI.CUIEvent)
+   0046 ldarg.0 
+   0047 ldfld CameraSystem::MobaCamera
+   004C ldnull 
+   004D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0052 brfalse IL_0078: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0057 ldarg.0 
+   0058 ldfld CameraSystem::MobaCamera
+   005D ldarg.0 
+   005E call System.Single CameraSystem::GetZoomRate()
+   0063 call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   0068 callvirt System.Void Moba_Camera::set_currentZoomRate(TssSdtFloat)
+   006D ldarg.0 
+   006E ldfld CameraSystem::MobaCamera
+   0073 callvirt System.Void Moba_Camera::CameraUpdate()
+   0078 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   007D ldc.i4.s 77
+   007F ldarg.0 
+   0080 ldftn System.Void CameraSystem::OnFocusSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0086 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   008B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0090 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0095 ldc.i4.8 
+   0096 ldarg.0 
+   0097 ldftn System.Void CameraSystem::OnPlayerDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   009D newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   00A2 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00A7 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00AC ldc.i4.s 10
+   00AE ldarg.0 
+   00AF ldftn System.Void CameraSystem::OnPlayerRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00B5 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00BA callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00BF call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00C4 ldc.i4.s 18
+   00C6 ldarg.0 
+   00C7 ldftn System.Void CameraSystem::OnPlayerRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00CD newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   00D2 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00D7 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00DC ldc.i4.s 79
+   00DE ldarg.0 
+   00DF ldftn System.Void CameraSystem::OnCameraHeightChanged(Assets.Scripts.GameLogic.CameraHeightChangeParam&)
+   00E5 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.CameraHeightChangeParam>::.ctor(System.Object,System.IntPtr)
+   00EA callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.CameraHeightChangeParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00EF call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   00F4 ldc.i4.s 77
+   00F6 ldarg.0 
+   00F7 ldftn System.Void CameraSystem::OnFocusSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   00FD newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0102 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0107 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   010C ldc.i4.8 
+   010D ldarg.0 
+   010E ldftn System.Void CameraSystem::OnPlayerDead(Assets.Scripts.GameLogic.ActorDeadEventParam&)
+   0114 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDeadEventParam>::.ctor(System.Object,System.IntPtr)
+   0119 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDeadEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   011E call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0123 ldc.i4.s 10
+   0125 ldarg.0 
+   0126 ldftn System.Void CameraSystem::OnPlayerRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   012C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0131 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0136 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   013B ldc.i4.s 18
+   013D ldarg.0 
+   013E ldftn System.Void CameraSystem::OnPlayerRevive(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0144 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0149 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   014E call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0153 ldc.i4.s 79
+   0155 ldarg.0 
+   0156 ldftn System.Void CameraSystem::OnCameraHeightChanged(Assets.Scripts.GameLogic.CameraHeightChangeParam&)
+   015C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.CameraHeightChangeParam>::.ctor(System.Object,System.IntPtr)
+   0161 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.CameraHeightChangeParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0166 ldarg.0 
+   0167 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   016C ldfld GlobalConfig::CameraMoveSpeed
+   0171 stfld CameraSystem::CurrentSpeed
+   0176 ret 
+== System.Void OnFocusSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   000B brfalse IL_0098: ret
+   0010 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0015 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   001A brtrue IL_0098: ret
+   001F ldarg.0 
+   0020 ldarg.1 
+   0021 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0026 ldc.i4.0 
+   0027 call System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   002C call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0031 ldarg.1 
+   0032 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0037 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003C callvirt System.Single Assets.Scripts.GameLogic.ActorLinker::get_ZoomRateFromAge()
+   0041 callvirt System.Void CameraSystem::set_ZoomRateFromAge(System.Single)
+   0046 call System.Int32 Assets.Scripts.Framework.GameSettings::get_CameraHeight()
+   004B conv.u1 
+   004C call TssSdtFloat Assets.Scripts.Framework.GameSettings::get_CameraHeightRateValue()
+   0051 call System.Single TssSdtFloat::op_Implicit(TssSdtFloat)
+   0056 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   005B callvirt System.Single CameraSystem::get_ZoomRateFromAge()
+   0060 call System.Void SGC::OnCameraHeightChange(System.Byte,System.Single,System.Single)
+   0065 ldarg.1 
+   0066 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   006B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0070 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0075 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   007A brtrue IL_0098: ret
+   007F ldarg.0 
+   0080 ldfld CameraSystem::bFreeCamera
+   0085 brtrue IL_0098: ret
+   008A ldarg.0 
+   008B ldc.i4.1 
+   008C call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   0091 ldarg.0 
+   0092 ldc.i4.0 
+   0093 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   0098 ret 
+== System.Void OnFocusSwitched(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>& src) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brtrue IL_007e: ret
+   000F ldarg.0 
+   0010 ldarg.1 
+   0011 ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0016 ldc.i4.0 
+   0017 call System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   001C call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0021 ldarg.1 
+   0022 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0027 callvirt System.Single Assets.Scripts.GameLogic.ActorLinker::get_ZoomRateFromAge()
+   002C callvirt System.Void CameraSystem::set_ZoomRateFromAge(System.Single)
+   0031 call System.Int32 Assets.Scripts.Framework.GameSettings::get_CameraHeight()
+   0036 conv.u1 
+   0037 call TssSdtFloat Assets.Scripts.Framework.GameSettings::get_CameraHeightRateValue()
+   003C call System.Single TssSdtFloat::op_Implicit(TssSdtFloat)
+   0041 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0046 callvirt System.Single CameraSystem::get_ZoomRateFromAge()
+   004B call System.Void SGC::OnCameraHeightChange(System.Byte,System.Single,System.Single)
+   0050 ldarg.1 
+   0051 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0056 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   005B callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0060 brtrue IL_007e: ret
+   0065 ldarg.0 
+   0066 ldfld CameraSystem::bFreeCamera
+   006B brtrue IL_007e: ret
+   0070 ldarg.0 
+   0071 ldc.i4.1 
+   0072 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   0077 ldarg.0 
+   0078 ldc.i4.0 
+   0079 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   007E ret 
+== System.Void SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> focus, System.Boolean bIsOB) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brfalse IL_0016: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000F ldarg.2 
+   0010 brtrue IL_0016: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0015 ret 
+   0016 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   001B ldfld Assets.Scripts.GameLogic.BattleLogic::mapLogic
+   0020 stloc.0 
+   0021 ldloc.0 
+   0022 ldnull 
+   0023 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0028 brfalse IL_0034: ldarg.0
+   002D ldloc.0 
+   002E ldarg.1 
+   002F callvirt System.Void Assets.Scripts.GameLogic.MapWrapper::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0034 ldarg.0 
+   0035 ldfld CameraSystem::MobaCamera
+   003A ldnull 
+   003B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0040 brfalse IL_0104: ldarg.0
+   0045 ldstr MainCamera
+   004A call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ldnull 
+   0052 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0057 brfalse IL_0104: ldarg.0
+   005C ldarg.0 
+   005D ldloc.1 
+   005E callvirt !!0 UnityEngine.GameObject::GetComponent<Moba_Camera>()
+   0063 stfld CameraSystem::MobaCamera
+   0068 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   006D callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0072 stloc.2 
+   0073 ldloc.2 
+   0074 brfalse IL_00ee: ldarg.0
+   0079 ldloc.2 
+   007A ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   007F brfalse IL_00ee: ldarg.0
+   0084 ldloc.2 
+   0085 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraRotate
+   008A brtrue IL_00ee: ldarg.0
+   008F ldarg.0 
+   0090 ldfld CameraSystem::MobaCamera
+   0095 ldfld Moba_Camera::settings
+   009A ldfld Moba_Camera_Settings::rotation
+   009F ldarg.0 
+   00A0 ldfld CameraSystem::MobaCamera
+   00A5 ldfld Moba_Camera::settings
+   00AA ldfld Moba_Camera_Settings::rotation
+   00AF ldflda Moba_Camera_Settings_Rotation::defualtRotation
+   00B4 ldfld UnityEngine.Vector2::x
+   00B9 ldloc.2 
+   00BA ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotationByCamp
+   00BF newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00C4 stfld Moba_Camera_Settings_Rotation::defualtRotation
+   00C9 ldarg.0 
+   00CA ldfld CameraSystem::MobaCamera
+   00CF ldarg.0 
+   00D0 ldfld CameraSystem::MobaCamera
+   00D5 ldfld Moba_Camera::settings
+   00DA ldfld Moba_Camera_Settings::rotation
+   00DF ldfld Moba_Camera_Settings_Rotation::defualtRotation
+   00E4 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   00E9 callvirt System.Void Moba_Camera::set_currentCameraRotation(UnityEngine.Vector3)
+   00EE ldarg.0 
+   00EF ldfld CameraSystem::MobaCamera
+   00F4 ldarg.0 
+   00F5 call System.Single CameraSystem::GetZoomRate()
+   00FA call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   00FF callvirt System.Void Moba_Camera::set_currentZoomRate(TssSdtFloat)
+   0104 ldarg.0 
+   0105 ldfld CameraSystem::MobaCamera
+   010A ldnull 
+   010B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0110 brfalse IL_012d: ret
+   0115 ldarg.0 
+   0116 ldfld CameraSystem::MobaCamera
+   011B ldarg.1 
+   011C callvirt System.Void Moba_Camera::SetTargetTransform(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0121 ldarg.0 
+   0122 ldfld CameraSystem::MobaCamera
+   0127 ldc.i4.1 
+   0128 callvirt System.Void Moba_Camera::SetCameraLocked(System.Boolean)
+   012D ret 
+== System.Void SetFocusActorForce(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> focus, System.Single inNewZoomAmount) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00d1: ret
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0016 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001B stloc.0 
+   001C ldloc.0 
+   001D brfalse IL_0072: ldarg.0
+   0022 ldloc.0 
+   0023 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   0028 brfalse IL_0072: ldarg.0
+   002D ldloc.0 
+   002E ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraRotate
+   0033 brtrue IL_0072: ldarg.0
+   0038 ldarg.0 
+   0039 ldfld CameraSystem::MobaCamera
+   003E ldfld Moba_Camera::settings
+   0043 ldfld Moba_Camera_Settings::rotation
+   0048 ldarg.0 
+   0049 ldfld CameraSystem::MobaCamera
+   004E ldfld Moba_Camera::settings
+   0053 ldfld Moba_Camera_Settings::rotation
+   0058 ldflda Moba_Camera_Settings_Rotation::defualtRotation
+   005D ldfld UnityEngine.Vector2::x
+   0062 ldloc.0 
+   0063 ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotationByCamp
+   0068 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   006D stfld Moba_Camera_Settings_Rotation::defualtRotation
+   0072 ldarg.0 
+   0073 ldfld CameraSystem::MobaCamera
+   0078 ldarg.0 
+   0079 ldfld CameraSystem::MobaCamera
+   007E ldfld Moba_Camera::settings
+   0083 ldfld Moba_Camera_Settings::rotation
+   0088 ldfld Moba_Camera_Settings_Rotation::defualtRotation
+   008D call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0092 callvirt System.Void Moba_Camera::set_currentCameraRotation(UnityEngine.Vector3)
+   0097 ldarg.0 
+   0098 ldfld CameraSystem::MobaCamera
+   009D ldarg.0 
+   009E call System.Single CameraSystem::GetZoomRate()
+   00A3 call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   00A8 callvirt System.Void Moba_Camera::set_currentZoomRate(TssSdtFloat)
+   00AD ldarg.0 
+   00AE ldfld CameraSystem::MobaCamera
+   00B3 ldarg.2 
+   00B4 callvirt System.Void Moba_Camera::SetCameraZoom(System.Single)
+   00B9 ldarg.0 
+   00BA ldfld CameraSystem::MobaCamera
+   00BF ldarg.1 
+   00C0 callvirt System.Void Moba_Camera::SetTargetTransform(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   00C5 ldarg.0 
+   00C6 ldfld CameraSystem::MobaCamera
+   00CB ldc.i4.1 
+   00CC callvirt System.Void Moba_Camera::SetCameraLocked(System.Boolean)
+   00D1 ret 
+== System.Void OnPlayerDead(Assets.Scripts.GameLogic.ActorDeadEventParam& prm) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0122: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0016 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001B brfalse IL_003b: ldarg.1
+   0020 ldarg.1 
+   0021 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0026 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002B ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0030 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   0035 ldc.i4.4 
+   0036 bne.un IL_004b: ldarg.0
+   003B ldarg.1 
+   003C ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0041 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActorCaller(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0046 brfalse IL_0122: ret
+   004B ldarg.0 
+   004C ldfld CameraSystem::bFreeCamera
+   0051 brtrue IL_0122: ret
+   0056 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   005B callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0060 brtrue IL_0122: ret
+   0065 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   006A callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsCooperationPlayMode()
+   006F brtrue IL_0122: ret
+   0074 ldc.i4.s 16
+   0076 ldstr 0
+   007B call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0080 ldarg.0 
+   0081 ldfld CameraSystem::MobaCamera
+   0086 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   008B brfalse IL_00ab: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0090 ldarg.0 
+   0091 ldfld CameraSystem::MobaCamera
+   0096 ldarg.1 
+   0097 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   009C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00A1 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   00A6 callvirt System.Void Moba_Camera::SetAbsoluteLockLocation(UnityEngine.Vector3)
+   00AB call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00B0 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   00B5 brfalse IL_00cf: ldarg.1
+   00BA call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00BF callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   00C4 ldarg.1 
+   00C5 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::bImmediateRevive
+   00CA callvirt System.Void Assets.Scripts.GameSystem.FightForm::EnableCameraDragPanelForDead(System.Boolean)
+   00CF ldarg.1 
+   00D0 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   00D5 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00DA ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   00DF ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheBaseAttribute
+   00E4 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/BaseAttribute::DeadControl
+   00E9 brtrue IL_00fc: ldarg.0
+   00EE ldarg.0 
+   00EF ldc.i4.0 
+   00F0 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   00F5 ldarg.0 
+   00F6 ldc.i4.1 
+   00F7 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   00FC ldarg.0 
+   00FD call System.Void CameraSystem::StopDisplacement()
+   0102 ldarg.0 
+   0103 ldfld CameraSystem::MobaCamera
+   0108 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   010D brfalse IL_0122: ret
+   0112 ldarg.0 
+   0113 ldfld CameraSystem::MobaCamera
+   0118 ldc.r4 1
+   011D stfld Moba_Camera::_lockTransitionRate
+   0122 ret 
+== System.Void OnPlayerRevive(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_007f: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0016 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   001B brfalse IL_007f: ret
+   0020 ldarg.0 
+   0021 ldfld CameraSystem::bFreeCamera
+   0026 brtrue IL_007f: ret
+   002B call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0030 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0035 brtrue IL_007f: ret
+   003A ldc.i4.s 16
+   003C ldstr 1
+   0041 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0046 ldarg.0 
+   0047 ldc.i4.1 
+   0048 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   004D ldarg.0 
+   004E ldc.i4.0 
+   004F call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   0054 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0059 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   005E brfalse IL_0072: ldarg.0
+   0063 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0068 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   006D callvirt System.Void Assets.Scripts.GameSystem.FightForm::DisableCameraDragPanelForRevive()
+   0072 ldarg.0 
+   0073 ldarg.1 
+   0074 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0079 ldc.i4.0 
+   007A call System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   007F ret 
+== System.Void OnBoundaryChange() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001c: ret
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 callvirt System.Void Moba_Camera::OnBoundaryChange()
+   001C ret 
+== System.Void SwitchCamera(UnityEngine.Camera target) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call UnityEngine.Camera CameraSystem::get_mainCamera()
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001d: ldarg.1
+   0011 ldarg.0 
+   0012 call UnityEngine.Camera CameraSystem::get_mainCamera()
+   0017 ldc.i4.0 
+   0018 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   001D ldarg.1 
+   001E ldstr MainCamera
+   0023 callvirt System.Void UnityEngine.Component::set_tag(System.String)
+   0028 ldarg.1 
+   0029 ldc.i4.1 
+   002A callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   002F ldarg.0 
+   0030 ldfld CameraSystem::cameraUpdater
+   0035 ldnull 
+   0036 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003B brfalse IL_0077: ldarg.0
+   0040 ldarg.1 
+   0041 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0046 callvirt !!0 UnityEngine.GameObject::GetComponent<CameraUpdater>()
+   004B stloc.0 
+   004C ldnull 
+   004D ldloc.0 
+   004E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0053 brfalse IL_0064: ldloc.0
+   0058 ldarg.1 
+   0059 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005E callvirt !!0 UnityEngine.GameObject::AddComponent<CameraUpdater>()
+   0063 stloc.0 
+   0064 ldloc.0 
+   0065 ldarg.0 
+   0066 ldfld CameraSystem::cameraUpdater
+   006B callvirt System.Void CameraUpdater::CopyParams(CameraUpdater)
+   0070 ldarg.0 
+   0071 ldloc.0 
+   0072 stfld CameraSystem::cameraUpdater
+   0077 ldarg.0 
+   0078 ldarg.1 
+   0079 stfld CameraSystem::m_mainCamera
+   007E ldarg.0 
+   007F ldarg.0 
+   0080 ldfld CameraSystem::m_mainCamera
+   0085 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   008A stfld CameraSystem::m_mainCameraTrans
+   008F ldarg.0 
+   0090 ldfld CameraSystem::MobaCamera
+   0095 ldfld Moba_Camera::requirements
+   009A ldarg.0 
+   009B ldfld CameraSystem::m_mainCamera
+   00A0 stfld Moba_Camera_Requirements::camera
+   00A5 ldarg.0 
+   00A6 ldfld CameraSystem::m_mainCamera
+   00AB ldc.i4 136
+   00B0 callvirt System.Void UnityEngine.Camera::set_activeRTFlags(System.UInt32)
+   00B5 ret 
+== System.Void SetCameraLerp(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0011: ret
+   0011 ret 
+== System.Void OnCameraHeightChanged(Assets.Scripts.GameLogic.CameraHeightChangeParam& pam) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0032: ldarg.1
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 ldarg.0 
+   0018 call System.Single CameraSystem::GetZoomRate()
+   001D call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   0022 callvirt System.Void Moba_Camera::set_currentZoomRate(TssSdtFloat)
+   0027 ldarg.0 
+   0028 ldfld CameraSystem::MobaCamera
+   002D callvirt System.Void Moba_Camera::CameraUpdate()
+   0032 ldarg.1 
+   0033 ldfld Assets.Scripts.GameLogic.CameraHeightChangeParam::par1
+   0038 ldarg.1 
+   0039 ldfld Assets.Scripts.GameLogic.CameraHeightChangeParam::par2
+   003E ldarg.0 
+   003F call System.Single CameraSystem::get_ZoomRateFromAge()
+   0044 call System.Void SGC::OnCameraHeightChange(System.Byte,System.Single,System.Single)
+   0049 ret 
+== System.Void MoveCamera(System.Single offX, System.Single offY) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00e7: ret
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0016 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001B stloc.0 
+   001C ldloc.0 
+   001D brfalse IL_005a: ldarg.0
+   0022 ldloc.0 
+   0023 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   0028 brfalse IL_005a: ldarg.0
+   002D ldloca.s V_1
+   002F ldarg.1 
+   0030 ldc.r4 0
+   0035 ldarg.2 
+   0036 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   003B ldloc.0 
+   003C callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ3d()
+   0041 ldloc.1 
+   0042 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   0047 stloc.1 
+   0048 ldloca.s V_1
+   004A ldfld UnityEngine.Vector3::x
+   004F starg.s offX
+   0051 ldloca.s V_1
+   0053 ldfld UnityEngine.Vector3::z
+   0058 starg.s offY
+   005A ldarg.0 
+   005B ldfld CameraSystem::MobaCamera
+   0060 ldfld Moba_Camera::settings
+   0065 ldflda Moba_Camera_Settings::absoluteLockLocation
+   006A dup 
+   006B ldfld UnityEngine.Vector3::x
+   0070 ldarg.1 
+   0071 ldsfld CameraSystem::s_CameraMoveScale
+   0076 mul 
+   0077 add 
+   0078 stfld UnityEngine.Vector3::x
+   007D ldarg.0 
+   007E ldfld CameraSystem::MobaCamera
+   0083 ldfld Moba_Camera::settings
+   0088 ldflda Moba_Camera_Settings::absoluteLockLocation
+   008D dup 
+   008E ldfld UnityEngine.Vector3::z
+   0093 ldarg.2 
+   0094 ldsfld CameraSystem::s_CameraMoveScale
+   0099 mul 
+   009A add 
+   009B stfld UnityEngine.Vector3::z
+   00A0 ldarg.0 
+   00A1 ldfld CameraSystem::MobaCamera
+   00A6 ldfld Moba_Camera::settings
+   00AB ldfld Moba_Camera_Settings::absoluteLockLocation
+   00B0 call System.Boolean Moba_Camera_Boundaries::isPointInBoundary(UnityEngine.Vector3)
+   00B5 brtrue IL_00e7: ret
+   00BA ldarg.0 
+   00BB ldfld CameraSystem::MobaCamera
+   00C0 ldfld Moba_Camera::settings
+   00C5 ldfld Moba_Camera_Settings::absoluteLockLocation
+   00CA ldloca.s V_2
+   00CC call System.Boolean Moba_Camera_Boundaries::GetClosestPointInBoundary(UnityEngine.Vector3,UnityEngine.Vector3&)
+   00D1 brfalse IL_00e7: ret
+   00D6 ldarg.0 
+   00D7 ldfld CameraSystem::MobaCamera
+   00DC ldfld Moba_Camera::settings
+   00E1 ldloc.2 
+   00E2 stfld Moba_Camera_Settings::absoluteLockLocation
+   00E7 ret 
+== System.Void StartCameraMoveTrack() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   000E ldarg.0 
+   000F ldfld CameraSystem::MobaCamera
+   0014 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0019 brfalse IL_004a: ret
+   001E ldarg.0 
+   001F ldfld CameraSystem::MobaCamera
+   0024 ldfld Moba_Camera::settings
+   0029 ldfld Moba_Camera_Settings::movement
+   002E ldc.i4.0 
+   002F stfld Moba_Camera_Settings_Movement::useDefualtHeight
+   0034 ldarg.0 
+   0035 ldfld CameraSystem::MobaCamera
+   003A ldfld Moba_Camera::settings
+   003F ldfld Moba_Camera_Settings::movement
+   0044 ldc.i4.0 
+   0045 stfld Moba_Camera_Settings_Movement::useLockTargetHeight
+   004A ret 
+== System.Void EndCameraMoveTrack() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   000E ldarg.0 
+   000F ldfld CameraSystem::MobaCamera
+   0014 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0019 brfalse IL_004a: ldarg.0
+   001E ldarg.0 
+   001F ldfld CameraSystem::MobaCamera
+   0024 ldfld Moba_Camera::settings
+   0029 ldfld Moba_Camera_Settings::movement
+   002E ldc.i4.1 
+   002F stfld Moba_Camera_Settings_Movement::useDefualtHeight
+   0034 ldarg.0 
+   0035 ldfld CameraSystem::MobaCamera
+   003A ldfld Moba_Camera::settings
+   003F ldfld Moba_Camera_Settings::movement
+   0044 ldc.i4.1 
+   0045 stfld Moba_Camera_Settings_Movement::useLockTargetHeight
+   004A ldarg.0 
+   004B call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0050 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0055 ldfld Assets.Scripts.GameLogic.Player::Captain
+   005A ldc.i4.0 
+   005B call System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0060 ret 
+== System.Void ToggleFreeCamera() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld CameraSystem::bFreeCamera
+   0007 ldc.i4.0 
+   0008 ceq 
+   000A stfld CameraSystem::bFreeCamera
+   000F ldarg.0 
+   0010 ldarg.0 
+   0011 ldfld CameraSystem::bFreeCamera
+   0016 ldc.i4.0 
+   0017 ceq 
+   0019 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   0025 ret 
+== System.Void ToggleFreeDragCamera(System.Boolean bFree) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldc.i4.0 
+   0003 ceq 
+   0005 call System.Void CameraSystem::set_enableLockedCamera(System.Boolean)
+   000A ldarg.0 
+   000B ldarg.1 
+   000C call System.Void CameraSystem::set_enableAbsoluteLocationLockCamera(System.Boolean)
+   0011 ret 
+== System.Void ToggleRotate() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld CameraSystem::bFreeRotate
+   0007 ldc.i4.0 
+   0008 ceq 
+   000A stfld CameraSystem::bFreeRotate
+   000F ldarg.0 
+   0010 ldfld CameraSystem::MobaCamera
+   0015 ldarg.0 
+   0016 ldfld CameraSystem::bFreeRotate
+   001B ldc.i4.0 
+   001C ceq 
+   001E callvirt System.Void Moba_Camera::set_lockRotateX(System.Boolean)
+   0023 ldarg.0 
+   0024 ldfld CameraSystem::MobaCamera
+   0029 ldarg.0 
+   002A ldfld CameraSystem::bFreeRotate
+   002F ldc.i4.0 
+   0030 ceq 
+   0032 callvirt System.Void Moba_Camera::set_lockRotateY(System.Boolean)
+   0037 ret 
+== System.Boolean get_enableLockedCamera() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001e: ldc.i4.0
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 callvirt System.Boolean Moba_Camera::GetCameraLocked()
+   001C br.s IL_001f: ret
+   001E ldc.i4.0 
+   001F ret 
+== System.Void set_enableLockedCamera(System.Boolean value) attrs=Family, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001d: ret
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 ldarg.1 
+   0018 callvirt System.Void Moba_Camera::SetCameraLocked(System.Boolean)
+   001D ret 
+== System.Boolean get_enableAbsoluteLocationLockCamera() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001e: ldc.i4.0
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 callvirt System.Boolean Moba_Camera::GetAbsoluteLocked()
+   001C br.s IL_001f: ret
+   001E ldc.i4.0 
+   001F ret 
+== System.Void set_enableAbsoluteLocationLockCamera(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001d: ret
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 ldarg.1 
+   0018 callvirt System.Void Moba_Camera::SetAbsoluteLocked(System.Boolean)
+   001D ret 
+== System.Single get_ZoomRateFromAge() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::zoomRateFromAge
+   0006 call System.Single TssSdtFloat::op_Implicit(TssSdtFloat)
+   000B ret 
+== System.Void set_ZoomRateFromAge(System.Single value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.1 
+   0001 ldc.r4 0
+   0006 ble.un IL_003e: ret
+   000B ldarg.0 
+   000C ldarg.1 
+   000D call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   0012 stfld CameraSystem::zoomRateFromAge
+   0017 ldarg.0 
+   0018 ldfld CameraSystem::MobaCamera
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_003e: ret
+   0028 ldarg.0 
+   0029 ldfld CameraSystem::MobaCamera
+   002E ldarg.0 
+   002F call System.Single CameraSystem::GetZoomRate()
+   0034 call TssSdtFloat TssSdtFloat::op_Implicit(System.Single)
+   0039 callvirt System.Void Moba_Camera::set_currentZoomRate(TssSdtFloat)
+   003E ret 
+== System.Boolean CheckVisiblity(UnityEngine.Bounds InBounds) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::CachedFrustum
+   0006 brfalse IL_0018: ldc.i4.1
+   000B ldarg.0 
+   000C ldfld CameraSystem::CachedFrustum
+   0011 ldarg.1 
+   0012 call System.Boolean UnityEngine.GeometryUtility::TestPlanesAABB(UnityEngine.Plane[],UnityEngine.Bounds)
+   0017 ret 
+   0018 ldc.i4.1 
+   0019 ret 
+== System.Boolean get_enableCameraMovement() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::bEnableCameraMovment
+   0006 ret 
+== System.Void set_enableCameraMovement(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld CameraSystem::bEnableCameraMovment
+   0007 ldarg.0 
+   0008 ldfld CameraSystem::MobaCamera
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_0029: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld CameraSystem::MobaCamera
+   001E ldarg.0 
+   001F ldfld CameraSystem::bEnableCameraMovment
+   0024 callvirt System.Void Moba_Camera::SetEnableDisplacement(System.Boolean)
+   0029 ldarg.0 
+   002A ldfld CameraSystem::bEnableCameraMovment
+   002F brtrue IL_004f: ldarg.0
+   0034 ldarg.0 
+   0035 call System.Void CameraSystem::StopDisplacement()
+   003A ldarg.0 
+   003B call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   0040 ldfld GlobalConfig::CameraMoveSpeed
+   0045 stfld CameraSystem::CurrentSpeed
+   004A br IL_00a1: ret
+   004F ldarg.0 
+   0050 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0055 stfld CameraSystem::LastUpdateTime
+   005A ldarg.0 
+   005B ldfld CameraSystem::MobaCamera
+   0060 ldnull 
+   0061 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0066 brfalse IL_00a1: ret
+   006B ldarg.0 
+   006C ldfld CameraSystem::MobaCamera
+   0071 ldfld Moba_Camera::settings
+   0076 ldfld Moba_Camera_Settings::lockTarget
+   007B stloc.0 
+   007C ldloc.0 
+   007D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0082 brfalse IL_00a1: ret
+   0087 ldloca.s V_0
+   0089 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008E ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0093 stloc.1 
+   0094 ldarg.0 
+   0095 ldfld CameraSystem::MobaCamera
+   009A ldloca.s V_1
+   009C callvirt System.Void Moba_Camera::SetStartLocation(UnityEngine.Vector3&)
+   00A1 ret 
+== System.Void UpdateCameraMovement(UnityEngine.Vector2& axis) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::bEnableCameraMovment
+   0006 brtrue IL_000c: call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   000B ret 
+   000C call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::LastUpdateTime
+   0017 sub 
+   0018 stloc.0 
+   0019 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   001E ldfld GlobalConfig::bResetCameraSpeedWhenZero
+   0023 brfalse IL_0058: call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   0028 ldarg.1 
+   0029 ldfld UnityEngine.Vector2::x
+   002E ldc.r4 0
+   0033 bne.un IL_0058: call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   0038 ldarg.1 
+   0039 ldfld UnityEngine.Vector2::y
+   003E ldc.r4 0
+   0043 bne.un IL_0058: call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   0048 ldarg.0 
+   0049 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   004E ldfld GlobalConfig::CameraMoveSpeed
+   0053 stfld CameraSystem::CurrentSpeed
+   0058 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   005D ldfld GlobalConfig::CameraMoveSpeedMax
+   0062 ldarg.0 
+   0063 ldfld CameraSystem::CurrentSpeed
+   0068 sub 
+   0069 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   006E ldfld GlobalConfig::CameraMoveAcceleration
+   0073 div 
+   0074 stloc.1 
+   0075 ldloc.1 
+   0076 ldloc.0 
+   0077 call System.Single UnityEngine.Mathf::Min(System.Single,System.Single)
+   007C stloc.2 
+   007D ldarg.0 
+   007E ldarg.0 
+   007F ldfld CameraSystem::CurrentSpeed
+   0084 call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   0089 ldfld GlobalConfig::CameraMoveAcceleration
+   008E ldloc.2 
+   008F mul 
+   0090 add 
+   0091 stfld CameraSystem::CurrentSpeed
+   0096 ldarg.1 
+   0097 call UnityEngine.Vector2 UnityEngine.Vector2::get_normalized()
+   009C ldarg.0 
+   009D ldfld CameraSystem::CurrentSpeed
+   00A2 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00A7 ldloc.0 
+   00A8 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00AD ldarg.1 
+   00AE call UnityEngine.Vector2 UnityEngine.Vector2::get_normalized()
+   00B3 ldc.r4 0.5
+   00B8 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00BD call !0 MonoSingleton`1<GlobalConfig>::get_instance()
+   00C2 ldfld GlobalConfig::CameraMoveAcceleration
+   00C7 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00CC ldloc.2 
+   00CD call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00D2 ldloc.2 
+   00D3 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   00D8 call UnityEngine.Vector2 UnityEngine.Vector2::op_Addition(UnityEngine.Vector2,UnityEngine.Vector2)
+   00DD stloc.3 
+   00DE ldarg.0 
+   00DF call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   00E4 stfld CameraSystem::LastUpdateTime
+   00E9 ldarg.0 
+   00EA ldfld CameraSystem::MobaCamera
+   00EF ldnull 
+   00F0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F5 brfalse IL_0107: ret
+   00FA ldarg.0 
+   00FB ldfld CameraSystem::MobaCamera
+   0100 ldloc.3 
+   0101 ldc.i4.0 
+   0102 callvirt System.Void Moba_Camera::UpdateCameraRelativeDisplacement(UnityEngine.Vector2,System.Boolean)
+   0107 ret 
+== System.Void StopDisplacement() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraSystem::MobaCamera
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001c: ret
+   0011 ldarg.0 
+   0012 ldfld CameraSystem::MobaCamera
+   0017 callvirt System.Void Moba_Camera::StopCameraRelativeDisplacement()
+   001C ret 
+== System.Void StartPanelCameraMovement() attrs=Public, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0005 ldc.i4.1 
+   0006 callvirt System.Void CameraSystem::set_enableCameraMovement(System.Boolean)
+   000B ret 
+== System.Void UpdatePanelCameraMovement(UnityEngine.Vector2 InMovement, System.Single cameraMoveSpeed, System.Boolean isUseRealOffset) attrs=Public, HideBySig maxstack=4
+   0000 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0005 ldfld CameraSystem::MobaCamera
+   000A ldnull 
+   000B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0010 brfalse IL_0016: ldarg.1
+   0015 ret 
+   0016 ldarg.1 
+   0017 ldarg.2 
+   0018 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   001D starg.s InMovement
+   001F ldarg.0 
+   0020 ldfld CameraSystem::MobaCamera
+   0025 ldarg.1 
+   0026 ldarg.3 
+   0027 callvirt System.Void Moba_Camera::UpdateCameraRelativeDisplacement(UnityEngine.Vector2,System.Boolean)
+   002C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0031 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0036 stloc.0 
+   0037 ldloc.0 
+   0038 brfalse IL_0048: ret
+   003D ldloc.0 
+   003E ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   0043 brtrue IL_0049: ldloc.0
+   0048 ret 
+   0049 ldloc.0 
+   004A ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   004F callvirt System.Boolean Assets.Scripts.GameSystem.MiniMapCameraFrame_3DUI::get_IsCameraFrameShow()
+   0054 brtrue IL_006f: ldloc.0
+   0059 ldloc.0 
+   005A ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   005F callvirt System.Void Assets.Scripts.GameSystem.MiniMapCameraFrame_3DUI::Show()
+   0064 ldloc.0 
+   0065 ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   006A callvirt System.Void Assets.Scripts.GameSystem.MiniMapCameraFrame_3DUI::ShowNormal()
+   006F ldloc.0 
+   0070 ldc.i4.0 
+   0071 callvirt Assets.Scripts.GameSystem.CMiniMapInstance Assets.Scripts.GameSystem.MinimapSys::GetMiniMapInstance(Assets.Scripts.GameSystem.enMiniMapType)
+   0076 stloc.1 
+   0077 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   007C ldfld CameraSystem::MobaCamera
+   0081 ldfld Moba_Camera::requirements
+   0086 ldfld Moba_Camera_Requirements::pivot
+   008B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0090 stloc.2 
+   0091 ldloca.s V_2
+   0093 ldloca.s V_2
+   0095 ldfld UnityEngine.Vector3::z
+   009A stfld UnityEngine.Vector3::y
+   009F ldloca.s V_2
+   00A1 ldc.r4 0
+   00A6 stfld UnityEngine.Vector3::z
+   00AB ldloc.2 
+   00AC ldloc.1 
+   00AD ldflda Assets.Scripts.GameSystem.CMiniMapInstance::m_sceneViewPortVertex
+   00B2 ldfld Assets.Scripts.GameSystem.stRectVertex::m_center
+   00B7 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   00BC stloc.2 
+   00BD call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00C2 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   00C7 stloc.3 
+   00C8 ldloc.3 
+   00C9 brfalse IL_00e6: ldloc.1
+   00CE ldloc.3 
+   00CF ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   00D4 brfalse IL_00e6: ldloc.1
+   00D9 ldloc.3 
+   00DA callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ()
+   00DF ldloc.2 
+   00E0 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   00E5 stloc.2 
+   00E6 ldloc.1 
+   00E7 callvirt UnityEngine.Vector2 Assets.Scripts.GameSystem.CMiniMapInstance::GetSceneToFormScale()
+   00EC stloc.s V_4
+   00EE ldloc.0 
+   00EF ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   00F4 ldloca.s V_2
+   00F6 ldfld UnityEngine.Vector3::x
+   00FB ldloca.s V_4
+   00FD ldfld UnityEngine.Vector2::x
+   0102 mul 
+   0103 ldloca.s V_2
+   0105 ldfld UnityEngine.Vector3::y
+   010A ldloca.s V_4
+   010C ldfld UnityEngine.Vector2::y
+   0111 mul 
+   0112 callvirt System.Void Assets.Scripts.GameSystem.MiniMapCameraFrame_3DUI::SetPos(System.Single,System.Single)
+   0117 ret 
+== System.Void StopPanelCameraMovement() attrs=Public, HideBySig maxstack=2
+   0000 call !0 MonoSingleton`1<CameraSystem>::get_instance()
+   0005 ldc.i4.0 
+   0006 callvirt System.Void CameraSystem::set_enableCameraMovement(System.Boolean)
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0010 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0027: ret
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   0022 brtrue IL_0028: ldloc.0
+   0027 ret 
+   0028 ldloc.0 
+   0029 ldfld Assets.Scripts.GameSystem.MinimapSys::MMiniMapCameraFrame_3Dui
+   002E callvirt System.Void Assets.Scripts.GameSystem.MiniMapCameraFrame_3DUI::Hide()
+   0033 ret 
+== System.Single GetZoomRate() attrs=Private, HideBySig maxstack=8
+   0000 call TssSdtFloat Assets.Scripts.Framework.GameSettings::get_CameraHeightRateValue()
+   0005 call System.Single TssSdtFloat::op_Implicit(TssSdtFloat)
+   000A ldarg.0 
+   000B ldfld CameraSystem::zoomRateFromAge
+   0010 call System.Single TssSdtFloat::op_Implicit(TssSdtFloat)
+   0015 mul 
+   0016 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.r4 0.02
+   0005 stsfld CameraSystem::s_CameraMoveScale
+   000A ret 

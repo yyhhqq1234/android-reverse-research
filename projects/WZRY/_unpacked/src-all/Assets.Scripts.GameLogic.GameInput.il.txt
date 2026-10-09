@@ -1,0 +1,449 @@
+// TYPE Assets.Scripts.GameLogic.GameInput  base=Singleton`1<Assets.Scripts.GameLogic.GameInput>  attrs=Public, BeforeFieldInit
+  FIELD StateMachine inputMode
+  FIELD System.Single DoubleTouchDeltaTime
+  FIELD System.Single UseDirectionSkillDistance
+  FIELD System.Single minGuestureCircleRadian
+  FIELD System.Single minCurveTrackDistance
+  FIELD System.Int32 enemyExploreOptRadius
+  FIELD System.Int32 ConfirmDirSndFrame
+  FIELD System.Int32 PreMoveDirection
+  FIELD System.Int32 FixtimeDirSndFrame
+  FIELD System.Byte nDirMoveSeq
+  FIELD System.Boolean isSlowUpMoveCmd
+  FIELD System.Boolean bSmartUse
+  FIELD System.DateTime lastClickEscape
+  FIELD System.Boolean bMessageBoxIsOpen
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void StateMachine::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.GameInput::inputMode
+   000B ldarg.0 
+   000C ldc.i4.m1 
+   000D stfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   0012 ldarg.0 
+   0013 ldc.i4 2147483647
+   0018 stfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   001D ldarg.0 
+   001E ldc.i4.m1 
+   001F stfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   0024 ldarg.0 
+   0025 call System.DateTime System.DateTime::get_Now()
+   002A stfld Assets.Scripts.GameLogic.GameInput::lastClickEscape
+   002F ldarg.0 
+   0030 call System.Void Singleton`1<Assets.Scripts.GameLogic.GameInput>::.ctor()
+   0035 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.s 19
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameLogic.GameInput::OnHostActorClearMove(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   000E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   001E ldarg.0 
+   001F newobj System.Void Assets.Scripts.GameLogic.LobbyInputMode::.ctor(Assets.Scripts.GameLogic.GameInput)
+   0024 ldstr LobbyInputMode
+   0029 callvirt System.Void StateMachine::RegisterState<Assets.Scripts.GameLogic.LobbyInputMode>(!!0,System.String)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0034 ldarg.0 
+   0035 newobj System.Void Assets.Scripts.GameLogic.JoystickMode::.ctor(Assets.Scripts.GameLogic.GameInput)
+   003A ldstr JoystickMode
+   003F callvirt System.Void StateMachine::RegisterState<Assets.Scripts.GameLogic.JoystickMode>(!!0,System.String)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   004A ldstr LobbyInputMode
+   004F callvirt IState StateMachine::ChangeState(System.String)
+   0054 pop 
+   0055 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005A ldc.i4 3798
+   005F ldarg.0 
+   0060 ldftn System.Void Assets.Scripts.GameLogic.GameInput::OnQuitGame(Assets.Scripts.UI.CUIEvent)
+   0066 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006B callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0070 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0075 ldc.i4 3799
+   007A ldarg.0 
+   007B ldftn System.Void Assets.Scripts.GameLogic.GameInput::OnQuitCameCancel(Assets.Scripts.UI.CUIEvent)
+   0081 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0086 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008B ldarg.0 
+   008C ldc.i4.0 
+   008D stfld Assets.Scripts.GameLogic.GameInput::bSmartUse
+   0092 ret 
+== System.Boolean IsSmartUse() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::bSmartUse
+   0006 ret 
+== System.Void SetSmartUse(System.Boolean _bUse) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.GameInput::bSmartUse
+   0007 ret 
+== System.Void UpdateFrame() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0006 callvirt IState StateMachine::get_tarState()
+   000B brfalse IL_0025: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0016 callvirt IState StateMachine::get_tarState()
+   001B castclass Assets.Scripts.GameLogic.GameInputMode
+   0020 callvirt System.Void Assets.Scripts.GameLogic.GameInputMode::Update()
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   002B ldc.i4.0 
+   002C ble IL_00a9: ldarg.0
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0037 ldc.i4 -2147483648
+   003C beq IL_00a9: ldarg.0
+   0041 call System.Int32 UnityEngine.Time::get_frameCount()
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   004C sub 
+   004D stloc.0 
+   004E ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   0053 ldc.i4.s 30
+   0055 div 
+   0056 stloc.1 
+   0057 ldloc.0 
+   0058 ldc.i4.0 
+   0059 ble IL_00a9: ldarg.0
+   005E ldloc.0 
+   005F ldc.i4.s 15
+   0061 ldloc.1 
+   0062 mul 
+   0063 bge IL_00a9: ldarg.0
+   0068 ldloc.0 
+   0069 ldc.i4.6 
+   006A ldloc.1 
+   006B mul 
+   006C rem 
+   006D brtrue IL_00a9: ldarg.0
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   0078 stloc.2 
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   007F ldc.i4 2147483647
+   0084 beq IL_009b: ldarg.0
+   0089 ldarg.0 
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0090 ldc.i4.0 
+   0091 call System.Void Assets.Scripts.GameLogic.GameInput::SendMoveDirection(System.Int32,System.UInt32)
+   0096 br IL_00a2: ldarg.0
+   009B ldarg.0 
+   009C ldc.i4.1 
+   009D call System.Void Assets.Scripts.GameLogic.GameInput::SendStopMove(System.Boolean)
+   00A2 ldarg.0 
+   00A3 ldloc.2 
+   00A4 stfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   00A9 ldarg.0 
+   00AA call System.Void Assets.Scripts.GameLogic.GameInput::UpdateEscape()
+   00AF ret 
+== System.Void UpdateEscape() attrs=Public, HideBySig maxstack=5
+   0000 ldc.i4.s 27
+   0002 call System.Boolean UnityEngine.Input::GetKeyDown(UnityEngine.KeyCode)
+   0007 brfalse IL_0079: ret
+   000C call System.DateTime System.DateTime::get_Now()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.GameInput::lastClickEscape
+   0017 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   001C stloc.0 
+   001D ldloca.s V_0
+   001F call System.Double System.TimeSpan::get_TotalMilliseconds()
+   0024 ldc.r8 1500
+   002D bge.un IL_006e: ldarg.0
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameLogic.GameInput::bMessageBoxIsOpen
+   0038 brtrue IL_0069: br IL_0079
+   003D call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0042 call !0 Singleton`1<CTextManager>::GetInstance()
+   0047 ldstr Is_QuitGame
+   004C ldc.i4.1 
+   004D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0052 ldc.i4 3798
+   0057 ldc.i4 3799
+   005C ldc.i4.0 
+   005D callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0062 ldarg.0 
+   0063 ldc.i4.1 
+   0064 stfld Assets.Scripts.GameLogic.GameInput::bMessageBoxIsOpen
+   0069 br IL_0079: ret
+   006E ldarg.0 
+   006F call System.DateTime System.DateTime::get_Now()
+   0074 stfld Assets.Scripts.GameLogic.GameInput::lastClickEscape
+   0079 ret 
+== System.Void OnQuitGame(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call System.Void SGameApplication::Quit()
+   0005 ret 
+== System.Void OnQuitCameCancel(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.GameInput::bMessageBoxIsOpen
+   0007 ret 
+== System.Void ChangeLobbyMode() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0006 ldstr LobbyInputMode
+   000B callvirt IState StateMachine::ChangeState(System.String)
+   0010 pop 
+   0011 ret 
+== System.Void ChangeBattleMode(System.Boolean bBriefness) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0006 ldstr JoystickMode
+   000B callvirt IState StateMachine::ChangeState(System.String)
+   0010 pop 
+   0011 ret 
+== System.Void OnHostActorClearMove(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   000B brfalse IL_001b: ret
+   0010 ldarg.0 
+   0011 ldc.i4 -2147483648
+   0016 stfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   001B ret 
+== System.Void OnHostActorRecvMove(System.Int32 nDegree) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0007 bne.un IL_0013: ret
+   000C ldarg.0 
+   000D ldc.i4.m1 
+   000E stfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   0013 ret 
+== System.Void StopInput() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::inputMode
+   0006 callvirt IState StateMachine::get_tarState()
+   000B castclass Assets.Scripts.GameLogic.GameInputMode
+   0010 callvirt System.Void Assets.Scripts.GameLogic.GameInputMode::StopInput()
+   0015 ret 
+== VInt3 CalcDirectionByTouchPosition(UnityEngine.Vector2 InFirst, UnityEngine.Vector2 InSecond) attrs=Private, HideBySig maxstack=4
+   0000 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0005 ldfld CameraSystem::m_mainCamera
+   000A ldnull 
+   000B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0010 brfalse IL_00b2: ldc.i4.0
+   0015 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   001A ldfld CameraSystem::m_mainCamera
+   001F ldarga.s InFirst
+   0021 ldfld UnityEngine.Vector2::x
+   0026 ldarga.s InFirst
+   0028 ldfld UnityEngine.Vector2::y
+   002D call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0032 ldfld CameraSystem::m_mainCamera
+   0037 callvirt System.Single UnityEngine.Camera::get_nearClipPlane()
+   003C newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0041 callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToWorldPoint(UnityEngine.Vector3)
+   0046 stloc.0 
+   0047 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   004C ldfld CameraSystem::m_mainCamera
+   0051 ldarga.s InSecond
+   0053 ldfld UnityEngine.Vector2::x
+   0058 ldarga.s InSecond
+   005A ldfld UnityEngine.Vector2::y
+   005F call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0064 ldfld CameraSystem::m_mainCamera
+   0069 callvirt System.Single UnityEngine.Camera::get_nearClipPlane()
+   006E newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0073 callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToWorldPoint(UnityEngine.Vector3)
+   0078 stloc.1 
+   0079 ldloc.1 
+   007A ldloc.0 
+   007B call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0080 stloc.3 
+   0081 ldloca.s V_3
+   0083 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0088 ldc.r4 0
+   008D ldc.r4 1
+   0092 ldc.r4 0
+   0097 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   009C call UnityEngine.Vector3 UnityEngine.Vector3::ProjectOnPlane(UnityEngine.Vector3,UnityEngine.Vector3)
+   00A1 stloc.s V_4
+   00A3 ldloca.s V_4
+   00A5 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   00AA stloc.2 
+   00AB ldloc.2 
+   00AC newobj System.Void VInt3::.ctor(UnityEngine.Vector3)
+   00B1 ret 
+   00B2 ldc.i4.0 
+   00B3 ldstr CalcDirectionByTouchPosition, Main camera is null
+   00B8 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   00BD ldsfld VInt3::forward
+   00C2 ret 
+== System.Void SendMoveDirection(UnityEngine.Vector2 start, UnityEngine.Vector2 end) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   0007 ldc.i4.1 
+   0008 add 
+   0009 stfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   000E ldarg.0 
+   000F ldarg.1 
+   0010 ldarg.2 
+   0011 call VInt3 Assets.Scripts.GameLogic.GameInput::CalcDirectionByTouchPosition(UnityEngine.Vector2,UnityEngine.Vector2)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ldsfld VInt3::zero
+   001D call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   0022 brfalse IL_00ce: ret
+   0027 ldloca.s V_0
+   0029 ldfld VInt3::z
+   002E neg 
+   002F conv.r4 
+   0030 ldloca.s V_0
+   0032 ldfld VInt3::x
+   0037 conv.r4 
+   0038 call System.Single UnityEngine.Mathf::Atan2(System.Single,System.Single)
+   003D stloc.1 
+   003E ldloc.1 
+   003F ldc.r4 180
+   0044 mul 
+   0045 conv.r8 
+   0046 ldc.r8 3.1416
+   004F div 
+   0050 conv.i4 
+   0051 stloc.2 
+   0052 ldloc.2 
+   0053 ldc.i4 32767
+   0058 bge IL_0067: ldc.i4.0
+   005D ldloc.2 
+   005E ldc.i4 -32768
+   0063 cgt 
+   0065 br.s IL_0068: ldstr "向量转换成2pi空间超过范围了"
+   0067 ldc.i4.0 
+   0068 ldstr 向量转换成2pi空间超过范围了
+   006D call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0072 ldloc.2 
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0079 sub 
+   007A stloc.3 
+   007B ldloc.3 
+   007C ldc.i4.1 
+   007D bgt IL_0096: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0082 ldloc.3 
+   0083 ldc.i4.m1 
+   0084 blt IL_0096: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   008F ldc.i4.s 30
+   0091 ble IL_00ce: ret
+   0096 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   009B callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   00A0 stloc.s V_4
+   00A2 ldloc.s V_4
+   00A4 brfalse IL_00ce: ret
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameLogic.GameInput::isSlowUpMoveCmd
+   00AF brfalse IL_00c6: ldarg.0
+   00B4 call System.Int32 UnityEngine.Time::get_frameCount()
+   00B9 ldarg.0 
+   00BA ldfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   00BF sub 
+   00C0 ldc.i4.1 
+   00C1 ble IL_00ce: ret
+   00C6 ldarg.0 
+   00C7 ldloc.2 
+   00C8 ldc.i4.0 
+   00C9 call System.Void Assets.Scripts.GameLogic.GameInput::SendMoveDirection(System.Int32,System.UInt32)
+   00CE ret 
+== System.Void SendMoveDirection(System.Int32 moveDegree, System.UInt32 playerId) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 brtrue IL_0025: ldarg.0
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   000B callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 brfalse IL_0024: ret
+   0017 ldloc.0 
+   0018 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   001D starg.s playerId
+   001F br IL_0025: ldarg.0
+   0024 ret 
+   0025 ldarg.0 
+   0026 ldarg.1 
+   0027 stfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   002C ldarg.0 
+   002D call System.Int32 UnityEngine.Time::get_frameCount()
+   0032 stfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   0037 ldarg.0 
+   0038 ldc.i4.0 
+   0039 stfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   003E call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.MoveDirectionCommand>()
+   0043 stloc.1 
+   0044 ldloc.1 
+   0045 ldarg.1 
+   0046 conv.i2 
+   0047 stfld Assets.Scripts.GameLogic.MoveDirectionCommand::Degree
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameLogic.GameInput::nDirMoveSeq
+   0052 ldc.i4 255
+   0057 bgt IL_0085: ldloc.1
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.GameInput::nDirMoveSeq
+   0062 ldc.i4.0 
+   0063 blt IL_0085: ldloc.1
+   0068 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   006D ldfld Assets.Scripts.Framework.FrameSynchr::m_MoveCMDSendTime
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameLogic.GameInput::nDirMoveSeq
+   0078 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   007D ldc.r4 1000
+   0082 mul 
+   0083 conv.u4 
+   0084 stelem.i4 
+   0085 ldloc.1 
+   0086 ldarg.0 
+   0087 dup 
+   0088 ldfld Assets.Scripts.GameLogic.GameInput::nDirMoveSeq
+   008D dup 
+   008E stloc.2 
+   008F ldc.i4.1 
+   0090 add 
+   0091 conv.u1 
+   0092 stfld Assets.Scripts.GameLogic.GameInput::nDirMoveSeq
+   0097 ldloc.2 
+   0098 stfld Assets.Scripts.GameLogic.MoveDirectionCommand::nSeq
+   009D ldloc.1 
+   009E callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   00A3 ret 
+== System.Void SendStopMove(System.Boolean force) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0006 ldc.i4 2147483647
+   000B bne.un IL_0016: ldarg.0
+   0010 ldarg.1 
+   0011 brfalse IL_003f: ret
+   0016 ldarg.0 
+   0017 ldc.i4 2147483647
+   001C stfld Assets.Scripts.GameLogic.GameInput::PreMoveDirection
+   0021 ldarg.0 
+   0022 call System.Int32 UnityEngine.Time::get_frameCount()
+   0027 stfld Assets.Scripts.GameLogic.GameInput::ConfirmDirSndFrame
+   002C ldarg.0 
+   002D ldc.i4.0 
+   002E stfld Assets.Scripts.GameLogic.GameInput::FixtimeDirSndFrame
+   0033 call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.StopMoveCommand>()
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   003F ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.r4 0.25
+   0005 stsfld Assets.Scripts.GameLogic.GameInput::DoubleTouchDeltaTime
+   000A ldc.r4 80
+   000F stsfld Assets.Scripts.GameLogic.GameInput::UseDirectionSkillDistance
+   0014 ldc.r4 20
+   0019 stsfld Assets.Scripts.GameLogic.GameInput::minGuestureCircleRadian
+   001E ldc.r4 60
+   0023 stsfld Assets.Scripts.GameLogic.GameInput::minCurveTrackDistance
+   0028 ldc.i4 2000
+   002D stsfld Assets.Scripts.GameLogic.GameInput::enemyExploreOptRadius
+   0032 ret 

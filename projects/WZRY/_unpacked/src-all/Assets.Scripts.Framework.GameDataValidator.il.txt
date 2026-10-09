@@ -1,0 +1,43 @@
+// TYPE Assets.Scripts.Framework.GameDataValidator  base=Singleton`1<Assets.Scripts.Framework.GameDataValidator>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean bDebugLossPickHeroMessage
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.Framework.GameDataValidator>::.ctor()
+   0006 ret 
+== System.Boolean IsLoseImportantGameData() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   000A ldc.i4.0 
+   000B ceq 
+   000D ret 
+== System.Boolean ValidateGameData() attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   000A brtrue IL_005e: ldc.i4.1
+   000F ldarg.0 
+   0010 call System.Boolean Assets.Scripts.Framework.GameDataValidator::IsLoseImportantGameData()
+   0015 brfalse IL_005e: ldc.i4.1
+   001A ldc.i4.0 
+   001B ldstr Warning, Lose HostPlayer, try to reconnect to gameserver. stacktrace:{0}
+   0020 ldc.i4.1 
+   0021 newarr System.Object
+   0026 dup 
+   0027 ldc.i4.0 
+   0028 call System.String System.Environment::get_StackTrace()
+   002D stelem.ref 
+   002E call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0033 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::get_instance()
+   0038 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   003D ldnull 
+   003E ceq 
+   0040 ldc.i4.0 
+   0041 ceq 
+   0043 ldstr invalid gameserver
+   0048 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   004D call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::get_instance()
+   0052 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0057 callvirt System.Void Assets.Scripts.Framework.BaseConnector::RestartConnector()
+   005C ldc.i4.0 
+   005D ret 
+   005E ldc.i4.1 
+   005F ret 

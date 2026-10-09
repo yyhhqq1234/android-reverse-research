@@ -1,0 +1,1598 @@
+// TYPE Assets.Scripts.GameLogic.DialogueProcessor  base=MonoSingleton`1<Assets.Scripts.GameLogic.DialogueProcessor>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean bAutoNextPage
+  FIELD Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode[] m_actorLines
+  FIELD System.Collections.Generic.List`1<ResData.ResActorLinesInfo> m_actorLinesRaw
+  FIELD System.Single AutoNextPageTime
+  FIELD System.Int32 m_curIndex
+  FIELD System.String m_contentGoName = Txt_Dialog
+  FIELD System.String m_nameGoName = CharacterName
+  FIELD System.String m_imgGoName = Pic_Npc
+  FIELD System.String m_3dPortraitAnimDefault = Idleshow
+  FIELD System.Single FadeInTime = 0.5
+  FIELD System.Single FadeOutTime = 0.5
+  FIELD System.Single NextPageDelay = 0.2
+  FIELD System.Single AlphaMax = 1
+  FIELD System.Single AlphaMin = 0.2
+  FIELD System.String m_3dPortraitPanelName = PanelCenter
+  FIELD System.String m_3dPortraitRawImgName = 3DImage
+  FIELD UnityEngine.GameObject m_3dPortraitName
+  FIELD DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript> m_uiFormMap
+  FIELD Assets.Scripts.UI.CUIFormScript m_curUiForm
+  FIELD Assets.Scripts.UI.CUIFormScript m_curUiFormPortrait
+  FIELD DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine> Portrait3dAnimCoMap
+  FIELD ListView`1<UnityEngine.GameObject> m_bgGoList
+  FIELD UnityEngine.Coroutine m_fadingCoroutine
+  FIELD System.Single m_nextPageProgressTime
+  FIELD System.Boolean m_bIsPlayingAutoNext
+  FIELD System.Int32 PreDialogId
+  FIELD System.String[] BlackDialogBgPaths
+  FIELD System.String[] ImageDialogBgPaths
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   000B ldarg.0 
+   000C ldc.r4 3
+   0011 stfld Assets.Scripts.GameLogic.DialogueProcessor::AutoNextPageTime
+   0016 ldarg.0 
+   0017 ldc.i4.m1 
+   0018 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   001D ldarg.0 
+   001E newobj System.Void DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::.ctor()
+   0023 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   0028 ldarg.0 
+   0029 newobj System.Void DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::.ctor()
+   002E stfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0033 ldarg.0 
+   0034 newobj System.Void ListView`1<UnityEngine.GameObject>::.ctor()
+   0039 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_bgGoList
+   003E ldarg.0 
+   003F call System.Void MonoSingleton`1<Assets.Scripts.GameLogic.DialogueProcessor>::.ctor()
+   0044 ret 
+== System.Void PreLoadResource(System.Int32 inDialogId, Assets.Scripts.GameLogic.PreloadResTypeDelegate loadFunc) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 bgt IL_0008: ldc.i4.0
+   0007 ret 
+   0008 ldc.i4.0 
+   0009 stloc.0 
+   000A ldarg.0 
+   000B conv.i8 
+   000C ldloca.s V_0
+   000E call System.Int32 ResData.GameDataMgr/actorLinesDatabin::FindRange(System.Int64,System.Int32&)
+   0013 stloc.1 
+   0014 ldloc.0 
+   0015 ldc.i4.0 
+   0016 ble IL_013f: ret
+   001B ldloc.1 
+   001C call ResData.ResActorLinesInfo ResData.GameDataMgr/actorLinesDatabin::GetByIndex(System.Int32)
+   0021 stloc.2 
+   0022 ldarg.1 
+   0023 ldc.i4.1 
+   0024 ldsfld System.String::Empty
+   0029 ldloca.s V_2
+   002B ldflda ResData.ResActorLinesInfo::strIdAgeActionName
+   0030 ldfld StringId::id
+   0035 ldnull 
+   0036 callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   003B ldc.i4.m1 
+   003C stloc.3 
+   003D ldc.i4.m1 
+   003E stloc.s V_4
+   0040 ldc.i4.0 
+   0041 stloc.s V_5
+   0043 br IL_0137: ldloc.s V_5
+   0048 ldloc.s V_5
+   004A brtrue IL_0055: ldloc.1
+   004F ldloc.2 
+   0050 br IL_005e: stloc.s V_6
+   0055 ldloc.1 
+   0056 ldloc.s V_5
+   0058 add 
+   0059 call ResData.ResActorLinesInfo ResData.GameDataMgr/actorLinesDatabin::GetByIndex(System.Int32)
+   005E stloc.s V_6
+   0060 ldloca.s V_6
+   0062 ldfld ResData.ResActorLinesInfo::iActorType
+   0067 ldloc.3 
+   0068 bne.un IL_0080: ldloca.s V_6
+   006D ldloca.s V_6
+   006F ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   0074 ldloc.s V_4
+   0076 bne.un IL_0080: ldloca.s V_6
+   007B br IL_0131: ldloc.s V_5
+   0080 ldloca.s V_6
+   0082 ldfld ResData.ResActorLinesInfo::iUse3dPortrait
+   0087 ldc.i4.0 
+   0088 ble IL_0131: ldloc.s V_5
+   008D ldloca.s V_6
+   008F ldfld ResData.ResActorLinesInfo::iActorType
+   0094 stloc.s V_8
+   0096 ldloc.s V_8
+   0098 switch Mono.Cecil.Cil.Instruction[]
+   00A9 br IL_00ed: ldloca.s V_9
+   00AE ldloca.s V_6
+   00B0 ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   00B5 ldc.i4.1 
+   00B6 ldc.i4.1 
+   00B7 call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetHero3DObjPath(System.UInt32,System.Boolean,System.Boolean)
+   00BC stloc.s V_7
+   00BE br IL_00fe: ldloca.s V_7
+   00C3 ldloca.s V_6
+   00C5 ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   00CA ldc.i4.1 
+   00CB ldc.i4.1 
+   00CC call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetMonster3DObjPath(System.Int32,System.Boolean,System.Boolean)
+   00D1 stloc.s V_7
+   00D3 br IL_00fe: ldloca.s V_7
+   00D8 ldloca.s V_6
+   00DA ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   00DF ldc.i4.1 
+   00E0 ldc.i4.1 
+   00E1 call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetOrgan3DObjPath(System.Int32,System.Boolean,System.Boolean)
+   00E6 stloc.s V_7
+   00E8 br IL_00fe: ldloca.s V_7
+   00ED ldloca.s V_9
+   00EF initobj Assets.Scripts.GameSystem.ObjNameData
+   00F5 ldloc.s V_9
+   00F7 stloc.s V_7
+   00F9 br IL_00fe: ldloca.s V_7
+   00FE ldloca.s V_7
+   0100 ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   0105 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   010A brtrue IL_0120: ldloca.s V_6
+   010F ldarg.1 
+   0110 ldc.i4.4 
+   0111 ldloca.s V_7
+   0113 ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   0118 ldc.i4.0 
+   0119 conv.i8 
+   011A ldnull 
+   011B callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   0120 ldloca.s V_6
+   0122 ldfld ResData.ResActorLinesInfo::iActorType
+   0127 stloc.3 
+   0128 ldloca.s V_6
+   012A ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   012F stloc.s V_4
+   0131 ldloc.s V_5
+   0133 ldc.i4.1 
+   0134 add 
+   0135 stloc.s V_5
+   0137 ldloc.s V_5
+   0139 ldloc.0 
+   013A blt IL_0048: ldloc.s V_5
+   013F ret 
+== System.Boolean IsInDialog() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0006 ldnull 
+   0007 ceq 
+   0009 ldc.i4.0 
+   000A ceq 
+   000C ret 
+== System.Void TranslateNodeFromRaw(Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode& outNode, ResData.ResActorLinesInfo& inRecord) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 ldfld ResData.ResActorLinesInfo::iDialogStyle
+   0007 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogStyle
+   000C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0011 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0016 ldfld Assets.Scripts.GameLogic.Player::Name
+   001B stloc.0 
+   001C ldloc.0 
+   001D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0022 brfalse IL_002d: ldarg.1
+   0027 ldstr Unknown
+   002C stloc.0 
+   002D ldarg.1 
+   002E ldarg.2 
+   002F call System.String ResData.ResActorLinesInfo::get_szDialogContent()
+   0034 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   0039 ldarg.1 
+   003A ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   003F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0044 brfalse IL_0059: ldarg.1
+   0049 ldarg.1 
+   004A ldsfld System.String::Empty
+   004F stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   0054 br IL_0070: ldarg.1
+   0059 ldarg.1 
+   005A ldarg.1 
+   005B ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   0060 ldstr [c]
+   0065 ldloc.0 
+   0066 callvirt System.String System.String::Replace(System.String,System.String)
+   006B stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   0070 ldarg.1 
+   0071 ldarg.2 
+   0072 call System.String ResData.ResActorLinesInfo::get_szDialogTitle()
+   0077 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   007C ldarg.1 
+   007D ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   0082 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0087 brfalse IL_009c: ldarg.1
+   008C ldarg.1 
+   008D ldsfld System.String::Empty
+   0092 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   0097 br IL_00b3: ldarg.1
+   009C ldarg.1 
+   009D ldarg.1 
+   009E ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   00A3 ldstr [c]
+   00A8 ldloc.0 
+   00A9 callvirt System.String System.String::Replace(System.String,System.String)
+   00AE stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   00B3 ldarg.1 
+   00B4 ldarg.2 
+   00B5 ldfld ResData.ResActorLinesInfo::bFadeInType
+   00BA ldc.i4.0 
+   00BB cgt 
+   00BD stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bFadeIn
+   00C2 ldarg.1 
+   00C3 ldarg.2 
+   00C4 ldfld ResData.ResActorLinesInfo::bFadeOutType
+   00C9 ldc.i4.0 
+   00CA cgt 
+   00CC stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bFadeOut
+   00D1 ldarg.1 
+   00D2 ldarg.2 
+   00D3 ldfld ResData.ResActorLinesInfo::iUse3dPortrait
+   00D8 ldc.i4.0 
+   00D9 cgt 
+   00DB stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::b3dPortrait
+   00E0 ldarg.1 
+   00E1 ldarg.2 
+   00E2 ldfld ResData.ResActorLinesInfo::iActorType
+   00E7 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::ActorType
+   00EC ldarg.1 
+   00ED ldarg.2 
+   00EE ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   00F3 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::CharCfgId
+   00F8 ldarg.1 
+   00F9 ldarg.2 
+   00FA call System.String ResData.ResActorLinesInfo::get_szAnimName()
+   00FF stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   0104 ldarg.1 
+   0105 ldarg.2 
+   0106 ldfld ResData.ResActorLinesInfo::iAnimLoop
+   010B ldc.i4.0 
+   010C cgt 
+   010E stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bAnimLoop
+   0113 ldarg.1 
+   0114 ldloca.s V_1
+   0116 initobj Assets.Scripts.GameSystem.ObjData
+   011C ldloc.1 
+   011D stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPrefab
+   0122 ldarg.1 
+   0123 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::b3dPortrait
+   0128 brfalse IL_01a9: ldarg.2
+   012D ldarg.2 
+   012E ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   0133 ldc.i4.0 
+   0134 ble IL_01a4: br IL_025a
+   0139 ldarg.2 
+   013A ldfld ResData.ResActorLinesInfo::iActorType
+   013F stloc.2 
+   0140 ldloc.2 
+   0141 switch Mono.Cecil.Cil.Instruction[]
+   0152 br IL_019f: br IL_01a4
+   0157 ldarg.1 
+   0158 ldarg.2 
+   0159 ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   015E ldc.i4.1 
+   015F ldc.i4.0 
+   0160 call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetHero3DObjPath(System.UInt32,System.Boolean,System.Boolean)
+   0165 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   016A br IL_01a4: br IL_025a
+   016F ldarg.1 
+   0170 ldarg.2 
+   0171 ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   0176 ldc.i4.1 
+   0177 ldc.i4.0 
+   0178 call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetMonster3DObjPath(System.Int32,System.Boolean,System.Boolean)
+   017D stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   0182 br IL_01a4: br IL_025a
+   0187 ldarg.1 
+   0188 ldarg.2 
+   0189 ldfld ResData.ResActorLinesInfo::iCharacterCfgId
+   018E ldc.i4.1 
+   018F ldc.i4.0 
+   0190 call Assets.Scripts.GameSystem.ObjNameData Assets.Scripts.GameSystem.CUICommonSystem::GetOrgan3DObjPath(System.Int32,System.Boolean,System.Boolean)
+   0195 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   019A br IL_01a4: br IL_025a
+   019F br IL_01a4: br IL_025a
+   01A4 br IL_025a: ret
+   01A9 ldarg.2 
+   01AA call System.String ResData.ResActorLinesInfo::get_szImagePath()
+   01AF stloc.3 
+   01B0 ldloc.3 
+   01B1 ldstr 9999
+   01B6 call System.Boolean System.String::op_Equality(System.String,System.String)
+   01BB brfalse IL_0220: ldsfld System.String Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Dialog_Dir_Portrait
+   01C0 ldstr 90
+   01C5 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   01CA callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   01CF ldfld Assets.Scripts.GameLogic.Player::headIconId
+   01D4 ldc.i4.1 
+   01D5 add 
+   01D6 box System.Int32
+   01DB call System.String System.String::Concat(System.Object,System.Object)
+   01E0 stloc.3 
+   01E1 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Dialog_Dir_Portrait
+   01E6 ldloc.3 
+   01E7 call System.String System.String::Concat(System.String,System.String)
+   01EC stloc.3 
+   01ED ldarg.1 
+   01EE ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPrefab
+   01F3 call !0 Singleton`1<CResourceManager>::GetInstance()
+   01F8 ldloc.3 
+   01F9 ldtoken UnityEngine.GameObject
+   01FE call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0203 ldc.i4.4 
+   0204 ldc.i4.0 
+   0205 ldc.i4.0 
+   0206 ldc.i4.0 
+   0207 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   020C ldfld CResource::m_content
+   0211 isinst UnityEngine.GameObject
+   0216 stfld Assets.Scripts.GameSystem.ObjData::Object
+   021B br IL_025a: ret
+   0220 ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Dialog_Dir_Portrait
+   0225 ldloc.3 
+   0226 call System.String System.String::Concat(System.String,System.String)
+   022B stloc.3 
+   022C ldarg.1 
+   022D ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPrefab
+   0232 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0237 ldloc.3 
+   0238 ldtoken UnityEngine.GameObject
+   023D call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0242 ldc.i4.4 
+   0243 ldc.i4.0 
+   0244 ldc.i4.0 
+   0245 ldc.i4.0 
+   0246 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   024B ldfld CResource::m_content
+   0250 isinst UnityEngine.GameObject
+   0255 stfld Assets.Scripts.GameSystem.ObjData::Object
+   025A ret 
+== System.Void PlayDrama(System.Int32 inGroupId, System.Boolean bDialogTriggerStart) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogue()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   000C callvirt System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::Clear()
+   0011 ldc.i4.0 
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 conv.i8 
+   0015 ldloca.s V_0
+   0017 call System.Int32 ResData.GameDataMgr/actorLinesDatabin::FindRange(System.Int64,System.Int32&)
+   001C stloc.1 
+   001D ldloc.0 
+   001E ldc.i4.0 
+   001F ble IL_0049: ldarg.0
+   0024 ldc.i4.0 
+   0025 stloc.2 
+   0026 br IL_0042: ldloc.2
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   0031 ldloc.1 
+   0032 ldloc.2 
+   0033 add 
+   0034 call ResData.ResActorLinesInfo ResData.GameDataMgr/actorLinesDatabin::GetByIndex(System.Int32)
+   0039 callvirt System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::Add(!0)
+   003E ldloc.2 
+   003F ldc.i4.1 
+   0040 add 
+   0041 stloc.2 
+   0042 ldloc.2 
+   0043 ldloc.0 
+   0044 blt IL_002b: ldarg.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   004F callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::get_Count()
+   0054 brtrue IL_005a: ldarg.0
+   0059 ret 
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   0060 ldc.i4.0 
+   0061 callvirt !0 System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::get_Item(System.Int32)
+   0066 stloc.3 
+   0067 ldarg.2 
+   0068 brfalse IL_0074: ldloca.s V_3
+   006D ldarg.0 
+   006E ldarg.1 
+   006F stfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   0074 ldloca.s V_3
+   0076 call System.String ResData.ResActorLinesInfo::get_szAgeActionName()
+   007B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0080 ldc.i4.0 
+   0081 ceq 
+   0083 stloc.s V_4
+   0085 ldloc.s V_4
+   0087 brfalse IL_009e: ldarg.0
+   008C ldloca.s V_3
+   008E ldfld ResData.ResActorLinesInfo::strIdAgeActionName
+   0093 ldarg.1 
+   0094 call System.Void SGW::PlayAgeActionDialog(StringId,System.Int32)
+   0099 br IL_00a5: ret
+   009E ldarg.0 
+   009F ldarg.1 
+   00A0 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::StartDialogue(System.Int32)
+   00A5 ret 
+== System.Void StartDialogue(System.Int32 inGroupId) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogue()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   000C callvirt System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::Clear()
+   0011 ldc.i4.0 
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 conv.i8 
+   0015 ldloca.s V_0
+   0017 call System.Int32 ResData.GameDataMgr/actorLinesDatabin::FindRange(System.Int64,System.Int32&)
+   001C stloc.1 
+   001D ldloc.0 
+   001E ldc.i4.0 
+   001F ble IL_0049: ldarg.0
+   0024 ldc.i4.0 
+   0025 stloc.2 
+   0026 br IL_0042: ldloc.2
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   0031 ldloc.1 
+   0032 ldloc.2 
+   0033 add 
+   0034 call ResData.ResActorLinesInfo ResData.GameDataMgr/actorLinesDatabin::GetByIndex(System.Int32)
+   0039 callvirt System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::Add(!0)
+   003E ldloc.2 
+   003F ldc.i4.1 
+   0040 add 
+   0041 stloc.2 
+   0042 ldloc.2 
+   0043 ldloc.0 
+   0044 blt IL_002b: ldarg.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   004F callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::get_Count()
+   0054 brtrue IL_005a: ldarg.0
+   0059 ret 
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   0060 ldc.i4.0 
+   0061 callvirt !0 System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::get_Item(System.Int32)
+   0066 stloc.3 
+   0067 call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bDialogBlock()
+   006C brfalse IL_007e: ldarg.0
+   0071 ldloca.s V_3
+   0073 ldfld ResData.ResActorLinesInfo::bIOSHide
+   0078 brfalse IL_007e: ldarg.0
+   007D ret 
+   007E ldarg.0 
+   007F ldloc.0 
+   0080 newarr Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0085 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   008A ldloca.s V_4
+   008C initobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0092 ldarg.0 
+   0093 ldloca.s V_4
+   0095 ldloca.s V_3
+   0097 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::TranslateNodeFromRaw(Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode&,ResData.ResActorLinesInfo&)
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   00A2 ldc.i4.0 
+   00A3 ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00A8 ldloc.s V_4
+   00AA stobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00AF ldc.i4.1 
+   00B0 stloc.s V_5
+   00B2 br IL_00f2: ldloc.s V_5
+   00B7 ldloc.1 
+   00B8 ldloc.s V_5
+   00BA add 
+   00BB call ResData.ResActorLinesInfo ResData.GameDataMgr/actorLinesDatabin::GetByIndex(System.Int32)
+   00C0 stloc.s V_6
+   00C2 ldloca.s V_7
+   00C4 initobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00CA ldarg.0 
+   00CB ldloca.s V_7
+   00CD ldloca.s V_6
+   00CF call System.Void Assets.Scripts.GameLogic.DialogueProcessor::TranslateNodeFromRaw(Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode&,ResData.ResActorLinesInfo&)
+   00D4 ldarg.0 
+   00D5 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   00DA ldloc.s V_5
+   00DC ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00E1 ldloc.s V_7
+   00E3 stobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00E8 ldloc.s V_7
+   00EA stloc.s V_4
+   00EC ldloc.s V_5
+   00EE ldc.i4.1 
+   00EF add 
+   00F0 stloc.s V_5
+   00F2 ldloc.s V_5
+   00F4 ldloc.0 
+   00F5 blt IL_00b7: ldloc.1
+   00FA call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00FF callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::PauseGameLogic()
+   0104 ldarg.0 
+   0105 ldc.i4.m1 
+   0106 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   010B ldarg.0 
+   010C ldfld Assets.Scripts.GameLogic.DialogueProcessor::bAutoNextPage
+   0111 brfalse IL_0128: ldarg.0
+   0116 ldarg.0 
+   0117 ldarg.0 
+   0118 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::NextPageNoTimeScale()
+   011D call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0122 pop 
+   0123 br IL_012f: ldarg.0
+   0128 ldarg.0 
+   0129 call System.Boolean Assets.Scripts.GameLogic.DialogueProcessor::NextPageInternal()
+   012E pop 
+   012F ldarg.0 
+   0130 ldfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   0135 brfalse IL_0169: ret
+   013A ldarg.1 
+   013B ldarg.0 
+   013C ldfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   0141 bne.un IL_0169: ret
+   0146 ldloca.s V_8
+   0148 ldarg.0 
+   0149 ldfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   014E ldc.i4.0 
+   014F call System.Void Assets.Scripts.GameLogic.GameCommonEventParam::.ctor(System.Int32,System.Int32)
+   0154 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0159 ldc.i4.s 92
+   015B ldloca.s V_8
+   015D callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   0162 ldarg.0 
+   0163 ldc.i4.0 
+   0164 stfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   0169 ret 
+== System.Collections.IEnumerator NextPageNoTimeScale() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameLogic.DialogueProcessor/<NextPageNoTimeScale>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameLogic.DialogueProcessor/<NextPageNoTimeScale>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void OnDestroyPortrait(UnityEngine.GameObject inPrefabObj) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0013 ldarg.1 
+   0014 callvirt System.Boolean DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::ContainsKey(!0)
+   0019 brfalse IL_003d: ret
+   001E ldarg.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0025 ldarg.1 
+   0026 callvirt !1 DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::get_Item(!0)
+   002B call System.Void UnityEngine.MonoBehaviour::StopCoroutine(UnityEngine.Coroutine)
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0036 ldarg.1 
+   0037 callvirt System.Boolean DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::Remove(!0)
+   003C pop 
+   003D ret 
+== System.Void EndDialogue() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0006 brfalse IL_0012: ldarg.0
+   000B ldarg.0 
+   000C ldnull 
+   000D stfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_007a: ldarg.0
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0029 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   002E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0033 ldstr PanelCenter
+   0038 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   003D stloc.0 
+   003E ldloc.0 
+   003F ldnull 
+   0040 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0045 brfalse IL_007a: ldarg.0
+   004A ldloc.0 
+   004B ldstr 3DImage
+   0050 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0055 stloc.1 
+   0056 ldloc.1 
+   0057 ldnull 
+   0058 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005D brfalse IL_007a: ldarg.0
+   0062 ldloc.1 
+   0063 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0068 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUI3DImageScript>()
+   006D stloc.2 
+   006E ldloc.2 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   0075 callvirt System.Void Assets.Scripts.UI.CUI3DImageScript::RemoveGameObject(UnityEngine.GameObject)
+   007A ldarg.0 
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   0081 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::OnDestroyPortrait(UnityEngine.GameObject)
+   0086 ldarg.0 
+   0087 ldnull 
+   0088 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   008D ldarg.0 
+   008E ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0093 callvirt System.Void DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::Clear()
+   0098 ldarg.0 
+   0099 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLinesRaw
+   009E callvirt System.Void System.Collections.Generic.List`1<ResData.ResActorLinesInfo>::Clear()
+   00A3 ldarg.0 
+   00A4 ldc.i4.m1 
+   00A5 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   00AA call System.Void SGW::OnResumeGameInterlude()
+   00AF ret 
+== System.Void EndDialogueComplete() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::bAutoNextPage
+   0006 brfalse IL_001d: ldarg.0
+   000B ldarg.0 
+   000C ldc.r4 0
+   0011 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_nextPageProgressTime
+   0016 ldarg.0 
+   0017 ldc.i4.0 
+   0018 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_bIsPlayingAutoNext
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_bgGoList
+   0023 callvirt System.Void ListViewBase::Clear()
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   002E brfalse IL_0046: ldarg.0
+   0033 ldarg.0 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   003A call System.Void UnityEngine.MonoBehaviour::StopCoroutine(UnityEngine.Coroutine)
+   003F ldarg.0 
+   0040 ldnull 
+   0041 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   0046 ldarg.0 
+   0047 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogue()
+   004C ldarg.0 
+   004D call System.Void Assets.Scripts.GameLogic.DialogueProcessor::ClearUiForms()
+   0052 ret 
+== System.Void ClearUiForms() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   0006 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::GetEnumerator()
+   000B stloc.0 
+   000C br IL_002a: ldloca.s V_0
+   0011 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0016 ldloca.s V_0
+   0018 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.Int32,Assets.Scripts.UI.CUIFormScript>::get_Current()
+   001D stloc.1 
+   001E ldloca.s V_1
+   0020 call !1 System.Collections.Generic.KeyValuePair`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::get_Value()
+   0025 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(Assets.Scripts.UI.CUIFormScript)
+   002A ldloca.s V_0
+   002C call System.Boolean DictionaryView`2/Enumerator<System.Int32,Assets.Scripts.UI.CUIFormScript>::MoveNext()
+   0031 brtrue IL_0011: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   003C callvirt System.Void DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::Clear()
+   0041 ldarg.0 
+   0042 ldnull 
+   0043 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   004E ldnull 
+   004F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0054 brfalse IL_0070: ret
+   0059 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0064 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(Assets.Scripts.UI.CUIFormScript)
+   0069 ldarg.0 
+   006A ldnull 
+   006B stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0070 ret 
+== System.Void PlayAnimNoTimeScalePlayAnimNoTimeScale(UnityEngine.Animation animation, System.String clipName, System.Boolean bLoop, System.Action onComplete) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 ldarg.s onComplete
+   0006 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::_PlayAnimNoTimeScale(UnityEngine.Animation,System.String,System.Boolean,System.Action)
+   000B call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0010 pop 
+   0011 ret 
+== System.Collections.IEnumerator _PlayAnimNoTimeScale(UnityEngine.Animation animation, System.String clipName, System.Boolean bLoop, System.Action onComplete) attrs=Private, Static, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1::animation
+   000D ldloc.0 
+   000E ldarg.1 
+   000F stfld Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1::clipName
+   0014 ldloc.0 
+   0015 ldarg.2 
+   0016 stfld Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1::bLoop
+   001B ldloc.0 
+   001C ldarg.3 
+   001D stfld Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1::onComplete
+   0022 ldloc.0 
+   0023 ret 
+== System.Void UpdateBgImageAlpha(System.Single inAlpha) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_bgGoList
+   0006 callvirt ListView`1/Enumerator<!0> ListView`1<UnityEngine.GameObject>::GetEnumerator()
+   000B stloc.0 
+   000C br IL_00a8: ldloca.s V_0
+   0011 ldloca.s V_0
+   0013 call !0 ListView`1/Enumerator<UnityEngine.GameObject>::get_Current()
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_0028: ldloca.s V_0
+   0023 br IL_00a8: ldloca.s V_0
+   0028 ldloca.s V_0
+   002A call !0 ListView`1/Enumerator<UnityEngine.GameObject>::get_Current()
+   002F stloc.1 
+   0030 ldloc.1 
+   0031 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0036 stloc.2 
+   0037 ldloc.1 
+   0038 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   003D stloc.3 
+   003E ldloc.2 
+   003F ldnull 
+   0040 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0045 brfalse IL_0073: ldloc.3
+   004A ldloc.2 
+   004B callvirt UnityEngine.Color UnityEngine.UI.Graphic::get_color()
+   0050 stloc.s V_4
+   0052 ldloc.2 
+   0053 ldloca.s V_4
+   0055 ldfld UnityEngine.Color::r
+   005A ldloca.s V_4
+   005C ldfld UnityEngine.Color::g
+   0061 ldloca.s V_4
+   0063 ldfld UnityEngine.Color::b
+   0068 ldarg.1 
+   0069 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   006E callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   0073 ldloc.3 
+   0074 ldnull 
+   0075 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   007A brfalse IL_00a8: ldloca.s V_0
+   007F ldloc.3 
+   0080 callvirt UnityEngine.Color UnityEngine.UI.Graphic::get_color()
+   0085 stloc.s V_5
+   0087 ldloc.3 
+   0088 ldloca.s V_5
+   008A ldfld UnityEngine.Color::r
+   008F ldloca.s V_5
+   0091 ldfld UnityEngine.Color::g
+   0096 ldloca.s V_5
+   0098 ldfld UnityEngine.Color::b
+   009D ldarg.1 
+   009E newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00A3 callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   00A8 ldloca.s V_0
+   00AA call System.Boolean ListView`1/Enumerator<UnityEngine.GameObject>::MoveNext()
+   00AF brtrue IL_0011: ldloca.s V_0
+   00B4 ret 
+== System.Collections.IEnumerator StartFadingOut() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingOut>c__Iterator2::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingOut>c__Iterator2::$this
+   000D ldloc.0 
+   000E ret 
+== System.Collections.IEnumerator StartFadingIn() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingIn>c__Iterator3::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingIn>c__Iterator3::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void UpdatePortrait3d(System.Boolean bActive, Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode node, Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode preNode) attrs=Private, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0018 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   001D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0022 ldstr PanelCenter
+   0027 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   002C stloc.0 
+   002D ldloc.0 
+   002E ldnull 
+   002F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0034 brfalse IL_003a: ldloc.0
+   0039 ret 
+   003A ldloc.0 
+   003B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0040 ldarg.1 
+   0041 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0046 ldarg.1 
+   0047 brfalse IL_0275: ldloc.0
+   004C ldarga.s preNode
+   004E ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   0053 ldarga.s node
+   0055 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   005A call System.Boolean System.String::op_Inequality(System.String,System.String)
+   005F brtrue IL_00b0: ldloc.0
+   0064 ldarga.s preNode
+   0066 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bAnimLoop
+   006B ldarga.s node
+   006D ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bAnimLoop
+   0072 bne.un IL_00b0: ldloc.0
+   0077 ldarga.s preNode
+   0079 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::b3dPortrait
+   007E ldarga.s node
+   0080 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::b3dPortrait
+   0085 bne.un IL_00b0: ldloc.0
+   008A ldarga.s preNode
+   008C ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::ActorType
+   0091 ldarga.s node
+   0093 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::ActorType
+   0098 bne.un IL_00b0: ldloc.0
+   009D ldarga.s preNode
+   009F ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::CharCfgId
+   00A4 ldarga.s node
+   00A6 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::CharCfgId
+   00AB beq IL_0270: br IL_02ac
+   00B0 ldloc.0 
+   00B1 ldstr 3DImage
+   00B6 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00BB callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C0 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUI3DImageScript>()
+   00C5 stloc.1 
+   00C6 ldarg.0 
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   00CD call System.Void Assets.Scripts.GameLogic.DialogueProcessor::OnDestroyPortrait(UnityEngine.GameObject)
+   00D2 ldloc.1 
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   00D9 callvirt System.Void Assets.Scripts.UI.CUI3DImageScript::RemoveGameObject(UnityEngine.GameObject)
+   00DE ldarg.0 
+   00DF ldnull 
+   00E0 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   00E5 ldarga.s node
+   00E7 ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   00EC ldfld Assets.Scripts.GameSystem.ObjNameData::ActorInfo
+   00F1 stloc.2 
+   00F2 ldloc.2 
+   00F3 ldnull 
+   00F4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F9 brfalse IL_010a: ldnull
+   00FE ldloc.2 
+   00FF ldc.i4.0 
+   0100 callvirt Assets.Scripts.GameLogic.TransformConfig Assets.Scripts.GameLogic.CActorInfo::GetTransformConfig(Assets.Scripts.GameLogic.ETransformConfigUsage)
+   0105 br IL_010b: stloc.3
+   010A ldnull 
+   010B stloc.3 
+   010C ldnull 
+   010D stloc.s V_4
+   010F ldarga.s node
+   0111 ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   0116 ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   011B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0120 brtrue IL_01c0: call !0 Singleton`1<CResourceManager>::GetInstance()
+   0125 ldloc.3 
+   0126 brfalse IL_01a8: ldloc.1
+   012B ldloca.s V_5
+   012D ldloc.3 
+   012E ldflda Assets.Scripts.GameLogic.TransformConfig::Offset
+   0133 ldfld UnityEngine.Vector3::x
+   0138 ldloc.3 
+   0139 ldflda Assets.Scripts.GameLogic.TransformConfig::Offset
+   013E ldfld UnityEngine.Vector3::y
+   0143 call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0148 ldloc.s V_5
+   014A ldloc.1 
+   014B callvirt UnityEngine.Vector2 Assets.Scripts.UI.CUI3DImageScript::GetPivotScreenPosition()
+   0150 call UnityEngine.Vector2 UnityEngine.Vector2::op_Addition(UnityEngine.Vector2,UnityEngine.Vector2)
+   0155 stloc.s V_5
+   0157 ldloc.1 
+   0158 ldarga.s node
+   015A ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   015F ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   0164 ldc.i4.0 
+   0165 ldloca.s V_5
+   0167 ldc.i4.1 
+   0168 ldc.i4.1 
+   0169 ldnull 
+   016A ldnull 
+   016B ldc.i4.1 
+   016C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::AddGameObject(System.String,System.Boolean,UnityEngine.Vector2&,System.Boolean,System.Boolean,System.String,UnityEngine.GameObject,System.Boolean)
+   0171 stloc.s V_4
+   0173 ldloc.s V_4
+   0175 ldnull 
+   0176 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   017B brfalse IL_01a3: br IL_01c0
+   0180 ldloc.s V_4
+   0182 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0187 ldloc.s V_4
+   0189 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   018E callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0193 ldloc.3 
+   0194 ldfld Assets.Scripts.GameLogic.TransformConfig::Scale
+   0199 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   019E callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   01A3 br IL_01c0: call !0 Singleton`1<CResourceManager>::GetInstance()
+   01A8 ldloc.1 
+   01A9 ldarga.s node
+   01AB ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   01B0 ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   01B5 ldc.i4.0 
+   01B6 ldc.i4.1 
+   01B7 ldnull 
+   01B8 ldc.i4.1 
+   01B9 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUI3DImageScript::AddGameObject(System.String,System.Boolean,System.Boolean,UnityEngine.GameObject,System.Boolean)
+   01BE stloc.s V_4
+   01C0 call !0 Singleton`1<CResourceManager>::GetInstance()
+   01C5 ldarga.s node
+   01C7 ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPath
+   01CC ldfld Assets.Scripts.GameSystem.ObjNameData::ObjectName
+   01D1 callvirt CResourcePackerInfo CResourceManager::GetResourceBelongedPackerInfo(System.String)
+   01D6 stloc.s V_6
+   01D8 ldloc.s V_6
+   01DA brfalse IL_01e7: ldarg.0
+   01DF ldloc.s V_6
+   01E1 ldc.i4.0 
+   01E2 callvirt System.Void CResourcePackerInfo::UnloadAssetBundle(System.Boolean)
+   01E7 ldarg.0 
+   01E8 ldloc.s V_4
+   01EA stfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   01EF ldloc.s V_4
+   01F1 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   01F6 brfalse IL_0270: br IL_02ac
+   01FB ldloc.s V_4
+   01FD callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Animation>()
+   0202 stloc.s V_7
+   0204 ldloc.s V_7
+   0206 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   020B brfalse IL_0270: br IL_02ac
+   0210 ldstr Idleshow
+   0215 stloc.s V_8
+   0217 ldarga.s node
+   0219 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   021E brfalse IL_023d: ldarg.0
+   0223 ldarga.s node
+   0225 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   022A call System.Boolean System.String::IsNullOrEmpty(System.String)
+   022F brtrue IL_023d: ldarg.0
+   0234 ldarga.s node
+   0236 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::AnimName
+   023B stloc.s V_8
+   023D ldarg.0 
+   023E ldloc.s V_7
+   0240 ldloc.s V_8
+   0242 ldarga.s node
+   0244 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bAnimLoop
+   0249 ldarg.0 
+   024A ldftn System.Void Assets.Scripts.GameLogic.DialogueProcessor::OnPortrait3dAnimComplete()
+   0250 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0255 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::_PlayAnimNoTimeScale(UnityEngine.Animation,System.String,System.Boolean,System.Action)
+   025A call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   025F stloc.s V_9
+   0261 ldarg.0 
+   0262 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0267 ldloc.s V_4
+   0269 ldloc.s V_9
+   026B callvirt System.Void DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::Add(!0,!1)
+   0270 br IL_02ac: ret
+   0275 ldloc.0 
+   0276 ldstr 3DImage
+   027B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0280 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0285 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUI3DImageScript>()
+   028A stloc.s V_10
+   028C ldarg.0 
+   028D ldarg.0 
+   028E ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   0293 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::OnDestroyPortrait(UnityEngine.GameObject)
+   0298 ldloc.s V_10
+   029A ldarg.0 
+   029B ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   02A0 callvirt System.Void Assets.Scripts.UI.CUI3DImageScript::RemoveGameObject(UnityEngine.GameObject)
+   02A5 ldarg.0 
+   02A6 ldnull 
+   02A7 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   02AC ret 
+== System.Void OnPortrait3dAnimComplete() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0018 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   001D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0022 ldstr PanelCenter
+   0027 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   002C stloc.0 
+   002D ldloc.0 
+   002E ldnull 
+   002F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0034 brfalse IL_003a: ldarg.0
+   0039 ret 
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_3dPortraitName
+   0040 stloc.1 
+   0041 ldloc.1 
+   0042 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0047 brfalse IL_00a2: ret
+   004C ldloc.1 
+   004D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Animation>()
+   0052 stloc.2 
+   0053 ldloc.2 
+   0054 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0059 brfalse IL_00a2: ret
+   005E ldarg.0 
+   005F ldloc.2 
+   0060 ldstr Idleshow
+   0065 ldc.i4.1 
+   0066 ldnull 
+   0067 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::_PlayAnimNoTimeScale(UnityEngine.Animation,System.String,System.Boolean,System.Action)
+   006C call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0071 stloc.3 
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0078 ldloc.1 
+   0079 callvirt System.Boolean DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::ContainsKey(!0)
+   007E brfalse IL_0095: ldarg.0
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   0089 ldloc.1 
+   008A ldloc.3 
+   008B callvirt System.Void DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::set_Item(!0,!1)
+   0090 br IL_00a2: ret
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameLogic.DialogueProcessor::Portrait3dAnimCoMap
+   009B ldloc.1 
+   009C ldloc.3 
+   009D callvirt System.Void DictionaryView`2<UnityEngine.GameObject,UnityEngine.Coroutine>::Add(!0,!1)
+   00A2 ret 
+== System.Void UpdatePortraitImg(System.Boolean bActive, Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode node, Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode preNode) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   0018 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   001D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0022 ldstr Pic_Npc
+   0027 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   002C stloc.0 
+   002D ldloc.0 
+   002E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0033 brfalse IL_0094: ret
+   0038 ldloc.0 
+   0039 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003E ldarg.1 
+   003F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0044 ldarg.1 
+   0045 brfalse IL_0094: ret
+   004A ldarga.s node
+   004C ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPrefab
+   0051 ldfld Assets.Scripts.GameSystem.ObjData::Object
+   0056 ldnull 
+   0057 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005C brfalse IL_0088: ldloc.0
+   0061 ldloc.0 
+   0062 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0067 stloc.1 
+   0068 ldloc.1 
+   0069 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   006E stloc.2 
+   006F ldloc.2 
+   0070 ldarga.s node
+   0072 ldflda Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::PortraitImgPrefab
+   0077 ldfld Assets.Scripts.GameSystem.ObjData::Object
+   007C ldc.i4.0 
+   007D ldc.i4.0 
+   007E call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.GameObject,System.Boolean,System.Boolean)
+   0083 br IL_0094: ret
+   0088 ldloc.0 
+   0089 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   008E ldc.i4.0 
+   008F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0094 ret 
+== System.Void SkipPages(Assets.Scripts.UI.CUIEvent inUiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogueComplete()
+   0006 ret 
+== System.Void NextPage(Assets.Scripts.UI.CUIEvent inUiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameLogic.DialogueProcessor::IsFading()
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D call System.Boolean Assets.Scripts.GameLogic.DialogueProcessor::NextPageInternal()
+   0012 pop 
+   0013 ret 
+== System.Boolean IsFading() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   0006 ldnull 
+   0007 ceq 
+   0009 ldc.i4.0 
+   000A ceq 
+   000C ret 
+== System.Void DoNextPageInternal() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   000C ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0011 ldobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0016 stloc.0 
+   0017 ldloca.s V_1
+   0019 initobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   001F ldloca.s V_1
+   0021 ldc.i4.m1 
+   0022 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::CharCfgId
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   002D ldc.i4.0 
+   002E ble IL_004c: ldnull
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   003F ldc.i4.1 
+   0040 sub 
+   0041 ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0046 ldobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   004B stloc.1 
+   004C ldnull 
+   004D stloc.2 
+   004E ldloca.s V_0
+   0050 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogStyle
+   0055 ldc.i4.0 
+   0056 blt IL_0069: ldarg.0
+   005B ldarg.0 
+   005C ldloca.s V_0
+   005E ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogStyle
+   0063 call Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameLogic.DialogueProcessor::QueryUiForm(System.Int32)
+   0068 stloc.2 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   006F ldloc.2 
+   0070 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0075 brfalse IL_0113: ldarg.0
+   007A ldloc.2 
+   007B ldnull 
+   007C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0081 brfalse IL_0113: ldarg.0
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   008C ldnull 
+   008D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0092 brfalse IL_00c4: ldarg.0
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   009D ldc.i4.1 
+   009E ldc.i4.1 
+   009F ldc.i4.0 
+   00A0 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   00AB ldnull 
+   00AC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B1 brfalse IL_00c4: ldarg.0
+   00B6 ldarg.0 
+   00B7 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   00BC ldc.i4.1 
+   00BD ldc.i4.1 
+   00BE ldc.i4.0 
+   00BF callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   00C4 ldarg.0 
+   00C5 ldloc.2 
+   00C6 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   00D1 ldnull 
+   00D2 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D7 brfalse IL_0113: ldarg.0
+   00DC ldarg.0 
+   00DD ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   00E2 ldc.i4.1 
+   00E3 ldc.i4.1 
+   00E4 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Appear(Assets.Scripts.UI.enFormHideFlag,System.Boolean)
+   00E9 ldloca.s V_0
+   00EB ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogStyle
+   00F0 brtrue IL_0113: ldarg.0
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   00FB ldnull 
+   00FC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0101 brfalse IL_0113: ldarg.0
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   010C ldc.i4.1 
+   010D ldc.i4.1 
+   010E callvirt System.Void Assets.Scripts.UI.CUIFormScript::Appear(Assets.Scripts.UI.enFormHideFlag,System.Boolean)
+   0113 ldarg.0 
+   0114 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   0119 ldnull 
+   011A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   011F brfalse IL_0241: ldloca.s V_0
+   0124 ldloca.s V_0
+   0126 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogStyle
+   012B ldc.i4.1 
+   012C bne.un IL_013b: ldsfld System.String[] Assets.Scripts.GameLogic.DialogueProcessor::ImageDialogBgPaths
+   0131 ldsfld Assets.Scripts.GameLogic.DialogueProcessor::BlackDialogBgPaths
+   0136 br IL_0140: stloc.3
+   013B ldsfld Assets.Scripts.GameLogic.DialogueProcessor::ImageDialogBgPaths
+   0140 stloc.3 
+   0141 ldloc.3 
+   0142 stloc.s V_5
+   0144 ldc.i4.0 
+   0145 stloc.s V_6
+   0147 br IL_0191: ldloc.s V_6
+   014C ldloc.s V_5
+   014E ldloc.s V_6
+   0150 ldelem.ref 
+   0151 stloc.s V_4
+   0153 ldarg.0 
+   0154 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   0159 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   015E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0163 ldloc.s V_4
+   0165 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   016A stloc.s V_7
+   016C ldloc.s V_7
+   016E ldnull 
+   016F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0174 brfalse IL_018b: ldloc.s V_6
+   0179 ldarg.0 
+   017A ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_bgGoList
+   017F ldloc.s V_7
+   0181 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0186 callvirt System.Void ListView`1<UnityEngine.GameObject>::Add(!0)
+   018B ldloc.s V_6
+   018D ldc.i4.1 
+   018E add 
+   018F stloc.s V_6
+   0191 ldloc.s V_6
+   0193 ldloc.s V_5
+   0195 ldlen 
+   0196 conv.i4 
+   0197 blt IL_014c: ldloc.s V_5
+   019C ldarg.0 
+   019D ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   01A2 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   01A7 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01AC ldstr Txt_Dialog
+   01B1 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01B6 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01BB stloc.s V_8
+   01BD ldloc.s V_8
+   01BF callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   01C4 stloc.s V_9
+   01C6 ldloc.s V_9
+   01C8 ldloca.s V_0
+   01CA ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogContent
+   01CF callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01D4 ldarg.0 
+   01D5 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiForm
+   01DA ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   01DF callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01E4 ldstr CharacterName
+   01E9 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01EE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01F3 stloc.s V_10
+   01F5 ldloc.s V_10
+   01F7 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   01FC stloc.s V_11
+   01FE ldloc.s V_11
+   0200 ldloca.s V_0
+   0202 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::DialogTitle
+   0207 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   020C ldloca.s V_0
+   020E ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::b3dPortrait
+   0213 brfalse IL_022f: ldarg.0
+   0218 ldarg.0 
+   0219 ldc.i4.1 
+   021A ldloc.0 
+   021B ldloc.1 
+   021C call System.Void Assets.Scripts.GameLogic.DialogueProcessor::UpdatePortrait3d(System.Boolean,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode)
+   0221 ldarg.0 
+   0222 ldc.i4.0 
+   0223 ldloc.0 
+   0224 ldloc.1 
+   0225 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::UpdatePortraitImg(System.Boolean,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode)
+   022A br IL_0241: ldloca.s V_0
+   022F ldarg.0 
+   0230 ldc.i4.0 
+   0231 ldloc.0 
+   0232 ldloc.1 
+   0233 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::UpdatePortrait3d(System.Boolean,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode)
+   0238 ldarg.0 
+   0239 ldc.i4.1 
+   023A ldloc.0 
+   023B ldloc.1 
+   023C call System.Void Assets.Scripts.GameLogic.DialogueProcessor::UpdatePortraitImg(System.Boolean,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode,Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode)
+   0241 ldloca.s V_0
+   0243 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bFadeIn
+   0248 brfalse IL_0264: ldarg.0
+   024D ldarg.0 
+   024E ldarg.0 
+   024F ldarg.0 
+   0250 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::StartFadingIn()
+   0255 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   025A stfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   025F br IL_026f: ret
+   0264 ldarg.0 
+   0265 ldc.r4 1
+   026A call System.Void Assets.Scripts.GameLogic.DialogueProcessor::UpdateBgImageAlpha(System.Single)
+   026F ret 
+== System.Boolean NextPageInternal() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0006 brtrue IL_0013: ldarg.0
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogueComplete()
+   0011 ldc.i4.1 
+   0012 ret 
+   0013 ldarg.0 
+   0014 dup 
+   0015 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   001A ldc.i4.1 
+   001B add 
+   001C dup 
+   001D stloc.0 
+   001E stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   0023 ldloc.0 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   002A ldlen 
+   002B conv.i4 
+   002C blt IL_0075: ldarg.0
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   003D ldc.i4.1 
+   003E sub 
+   003F ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0044 ldobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0049 stloc.1 
+   004A ldloca.s V_1
+   004C ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bFadeOut
+   0051 brtrue IL_0061: ldarg.0
+   0056 ldarg.0 
+   0057 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogueComplete()
+   005C br IL_0073: ldc.i4.1
+   0061 ldarg.0 
+   0062 ldarg.0 
+   0063 ldarg.0 
+   0064 call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::StartFadingOut()
+   0069 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   006E stfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   0073 ldc.i4.1 
+   0074 ret 
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameLogic.DialogueProcessor::bAutoNextPage
+   007B brfalse IL_008b: ldloca.s V_2
+   0080 ldarg.0 
+   0081 ldc.r4 0
+   0086 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_nextPageProgressTime
+   008B ldloca.s V_2
+   008D initobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   0093 ldloca.s V_2
+   0095 ldc.i4.m1 
+   0096 stfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::CharCfgId
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   00A1 ldc.i4.0 
+   00A2 ble IL_00e0: ldarg.0
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_actorLines
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curIndex
+   00B3 ldc.i4.1 
+   00B4 sub 
+   00B5 ldelema Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00BA ldobj Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+   00BF stloc.2 
+   00C0 ldloca.s V_2
+   00C2 ldfld Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode::bFadeOut
+   00C7 brfalse IL_00e0: ldarg.0
+   00CC ldarg.0 
+   00CD ldarg.0 
+   00CE ldarg.0 
+   00CF call System.Collections.IEnumerator Assets.Scripts.GameLogic.DialogueProcessor::StartFadingOut()
+   00D4 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   00D9 stfld Assets.Scripts.GameLogic.DialogueProcessor::m_fadingCoroutine
+   00DE ldc.i4.0 
+   00DF ret 
+   00E0 ldarg.0 
+   00E1 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::DoNextPageInternal()
+   00E6 ldc.i4.0 
+   00E7 ret 
+== System.Void Init() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 700
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameLogic.DialogueProcessor::NextPage(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 701
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameLogic.DialogueProcessor::SkipPages(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 ret 
+== System.Void Uninit() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.DialogueProcessor::EndDialogueComplete()
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 stfld Assets.Scripts.GameLogic.DialogueProcessor::PreDialogId
+   000D ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 700
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameLogic.DialogueProcessor::NextPage(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 701
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameLogic.DialogueProcessor::SkipPages(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 ldarg.0 
+   0037 call System.Void MonoSingleton`1<Assets.Scripts.GameLogic.DialogueProcessor>::OnDestroy()
+   003C ret 
+== Assets.Scripts.UI.CUIFormScript QueryUiForm(System.Int32 inDialogStyle) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   0006 ldarg.1 
+   0007 callvirt System.Boolean DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::ContainsKey(!0)
+   000C brfalse IL_001e: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   0017 ldarg.1 
+   0018 callvirt !1 DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::get_Item(!0)
+   001D ret 
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 call System.String Assets.Scripts.GameLogic.DialogueProcessor::QueryDialogTempPath(System.Int32)
+   0025 stloc.0 
+   0026 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002B ldloc.0 
+   002C ldc.i4.1 
+   002D ldc.i4.0 
+   002E ldnull 
+   002F callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0034 stloc.1 
+   0035 ldloc.1 
+   0036 ldnull 
+   0037 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003C call System.Void DebugHelper::Assert(System.Boolean)
+   0041 ldloc.1 
+   0042 ldnull 
+   0043 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0048 brfalse IL_00a0: ldloc.1
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_uiFormMap
+   0053 ldarg.1 
+   0054 ldloc.1 
+   0055 callvirt System.Void DictionaryView`2<System.Int32,Assets.Scripts.UI.CUIFormScript>::Add(!0,!1)
+   005A ldloc.1 
+   005B ldc.i4.1 
+   005C ldc.i4.1 
+   005D ldc.i4.0 
+   005E callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   0063 ldarg.1 
+   0064 brtrue IL_00a0: ldloc.1
+   0069 ldarg.0 
+   006A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   006F ldstr UGUI/Form/System/Dialog/Form_NpcDialogPortrait
+   0074 ldc.i4.1 
+   0075 ldc.i4.0 
+   0076 ldnull 
+   0077 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   007C stfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0087 ldnull 
+   0088 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008D brfalse IL_00a0: ldloc.1
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameLogic.DialogueProcessor::m_curUiFormPortrait
+   0098 ldc.i4.1 
+   0099 ldc.i4.1 
+   009A ldc.i4.0 
+   009B callvirt System.Void Assets.Scripts.UI.CUIFormScript::Hide(Assets.Scripts.UI.enFormHideFlag,System.Boolean,System.Boolean)
+   00A0 ldloc.1 
+   00A1 ret 
+== System.String QueryDialogTempPath(System.Int32 inDialogStyle) attrs=Private, HideBySig maxstack=2
+   0000 ldstr UGUI/Form/System/Dialog/Form_DialogBlack
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 ldc.i4.1 
+   0008 beq IL_0018: ldstr "UGUI/Form/System/Dialog/Form_DialogBlack"
+   000D ldarg.1 
+   000E brfalse IL_0023: ldstr "UGUI/Form/System/Dialog/Form_NpcDialog"
+   0013 br IL_0023: ldstr "UGUI/Form/System/Dialog/Form_NpcDialog"
+   0018 ldstr UGUI/Form/System/Dialog/Form_DialogBlack
+   001D stloc.0 
+   001E br IL_002e: ldloc.0
+   0023 ldstr UGUI/Form/System/Dialog/Form_NpcDialog
+   0028 stloc.0 
+   0029 br IL_002e: ldloc.0
+   002E ldloc.0 
+   002F ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.3 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr ClickFg
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldstr Txt_Dialog
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.2 
+   0018 ldstr CharacterName
+   001D stelem.ref 
+   001E stsfld Assets.Scripts.GameLogic.DialogueProcessor::BlackDialogBgPaths
+   0023 ldc.i4.5 
+   0024 newarr System.String
+   0029 dup 
+   002A ldc.i4.0 
+   002B ldstr Bg_Down
+   0030 stelem.ref 
+   0031 dup 
+   0032 ldc.i4.1 
+   0033 ldstr Bg_Down/ImageLine
+   0038 stelem.ref 
+   0039 dup 
+   003A ldc.i4.2 
+   003B ldstr Bg_Down/ImageArrow
+   0040 stelem.ref 
+   0041 dup 
+   0042 ldc.i4.3 
+   0043 ldstr Txt_Dialog
+   0048 stelem.ref 
+   0049 dup 
+   004A ldc.i4.4 
+   004B ldstr CharacterName
+   0050 stelem.ref 
+   0051 stsfld Assets.Scripts.GameLogic.DialogueProcessor::ImageDialogBgPaths
+   0056 ret 
+  NESTED Assets.Scripts.GameLogic.DialogueProcessor/SActorLineNode
+  NESTED Assets.Scripts.GameLogic.DialogueProcessor/<NextPageNoTimeScale>c__Iterator0
+  NESTED Assets.Scripts.GameLogic.DialogueProcessor/<_PlayAnimNoTimeScale>c__Iterator1
+  NESTED Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingOut>c__Iterator2
+  NESTED Assets.Scripts.GameLogic.DialogueProcessor/<StartFadingIn>c__Iterator3

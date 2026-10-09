@@ -1,0 +1,570 @@
+// TYPE Assets.Scripts.GameLogic.PathMoveCmd  base=Assets.Scripts.GameLogic.BaseCmd  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean targetReached
+  FIELD System.Int32 currentWaypointIndex
+  FIELD System.Int32 pickNextWaypointDist
+  FIELD UnityEngine.Vector3 moveForward
+  FIELD VInt3 lastFoundWaypointPosition
+  FIELD VInt3 curTargetPoint
+  FIELD VInt3 curTargetDir
+  FIELD VInt3 targetPos
+  FIELD System.Collections.Generic.List`1<VInt3> pathPoints
+  FIELD Assets.Scripts.GameLogic.ConstantController localControl
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<VInt3>::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.GameLogic.BaseCmd::.ctor()
+   0011 ret 
+== System.Int32 Clamp(System.Int32 a, System.Int32 b, System.Int32 c) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 ble IL_000d: ldarg.0
+   0007 ldarg.2 
+   0008 br IL_001b: ret
+   000D ldarg.0 
+   000E ldarg.1 
+   000F bge IL_001a: ldarg.0
+   0014 ldarg.1 
+   0015 br IL_001b: ret
+   001A ldarg.0 
+   001B ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.BaseCmd::OnUse()
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   000D ldarg.0 
+   000E ldc.i4 2000
+   0013 stfld Assets.Scripts.GameLogic.PathMoveCmd::pickNextWaypointDist
+   0018 ldarg.0 
+   0019 call UnityEngine.Vector3 UnityEngine.Vector3::get_right()
+   001E stfld Assets.Scripts.GameLogic.PathMoveCmd::moveForward
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0029 callvirt System.Void System.Collections.Generic.List`1<VInt3>::Clear()
+   002E ldarg.0 
+   002F ldsfld VInt3::zero
+   0034 stfld Assets.Scripts.GameLogic.PathMoveCmd::lastFoundWaypointPosition
+   0039 ldarg.0 
+   003A ldsfld VInt3::zero
+   003F stfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetPoint
+   0044 ldarg.0 
+   0045 ldsfld VInt3::zero
+   004A stfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   004F ldarg.0 
+   0050 ldsfld VInt3::zero
+   0055 stfld Assets.Scripts.GameLogic.PathMoveCmd::targetPos
+   005A ldarg.0 
+   005B ldc.i4.0 
+   005C stfld Assets.Scripts.GameLogic.PathMoveCmd::targetReached
+   0061 ret 
+== System.Void OnRelease() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Common.PooledClassObject::OnRelease()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.PathMoveCmd::localControl
+   000C callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0011 ret 
+== System.Void Init(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> _actor, SGW/FakeProtocol/PathMoveDef _def, System.Single _speed) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.BaseCmd::actorLinker
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.BaseCmd::actorLinker
+   000D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0012 brfalse IL_002d: ldarg.0
+   0017 ldarg.0 
+   0018 ldarg.0 
+   0019 ldflda Assets.Scripts.GameLogic.BaseCmd::actorLinker
+   001E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0023 ldfld Assets.Scripts.GameLogic.ActorLinker::MoveControl
+   0028 stfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0033 ldarga.s _def
+   0035 ldfld SGW/FakeProtocol/PathMoveDef::findPaths
+   003A callvirt System.Void System.Collections.Generic.List`1<VInt3>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   003F ldarg.0 
+   0040 ldarg.3 
+   0041 stfld Assets.Scripts.GameLogic.BaseCmd::moveSpeed
+   0046 ldarg.0 
+   0047 ldc.i4.0 
+   0048 stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   004D ldarg.0 
+   004E ldc.i4 8000
+   0053 stfld Assets.Scripts.GameLogic.PathMoveCmd::pickNextWaypointDist
+   0058 ldarg.0 
+   0059 ldarga.s _def
+   005B ldfld SGW/FakeProtocol/PathMoveDef::targetPos
+   0060 stfld Assets.Scripts.GameLogic.PathMoveCmd::targetPos
+   0065 ldarg.0 
+   0066 call !0 Assets.Scripts.Common.ClassObjPool`1<Assets.Scripts.GameLogic.ConstantController>::Get()
+   006B stfld Assets.Scripts.GameLogic.PathMoveCmd::localControl
+   0070 ret 
+== VFactor NearestPointFactorXZ(VInt3 lineStart, VInt3 lineEnd, VInt3 point) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldarga.s lineEnd
+   0004 ldfld VInt3::x
+   0009 ldarga.s lineStart
+   000B ldfld VInt3::x
+   0010 sub 
+   0011 ldarga.s lineEnd
+   0013 ldfld VInt3::z
+   0018 ldarga.s lineStart
+   001A ldfld VInt3::z
+   001F sub 
+   0020 call System.Void VInt2::.ctor(System.Int32,System.Int32)
+   0025 ldloca.s V_1
+   0027 ldarga.s point
+   0029 ldfld VInt3::x
+   002E ldarga.s lineStart
+   0030 ldfld VInt3::x
+   0035 sub 
+   0036 ldarga.s point
+   0038 ldfld VInt3::z
+   003D ldarga.s lineStart
+   003F ldfld VInt3::z
+   0044 sub 
+   0045 call System.Void VInt2::.ctor(System.Int32,System.Int32)
+   004A ldloca.s V_0
+   004C call System.Int64 VInt2::get_sqrMagnitudeLong()
+   0051 stloc.2 
+   0052 ldsfld VFactor::zero
+   0057 stloc.3 
+   0058 ldloca.s V_3
+   005A ldloca.s V_1
+   005C ldloca.s V_0
+   005E call System.Int64 VInt2::DotLong(VInt2&,VInt2&)
+   0063 stfld VFactor::nom
+   0068 ldloc.2 
+   0069 ldc.i4.0 
+   006A conv.i8 
+   006B beq IL_0078: ldloc.3
+   0070 ldloca.s V_3
+   0072 ldloc.2 
+   0073 stfld VFactor::den
+   0078 ldloc.3 
+   0079 ret 
+== VInt3 CalculateTargetPoint(VInt3 p, VInt3 a, VInt3 b) attrs=Private, HideBySig maxstack=3
+   0000 ldarga.s a
+   0002 ldfld VInt3::x
+   0007 ldarga.s b
+   0009 ldfld VInt3::x
+   000E bne.un IL_0028: ldarg.2
+   0013 ldarga.s a
+   0015 ldfld VInt3::z
+   001A ldarga.s b
+   001C ldfld VInt3::z
+   0021 bne.un IL_0028: ldarg.2
+   0026 ldarg.2 
+   0027 ret 
+   0028 ldarg.2 
+   0029 ldarg.3 
+   002A ldarg.1 
+   002B call VFactor Assets.Scripts.GameLogic.PathMoveCmd::NearestPointFactorXZ(VInt3,VInt3,VInt3)
+   0030 stloc.0 
+   0031 ldarg.2 
+   0032 ldarg.3 
+   0033 ldloc.0 
+   0034 call VInt3 VInt3::Lerp(VInt3,VInt3,VFactor)
+   0039 stloc.1 
+   003A ldloc.1 
+   003B ldarg.1 
+   003C call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   0041 stloc.3 
+   0042 ldloca.s V_3
+   0044 call System.Int64 VInt3::get_sqrMagnitudeLong2D()
+   0049 stloc.2 
+   004A ldloc.2 
+   004B call System.Int32 IntMath::Sqrt(System.Int64)
+   0050 stloc.s V_4
+   0052 ldarg.2 
+   0053 ldarg.3 
+   0054 call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   0059 stloc.s V_6
+   005B ldloca.s V_6
+   005D call System.Int64 VInt3::get_sqrMagnitudeLong2D()
+   0062 stloc.s V_5
+   0064 ldloc.s V_5
+   0066 call System.Int32 IntMath::Sqrt(System.Int64)
+   006B stloc.s V_7
+   006D ldloc.s V_7
+   006F brtrue IL_0076: ldc.i4 1000
+   0074 ldarg.3 
+   0075 ret 
+   0076 ldc.i4 1000
+   007B ldloc.s V_4
+   007D sub 
+   007E ldc.i4.0 
+   007F ldc.i4 1000
+   0084 call System.Int32 Assets.Scripts.GameLogic.PathMoveCmd::Clamp(System.Int32,System.Int32,System.Int32)
+   0089 stloc.s V_8
+   008B ldloc.s V_8
+   008D conv.i8 
+   008E ldloca.s V_0
+   0090 ldfld VFactor::den
+   0095 mul 
+   0096 ldloca.s V_0
+   0098 ldfld VFactor::nom
+   009D ldloc.s V_7
+   009F conv.i8 
+   00A0 mul 
+   00A1 add 
+   00A2 stloc.s V_9
+   00A4 ldloc.s V_7
+   00A6 conv.i8 
+   00A7 ldloca.s V_0
+   00A9 ldfld VFactor::den
+   00AE mul 
+   00AF stloc.s V_10
+   00B1 ldloca.s V_11
+   00B3 ldloc.s V_9
+   00B5 ldloc.s V_10
+   00B7 call System.Void VFactor::.ctor(System.Int64,System.Int64)
+   00BC ldloc.s V_11
+   00BE ldsfld VFactor::one
+   00C3 call System.Boolean VFactor::op_GreaterThan(VFactor,VFactor)
+   00C8 brfalse IL_00d9: ldloc.s V_11
+   00CD ldsfld VFactor::one
+   00D2 stloc.s V_11
+   00D4 br IL_00f1: ldloca.s V_11
+   00D9 ldloc.s V_11
+   00DB ldsfld VFactor::zero
+   00E0 call System.Boolean VFactor::op_LessThan(VFactor,VFactor)
+   00E5 brfalse IL_00f1: ldloca.s V_11
+   00EA ldsfld VFactor::zero
+   00EF stloc.s V_11
+   00F1 ldloca.s V_11
+   00F3 call System.Void VFactor::strip()
+   00F8 ldarg.2 
+   00F9 ldarg.3 
+   00FA ldloc.s V_11
+   00FC call VInt3 VInt3::Lerp(VInt3,VInt3,VFactor)
+   0101 ret 
+== VInt3 CaculateDir(VInt3 _curPos) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<VInt3>::get_Count()
+   000B brtrue IL_0016: ldarg.0
+   0010 ldsfld VInt3::zero
+   0015 ret 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   001C callvirt System.Int32 System.Collections.Generic.List`1<VInt3>::get_Count()
+   0021 ldc.i4.1 
+   0022 bne.un IL_0034: ldarg.0
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   002D ldc.i4.0 
+   002E ldarg.1 
+   002F callvirt System.Void System.Collections.Generic.List`1<VInt3>::Insert(System.Int32,!0)
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0040 callvirt System.Int32 System.Collections.Generic.List`1<VInt3>::get_Count()
+   0045 blt IL_005d: ldarg.0
+   004A ldarg.0 
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0051 callvirt System.Int32 System.Collections.Generic.List`1<VInt3>::get_Count()
+   0056 ldc.i4.1 
+   0057 sub 
+   0058 stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0063 ldc.i4.1 
+   0064 bgt IL_0070: ldarg.0
+   0069 ldarg.0 
+   006A ldc.i4.1 
+   006B stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   007C callvirt System.Int32 System.Collections.Generic.List`1<VInt3>::get_Count()
+   0081 ldc.i4.1 
+   0082 sub 
+   0083 bge IL_0142: br IL_014c
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   008E ldarg.0 
+   008F ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0094 callvirt !0 System.Collections.Generic.List`1<VInt3>::get_Item(System.Int32)
+   0099 ldarg.1 
+   009A call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   009F stloc.1 
+   00A0 ldloca.s V_1
+   00A2 call System.Int64 VInt3::get_sqrMagnitudeLong2D()
+   00A7 stloc.0 
+   00A8 ldloc.0 
+   00A9 ldc.i4.s 25
+   00AB conv.i8 
+   00AC bgt IL_00cb: ldarg.0
+   00B1 ldarg.0 
+   00B2 ldarg.1 
+   00B3 stfld Assets.Scripts.GameLogic.PathMoveCmd::lastFoundWaypointPosition
+   00B8 ldarg.0 
+   00B9 dup 
+   00BA ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   00BF ldc.i4.1 
+   00C0 add 
+   00C1 stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   00C6 br IL_0070: ldarg.0
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   00D1 ldarg.0 
+   00D2 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   00D7 ldc.i4.1 
+   00D8 sub 
+   00D9 callvirt !0 System.Collections.Generic.List`1<VInt3>::get_Item(System.Int32)
+   00DE stloc.2 
+   00DF ldarg.0 
+   00E0 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   00EB callvirt !0 System.Collections.Generic.List`1<VInt3>::get_Item(System.Int32)
+   00F0 stloc.3 
+   00F1 ldloc.3 
+   00F2 ldloc.2 
+   00F3 call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   00F8 stloc.s V_4
+   00FA ldloca.s V_4
+   00FC call System.Int64 VInt3::Normalize()
+   0101 stloc.s V_5
+   0103 ldarg.1 
+   0104 ldloc.2 
+   0105 call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   010A ldloc.s V_4
+   010C call System.Int64 VInt3::DotXZLong(VInt3,VInt3)
+   0111 stloc.s V_6
+   0113 ldloc.s V_6
+   0115 ldloc.s V_5
+   0117 ldc.i4 1000
+   011C conv.i8 
+   011D mul 
+   011E blt IL_013d: br IL_014c
+   0123 ldarg.0 
+   0124 ldarg.1 
+   0125 stfld Assets.Scripts.GameLogic.PathMoveCmd::lastFoundWaypointPosition
+   012A ldarg.0 
+   012B dup 
+   012C ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0131 ldc.i4.1 
+   0132 add 
+   0133 stfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   0138 br IL_0070: ldarg.0
+   013D br IL_014c: ldarg.0
+   0142 br IL_014c: ldarg.0
+   0147 br IL_0070: ldarg.0
+   014C ldarg.0 
+   014D ldarg.0 
+   014E ldarg.1 
+   014F ldarg.0 
+   0150 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0155 ldarg.0 
+   0156 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   015B ldc.i4.1 
+   015C sub 
+   015D callvirt !0 System.Collections.Generic.List`1<VInt3>::get_Item(System.Int32)
+   0162 ldarg.0 
+   0163 ldfld Assets.Scripts.GameLogic.PathMoveCmd::pathPoints
+   0168 ldarg.0 
+   0169 ldfld Assets.Scripts.GameLogic.PathMoveCmd::currentWaypointIndex
+   016E callvirt !0 System.Collections.Generic.List`1<VInt3>::get_Item(System.Int32)
+   0173 call VInt3 Assets.Scripts.GameLogic.PathMoveCmd::CalculateTargetPoint(VInt3,VInt3,VInt3)
+   0178 stfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetPoint
+   017D ldarg.0 
+   017E ldarg.0 
+   017F ldfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetPoint
+   0184 ldarg.1 
+   0185 call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   018A stfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   018F ldarg.0 
+   0190 ldflda Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   0195 ldc.i4.0 
+   0196 stfld VInt3::y
+   019B ldarg.0 
+   019C ldflda Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   01A1 call System.Int64 VInt3::Normalize()
+   01A6 pop 
+   01A7 ldarg.0 
+   01A8 ldfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   01AD ret 
+== System.Void NoReachedEdgeLocalExcute() attrs=Private, HideBySig maxstack=5
+   0000 call System.Single UnityEngine.Time::get_deltaTime()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   000C callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0011 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   0016 stloc.1 
+   0017 ldarg.0 
+   0018 ldloc.1 
+   0019 call VInt3 Assets.Scripts.GameLogic.PathMoveCmd::CaculateDir(VInt3)
+   001E pop 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   0025 stloc.2 
+   0026 ldloc.2 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.BaseCmd::moveSpeed
+   002D ldloc.0 
+   002E mul 
+   002F call VInt3 VInt3::op_Multiply(VInt3,System.Single)
+   0034 stloc.2 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   003B callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0040 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   0045 ldloc.2 
+   0046 call VInt3 SGW/FakeProtocol::CoreMoveLerp(VInt3,VInt3)
+   004B stloc.2 
+   004C ldloc.1 
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameLogic.PathMoveCmd::targetPos
+   0053 call VInt3 VInt3::op_Subtraction(VInt3,VInt3)
+   0058 stloc.3 
+   0059 ldloca.s V_3
+   005B call System.Int64 VInt3::get_sqrMagnitudeLong2D()
+   0060 ldloca.s V_2
+   0062 call System.Int64 VInt3::get_sqrMagnitudeLong2D()
+   0067 bgt IL_008e: ldarg.0
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameLogic.PathMoveCmd::targetPos
+   0078 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   007D callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_CurPosition(UnityEngine.Vector3)
+   0082 ldarg.0 
+   0083 ldc.i4.1 
+   0084 stfld Assets.Scripts.GameLogic.PathMoveCmd::targetReached
+   0089 br IL_00a5: ldarg.0
+   008E ldarg.0 
+   008F ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0094 ldloc.1 
+   0095 ldloc.2 
+   0096 call VInt3 VInt3::op_Addition(VInt3,VInt3)
+   009B call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   00A0 callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_CurPosition(UnityEngine.Vector3)
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   00B1 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   00B6 call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3)
+   00BB callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_TarRotation(UnityEngine.Quaternion)
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   00C6 ldarg.0 
+   00C7 ldfld Assets.Scripts.GameLogic.PathMoveCmd::curTargetDir
+   00CC call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   00D1 callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_MoveForward(UnityEngine.Vector3)
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   00DC ldarg.0 
+   00DD ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   00E2 callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.MoveComponent::get_CurRotation()
+   00E7 ldarg.0 
+   00E8 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   00ED callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.MoveComponent::get_TarRotation()
+   00F2 call System.Single UnityEngine.Time::get_deltaTime()
+   00F7 ldc.r4 720
+   00FC mul 
+   00FD call UnityEngine.Quaternion UnityEngine.Quaternion::RotateTowards(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   0102 callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_CurRotation(UnityEngine.Quaternion)
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   010D ldarg.0 
+   010E ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0113 callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0118 callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_RemotePosition(UnityEngine.Vector3)
+   011D ret 
+== System.Void LocalExcute() attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PathMoveCmd::targetReached
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.BaseCmd::bReachedEdge
+   0012 brtrue IL_0022: call System.Single UnityEngine.Time::get_deltaTime()
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.GameLogic.PathMoveCmd::NoReachedEdgeLocalExcute()
+   001D br IL_009f: ret
+   0022 call System.Single UnityEngine.Time::get_deltaTime()
+   0027 stloc.0 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.PathMoveCmd::localControl
+   002E ldloc.0 
+   002F callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.BaseController::GetMotionDeltaDistance(System.Single)
+   0034 stloc.1 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   003B callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0040 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   0045 ldloc.1 
+   0046 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   004B call VInt3 SGW/FakeProtocol::CoreMoveLerp(VInt3,VInt3)
+   0050 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   0055 stloc.1 
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0062 callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0067 ldloc.1 
+   0068 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   006D callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_CurPosition(UnityEngine.Vector3)
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   007E callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.MoveComponent::get_CurRotation()
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0089 callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.MoveComponent::get_TarRotation()
+   008E ldloc.0 
+   008F ldc.r4 720
+   0094 mul 
+   0095 call UnityEngine.Quaternion UnityEngine.Quaternion::RotateTowards(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   009A callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_CurRotation(UnityEngine.Quaternion)
+   009F ret 
+== System.Void RemoteExcute() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void HandleLocalMotion() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void HandleReachedEdgeMotion() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0006 callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_RemotePosition()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   0011 callvirt UnityEngine.Vector3 Assets.Scripts.GameLogic.MoveComponent::get_CurPosition()
+   0016 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   001B stloc.0 
+   001C ldloca.s V_0
+   001E call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameLogic.PathMoveCmd::localControl
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameLogic.BaseCmd::moveSpeed
+   0030 ldloc.0 
+   0031 callvirt System.Void Assets.Scripts.GameLogic.ConstantController::Init(System.Single,UnityEngine.Vector3)
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameLogic.BaseCmd::moveControl
+   003C ldloc.0 
+   003D callvirt System.Void Assets.Scripts.GameLogic.MoveComponent::set_MoveForward(UnityEngine.Vector3)
+   0042 ret 
+== System.Void SetReachedEdge(System.Boolean _b, UnityEngine.Vector3 _dir) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.BaseCmd::bReachedEdge
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.BaseCmd::bReachedEdge
+   000D brfalse IL_0018: ret
+   0012 ldarg.0 
+   0013 call System.Void Assets.Scripts.GameLogic.PathMoveCmd::HandleReachedEdgeMotion()
+   0018 ret 

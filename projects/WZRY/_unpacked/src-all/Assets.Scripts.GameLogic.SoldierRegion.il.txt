@@ -1,0 +1,205 @@
+// TYPE Assets.Scripts.GameLogic.SoldierRegion  base=Assets.Scripts.GameLogic.FuncRegion  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 WaveID
+  FIELD System.Int32 RouteID
+  FIELD UnityEngine.GameObject finalTarget
+  FIELD UnityEngine.GameObject AttackRoute
+  FIELD System.Boolean bForceCompleteSpawn
+  FIELD System.Int32 regionIndex
+  FIELD System.Int32 preloadOrder
+  FIELD System.Boolean allDeadSpawnNext
+  FIELD UnityEngine.GameObject[] specifyBornPosArr
+  FIELD ListView`1<Assets.Scripts.GameLogic.SoldierWave> Waves
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameLogic.SoldierRegion::bForceCompleteSpawn
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 newarr UnityEngine.GameObject
+   000E stfld Assets.Scripts.GameLogic.SoldierRegion::specifyBornPosArr
+   0013 ldarg.0 
+   0014 newobj System.Void ListView`1<Assets.Scripts.GameLogic.SoldierWave>::.ctor()
+   0019 stfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   001E ldarg.0 
+   001F call System.Void Assets.Scripts.GameLogic.FuncRegion::.ctor()
+   0024 ret 
+== System.Void Awake() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.SoldierRegion::WaveID
+   0007 call System.Void Assets.Scripts.GameLogic.SoldierRegion::LoadWave(System.Int32)
+   000C ret 
+== System.Void LoadWave(System.Int32 theWaveID) attrs=Private, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.1 
+   0003 call System.Boolean ResData.GameDataMgr/soldierWaveDatabin::FindByKey(ResData.ResSoldierWaveInfo&,System.UInt32)
+   0008 stloc.1 
+   0009 ldc.i4.0 
+   000A stloc.2 
+   000B br IL_0036: ldloc.1
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   0016 ldarg.0 
+   0017 ldloc.0 
+   0018 ldloc.2 
+   0019 dup 
+   001A ldc.i4.1 
+   001B add 
+   001C stloc.2 
+   001D newobj System.Void Assets.Scripts.GameLogic.SoldierWave::.ctor(Assets.Scripts.GameLogic.SoldierRegion,ResData.ResSoldierWaveInfo,System.Int32)
+   0022 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.SoldierWave>::Add(!0)
+   0027 ldloca.s V_0
+   0029 ldloca.s V_0
+   002B ldfld ResData.ResSoldierWaveInfo::dwNextSoldierWaveID
+   0030 call System.Boolean ResData.GameDataMgr/soldierWaveDatabin::FindByKey(ResData.ResSoldierWaveInfo&,System.UInt32)
+   0035 stloc.1 
+   0036 ldloc.1 
+   0037 brtrue IL_0010: ldarg.0
+   003C ret 
+== System.Collections.Generic.List`1<ResData.ResSoldierWaveInfo> GetWavesForPreLoad(System.UInt32 inWaveId) attrs=Public, Static, HideBySig maxstack=2
+   0000 newobj System.Void System.Collections.Generic.List`1<ResData.ResSoldierWaveInfo>::.ctor()
+   0005 stloc.0 
+   0006 br IL_001b: ldloca.s V_1
+   000B ldloc.0 
+   000C ldloc.1 
+   000D callvirt System.Void System.Collections.Generic.List`1<ResData.ResSoldierWaveInfo>::Add(!0)
+   0012 ldloca.s V_1
+   0014 ldfld ResData.ResSoldierWaveInfo::dwNextSoldierWaveID
+   0019 starg.s inWaveId
+   001B ldloca.s V_1
+   001D ldarg.0 
+   001E call System.Boolean ResData.GameDataMgr/soldierWaveDatabin::FindByKey(ResData.ResSoldierWaveInfo&,System.UInt32)
+   0023 brtrue IL_000b: ldloc.0
+   0028 ldloc.0 
+   0029 ret 
+== System.Int32 GetTotalCount() attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   0008 callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.GameLogic.SoldierWave>::GetEnumerator()
+   000D stloc.1 
+   000E br IL_0042: ldloca.s V_1
+   0013 ldloca.s V_1
+   0015 call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::get_Current()
+   001A stloc.2 
+   001B ldloc.2 
+   001C callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0021 stloc.3 
+   0022 ldloca.s V_3
+   0024 ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   0029 brtrue IL_0030: ldloc.0
+   002E ldc.i4.0 
+   002F ret 
+   0030 ldloc.0 
+   0031 ldloc.2 
+   0032 callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0037 stloc.s V_4
+   0039 ldloca.s V_4
+   003B ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   0040 add 
+   0041 stloc.0 
+   0042 ldloca.s V_1
+   0044 call System.Boolean ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::MoveNext()
+   0049 brtrue IL_0013: ldloca.s V_1
+   004E ldloc.0 
+   004F ret 
+== System.Int32 GetRepeatCountTill(System.Int32 inWaveIndex) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldarg.0 
+   0005 ldfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   000A callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.GameLogic.SoldierWave>::GetEnumerator()
+   000F stloc.2 
+   0010 br IL_0049: ldloca.s V_2
+   0015 ldloca.s V_2
+   0017 call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::get_Current()
+   001C stloc.3 
+   001D ldloc.3 
+   001E callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0023 stloc.s V_4
+   0025 ldloca.s V_4
+   0027 ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   002C brtrue IL_0033: ldloc.1
+   0031 ldc.i4.0 
+   0032 ret 
+   0033 ldloc.1 
+   0034 ldloc.3 
+   0035 callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   003A stloc.s V_5
+   003C ldloca.s V_5
+   003E ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   0043 add 
+   0044 stloc.1 
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.0 
+   0049 ldloca.s V_2
+   004B call System.Boolean ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::MoveNext()
+   0050 brfalse IL_005c: ldarg.0
+   0055 ldloc.0 
+   0056 ldarg.1 
+   0057 blt IL_0015: ldloca.s V_2
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   0062 ldarg.1 
+   0063 callvirt !0 ListView`1<Assets.Scripts.GameLogic.SoldierWave>::get_Item(System.Int32)
+   0068 ldfld Assets.Scripts.GameLogic.SoldierWave::repeatCount
+   006D stloc.s V_6
+   006F ldloc.1 
+   0070 ldloc.s V_6
+   0072 add 
+   0073 stloc.1 
+   0074 ldloc.1 
+   0075 ret 
+== System.Int32 GetTotalTime() attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameLogic.SoldierRegion::Waves
+   0008 callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.GameLogic.SoldierWave>::GetEnumerator()
+   000D stloc.1 
+   000E br IL_0066: ldloca.s V_1
+   0013 ldloca.s V_1
+   0015 call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::get_Current()
+   001A stloc.2 
+   001B ldloc.2 
+   001C callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0021 stloc.3 
+   0022 ldloca.s V_3
+   0024 ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   0029 brtrue IL_0030: ldloc.0
+   002E ldc.i4.0 
+   002F ret 
+   0030 ldloc.0 
+   0031 ldloc.2 
+   0032 callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0037 stloc.s V_4
+   0039 ldloca.s V_4
+   003B ldfld ResData.ResSoldierWaveInfo::dwStartWatiTick
+   0040 add 
+   0041 stloc.0 
+   0042 ldloc.0 
+   0043 ldloc.2 
+   0044 callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0049 stloc.s V_5
+   004B ldloca.s V_5
+   004D ldfld ResData.ResSoldierWaveInfo::dwIntervalTick
+   0052 ldloc.2 
+   0053 callvirt ResData.ResSoldierWaveInfo Assets.Scripts.GameLogic.SoldierWave::get_WaveInfo()
+   0058 stloc.s V_6
+   005A ldloca.s V_6
+   005C ldfld ResData.ResSoldierWaveInfo::dwRepeatNum
+   0061 ldc.i4.1 
+   0062 sub 
+   0063 mul 
+   0064 add 
+   0065 stloc.0 
+   0066 ldloca.s V_1
+   0068 call System.Boolean ListView`1/Enumerator<Assets.Scripts.GameLogic.SoldierWave>::MoveNext()
+   006D brtrue IL_0013: ldloca.s V_1
+   0072 ldloc.0 
+   0073 ret 

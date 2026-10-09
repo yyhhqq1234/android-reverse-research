@@ -1,0 +1,2335 @@
+// TYPE Assets.Scripts.GameSystem.CAchievementSystem  base=Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>  attrs=Public, BeforeFieldInit
+  FIELD System.UInt16 TROPHY_RULE_ID = 16
+  FIELD System.String OverviewFormPrefabPath = UGUI/Form/System/Achieve/Form_Trophy_Overview.prefab
+  FIELD System.String TrophyDetailFormPrefabPath = UGUI/Form/System/Achieve/Form_Trophy_Detail.prefab
+  FIELD System.String TrophyRewardsFormPrefabPath = UGUI/Form/System/Achieve/Form_Trophy_Rewards.prefab
+  FIELD Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu m_CurMenu
+  FIELD System.String[] m_TypeMenuNameKeys
+  FIELD ListView`1<Assets.Scripts.GameSystem.CAchieveItem2> m_CurAchieveSeries
+  FIELD Assets.Scripts.GameSystem.CAchieveItem2 m_CurAchieveItem
+  FIELD System.Int32 m_curAchievementType
+  FIELD Assets.Scripts.GameSystem.CAchieveShareComponent m_shareComponent
+  FIELD ListView`1<Assets.Scripts.GameSystem.CTrophyRewardInfo> m_TrophyRewardInfoWithRewardList
+  FIELD ListView`1<CSProtocol.SCPKG_PVPBAN_NTF> CachedPunishMsg
+  PROP Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu CurMenu
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=7
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 newarr System.String
+   0007 dup 
+   0008 ldc.i4.0 
+   0009 call !0 Singleton`1<CTextManager>::GetInstance()
+   000E ldstr Achievement_Trophy_Menu_All
+   0013 ldc.i4.1 
+   0014 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0019 stelem.ref 
+   001A dup 
+   001B ldc.i4.1 
+   001C call !0 Singleton`1<CTextManager>::GetInstance()
+   0021 ldstr Achievement_Trophy_Menu_Not_Done
+   0026 ldc.i4.1 
+   0027 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   002C stelem.ref 
+   002D stfld Assets.Scripts.GameSystem.CAchievementSystem::m_TypeMenuNameKeys
+   0032 ldarg.0 
+   0033 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CAchieveItem2>::.ctor()
+   0038 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   003D ldarg.0 
+   003E call System.Void Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::.ctor()
+   0043 ret 
+== Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu get_CurMenu() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurMenu
+   0006 ret 
+== System.Void set_CurMenu(Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurMenu
+   0007 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::Init()
+   0006 ldarg.0 
+   0007 ldnull 
+   0008 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   000D ldarg.0 
+   000E newobj System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::.ctor()
+   0013 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_shareComponent
+   0018 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   001D ldc.i4 15200
+   0022 ldarg.0 
+   0023 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementOpenOverviewForm(Assets.Scripts.UI.CUIEvent)
+   0029 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   002E callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0033 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0038 ldc.i4 15204
+   003D ldarg.0 
+   003E ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementShowShareBtn(Assets.Scripts.UI.CUIEvent)
+   0044 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0049 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   004E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0053 ldc.i4 15206
+   0058 ldarg.0 
+   0059 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnMenuChange(Assets.Scripts.UI.CUIEvent)
+   005F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0064 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0069 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   006E ldc.i4 15207
+   0073 ldarg.0 
+   0074 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyEnable(Assets.Scripts.UI.CUIEvent)
+   007A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   007F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0084 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0089 ldc.i4 15208
+   008E ldarg.0 
+   008F ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyClick(Assets.Scripts.UI.CUIEvent)
+   0095 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   009F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A4 ldc.i4 15209
+   00A9 ldarg.0 
+   00AA ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementEnable(Assets.Scripts.UI.CUIEvent)
+   00B0 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B5 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BA call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00BF ldc.i4 15210
+   00C4 ldarg.0 
+   00C5 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnBrowseAllRewards(Assets.Scripts.UI.CUIEvent)
+   00CB newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D0 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D5 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00DA ldc.i4 15211
+   00DF ldarg.0 
+   00E0 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyRewardInfoEnable(Assets.Scripts.UI.CUIEvent)
+   00E6 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00EB callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F0 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00F5 ldc.i4 15212
+   00FA ldarg.0 
+   00FB ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnGetTrophyReward(Assets.Scripts.UI.CUIEvent)
+   0101 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0106 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   010B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0110 ldc.i4 15218
+   0115 ldarg.0 
+   0116 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnShowRule(Assets.Scripts.UI.CUIEvent)
+   011C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0121 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0126 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   012B ldc.i4 290
+   0130 ldarg.0 
+   0131 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::HandleLobbyLoadComplete(Assets.Scripts.UI.CUIEvent)
+   0137 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   013C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0141 call !0 Singleton`1<EventRouter>::get_instance()
+   0146 ldsfld EventID::ACHIEVE_GET_RANKING_ACCOUNT_INFO
+   014B ldarg.0 
+   014C ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::HandleAchieveGetRankingAccountInfo(CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP)
+   0152 newobj System.Void System.Action`1<CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP>::.ctor(System.Object,System.IntPtr)
+   0157 callvirt System.Void EventRouter::AddEventHandler<CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP>(System.Int32,System.Action`1<!!0>)
+   015C call !0 Singleton`1<EventRouter>::get_instance()
+   0161 ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   0166 ldarg.0 
+   0167 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyStateChange()
+   016D newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0172 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   0177 call !0 Singleton`1<EventRouter>::get_instance()
+   017C ldsfld Assets.Scripts.GameSystem.Ranking_Event::Ranking_List_Change
+   0181 ldarg.0 
+   0182 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::RankingListChange(Assets.Scripts.GameSystem.RankingSystem/RankingType)
+   0188 newobj System.Void System.Action`1<Assets.Scripts.GameSystem.RankingSystem/RankingType>::.ctor(System.Object,System.IntPtr)
+   018D callvirt System.Void EventRouter::AddEventHandler<Assets.Scripts.GameSystem.RankingSystem/RankingType>(System.Int32,System.Action`1<!!0>)
+   0192 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0197 ldc.i4 5159
+   019C ldarg.0 
+   019D ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnNobeLevelUpFormClose(Assets.Scripts.UI.CUIEvent)
+   01A3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01A8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01AD call !0 Singleton`1<EventRouter>::get_instance()
+   01B2 ldsfld EventID::Mall_Get_Product_OK
+   01B7 ldarg.0 
+   01B8 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnMallGetProductOk()
+   01BE newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   01C3 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   01C8 call !0 Singleton`1<EventRouter>::get_instance()
+   01CD ldsfld EventID::ACHIEVE_RECEIVE_PVP_BAN_MSG
+   01D2 ldarg.0 
+   01D3 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::ProcessPvpBanMsg()
+   01D9 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   01DE callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   01E3 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::UnInit()
+   0006 ldarg.0 
+   0007 ldnull 
+   0008 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   000D ldnull 
+   000E stsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0013 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0018 ldc.i4 15200
+   001D ldarg.0 
+   001E ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementOpenOverviewForm(Assets.Scripts.UI.CUIEvent)
+   0024 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0029 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   002E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0033 ldc.i4 15204
+   0038 ldarg.0 
+   0039 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementShowShareBtn(Assets.Scripts.UI.CUIEvent)
+   003F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0044 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0049 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   004E ldc.i4 15206
+   0053 ldarg.0 
+   0054 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnMenuChange(Assets.Scripts.UI.CUIEvent)
+   005A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   005F callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0064 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0069 ldc.i4 15207
+   006E ldarg.0 
+   006F ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyEnable(Assets.Scripts.UI.CUIEvent)
+   0075 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   007A callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   007F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0084 ldc.i4 15208
+   0089 ldarg.0 
+   008A ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyClick(Assets.Scripts.UI.CUIEvent)
+   0090 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0095 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   009A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   009F ldc.i4 15209
+   00A4 ldarg.0 
+   00A5 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnAchievementEnable(Assets.Scripts.UI.CUIEvent)
+   00AB newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B0 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00B5 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00BA ldc.i4 15210
+   00BF ldarg.0 
+   00C0 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnBrowseAllRewards(Assets.Scripts.UI.CUIEvent)
+   00C6 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00CB callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D0 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00D5 ldc.i4 15211
+   00DA ldarg.0 
+   00DB ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyRewardInfoEnable(Assets.Scripts.UI.CUIEvent)
+   00E1 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00E6 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00EB call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00F0 ldc.i4 15212
+   00F5 ldarg.0 
+   00F6 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnGetTrophyReward(Assets.Scripts.UI.CUIEvent)
+   00FC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0101 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0106 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   010B ldc.i4 15218
+   0110 ldarg.0 
+   0111 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnShowRule(Assets.Scripts.UI.CUIEvent)
+   0117 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   011C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0121 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0126 ldc.i4 290
+   012B ldarg.0 
+   012C ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::HandleLobbyLoadComplete(Assets.Scripts.UI.CUIEvent)
+   0132 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0137 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   013C call !0 Singleton`1<EventRouter>::get_instance()
+   0141 ldsfld EventID::ACHIEVE_GET_RANKING_ACCOUNT_INFO
+   0146 ldarg.0 
+   0147 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::HandleAchieveGetRankingAccountInfo(CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP)
+   014D newobj System.Void System.Action`1<CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP>::.ctor(System.Object,System.IntPtr)
+   0152 callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP>(System.Int32,System.Action`1<!!0>)
+   0157 call !0 Singleton`1<EventRouter>::get_instance()
+   015C ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   0161 ldarg.0 
+   0162 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnTrophyStateChange()
+   0168 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   016D callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0172 call !0 Singleton`1<EventRouter>::get_instance()
+   0177 ldsfld Assets.Scripts.GameSystem.Ranking_Event::Ranking_List_Change
+   017C ldarg.0 
+   017D ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::RankingListChange(Assets.Scripts.GameSystem.RankingSystem/RankingType)
+   0183 newobj System.Void System.Action`1<Assets.Scripts.GameSystem.RankingSystem/RankingType>::.ctor(System.Object,System.IntPtr)
+   0188 callvirt System.Void EventRouter::RemoveEventHandler<Assets.Scripts.GameSystem.RankingSystem/RankingType>(System.Int32,System.Action`1<!!0>)
+   018D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0192 ldc.i4 5159
+   0197 ldarg.0 
+   0198 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnNobeLevelUpFormClose(Assets.Scripts.UI.CUIEvent)
+   019E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01A8 call !0 Singleton`1<EventRouter>::get_instance()
+   01AD ldsfld EventID::Mall_Get_Product_OK
+   01B2 ldarg.0 
+   01B3 ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::OnMallGetProductOk()
+   01B9 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   01BE callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   01C3 call !0 Singleton`1<EventRouter>::get_instance()
+   01C8 ldsfld EventID::ACHIEVE_RECEIVE_PVP_BAN_MSG
+   01CD ldarg.0 
+   01CE ldftn System.Void Assets.Scripts.GameSystem.CAchievementSystem::ProcessPvpBanMsg()
+   01D4 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   01D9 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   01DE ldarg.0 
+   01DF ldnull 
+   01E0 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_shareComponent
+   01E5 ret 
+== System.Void OnNobeLevelUpFormClose(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::GetInstance()
+   0005 ldc.i4.1 
+   0006 callvirt System.Void Assets.Scripts.GameSystem.CAchievementSystem::ProcessMostRecentlyDoneAchievements(System.Boolean)
+   000B ret 
+== System.Void OnShowRule(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.s 16
+   0002 stloc.0 
+   0003 ldloca.s V_1
+   0005 ldloc.0 
+   0006 call System.Boolean ResData.GameDataMgr/s_ruleTextDatabin::FindByKey(ResData.ResRuleText&,System.UInt16)
+   000B brfalse IL_003b: ret
+   0010 ldloca.s V_1
+   0012 ldfld ResData.ResRuleText::strIdTitle
+   0017 stloc.2 
+   0018 ldloca.s V_1
+   001A ldfld ResData.ResRuleText::strIdContent
+   001F stloc.3 
+   0020 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0025 ldloc.2 
+   0026 call System.String StringId2::op_Implicit(StringId2)
+   002B ldloc.3 
+   002C call System.String StringId2::op_Implicit(StringId2)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenInfoForm(System.String,System.String)
+   0036 br IL_003b: ret
+   003B ret 
+== System.Void OnMenuChange(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0006 isinst Assets.Scripts.UI.CUIListScript
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_0019: ldloc.0
+   0018 ret 
+   0019 ldloc.0 
+   001A callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldc.i4.0 
+   0022 blt IL_002e: ldc.i4.0
+   0027 ldloc.1 
+   0028 ldc.i4.2 
+   0029 ble IL_003a: ldarg.0
+   002E ldc.i4.0 
+   002F ldstr Achievement type form selected menu indx out of range!
+   0034 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0039 ret 
+   003A ldarg.0 
+   003B ldloc.1 
+   003C call System.Void Assets.Scripts.GameSystem.CAchievementSystem::set_CurMenu(Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu)
+   0041 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0046 stloc.2 
+   0047 ldarg.0 
+   0048 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CAchieveItem2>::.ctor()
+   004D stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   0052 ldarg.0 
+   0053 call Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu Assets.Scripts.GameSystem.CAchievementSystem::get_CurMenu()
+   0058 stloc.3 
+   0059 ldloc.3 
+   005A brfalse IL_006b: ldarg.0
+   005F ldloc.3 
+   0060 ldc.i4.1 
+   0061 beq IL_008d: ldarg.0
+   0066 br IL_00af: ldarg.0
+   006B ldarg.0 
+   006C ldloc.2 
+   006D ldc.i4.0 
+   006E callvirt ListView`1<Assets.Scripts.GameSystem.CAchieveItem2> Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophies(Assets.Scripts.GameSystem.enTrophyState)
+   0073 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   007E newobj System.Void Assets.Scripts.GameSystem.CAchieveSort::.ctor()
+   0083 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CAchieveItem2>::Sort(System.Collections.Generic.IComparer`1<!0>)
+   0088 br IL_00af: ldarg.0
+   008D ldarg.0 
+   008E ldloc.2 
+   008F ldc.i4.2 
+   0090 callvirt ListView`1<Assets.Scripts.GameSystem.CAchieveItem2> Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophies(Assets.Scripts.GameSystem.enTrophyState)
+   0095 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   009A ldarg.0 
+   009B ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   00A0 newobj System.Void Assets.Scripts.GameSystem.CAchieveSort::.ctor()
+   00A5 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CAchieveItem2>::Sort(System.Collections.Generic.IComparer`1<!0>)
+   00AA br IL_00af: ldarg.0
+   00AF ldarg.0 
+   00B0 ldarg.1 
+   00B1 ldfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   00B6 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::RefreshOverviewForm(Assets.Scripts.UI.CUIFormScript)
+   00BB ret 
+== System.Void OnTrophyEnable(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldc.i4.0 
+   0009 blt IL_001f: ret
+   000E ldloc.0 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   0015 callvirt System.Int32 ListViewBase::get_Count()
+   001A blt IL_0020: ldarg.1
+   001F ret 
+   0020 ldarg.1 
+   0021 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0026 isinst Assets.Scripts.UI.CUIListElementScript
+   002B stloc.1 
+   002C ldloc.1 
+   002D ldnull 
+   002E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0033 brfalse IL_0044: ldarg.0
+   0038 ldc.i4.0 
+   0039 ldstr achievement sery enable elementscript is null
+   003E call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0043 ret 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   004A ldloc.0 
+   004B callvirt !0 ListView`1<Assets.Scripts.GameSystem.CAchieveItem2>::get_Item(System.Int32)
+   0050 stloc.2 
+   0051 ldloc.1 
+   0052 callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0057 stloc.3 
+   0058 ldloca.s V_4
+   005A initobj Assets.Scripts.UI.stUIEventParams
+   0060 ldloca.s V_4
+   0062 ldloc.2 
+   0063 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0068 ldfld ResData.ResAchievement::dwID
+   006D stfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   0072 ldloc.3 
+   0073 ldc.i4.1 
+   0074 ldc.i4 15208
+   0079 ldloc.s V_4
+   007B callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   0080 ldloc.1 
+   0081 ldc.i4.0 
+   0082 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0087 stloc.s V_5
+   0089 ldloc.1 
+   008A ldc.i4.1 
+   008B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0090 stloc.s V_6
+   0092 ldloc.1 
+   0093 ldc.i4.2 
+   0094 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0099 stloc.s V_7
+   009B ldloc.1 
+   009C ldc.i4.3 
+   009D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00A2 stloc.s V_8
+   00A4 ldloc.1 
+   00A5 ldc.i4.4 
+   00A6 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00AB stloc.s V_9
+   00AD ldloc.1 
+   00AE ldc.i4.5 
+   00AF callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00B4 stloc.s V_10
+   00B6 ldloc.s V_6
+   00B8 ldc.i4.0 
+   00B9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BE ldloc.s V_5
+   00C0 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00C5 stloc.s V_11
+   00C7 ldloc.s V_9
+   00C9 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00CE stloc.s V_12
+   00D0 ldloc.s V_7
+   00D2 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00D7 stloc.s V_13
+   00D9 ldloc.s V_8
+   00DB callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00E0 stloc.s V_14
+   00E2 ldloc.s V_11
+   00E4 ldnull 
+   00E5 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00EA brtrue IL_0116: ret
+   00EF ldloc.s V_12
+   00F1 ldnull 
+   00F2 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00F7 brtrue IL_0116: ret
+   00FC ldloc.s V_13
+   00FE ldnull 
+   00FF call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0104 brtrue IL_0116: ret
+   0109 ldloc.s V_14
+   010B ldnull 
+   010C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0111 brfalse IL_0117: ldloc.2
+   0116 ret 
+   0117 ldloc.2 
+   0118 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::TryToGetMostRecentlyDoneItem()
+   011D stloc.s V_15
+   011F ldloc.s V_15
+   0121 brtrue IL_0178: ldloc.s V_11
+   0126 ldloc.s V_11
+   0128 ldloc.2 
+   0129 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchieveImagePath()
+   012E ldc.i4.0 
+   012F ldc.i4.0 
+   0130 call UnityEngine.GameObject Assets.Scripts.UI.CUIUtility::GetSpritePrefeb(System.String,System.Boolean,System.Boolean)
+   0135 ldc.i4.0 
+   0136 ldc.i4.0 
+   0137 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.GameObject,System.Boolean,System.Boolean)
+   013C ldloc.s V_9
+   013E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0143 ldloc.2 
+   0144 ldnull 
+   0145 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::SetAchieveBaseIcon(UnityEngine.Transform,Assets.Scripts.GameSystem.CAchieveItem2,Assets.Scripts.UI.CUIFormScript)
+   014A ldloc.s V_13
+   014C ldloc.2 
+   014D ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0152 call System.String ResData.ResAchievement::get_szName()
+   0157 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   015C ldloc.s V_14
+   015E ldloc.2 
+   015F ldc.i4.0 
+   0160 ldc.i4.0 
+   0161 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetGotTimeText(System.Boolean,System.Boolean)
+   0166 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   016B ldloc.s V_10
+   016D ldc.i4.1 
+   016E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0173 br IL_01e5: ret
+   0178 ldloc.s V_11
+   017A ldloc.s V_15
+   017C callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchieveImagePath()
+   0181 ldc.i4.0 
+   0182 ldc.i4.0 
+   0183 call UnityEngine.GameObject Assets.Scripts.UI.CUIUtility::GetSpritePrefeb(System.String,System.Boolean,System.Boolean)
+   0188 ldc.i4.0 
+   0189 ldc.i4.0 
+   018A call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.GameObject,System.Boolean,System.Boolean)
+   018F ldloc.s V_9
+   0191 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0196 ldloc.s V_15
+   0198 ldnull 
+   0199 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::SetAchieveBaseIcon(UnityEngine.Transform,Assets.Scripts.GameSystem.CAchieveItem2,Assets.Scripts.UI.CUIFormScript)
+   019E ldloc.s V_13
+   01A0 ldloc.s V_15
+   01A2 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   01A7 call System.String ResData.ResAchievement::get_szName()
+   01AC callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01B1 ldloc.2 
+   01B2 ldloc.s V_15
+   01B4 bne.un IL_01cd: ldloc.s V_14
+   01B9 ldloc.s V_14
+   01BB ldloc.2 
+   01BC ldc.i4.0 
+   01BD ldc.i4.0 
+   01BE callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetGotTimeText(System.Boolean,System.Boolean)
+   01C3 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01C8 br IL_01dd: ldloc.s V_10
+   01CD ldloc.s V_14
+   01CF ldloc.s V_15
+   01D1 ldc.i4.0 
+   01D2 ldc.i4.1 
+   01D3 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetGotTimeText(System.Boolean,System.Boolean)
+   01D8 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01DD ldloc.s V_10
+   01DF ldc.i4.0 
+   01E0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01E5 ret 
+== System.Void OnTrophyClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000C ldfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   0011 stloc.1 
+   0012 ldarg.0 
+   0013 ldloc.0 
+   0014 ldloc.1 
+   0015 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::ShowTrophyDetail(Assets.Scripts.GameSystem.CAchieveInfo2,System.UInt32)
+   001A ret 
+== System.Void ShowTrophyDetail(Assets.Scripts.GameSystem.CAchieveInfo2 achieveInfo, System.UInt32 achievementID) attrs=Public, HideBySig maxstack=5
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::m_AchiveItemDic
+   0008 ldarg.2 
+   0009 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CAchieveItem2>::ContainsKey(!0)
+   000E brfalse IL_0020: ldloc.0
+   0013 ldarg.1 
+   0014 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::m_AchiveItemDic
+   0019 ldarg.2 
+   001A callvirt !1 DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CAchieveItem2>::get_Item(!0)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 brtrue IL_0027: ldarg.0
+   0026 ret 
+   0027 ldarg.0 
+   0028 ldloc.0 
+   0029 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::GetHead()
+   002E stfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   0039 callvirt System.Int32 Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementCnt()
+   003E stloc.1 
+   003F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0044 ldstr UGUI/Form/System/Achieve/Form_Trophy_Detail.prefab
+   0049 ldc.i4.0 
+   004A ldc.i4.1 
+   004B ldnull 
+   004C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0051 stloc.2 
+   0052 ldloc.2 
+   0053 ldnull 
+   0054 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0059 brfalse IL_00dd: ret
+   005E ldloc.2 
+   005F ldc.i4.1 
+   0060 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0065 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   006A stloc.3 
+   006B ldloc.3 
+   006C ldnull 
+   006D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0072 brfalse IL_008d: ldloc.2
+   0077 ldloc.3 
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   007E ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0083 call System.String ResData.ResAchievement::get_szName()
+   0088 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   008D ldloc.2 
+   008E ldc.i4.2 
+   008F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0094 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0099 stloc.s V_4
+   009B ldloc.s V_4
+   009D ldnull 
+   009E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A3 brfalse IL_00ba: ldloc.2
+   00A8 ldloc.s V_4
+   00AA ldarg.0 
+   00AB ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   00B0 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementTips()
+   00B5 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00BA ldloc.2 
+   00BB ldc.i4.0 
+   00BC callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00C1 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   00C6 stloc.s V_5
+   00C8 ldloc.s V_5
+   00CA ldnull 
+   00CB call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D0 brfalse IL_00dd: ret
+   00D5 ldloc.s V_5
+   00D7 ldloc.1 
+   00D8 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   00DD ret 
+== System.Void OnAchievementEnable(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   0006 brtrue IL_001b: ldarg.1
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0010 ldstr UGUI/Form/System/Achieve/Form_Trophy_Detail.prefab
+   0015 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   001A ret 
+   001B ldarg.1 
+   001C callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0021 stloc.0 
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   0028 callvirt System.Int32 Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementCnt()
+   002D stloc.1 
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveItem
+   0034 stloc.2 
+   0035 ldloc.0 
+   0036 ldloc.1 
+   0037 ldc.i4.1 
+   0038 sub 
+   0039 ceq 
+   003B ldc.i4.0 
+   003C ceq 
+   003E stloc.3 
+   003F ldc.i4.0 
+   0040 stloc.s V_4
+   0042 br IL_0054: ldloc.s V_4
+   0047 ldloc.2 
+   0048 ldfld Assets.Scripts.GameSystem.CAchieveItem2::Next
+   004D stloc.2 
+   004E ldloc.s V_4
+   0050 ldc.i4.1 
+   0051 add 
+   0052 stloc.s V_4
+   0054 ldloc.s V_4
+   0056 ldloc.0 
+   0057 blt IL_0047: ldloc.2
+   005C ldarg.1 
+   005D ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0062 isinst Assets.Scripts.UI.CUIListElementScript
+   0067 stloc.s V_5
+   0069 ldloc.s V_5
+   006B ldc.i4.0 
+   006C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0071 stloc.s V_6
+   0073 ldloc.s V_5
+   0075 ldc.i4.1 
+   0076 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   007B stloc.s V_7
+   007D ldloc.s V_5
+   007F ldc.i4.2 
+   0080 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0085 stloc.s V_8
+   0087 ldloc.s V_5
+   0089 ldc.i4.3 
+   008A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   008F stloc.s V_9
+   0091 ldloc.s V_5
+   0093 ldc.i4.4 
+   0094 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0099 stloc.s V_10
+   009B ldloc.s V_5
+   009D ldc.i4.5 
+   009E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00A3 stloc.s V_11
+   00A5 ldloc.s V_5
+   00A7 ldc.i4.6 
+   00A8 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00AD stloc.s V_12
+   00AF ldloc.s V_5
+   00B1 ldc.i4.7 
+   00B2 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00B7 stloc.s V_13
+   00B9 ldloc.s V_5
+   00BB ldc.i4.8 
+   00BC callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00C1 stloc.s V_14
+   00C3 ldloc.s V_5
+   00C5 ldc.i4.s 9
+   00C7 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00CC stloc.s V_15
+   00CE ldloc.s V_9
+   00D0 ldloc.3 
+   00D1 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D6 ldloc.s V_6
+   00D8 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00DD stloc.s V_16
+   00DF ldloc.s V_14
+   00E1 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00E6 stloc.s V_17
+   00E8 ldloc.s V_7
+   00EA callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00EF stloc.s V_18
+   00F1 ldloc.s V_8
+   00F3 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00F8 stloc.s V_19
+   00FA ldloc.s V_15
+   00FC callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0101 stloc.s V_20
+   0103 ldloc.s V_10
+   0105 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   010A stloc.s V_21
+   010C ldloc.s V_11
+   010E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0113 stloc.s V_22
+   0115 ldloc.s V_16
+   0117 ldnull 
+   0118 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   011D brtrue IL_0170: ret
+   0122 ldloc.s V_18
+   0124 ldnull 
+   0125 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   012A brtrue IL_0170: ret
+   012F ldloc.s V_19
+   0131 ldnull 
+   0132 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0137 brtrue IL_0170: ret
+   013C ldloc.s V_21
+   013E ldnull 
+   013F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0144 brtrue IL_0170: ret
+   0149 ldloc.s V_22
+   014B ldnull 
+   014C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0151 brtrue IL_0170: ret
+   0156 ldloc.s V_17
+   0158 ldnull 
+   0159 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   015E brtrue IL_0170: ret
+   0163 ldloc.s V_20
+   0165 ldnull 
+   0166 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   016B brfalse IL_0171: ldloc.s V_16
+   0170 ret 
+   0171 ldloc.s V_16
+   0173 ldloc.2 
+   0174 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchieveImagePath()
+   0179 ldc.i4.0 
+   017A ldc.i4.0 
+   017B call UnityEngine.GameObject Assets.Scripts.UI.CUIUtility::GetSpritePrefeb(System.String,System.Boolean,System.Boolean)
+   0180 ldc.i4.0 
+   0181 ldc.i4.0 
+   0182 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,UnityEngine.GameObject,System.Boolean,System.Boolean)
+   0187 ldloc.s V_14
+   0189 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   018E ldloc.2 
+   018F ldnull 
+   0190 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::SetAchieveBaseIcon(UnityEngine.Transform,Assets.Scripts.GameSystem.CAchieveItem2,Assets.Scripts.UI.CUIFormScript)
+   0195 ldloc.s V_18
+   0197 ldloc.2 
+   0198 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   019D call System.String ResData.ResAchievement::get_szName()
+   01A2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01A7 ldloc.s V_19
+   01A9 call !0 Singleton`1<CTextManager>::GetInstance()
+   01AE ldstr Achievement_Score
+   01B3 ldc.i4.1 
+   01B4 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01B9 ldloc.2 
+   01BA ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   01BF ldfld ResData.ResAchievement::dwPoint
+   01C4 box System.UInt32
+   01C9 call System.String System.String::Format(System.String,System.Object)
+   01CE callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01D3 ldloc.2 
+   01D4 callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   01D9 brfalse IL_0259: ldloc.s V_15
+   01DE ldloc.2 
+   01DF ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   01E4 brtrue IL_01f6: ldloc.s V_15
+   01E9 ldloc.s V_15
+   01EB ldc.i4.0 
+   01EC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01F1 br IL_0220: ldloc.s V_21
+   01F6 ldloc.s V_15
+   01F8 ldc.i4.1 
+   01F9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01FE ldloc.s V_20
+   0200 ldstr {0:yyyy.M.d}
+   0205 ldloc.2 
+   0206 ldfld Assets.Scripts.GameSystem.CAchieveItem2::DoneTime
+   020B conv.u8 
+   020C call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0211 box System.DateTime
+   0216 call System.String System.String::Format(System.String,System.Object)
+   021B callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0220 ldloc.s V_21
+   0222 ldloc.2 
+   0223 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementDesc()
+   0228 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   022D ldloc.s V_22
+   022F call !0 Singleton`1<CTextManager>::GetInstance()
+   0234 ldstr Achievement_Status_Done
+   0239 ldc.i4.1 
+   023A callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   023F callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0244 ldloc.s V_12
+   0246 ldc.i4.1 
+   0247 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   024C ldloc.s V_13
+   024E ldc.i4.0 
+   024F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0254 br IL_0286: ret
+   0259 ldloc.s V_15
+   025B ldc.i4.0 
+   025C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0261 ldloc.s V_21
+   0263 ldloc.2 
+   0264 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementDesc()
+   0269 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   026E ldloc.s V_11
+   0270 ldc.i4.0 
+   0271 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0276 ldloc.s V_12
+   0278 ldc.i4.0 
+   0279 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   027E ldloc.s V_13
+   0280 ldc.i4.1 
+   0281 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0286 ret 
+== System.Void OnBrowseAllRewards(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldstr UGUI/Form/System/Achieve/Form_Trophy_Rewards.prefab
+   000A ldc.i4.0 
+   000B ldc.i4.1 
+   000C ldnull 
+   000D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0012 stloc.0 
+   0013 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0018 stloc.1 
+   0019 ldloc.0 
+   001A ldc.i4.0 
+   001B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0020 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0025 stloc.2 
+   0026 ldloc.2 
+   0027 ldnull 
+   0028 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002D brfalse IL_005f: ret
+   0032 ldarg.0 
+   0033 ldloc.1 
+   0034 callvirt ListView`1<Assets.Scripts.GameSystem.CTrophyRewardInfo> Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoWithRewards()
+   0039 stfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   0044 newobj System.Void Assets.Scripts.GameSystem.CTrophyRewardInfoSort::.ctor()
+   0049 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CTrophyRewardInfo>::Sort(System.Collections.Generic.IComparer`1<!0>)
+   004E ldloc.2 
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   0055 callvirt System.Int32 ListViewBase::get_Count()
+   005A callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   005F ret 
+== System.Void OnTrophyRewardInfoEnable(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   000D brtrue IL_0018: ldarg.0
+   0012 ldc.i4.0 
+   0013 br IL_0023: stloc.1
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   001E callvirt System.Int32 ListViewBase::get_Count()
+   0023 stloc.1 
+   0024 ldloc.0 
+   0025 ldc.i4.0 
+   0026 blt IL_0032: ret
+   002B ldloc.0 
+   002C ldloc.1 
+   002D blt IL_0033: ldarg.0
+   0032 ret 
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TrophyRewardInfoWithRewardList
+   0039 ldloc.0 
+   003A callvirt !0 ListView`1<Assets.Scripts.GameSystem.CTrophyRewardInfo>::get_Item(System.Int32)
+   003F stloc.2 
+   0040 ldarg.1 
+   0041 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0046 isinst Assets.Scripts.UI.CUIListElementScript
+   004B stloc.3 
+   004C ldloc.3 
+   004D ldnull 
+   004E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0053 brfalse IL_0064: ldloc.3
+   0058 ldc.i4.0 
+   0059 ldstr achievement reward enable elementscript is null
+   005E call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0063 ret 
+   0064 ldloc.3 
+   0065 ldc.i4.0 
+   0066 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   006B stloc.s V_4
+   006D ldloc.3 
+   006E ldc.i4.1 
+   006F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0074 stloc.s V_5
+   0076 ldloc.3 
+   0077 ldc.i4.2 
+   0078 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   007D stloc.s V_6
+   007F ldloc.3 
+   0080 ldc.i4.3 
+   0081 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0086 stloc.s V_7
+   0088 ldloc.3 
+   0089 ldc.i4.4 
+   008A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   008F stloc.s V_8
+   0091 ldloc.3 
+   0092 ldc.i4.5 
+   0093 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0098 stloc.s V_9
+   009A ldloc.3 
+   009B ldc.i4.6 
+   009C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00A1 stloc.s V_10
+   00A3 ldloc.3 
+   00A4 ldc.i4.7 
+   00A5 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00AA stloc.s V_11
+   00AC ldloc.3 
+   00AD ldc.i4.8 
+   00AE callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00B3 stloc.s V_12
+   00B5 ldloc.3 
+   00B6 ldc.i4.s 9
+   00B8 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00BD stloc.s V_13
+   00BF ldloc.3 
+   00C0 ldc.i4.s 10
+   00C2 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00C7 stloc.s V_14
+   00C9 ldloc.2 
+   00CA callvirt System.Boolean Assets.Scripts.GameSystem.CTrophyRewardInfo::HasGotAward()
+   00CF brfalse IL_0129: ldloc.2
+   00D4 ldloc.s V_4
+   00D6 ldc.i4.0 
+   00D7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00DC ldloc.s V_5
+   00DE ldc.i4.1 
+   00DF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00E4 ldloc.s V_8
+   00E6 ldc.i4.0 
+   00E7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EC ldloc.s V_11
+   00EE ldc.i4.0 
+   00EF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00F4 ldloc.s V_9
+   00F6 ldc.i4.1 
+   00F7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00FC ldloc.s V_9
+   00FE callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0103 stloc.s V_15
+   0105 ldloc.s V_15
+   0107 call !0 Singleton`1<CTextManager>::GetInstance()
+   010C ldstr Achievement_Trophy_Reward_Status_Got
+   0111 ldc.i4.1 
+   0112 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0117 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   011C ldloc.s V_12
+   011E ldc.i4.0 
+   011F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0124 br IL_02af: ldloc.s V_6
+   0129 ldloc.2 
+   012A callvirt System.Boolean Assets.Scripts.GameSystem.CTrophyRewardInfo::IsFinish()
+   012F brfalse IL_0231: ldloc.s V_4
+   0134 ldc.i4.0 
+   0135 stloc.s V_16
+   0137 ldc.i4.0 
+   0138 stloc.s V_17
+   013A br IL_0166: ldloc.s V_17
+   013F ldloc.2 
+   0140 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   0145 ldloc.s V_17
+   0147 call ResData.ResRewardInfo ResData.ResTrophyLvl::astReqReward(System.Int32)
+   014C stloc.s V_18
+   014E ldloca.s V_18
+   0150 ldfld ResData.ResRewardInfo::dwRewardNum
+   0155 brfalse IL_0160: ldloc.s V_17
+   015A ldloc.s V_16
+   015C ldc.i4.1 
+   015D add 
+   015E stloc.s V_16
+   0160 ldloc.s V_17
+   0162 ldc.i4.1 
+   0163 add 
+   0164 stloc.s V_17
+   0166 ldloc.s V_17
+   0168 ldc.i4.3 
+   0169 blt IL_013f: ldloc.2
+   016E ldloc.s V_16
+   0170 brtrue IL_01c2: ldloc.s V_4
+   0175 ldloc.s V_4
+   0177 ldc.i4.0 
+   0178 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   017D ldloc.s V_5
+   017F ldc.i4.1 
+   0180 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0185 ldloc.s V_8
+   0187 ldc.i4.0 
+   0188 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   018D ldloc.s V_11
+   018F ldc.i4.0 
+   0190 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0195 ldloc.s V_9
+   0197 ldc.i4.1 
+   0198 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   019D ldloc.s V_9
+   019F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   01A4 stloc.s V_19
+   01A6 ldloc.s V_19
+   01A8 call !0 Singleton`1<CTextManager>::GetInstance()
+   01AD ldstr Achievement_Trophy_Reward_Status_Done
+   01B2 ldc.i4.1 
+   01B3 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01B8 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01BD br IL_0224: ldloc.s V_12
+   01C2 ldloc.s V_4
+   01C4 ldc.i4.1 
+   01C5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01CA ldloc.s V_5
+   01CC ldc.i4.0 
+   01CD call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01D2 ldloc.s V_8
+   01D4 ldc.i4.0 
+   01D5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01DA ldloc.s V_11
+   01DC ldc.i4.1 
+   01DD call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01E2 ldloc.s V_9
+   01E4 ldc.i4.0 
+   01E5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01EA ldloc.s V_11
+   01EC callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   01F1 stloc.s V_20
+   01F3 ldloc.s V_20
+   01F5 ldnull 
+   01F6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01FB brfalse IL_0224: ldloc.s V_12
+   0200 ldloca.s V_21
+   0202 initobj Assets.Scripts.UI.stUIEventParams
+   0208 ldloca.s V_21
+   020A ldloc.2 
+   020B ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::Index
+   0210 stfld Assets.Scripts.UI.stUIEventParams::tag
+   0215 ldloc.s V_20
+   0217 ldc.i4.1 
+   0218 ldc.i4 15212
+   021D ldloc.s V_21
+   021F callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   0224 ldloc.s V_12
+   0226 ldc.i4.0 
+   0227 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   022C br IL_02af: ldloc.s V_6
+   0231 ldloc.s V_4
+   0233 ldc.i4.1 
+   0234 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0239 ldloc.s V_5
+   023B ldc.i4.0 
+   023C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0241 ldloc.s V_8
+   0243 ldc.i4.0 
+   0244 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0249 ldloc.s V_11
+   024B ldc.i4.0 
+   024C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0251 ldloc.s V_9
+   0253 ldc.i4.1 
+   0254 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0259 ldloc.s V_9
+   025B callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0260 stloc.s V_22
+   0262 ldloc.s V_22
+   0264 ldnull 
+   0265 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   026A brfalse IL_02a7: ldloc.s V_12
+   026F ldloc.s V_22
+   0271 ldloc.2 
+   0272 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::State
+   0277 ldc.i4.2 
+   0278 bne.un IL_0292: call !0 Singleton`1<CTextManager>::GetInstance()
+   027D call !0 Singleton`1<CTextManager>::GetInstance()
+   0282 ldstr Achievement_Trophy_Reward_Status_OnGoing
+   0287 ldc.i4.1 
+   0288 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   028D br IL_02a2: callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0292 call !0 Singleton`1<CTextManager>::GetInstance()
+   0297 ldstr Achievement_Trophy_Reward_Status_Not_Done
+   029C ldc.i4.1 
+   029D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02A2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   02A7 ldloc.s V_12
+   02A9 ldc.i4.0 
+   02AA call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02AF ldloc.s V_6
+   02B1 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   02B6 stloc.s V_23
+   02B8 ldloc.s V_23
+   02BA ldloc.2 
+   02BB callvirt System.String Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyImagePath()
+   02C0 ldloc.3 
+   02C1 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   02C6 ldc.i4.1 
+   02C7 ldc.i4.0 
+   02C8 ldc.i4.0 
+   02C9 ldc.i4.0 
+   02CA ldc.i4.0 
+   02CB call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   02D0 ldloc.s V_7
+   02D2 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   02D7 stloc.s V_24
+   02D9 ldloc.s V_24
+   02DB ldnull 
+   02DC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   02E1 brfalse IL_02f8: ldloc.s V_10
+   02E6 ldloc.s V_24
+   02E8 ldloc.2 
+   02E9 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   02EE call System.String ResData.ResTrophyLvl::get_szTrophyDesc()
+   02F3 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   02F8 ldloc.s V_10
+   02FA callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   02FF stloc.s V_25
+   0301 ldloc.s V_25
+   0303 ldnull 
+   0304 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0309 brfalse IL_04e0: ret
+   030E ldloc.2 
+   030F callvirt Assets.Scripts.GameSystem.CUseable[] Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyRewards()
+   0314 stloc.s V_26
+   0316 ldloc.s V_25
+   0318 ldloc.s V_26
+   031A ldlen 
+   031B conv.i4 
+   031C callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0321 ldc.i4.0 
+   0322 stloc.s V_27
+   0324 br IL_04d5: ldloc.s V_27
+   0329 ldloc.s V_25
+   032B ldloc.s V_27
+   032D callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0332 stloc.s V_28
+   0334 ldloc.s V_28
+   0336 ldc.i4.0 
+   0337 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   033C stloc.s V_29
+   033E ldloc.s V_29
+   0340 ldnull 
+   0341 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0346 brfalse IL_04cf: ldloc.s V_27
+   034B ldloc.s V_26
+   034D ldloc.s V_27
+   034F ldelem.ref 
+   0350 stloc.s V_30
+   0352 ldloc.s V_30
+   0354 brtrue IL_0362: ldloc.s V_26
+   0359 ldloc.s V_25
+   035B ldc.i4.0 
+   035C callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0361 ret 
+   0362 ldloc.s V_26
+   0364 ldlen 
+   0365 conv.i4 
+   0366 ldc.i4.5 
+   0367 blt IL_0385: ldloc.s V_25
+   036C ldloc.s V_25
+   036E ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0373 ldloc.s V_29
+   0375 ldloc.s V_30
+   0377 ldc.i4.0 
+   0378 ldc.i4.0 
+   0379 ldc.i4.0 
+   037A ldc.i4.0 
+   037B call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetItemCell(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,Assets.Scripts.GameSystem.CUseable,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0380 br IL_0399: ldloc.s V_30
+   0385 ldloc.s V_25
+   0387 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   038C ldloc.s V_29
+   038E ldloc.s V_30
+   0390 ldc.i4.1 
+   0391 ldc.i4.0 
+   0392 ldc.i4.0 
+   0393 ldc.i4.0 
+   0394 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetItemCell(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,Assets.Scripts.GameSystem.CUseable,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0399 ldloc.s V_30
+   039B ldfld Assets.Scripts.GameSystem.CUseable::m_stackCount
+   03A0 ldc.i4.1 
+   03A1 bne.un IL_03cf: ldloc.s V_29
+   03A6 ldloc.s V_29
+   03A8 ldstr cntBg
+   03AD call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03B2 ldc.i4.0 
+   03B3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03B8 ldloc.s V_29
+   03BA ldstr lblIconCount
+   03BF call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03C4 ldc.i4.0 
+   03C5 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03CA br IL_03f3: ldloc.s V_29
+   03CF ldloc.s V_29
+   03D1 ldstr cntBg
+   03D6 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03DB ldc.i4.1 
+   03DC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03E1 ldloc.s V_29
+   03E3 ldstr lblIconCount
+   03E8 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   03ED ldc.i4.1 
+   03EE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03F3 ldloc.s V_29
+   03F5 ldstr imgIcon
+   03FA call T Utility::GetComponetInChild<UnityEngine.UI.Image>(UnityEngine.GameObject,System.String)
+   03FF stloc.s V_31
+   0401 ldloc.s V_30
+   0403 isinst Assets.Scripts.GameSystem.CHeadImg
+   0408 brfalse IL_044d: ldloc.s V_29
+   040D ldloc.s V_29
+   040F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0414 ldc.i4.0 
+   0415 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   041A ldloc.s V_25
+   041C ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0421 ldc.r4 0.7
+   0426 ldc.i4.1 
+   0427 ldc.r4 0
+   042C newobj System.Void Assets.Scripts.GameSystem.HeadEffectParam::.ctor(Assets.Scripts.UI.CUIFormScript,System.Single,System.Boolean,System.Single)
+   0431 stloc.s V_32
+   0433 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.NobeSys>::GetInstance()
+   0438 ldloc.s V_31
+   043A ldloc.s V_30
+   043C ldfld Assets.Scripts.GameSystem.CUseable::m_baseID
+   0441 ldloc.s V_32
+   0443 callvirt System.Void Assets.Scripts.GameSystem.NobeSys::SetHeadIconBk(UnityEngine.UI.Image,System.Int32,Assets.Scripts.GameSystem.HeadEffectParam)
+   0448 br IL_04cf: ldloc.s V_27
+   044D ldloc.s V_29
+   044F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0454 ldc.i4.1 
+   0455 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   045A br IL_04bd: ldloc.s V_31
+   045F ldloc.s V_31
+   0461 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0466 ldc.i4.0 
+   0467 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   046C stloc.s V_33
+   046E ldloc.s V_33
+   0470 ldnull 
+   0471 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   0476 ldloc.s V_33
+   0478 callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIParticleScript>()
+   047D stloc.s V_34
+   047F ldloc.s V_34
+   0481 ldnull 
+   0482 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0487 brfalse IL_04ac: ldloc.s V_33
+   048C ldloc.s V_34
+   048E ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0493 ldnull 
+   0494 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0499 brfalse IL_04ac: ldloc.s V_33
+   049E ldloc.s V_34
+   04A0 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   04A5 ldloc.s V_34
+   04A7 callvirt System.Void Assets.Scripts.UI.CUIFormScript::RemoveUIComponent(Assets.Scripts.UI.CUIComponent)
+   04AC ldloc.s V_33
+   04AE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   04B3 ldc.r4 0.1
+   04B8 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   04BD ldloc.s V_31
+   04BF callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   04C4 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   04C9 ldc.i4.0 
+   04CA bgt IL_045f: ldloc.s V_31
+   04CF ldloc.s V_27
+   04D1 ldc.i4.1 
+   04D2 add 
+   04D3 stloc.s V_27
+   04D5 ldloc.s V_27
+   04D7 ldloc.s V_26
+   04D9 ldlen 
+   04DA conv.i4 
+   04DB blt IL_0329: ldloc.s V_25
+   04E0 ret 
+== System.Void OnGetTrophyReward(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   000B stloc.0 
+   000C call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0011 stloc.1 
+   0012 ldloc.1 
+   0013 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::TrophyRewardInfoArr
+   0018 stloc.2 
+   0019 ldloc.0 
+   001A ldc.i4.0 
+   001B blt IL_0029: ret
+   0020 ldloc.0 
+   0021 ldloc.2 
+   0022 ldlen 
+   0023 conv.i4 
+   0024 blt IL_002a: ldloc.2
+   0029 ret 
+   002A ldloc.2 
+   002B ldloc.0 
+   002C ldelem.ref 
+   002D stloc.3 
+   002E ldarg.0 
+   002F ldloc.3 
+   0030 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   0035 ldfld ResData.ResTrophyLvl::dwTrophyLvl
+   003A call System.Void Assets.Scripts.GameSystem.CAchievementSystem::SendGetTrophyRewardReq(System.UInt32)
+   003F ret 
+== System.Void OnAchievementOpenOverviewForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::ResetLobbyFormFadeRecover()
+   0005 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000A ldsfld Assets.Scripts.GameSystem.CPlayerInfoSystem::sPlayerInfoFormPath
+   000F callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0014 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0019 ldsfld Assets.Scripts.GameSystem.RankingSystem::s_rankingForm
+   001E callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0023 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0028 ldsfld Assets.Scripts.GameSystem.RankingSystem::s_rankingBestNumberOneForm
+   002D callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0032 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0037 ldstr UGUI/Form/System/Achieve/Form_Trophy_Overview.prefab
+   003C ldc.i4.0 
+   003D ldc.i4.1 
+   003E ldnull 
+   003F callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0044 stloc.0 
+   0045 ldloc.0 
+   0046 ldnull 
+   0047 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   004C brfalse IL_0052: ldarg.0
+   0051 ret 
+   0052 ldarg.0 
+   0053 ldloc.0 
+   0054 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::InitTypeMenu(Assets.Scripts.UI.CUIFormScript)
+   0059 call !0 Singleton`1<Assets.Scripts.GameLogic.CBattleGuideManager>::get_instance()
+   005E ldc.i4.s 18
+   0060 ldnull 
+   0061 callvirt System.Boolean Assets.Scripts.GameLogic.CBattleGuideManager::OpenBannerDlgByBannerGuideId(System.UInt32,Assets.Scripts.UI.CUIEvent)
+   0066 pop 
+   0067 ret 
+== System.Void OnAchievementShowShareBtn(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldnull 
+   0009 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000E brfalse IL_0014: ldloc.0
+   0013 ret 
+   0014 ldloc.0 
+   0015 ldc.i4.2 
+   0016 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001B ldc.i4.1 
+   001C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0021 ldloc.0 
+   0022 ldc.i4.1 
+   0023 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0028 ldc.i4.0 
+   0029 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002E ret 
+== System.Void ProcessPvpBanMsg() attrs=Public, HideBySig maxstack=10
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_0047: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   0019 brtrue IL_0047: ret
+   001E call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0023 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0028 brtrue IL_0047: ret
+   002D call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0032 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   0037 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   003C ldnull 
+   003D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0042 brfalse IL_0048: ldsfld ListView`1<CSProtocol.SCPKG_PVPBAN_NTF> Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0047 ret 
+   0048 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   004D brfalse IL_0104: ret
+   0052 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0057 callvirt System.Int32 ListViewBase::get_Count()
+   005C ldc.i4.0 
+   005D ble IL_0104: ret
+   0062 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0067 callvirt System.Int32 ListViewBase::get_Count()
+   006C ldc.i4.1 
+   006D sub 
+   006E stloc.0 
+   006F br IL_00fd: ldloc.0
+   0074 call !0 Singleton`1<CTextManager>::GetInstance()
+   0079 ldstr Achievement_10
+   007E ldc.i4.1 
+   007F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0084 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0089 ldloc.0 
+   008A callvirt !0 ListView`1<CSProtocol.SCPKG_PVPBAN_NTF>::get_Item(System.Int32)
+   008F ldfld CSProtocol.SCPKG_PVPBAN_NTF::dwPunishEndTime
+   0094 conv.u8 
+   0095 ldstr yyyy年M月d日 H:m:s
+   009A call System.String Utility::GetUtcToLocalTimeStringFormat(System.UInt64,System.String)
+   009F call System.String System.String::Format(System.String,System.Object)
+   00A4 stloc.1 
+   00A5 ldloca.s V_2
+   00A7 initobj Assets.Scripts.UI.stUIEventParams
+   00AD ldloca.s V_2
+   00AF ldc.i4.0 
+   00B0 stfld Assets.Scripts.UI.stUIEventParams::tag
+   00B5 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00BA ldloc.1 
+   00BB ldc.i4.0 
+   00BC ldc.i4 5184
+   00C1 ldloc.2 
+   00C2 call !0 Singleton`1<CTextManager>::GetInstance()
+   00C7 ldstr Common_Confirm
+   00CC ldc.i4.1 
+   00CD callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00D2 call !0 Singleton`1<CTextManager>::GetInstance()
+   00D7 ldstr KfArea_Btn_Name
+   00DC ldc.i4.1 
+   00DD callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00E2 ldc.i4.0 
+   00E3 ldsfld System.String::Empty
+   00E8 ldc.i4.0 
+   00E9 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String,System.String,System.Boolean,System.String,System.Boolean)
+   00EE ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   00F3 ldloc.0 
+   00F4 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00F9 ldloc.0 
+   00FA ldc.i4.1 
+   00FB sub 
+   00FC stloc.0 
+   00FD ldloc.0 
+   00FE ldc.i4.0 
+   00FF bge IL_0074: call !0 Singleton`1<CTextManager>::GetInstance()
+   0104 ret 
+== System.Void OnMallGetProductOk() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::GetInstance()
+   0005 ldc.i4.1 
+   0006 callvirt System.Void Assets.Scripts.GameSystem.CAchievementSystem::ProcessMostRecentlyDoneAchievements(System.Boolean)
+   000B ret 
+== System.Void HandleAchieveGetRankingAccountInfo(CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP rsp) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP::stAcntRankingDetail
+   0006 callvirt CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF CSProtocol.CSDT_ACNT_RANKING_DETAIL::get_stOfSucc()
+   000B ldfld CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF::bNumberType
+   0010 ldc.i4.8 
+   0011 beq IL_0017: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0016 ret 
+   0017 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   001C callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 brtrue IL_0050: ldloc.0
+   0028 ldc.i4.0 
+   0029 ldstr HandleAchieveGetRankingAccountInfo::Master Role Info Is Null
+   002E call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0033 ldc.i4.0 
+   0034 ldc.i4.0 
+   0035 conv.i8 
+   0036 ldarg.1 
+   0037 ldfld CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP::stAcntRankingDetail
+   003C callvirt CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF CSProtocol.CSDT_ACNT_RANKING_DETAIL::get_stOfSucc()
+   0041 ldfld CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF::dwRankNo
+   0046 call System.Void Assets.Scripts.GameSystem.CAchieveInfo2::AddWorldRank(System.Int32,System.UInt64,System.UInt32)
+   004B br IL_0071: ret
+   0050 ldloc.0 
+   0051 callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0056 ldloc.0 
+   0057 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   005C ldarg.1 
+   005D ldfld CSProtocol.SCPKG_GET_RANKING_ACNT_INFO_RSP::stAcntRankingDetail
+   0062 callvirt CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF CSProtocol.CSDT_ACNT_RANKING_DETAIL::get_stOfSucc()
+   0067 ldfld CSProtocol.CSDT_GET_RANKING_ACNT_DETAIL_SELF::dwRankNo
+   006C call System.Void Assets.Scripts.GameSystem.CAchieveInfo2::AddWorldRank(System.Int32,System.UInt64,System.UInt32)
+   0071 ret 
+== System.Void RankingListChange(Assets.Scripts.GameSystem.RankingSystem/RankingType rankType) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.i4.5 
+   0002 bne.un IL_007f: ret
+   0007 call !0 Singleton`1<Assets.Scripts.GameSystem.RankingSystem>::GetInstance()
+   000C ldc.i4.5 
+   000D callvirt CSProtocol.CSDT_RANKING_LIST_SUCC Assets.Scripts.GameSystem.RankingSystem::GetRankList(Assets.Scripts.GameSystem.RankingSystem/RankingType)
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 brfalse IL_007f: ret
+   0019 ldc.i4.0 
+   001A stloc.1 
+   001B br IL_0071: ldloc.1
+   0020 ldloc.0 
+   0021 ldfld CSProtocol.CSDT_RANKING_LIST_SUCC::astItemDetail
+   0026 ldloc.1 
+   0027 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_RANKING_LIST_ITEM_INFO>::get_Item(System.Int32)
+   002C ldfld CSProtocol.CSDT_RANKING_LIST_ITEM_INFO::stExtraInfo
+   0031 ldfld CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_INFO::stDetailInfo
+   0036 callvirt CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_PLAYER CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_DETAIL::get_stAchievement()
+   003B ldfld CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_PLAYER::iLogicWorldId
+   0040 ldloc.0 
+   0041 ldfld CSProtocol.CSDT_RANKING_LIST_SUCC::astItemDetail
+   0046 ldloc.1 
+   0047 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_RANKING_LIST_ITEM_INFO>::get_Item(System.Int32)
+   004C ldfld CSProtocol.CSDT_RANKING_LIST_ITEM_INFO::stExtraInfo
+   0051 ldfld CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_INFO::stDetailInfo
+   0056 callvirt CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_PLAYER CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_DETAIL::get_stAchievement()
+   005B ldfld CSProtocol.COMDT_RANKING_LIST_ITEM_EXTRA_PLAYER::ullUid
+   0060 ldloc.0 
+   0061 ldfld CSProtocol.CSDT_RANKING_LIST_SUCC::iStart
+   0066 ldloc.1 
+   0067 add 
+   0068 call System.Void Assets.Scripts.GameSystem.CAchieveInfo2::AddWorldRank(System.Int32,System.UInt64,System.UInt32)
+   006D ldloc.1 
+   006E ldc.i4.1 
+   006F add 
+   0070 stloc.1 
+   0071 ldloc.1 
+   0072 conv.i8 
+   0073 ldloc.0 
+   0074 ldfld CSProtocol.CSDT_RANKING_LIST_SUCC::dwItemNum
+   0079 conv.u8 
+   007A blt IL_0020: ldloc.0
+   007F ret 
+== System.Void HandleLobbyLoadComplete(Assets.Scripts.UI.CUIEvent evt) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<EventRouter>::GetInstance()
+   0005 ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   000A callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   000F ret 
+== System.Void OnTrophyStateChange() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldstr UGUI/Form/System/Achieve/Form_Trophy_Overview.prefab
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0015 ldstr UGUI/Form/System/Achieve/Form_Trophy_Rewards.prefab
+   001A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldnull 
+   0022 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0027 brfalse IL_003b: ldloc.0
+   002C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0031 ldc.i4 15210
+   0036 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   003B ldloc.0 
+   003C ldnull 
+   003D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0042 brfalse IL_004e: ret
+   0047 ldarg.0 
+   0048 ldloc.0 
+   0049 call System.Void Assets.Scripts.GameSystem.CAchievementSystem::RefreshOverviewForm(Assets.Scripts.UI.CUIFormScript)
+   004E ret 
+== System.Void AddPunishMsg(CSProtocol.SCPKG_PVPBAN_NTF msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0005 brtrue IL_0014: ldsfld ListView`1<CSProtocol.SCPKG_PVPBAN_NTF> Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   000A newobj System.Void ListView`1<CSProtocol.SCPKG_PVPBAN_NTF>::.ctor()
+   000F stsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0014 ldsfld Assets.Scripts.GameSystem.CAchievementSystem::CachedPunishMsg
+   0019 ldarg.0 
+   001A callvirt System.Void ListView`1<CSProtocol.SCPKG_PVPBAN_NTF>::Add(!0)
+   001F call !0 Singleton`1<EventRouter>::GetInstance()
+   0024 ldsfld EventID::ACHIEVE_RECEIVE_PVP_BAN_MSG
+   0029 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   002E ret 
+== System.Void SetAchieveBaseIcon(UnityEngine.Transform trans, Assets.Scripts.GameSystem.CAchieveItem2 achieveItem, Assets.Scripts.UI.CUIFormScript form) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_0007: ldarg.0
+   0006 ret 
+   0007 ldarg.0 
+   0008 ldnull 
+   0009 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000E brfalse IL_0014: ldarg.0
+   0013 ret 
+   0014 ldarg.0 
+   0015 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Image>()
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldarg.1 
+   001D callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementBgIconPath()
+   0022 ldarg.2 
+   0023 ldc.i4.1 
+   0024 ldc.i4.0 
+   0025 ldc.i4.0 
+   0026 ldc.i4.0 
+   0027 ldc.i4.0 
+   0028 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   002D ldarg.0 
+   002E ldstr goldEffect
+   0033 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0038 stloc.1 
+   0039 ldarg.0 
+   003A ldstr silverEffect
+   003F callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0044 stloc.2 
+   0045 ldarg.1 
+   0046 callvirt System.Boolean Assets.Scripts.GameSystem.CAchieveItem2::IsFinish()
+   004B brtrue IL_0069: ldarg.1
+   0050 ldloc.1 
+   0051 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0056 ldc.i4.0 
+   0057 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005C ldloc.2 
+   005D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0062 ldc.i4.0 
+   0063 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0068 ret 
+   0069 ldarg.1 
+   006A ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   006F ldfld ResData.ResAchievement::dwAchieveLvl
+   0074 stloc.3 
+   0075 ldloc.3 
+   0076 ldc.i4.3 
+   0077 blt.un IL_0099: ldloc.3
+   007C ldloc.1 
+   007D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0082 ldc.i4.1 
+   0083 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0088 ldloc.2 
+   0089 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   008E ldc.i4.0 
+   008F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0094 br IL_00d5: ret
+   0099 ldloc.3 
+   009A ldc.i4.2 
+   009B bne.un IL_00bd: ldloc.1
+   00A0 ldloc.1 
+   00A1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A6 ldc.i4.0 
+   00A7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00AC ldloc.2 
+   00AD callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00B2 ldc.i4.1 
+   00B3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B8 br IL_00d5: ret
+   00BD ldloc.1 
+   00BE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C3 ldc.i4.0 
+   00C4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C9 ldloc.2 
+   00CA callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00CF ldc.i4.0 
+   00D0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D5 ret 
+== System.Void ProcessMostRecentlyDoneAchievements(System.Boolean force) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_shareComponent
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_shareComponent
+   0011 ldarg.1 
+   0012 callvirt System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::Process(System.Boolean)
+   0017 ret 
+== System.Void InitTypeMenu(Assets.Scripts.UI.CUIFormScript form) attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.2 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldc.i4.0 
+   0004 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0009 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   000E stloc.1 
+   000F ldloc.1 
+   0010 ldc.i4.2 
+   0011 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0016 ldc.i4.0 
+   0017 stloc.2 
+   0018 br IL_006f: ldloc.2
+   001D ldloc.1 
+   001E ldloc.2 
+   001F callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0024 stloc.3 
+   0025 ldloc.3 
+   0026 ldc.i4.0 
+   0027 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   002C stloc.s V_4
+   002E ldloc.s V_4
+   0030 ldnull 
+   0031 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0036 brfalse IL_006b: ldloc.2
+   003B ldloc.s V_4
+   003D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0042 stloc.s V_5
+   0044 ldloc.s V_5
+   0046 ldnull 
+   0047 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004C brfalse IL_006b: ldloc.2
+   0051 ldloc.s V_5
+   0053 call !0 Singleton`1<CTextManager>::GetInstance()
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_TypeMenuNameKeys
+   005E ldloc.2 
+   005F ldelem.ref 
+   0060 ldc.i4.1 
+   0061 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0066 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   006B ldloc.2 
+   006C ldc.i4.1 
+   006D add 
+   006E stloc.2 
+   006F ldloc.2 
+   0070 ldloc.0 
+   0071 blt IL_001d: ldloc.1
+   0076 ldloc.1 
+   0077 ldc.i4.0 
+   0078 ldc.i4.1 
+   0079 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   007E ret 
+== System.Void RefreshOverviewForm(Assets.Scripts.UI.CUIFormScript overviewForm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_001d: ldarg.1
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0011 ldstr UGUI/Form/System/Achieve/Form_Trophy_Overview.prefab
+   0016 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001B starg.s overviewForm
+   001D ldarg.1 
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_002a: ldarg.1
+   0029 ret 
+   002A ldarg.1 
+   002B ldc.i4.1 
+   002C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0031 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0036 stloc.0 
+   0037 ldloc.0 
+   0038 ldnull 
+   0039 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003E brfalse IL_0054: ldarg.1
+   0043 ldloc.0 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CAchievementSystem::m_CurAchieveSeries
+   004A callvirt System.Int32 ListViewBase::get_Count()
+   004F callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0054 ldarg.1 
+   0055 ldc.i4.2 
+   0056 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   005B stloc.1 
+   005C ldarg.1 
+   005D ldc.i4.3 
+   005E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0063 stloc.2 
+   0064 ldarg.1 
+   0065 ldc.i4.7 
+   0066 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   006B stloc.3 
+   006C ldarg.1 
+   006D ldc.i4.8 
+   006E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0073 stloc.s V_4
+   0075 ldarg.1 
+   0076 ldc.i4.s 9
+   0078 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   007D stloc.s V_5
+   007F ldarg.1 
+   0080 ldc.i4.s 10
+   0082 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0087 stloc.s V_6
+   0089 ldarg.1 
+   008A ldc.i4.4 
+   008B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0090 stloc.s V_7
+   0092 ldarg.1 
+   0093 ldc.i4.5 
+   0094 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0099 stloc.s V_8
+   009B ldarg.1 
+   009C ldc.i4.6 
+   009D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00A2 stloc.s V_9
+   00A4 ldloc.1 
+   00A5 ldnull 
+   00A6 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00AB brtrue IL_0116: ldc.i4.0
+   00B0 ldloc.2 
+   00B1 ldnull 
+   00B2 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00B7 brtrue IL_0116: ldc.i4.0
+   00BC ldloc.3 
+   00BD ldnull 
+   00BE call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00C3 brtrue IL_0116: ldc.i4.0
+   00C8 ldloc.s V_4
+   00CA ldnull 
+   00CB call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00D0 brtrue IL_0116: ldc.i4.0
+   00D5 ldloc.s V_7
+   00D7 ldnull 
+   00D8 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00DD brtrue IL_0116: ldc.i4.0
+   00E2 ldloc.s V_8
+   00E4 ldnull 
+   00E5 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00EA brtrue IL_0116: ldc.i4.0
+   00EF ldloc.s V_9
+   00F1 ldnull 
+   00F2 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00F7 brtrue IL_0116: ldc.i4.0
+   00FC ldloc.s V_5
+   00FE ldnull 
+   00FF call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0104 brtrue IL_0116: ldc.i4.0
+   0109 ldloc.s V_6
+   010B ldnull 
+   010C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0111 brfalse IL_0122: ldloc.1
+   0116 ldc.i4.0 
+   0117 ldstr Some of Trophy overview form widgets is null
+   011C call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0121 ret 
+   0122 ldloc.1 
+   0123 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0128 stloc.s V_10
+   012A ldloc.2 
+   012B callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0130 stloc.s V_11
+   0132 ldloc.s V_6
+   0134 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0139 stloc.s V_12
+   013B ldloc.3 
+   013C callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0141 stloc.s V_13
+   0143 ldloc.s V_4
+   0145 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   014A stloc.s V_14
+   014C call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0151 stloc.s V_15
+   0153 ldloc.s V_15
+   0155 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::LastDoneTrophyRewardInfo
+   015A brfalse IL_0178: ldloc.s V_10
+   015F ldloc.s V_12
+   0161 ldloc.s V_15
+   0163 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::LastDoneTrophyRewardInfo
+   0168 callvirt System.String Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyImagePath()
+   016D ldarg.1 
+   016E ldc.i4.1 
+   016F ldc.i4.0 
+   0170 ldc.i4.0 
+   0171 ldc.i4.0 
+   0172 ldc.i4.0 
+   0173 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0178 ldloc.s V_10
+   017A ldloc.s V_15
+   017C ldfld Assets.Scripts.GameSystem.CAchieveInfo2::LastDoneTrophyRewardInfo
+   0181 brtrue IL_0190: ldstr "{0}"
+   0186 ldstr 0
+   018B br IL_01b0: callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0190 ldstr {0}
+   0195 ldloc.s V_15
+   0197 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::LastDoneTrophyRewardInfo
+   019C ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   01A1 ldfld ResData.ResTrophyLvl::dwTrophyLvl
+   01A6 box System.UInt32
+   01AB call System.String System.String::Format(System.String,System.Object)
+   01B0 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01B5 ldloc.s V_15
+   01B7 callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveInfo2::GetWorldRank()
+   01BC brtrue IL_01d5: ldloc.s V_5
+   01C1 ldloc.s V_5
+   01C3 ldc.i4.1 
+   01C4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01C9 ldloc.2 
+   01CA ldc.i4.0 
+   01CB call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01D0 br IL_0201: ldc.i4.0
+   01D5 ldloc.s V_5
+   01D7 ldc.i4.0 
+   01D8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01DD ldloc.2 
+   01DE ldc.i4.1 
+   01DF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01E4 ldloc.s V_11
+   01E6 ldloc.s V_15
+   01E8 callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveInfo2::GetWorldRank()
+   01ED stloc.s V_16
+   01EF ldloca.s V_16
+   01F1 constrained. System.UInt32
+   01F7 callvirt System.String System.Object::ToString()
+   01FC callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0201 ldc.i4.0 
+   0202 stloc.s V_17
+   0204 ldc.i4.0 
+   0205 stloc.s V_18
+   0207 ldloc.s V_15
+   0209 ldloca.s V_17
+   020B ldloca.s V_18
+   020D callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyProgress(System.UInt32&,System.UInt32&)
+   0212 ldloc.s V_15
+   0214 ldloc.s V_17
+   0216 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByPoint(System.UInt32)
+   021B stloc.s V_19
+   021D ldloc.s V_15
+   021F ldloc.s V_19
+   0221 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::Index
+   0226 ldc.i4.1 
+   0227 add 
+   0228 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByIndex(System.Int32)
+   022D stloc.s V_20
+   022F ldloc.s V_13
+   0231 ldloc.s V_17
+   0233 ldloc.s V_20
+   0235 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   023A sub 
+   023B ldloc.s V_20
+   023D ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MaxPoint
+   0242 ldloc.s V_20
+   0244 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   0249 sub 
+   024A call System.Single Utility::Divide(System.UInt32,System.UInt32)
+   024F callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0254 ldloc.s V_14
+   0256 ldstr {0}/{1}
+   025B ldloc.s V_17
+   025D ldloc.s V_20
+   025F ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   0264 sub 
+   0265 box System.UInt32
+   026A ldloc.s V_20
+   026C ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MaxPoint
+   0271 ldloc.s V_20
+   0273 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   0278 sub 
+   0279 box System.UInt32
+   027E call System.String System.String::Format(System.String,System.Object,System.Object)
+   0283 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0288 ldloc.s V_7
+   028A callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   028F stloc.s V_21
+   0291 ldloc.s V_8
+   0293 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0298 stloc.s V_22
+   029A ldloc.s V_9
+   029C callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   02A1 stloc.s V_23
+   02A3 ldloc.s V_15
+   02A5 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetFirstTrophyRewardInfoAwardNotGot()
+   02AA stloc.s V_24
+   02AC ldloc.s V_24
+   02AE brtrue IL_02d0: ldc.i4.0
+   02B3 ldloc.s V_7
+   02B5 ldc.i4.0 
+   02B6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02BB ldloc.s V_9
+   02BD ldc.i4.0 
+   02BE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02C3 ldloc.s V_22
+   02C5 ldc.i4.0 
+   02C6 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   02CB br IL_04a6: ret
+   02D0 ldc.i4.0 
+   02D1 stloc.s V_25
+   02D3 ldloc.s V_24
+   02D5 callvirt Assets.Scripts.GameSystem.CUseable[] Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyRewards()
+   02DA stloc.s V_26
+   02DC ldloc.s V_24
+   02DE callvirt System.Boolean Assets.Scripts.GameSystem.CTrophyRewardInfo::HasGotAward()
+   02E3 brtrue IL_02f7: ldloc.s V_7
+   02E8 ldloc.s V_24
+   02EA callvirt System.Boolean Assets.Scripts.GameSystem.CTrophyRewardInfo::IsFinish()
+   02EF brfalse IL_02f7: ldloc.s V_7
+   02F4 ldc.i4.1 
+   02F5 stloc.s V_25
+   02F7 ldloc.s V_7
+   02F9 ldc.i4.1 
+   02FA call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02FF ldloc.s V_21
+   0301 ldstr {0}级奖励：
+   0306 ldloc.s V_24
+   0308 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   030D ldfld ResData.ResTrophyLvl::dwTrophyLvl
+   0312 box System.UInt32
+   0317 call System.String System.String::Format(System.String,System.Object)
+   031C callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0321 ldloc.s V_22
+   0323 ldloc.s V_26
+   0325 ldlen 
+   0326 conv.i4 
+   0327 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   032C ldc.i4.0 
+   032D stloc.s V_27
+   032F br IL_0442: ldloc.s V_27
+   0334 ldloc.s V_22
+   0336 ldloc.s V_27
+   0338 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   033D stloc.s V_28
+   033F ldloc.s V_28
+   0341 ldc.i4.0 
+   0342 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   0347 stloc.s V_29
+   0349 ldarg.1 
+   034A ldloc.s V_29
+   034C ldloc.s V_26
+   034E ldloc.s V_27
+   0350 ldelem.ref 
+   0351 ldc.i4.0 
+   0352 ldc.i4.0 
+   0353 ldc.i4.0 
+   0354 ldc.i4.0 
+   0355 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetItemCell(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,Assets.Scripts.GameSystem.CUseable,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   035A ldloc.s V_29
+   035C ldstr imgIcon
+   0361 call T Utility::GetComponetInChild<UnityEngine.UI.Image>(UnityEngine.GameObject,System.String)
+   0366 stloc.s V_30
+   0368 ldloc.s V_26
+   036A ldloc.s V_27
+   036C ldelem.ref 
+   036D isinst Assets.Scripts.GameSystem.CHeadImg
+   0372 brfalse IL_03ba: ldloc.s V_29
+   0377 ldloc.s V_29
+   0379 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   037E ldc.i4.0 
+   037F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0384 ldloc.s V_22
+   0386 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   038B ldc.r4 0.7
+   0390 ldc.i4.1 
+   0391 ldc.r4 0
+   0396 newobj System.Void Assets.Scripts.GameSystem.HeadEffectParam::.ctor(Assets.Scripts.UI.CUIFormScript,System.Single,System.Boolean,System.Single)
+   039B stloc.s V_31
+   039D call !0 MonoSingleton`1<Assets.Scripts.GameSystem.NobeSys>::GetInstance()
+   03A2 ldloc.s V_30
+   03A4 ldloc.s V_26
+   03A6 ldloc.s V_27
+   03A8 ldelem.ref 
+   03A9 ldfld Assets.Scripts.GameSystem.CUseable::m_baseID
+   03AE ldloc.s V_31
+   03B0 callvirt System.Void Assets.Scripts.GameSystem.NobeSys::SetHeadIconBk(UnityEngine.UI.Image,System.Int32,Assets.Scripts.GameSystem.HeadEffectParam)
+   03B5 br IL_043c: ldloc.s V_27
+   03BA ldloc.s V_29
+   03BC callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   03C1 ldc.i4.1 
+   03C2 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   03C7 br IL_042a: ldloc.s V_30
+   03CC ldloc.s V_30
+   03CE callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   03D3 ldc.i4.0 
+   03D4 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   03D9 stloc.s V_32
+   03DB ldloc.s V_32
+   03DD ldnull 
+   03DE callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   03E3 ldloc.s V_32
+   03E5 callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIParticleScript>()
+   03EA stloc.s V_33
+   03EC ldloc.s V_33
+   03EE ldnull 
+   03EF call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03F4 brfalse IL_0419: ldloc.s V_32
+   03F9 ldloc.s V_33
+   03FB ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0400 ldnull 
+   0401 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0406 brfalse IL_0419: ldloc.s V_32
+   040B ldloc.s V_33
+   040D ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0412 ldloc.s V_33
+   0414 callvirt System.Void Assets.Scripts.UI.CUIFormScript::RemoveUIComponent(Assets.Scripts.UI.CUIComponent)
+   0419 ldloc.s V_32
+   041B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0420 ldc.r4 0.1
+   0425 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   042A ldloc.s V_30
+   042C callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0431 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   0436 ldc.i4.0 
+   0437 bgt IL_03cc: ldloc.s V_30
+   043C ldloc.s V_27
+   043E ldc.i4.1 
+   043F add 
+   0440 stloc.s V_27
+   0442 ldloc.s V_27
+   0444 ldloc.s V_26
+   0446 ldlen 
+   0447 conv.i4 
+   0448 blt IL_0334: ldloc.s V_22
+   044D ldloc.s V_9
+   044F ldc.i4.1 
+   0450 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0455 ldloc.s V_25
+   0457 brfalse IL_0496: ldloc.s V_9
+   045C ldloc.s V_9
+   045E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   0463 ldc.i4.1 
+   0464 ldc.i4.1 
+   0465 ldc.i4.1 
+   0466 ldc.i4.0 
+   0467 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   046C ldloca.s V_34
+   046E initobj Assets.Scripts.UI.stUIEventParams
+   0474 ldloca.s V_34
+   0476 ldloc.s V_24
+   0478 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::Index
+   047D stfld Assets.Scripts.UI.stUIEventParams::tag
+   0482 ldloc.s V_23
+   0484 ldc.i4.1 
+   0485 ldc.i4 15212
+   048A ldloc.s V_34
+   048C callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   0491 br IL_04a6: ret
+   0496 ldloc.s V_9
+   0498 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   049D ldc.i4.0 
+   049E ldc.i4.1 
+   049F ldc.i4.1 
+   04A0 ldc.i4.0 
+   04A1 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   04A6 ret 
+== System.Void SendGetTrophyRewardReq(System.UInt32 id) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 4410
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_GET_TROPHYLVL_REWARD_REQ CSProtocol.CSPkgBody::get_stGetTrophyLvlRewardReq()
+   0016 ldarg.1 
+   0017 stfld CSProtocol.CSPKG_GET_TROPHYLVL_REWARD_REQ::dwTrophyLvl
+   001C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0021 ldloca.s V_0
+   0023 ldc.i4.1 
+   0024 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0029 pop 
+   002A ret 
+== System.Void SendReqGetRankingAcountInfo() attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 2604
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_GET_RANKING_ACNT_INFO_REQ CSProtocol.CSPkgBody::get_stGetRankingAcntInfoReq()
+   0016 ldc.i4.8 
+   0017 stfld CSProtocol.CSPKG_GET_RANKING_ACNT_INFO_REQ::bNumberType
+   001C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0021 ldloca.s V_0
+   0023 ldc.i4.0 
+   0024 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0029 pop 
+   002A ret 
+== System.Void SendGetAchieveRewardReq(System.UInt32 achieveId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 4404
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 newobj System.Void CSProtocol.CSPKG_GET_ACHIEVEMENT_REWARD_REQ::.ctor()
+   0016 callvirt System.Void CSProtocol.CSPkgBody::set_stGetAchievementRewardReq(CSProtocol.CSPKG_GET_ACHIEVEMENT_REWARD_REQ)
+   001B ldloc.0 
+   001C ldfld CSProtocol.CSPkg::stPkgData
+   0021 callvirt CSProtocol.CSPKG_GET_ACHIEVEMENT_REWARD_REQ CSProtocol.CSPkgBody::get_stGetAchievementRewardReq()
+   0026 ldarg.0 
+   0027 stfld CSProtocol.CSPKG_GET_ACHIEVEMENT_REWARD_REQ::dwAchievementID
+   002C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0031 ldloca.s V_0
+   0033 ldc.i4.1 
+   0034 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0039 pop 
+   003A ret 
+== System.Void OnRecieveAchieveInfo(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_ACHIEVEMENT_INFO_NTF CSProtocol.CSPkgBody::get_stGetAchievememtInfoNtf()
+   0015 stloc.0 
+   0016 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   001B stloc.1 
+   001C ldloc.1 
+   001D ldloc.0 
+   001E ldflda CSProtocol.SCPKG_ACHIEVEMENT_INFO_NTF::stAchievementInfo
+   0023 callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::OnServerAchieveInfo(CSProtocol.COMDT_ACHIEVEMENT_INFO&)
+   0028 ret 
+== System.Void OnReceiveGetTrophyRewardRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=13
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_GET_TROPHYLVL_REWARD_RSP CSProtocol.CSPkgBody::get_stGetTrophyLvlmentRewardRsp()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.SCPKG_GET_TROPHYLVL_REWARD_RSP::iResult
+   001C ldc.i4.0 
+   001D bge IL_004f: call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0022 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0027 ldstr 奖励领取失败，请稍后再试 {0}
+   002C ldloc.0 
+   002D ldfld CSProtocol.SCPKG_GET_TROPHYLVL_REWARD_RSP::iResult
+   0032 box System.Int32
+   0037 call System.String System.String::Format(System.String,System.Object)
+   003C ldc.i4.0 
+   003D ldc.r4 1.5
+   0042 ldnull 
+   0043 ldc.i4.0 
+   0044 newarr System.Object
+   0049 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   004E ret 
+   004F call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0054 stloc.1 
+   0055 ldloc.0 
+   0056 ldfld CSProtocol.SCPKG_GET_TROPHYLVL_REWARD_RSP::dwTrophyLvl
+   005B ldc.i4.1 
+   005C sub 
+   005D stloc.2 
+   005E ldloc.2 
+   005F ldc.i4.0 
+   0060 blt IL_0073: ret
+   0065 ldloc.2 
+   0066 conv.i8 
+   0067 ldloc.1 
+   0068 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::TrophyRewardInfoArrCnt
+   006D conv.u8 
+   006E ble IL_0074: ldloc.1
+   0073 ret 
+   0074 ldloc.1 
+   0075 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::TrophyRewardInfoArr
+   007A ldloc.2 
+   007B ldelem.ref 
+   007C stloc.3 
+   007D ldloc.3 
+   007E callvirt Assets.Scripts.GameSystem.CUseable[] Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyRewards()
+   0083 stloc.s V_4
+   0085 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   008A ldloc.s V_4
+   008C ldnull 
+   008D ldc.i4.0 
+   008E ldc.i4.0 
+   008F ldc.i4.0 
+   0090 ldc.i4.0 
+   0091 ldstr Form_Award
+   0096 ldnull 
+   0097 ldnull 
+   0098 ldc.i4.0 
+   0099 ldloca.s V_5
+   009B initobj Assets.Scripts.UI.stUIEventParams
+   00A1 ldloc.s V_5
+   00A3 ldnull 
+   00A4 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenAwardTip(Assets.Scripts.GameSystem.CUseable[],System.String,System.Boolean,Assets.Scripts.UI.enUIEventID,System.Boolean,System.Boolean,System.String,System.String,System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String)
+   00A9 ldloc.3 
+   00AA ldc.i4.1 
+   00AB stfld Assets.Scripts.GameSystem.CTrophyRewardInfo::State
+   00B0 call !0 Singleton`1<EventRouter>::GetInstance()
+   00B5 ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   00BA callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00BF ret 
+== System.Void OnTrophyLevelUp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_NTF_TROPHYLVLUP CSProtocol.CSPkgBody::get_stNtfTrophyLvlUp()
+   0015 stloc.0 
+   0016 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   001B stloc.1 
+   001C ldloc.1 
+   001D ldloc.0 
+   001E ldfld CSProtocol.SCPKG_NTF_TROPHYLVLUP::dwOldTrophyLvl
+   0023 ldloc.0 
+   0024 ldfld CSProtocol.SCPKG_NTF_TROPHYLVLUP::dwNewTrophyLvl
+   0029 callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::TrophyLevelUp(System.UInt32,System.UInt32)
+   002E call !0 Singleton`1<EventRouter>::GetInstance()
+   0033 ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   0038 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   003D ret 
+== System.Void OnNotifyAchieveStateChange(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_ACHIEVEMENT_STATE_CHG_NTF CSProtocol.CSPkgBody::get_stAchievementStateChgNtf()
+   0015 stloc.0 
+   0016 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   001B stloc.1 
+   001C ldloc.1 
+   001D ldloc.0 
+   001E ldflda CSProtocol.SCPKG_ACHIEVEMENT_STATE_CHG_NTF::stAchievementData
+   0023 callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::ChangeAchieveState(CSProtocol.COMDT_ACHIEVEMENT_DATA&)
+   0028 call !0 Singleton`1<Assets.Scripts.GameSystem.CAchievementSystem>::GetInstance()
+   002D ldc.i4.0 
+   002E callvirt System.Void Assets.Scripts.GameSystem.CAchievementSystem::ProcessMostRecentlyDoneAchievements(System.Boolean)
+   0033 call !0 Singleton`1<EventRouter>::GetInstance()
+   0038 ldsfld EventID::ACHIEVE_TROPHY_REWARD_INFO_STATE_CHANGE
+   003D callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0042 ret 
+== System.Void OnNotifyAchieveDoneDataChange(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_ACHIEVEMENT_DONE_DATA_CHG_NTF CSProtocol.CSPkgBody::get_stAchievementDoneDataChgNtf()
+   0015 stloc.0 
+   0016 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   001B stloc.1 
+   001C ldloc.1 
+   001D ldloc.0 
+   001E ldfld CSProtocol.SCPKG_ACHIEVEMENT_DONE_DATA_CHG_NTF::stAchievementDoneData
+   0023 callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::OnAchieveDoneDataChange(CSProtocol.COMDT_ACHIEVEMENT_DONE_DATA)
+   0028 ret 
+== System.Void OnNotifyPvpBanMsg(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_PVPBAN_NTF CSProtocol.CSPkgBody::get_stPvPBanNtf()
+   000B call System.Void Assets.Scripts.GameSystem.CAchievementSystem::AddPunishMsg(CSProtocol.SCPKG_PVPBAN_NTF)
+   0010 ret 
+  NESTED Assets.Scripts.GameSystem.CAchievementSystem/enTypeMenu
+  NESTED Assets.Scripts.GameSystem.CAchievementSystem/enOverviewFormWidget

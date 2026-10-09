@@ -1,0 +1,611 @@
+// TYPE Assets.Scripts.GameSystem.FriendRelationNetCore  base=System.Object  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Send_INTIMACY_RELATION_REQUEST(System.UInt64 ulluid, System.UInt32 worldID, CSProtocol.COM_INTIMACY_STATE state, CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE chgType) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 1360
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stIntimacyRelationRequestReq()
+   0016 ldfld CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST::stUin
+   001B ldarg.0 
+   001C stfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stIntimacyRelationRequestReq()
+   002C ldfld CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST::stUin
+   0031 ldarg.1 
+   0032 stfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stIntimacyRelationRequestReq()
+   0042 ldarg.2 
+   0043 conv.u1 
+   0044 stfld CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0049 ldloc.0 
+   004A ldfld CSProtocol.CSPkg::stPkgData
+   004F callvirt CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stIntimacyRelationRequestReq()
+   0054 ldarg.3 
+   0055 conv.u1 
+   0056 stfld CSProtocol.CSPKG_CMD_INTIMACY_RELATION_REQUEST::bRelationChgType
+   005B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0060 ldloca.s V_0
+   0062 ldc.i4.1 
+   0063 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0068 pop 
+   0069 ret 
+== System.Void On_Send_INTIMACY_RELATION_REQUEST(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stIntimacyRelationRequestRsp()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::dwResult
+   001C brtrue IL_010a: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0021 ldsfld System.String::Empty
+   0026 stloc.1 
+   0027 ldc.i4.0 
+   0028 stloc.2 
+   0029 ldloc.0 
+   002A ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bRelationChgType
+   002F ldc.i4.1 
+   0030 bne.un IL_0078: ldloc.0
+   0035 ldloc.0 
+   0036 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   003B call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   0040 brfalse IL_0073: br IL_00c4
+   0045 ldloc.0 
+   0046 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   004B call CSProtocol.COM_INTIMACY_STATE Assets.Scripts.GameSystem.IntimacyRelationViewUT::GetConfirmState(System.Byte)
+   0050 stloc.2 
+   0051 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0056 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   005B ldfld Assets.Scripts.GameSystem.CFriendModel::FRData
+   0060 ldloc.0 
+   0061 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0066 callvirt Assets.Scripts.GameSystem.RelationConfig Assets.Scripts.GameSystem.CFriendRelationship::GetRelaTextCfg(System.Byte)
+   006B stloc.3 
+   006C ldloc.3 
+   006D ldfld Assets.Scripts.GameSystem.RelationConfig::IntimRela_Tips_SendRequestSuccess
+   0072 stloc.1 
+   0073 br IL_00c4: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0078 ldloc.0 
+   0079 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bRelationChgType
+   007E ldc.i4.2 
+   007F bne.un IL_00c4: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0084 ldloc.0 
+   0085 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   008A call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   008F brfalse IL_00c4: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0094 ldloc.0 
+   0095 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   009A call CSProtocol.COM_INTIMACY_STATE Assets.Scripts.GameSystem.IntimacyRelationViewUT::GetDenyState(System.Byte)
+   009F stloc.2 
+   00A0 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   00A5 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   00AA ldfld Assets.Scripts.GameSystem.CFriendModel::FRData
+   00AF ldloc.0 
+   00B0 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bIntimacyState
+   00B5 callvirt Assets.Scripts.GameSystem.RelationConfig Assets.Scripts.GameSystem.CFriendRelationship::GetRelaTextCfg(System.Byte)
+   00BA stloc.s V_4
+   00BC ldloc.s V_4
+   00BE ldfld Assets.Scripts.GameSystem.RelationConfig::IntimRela_Tips_SendDelSuccess
+   00C3 stloc.1 
+   00C4 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C9 ldloc.1 
+   00CA ldc.i4.0 
+   00CB ldc.r4 1.5
+   00D0 ldnull 
+   00D1 ldc.i4.0 
+   00D2 newarr System.Object
+   00D7 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00DC call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   00E1 ldloc.0 
+   00E2 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::stUin
+   00E7 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   00EC ldloc.0 
+   00ED ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::stUin
+   00F2 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   00F7 ldloc.2 
+   00F8 ldloc.0 
+   00F9 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::bRelationChgType
+   00FE ldc.i4.0 
+   00FF ldc.i4.0 
+   0100 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   0105 br IL_012c: ret
+   010A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   010F ldloc.0 
+   0110 ldfld CSProtocol.SCPKG_CMD_INTIMACY_RELATION_REQUEST::dwResult
+   0115 call System.String Assets.Scripts.GameSystem.UT::ErrorCode_String(System.UInt32)
+   011A ldc.i4.0 
+   011B ldc.r4 1.5
+   0120 ldnull 
+   0121 ldc.i4.0 
+   0122 newarr System.Object
+   0127 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   012C ret 
+== System.Void On_NTF_INTIMACY_RELATION_REQUEST(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST CSProtocol.CSPkgBody::get_stNtfIntimacyRelationRequest()
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0013: ldc.i4.0
+   0012 ret 
+   0013 ldc.i4.0 
+   0014 stloc.1 
+   0015 ldloc.0 
+   0016 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bRelationChgType
+   001B ldc.i4.1 
+   001C bne.un IL_0042: ldloc.0
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0027 call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   002C brfalse IL_003d: br IL_006a
+   0031 ldloc.0 
+   0032 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0037 call CSProtocol.COM_INTIMACY_STATE Assets.Scripts.GameSystem.IntimacyRelationViewUT::GetConfirmState(System.Byte)
+   003C stloc.1 
+   003D br IL_006a: ldloc.1
+   0042 ldloc.0 
+   0043 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bRelationChgType
+   0048 ldc.i4.2 
+   0049 bne.un IL_006a: ldloc.1
+   004E ldloc.0 
+   004F ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0054 call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   0059 brfalse IL_006a: ldloc.1
+   005E ldloc.0 
+   005F ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bIntimacyState
+   0064 call CSProtocol.COM_INTIMACY_STATE Assets.Scripts.GameSystem.IntimacyRelationViewUT::GetDenyState(System.Byte)
+   0069 stloc.1 
+   006A ldloc.1 
+   006B brfalse IL_0099: ret
+   0070 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0075 ldloc.0 
+   0076 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::stUin
+   007B ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0080 ldloc.0 
+   0081 ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::stUin
+   0086 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   008B ldloc.1 
+   008C ldloc.0 
+   008D ldfld CSProtocol.SCPKG_CMD_NTF_INTIMACY_RELATION_REQUEST::bRelationChgType
+   0092 ldc.i4.0 
+   0093 ldc.i4.1 
+   0094 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   0099 ret 
+== System.Void Send_CHG_INTIMACY_CONFIRM(System.UInt64 ulluid, System.UInt32 worldID, CSProtocol.COM_INTIMACY_STATE value, CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE type) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 1363
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stChgIntimacyConfirmReq()
+   0016 ldfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   001B ldarg.0 
+   001C stfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stChgIntimacyConfirmReq()
+   002C ldfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   0031 ldarg.1 
+   0032 stfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stChgIntimacyConfirmReq()
+   0042 ldarg.3 
+   0043 conv.u1 
+   0044 stfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM::bRelationChgType
+   0049 ldloc.0 
+   004A ldfld CSProtocol.CSPkg::stPkgData
+   004F callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stChgIntimacyConfirmReq()
+   0054 ldarg.2 
+   0055 conv.u1 
+   0056 stfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   005B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0060 ldloca.s V_0
+   0062 ldc.i4.1 
+   0063 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0068 pop 
+   0069 ret 
+== System.Void On_Send_CHG_INTIMACY_CONFIRM(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stChgIntimacyConfirmRsp()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwResult
+   001C ldc.i4 238
+   0021 ceq 
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 brfalse IL_0091: ldloc.0
+   002A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002F ldstr CS_ERR_INTIMACY_RELATION_DEL_AUTO
+   0034 ldc.i4.1 
+   0035 ldc.r4 1.5
+   003A ldnull 
+   003B ldc.i4.0 
+   003C newarr System.Object
+   0041 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0046 ldloc.0 
+   0047 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   004C call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   0051 call System.Void DebugHelper::Assert(System.Boolean)
+   0056 ldloc.0 
+   0057 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   005C call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   0061 brfalse IL_0090: ret
+   0066 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   006B ldloc.0 
+   006C ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   0071 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0076 ldloc.0 
+   0077 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   007C ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0081 ldc.i4.s 28
+   0083 ldc.i4.2 
+   0084 ldloc.0 
+   0085 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwTerminateTime
+   008A ldc.i4.0 
+   008B callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   0090 ret 
+   0091 ldloc.0 
+   0092 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwResult
+   0097 brtrue IL_0136: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   009C ldloc.0 
+   009D ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bRelationChgType
+   00A2 ldc.i4.1 
+   00A3 bne.un IL_00e6: ldloc.0
+   00A8 ldloc.0 
+   00A9 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   00AE call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   00B3 brfalse IL_00e6: ldloc.0
+   00B8 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   00BD ldloc.0 
+   00BE ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   00C3 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   00C8 ldloc.0 
+   00C9 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   00CE ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   00D3 ldloc.0 
+   00D4 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   00D9 ldloc.0 
+   00DA ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bRelationChgType
+   00DF ldc.i4.0 
+   00E0 ldc.i4.0 
+   00E1 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   00E6 ldloc.0 
+   00E7 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bRelationChgType
+   00EC ldc.i4.2 
+   00ED bne.un IL_0131: br IL_017c
+   00F2 ldloc.0 
+   00F3 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bIntimacyState
+   00F8 call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   00FD brfalse IL_0131: br IL_017c
+   0102 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0107 ldloc.0 
+   0108 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   010D ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0112 ldloc.0 
+   0113 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   0118 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   011D ldc.i4.s 28
+   011F ldloc.0 
+   0120 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::bRelationChgType
+   0125 ldloc.0 
+   0126 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwTerminateTime
+   012B ldc.i4.0 
+   012C callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   0131 br IL_017c: ret
+   0136 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   013B ldloc.0 
+   013C ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwResult
+   0141 call System.String Assets.Scripts.GameSystem.UT::ErrorCode_String(System.UInt32)
+   0146 ldc.i4.0 
+   0147 ldc.r4 1.5
+   014C ldnull 
+   014D ldc.i4.0 
+   014E newarr System.Object
+   0153 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0158 ldloc.0 
+   0159 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::stUin
+   015E stloc.2 
+   015F ldloc.2 
+   0160 brfalse IL_017c: ret
+   0165 ldloc.0 
+   0166 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_CONFIRM::dwResult
+   016B ldloc.2 
+   016C ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0171 ldloc.2 
+   0172 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0177 call System.Void Assets.Scripts.GameSystem.FriendRelationNetCore::ProcessByErrorCode(System.UInt32,System.UInt64,System.UInt32)
+   017C ret 
+== System.Void ProcessByErrorCode(System.UInt32 errorCode, System.UInt64 ulluid, System.UInt32 worldID) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 brtrue IL_0007: ldarg.0
+   0006 ret 
+   0007 ldarg.0 
+   0008 ldc.i4 191
+   000D beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0012 ldarg.0 
+   0013 ldc.i4 193
+   0018 beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   001D ldarg.0 
+   001E ldc.i4 188
+   0023 beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0028 ldarg.0 
+   0029 ldc.i4 189
+   002E beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0033 ldarg.0 
+   0034 ldc.i4 189
+   0039 beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   003E ldarg.0 
+   003F ldc.i4.s 101
+   0041 beq IL_0051: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0046 ldarg.0 
+   0047 ldc.i4 189
+   004C bne.un IL_006c: ret
+   0051 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0056 ldarg.1 
+   0057 ldarg.2 
+   0058 callvirt Assets.Scripts.GameSystem.CFR Assets.Scripts.GameSystem.CFriendRelationship::GetCfr(System.UInt64,System.UInt32)
+   005D stloc.0 
+   005E ldloc.0 
+   005F brfalse IL_006c: ret
+   0064 ldloc.0 
+   0065 ldc.i4.s 28
+   0067 callvirt System.Void Assets.Scripts.GameSystem.CFR::set_state(CSProtocol.COM_INTIMACY_STATE)
+   006C ret 
+== System.Void On_NTF_CHG_INTIMACY_CONFIRM(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM CSProtocol.CSPkgBody::get_stNtfChgIntimacyConfirm()
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0013: ldc.i4.0
+   0012 ret 
+   0013 ldc.i4.0 
+   0014 stloc.1 
+   0015 ldloc.0 
+   0016 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bRelationChgType
+   001B ldc.i4.1 
+   001C bne.un IL_005f: ldloc.0
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bIntimacyState
+   0027 call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   002C brfalse IL_005f: ldloc.0
+   0031 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0036 ldloc.0 
+   0037 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::stUin
+   003C ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0041 ldloc.0 
+   0042 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::stUin
+   0047 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   004C ldloc.0 
+   004D ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bIntimacyState
+   0052 ldloc.0 
+   0053 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bRelationChgType
+   0058 ldc.i4.0 
+   0059 ldc.i4.0 
+   005A callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   005F ldloc.0 
+   0060 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bRelationChgType
+   0065 ldc.i4.2 
+   0066 bne.un IL_00aa: ret
+   006B ldloc.0 
+   006C ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bIntimacyState
+   0071 call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   0076 brfalse IL_00aa: ret
+   007B call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0080 ldloc.0 
+   0081 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::stUin
+   0086 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   008B ldloc.0 
+   008C ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::stUin
+   0091 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0096 ldc.i4.s 28
+   0098 ldloc.0 
+   0099 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::bRelationChgType
+   009E ldloc.0 
+   009F ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_CONFIRM::dwTerminateTime
+   00A4 ldc.i4.0 
+   00A5 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   00AA ret 
+== System.Void Send_CHG_INTIMACY_DENY(System.UInt64 ulluid, System.UInt32 worldID, CSProtocol.COM_INTIMACY_STATE state, CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE type) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 1366
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stChgIntimacyDenyReq()
+   0016 ldfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY::stUin
+   001B ldarg.0 
+   001C stfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stChgIntimacyDenyReq()
+   002C ldfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY::stUin
+   0031 ldarg.1 
+   0032 stfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stChgIntimacyDenyReq()
+   0042 ldarg.3 
+   0043 conv.u1 
+   0044 stfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY::bRelationChgType
+   0049 ldloc.0 
+   004A ldfld CSProtocol.CSPkg::stPkgData
+   004F callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stChgIntimacyDenyReq()
+   0054 ldarg.2 
+   0055 conv.u1 
+   0056 stfld CSProtocol.CSPKG_CMD_CHG_INTIMACY_DENY::bIntimacyState
+   005B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0060 ldloca.s V_0
+   0062 ldc.i4.1 
+   0063 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0068 pop 
+   0069 ret 
+== System.Void On_Send_CHG_INTIMACY_DENY(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_CMD_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stChgIntimacyDenyRsp()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_DENY::dwResult
+   001C brtrue IL_0028: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0021 ldc.i4.0 
+   0022 stloc.1 
+   0023 br IL_004a: ret
+   0028 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002D ldloc.0 
+   002E ldfld CSProtocol.SCPKG_CMD_CHG_INTIMACY_DENY::dwResult
+   0033 call System.String Assets.Scripts.GameSystem.UT::ErrorCode_String(System.UInt32)
+   0038 ldc.i4.0 
+   0039 ldc.r4 1.5
+   003E ldnull 
+   003F ldc.i4.0 
+   0040 newarr System.Object
+   0045 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   004A ret 
+== System.Void On_NTF_CHG_INTIMACY_DENY(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY CSProtocol.CSPkgBody::get_stNtfChgIntimacyDeny()
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0013: call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0012 ret 
+   0013 call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::get_instance()
+   0018 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   001D ldloc.0 
+   001E ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   0023 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0028 ldloc.0 
+   0029 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   002E ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0033 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.CFriendModel::GetGameOrSnsFriend(System.UInt64,System.UInt32)
+   0038 stloc.1 
+   0039 ldsfld System.String::Empty
+   003E stloc.2 
+   003F ldloc.0 
+   0040 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bRelationChgType
+   0045 ldc.i4.1 
+   0046 bne.un IL_00ba: ldloc.0
+   004B ldsfld System.String::Empty
+   0050 stloc.3 
+   0051 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0056 ldloc.0 
+   0057 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bIntimacyState
+   005C callvirt Assets.Scripts.GameSystem.RelationConfig Assets.Scripts.GameSystem.CFriendRelationship::GetRelaTextCfg(System.Byte)
+   0061 stloc.s V_4
+   0063 ldloc.s V_4
+   0065 brfalse IL_0072: ldloc.3
+   006A ldloc.s V_4
+   006C ldfld Assets.Scripts.GameSystem.RelationConfig::IntimRela_Tips_DenyYourRequest
+   0071 stloc.3 
+   0072 ldloc.3 
+   0073 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0078 brtrue IL_00ba: ldloc.0
+   007D ldloc.1 
+   007E brfalse IL_00ba: ldloc.0
+   0083 ldloc.3 
+   0084 ldloc.1 
+   0085 ldfld Assets.Scripts.GameSystem.BasicFriendData::PlayerName
+   008A call System.String Assets.Scripts.GameSystem.UT::Bytes2String(System.String)
+   008F call System.String System.String::Format(System.String,System.Object)
+   0094 stloc.2 
+   0095 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   009A ldloc.0 
+   009B ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   00A0 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   00A5 ldloc.0 
+   00A6 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   00AB ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   00B0 ldc.i4.s 28
+   00B2 ldc.i4.0 
+   00B3 ldc.i4.0 
+   00B4 ldc.i4.0 
+   00B5 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   00BA ldloc.0 
+   00BB ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bRelationChgType
+   00C0 ldc.i4.2 
+   00C1 bne.un IL_0138: ldloc.2
+   00C6 ldloc.0 
+   00C7 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bIntimacyState
+   00CC call System.Boolean Assets.Scripts.GameSystem.IntimacyRelationViewUT::IsRelaState(System.Byte)
+   00D1 brtrue IL_00d7: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   00D6 ret 
+   00D7 call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   00DC ldloc.0 
+   00DD ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bIntimacyState
+   00E2 callvirt Assets.Scripts.GameSystem.RelationConfig Assets.Scripts.GameSystem.CFriendRelationship::GetRelaTextCfg(System.Byte)
+   00E7 stloc.s V_5
+   00E9 ldloc.s V_5
+   00EB brtrue IL_00f1: ldloc.1
+   00F0 ret 
+   00F1 ldloc.1 
+   00F2 brfalse IL_010f: call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   00F7 ldloc.s V_5
+   00F9 ldfld Assets.Scripts.GameSystem.RelationConfig::IntimRela_Tips_DenyYourDel
+   00FE ldloc.1 
+   00FF ldfld Assets.Scripts.GameSystem.BasicFriendData::PlayerName
+   0104 call System.String Assets.Scripts.GameSystem.UT::Bytes2String(System.String)
+   0109 call System.String System.String::Format(System.String,System.Object)
+   010E stloc.2 
+   010F call Assets.Scripts.GameSystem.CFriendRelationship Assets.Scripts.GameSystem.CFriendRelationship::get_FRData()
+   0114 ldloc.0 
+   0115 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   011A ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   011F ldloc.0 
+   0120 ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::stUin
+   0125 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   012A ldloc.0 
+   012B ldfld CSProtocol.SCPKG_CMD_NTF_CHG_INTIMACY_DENY::bIntimacyState
+   0130 ldc.i4.0 
+   0131 ldc.i4.0 
+   0132 ldc.i4.0 
+   0133 callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::Add(System.UInt64,System.UInt32,CSProtocol.COM_INTIMACY_STATE,CSProtocol.COM_INTIMACY_RELATION_CHG_TYPE,System.UInt32,System.Boolean)
+   0138 ldloc.2 
+   0139 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   013E brfalse IL_015b: ret
+   0143 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0148 ldloc.2 
+   0149 ldc.i4.0 
+   014A ldc.r4 1.5
+   014F ldnull 
+   0150 ldc.i4.0 
+   0151 newarr System.Object
+   0156 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   015B ret 
+== System.Void Send_CHG_INTIMACYPRIORITY(CSProtocol.COM_INTIMACY_STATE type) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 1369
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_CHG_INTIMACYPRIORITY CSProtocol.CSPkgBody::get_stChgIntimacyPriorityReq()
+   0016 ldarg.0 
+   0017 conv.u1 
+   0018 stfld CSProtocol.CSPKG_CMD_CHG_INTIMACYPRIORITY::bIntimacyState
+   001D call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0022 ldloca.s V_0
+   0024 ldc.i4.0 
+   0025 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   002A pop 
+   002B call !0 Singleton`1<Assets.Scripts.GameSystem.CFriendContoller>::GetInstance()
+   0030 ldfld Assets.Scripts.GameSystem.CFriendContoller::model
+   0035 ldfld Assets.Scripts.GameSystem.CFriendModel::FRData
+   003A ldarg.0 
+   003B callvirt System.Void Assets.Scripts.GameSystem.CFriendRelationship::SetFirstChoiseState(CSProtocol.COM_INTIMACY_STATE)
+   0040 ret 

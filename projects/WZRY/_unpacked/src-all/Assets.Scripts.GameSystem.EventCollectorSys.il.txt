@@ -1,0 +1,640 @@
+// TYPE Assets.Scripts.GameSystem.EventCollectorSys  base=Singleton`1<Assets.Scripts.GameSystem.EventCollectorSys>  attrs=Public, BeforeFieldInit
+  FIELD System.String eventCollocetFile = EventColloect.evt
+  FIELD System.String eventCollocetFileNoExt = EventColloect
+  FIELD System.Boolean _watchMode
+  FIELD System.IO.MemoryStream memStream
+  FIELD System.IO.BinaryWriter streamWriter
+  FIELD System.String unConsistencyField
+  FIELD System.Byte eventBufferFileHeaderType = 3
+  FIELD System.Boolean reportBitFromServer
+  PROP System.String EventCollectorFolder
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.EventCollectorSys>::.ctor()
+   0006 ret 
+== System.Void SetReportBitFromSever(System.Boolean report) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.EventCollectorSys::reportBitFromServer
+   0007 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.EventCollectorSys>::Init()
+   0006 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.EventCollectorSys>::UnInit()
+   0006 ret 
+== System.String get_EventCollectorFolder() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 call System.String DebugHelper::get_EventCollectorPath()
+   0005 ret 
+== System.Void ReportEvent_Begin(System.Boolean watchMode) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.IO.MemoryStream::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   000B ldarg.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   0012 newobj System.Void System.IO.BinaryWriter::.ctor(System.IO.Stream)
+   0017 stfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   001C ldarg.0 
+   001D ldarg.1 
+   001E stfld Assets.Scripts.GameSystem.EventCollectorSys::_watchMode
+   0023 ret 
+== System.Void WriteStreamBuffer(System.IO.Stream reportBuf, System.Byte[] buffer, System.Int32 bufferLen, System.Byte compressMethod, System.Int32 originLen) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.i4.8 
+   0002 callvirt System.Void System.IO.Stream::WriteByte(System.Byte)
+   0007 call System.Text.Encoding System.Text.Encoding::get_ASCII()
+   000C ldsfld Assets.Scripts.Framework.GameFramework::AppVersion
+   0011 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   0016 stloc.0 
+   0017 ldc.i4.s 20
+   0019 newarr System.Byte
+   001E stloc.1 
+   001F ldc.i4.0 
+   0020 stloc.2 
+   0021 br IL_0030: ldloc.2
+   0026 ldloc.1 
+   0027 ldloc.2 
+   0028 ldloc.0 
+   0029 ldloc.2 
+   002A ldelem.u1 
+   002B stelem.i1 
+   002C ldloc.2 
+   002D ldc.i4.1 
+   002E add 
+   002F stloc.2 
+   0030 ldloc.2 
+   0031 ldc.i4.s 20
+   0033 bge IL_0041: ldarg.1
+   0038 ldloc.2 
+   0039 ldloc.0 
+   003A ldlen 
+   003B conv.i4 
+   003C blt IL_0026: ldloc.1
+   0041 ldarg.1 
+   0042 ldloc.1 
+   0043 ldc.i4.0 
+   0044 ldc.i4.s 20
+   0046 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   004B call System.String ApolloConfig::GetAppID()
+   0050 stloc.3 
+   0051 call System.Text.Encoding System.Text.Encoding::get_ASCII()
+   0056 ldloc.3 
+   0057 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   005C stloc.s V_4
+   005E ldc.i4.s 20
+   0060 newarr System.Byte
+   0065 stloc.s V_5
+   0067 ldc.i4.0 
+   0068 stloc.s V_6
+   006A br IL_007f: ldloc.s V_6
+   006F ldloc.s V_5
+   0071 ldloc.s V_6
+   0073 ldloc.s V_4
+   0075 ldloc.s V_6
+   0077 ldelem.u1 
+   0078 stelem.i1 
+   0079 ldloc.s V_6
+   007B ldc.i4.1 
+   007C add 
+   007D stloc.s V_6
+   007F ldloc.s V_6
+   0081 ldc.i4.s 20
+   0083 bge IL_0093: ldarg.1
+   0088 ldloc.s V_6
+   008A ldloc.s V_4
+   008C ldlen 
+   008D conv.i4 
+   008E blt IL_006f: ldloc.s V_5
+   0093 ldarg.1 
+   0094 ldloc.s V_5
+   0096 ldc.i4.0 
+   0097 ldc.i4.s 20
+   0099 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   009E ldarg.1 
+   009F ldarg.s compressMethod
+   00A1 callvirt System.Void System.IO.Stream::WriteByte(System.Byte)
+   00A6 ldarg.1 
+   00A7 ldsfld System.BitConverter::IsLittleEndian
+   00AC brfalse IL_00b7: ldc.i4.0
+   00B1 ldc.i4.1 
+   00B2 br IL_00b8: callvirt System.Void System.IO.Stream::WriteByte(System.Byte)
+   00B7 ldc.i4.0 
+   00B8 callvirt System.Void System.IO.Stream::WriteByte(System.Byte)
+   00BD ldarg.s originLen
+   00BF call System.Byte[] System.BitConverter::GetBytes(System.Int32)
+   00C4 stloc.s V_7
+   00C6 ldarg.1 
+   00C7 ldloc.s V_7
+   00C9 ldc.i4.0 
+   00CA ldloc.s V_7
+   00CC ldlen 
+   00CD conv.i4 
+   00CE callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   00D3 ldarg.3 
+   00D4 call System.Byte[] System.BitConverter::GetBytes(System.Int32)
+   00D9 stloc.s V_8
+   00DB ldarg.1 
+   00DC ldloc.s V_8
+   00DE ldc.i4.0 
+   00DF ldloc.s V_8
+   00E1 ldlen 
+   00E2 conv.i4 
+   00E3 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   00E8 ldarg.1 
+   00E9 ldarg.2 
+   00EA ldc.i4.0 
+   00EB ldarg.3 
+   00EC callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   00F1 ret 
+== System.Void ReportEvent_End() attrs=Public, HideBySig maxstack=6
+   0000 ldsfld TDM.ITDataMaster::Instance
+   0005 ldc.i4.1 
+   0006 callvirt System.Void TDM.ITDataMaster::EnableReport(System.Boolean)
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0015 stloc.0 
+   0016 ldstr ReportEvent_End, reportBitFromServer:
+   001B ldarg.0 
+   001C ldflda Assets.Scripts.GameSystem.EventCollectorSys::reportBitFromServer
+   0021 constrained. System.Boolean
+   0027 callvirt System.String System.Object::ToString()
+   002C call System.String System.String::Concat(System.String,System.String)
+   0031 call System.Void UnityEngine.Debug::Log(System.Object)
+   0036 call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   003B callvirt System.Boolean Assets.Scripts.GameSystem.CCheatSystem::IsDisplayErrorLog()
+   0040 brtrue IL_006b: ldarg.0
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameSystem.EventCollectorSys::_watchMode
+   004B brtrue IL_005b: ldarg.0
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.EventCollectorSys::reportBitFromServer
+   0056 brtrue IL_006b: ldarg.0
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   0061 callvirt System.Void System.IO.Stream::Close()
+   0066 leave IL_02bb: ret
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   0071 callvirt System.Byte[] System.IO.MemoryStream::ToArray()
+   0076 stloc.1 
+   0077 ldloc.1 
+   0078 ldlen 
+   0079 conv.i4 
+   007A stloc.2 
+   007B ldloc.2 
+   007C stloc.3 
+   007D ldc.i4.0 
+   007E stloc.s V_4
+   0080 call Apollo.IApollo Apollo.IApollo::get_Instance()
+   0085 ldc.i4 1004
+   008A callvirt Apollo.IApolloServiceBase Apollo.IApollo::GetService(System.Int32)
+   008F isinst Apollo.IApolloCompressService
+   0094 stloc.s V_5
+   0096 ldloc.s V_5
+   0098 brfalse IL_00d0: ldstr "{0}/{1}"
+   009D ldloc.1 
+   009E stloc.s V_6
+   00A0 ldloc.s V_6
+   00A2 ldlen 
+   00A3 conv.i4 
+   00A4 stloc.s V_7
+   00A6 ldc.i4.1 
+   00A7 stloc.s V_8
+   00A9 ldc.i4.1 
+   00AA stloc.s V_4
+   00AC ldloc.s V_5
+   00AE ldloc.s V_8
+   00B0 ldloc.s V_7
+   00B2 callvirt System.Int32 Apollo.IApolloCompressService::CompressBound(Apollo.CompressMethod,System.Int32)
+   00B7 stloc.2 
+   00B8 ldloc.2 
+   00B9 newarr System.Byte
+   00BE stloc.1 
+   00BF ldloc.s V_5
+   00C1 ldloc.s V_8
+   00C3 ldloc.s V_6
+   00C5 ldloc.s V_7
+   00C7 ldloc.1 
+   00C8 ldloca.s V_2
+   00CA callvirt System.Boolean Apollo.IApolloCompressService::Compress(Apollo.CompressMethod,System.Byte[],System.Int32,System.Byte[],System.Int32&)
+   00CF pop 
+   00D0 ldstr {0}/{1}
+   00D5 call System.String Assets.Scripts.GameSystem.EventCollectorSys::get_EventCollectorFolder()
+   00DA ldstr EventColloect.evt
+   00DF call System.String System.String::Format(System.String,System.Object,System.Object)
+   00E4 stloc.s V_9
+   00E6 newobj System.Void System.IO.MemoryStream::.ctor()
+   00EB stloc.s V_10
+   00ED ldarg.0 
+   00EE ldloc.s V_10
+   00F0 ldloc.1 
+   00F1 ldloc.2 
+   00F2 ldloc.s V_4
+   00F4 ldloc.3 
+   00F5 call System.Void Assets.Scripts.GameSystem.EventCollectorSys::WriteStreamBuffer(System.IO.Stream,System.Byte[],System.Int32,System.Byte,System.Int32)
+   00FA ldloc.s V_10
+   00FC callvirt System.Void System.IO.Stream::Flush()
+   0101 ldloc.s V_10
+   0103 callvirt System.Byte[] System.IO.MemoryStream::GetBuffer()
+   0108 stloc.s V_11
+   010A ldsfld TDM.ITDataMaster::Instance
+   010F ldstr evtData
+   0114 ldloc.s V_11
+   0116 ldloc.s V_11
+   0118 ldlen 
+   0119 conv.i4 
+   011A callvirt System.Void TDM.ITDataMaster::ReportBinary(System.String,System.Byte[],System.Int32)
+   011F ldstr TDM reportData:
+   0124 ldloc.s V_11
+   0126 ldlen 
+   0127 conv.i4 
+   0128 stloc.s V_12
+   012A ldloca.s V_12
+   012C constrained. System.Int32
+   0132 callvirt System.String System.Object::ToString()
+   0137 call System.String System.String::Concat(System.String,System.String)
+   013C call System.Void UnityEngine.Debug::Log(System.Object)
+   0141 call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   0146 callvirt System.Boolean Assets.Scripts.GameSystem.CCheatSystem::IsDisplayErrorLog()
+   014B brfalse IL_018b: ldloc.s V_10
+   0150 ldloc.s V_9
+   0152 ldc.i4.2 
+   0153 ldc.i4.2 
+   0154 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess)
+   0159 stloc.s V_13
+   015B ldloc.s V_13
+   015D ldloc.s V_11
+   015F ldc.i4.0 
+   0160 ldloc.s V_11
+   0162 ldlen 
+   0163 conv.i4 
+   0164 callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   0169 ldloc.s V_13
+   016B callvirt System.Void System.IO.Stream::Flush()
+   0170 ldloc.s V_13
+   0172 callvirt System.Void System.IO.Stream::Close()
+   0177 leave IL_018b: ldloc.s V_10
+   017C ldloc.s V_13
+   017E brfalse IL_018a: endfinally
+   0183 ldloc.s V_13
+   0185 callvirt System.Void System.IDisposable::Dispose()
+   018A endfinally 
+   018B ldloc.s V_10
+   018D callvirt System.Void System.IO.Stream::Close()
+   0192 leave IL_01a6: ldsfld System.String System.String::Empty
+   0197 ldloc.s V_10
+   0199 brfalse IL_01a5: endfinally
+   019E ldloc.s V_10
+   01A0 callvirt System.Void System.IDisposable::Dispose()
+   01A5 endfinally 
+   01A6 ldsfld System.String::Empty
+   01AB stloc.s V_14
+   01AD call !0 Singleton`1<ApolloHelper>::GetInstance()
+   01B2 ldc.i4.0 
+   01B3 callvirt Apollo.ApolloAccountInfo ApolloHelper::GetAccountInfo(System.Boolean)
+   01B8 stloc.s V_15
+   01BA ldloc.s V_15
+   01BC brfalse IL_01ca: ldloc.s V_14
+   01C1 ldloc.s V_15
+   01C3 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   01C8 stloc.s V_14
+   01CA ldloc.s V_14
+   01CC call System.Boolean System.String::IsNullOrEmpty(System.String)
+   01D1 brfalse IL_0208: newobj System.Void Assets.Scripts.GameSystem.PathParam::.ctor()
+   01D6 ldsfld System.String::Empty
+   01DB stloc.s V_14
+   01DD call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   01E2 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   01E7 stloc.s V_16
+   01E9 ldloc.s V_16
+   01EB brfalse IL_0208: newobj System.Void Assets.Scripts.GameSystem.PathParam::.ctor()
+   01F0 ldloc.s V_16
+   01F2 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   01F7 stloc.s V_17
+   01F9 ldloca.s V_17
+   01FB constrained. System.UInt64
+   0201 callvirt System.String System.Object::ToString()
+   0206 stloc.s V_14
+   0208 newobj System.Void Assets.Scripts.GameSystem.PathParam::.ctor()
+   020D stloc.s V_18
+   020F ldloc.s V_18
+   0211 ldloc.s V_14
+   0213 ldstr _
+   0218 call System.DateTime System.DateTime::get_Now()
+   021D stloc.s V_19
+   021F ldloca.s V_19
+   0221 ldstr yyyyMMdd_HHmmss
+   0226 call System.String System.DateTime::ToString(System.String)
+   022B ldstr .evt
+   0230 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   0235 stfld Assets.Scripts.GameSystem.PathParam::remotePath
+   023A ldloc.s V_18
+   023C ldloc.s V_9
+   023E stfld Assets.Scripts.GameSystem.PathParam::localPath
+   0243 ldarg.0 
+   0244 ldfld Assets.Scripts.GameSystem.EventCollectorSys::unConsistencyField
+   0249 brfalse IL_0265: ldloc.s V_18
+   024E ldloc.s V_18
+   0250 dup 
+   0251 ldfld Assets.Scripts.GameSystem.PathParam::remotePath
+   0256 ldstr _err
+   025B call System.String System.String::Concat(System.String,System.String)
+   0260 stfld Assets.Scripts.GameSystem.PathParam::remotePath
+   0265 ldloc.s V_18
+   0267 dup 
+   0268 ldfld Assets.Scripts.GameSystem.PathParam::remotePath
+   026D ldstr _and
+   0272 call System.String System.String::Concat(System.String,System.String)
+   0277 stfld Assets.Scripts.GameSystem.PathParam::remotePath
+   027C ldarg.0 
+   027D ldloc.s V_18
+   027F ldfld Assets.Scripts.GameSystem.PathParam::remotePath
+   0284 ldarg.0 
+   0285 ldfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   028A callvirt System.Int64 System.IO.Stream::get_Length()
+   028F ldloc.2 
+   0290 ldloc.s V_14
+   0292 call System.Void Assets.Scripts.GameSystem.EventCollectorSys::ReportBeacon_EventFile(System.String,System.Int64,System.Int32,System.String)
+   0297 ldarg.0 
+   0298 ldfld Assets.Scripts.GameSystem.EventCollectorSys::memStream
+   029D callvirt System.Void System.IO.Stream::Close()
+   02A2 ldarg.0 
+   02A3 call System.Void Assets.Scripts.GameSystem.EventCollectorSys::ReportBeacon_UnConsistency()
+   02A8 leave IL_02b4: ldarg.0
+   02AD stloc.s V_20
+   02AF leave IL_02b4: ldarg.0
+   02B4 ldarg.0 
+   02B5 ldc.i4.0 
+   02B6 stfld Assets.Scripts.GameSystem.EventCollectorSys::reportBitFromServer
+   02BB ret 
+== System.Void ReportEventBuffer(System.Byte[] buffer, System.Int32 len) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   0006 ldarg.1 
+   0007 ldc.i4.0 
+   0008 ldarg.2 
+   0009 ldarg.1 
+   000A ldlen 
+   000B conv.i4 
+   000C call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   0011 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte[],System.Int32,System.Int32)
+   0016 leave IL_0021: ret
+   001B stloc.0 
+   001C leave IL_0021: ret
+   0021 ret 
+== System.Void ReportEventBufferLen(System.Int32 len) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   0006 ldarg.1 
+   0007 ldc.i4.5 
+   0008 add 
+   0009 callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   0014 ldc.i4.3 
+   0015 callvirt System.Void System.IO.BinaryWriter::Write(System.Byte)
+   001A leave IL_0025: ret
+   001F stloc.0 
+   0020 leave IL_0025: ret
+   0025 ret 
+== System.Void ReportEventHeader(System.Byte[] buffer, System.Int32 len) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   0006 ldarg.2 
+   0007 ldc.i4.4 
+   0008 add 
+   0009 callvirt System.Void System.IO.BinaryWriter::Write(System.Int32)
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.EventCollectorSys::streamWriter
+   0014 ldarg.1 
+   0015 ldc.i4.0 
+   0016 ldarg.2 
+   0017 ldarg.1 
+   0018 ldlen 
+   0019 conv.i4 
+   001A call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   001F callvirt System.Void System.IO.BinaryWriter::Write(System.Byte[],System.Int32,System.Int32)
+   0024 leave IL_002f: ret
+   0029 stloc.0 
+   002A leave IL_002f: ret
+   002F ret 
+== System.Collections.IEnumerator UploadWorkingFun(System.Object pathsObj) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameSystem.EventCollectorSys/<UploadWorkingFun>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.GameSystem.EventCollectorSys/<UploadWorkingFun>c__Iterator0::pathsObj
+   000D ldloc.0 
+   000E ret 
+== System.Void ReportBeacon_EventFile(System.String fileName, System.Int64 orginLen, System.Int32 compressLen, System.String openid) attrs=Private, HideBySig maxstack=4
+   0000 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldstr openid
+   000C ldarg.s openid
+   000E newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0013 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0018 ldloc.0 
+   0019 ldstr fileName
+   001E ldarg.1 
+   001F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0024 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0029 ldloc.0 
+   002A ldstr orginLen
+   002F ldarga.s orginLen
+   0031 constrained. System.Int64
+   0037 callvirt System.String System.Object::ToString()
+   003C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0041 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0046 ldloc.0 
+   0047 ldstr compressLen
+   004C ldarga.s compressLen
+   004E constrained. System.Int32
+   0054 callvirt System.String System.Object::ToString()
+   0059 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   005E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0063 ldloc.0 
+   0064 ldstr watch
+   0069 ldarg.0 
+   006A ldflda Assets.Scripts.GameSystem.EventCollectorSys::_watchMode
+   006F constrained. System.Boolean
+   0075 callvirt System.String System.Object::ToString()
+   007A newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   007F callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0084 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0089 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   008E stloc.1 
+   008F ldloc.1 
+   0090 brfalse IL_00b9: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0095 ldloc.0 
+   0096 ldstr multiPlayer
+   009B ldloc.1 
+   009C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMultiPlayerGame()
+   00A1 stloc.2 
+   00A2 ldloca.s V_2
+   00A4 constrained. System.Boolean
+   00AA callvirt System.String System.Object::ToString()
+   00AF newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00B4 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00B9 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00BE ldstr Event_Collect_File
+   00C3 ldloc.0 
+   00C4 ldc.i4.1 
+   00C5 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00CA ldstr Event_Collect_File send：
+   00CF ldarg.1 
+   00D0 call System.String System.String::Concat(System.String,System.String)
+   00D5 call System.Void DebugHelper::CustomLog(System.String)
+   00DA ret 
+== System.Void ReportUnConsistency(System.String fieldName) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.EventCollectorSys::unConsistencyField
+   0007 ret 
+== System.Void ReportBeacon_UnConsistency() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.EventCollectorSys::unConsistencyField
+   0006 brfalse IL_0049: ret
+   000B newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldstr unConsistencyField
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.EventCollectorSys::unConsistencyField
+   001D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0022 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0027 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   002C ldstr Event_Collect_UnConsistency
+   0031 ldloc.0 
+   0032 ldc.i4.1 
+   0033 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0038 ldstr Event_Collect_UnConsistency send
+   003D call System.Void DebugHelper::CustomLog(System.String)
+   0042 ldarg.0 
+   0043 ldnull 
+   0044 stfld Assets.Scripts.GameSystem.EventCollectorSys::unConsistencyField
+   0049 ret 
+== System.Void ReportFreshmanStat(SGW/FreshmanStat& stat) attrs=Public, HideBySig maxstack=3
+   0000 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldstr heroId
+   000C ldarg.1 
+   000D ldflda SGW/FreshmanStat::heroId
+   0012 constrained. System.UInt32
+   0018 callvirt System.String System.Object::ToString()
+   001D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0022 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0027 ldloc.0 
+   0028 ldstr occupation
+   002D ldarg.1 
+   002E ldflda SGW/FreshmanStat::occupation
+   0033 constrained. System.UInt32
+   0039 callvirt System.String System.Object::ToString()
+   003E newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0043 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0048 ldloc.0 
+   0049 ldstr hurtToHero
+   004E ldarg.1 
+   004F ldflda SGW/FreshmanStat::hurtToHero
+   0054 constrained. System.UInt32
+   005A callvirt System.String System.Object::ToString()
+   005F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0064 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0069 ldloc.0 
+   006A ldstr hurtTakenByHero
+   006F ldarg.1 
+   0070 ldflda SGW/FreshmanStat::hurtTakenByHero
+   0075 constrained. System.UInt32
+   007B callvirt System.String System.Object::ToString()
+   0080 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0085 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   008A ldloc.0 
+   008B ldstr hurtTakenTotal
+   0090 ldarg.1 
+   0091 ldflda SGW/FreshmanStat::hurtTakenTotal
+   0096 constrained. System.UInt32
+   009C callvirt System.String System.Object::ToString()
+   00A1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00A6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00AB ldloc.0 
+   00AC ldstr hurtTakenByMonster
+   00B1 ldarg.1 
+   00B2 ldflda SGW/FreshmanStat::hurtTakenByMonster
+   00B7 constrained. System.UInt32
+   00BD callvirt System.String System.Object::ToString()
+   00C2 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00C7 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00CC ldloc.0 
+   00CD ldstr hurtTakenByTower
+   00D2 ldarg.1 
+   00D3 ldflda SGW/FreshmanStat::hurtTakenByTower
+   00D8 constrained. System.UInt32
+   00DE callvirt System.String System.Object::ToString()
+   00E3 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00E8 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00ED ldloc.0 
+   00EE ldstr hurtTakenBySoldier
+   00F3 ldarg.1 
+   00F4 ldflda SGW/FreshmanStat::hurtTakenBySoldier
+   00F9 constrained. System.UInt32
+   00FF callvirt System.String System.Object::ToString()
+   0104 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0109 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   010E ldloc.0 
+   010F ldstr kill
+   0114 ldarg.1 
+   0115 ldflda SGW/FreshmanStat::kill
+   011A constrained. System.UInt32
+   0120 callvirt System.String System.Object::ToString()
+   0125 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   012A callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   012F ldloc.0 
+   0130 ldstr dead
+   0135 ldarg.1 
+   0136 ldflda SGW/FreshmanStat::dead
+   013B constrained. System.UInt32
+   0141 callvirt System.String System.Object::ToString()
+   0146 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   014B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0150 ldloc.0 
+   0151 ldstr assist
+   0156 ldarg.1 
+   0157 ldflda SGW/FreshmanStat::assist
+   015C constrained. System.UInt32
+   0162 callvirt System.String System.Object::ToString()
+   0167 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   016C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0171 ldloc.0 
+   0172 ldstr killMonster
+   0177 ldarg.1 
+   0178 ldflda SGW/FreshmanStat::killMonster
+   017D constrained. System.UInt32
+   0183 callvirt System.String System.Object::ToString()
+   0188 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   018D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0192 ldloc.0 
+   0193 ldstr level
+   0198 ldarg.1 
+   0199 ldflda SGW/FreshmanStat::level
+   019E constrained. System.UInt32
+   01A4 callvirt System.String System.Object::ToString()
+   01A9 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01AE callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01B3 ldloc.0 
+   01B4 ldstr soullevel
+   01B9 ldarg.1 
+   01BA ldflda SGW/FreshmanStat::soulLevel
+   01BF constrained. System.UInt32
+   01C5 callvirt System.String System.Object::ToString()
+   01CA newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01CF callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01D4 ldsfld TDM.ITDataMaster::Instance
+   01D9 ldstr freshmanStat
+   01DE ldloc.0 
+   01DF callvirt System.Void TDM.ITDataMaster::ReportEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>)
+   01E4 ret 
+  NESTED Assets.Scripts.GameSystem.EventCollectorSys/<UploadWorkingFun>c__Iterator0

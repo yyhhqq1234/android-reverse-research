@@ -1,0 +1,405 @@
+// TYPE SenseARUpdateTexture  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD SenseGoogleARCoreInternal.NativeSession m_NativeSession
+  FIELD System.Int32 FrameWidth
+  FIELD System.Int32 FrameHeight
+  FIELD System.Single AspectRatio
+  FIELD SenseGoogleARCore.SenseARCameraPose senseARCameraPose
+  FIELD UnityEngine.Texture2D _videoTextureY
+  FIELD System.Byte[] _videoTexture_Y_bytes
+  FIELD UnityEngine.Texture2D _videoTextureUV
+  FIELD System.Byte[] _videoTexture_uv_RGBA_bytes
+  FIELD UnityEngine.Material yuvMaterial
+  FIELD System.Boolean bCommandBufferInitialized
+  FIELD UnityEngine.Rendering.CommandBuffer m_VideoCommandBuffer
+  FIELD UnityEngine.Material _Material
+  FIELD UnityEngine.Matrix4x4 _displayTransform
+  FIELD System.Int32 FrameIndex
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 1920
+   0006 stfld SenseARUpdateTexture::FrameWidth
+   000B ldarg.0 
+   000C ldc.i4 1080
+   0011 stfld SenseARUpdateTexture::FrameHeight
+   0016 ldarg.0 
+   0017 ldc.i4.1 
+   0018 stfld SenseARUpdateTexture::FrameIndex
+   001D ldarg.0 
+   001E call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0023 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call SenseGoogleARCoreInternal.NativeSession SenseGoogleARCore.Session::GetNativeSession()
+   0006 stfld SenseARUpdateTexture::m_NativeSession
+   000B ldarg.0 
+   000C ldarg.0 
+   000D call !!0 UnityEngine.Component::GetComponent<SenseGoogleARCore.SenseARCameraPose>()
+   0012 stfld SenseARUpdateTexture::senseARCameraPose
+   0017 ldarg.0 
+   0018 ldfld SenseARUpdateTexture::m_NativeSession
+   001D ldarg.0 
+   001E ldflda SenseARUpdateTexture::FrameWidth
+   0023 ldarg.0 
+   0024 ldflda SenseARUpdateTexture::FrameHeight
+   0029 callvirt System.Void SenseGoogleARCoreInternal.NativeSession::getTextureSize(System.Int32&,System.Int32&)
+   002E ldarg.0 
+   002F ldarg.0 
+   0030 ldfld SenseARUpdateTexture::FrameWidth
+   0035 conv.r4 
+   0036 ldarg.0 
+   0037 ldfld SenseARUpdateTexture::FrameHeight
+   003C conv.r4 
+   003D div 
+   003E stfld SenseARUpdateTexture::AspectRatio
+   0043 ldarg.0 
+   0044 ldarg.0 
+   0045 ldfld SenseARUpdateTexture::yuvMaterial
+   004A stfld SenseARUpdateTexture::_Material
+   004F ldarg.0 
+   0050 ldc.i4.0 
+   0051 stfld SenseARUpdateTexture::bCommandBufferInitialized
+   0056 ldarg.0 
+   0057 call System.Void SenseARUpdateTexture::genUnityTextures()
+   005C ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld SenseARUpdateTexture::_videoTextureY
+   0007 ldarg.0 
+   0008 ldnull 
+   0009 stfld SenseARUpdateTexture::_videoTexture_Y_bytes
+   000E ldarg.0 
+   000F ldnull 
+   0010 stfld SenseARUpdateTexture::_videoTextureUV
+   0015 ldarg.0 
+   0016 ldnull 
+   0017 stfld SenseARUpdateTexture::_videoTexture_uv_RGBA_bytes
+   001C ret 
+== System.Void InitializeCommandBuffer() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 newobj System.Void UnityEngine.Rendering.CommandBuffer::.ctor()
+   0006 stfld SenseARUpdateTexture::m_VideoCommandBuffer
+   000B call System.Int32 UnityEngine.Screen::get_height()
+   0010 conv.r4 
+   0011 ldarg.0 
+   0012 ldfld SenseARUpdateTexture::AspectRatio
+   0017 mul 
+   0018 stloc.0 
+   0019 call System.Int32 UnityEngine.Screen::get_height()
+   001E conv.r4 
+   001F stloc.1 
+   0020 ldc.r4 0
+   0025 stloc.2 
+   0026 call System.Int32 UnityEngine.Screen::get_width()
+   002B conv.r4 
+   002C ldloc.0 
+   002D sub 
+   002E conv.r4 
+   002F ldc.r4 2
+   0034 div 
+   0035 stloc.3 
+   0036 ldarg.0 
+   0037 ldfld SenseARUpdateTexture::m_VideoCommandBuffer
+   003C ldc.i4.1 
+   003D ldc.i4.1 
+   003E call UnityEngine.Color UnityEngine.Color::get_black()
+   0043 callvirt System.Void UnityEngine.Rendering.CommandBuffer::ClearRenderTarget(System.Boolean,System.Boolean,UnityEngine.Color)
+   0048 ldarg.0 
+   0049 ldfld SenseARUpdateTexture::m_VideoCommandBuffer
+   004E ldnull 
+   004F ldc.i4.1 
+   0050 call UnityEngine.Rendering.RenderTargetIdentifier UnityEngine.Rendering.RenderTargetIdentifier::op_Implicit(UnityEngine.Rendering.BuiltinRenderTextureType)
+   0055 ldarg.0 
+   0056 ldfld SenseARUpdateTexture::_Material
+   005B callvirt System.Void UnityEngine.Rendering.CommandBuffer::Blit(UnityEngine.Texture,UnityEngine.Rendering.RenderTargetIdentifier,UnityEngine.Material)
+   0060 ldarg.0 
+   0061 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   0066 ldloc.3 
+   0067 ldloc.2 
+   0068 ldloc.0 
+   0069 ldloc.1 
+   006A newobj System.Void UnityEngine.Rect::.ctor(System.Single,System.Single,System.Single,System.Single)
+   006F callvirt System.Void UnityEngine.Camera::set_pixelRect(UnityEngine.Rect)
+   0074 ldarg.0 
+   0075 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   007A ldc.i4.s 10
+   007C ldarg.0 
+   007D ldfld SenseARUpdateTexture::m_VideoCommandBuffer
+   0082 callvirt System.Void UnityEngine.Camera::AddCommandBuffer(UnityEngine.Rendering.CameraEvent,UnityEngine.Rendering.CommandBuffer)
+   0087 ldarg.0 
+   0088 ldc.i4.1 
+   0089 stfld SenseARUpdateTexture::bCommandBufferInitialized
+   008E ret 
+== System.Void genUnityTextures() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld SenseARUpdateTexture::FrameWidth
+   0007 ldarg.0 
+   0008 ldfld SenseARUpdateTexture::FrameHeight
+   000D ldc.i4.1 
+   000E ldc.i4.0 
+   000F newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   0014 stfld SenseARUpdateTexture::_videoTextureY
+   0019 ldarg.0 
+   001A ldarg.0 
+   001B ldfld SenseARUpdateTexture::FrameWidth
+   0020 ldarg.0 
+   0021 ldfld SenseARUpdateTexture::FrameHeight
+   0026 mul 
+   0027 newarr System.Byte
+   002C stfld SenseARUpdateTexture::_videoTexture_Y_bytes
+   0031 ldarg.0 
+   0032 ldarg.0 
+   0033 ldfld SenseARUpdateTexture::FrameWidth
+   0038 ldc.i4.2 
+   0039 div 
+   003A ldarg.0 
+   003B ldfld SenseARUpdateTexture::FrameHeight
+   0040 ldc.i4.2 
+   0041 div 
+   0042 ldc.i4.4 
+   0043 ldc.i4.0 
+   0044 newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   0049 stfld SenseARUpdateTexture::_videoTextureUV
+   004E ldarg.0 
+   004F ldarg.0 
+   0050 ldfld SenseARUpdateTexture::FrameWidth
+   0055 ldarg.0 
+   0056 ldfld SenseARUpdateTexture::FrameHeight
+   005B mul 
+   005C newarr System.Byte
+   0061 stfld SenseARUpdateTexture::_videoTexture_uv_RGBA_bytes
+   0066 ret 
+== System.Void updateAndroidTexture_YUV() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld SenseARUpdateTexture::m_NativeSession
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld SenseARUpdateTexture::m_NativeSession
+   0012 callvirt SenseGoogleARCoreInternal.PoseApi SenseGoogleARCoreInternal.NativeSession::get_PoseApi()
+   0017 callvirt System.IntPtr SenseGoogleARCoreInternal.PoseApi::Create()
+   001C stloc.0 
+   001D ldarg.0 
+   001E ldfld SenseARUpdateTexture::m_NativeSession
+   0023 ldarg.0 
+   0024 ldfld SenseARUpdateTexture::_videoTexture_Y_bytes
+   0029 ldarg.0 
+   002A ldfld SenseARUpdateTexture::_videoTexture_uv_RGBA_bytes
+   002F ldloc.0 
+   0030 callvirt System.Void SenseGoogleARCoreInternal.NativeSession::updateTexture_y_memcpy_uv_assign_RGBA_pose(System.Byte[],System.Byte[],System.IntPtr)
+   0035 ldarg.0 
+   0036 ldfld SenseARUpdateTexture::m_NativeSession
+   003B callvirt SenseGoogleARCoreInternal.PoseApi SenseGoogleARCoreInternal.NativeSession::get_PoseApi()
+   0040 ldloc.0 
+   0041 callvirt UnityEngine.Pose SenseGoogleARCoreInternal.PoseApi::ExtractPoseValue(System.IntPtr)
+   0046 stloc.1 
+   0047 call SenseGoogleARCore.TrackingState SenseGoogleARCore.Frame::get_TrackingState()
+   004C brtrue IL_005d: ldarg.0
+   0051 ldarg.0 
+   0052 ldfld SenseARUpdateTexture::senseARCameraPose
+   0057 ldloc.1 
+   0058 callvirt System.Void SenseGoogleARCore.SenseARCameraPose::SetPose(UnityEngine.Pose)
+   005D ldarg.0 
+   005E ldfld SenseARUpdateTexture::m_NativeSession
+   0063 callvirt SenseGoogleARCoreInternal.PoseApi SenseGoogleARCoreInternal.NativeSession::get_PoseApi()
+   0068 ldloc.0 
+   0069 callvirt System.Void SenseGoogleARCoreInternal.PoseApi::Destroy(System.IntPtr)
+   006E ldarg.0 
+   006F ldfld SenseARUpdateTexture::_videoTextureY
+   0074 ldarg.0 
+   0075 ldfld SenseARUpdateTexture::_videoTexture_Y_bytes
+   007A callvirt System.Void UnityEngine.Texture2D::LoadRawTextureData(System.Byte[])
+   007F ldarg.0 
+   0080 ldfld SenseARUpdateTexture::_videoTextureY
+   0085 callvirt System.Void UnityEngine.Texture2D::Apply()
+   008A ldarg.0 
+   008B ldfld SenseARUpdateTexture::_videoTextureUV
+   0090 ldarg.0 
+   0091 ldfld SenseARUpdateTexture::_videoTexture_uv_RGBA_bytes
+   0096 callvirt System.Void UnityEngine.Texture2D::LoadRawTextureData(System.Byte[])
+   009B ldarg.0 
+   009C ldfld SenseARUpdateTexture::_videoTextureUV
+   00A1 callvirt System.Void UnityEngine.Texture2D::Apply()
+   00A6 ldarg.0 
+   00A7 ldfld SenseARUpdateTexture::_Material
+   00AC ldstr _uvTex
+   00B1 ldarg.0 
+   00B2 ldfld SenseARUpdateTexture::_videoTextureUV
+   00B7 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   00BC ldarg.0 
+   00BD ldfld SenseARUpdateTexture::_Material
+   00C2 ldarg.0 
+   00C3 ldfld SenseARUpdateTexture::_videoTextureY
+   00C8 callvirt System.Void UnityEngine.Material::set_mainTexture(UnityEngine.Texture)
+   00CD ret 
+== System.Collections.IEnumerator UploadPNG(System.Byte[] pic) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void SenseARUpdateTexture/<UploadPNG>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld SenseARUpdateTexture/<UploadPNG>c__Iterator0::pic
+   000D ldloc.0 
+   000E ldarg.0 
+   000F stfld SenseARUpdateTexture/<UploadPNG>c__Iterator0::$this
+   0014 ldloc.0 
+   0015 ret 
+== System.Void ScanFile(System.String[] path) attrs=Private, HideBySig maxstack=6
+   0000 ldstr com.unity3d.player.UnityPlayer
+   0005 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldstr currentActivity
+   0011 callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<UnityEngine.AndroidJavaObject>(System.String)
+   0016 stloc.1 
+   0017 ldstr android.media.MediaScannerConnection
+   001C ldc.i4.2 
+   001D newarr System.Object
+   0022 dup 
+   0023 ldc.i4.0 
+   0024 ldloc.1 
+   0025 stelem.ref 
+   0026 newobj System.Void UnityEngine.AndroidJavaObject::.ctor(System.String,System.Object[])
+   002B stloc.2 
+   002C ldloc.2 
+   002D ldstr scanFile
+   0032 ldc.i4.4 
+   0033 newarr System.Object
+   0038 dup 
+   0039 ldc.i4.0 
+   003A ldloc.1 
+   003B stelem.ref 
+   003C dup 
+   003D ldc.i4.1 
+   003E ldarg.1 
+   003F stelem.ref 
+   0040 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0045 leave IL_0057: leave IL_0069
+   004A ldloc.2 
+   004B brfalse IL_0056: endfinally
+   0050 ldloc.2 
+   0051 callvirt System.Void System.IDisposable::Dispose()
+   0056 endfinally 
+   0057 leave IL_0069: ret
+   005C ldloc.0 
+   005D brfalse IL_0068: endfinally
+   0062 ldloc.0 
+   0063 callvirt System.Void System.IDisposable::Dispose()
+   0068 endfinally 
+   0069 ret 
+== System.Void Shoot() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldarg.0 
+   0003 ldfld SenseARUpdateTexture::_videoTextureY
+   0008 callvirt System.Byte[] UnityEngine.Texture2D::EncodeToPNG()
+   000D call System.Collections.IEnumerator SenseARUpdateTexture::UploadPNG(System.Byte[])
+   0012 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0017 pop 
+   0018 ret 
+== System.Boolean IsVideoUpdated() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SenseARUpdateTexture::m_NativeSession
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld SenseARUpdateTexture::m_NativeSession
+   0013 callvirt System.Boolean SenseGoogleARCoreInternal.NativeSession::isVideoUpdated()
+   0018 ret 
+== System.Void UpdateSession() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld SenseARUpdateTexture::m_NativeSession
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld SenseARUpdateTexture::m_NativeSession
+   0012 callvirt System.IntPtr SenseGoogleARCoreInternal.NativeSession::GetFramePtr()
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ldsfld System.IntPtr::Zero
+   001E call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr)
+   0023 brfalse IL_0034: ldarg.0
+   0028 call SenseGoogleARCoreInternal.SessionManager SenseGoogleARCore.Session::get_SessionManager()
+   002D ldloc.0 
+   002E callvirt System.Boolean SenseGoogleARCoreInternal.SessionManager::Update(System.IntPtr)
+   0033 pop 
+   0034 ldarg.0 
+   0035 ldfld SenseARUpdateTexture::m_NativeSession
+   003A callvirt System.Boolean SenseGoogleARCoreInternal.NativeSession::Update()
+   003F pop 
+   0040 ret 
+== System.Void OnPreRender() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld SenseARUpdateTexture::bCommandBufferInitialized
+   0006 brtrue IL_0011: ldloca.s V_0
+   000B ldarg.0 
+   000C call System.Void SenseARUpdateTexture::InitializeCommandBuffer()
+   0011 ldloca.s V_0
+   0013 ldc.r4 0
+   0018 stfld UnityEngine.Vector3::x
+   001D ldloca.s V_0
+   001F ldc.r4 0
+   0024 stfld UnityEngine.Vector3::y
+   0029 ldloca.s V_0
+   002B ldc.r4 0
+   0030 stfld UnityEngine.Vector3::z
+   0035 ldc.i4.0 
+   0036 stloc.1 
+   0037 call UnityEngine.ScreenOrientation UnityEngine.Screen::get_orientation()
+   003C stloc.2 
+   003D ldloc.2 
+   003E ldc.i4.1 
+   003F sub 
+   0040 switch Mono.Cecil.Cil.Instruction[]
+   0055 br IL_00b6: ldloc.0
+   005A br IL_00b6: ldloc.0
+   005F ldloca.s V_0
+   0061 ldc.r4 0
+   0066 stfld UnityEngine.Vector3::x
+   006B ldloca.s V_0
+   006D ldc.r4 0
+   0072 stfld UnityEngine.Vector3::y
+   0077 ldloca.s V_0
+   0079 ldc.r4 180
+   007E stfld UnityEngine.Vector3::z
+   0083 br IL_00b6: ldloc.0
+   0088 ldloca.s V_0
+   008A ldc.r4 0
+   008F stfld UnityEngine.Vector3::x
+   0094 ldloca.s V_0
+   0096 ldc.r4 0
+   009B stfld UnityEngine.Vector3::y
+   00A0 ldloca.s V_0
+   00A2 ldc.r4 -90
+   00A7 stfld UnityEngine.Vector3::z
+   00AC br IL_00b6: ldloc.0
+   00B1 br IL_00b6: ldloc.0
+   00B6 ldloc.0 
+   00B7 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(UnityEngine.Vector3)
+   00BC stloc.3 
+   00BD ldarg.0 
+   00BE call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00C3 ldloc.3 
+   00C4 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   00C9 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::TRS(UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Vector3)
+   00CE stfld SenseARUpdateTexture::_displayTransform
+   00D3 ldarg.0 
+   00D4 ldfld SenseARUpdateTexture::_Material
+   00D9 ldstr _DisplayTransform
+   00DE ldarg.0 
+   00DF ldfld SenseARUpdateTexture::_displayTransform
+   00E4 callvirt System.Void UnityEngine.Material::SetMatrix(System.String,UnityEngine.Matrix4x4)
+   00E9 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean SenseARUpdateTexture::IsVideoUpdated()
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C call System.Void SenseARUpdateTexture::UpdateSession()
+   0011 ldarg.0 
+   0012 call System.Void SenseARUpdateTexture::updateAndroidTexture_YUV()
+   0017 ret 
+  NESTED SenseARUpdateTexture/<UploadPNG>c__Iterator0

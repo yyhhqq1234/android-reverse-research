@@ -1,0 +1,554 @@
+// TYPE Assets.Scripts.GameSystem.CGuildChatModule  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>> actionBtnsDic
+  FIELD System.Int32 recruitTimer
+  FIELD System.Int32 GuildRecruitRequestTimeInterval
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   000B ldarg.0 
+   000C ldc.i4.m1 
+   000D stfld Assets.Scripts.GameSystem.CGuildChatModule::recruitTimer
+   0012 ldarg.0 
+   0013 call System.Void System.Object::.ctor()
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.GameSystem.CGuildChatModule::InitEvent()
+   001E ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0006 brfalse IL_005b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0011 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::GetEnumerator()
+   0016 stloc.0 
+   0017 br IL_0044: ldloca.s V_0
+   001C ldloca.s V_0
+   001E call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Current()
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 call !1 System.Collections.Generic.KeyValuePair`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Value()
+   002B brfalse IL_0044: ldloca.s V_0
+   0030 ldloca.s V_0
+   0032 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Current()
+   0037 stloc.2 
+   0038 ldloca.s V_2
+   003A call !1 System.Collections.Generic.KeyValuePair`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Value()
+   003F callvirt System.Void ListViewBase::Clear()
+   0044 ldloca.s V_0
+   0046 call System.Boolean DictionaryView`2/Enumerator<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::MoveNext()
+   004B brtrue IL_001c: ldloca.s V_0
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0056 callvirt System.Void DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::Clear()
+   005B ret 
+== System.Void SetGuildRecruitTimerEnable(System.Boolean b) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CGuildChatModule::recruitTimer
+   0006 ldc.i4.m1 
+   0007 bne.un IL_0055: ldarg.0
+   000C ldc.i4.s 86
+   000E call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 ldc.i4.0 
+   0016 ble IL_0021: ldarg.0
+   001B ldloc.0 
+   001C stsfld Assets.Scripts.GameSystem.CGuildChatModule::GuildRecruitRequestTimeInterval
+   0021 ldarg.0 
+   0022 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0027 ldsfld Assets.Scripts.GameSystem.CGuildChatModule::GuildRecruitRequestTimeInterval
+   002C ldc.i4 1000
+   0031 mul 
+   0032 ldc.i4.m1 
+   0033 ldarg.0 
+   0034 ldftn System.Void Assets.Scripts.GameSystem.CGuildChatModule::On_Send_GetGuildRecruit_Req(System.Int32)
+   003A newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003F callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0044 stfld Assets.Scripts.GameSystem.CGuildChatModule::recruitTimer
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CGuildChatModule::recruitTimer
+   004F ldc.i4.1 
+   0050 call System.Void Assets.Scripts.GameSystem.UT::ResetTimer(System.Int32,System.Boolean)
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CGuildChatModule::recruitTimer
+   005B ldarg.1 
+   005C ldc.i4.0 
+   005D ceq 
+   005F call System.Void Assets.Scripts.GameSystem.UT::ResetTimer(System.Int32,System.Boolean)
+   0064 ret 
+== System.Void InitEvent() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<EventRouter>::GetInstance()
+   0005 ldsfld EventID::GUILD_PLATFORM_GROUP_STATUS_CHANGE
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.CGuildChatModule::OnGuildPlatformGroupStatusChange()
+   0011 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 1584
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CGuildChatModule::On_Chat_Guild_Recruit_List_Element_Enabled(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 ret 
+== System.Void On_Chat_Guild_Recruit_List_Element_Enabled(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call System.Void Assets.Scripts.GameSystem.CChatListShower::SetGuildRecruitListElement(Assets.Scripts.UI.CUIEvent)
+   0006 ret 
+== System.Void FilterActionBtn(Assets.Scripts.UI.enUIEventID uiEventID, UnityEngine.GameObject btn, System.String btnName, System.Int32 customIntPara, Assets.Scripts.UI.CUIFormScript form) attrs=Public, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 initobj Assets.Scripts.UI.stUIEventParams
+   0008 ldarg.1 
+   0009 ldc.i4 31121
+   000E bne.un IL_001c: ldarg.2
+   0013 ldloca.s V_0
+   0015 ldarg.s customIntPara
+   0017 stfld Assets.Scripts.UI.stUIEventParams::tag
+   001C ldarg.2 
+   001D ldarg.3 
+   001E ldarg.s form
+   0020 ldloc.0 
+   0021 newobj System.Void Assets.Scripts.GameSystem.ActionBtn::.ctor(UnityEngine.GameObject,System.String,Assets.Scripts.UI.CUIFormScript,Assets.Scripts.UI.stUIEventParams)
+   0026 stloc.1 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   002D ldarg.1 
+   002E callvirt System.Boolean DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::ContainsKey(!0)
+   0033 brfalse IL_0067: ldarg.0
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   003E ldarg.1 
+   003F callvirt !1 DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Item(!0)
+   0044 ldloc.1 
+   0045 callvirt System.Int32 ListView`1<Assets.Scripts.GameSystem.ActionBtn>::IndexOf(!0)
+   004A ldc.i4.m1 
+   004B bne.un IL_0062: br IL_008a
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0056 ldarg.1 
+   0057 callvirt !1 DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Item(!0)
+   005C ldloc.1 
+   005D callvirt System.Void ListView`1<Assets.Scripts.GameSystem.ActionBtn>::Add(!0)
+   0062 br IL_008a: ldarg.1
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   006D ldarg.1 
+   006E newobj System.Void ListView`1<Assets.Scripts.GameSystem.ActionBtn>::.ctor()
+   0073 callvirt System.Void DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::Add(!0,!1)
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   007E ldarg.1 
+   007F callvirt !1 DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Item(!0)
+   0084 ldloc.1 
+   0085 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.ActionBtn>::Add(!0)
+   008A ldarg.1 
+   008B ldc.i4 4042
+   0090 beq IL_00a5: call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   0095 ldarg.1 
+   0096 ldc.i4 31121
+   009B beq IL_00df: ldarg.0
+   00A0 br IL_00ea: ret
+   00A5 call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   00AA stloc.2 
+   00AB ldloc.2 
+   00AC callvirt Assets.Scripts.GameSystem.enGuildPlatformGroupStatus Assets.Scripts.GameSystem.IGuildPlatformGroupService::get_Status()
+   00B1 stloc.3 
+   00B2 ldloc.3 
+   00B3 ldc.i4.6 
+   00B4 beq IL_00c0: ldloc.2
+   00B9 ldloc.3 
+   00BA ldc.i4.5 
+   00BB bne.un IL_00cb: call !0 Singleton`1<EventRouter>::GetInstance()
+   00C0 ldloc.2 
+   00C1 callvirt System.Void Assets.Scripts.GameSystem.IGuildPlatformGroupService::Query()
+   00C6 br IL_00da: br IL_00ea
+   00CB call !0 Singleton`1<EventRouter>::GetInstance()
+   00D0 ldsfld EventID::GUILD_PLATFORM_GROUP_STATUS_CHANGE
+   00D5 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00DA br IL_00ea: ret
+   00DF ldarg.0 
+   00E0 call System.Void Assets.Scripts.GameSystem.CGuildChatModule::HandleGuildRedEnvelopeActionBtns()
+   00E5 br IL_00ea: ret
+   00EA ret 
+== System.Void HandleGuildRedEnvelopeActionBtns() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0006 ldc.i4 31121
+   000B callvirt System.Boolean DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::ContainsKey(!0)
+   0010 brfalse IL_01e9: ret
+   0015 newobj System.Void CChatParser::.ctor()
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0021 ldc.i4 31121
+   0026 callvirt !1 DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Item(!0)
+   002B stloc.1 
+   002C ldc.i4.0 
+   002D stloc.2 
+   002E br IL_01dd: ldloc.2
+   0033 ldloc.1 
+   0034 ldloc.2 
+   0035 callvirt !0 ListView`1<Assets.Scripts.GameSystem.ActionBtn>::get_Item(System.Int32)
+   003A stloc.3 
+   003B ldloc.3 
+   003C ldflda Assets.Scripts.GameSystem.ActionBtn::uiEventParams
+   0041 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0046 stloc.s V_4
+   0048 ldloc.s V_4
+   004A ldc.i4.0 
+   004B blt IL_0066: ldloc.3
+   0050 ldloc.s V_4
+   0052 call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem>::GetInstance()
+   0057 ldfld Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem::NewestRedEnvelopeList
+   005C callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.RedEnvelopeUniq>::get_Count()
+   0061 blt IL_0077: call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem>::GetInstance()
+   0066 ldloc.3 
+   0067 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   006C ldc.i4.0 
+   006D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0072 br IL_01d9: ldloc.2
+   0077 call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem>::GetInstance()
+   007C ldfld Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem::Container
+   0081 call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem>::GetInstance()
+   0086 ldfld Assets.Scripts.GameSystem.CGuildRedEnvelopeSystem::NewestRedEnvelopeList
+   008B ldloc.s V_4
+   008D callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.RedEnvelopeUniq>::get_Item(System.Int32)
+   0092 callvirt Assets.Scripts.GameSystem.RedEnvelopeBrief Assets.Scripts.GameSystem.CRedEnvelopeContainer::GetRedEnvelope(Assets.Scripts.GameSystem.RedEnvelopeUniq)
+   0097 stloc.s V_5
+   0099 ldloc.s V_5
+   009B brfalse IL_00ad: ldloc.3
+   00A0 ldloc.s V_5
+   00A2 ldfld Assets.Scripts.GameSystem.RedEnvelopeBrief::State
+   00A7 ldc.i4.1 
+   00A8 beq IL_00be: ldloc.3
+   00AD ldloc.3 
+   00AE ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   00B3 ldc.i4.0 
+   00B4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B9 br IL_01d9: ldloc.2
+   00BE ldloc.3 
+   00BF ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   00C4 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   00C9 stloc.s V_6
+   00CB ldloc.s V_6
+   00CD ldnull 
+   00CE call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00D3 brfalse IL_0105: ldc.r4 0
+   00D8 ldloc.3 
+   00D9 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   00DE callvirt !!0 UnityEngine.GameObject::AddComponent<Assets.Scripts.UI.CUIEventScript>()
+   00E3 stloc.s V_6
+   00E5 ldloc.s V_6
+   00E7 ldloc.3 
+   00E8 ldfld Assets.Scripts.GameSystem.ActionBtn::form
+   00ED callvirt System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   00F2 ldloc.s V_6
+   00F4 ldc.i4.1 
+   00F5 ldc.i4 31121
+   00FA ldloc.3 
+   00FB ldfld Assets.Scripts.GameSystem.ActionBtn::uiEventParams
+   0100 callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   0105 ldc.r4 0
+   010A stloc.s V_7
+   010C ldc.i4.0 
+   010D stloc.s V_8
+   010F br IL_013c: ldloc.s V_8
+   0114 ldloc.3 
+   0115 ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   011A ldloc.s V_8
+   011C callvirt System.Char System.String::get_Chars(System.Int32)
+   0121 stloc.s V_9
+   0123 ldloc.s V_7
+   0125 ldloc.s V_9
+   0127 ldloc.0 
+   0128 ldfld CChatParser::viewFontSize
+   012D call System.Int32 CChatParser::GetCharacterWidth(System.Char,System.Int32)
+   0132 conv.r4 
+   0133 add 
+   0134 stloc.s V_7
+   0136 ldloc.s V_8
+   0138 ldc.i4.1 
+   0139 add 
+   013A stloc.s V_8
+   013C ldloc.s V_8
+   013E ldloc.3 
+   013F ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   0144 callvirt System.Int32 System.String::get_Length()
+   0149 blt IL_0114: ldloc.3
+   014E ldloc.s V_7
+   0150 ldc.r4 16
+   0155 add 
+   0156 stloc.s V_7
+   0158 ldloc.3 
+   0159 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   015E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0163 stloc.s V_10
+   0165 ldloc.3 
+   0166 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   016B ldstr Text
+   0170 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0175 stloc.s V_11
+   0177 ldloc.s V_10
+   0179 ldnull 
+   017A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   017F brfalse IL_01cd: ldloc.3
+   0184 ldloc.s V_11
+   0186 ldnull 
+   0187 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   018C brfalse IL_01cd: ldloc.3
+   0191 ldloc.s V_11
+   0193 ldloc.3 
+   0194 ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   0199 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   019E ldloc.s V_10
+   01A0 ldloc.s V_7
+   01A2 ldloc.s V_10
+   01A4 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   01A9 stloc.s V_12
+   01AB ldloca.s V_12
+   01AD ldfld UnityEngine.Vector2::y
+   01B2 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   01B7 callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   01BC ldloc.3 
+   01BD ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   01C2 ldc.i4.1 
+   01C3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01C8 br IL_01d9: ldloc.2
+   01CD ldloc.3 
+   01CE ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   01D3 ldc.i4.0 
+   01D4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01D9 ldloc.2 
+   01DA ldc.i4.1 
+   01DB add 
+   01DC stloc.2 
+   01DD ldloc.2 
+   01DE ldloc.1 
+   01DF callvirt System.Int32 ListViewBase::get_Count()
+   01E4 blt IL_0033: ldloc.1
+   01E9 ret 
+== System.Void OnGuildPlatformGroupStatusChange() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   0006 ldc.i4 4042
+   000B callvirt System.Boolean DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::ContainsKey(!0)
+   0010 brfalse IL_01cc: ret
+   0015 call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   001A stloc.0 
+   001B ldloc.0 
+   001C callvirt Assets.Scripts.GameSystem.enGuildPlatformGroupStatus Assets.Scripts.GameSystem.IGuildPlatformGroupService::get_Status()
+   0021 stloc.1 
+   0022 newobj System.Void CChatParser::.ctor()
+   0027 stloc.2 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CGuildChatModule::actionBtnsDic
+   002E ldc.i4 4042
+   0033 callvirt !1 DictionaryView`2<Assets.Scripts.UI.enUIEventID,ListView`1<Assets.Scripts.GameSystem.ActionBtn>>::get_Item(!0)
+   0038 stloc.3 
+   0039 ldc.i4.0 
+   003A stloc.s V_4
+   003C br IL_01bf: ldloc.s V_4
+   0041 ldloc.3 
+   0042 ldloc.s V_4
+   0044 callvirt !0 ListView`1<Assets.Scripts.GameSystem.ActionBtn>::get_Item(System.Int32)
+   0049 stloc.s V_5
+   004B ldloc.1 
+   004C ldc.i4.3 
+   004D beq IL_0066: ldloc.s V_5
+   0052 ldloc.1 
+   0053 ldc.i4.4 
+   0054 beq IL_0066: ldloc.s V_5
+   0059 ldloc.1 
+   005A ldc.i4.1 
+   005B beq IL_0066: ldloc.s V_5
+   0060 ldloc.1 
+   0061 brtrue IL_0081: ldloc.1
+   0066 ldloc.s V_5
+   0068 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   006D ldc.i4.0 
+   006E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0073 ldloc.3 
+   0074 ldloc.s V_5
+   0076 callvirt System.Boolean ListView`1<Assets.Scripts.GameSystem.ActionBtn>::Remove(!0)
+   007B pop 
+   007C br IL_01b9: ldloc.s V_4
+   0081 ldloc.1 
+   0082 ldc.i4.2 
+   0083 bne.un IL_01ac: ldloc.s V_5
+   0088 ldloc.s V_5
+   008A ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   008F callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0094 stloc.s V_6
+   0096 ldloc.s V_6
+   0098 ldnull 
+   0099 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   009E brfalse IL_00cc: ldc.r4 0
+   00A3 ldloc.s V_5
+   00A5 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   00AA callvirt !!0 UnityEngine.GameObject::AddComponent<Assets.Scripts.UI.CUIEventScript>()
+   00AF stloc.s V_6
+   00B1 ldloc.s V_6
+   00B3 ldloc.s V_5
+   00B5 ldfld Assets.Scripts.GameSystem.ActionBtn::form
+   00BA callvirt System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   00BF ldloc.s V_6
+   00C1 ldc.i4.1 
+   00C2 ldc.i4 4042
+   00C7 callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID)
+   00CC ldc.r4 0
+   00D1 stloc.s V_7
+   00D3 ldc.i4.0 
+   00D4 stloc.s V_8
+   00D6 br IL_0104: ldloc.s V_8
+   00DB ldloc.s V_5
+   00DD ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   00E2 ldloc.s V_4
+   00E4 callvirt System.Char System.String::get_Chars(System.Int32)
+   00E9 stloc.s V_9
+   00EB ldloc.s V_7
+   00ED ldloc.s V_9
+   00EF ldloc.2 
+   00F0 ldfld CChatParser::viewFontSize
+   00F5 call System.Int32 CChatParser::GetCharacterWidth(System.Char,System.Int32)
+   00FA conv.r4 
+   00FB add 
+   00FC stloc.s V_7
+   00FE ldloc.s V_8
+   0100 ldc.i4.1 
+   0101 add 
+   0102 stloc.s V_8
+   0104 ldloc.s V_8
+   0106 ldloc.s V_5
+   0108 ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   010D callvirt System.Int32 System.String::get_Length()
+   0112 blt IL_00db: ldloc.s V_5
+   0117 ldloc.s V_7
+   0119 ldc.r4 16
+   011E add 
+   011F stloc.s V_7
+   0121 ldloc.s V_5
+   0123 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   0128 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   012D stloc.s V_10
+   012F ldloc.s V_5
+   0131 ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   0136 ldstr Text
+   013B call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0140 stloc.s V_11
+   0142 ldloc.s V_10
+   0144 ldnull 
+   0145 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   014A brfalse IL_019a: ldloc.s V_5
+   014F ldloc.s V_11
+   0151 ldnull 
+   0152 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0157 brfalse IL_019a: ldloc.s V_5
+   015C ldloc.s V_11
+   015E ldloc.s V_5
+   0160 ldfld Assets.Scripts.GameSystem.ActionBtn::name
+   0165 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   016A ldloc.s V_10
+   016C ldloc.s V_7
+   016E ldloc.s V_10
+   0170 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0175 stloc.s V_12
+   0177 ldloca.s V_12
+   0179 ldfld UnityEngine.Vector2::y
+   017E newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0183 callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0188 ldloc.s V_5
+   018A ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   018F ldc.i4.1 
+   0190 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0195 br IL_01a7: br IL_01b9
+   019A ldloc.s V_5
+   019C ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   01A1 ldc.i4.0 
+   01A2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01A7 br IL_01b9: ldloc.s V_4
+   01AC ldloc.s V_5
+   01AE ldfld Assets.Scripts.GameSystem.ActionBtn::btn
+   01B3 ldc.i4.0 
+   01B4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01B9 ldloc.s V_4
+   01BB ldc.i4.1 
+   01BC add 
+   01BD stloc.s V_4
+   01BF ldloc.s V_4
+   01C1 ldloc.3 
+   01C2 callvirt System.Int32 ListViewBase::get_Count()
+   01C7 blt IL_0041: ldloc.3
+   01CC ret 
+== System.Void On_Send_GetGuildRecruit_Req(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0038: ret
+   0011 ldloc.0 
+   0012 callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PvpLevel()
+   0017 call System.UInt32 Assets.Scripts.GameSystem.CGuildHelper::GetGuildMemberMinPvpLevel()
+   001C blt.un IL_0038: ret
+   0021 call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildSystem>::GetInstance()
+   0026 brfalse IL_0038: ret
+   002B ldarg.0 
+   002C call System.UInt32 Assets.Scripts.GameSystem.CGuildChatModule::GetLastRecruitInfoTime()
+   0031 stloc.1 
+   0032 ldloc.1 
+   0033 call System.Void Assets.Scripts.GameSystem.CChatNetUT::RequestGetGuildRecruitReq(System.UInt32)
+   0038 ret 
+== System.UInt32 GetLastRecruitInfoTime() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.CChatController::model
+   000A stloc.0 
+   000B ldc.i4.0 
+   000C stloc.1 
+   000D ldloc.0 
+   000E brfalse IL_008f: ldloc.1
+   0013 ldloc.0 
+   0014 ldfld Assets.Scripts.GameSystem.CChatModel::sysData
+   0019 brfalse IL_008f: ldloc.1
+   001E ldloc.0 
+   001F ldfld Assets.Scripts.GameSystem.CChatModel::sysData
+   0024 ldfld Assets.Scripts.GameSystem.CChatSysData::m_guildRecruitInfos
+   0029 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.GuildRecruitInfo>::get_Count()
+   002E ldc.i4.0 
+   002F ble IL_008f: ldloc.1
+   0034 ldc.i4.0 
+   0035 stloc.2 
+   0036 br IL_0079: ldloc.2
+   003B ldloc.1 
+   003C ldloc.0 
+   003D ldfld Assets.Scripts.GameSystem.CChatModel::sysData
+   0042 ldfld Assets.Scripts.GameSystem.CChatSysData::m_guildRecruitInfos
+   0047 ldloc.2 
+   0048 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.GuildRecruitInfo>::get_Item(System.Int32)
+   004D stloc.3 
+   004E ldloca.s V_3
+   0050 ldfld Assets.Scripts.GameSystem.GuildRecruitInfo::sendTime
+   0055 bge.un IL_0075: ldloc.2
+   005A ldloc.0 
+   005B ldfld Assets.Scripts.GameSystem.CChatModel::sysData
+   0060 ldfld Assets.Scripts.GameSystem.CChatSysData::m_guildRecruitInfos
+   0065 ldloc.2 
+   0066 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.GuildRecruitInfo>::get_Item(System.Int32)
+   006B stloc.s V_4
+   006D ldloca.s V_4
+   006F ldfld Assets.Scripts.GameSystem.GuildRecruitInfo::sendTime
+   0074 stloc.1 
+   0075 ldloc.2 
+   0076 ldc.i4.1 
+   0077 add 
+   0078 stloc.2 
+   0079 ldloc.2 
+   007A ldloc.0 
+   007B ldfld Assets.Scripts.GameSystem.CChatModel::sysData
+   0080 ldfld Assets.Scripts.GameSystem.CChatSysData::m_guildRecruitInfos
+   0085 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.GuildRecruitInfo>::get_Count()
+   008A blt IL_003b: ldloc.1
+   008F ldloc.1 
+   0090 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.s 10
+   0002 stsfld Assets.Scripts.GameSystem.CGuildChatModule::GuildRecruitRequestTimeInterval
+   0007 ret 

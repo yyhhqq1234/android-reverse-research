@@ -1,0 +1,979 @@
+// TYPE Assets.Scripts.UI.CUIPandoraVideoPlayerScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.UI.Image m_imgPlay
+  FIELD Assets.Scripts.UI.CUIHttpImageScript m_imgPreview
+  FIELD UnityEngine.GameObject m_loading
+  FIELD UnityEngine.UI.RawImage m_rawImg
+  FIELD UnityEngine.GameObject m_btnPlayObj
+  FIELD System.Boolean m_autoReplay
+  FIELD System.Boolean m_downloadFromCdnFirst
+  FIELD System.Boolean m_appPausedAutoResumeVideo
+  FIELD Assets.Scripts.UI.enUIEventID m_videoPlayerBeginEventID
+  FIELD Assets.Scripts.UI.enUIEventID m_videoPlayerEndEventID
+  FIELD Assets.Scripts.UI.enUIEventID m_videoPlayerOnClickPlayEventID
+  FIELD Assets.Scripts.UI.enUIEventID m_downLoadVideoErrorEventID
+  FIELD Assets.Scripts.UI.enUIEventID m_downLoadVideoSucEventID
+  FIELD Assets.Scripts.GameSystem.enFullScreenScalingMode m_fullScreenScalingMode
+  FIELD System.String m_videoUrl
+  FIELD System.String m_previewImgUrl
+  FIELD Assets.Scripts.UI.CUIPandoraVideoPlayerScript/enPlayerState m_PlayerState
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_autoReplay
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downloadFromCdnFirst
+   000E ldarg.0 
+   000F call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0014 ret 
+== Assets.Scripts.UI.CUIPandoraVideoPlayerScript/enPlayerState GetPlayerState() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0006 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0007 ret 
+== System.Boolean Play(System.String videoUrl, System.Boolean bNeedVerifyLocalVideoFile) attrs=Public, HideBySig maxstack=2
+   0000 call System.Boolean Assets.Scripts.UI.CUIPandoraVideoPlayerScript::IsVideoSwitchOn()
+   0005 brtrue IL_000c: ldarg.2
+   000A ldc.i4.0 
+   000B ret 
+   000C ldarg.2 
+   000D brfalse IL_001f: ldarg.1
+   0012 ldarg.1 
+   0013 call System.Boolean Utility::VerifyBigFile(System.String)
+   0018 brtrue IL_001f: ldarg.1
+   001D ldc.i4.0 
+   001E ret 
+   001F ldarg.1 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   0026 call System.Boolean System.String::op_Equality(System.String,System.String)
+   002B brfalse IL_0056: ldarg.0
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0036 ldc.i4.1 
+   0037 beq IL_0054: ldc.i4.0
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0042 ldc.i4.2 
+   0043 beq IL_0054: ldc.i4.0
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   004E ldc.i4.3 
+   004F bne.un IL_0056: ldarg.0
+   0054 ldc.i4.0 
+   0055 ret 
+   0056 ldarg.0 
+   0057 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::Stop()
+   005C ldarg.0 
+   005D ldarg.1 
+   005E stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   0063 ldarg.0 
+   0064 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterLoadingState()
+   0069 ldc.i4.1 
+   006A ret 
+== System.Void Resume() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0006 ldc.i4.3 
+   0007 beq IL_0018: ldarg.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0012 ldc.i4.5 
+   0013 bne.un IL_0028: ret
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterPlayingState()
+   001E call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0023 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   0028 ret 
+== System.Void Stop() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.4 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0007 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   000C callvirt System.Void com.tencent.pandora.VideoPlayer::Close()
+   0011 ret 
+== System.Void Pause(System.Boolean pause) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0006 ldc.i4.2 
+   0007 bne.un IL_0012: ret
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterPauseState()
+   0012 ret 
+== System.Void SetPreImgUrl(System.String previewImgUrl) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_previewImgUrl
+   0007 ldarg.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_previewImgUrl
+   000E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgUrl(System.String)
+   0013 ret 
+== System.Void SetVideoPlayerEvent(Assets.Scripts.UI.CUIPandoraVideoPlayerScript/enVedioPlayerEventType type, Assets.Scripts.UI.enUIEventID uiEventID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_0012: ldarg.0
+   0006 ldarg.1 
+   0007 ldc.i4.1 
+   0008 beq IL_001e: ldarg.0
+   000D br IL_002a: ret
+   0012 ldarg.0 
+   0013 ldarg.2 
+   0014 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerBeginEventID
+   0019 br IL_002a: ret
+   001E ldarg.0 
+   001F ldarg.2 
+   0020 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerEndEventID
+   0025 br IL_002a: ret
+   002A ret 
+== System.String GetFullLocalResVideoPath(System.String videoPath, System.Int32 extraIfsPack) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 ldnull 
+   0008 ldnull 
+   0009 call System.String CFileManager::GetIFSExtractPath(System.UInt32,CResourceInfo,CResourcePackerInfo)
+   000E ldarg.0 
+   000F call System.String CFileManager::CombinePath(System.String,System.String)
+   0014 stloc.0 
+   0015 ldloc.0 
+   0016 ret 
+== System.Void RefreshVideoArea(System.String videoUrl, System.String previewImgUrl) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_previewImgUrl
+   000E call System.Boolean Assets.Scripts.UI.CUIPandoraVideoPlayerScript::IsVideoSwitchOn()
+   0013 brfalse IL_005a: ldarg.0
+   0018 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   001D callvirt System.Void com.tencent.pandora.VideoPlayer::Close()
+   0022 call Assets.Scripts.GameSystem.enNetWorkType Assets.Scripts.GameSystem.CUICommonSystem::GetNetWorkType()
+   0027 ldc.i4.1 
+   0028 bne.un IL_004f: ldarg.0
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0033 ldc.i4.2 
+   0034 bne.un IL_0044: ldarg.0
+   0039 ldarg.0 
+   003A call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterLoadingState()
+   003F br IL_004a: br IL_0055
+   0044 ldarg.0 
+   0045 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterNotReadyState()
+   004A br IL_0055: br IL_0089
+   004F ldarg.0 
+   0050 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterNotReadyState()
+   0055 br IL_0089: ret
+   005A ldarg.0 
+   005B ldc.i4.0 
+   005C call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPlayBtnImgVisible(System.Boolean)
+   0061 ldarg.0 
+   0062 ldc.i4.0 
+   0063 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetLoadingObjActive(System.Boolean)
+   0068 ldarg.0 
+   0069 ldc.i4.0 
+   006A call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetRawImgVisible(System.Boolean)
+   006F ldarg.0 
+   0070 ldc.i4.1 
+   0071 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgObjActive(System.Boolean)
+   0076 ldarg.0 
+   0077 ldarg.2 
+   0078 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgUrl(System.String)
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_btnPlayObj
+   0083 ldc.i4.0 
+   0084 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0089 ret 
+== System.Void EnterPlayingState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPlayBtnImgVisible(System.Boolean)
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgObjActive(System.Boolean)
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetLoadingObjActive(System.Boolean)
+   001C ldarg.0 
+   001D ldc.i4.1 
+   001E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetRawImgVisible(System.Boolean)
+   0023 ret 
+== System.Void EnterPauseState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.3 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPlayBtnImgVisible(System.Boolean)
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgObjActive(System.Boolean)
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetLoadingObjActive(System.Boolean)
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetRawImgVisible(System.Boolean)
+   0023 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0028 callvirt System.Void com.tencent.pandora.VideoPlayer::Pause()
+   002D ret 
+== System.Void EnterNotReadyState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPlayBtnImgVisible(System.Boolean)
+   000E ldarg.0 
+   000F ldc.i4.1 
+   0010 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgObjActive(System.Boolean)
+   0015 ldarg.0 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_previewImgUrl
+   001C call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgUrl(System.String)
+   0021 ldarg.0 
+   0022 ldc.i4.0 
+   0023 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetLoadingObjActive(System.Boolean)
+   0028 ldarg.0 
+   0029 ldc.i4.0 
+   002A call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetRawImgVisible(System.Boolean)
+   002F ret 
+== System.Void EnterLoadingState() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPlayBtnImgVisible(System.Boolean)
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetPreviewImgObjActive(System.Boolean)
+   0015 ldarg.0 
+   0016 ldc.i4.1 
+   0017 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetLoadingObjActive(System.Boolean)
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::SetRawImgVisible(System.Boolean)
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downloadFromCdnFirst
+   0029 brfalse IL_0070: call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   002E ldarg.0 
+   002F call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0034 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIHttpFileManagerScript>()
+   0039 stloc.0 
+   003A ldloc.0 
+   003B ldnull 
+   003C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0041 brfalse IL_006b: br IL_0087
+   0046 ldloc.0 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   004D ldarg.0 
+   004E ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::DownloadVideoErrorDelegate(System.String)
+   0054 newobj System.Void Assets.Scripts.UI.HttpFileDownloadErrorDelegate::.ctor(System.Object,System.IntPtr)
+   0059 ldarg.0 
+   005A ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::DownloadVideoSuccessDelegate(System.String)
+   0060 newobj System.Void Assets.Scripts.UI.HttpFileDownloadSuccesDelegate::.ctor(System.Object,System.IntPtr)
+   0065 ldc.i4.1 
+   0066 callvirt System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::SetFileUrl(System.String,Assets.Scripts.UI.HttpFileDownloadErrorDelegate,Assets.Scripts.UI.HttpFileDownloadSuccesDelegate,System.Boolean)
+   006B br IL_0087: ret
+   0070 call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0075 ldarg.0 
+   0076 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   0081 ldc.i4.1 
+   0082 callvirt System.Void com.tencent.pandora.VideoPlayer::Play(UnityEngine.GameObject,System.String,System.Boolean)
+   0087 ret 
+== System.Void DownloadVideoErrorDelegate(System.String errMsg) attrs=Private, HideBySig maxstack=8
+   0000 ldstr download file fail:
+   0005 ldarg.1 
+   0006 call System.String System.String::Concat(System.String,System.String)
+   000B ldc.i4.1 
+   000C call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0011 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0016 ldstr TipForDownloadVideoError
+   001B ldc.i4.1 
+   001C ldc.r4 1.5
+   0021 ldnull 
+   0022 ldc.i4.0 
+   0023 newarr System.Object
+   0028 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002D ldarg.0 
+   002E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterNotReadyState()
+   0033 ldarg.0 
+   0034 ldarg.1 
+   0035 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::TryDispatchVideoErrorEvt(System.String)
+   003A ret 
+== System.Void DownloadVideoSuccessDelegate(System.String localPath) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0039: ldstr "video path is empty"
+   000B ldstr download success，file path:
+   0010 ldarg.1 
+   0011 call System.String System.String::Concat(System.String,System.String)
+   0016 ldc.i4.0 
+   0017 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   001C call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0021 ldarg.0 
+   0022 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0027 ldarg.1 
+   0028 ldc.i4.1 
+   0029 callvirt System.Void com.tencent.pandora.VideoPlayer::Play(UnityEngine.GameObject,System.String,System.Boolean)
+   002E ldarg.0 
+   002F call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::TryDispatchVideoSucEvt()
+   0034 br IL_004d: ret
+   0039 ldstr video path is empty
+   003E stloc.0 
+   003F ldloc.0 
+   0040 ldc.i4.1 
+   0041 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0046 ldarg.0 
+   0047 ldloc.0 
+   0048 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::TryDispatchVideoErrorEvt(System.String)
+   004D ret 
+== System.Void TryDispatchVideoErrorEvt(System.String errMsg) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downloadFromCdnFirst
+   0006 brfalse IL_0044: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downLoadVideoErrorEventID
+   0011 brfalse IL_0044: ret
+   0016 ldloca.s V_0
+   0018 initobj Assets.Scripts.UI.stUIEventParams
+   001E ldloca.s V_0
+   0020 ldarg.1 
+   0021 stfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0026 ldloca.s V_0
+   0028 ldarg.0 
+   0029 call System.Int32 UnityEngine.Object::GetInstanceID()
+   002E stfld Assets.Scripts.UI.stUIEventParams::tag
+   0033 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downLoadVideoErrorEventID
+   003E ldloc.0 
+   003F callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   0044 ret 
+== System.Void TryDispatchVideoSucEvt() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downloadFromCdnFirst
+   0006 brfalse IL_003c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downLoadVideoSucEventID
+   0011 brfalse IL_003c: ret
+   0016 ldloca.s V_0
+   0018 initobj Assets.Scripts.UI.stUIEventParams
+   001E ldloca.s V_0
+   0020 ldarg.0 
+   0021 call System.Int32 UnityEngine.Object::GetInstanceID()
+   0026 stfld Assets.Scripts.UI.stUIEventParams::tag
+   002B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_downLoadVideoSucEventID
+   0036 ldloc.0 
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams)
+   003C ret 
+== System.Boolean IsVideoSwitchOn() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4 777
+   0005 call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   000A stloc.0 
+   000B call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0010 callvirt System.Int32 ApolloHelper::GetAndroidSDKLevel()
+   0015 stloc.1 
+   0016 ldloc.0 
+   0017 ldc.i4.0 
+   0018 ble.un IL_0024: ldc.i4.0
+   001D ldloc.1 
+   001E ldc.i4.s 21
+   0020 cgt 
+   0022 br.s IL_0025: ret
+   0024 ldc.i4.0 
+   0025 ret 
+== System.Void OnClickPlay(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerOnClickPlayEventID
+   0006 brtrue IL_007e: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0010 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0079: br IL_008e
+   001C ldloc.0 
+   001D ldc.i4 319
+   0022 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsClientBitsSet(System.Int32)
+   0027 brtrue IL_006a: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   002C call Assets.Scripts.GameSystem.enNetWorkType Assets.Scripts.GameSystem.CUICommonSystem::GetNetWorkType()
+   0031 ldc.i4.1 
+   0032 beq IL_006a: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0037 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003C call !0 Singleton`1<CTextManager>::GetInstance()
+   0041 ldstr TipBattleEffectVideoLiuliang
+   0046 ldc.i4.1 
+   0047 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   004C ldc.i4 42104
+   0051 ldc.i4.0 
+   0052 ldc.i4.0 
+   0053 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0058 ldloc.0 
+   0059 ldc.i4 319
+   005E ldc.i4.1 
+   005F ldc.i4.1 
+   0060 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfo::SetClientBits(System.Int32,System.Boolean,System.Boolean)
+   0065 br IL_0079: br IL_008e
+   006A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   006F ldc.i4 42104
+   0074 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   0079 br IL_008e: ret
+   007E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerOnClickPlayEventID
+   0089 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   008E ret 
+== System.Void SetPreviewImgObjActive(System.Boolean active) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPreview
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0022: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPreview
+   0017 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   001C ldarg.1 
+   001D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0022 ret 
+== System.Void SetPreviewImgUrl(System.String imgUrl) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPreview
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_002d: ret
+   0011 ldarg.1 
+   0012 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0017 brtrue IL_002d: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPreview
+   0022 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0027 ldarg.1 
+   0028 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjHttpImagePath(UnityEngine.Transform,System.String)
+   002D ret 
+== System.Void SetPlayBtnImgVisible(System.Boolean visible) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPlay
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_003e: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPlay
+   0017 callvirt UnityEngine.Color UnityEngine.UI.Graphic::get_color()
+   001C stloc.0 
+   001D ldloca.s V_0
+   001F ldarg.1 
+   0020 brfalse IL_002b: ldc.i4.0
+   0025 ldc.i4.1 
+   0026 br IL_002c: conv.r4
+   002B ldc.i4.0 
+   002C conv.r4 
+   002D stfld UnityEngine.Color::a
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_imgPlay
+   0038 ldloc.0 
+   0039 callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   003E ret 
+== System.Void SetLoadingObjActive(System.Boolean active) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_loading
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001d: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_loading
+   0017 ldarg.1 
+   0018 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001D ret 
+== System.Void SetRawImgVisible(System.Boolean visible) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_003e: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0017 callvirt UnityEngine.Color UnityEngine.UI.Graphic::get_color()
+   001C stloc.0 
+   001D ldloca.s V_0
+   001F ldarg.1 
+   0020 brfalse IL_002b: ldc.i4.0
+   0025 ldc.i4.1 
+   0026 br IL_002c: conv.r4
+   002B ldc.i4.0 
+   002C conv.r4 
+   002D stfld UnityEngine.Color::a
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0038 ldloc.0 
+   0039 callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   003E ret 
+== System.Void AddEventListener() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 42101
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerError(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 42102
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerEvent(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 42105
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerBegin(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 42106
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerEnd(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 42103
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnClickPlay(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 42104
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::RealPlayVideo(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 42108
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnAppPause(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C2 ldc.i4 42107
+   00C7 ldarg.0 
+   00C8 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnChangeResolution(Assets.Scripts.UI.CUIEvent)
+   00CE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D8 ret 
+== System.Void RealPlayVideo(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0006 ldc.i4.2 
+   0007 bne.un IL_0017: ldarg.0
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterPauseState()
+   0012 br IL_004b: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   001D ldc.i4.1 
+   001E bne.un IL_002e: ldarg.0
+   0023 ldarg.0 
+   0024 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterNotReadyState()
+   0029 br IL_004b: ret
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   0034 ldc.i4.3 
+   0035 bne.un IL_0045: ldarg.0
+   003A ldarg.0 
+   003B call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::Resume()
+   0040 br IL_004b: ret
+   0045 ldarg.0 
+   0046 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterLoadingState()
+   004B ret 
+== System.Void RemoveEventListener() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 42101
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerError(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 42102
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerEvent(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 42105
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerBegin(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0056 ldc.i4 42106
+   005B ldarg.0 
+   005C ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnVideoPlayerEnd(Assets.Scripts.UI.CUIEvent)
+   0062 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0067 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0071 ldc.i4 42103
+   0076 ldarg.0 
+   0077 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnClickPlay(Assets.Scripts.UI.CUIEvent)
+   007D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0082 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0087 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008C ldc.i4 42104
+   0091 ldarg.0 
+   0092 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::RealPlayVideo(Assets.Scripts.UI.CUIEvent)
+   0098 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A2 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A7 ldc.i4 42108
+   00AC ldarg.0 
+   00AD ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnAppPause(Assets.Scripts.UI.CUIEvent)
+   00B3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BD call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C2 ldc.i4 42107
+   00C7 ldarg.0 
+   00C8 ldftn System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::OnChangeResolution(Assets.Scripts.UI.CUIEvent)
+   00CE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D8 ret 
+== System.Void OnVideoPlayerEnd(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=3
+   0000 ldstr CUIPandroaVideoPlayer eventId = 
+   0005 ldarg.1 
+   0006 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000B ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0010 box System.Int32
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0020 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0025 ldc.i4.1 
+   0026 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_autoReplay
+   0031 brfalse IL_0048: ldarg.0
+   0036 ldarg.0 
+   0037 ldc.i4.5 
+   0038 stfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   003D ldarg.0 
+   003E call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::Resume()
+   0043 br IL_004e: ldarg.0
+   0048 ldarg.0 
+   0049 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterPauseState()
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerEndEventID
+   0054 brfalse IL_0072: ret
+   0059 ldarg.1 
+   005A stloc.0 
+   005B ldloc.0 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerEndEventID
+   0062 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0067 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   006C ldloc.0 
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   0072 ret 
+== System.Void OnVideoPlayerBegin(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=3
+   0000 ldstr CUIPandroaVideoPlayer eventId = 
+   0005 ldarg.1 
+   0006 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000B ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0010 box System.Int32
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0020 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0025 ldc.i4.1 
+   0026 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   002B ldarg.0 
+   002C call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::EnterPlayingState()
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerBeginEventID
+   0037 brfalse IL_0055: ret
+   003C ldarg.1 
+   003D stloc.0 
+   003E ldloc.0 
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoPlayerBeginEventID
+   0045 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   004A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   004F ldloc.0 
+   0050 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   0055 ret 
+== System.Void OnVideoPlayerEvent(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=8
+   0000 ldstr CUIPandroaVideoPlayer eventId = 
+   0005 ldarg.1 
+   0006 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000B ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0010 box System.Int32
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0020 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0025 ldc.i4.1 
+   0026 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   002B ret 
+== System.Void OnVideoPlayerError(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=6
+   0000 ldstr CUIPandroaVideoPlayer eventId = 
+   0005 ldarg.1 
+   0006 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000B ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0010 box System.Int32
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0020 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0025 ldc.i4.1 
+   0026 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   002B ldarg.0 
+   002C call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::Stop()
+   0031 ldarg.1 
+   0032 ldfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   0037 stloc.0 
+   0038 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003D ldstr eventid = {0},msg = {1}
+   0042 ldloca.s V_0
+   0044 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0049 box System.Int32
+   004E ldloca.s V_0
+   0050 ldfld Assets.Scripts.UI.stUIEventParams::tagStr
+   0055 call System.String System.String::Format(System.String,System.Object,System.Object)
+   005A ldc.i4.0 
+   005B ldc.r4 1.5
+   0060 ldnull 
+   0061 ldc.i4.0 
+   0062 newarr System.Object
+   0067 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   006C ret 
+== System.Void OnAppPause(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_appPausedAutoResumeVideo
+   0006 brfalse IL_0025: ret
+   000B ldarg.1 
+   000C ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0011 ldfld Assets.Scripts.UI.stUIEventParams::tag2
+   0016 brtrue IL_0025: ret
+   001B call com.tencent.pandora.VideoPlayer com.tencent.pandora.VideoPlayer::get_Instance()
+   0020 callvirt System.Void com.tencent.pandora.VideoPlayer::Resume()
+   0025 ret 
+== System.Void OnChangeResolution(Assets.Scripts.UI.CUIEvent obj) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_fullScreenScalingMode
+   0006 ldc.i4.1 
+   0007 bne.un IL_002f: ldarg.0
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0013 ldfld Assets.Scripts.UI.stUIEventParams::tag2
+   0018 conv.r4 
+   0019 ldarg.1 
+   001A ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001F ldfld Assets.Scripts.UI.stUIEventParams::tag3
+   0024 conv.r4 
+   0025 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::ScaleScreenAspectFit(System.Single,System.Single)
+   002A br IL_0059: ret
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_fullScreenScalingMode
+   0035 ldc.i4.2 
+   0036 bne.un IL_0059: ret
+   003B ldarg.0 
+   003C ldarg.1 
+   003D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0042 ldfld Assets.Scripts.UI.stUIEventParams::tag2
+   0047 conv.r4 
+   0048 ldarg.1 
+   0049 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   004E ldfld Assets.Scripts.UI.stUIEventParams::tag3
+   0053 conv.r4 
+   0054 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::ScaleScreenAspectFill(System.Single,System.Single)
+   0059 ret 
+== System.Void ScaleScreenAspectFit(System.Single width, System.Single height) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00ee: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_00ee: ret
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0028 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   002D isinst UnityEngine.RectTransform
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ldarg.1 
+   0035 ldarg.2 
+   0036 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   003B callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0046 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   004B ldfld UnityEngine.Vector2::x
+   0050 conv.r4 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0057 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   005C ldfld UnityEngine.Vector2::y
+   0061 conv.r4 
+   0062 div 
+   0063 stloc.1 
+   0064 ldloc.0 
+   0065 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   006A stloc.3 
+   006B ldloca.s V_3
+   006D ldfld UnityEngine.Vector2::x
+   0072 ldloc.0 
+   0073 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0078 stloc.s V_4
+   007A ldloca.s V_4
+   007C ldfld UnityEngine.Vector2::y
+   0081 div 
+   0082 stloc.2 
+   0083 ldc.r4 1
+   0088 stloc.s V_5
+   008A ldloc.1 
+   008B ldloc.2 
+   008C bge.un IL_00b8: ldarg.0
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0097 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   009C ldfld UnityEngine.Vector2::y
+   00A1 ldloc.0 
+   00A2 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   00A7 stloc.s V_6
+   00A9 ldloca.s V_6
+   00AB ldfld UnityEngine.Vector2::y
+   00B0 div 
+   00B1 stloc.s V_5
+   00B3 br IL_00da: ldloc.0
+   00B8 ldarg.0 
+   00B9 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   00BE ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   00C3 ldfld UnityEngine.Vector2::x
+   00C8 ldloc.0 
+   00C9 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   00CE stloc.s V_7
+   00D0 ldloca.s V_7
+   00D2 ldfld UnityEngine.Vector2::x
+   00D7 div 
+   00D8 stloc.s V_5
+   00DA ldloc.0 
+   00DB ldloc.s V_5
+   00DD ldloc.s V_5
+   00DF ldc.r4 1
+   00E4 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00E9 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00EE ret 
+== System.Void ScaleScreenAspectFill(System.Single width, System.Single height) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00ee: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_00ee: ret
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_rawImg
+   0028 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   002D isinst UnityEngine.RectTransform
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ldarg.1 
+   0035 ldarg.2 
+   0036 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   003B callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0046 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   004B ldfld UnityEngine.Vector2::x
+   0050 conv.r4 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0057 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   005C ldfld UnityEngine.Vector2::y
+   0061 conv.r4 
+   0062 div 
+   0063 stloc.1 
+   0064 ldloc.0 
+   0065 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   006A stloc.3 
+   006B ldloca.s V_3
+   006D ldfld UnityEngine.Vector2::x
+   0072 ldloc.0 
+   0073 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0078 stloc.s V_4
+   007A ldloca.s V_4
+   007C ldfld UnityEngine.Vector2::y
+   0081 div 
+   0082 stloc.2 
+   0083 ldc.r4 1
+   0088 stloc.s V_5
+   008A ldloc.1 
+   008B ldloc.2 
+   008C bge.un IL_00b8: ldloc.0
+   0091 ldloc.0 
+   0092 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0097 stloc.s V_6
+   0099 ldloca.s V_6
+   009B ldfld UnityEngine.Vector2::y
+   00A0 ldarg.0 
+   00A1 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   00A6 ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   00AB ldfld UnityEngine.Vector2::y
+   00B0 div 
+   00B1 stloc.s V_5
+   00B3 br IL_00da: ldloc.0
+   00B8 ldloc.0 
+   00B9 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   00BE stloc.s V_7
+   00C0 ldloca.s V_7
+   00C2 ldfld UnityEngine.Vector2::x
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   00CD ldflda Assets.Scripts.UI.CUIFormScript::m_referenceResolution
+   00D2 ldfld UnityEngine.Vector2::x
+   00D7 div 
+   00D8 stloc.s V_5
+   00DA ldloc.0 
+   00DB ldloc.s V_5
+   00DD ldloc.s V_5
+   00DF ldc.r4 1
+   00E4 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00E9 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00EE ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::RemoveEventListener()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::Stop()
+   000C ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::AddEventListener()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_PlayerState
+   000C ldc.i4.4 
+   000D bne.un IL_0024: ret
+   0012 ldarg.0 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_videoUrl
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.UI.CUIPandoraVideoPlayerScript::m_previewImgUrl
+   001F call System.Void Assets.Scripts.UI.CUIPandoraVideoPlayerScript::RefreshVideoArea(System.String,System.String)
+   0024 ret 
+  NESTED Assets.Scripts.UI.CUIPandoraVideoPlayerScript/enPlayerState
+  NESTED Assets.Scripts.UI.CUIPandoraVideoPlayerScript/enVedioPlayerEventType

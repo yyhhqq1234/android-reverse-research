@@ -1,0 +1,929 @@
+// TYPE NewbieWeakGuideControl  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.String WEAK_BUBBLE_PATH
+  FIELD NewbieWeakGuideImpl guideImpl
+  FIELD DictionaryView`2<System.UInt32,UnityEngine.GameObject> mEffectCache
+  FIELD System.Boolean isGuiding
+  FIELD ResData.NewbieWeakGuideMainLineConf curWeakMainLineConf
+  FIELD System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf> mConfList
+  FIELD System.UInt32 m_CurStep
+  FIELD System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf> mToaddConfList
+  FIELD ResData.NewbieGuideWeakConf curToAddEffectConf
+  FIELD System.Single TYR_TO_ADD_EFFECT_TIME = 5
+  FIELD System.Single tryToAddEffectTime
+  FIELD NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate CompleteEvent
+  FIELD NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate TimeOutEvent
+  FIELD System.UInt32 mStartIndex
+  FIELD System.String logTitle
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldstr [<color=cyan>新手弱引导</color>][<color=green>eason</color>]
+   0006 stfld NewbieWeakGuideControl::logTitle
+   000B ldarg.0 
+   000C call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0011 ret 
+== System.Void add_CompleteEvent(NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate value) attrs=Public, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::CompleteEvent
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldflda NewbieWeakGuideControl::CompleteEvent
+   000F ldloc.1 
+   0010 ldarg.1 
+   0011 call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   0016 castclass NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate
+   001B ldloc.0 
+   001C call !!0 System.Threading.Interlocked::CompareExchange<NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate>(!!0&,!!0,!!0)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldloc.1 
+   0024 bne.un IL_0007: ldloc.0
+   0029 ret 
+== System.Void remove_CompleteEvent(NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate value) attrs=Public, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::CompleteEvent
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldflda NewbieWeakGuideControl::CompleteEvent
+   000F ldloc.1 
+   0010 ldarg.1 
+   0011 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   0016 castclass NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate
+   001B ldloc.0 
+   001C call !!0 System.Threading.Interlocked::CompareExchange<NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate>(!!0&,!!0,!!0)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldloc.1 
+   0024 bne.un IL_0007: ldloc.0
+   0029 ret 
+== System.Void add_TimeOutEvent(NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate value) attrs=Public, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::TimeOutEvent
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldflda NewbieWeakGuideControl::TimeOutEvent
+   000F ldloc.1 
+   0010 ldarg.1 
+   0011 call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   0016 castclass NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate
+   001B ldloc.0 
+   001C call !!0 System.Threading.Interlocked::CompareExchange<NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate>(!!0&,!!0,!!0)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldloc.1 
+   0024 bne.un IL_0007: ldloc.0
+   0029 ret 
+== System.Void remove_TimeOutEvent(NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate value) attrs=Public, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::TimeOutEvent
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldflda NewbieWeakGuideControl::TimeOutEvent
+   000F ldloc.1 
+   0010 ldarg.1 
+   0011 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   0016 castclass NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate
+   001B ldloc.0 
+   001C call !!0 System.Threading.Interlocked::CompareExchange<NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate>(!!0&,!!0,!!0)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldloc.1 
+   0024 bne.un IL_0007: ldloc.0
+   0029 ret 
+== System.Void OpenGuideForm() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::guideImpl
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::guideImpl
+   0011 callvirt System.Void NewbieWeakGuideImpl::OpenGuideForm()
+   0016 ret 
+== System.Void Awake() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void NewbieWeakGuideControl::Init()
+   0006 ret 
+== System.Void OnDestroy() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void NewbieWeakGuideControl::UnInit()
+   0006 ret 
+== System.Void Init() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void DictionaryView`2<System.UInt32,UnityEngine.GameObject>::.ctor()
+   0006 stfld NewbieWeakGuideControl::mEffectCache
+   000B ldarg.0 
+   000C newobj System.Void NewbieWeakGuideImpl::.ctor()
+   0011 stfld NewbieWeakGuideControl::guideImpl
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::.ctor()
+   001C stfld NewbieWeakGuideControl::mToaddConfList
+   0021 ldarg.0 
+   0022 newobj System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::.ctor()
+   0027 stfld NewbieWeakGuideControl::mConfList
+   002C ldarg.0 
+   002D ldfld NewbieWeakGuideControl::guideImpl
+   0032 callvirt System.Void NewbieWeakGuideImpl::Init()
+   0037 ret 
+== System.Void UnInit() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void NewbieWeakGuideControl::RemoveAllEffect()
+   0006 ldarg.0 
+   0007 call System.Void NewbieWeakGuideControl::ClearEvent()
+   000C ret 
+== System.Void ClearEvent() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::guideImpl
+   0006 callvirt System.Void NewbieWeakGuideImpl::UnInit()
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::mToaddConfList
+   0011 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Clear()
+   0016 ldarg.0 
+   0017 ldfld NewbieWeakGuideControl::mConfList
+   001C callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Clear()
+   0021 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::guideImpl
+   0006 brfalse IL_0016: ldarg.0
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::guideImpl
+   0011 callvirt System.Void NewbieWeakGuideImpl::Update()
+   0016 ldarg.0 
+   0017 ldfld NewbieWeakGuideControl::mToaddConfList
+   001C brfalse IL_003e: ret
+   0021 ldarg.0 
+   0022 ldfld NewbieWeakGuideControl::mToaddConfList
+   0027 callvirt System.Int32 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Count()
+   002C ldc.i4.0 
+   002D ble IL_003e: ret
+   0032 ldarg.0 
+   0033 call System.Void NewbieWeakGuideControl::AddEffectProcess()
+   0038 ldarg.0 
+   0039 call System.Void NewbieWeakGuideControl::checkTryToAddEffectTimeOut()
+   003E ret 
+== System.Void StopCurrentWeakGuide() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::isGuiding
+   0006 brfalse IL_0018: ret
+   000B ldarg.0 
+   000C call System.Void NewbieWeakGuideControl::RemoveAllEffect()
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld NewbieWeakGuideControl::isGuiding
+   0018 ret 
+== System.Void SetData(System.UInt32 weakGuideID, System.UInt32 startIndex) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<NewbieGuideDataManager>::GetInstance()
+   0005 ldarg.1 
+   0006 ldloca.s V_0
+   0008 callvirt System.Boolean NewbieGuideDataManager::GetNewbieWeakGuideMainLineConf(System.UInt32,ResData.NewbieWeakGuideMainLineConf&)
+   000D pop 
+   000E ldarg.0 
+   000F ldarg.2 
+   0010 stfld NewbieWeakGuideControl::mStartIndex
+   0015 ldarg.0 
+   0016 ldloc.0 
+   0017 stfld NewbieWeakGuideControl::curWeakMainLineConf
+   001C ret 
+== System.Void Start() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void NewbieWeakGuideControl::StartGuide()
+   0006 ret 
+== System.Void StartGuide() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void NewbieWeakGuideControl::RemoveAllEffect()
+   0006 ldarg.0 
+   0007 ldfld NewbieWeakGuideControl::mToaddConfList
+   000C callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Clear()
+   0011 ldarg.0 
+   0012 ldfld NewbieWeakGuideControl::mConfList
+   0017 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Clear()
+   001C ldarg.0 
+   001D ldc.i4.1 
+   001E stfld NewbieWeakGuideControl::isGuiding
+   0023 call !0 Singleton`1<NewbieGuideDataManager>::GetInstance()
+   0028 ldarg.0 
+   0029 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   002E ldfld ResData.NewbieWeakGuideMainLineConf::dwID
+   0033 callvirt System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf> NewbieGuideDataManager::GetWeakScriptList(System.UInt32)
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A brfalse IL_004b: ldarg.0
+   003F ldarg.0 
+   0040 ldfld NewbieWeakGuideControl::mConfList
+   0045 ldloc.0 
+   0046 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   004B ldarg.0 
+   004C ldarg.0 
+   004D ldfld NewbieWeakGuideControl::mStartIndex
+   0052 stfld NewbieWeakGuideControl::m_CurStep
+   0057 ldarg.0 
+   0058 call System.Void NewbieWeakGuideControl::OpenGuideForm()
+   005D ldarg.0 
+   005E ldfld NewbieWeakGuideControl::mConfList
+   0063 callvirt System.Int32 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Count()
+   0068 brtrue IL_0078: ldarg.0
+   006D ldarg.0 
+   006E call System.Void NewbieWeakGuideControl::CompleteAll()
+   0073 br IL_007e: ret
+   0078 ldarg.0 
+   0079 call System.Void NewbieWeakGuideControl::CheckNext()
+   007E ret 
+== System.Void CheckNext() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::mConfList
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Count()
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld NewbieWeakGuideControl::m_CurStep
+   0012 conv.u8 
+   0013 ldloc.0 
+   0014 conv.i8 
+   0015 bgt IL_003b: ldarg.0
+   001A ldarg.0 
+   001B ldfld NewbieWeakGuideControl::mConfList
+   0020 ldarg.0 
+   0021 ldfld NewbieWeakGuideControl::m_CurStep
+   0026 ldc.i4.1 
+   0027 sub 
+   0028 callvirt !0 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Item(System.Int32)
+   002D stloc.1 
+   002E ldarg.0 
+   002F ldloc.1 
+   0030 call System.Boolean NewbieWeakGuideControl::AddEffect(ResData.NewbieGuideWeakConf)
+   0035 pop 
+   0036 br IL_0041: ret
+   003B ldarg.0 
+   003C call System.Void NewbieWeakGuideControl::CompleteAll()
+   0041 ret 
+== System.Void Complete(System.UInt32 weakGuideId, System.UInt32 nextStep) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::m_CurStep
+   0006 conv.u8 
+   0007 ldarg.0 
+   0008 ldfld NewbieWeakGuideControl::mConfList
+   000D callvirt System.Int32 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Count()
+   0012 conv.i8 
+   0013 bgt IL_006e: ret
+   0018 ldarg.0 
+   0019 ldfld NewbieWeakGuideControl::mConfList
+   001E ldarg.0 
+   001F ldfld NewbieWeakGuideControl::m_CurStep
+   0024 ldc.i4.1 
+   0025 sub 
+   0026 callvirt !0 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Item(System.Int32)
+   002B stloc.0 
+   002C ldarg.0 
+   002D ldarg.1 
+   002E call System.Void NewbieWeakGuideControl::RemoveEffect(System.UInt32)
+   0033 ldloca.s V_0
+   0035 ldc.i4.2 
+   0036 call System.UInt32 ResData.NewbieGuideWeakConf::Param(System.Int32)
+   003B ldc.i4.0 
+   003C ble.un IL_0048: ldarg.2
+   0041 ldarg.0 
+   0042 call System.Void NewbieWeakGuideControl::CompleteAll()
+   0047 ret 
+   0048 ldarg.2 
+   0049 brtrue IL_0061: ldarg.0
+   004E ldarg.0 
+   004F ldarg.0 
+   0050 ldfld NewbieWeakGuideControl::m_CurStep
+   0055 ldc.i4.1 
+   0056 add 
+   0057 stfld NewbieWeakGuideControl::m_CurStep
+   005C br IL_0068: ldarg.0
+   0061 ldarg.0 
+   0062 ldarg.2 
+   0063 stfld NewbieWeakGuideControl::m_CurStep
+   0068 ldarg.0 
+   0069 call System.Void NewbieWeakGuideControl::CheckNext()
+   006E ret 
+== System.Void CompleteAll() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   0006 ldfld ResData.NewbieWeakGuideMainLineConf::bOnlyOnce
+   000B ldc.i4.0 
+   000C ble IL_0023: ldarg.0
+   0011 ldarg.0 
+   0012 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   0017 ldfld ResData.NewbieWeakGuideMainLineConf::dwID
+   001C ldc.i4.1 
+   001D ldc.i4.1 
+   001E call System.Void NewbieGuideManager::SetWeakGuideComplete(System.UInt32,System.Boolean,System.Boolean)
+   0023 ldarg.0 
+   0024 ldfld NewbieWeakGuideControl::CompleteEvent
+   0029 callvirt System.Void NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate::Invoke()
+   002E ldarg.0 
+   002F call System.Void NewbieWeakGuideControl::RemoveAllEffect()
+   0034 ldarg.0 
+   0035 ldc.i4.0 
+   0036 stfld NewbieWeakGuideControl::isGuiding
+   003B ret 
+== System.Void OnWeakGuideBubbleTimeOut(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0007 ldc.i4.0 
+   0008 call System.Void NewbieWeakGuideControl::RemoveEffectByHilight(UnityEngine.GameObject,System.Boolean)
+   000D ldarg.0 
+   000E ldfld NewbieWeakGuideControl::TimeOutEvent
+   0013 brfalse IL_0023: ret
+   0018 ldarg.0 
+   0019 ldfld NewbieWeakGuideControl::TimeOutEvent
+   001E callvirt System.Void NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate::Invoke()
+   0023 ret 
+== System.Void OnWeakGuideCommonTxtTimeOut(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::guideImpl
+   0006 callvirt System.Void NewbieWeakGuideImpl::HideWeakFormTxt()
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::TimeOutEvent
+   0011 brfalse IL_0021: ret
+   0016 ldarg.0 
+   0017 ldfld NewbieWeakGuideControl::TimeOutEvent
+   001C callvirt System.Void NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate::Invoke()
+   0021 ret 
+== System.Void OnChatTabChange(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CChatController::ChatFormPath
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0062: ret
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0022 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0027 ldstr node/ToolBar/sound/WeakGuideBubble(Clone)
+   002C callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0031 stloc.1 
+   0032 ldloc.1 
+   0033 ldnull 
+   0034 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0039 brfalse IL_0062: ret
+   003E ldarg.0 
+   003F ldloc.1 
+   0040 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0045 ldarg.1 
+   0046 ldfld Assets.Scripts.UI.CUIEvent::m_eventID
+   004B ldc.i4 1587
+   0050 ceq 
+   0052 call System.Void NewbieWeakGuideControl::RemoveEffectByHilight(UnityEngine.GameObject,System.Boolean)
+   0057 ldarg.0 
+   0058 ldfld NewbieWeakGuideControl::TimeOutEvent
+   005D callvirt System.Void NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate::Invoke()
+   0062 ret 
+== System.Void OnWeakGuideFormClose(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::guideImpl
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::guideImpl
+   0011 callvirt System.Void NewbieWeakGuideImpl::OnFormClose()
+   0016 ret 
+== System.Void checkTryToAddEffectTimeOut() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld NewbieWeakGuideControl::tryToAddEffectTime
+   0007 call System.Single UnityEngine.Time::get_deltaTime()
+   000C add 
+   000D stfld NewbieWeakGuideControl::tryToAddEffectTime
+   0012 ldarg.0 
+   0013 ldfld NewbieWeakGuideControl::tryToAddEffectTime
+   0018 ldc.r4 5
+   001D blt.un IL_0043: ret
+   0022 ldarg.0 
+   0023 ldfld NewbieWeakGuideControl::mToaddConfList
+   0028 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Clear()
+   002D ldarg.0 
+   002E ldc.r4 0
+   0033 stfld NewbieWeakGuideControl::tryToAddEffectTime
+   0038 ldarg.0 
+   0039 ldfld NewbieWeakGuideControl::TimeOutEvent
+   003E callvirt System.Void NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate::Invoke()
+   0043 ret 
+== System.Boolean AddEffect(ResData.NewbieGuideWeakConf conf) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarga.s conf
+   0003 ldfld ResData.NewbieGuideWeakConf::dwID
+   0008 call System.Boolean NewbieWeakGuideControl::HasEffect(System.UInt32)
+   000D brfalse IL_0014: ldarg.0
+   0012 ldc.i4.0 
+   0013 ret 
+   0014 ldarg.0 
+   0015 ldarg.1 
+   0016 stfld NewbieWeakGuideControl::curToAddEffectConf
+   001B ldarg.0 
+   001C ldfld NewbieWeakGuideControl::mToaddConfList
+   0021 ldarg.1 
+   0022 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::Add(!0)
+   0027 ldarg.0 
+   0028 ldc.r4 0
+   002D stfld NewbieWeakGuideControl::tryToAddEffectTime
+   0032 ldc.i4.1 
+   0033 ret 
+== System.Void AddEffectProcess() attrs=Private, HideBySig maxstack=5
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld NewbieWeakGuideControl::mEffectCache
+   0008 ldarg.0 
+   0009 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   000E ldfld ResData.NewbieGuideWeakConf::dwID
+   0013 ldloca.s V_0
+   0015 callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::TryGetValue(!0,!1&)
+   001A brtrue IL_00d8: ret
+   001F ldarg.0 
+   0020 ldfld NewbieWeakGuideControl::guideImpl
+   0025 ldarg.0 
+   0026 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   002B ldarg.0 
+   002C ldloca.s V_0
+   002E callvirt System.Boolean NewbieWeakGuideImpl::AddEffect(ResData.NewbieGuideWeakConf&,NewbieWeakGuideControl,UnityEngine.GameObject&)
+   0033 stloc.1 
+   0034 ldloc.1 
+   0035 brfalse IL_00d8: ret
+   003A ldarg.0 
+   003B ldfld NewbieWeakGuideControl::mToaddConfList
+   0040 callvirt System.Int32 System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::get_Count()
+   0045 ldc.i4.0 
+   0046 ble IL_0057: ldloc.0
+   004B ldarg.0 
+   004C ldfld NewbieWeakGuideControl::mToaddConfList
+   0051 ldc.i4.0 
+   0052 callvirt System.Void System.Collections.Generic.List`1<ResData.NewbieGuideWeakConf>::RemoveAt(System.Int32)
+   0057 ldloc.0 
+   0058 ldnull 
+   0059 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005E brfalse IL_00a4: ldarg.0
+   0063 ldarg.0 
+   0064 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   0069 ldfld ResData.NewbieGuideWeakConf::dwID
+   006E ldloc.0 
+   006F ldarg.0 
+   0070 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   0075 ldfld ResData.NewbieGuideWeakConf::bGuideActionType
+   007A ldarg.0 
+   007B ldftn System.Void NewbieWeakGuideControl::ClickHandler(Assets.Scripts.UI.stUIEventParams&,UnityEngine.GameObject)
+   0081 newobj System.Void NewbieWeakGuideControl/OnUIEventHandler::.ctor(System.Object,System.IntPtr)
+   0086 ldc.i4.1 
+   0087 call UnityEngine.GameObject NewbieWeakGuideControl::TryToAddClickEvent(System.UInt32,UnityEngine.GameObject,ResData.RES_GUIDE_ACTION_TYPE,NewbieWeakGuideControl/OnUIEventHandler,System.Boolean)
+   008C pop 
+   008D ldarg.0 
+   008E ldfld NewbieWeakGuideControl::mEffectCache
+   0093 ldarg.0 
+   0094 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   0099 ldfld ResData.NewbieGuideWeakConf::dwID
+   009E ldloc.0 
+   009F callvirt System.Void DictionaryView`2<System.UInt32,UnityEngine.GameObject>::Add(!0,!1)
+   00A4 ldarg.0 
+   00A5 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   00AA ldfld ResData.NewbieWeakGuideMainLineConf::bSetBitWhenTrigger
+   00AF ldc.i4.0 
+   00B0 ble IL_00d8: ret
+   00B5 ldarg.0 
+   00B6 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   00BB ldfld ResData.NewbieWeakGuideMainLineConf::bOnlyOnce
+   00C0 ldc.i4.0 
+   00C1 ble IL_00d8: ret
+   00C6 ldarg.0 
+   00C7 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   00CC ldfld ResData.NewbieWeakGuideMainLineConf::dwID
+   00D1 ldc.i4.1 
+   00D2 ldc.i4.1 
+   00D3 call System.Void NewbieGuideManager::SetWeakGuideComplete(System.UInt32,System.Boolean,System.Boolean)
+   00D8 ret 
+== System.Boolean HasEffect(System.UInt32 weakGuideId) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::mEffectCache
+   0006 brfalse IL_0058: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld NewbieWeakGuideControl::mEffectCache
+   0011 ldarg.1 
+   0012 callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::ContainsKey(!0)
+   0017 brfalse IL_0058: ldc.i4.0
+   001C ldarg.0 
+   001D ldfld NewbieWeakGuideControl::mEffectCache
+   0022 ldarg.1 
+   0023 callvirt !1 DictionaryView`2<System.UInt32,UnityEngine.GameObject>::get_Item(!0)
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0035: ldarg.0
+   0033 ldc.i4.1 
+   0034 ret 
+   0035 ldarg.0 
+   0036 ldfld NewbieWeakGuideControl::mEffectCache
+   003B ldarg.1 
+   003C callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::Remove(!0)
+   0041 pop 
+   0042 ldarg.0 
+   0043 ldfld NewbieWeakGuideControl::guideImpl
+   0048 callvirt System.Void NewbieWeakGuideImpl::ClearEffectText()
+   004D ldarg.0 
+   004E ldfld NewbieWeakGuideControl::guideImpl
+   0053 callvirt System.Void NewbieWeakGuideImpl::ClearClickAnyWhereMask()
+   0058 ldc.i4.0 
+   0059 ret 
+== System.Void RemoveAllEffect() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld NewbieWeakGuideControl::mEffectCache
+   0006 callvirt System.Collections.Generic.Dictionary`2/KeyCollection<!0,System.Object> DictionaryView`2<System.UInt32,UnityEngine.GameObject>::get_Keys()
+   000B newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor(System.Collections.Generic.IEnumerable`1<!0>)
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0017 stloc.1 
+   0018 ldc.i4.0 
+   0019 stloc.2 
+   001A br IL_0032: ldloc.2
+   001F ldloc.0 
+   0020 ldloc.2 
+   0021 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0026 stloc.3 
+   0027 ldarg.0 
+   0028 ldloc.3 
+   0029 call System.Void NewbieWeakGuideControl::RemoveEffect(System.UInt32)
+   002E ldloc.2 
+   002F ldc.i4.1 
+   0030 add 
+   0031 stloc.2 
+   0032 ldloc.2 
+   0033 ldloc.1 
+   0034 blt IL_001f: ldloc.0
+   0039 ret 
+== System.Void RemoveEffect(System.UInt32 weakGuideId) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld NewbieWeakGuideControl::mEffectCache
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::TryGetValue(!0,!1&)
+   0010 brfalse IL_004f: ret
+   0015 ldarg.0 
+   0016 ldfld NewbieWeakGuideControl::mEffectCache
+   001B ldarg.1 
+   001C callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::Remove(!0)
+   0021 pop 
+   0022 ldloc.0 
+   0023 ldnull 
+   0024 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse IL_0039: ldarg.0
+   002E ldloc.0 
+   002F ldc.r4 0.1
+   0034 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::DestoryObj(UnityEngine.GameObject,System.Single)
+   0039 ldarg.0 
+   003A ldfld NewbieWeakGuideControl::guideImpl
+   003F callvirt System.Void NewbieWeakGuideImpl::ClearEffectText()
+   0044 ldarg.0 
+   0045 ldfld NewbieWeakGuideControl::guideImpl
+   004A callvirt System.Void NewbieWeakGuideImpl::ClearClickAnyWhereMask()
+   004F ret 
+== System.Void RemoveEffectByHilight(UnityEngine.GameObject hilighter, System.Boolean completeGuide) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0073: ret
+   000C ldc.i4.0 
+   000D stloc.0 
+   000E ldarg.1 
+   000F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0014 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0019 stloc.1 
+   001A ldloc.1 
+   001B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0020 ldarg.0 
+   0021 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   0026 ldfld ResData.NewbieGuideWeakConf::bGuideActionType
+   002B ldarg.0 
+   002C ldftn System.Void NewbieWeakGuideControl::ClickHandler(Assets.Scripts.UI.stUIEventParams&,UnityEngine.GameObject)
+   0032 newobj System.Void NewbieWeakGuideControl/OnUIEventHandler::.ctor(System.Object,System.IntPtr)
+   0037 call System.UInt32 NewbieWeakGuideControl::DelEventHander(UnityEngine.GameObject,ResData.RES_GUIDE_ACTION_TYPE,NewbieWeakGuideControl/OnUIEventHandler)
+   003C stloc.0 
+   003D ldloc.0 
+   003E brfalse IL_004a: ldarg.2
+   0043 ldarg.0 
+   0044 ldloc.0 
+   0045 call System.Void NewbieWeakGuideControl::RemoveEffect(System.UInt32)
+   004A ldarg.2 
+   004B brfalse IL_0073: ret
+   0050 ldarg.0 
+   0051 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   0056 ldfld ResData.NewbieWeakGuideMainLineConf::bOnlyOnce
+   005B ldc.i4.0 
+   005C ble IL_0073: ret
+   0061 ldarg.0 
+   0062 ldflda NewbieWeakGuideControl::curWeakMainLineConf
+   0067 ldfld ResData.NewbieWeakGuideMainLineConf::dwID
+   006C ldc.i4.1 
+   006D ldc.i4.1 
+   006E call System.Void NewbieGuideManager::SetWeakGuideComplete(System.UInt32,System.Boolean,System.Boolean)
+   0073 ret 
+== UnityEngine.GameObject TryToAddClickEvent(System.UInt32 id, UnityEngine.GameObject EffectObj, ResData.RES_GUIDE_ACTION_TYPE actionType, NewbieWeakGuideControl/OnUIEventHandler handler, System.Boolean bWeakGuide) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000e: ldnull
+   000C ldnull 
+   000D ret 
+   000E ldnull 
+   000F stloc.0 
+   0010 ldarg.1 
+   0011 callvirt !!0 UnityEngine.GameObject::GetComponentInParent<Assets.Scripts.UI.CUIEventScript>()
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_0090: ldarg.1
+   0023 ldarg.2 
+   0024 brtrue IL_0058: ldarg.2
+   0029 ldarg.s bWeakGuide
+   002B brfalse IL_003c: ldloc.1
+   0030 ldloc.1 
+   0031 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   0036 ldarg.0 
+   0037 stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   003C ldloc.1 
+   003D dup 
+   003E ldfld Assets.Scripts.UI.CUIEventScript::onClick
+   0043 ldarg.3 
+   0044 call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   0049 castclass NewbieWeakGuideControl/OnUIEventHandler
+   004E stfld Assets.Scripts.UI.CUIEventScript::onClick
+   0053 br IL_0089: ldloc.1
+   0058 ldarg.2 
+   0059 ldc.i4.1 
+   005A bne.un IL_0089: ldloc.1
+   005F ldarg.s bWeakGuide
+   0061 brfalse IL_0072: ldloc.1
+   0066 ldloc.1 
+   0067 ldflda Assets.Scripts.UI.CUIEventScript::m_onDownEventParams
+   006C ldarg.0 
+   006D stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0072 ldloc.1 
+   0073 dup 
+   0074 ldfld Assets.Scripts.UI.CUIEventScript::onDown
+   0079 ldarg.3 
+   007A call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   007F castclass NewbieWeakGuideControl/OnUIEventHandler
+   0084 stfld Assets.Scripts.UI.CUIEventScript::onDown
+   0089 ldloc.1 
+   008A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   008F stloc.0 
+   0090 ldarg.1 
+   0091 callvirt !!0 UnityEngine.GameObject::GetComponentInParent<Assets.Scripts.UI.CUIMiniEventScript>()
+   0096 stloc.2 
+   0097 ldloc.2 
+   0098 ldnull 
+   0099 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   009E brfalse IL_0110: ldarg.1
+   00A3 ldarg.2 
+   00A4 brtrue IL_00d8: ldarg.2
+   00A9 ldarg.s bWeakGuide
+   00AB brfalse IL_00bc: ldloc.2
+   00B0 ldloc.2 
+   00B1 ldflda Assets.Scripts.UI.CUIMiniEventScript::m_onClickEventParams
+   00B6 ldarg.0 
+   00B7 stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   00BC ldloc.2 
+   00BD dup 
+   00BE ldfld Assets.Scripts.UI.CUIMiniEventScript::onClick
+   00C3 ldarg.3 
+   00C4 call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   00C9 castclass NewbieWeakGuideControl/OnUIEventHandler
+   00CE stfld Assets.Scripts.UI.CUIMiniEventScript::onClick
+   00D3 br IL_0109: ldloc.2
+   00D8 ldarg.2 
+   00D9 ldc.i4.1 
+   00DA bne.un IL_0109: ldloc.2
+   00DF ldarg.s bWeakGuide
+   00E1 brfalse IL_00f2: ldloc.2
+   00E6 ldloc.2 
+   00E7 ldflda Assets.Scripts.UI.CUIMiniEventScript::m_onDownEventParams
+   00EC ldarg.0 
+   00ED stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   00F2 ldloc.2 
+   00F3 dup 
+   00F4 ldfld Assets.Scripts.UI.CUIMiniEventScript::onDown
+   00F9 ldarg.3 
+   00FA call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   00FF castclass NewbieWeakGuideControl/OnUIEventHandler
+   0104 stfld Assets.Scripts.UI.CUIMiniEventScript::onDown
+   0109 ldloc.2 
+   010A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   010F stloc.0 
+   0110 ldarg.1 
+   0111 callvirt !!0 UnityEngine.GameObject::GetComponentInParent<Assets.Scripts.UI.CUIMiniEventWithDragScript>()
+   0116 stloc.3 
+   0117 ldloc.3 
+   0118 ldnull 
+   0119 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   011E brfalse IL_0190: ldloc.0
+   0123 ldarg.2 
+   0124 brtrue IL_0158: ldarg.2
+   0129 ldarg.s bWeakGuide
+   012B brfalse IL_013c: ldloc.3
+   0130 ldloc.3 
+   0131 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   0136 ldarg.0 
+   0137 stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   013C ldloc.3 
+   013D dup 
+   013E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   0143 ldarg.3 
+   0144 call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   0149 castclass NewbieWeakGuideControl/OnUIEventHandler
+   014E stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   0153 br IL_0189: ldloc.3
+   0158 ldarg.2 
+   0159 ldc.i4.1 
+   015A bne.un IL_0189: ldloc.3
+   015F ldarg.s bWeakGuide
+   0161 brfalse IL_0172: ldloc.3
+   0166 ldloc.3 
+   0167 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   016C ldarg.0 
+   016D stfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0172 ldloc.3 
+   0173 dup 
+   0174 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   0179 ldarg.3 
+   017A call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   017F castclass NewbieWeakGuideControl/OnUIEventHandler
+   0184 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   0189 ldloc.3 
+   018A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   018F stloc.0 
+   0190 ldloc.0 
+   0191 ret 
+== System.Void ClickHandler(Assets.Scripts.UI.stUIEventParams& eventParams, UnityEngine.GameObject guideObj) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0006 stloc.0 
+   0007 ldnull 
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldfld NewbieWeakGuideControl::mEffectCache
+   000F ldloc.0 
+   0010 ldloca.s V_1
+   0012 callvirt System.Boolean DictionaryView`2<System.UInt32,UnityEngine.GameObject>::TryGetValue(!0,!1&)
+   0017 pop 
+   0018 ldloc.1 
+   0019 ldnull 
+   001A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001F brfalse IL_0025: ldloc.1
+   0024 ret 
+   0025 ldloc.1 
+   0026 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002B callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0030 stloc.2 
+   0031 ldloc.2 
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_0060: ldarg.0
+   003D ldloc.2 
+   003E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0043 ldarg.0 
+   0044 ldflda NewbieWeakGuideControl::curToAddEffectConf
+   0049 ldfld ResData.NewbieGuideWeakConf::bGuideActionType
+   004E ldarg.0 
+   004F ldftn System.Void NewbieWeakGuideControl::ClickHandler(Assets.Scripts.UI.stUIEventParams&,UnityEngine.GameObject)
+   0055 newobj System.Void NewbieWeakGuideControl/OnUIEventHandler::.ctor(System.Object,System.IntPtr)
+   005A call System.UInt32 NewbieWeakGuideControl::DelEventHander(UnityEngine.GameObject,ResData.RES_GUIDE_ACTION_TYPE,NewbieWeakGuideControl/OnUIEventHandler)
+   005F pop 
+   0060 ldarg.0 
+   0061 ldloc.0 
+   0062 ldc.i4.0 
+   0063 call System.Void NewbieWeakGuideControl::Complete(System.UInt32,System.UInt32)
+   0068 ret 
+== System.UInt32 DelEventHander(UnityEngine.GameObject obj, ResData.RES_GUIDE_ACTION_TYPE actionType, NewbieWeakGuideControl/OnUIEventHandler handler) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldnull 
+   0004 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0009 brfalse IL_014f: ldloc.0
+   000E ldarg.0 
+   000F callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0014 stloc.1 
+   0015 ldloc.1 
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001C brfalse IL_0079: ldarg.0
+   0021 ldarg.1 
+   0022 brtrue IL_004f: ldarg.1
+   0027 ldloc.1 
+   0028 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   002D ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0032 stloc.0 
+   0033 ldloc.1 
+   0034 dup 
+   0035 ldfld Assets.Scripts.UI.CUIEventScript::onClick
+   003A ldarg.2 
+   003B call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   0040 castclass NewbieWeakGuideControl/OnUIEventHandler
+   0045 stfld Assets.Scripts.UI.CUIEventScript::onClick
+   004A br IL_0079: ldarg.0
+   004F ldarg.1 
+   0050 ldc.i4.1 
+   0051 bne.un IL_0079: ldarg.0
+   0056 ldloc.1 
+   0057 ldflda Assets.Scripts.UI.CUIEventScript::m_onDownEventParams
+   005C ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0061 stloc.0 
+   0062 ldloc.1 
+   0063 dup 
+   0064 ldfld Assets.Scripts.UI.CUIEventScript::onDown
+   0069 ldarg.2 
+   006A call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   006F castclass NewbieWeakGuideControl/OnUIEventHandler
+   0074 stfld Assets.Scripts.UI.CUIEventScript::onDown
+   0079 ldarg.0 
+   007A callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIMiniEventScript>()
+   007F stloc.2 
+   0080 ldloc.2 
+   0081 ldnull 
+   0082 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0087 brfalse IL_00e4: ldarg.0
+   008C ldarg.1 
+   008D brtrue IL_00ba: ldarg.1
+   0092 ldloc.2 
+   0093 ldflda Assets.Scripts.UI.CUIMiniEventScript::m_onClickEventParams
+   0098 ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   009D stloc.0 
+   009E ldloc.2 
+   009F dup 
+   00A0 ldfld Assets.Scripts.UI.CUIMiniEventScript::onClick
+   00A5 ldarg.2 
+   00A6 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   00AB castclass NewbieWeakGuideControl/OnUIEventHandler
+   00B0 stfld Assets.Scripts.UI.CUIMiniEventScript::onClick
+   00B5 br IL_00e4: ldarg.0
+   00BA ldarg.1 
+   00BB ldc.i4.1 
+   00BC bne.un IL_00e4: ldarg.0
+   00C1 ldloc.2 
+   00C2 ldflda Assets.Scripts.UI.CUIMiniEventScript::m_onDownEventParams
+   00C7 ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   00CC stloc.0 
+   00CD ldloc.2 
+   00CE dup 
+   00CF ldfld Assets.Scripts.UI.CUIMiniEventScript::onDown
+   00D4 ldarg.2 
+   00D5 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   00DA castclass NewbieWeakGuideControl/OnUIEventHandler
+   00DF stfld Assets.Scripts.UI.CUIMiniEventScript::onDown
+   00E4 ldarg.0 
+   00E5 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIMiniEventWithDragScript>()
+   00EA stloc.3 
+   00EB ldloc.3 
+   00EC ldnull 
+   00ED call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F2 brfalse IL_014f: ldloc.0
+   00F7 ldarg.1 
+   00F8 brtrue IL_0125: ldarg.1
+   00FD ldloc.3 
+   00FE ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   0103 ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0108 stloc.0 
+   0109 ldloc.3 
+   010A dup 
+   010B ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   0110 ldarg.2 
+   0111 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   0116 castclass NewbieWeakGuideControl/OnUIEventHandler
+   011B stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   0120 br IL_014f: ldloc.0
+   0125 ldarg.1 
+   0126 ldc.i4.1 
+   0127 bne.un IL_014f: ldloc.0
+   012C ldloc.3 
+   012D ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   0132 ldfld Assets.Scripts.UI.stUIEventParams::weakGuideId
+   0137 stloc.0 
+   0138 ldloc.3 
+   0139 dup 
+   013A ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   013F ldarg.2 
+   0140 call System.Delegate System.Delegate::Remove(System.Delegate,System.Delegate)
+   0145 castclass NewbieWeakGuideControl/OnUIEventHandler
+   014A stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   014F ldloc.0 
+   0150 ret 
+== System.Boolean IsLobbyChatWeakGuideComplete() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.s 16
+   0002 call System.Boolean NewbieGuideManager::IsWeakNewbieBitSet(System.Int32)
+   0007 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/Dialog/WeakGuideBubble.prefab
+   0005 stsfld NewbieWeakGuideControl::WEAK_BUBBLE_PATH
+   000A ret 
+  NESTED NewbieWeakGuideControl/NewbieWeakGuideScriptControlDelegate
+  NESTED NewbieWeakGuideControl/OnUIEventHandler

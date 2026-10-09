@@ -1,0 +1,3829 @@
+// TYPE Assets.Scripts.GameLogic.MinimapComponent  base=Assets.Scripts.GameLogic.LogicComponent  attrs=Public, BeforeFieldInit
+  FIELD System.String[] MarkCenterSpriteNameList
+  FIELD System.String[] MarkHeadSpriteNameList
+  FIELD System.Int32 c_noneHeroRefreshIntervalFrame = 4
+  FIELD System.Int32 c_heroRefreshintervalFrame = 2
+  FIELD VInt3 m_actorForward
+  FIELD System.Boolean m_bHeroSameCamp
+  FIELD UnityEngine.GameObject m_heroIconBG_small
+  FIELD UnityEngine.GameObject m_heroIconBG_big
+  FIELD Assets.Scripts.GameSystem.MinimapSys theMmpSys
+  FIELD CPooledGameObjectScript m_mapPointer_small
+  FIELD UnityEngine.Transform m_heroHead_small_Trans
+  FIELD UnityEngine.Transform m_heroDying_small_Trans
+  FIELD CPooledGameObjectScript m_mapOutBoundPointer_small
+  FIELD UnityEngine.Transform m_mapOutBoundPointer_small_Pivot
+  FIELD UnityEngine.Transform m_mapOutBoundPointer_small_CenterImg
+  FIELD CPooledGameObjectScript m_mapPointer_big
+  FIELD UnityEngine.Transform m_heroHead_big_Trans
+  FIELD UnityEngine.Transform m_heroDying_big_Trans
+  FIELD Sprite3D bigTower_spt3d
+  FIELD Sprite3D smallTower_spt3d
+  FIELD Sprite3D bigCallMonster_spt3d
+  FIELD Sprite3D smallCallMonster_spt3d
+  FIELD System.Int32 callMonsterLifeTime
+  FIELD System.Int32 callMonsterCurTime
+  FIELD Assets.Scripts.GameSystem.UI3DEventCom m_evtCom
+  FIELD UnityEngine.UI.Image m_signalImage
+  FIELD UnityEngine.Vector3 m_actorPos
+  FIELD System.Int32 BASE_ATTACK_INTERVAL = 20000
+  FIELD System.UInt64 LastBaseAttackTime
+  FIELD System.Boolean m_pointerLogicVisible
+  FIELD System.Int32 m_dirtyFlags
+  FIELD System.Boolean m_isVanguard
+  FIELD System.Boolean m_isTaoShaFinalBoss
+  FIELD System.Boolean m_needShowAfterDead
+  FIELD System.Single m_deadShowStartTime
+  FIELD System.Single DEAD_SHOW_TIME_SECONDS = 30
+  FIELD System.UInt32 s_showAliceLowHpWarning
+  FIELD System.UInt32 s_showBigmapHP
+  FIELD System.Single m_bloodRate
+  FIELD System.Boolean m_lowHPWarningShow
+  FIELD CPooledGameObjectScript m_smallBloodWarning
+  FIELD CPooledGameObjectScript m_bigBlood
+  FIELD Sprite3D m_bigBloodSprite
+  FIELD CPooledGameObjectScript m_friendIconSmall
+  FIELD CPooledGameObjectScript m_friendIconBig
+  FIELD System.Boolean bInViewPort
+  FIELD System.Boolean bInBigMapViewPort
+  PROP System.Boolean IsHostView
+  PROP UnityEngine.GameObject MapPointerSmall
+  PROP UnityEngine.GameObject MapPointerBig
+  PROP System.Int32 CallMonsterLifeTime
+  PROP System.Int32 CallMonsterCurTime
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 1
+   0006 stfld Assets.Scripts.GameLogic.MinimapComponent::m_bloodRate
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   0019 ldarg.0 
+   001A call System.Void Assets.Scripts.GameLogic.LogicComponent::.ctor()
+   001F ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LogicComponent::OnUse()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnInitMiniMapElement()
+   000C ret 
+== System.Void Born(Assets.Scripts.GameLogic.ActorLinker owner) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameLogic.LogicComponent::Born(Assets.Scripts.GameLogic.ActorLinker)
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnInitMiniMapElement()
+   000D ldarg.0 
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0014 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsVanguard(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0019 stfld Assets.Scripts.GameLogic.MinimapComponent::m_isVanguard
+   001E ldarg.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0025 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsTaoShaFinalBoss(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   002A stfld Assets.Scripts.GameLogic.MinimapComponent::m_isTaoShaFinalBoss
+   002F ret 
+== System.Void Uninit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnRegisterEvents()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnInitMiniMapElement()
+   000C ret 
+== System.Void UnInitMiniMapElement() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0007 ldarg.0 
+   0008 ldc.r4 1
+   000D stfld Assets.Scripts.GameLogic.MinimapComponent::m_bloodRate
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   0019 ldarg.0 
+   001A ldc.i4.1 
+   001B stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0020 ldarg.0 
+   0021 ldc.i4.1 
+   0022 stfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   0027 ldarg.0 
+   0028 ldc.i4.0 
+   0029 stfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   002E ldarg.0 
+   002F ldc.r4 0
+   0034 stfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   0039 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   003E stloc.0 
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   0045 brfalse IL_0055: ldarg.0
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   0050 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0055 ldarg.0 
+   0056 ldnull 
+   0057 stfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   0062 brfalse IL_0072: ldarg.0
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   006D call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0072 ldarg.0 
+   0073 ldnull 
+   0074 stfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   007F ldnull 
+   0080 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0085 brfalse IL_0095: ldarg.0
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0090 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(UnityEngine.Transform)
+   0095 ldarg.0 
+   0096 ldnull 
+   0097 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   00A2 brfalse IL_00c3: ldarg.0
+   00A7 ldloc.0 
+   00A8 ldarg.0 
+   00A9 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   00AE ldfld CPooledGameObjectScript::Go
+   00B3 callvirt System.Void Assets.Scripts.UI.C3DUIManager::RemoveGameObjectFromGroup(UnityEngine.GameObject)
+   00B8 ldarg.0 
+   00B9 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   00BE call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   00C3 ldarg.0 
+   00C4 ldnull 
+   00C5 stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00D0 brfalse IL_00f1: ldarg.0
+   00D5 ldloc.0 
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00DC ldfld CPooledGameObjectScript::Go
+   00E1 callvirt System.Void Assets.Scripts.UI.C3DUIManager::RemoveGameObjectFromGroup(UnityEngine.GameObject)
+   00E6 ldarg.0 
+   00E7 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00EC call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   00F1 ldarg.0 
+   00F2 ldnull 
+   00F3 stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00F8 ldarg.0 
+   00F9 ldnull 
+   00FA stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_Pivot
+   00FF ldarg.0 
+   0100 ldnull 
+   0101 stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_CenterImg
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   010C ldnull 
+   010D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0112 brfalse IL_0156: ldarg.0
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   011D callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0122 stloc.1 
+   0123 ldloc.1 
+   0124 ldnull 
+   0125 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   012A brfalse IL_013a: ldloc.0
+   012F ldloc.1 
+   0130 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   0135 callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   013A ldloc.0 
+   013B ldarg.0 
+   013C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0141 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0146 callvirt System.Void Assets.Scripts.UI.C3DUIManager::RemoveGameObjectFromGroup(UnityEngine.GameObject)
+   014B ldarg.0 
+   014C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0151 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(UnityEngine.Transform)
+   0156 ldarg.0 
+   0157 ldnull 
+   0158 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   015D ldarg.0 
+   015E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   0163 brfalse IL_0173: ldarg.0
+   0168 ldarg.0 
+   0169 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   016E call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0173 ldarg.0 
+   0174 ldnull 
+   0175 stfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   017A ldarg.0 
+   017B ldnull 
+   017C stfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBloodSprite
+   0181 ldarg.0 
+   0182 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   0187 brfalse IL_0197: ldarg.0
+   018C ldarg.0 
+   018D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   0192 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   0197 ldarg.0 
+   0198 ldnull 
+   0199 stfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   019E ldarg.0 
+   019F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   01A4 ldnull 
+   01A5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01AA brfalse IL_01ba: ldarg.0
+   01AF ldarg.0 
+   01B0 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   01B5 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(UnityEngine.Transform)
+   01BA ldarg.0 
+   01BB ldnull 
+   01BC stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   01C1 ldarg.0 
+   01C2 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01C7 brfalse IL_01e8: ldarg.0
+   01CC ldloc.0 
+   01CD ldarg.0 
+   01CE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01D3 ldfld CPooledGameObjectScript::Go
+   01D8 callvirt System.Void Assets.Scripts.UI.C3DUIManager::RemoveGameObjectFromGroup(UnityEngine.GameObject)
+   01DD ldarg.0 
+   01DE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01E3 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(CPooledGameObjectScript)
+   01E8 ldarg.0 
+   01E9 ldnull 
+   01EA stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01EF ldarg.0 
+   01F0 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   01F5 ldnull 
+   01F6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01FB brfalse IL_023f: ldarg.0
+   0200 ldarg.0 
+   0201 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0206 callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   020B stloc.2 
+   020C ldloc.2 
+   020D ldnull 
+   020E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0213 brfalse IL_0223: ldloc.0
+   0218 ldloc.2 
+   0219 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   021E callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   0223 ldloc.0 
+   0224 ldarg.0 
+   0225 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   022A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   022F callvirt System.Void Assets.Scripts.UI.C3DUIManager::RemoveGameObjectFromGroup(UnityEngine.GameObject)
+   0234 ldarg.0 
+   0235 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   023A call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::RecycleMapGameObject(UnityEngine.Transform)
+   023F ldarg.0 
+   0240 ldnull 
+   0241 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0246 ldarg.0 
+   0247 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   024C call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::UnRegisterEventCom(Assets.Scripts.GameSystem.UI3DEventCom)
+   0251 ldarg.0 
+   0252 ldnull 
+   0253 stfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0258 ldarg.0 
+   0259 ldnull 
+   025A stfld Assets.Scripts.GameLogic.MinimapComponent::bigTower_spt3d
+   025F ldarg.0 
+   0260 ldnull 
+   0261 stfld Assets.Scripts.GameLogic.MinimapComponent::smallTower_spt3d
+   0266 ldarg.0 
+   0267 ldnull 
+   0268 stfld Assets.Scripts.GameLogic.MinimapComponent::bigCallMonster_spt3d
+   026D ldarg.0 
+   026E ldnull 
+   026F stfld Assets.Scripts.GameLogic.MinimapComponent::smallCallMonster_spt3d
+   0274 ldarg.0 
+   0275 ldc.i4.0 
+   0276 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterLifeTime(System.Int32)
+   027B ldarg.0 
+   027C ldc.i4.0 
+   027D call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterCurTime(System.Int32)
+   0282 ldarg.0 
+   0283 ldsfld VInt3::zero
+   0288 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorForward
+   028D ldarg.0 
+   028E ldc.i4.0 
+   028F stfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0294 ldarg.0 
+   0295 ldnull 
+   0296 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_small
+   029B ldarg.0 
+   029C ldnull 
+   029D stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_big
+   02A2 ldarg.0 
+   02A3 ldc.i4.0 
+   02A4 conv.i8 
+   02A5 stfld Assets.Scripts.GameLogic.MinimapComponent::LastBaseAttackTime
+   02AA ldarg.0 
+   02AB ldc.i4.0 
+   02AC stfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   02B1 ldarg.0 
+   02B2 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   02B7 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   02BC ldarg.0 
+   02BD ldc.i4.0 
+   02BE stfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   02C3 ldarg.0 
+   02C4 ldc.i4.0 
+   02C5 stfld Assets.Scripts.GameLogic.MinimapComponent::m_isVanguard
+   02CA ldarg.0 
+   02CB ldc.i4.0 
+   02CC stfld Assets.Scripts.GameLogic.MinimapComponent::m_isTaoShaFinalBoss
+   02D1 ret 
+== System.Void Prepare() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LogicComponent::Prepare()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.MinimapComponent::RegisterEvents()
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameLogic.MinimapComponent::InitMinimapUI()
+   0012 ldarg.0 
+   0013 call System.Void Assets.Scripts.GameLogic.MinimapComponent::RefreshData()
+   0018 ldarg.0 
+   0019 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   001E callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMinimapDeadShow()
+   0023 brfalse IL_0038: ldc.i4.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   002E callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0033 ldc.i4.0 
+   0034 ceq 
+   0036 br.s IL_0039: stfld System.Boolean Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   0038 ldc.i4.0 
+   0039 stfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   003E ldarg.0 
+   003F ldc.r4 0
+   0044 stfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   0049 ldarg.0 
+   004A ldc.i4.1 
+   004B call System.Void Assets.Scripts.GameLogic.MinimapComponent::setLogicVisible(System.Boolean)
+   0050 ldarg.0 
+   0051 ldc.i4.1 
+   0052 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0057 ldarg.0 
+   0058 ldc.i4.s 16
+   005A call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   005F ret 
+== System.Void Deactive() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LogicComponent::Deactive()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnRegisterEvents()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0012 brfalse IL_002e: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   001D ldc.i4.1 
+   001E stfld Assets.Scripts.GameSystem.UI3DEventCom::isDead
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0029 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventCom::Clear()
+   002E ldarg.0 
+   002F ldc.i4.0 
+   0030 call System.Void Assets.Scripts.GameLogic.MinimapComponent::setLogicVisible(System.Boolean)
+   0035 ldarg.0 
+   0036 call System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessFlags()
+   003B ret 
+== System.Void RefreshData() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0006 brfalse IL_0032: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0011 ldflda Assets.Scripts.GameSystem.UI3DEventCom::m_eventParams
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   001C callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0021 stfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   002C ldc.i4.0 
+   002D stfld Assets.Scripts.GameSystem.UI3DEventCom::isDead
+   0032 ret 
+== System.Void Interpolation(System.Int32 delta) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameLogic.LogicComponent::LateUpdate(System.Int32)
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessFlags()
+   000D ldarg.0 
+   000E ldarg.1 
+   000F call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateSpecialMonsterPointer(System.Int32)
+   0014 ret 
+== System.Void UpdateSpecialMonsterPointer(System.Int32 delta) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Int32 Assets.Scripts.GameLogic.MinimapComponent::get_CallMonsterLifeTime()
+   0006 ldc.i4.0 
+   0007 ble IL_007c: ret
+   000C ldarg.0 
+   000D dup 
+   000E call System.Int32 Assets.Scripts.GameLogic.MinimapComponent::get_CallMonsterCurTime()
+   0013 ldarg.1 
+   0014 sub 
+   0015 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterCurTime(System.Int32)
+   001A ldarg.0 
+   001B call System.Int32 Assets.Scripts.GameLogic.MinimapComponent::get_CallMonsterCurTime()
+   0020 conv.r4 
+   0021 ldarg.0 
+   0022 call System.Int32 Assets.Scripts.GameLogic.MinimapComponent::get_CallMonsterLifeTime()
+   0027 conv.r4 
+   0028 div 
+   0029 stloc.0 
+   002A ldloc.0 
+   002B ldc.r4 0
+   0030 bgt.un IL_0042: ldarg.0
+   0035 ldarg.0 
+   0036 ldc.i4.0 
+   0037 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterLifeTime(System.Int32)
+   003C ldc.r4 0
+   0041 stloc.0 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.MinimapComponent::smallCallMonster_spt3d
+   0048 ldnull 
+   0049 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004E brfalse IL_005f: ldarg.0
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.GameLogic.MinimapComponent::smallCallMonster_spt3d
+   0059 ldloc.0 
+   005A callvirt System.Void Sprite3D::set_fillAmount(System.Single)
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameLogic.MinimapComponent::bigCallMonster_spt3d
+   0065 ldnull 
+   0066 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006B brfalse IL_007c: ret
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameLogic.MinimapComponent::bigCallMonster_spt3d
+   0076 ldloc.0 
+   0077 callvirt System.Void Sprite3D::set_fillAmount(System.Single)
+   007C ret 
+== System.Void SetMonsterLifeTime(System.Int32 time) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterCurTime(System.Int32)
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterLifeTime(System.Int32)
+   000E ret 
+== System.Void ProcessClip() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_00a6: ldarg.0
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateViewPort()
+   0017 brfalse IL_00a6: ldarg.0
+   001C ldloc.0 
+   001D callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_viewPortChange()
+   0022 brfalse IL_00a6: ldarg.0
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   002D callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0032 brtrue IL_0065: ldc.i4.0
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   003D brfalse IL_0065: ldc.i4.0
+   0042 ldarg.0 
+   0043 ldc.i4.1 
+   0044 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0049 ldarg.0 
+   004A ldloc.0 
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0051 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0056 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::ViewPortContains(UnityEngine.Vector3)
+   005B stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0060 br IL_00a1: br IL_00ad
+   0065 ldc.i4.0 
+   0066 stloc.1 
+   0067 ldloc.0 
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   006E ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0073 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::ViewPortContains(UnityEngine.Vector3)
+   0078 stloc.1 
+   0079 ldloc.1 
+   007A brfalse IL_0086: ldarg.0
+   007F ldarg.0 
+   0080 ldc.i4.1 
+   0081 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   008C ldloc.1 
+   008D beq IL_00a1: br IL_00ad
+   0092 ldarg.0 
+   0093 ldloc.1 
+   0094 stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0099 ldarg.0 
+   009A ldc.i4.s 16
+   009C call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00A1 br IL_00ad: ldloc.0
+   00A6 ldarg.0 
+   00A7 ldc.i4.1 
+   00A8 stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   00AD ldloc.0 
+   00AE brfalse IL_0103: ret
+   00B3 ldloc.0 
+   00B4 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateBigMapViewPort()
+   00B9 brfalse IL_0103: ret
+   00BE ldloc.0 
+   00BF callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_bigMapViewPortChange()
+   00C4 brfalse IL_0103: ret
+   00C9 ldloc.0 
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00D0 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   00D5 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::BigViewPortContains(UnityEngine.Vector3)
+   00DA stloc.2 
+   00DB ldloc.2 
+   00DC brfalse IL_00e8: ldarg.0
+   00E1 ldarg.0 
+   00E2 ldc.i4.1 
+   00E3 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00E8 ldarg.0 
+   00E9 ldfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   00EE ldloc.2 
+   00EF beq IL_0103: ret
+   00F4 ldarg.0 
+   00F5 ldloc.2 
+   00F6 stfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   00FB ldarg.0 
+   00FC ldc.i4.s 16
+   00FE call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0103 ret 
+== System.Void OnClip() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UnRegisterEvents()
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 call System.Void Assets.Scripts.GameLogic.MinimapComponent::ActorHideInMinimap(System.Boolean)
+   000D ldarg.0 
+   000E call System.Void Assets.Scripts.GameLogic.MinimapComponent::refreshLogicVisible()
+   0013 ldarg.0 
+   0014 call System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessFlags()
+   0019 ret 
+== System.Void OnClipRecover(System.Boolean registerEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_000c: ldarg.0
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameLogic.MinimapComponent::RegisterEvents()
+   000C ldarg.0 
+   000D ldc.i4.0 
+   000E call System.Void Assets.Scripts.GameLogic.MinimapComponent::ActorHideInMinimap(System.Boolean)
+   0013 ldarg.0 
+   0014 call System.Void Assets.Scripts.GameLogic.MinimapComponent::refreshLogicVisible()
+   0019 ldarg.0 
+   001A call System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessFlags()
+   001F ret 
+== System.Void ProcessFlags() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   0006 brfalse IL_0042: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   0011 ldc.r4 0
+   0016 beq IL_0042: ldarg.0
+   001B call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   0026 sub 
+   0027 ldc.r4 30
+   002C ble.un IL_0042: ldarg.0
+   0031 ldarg.0 
+   0032 ldc.r4 0
+   0037 stfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   003C ldarg.0 
+   003D call System.Void Assets.Scripts.GameLogic.MinimapComponent::clearAfterDeadDisappear()
+   0042 ldarg.0 
+   0043 call System.Void Assets.Scripts.GameLogic.MinimapComponent::ProcessClip()
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   004E callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0053 brtrue IL_0088: ldarg.0
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_isVanguard
+   005E brtrue IL_0088: ldarg.0
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_isTaoShaFinalBoss
+   0069 brtrue IL_0088: ldarg.0
+   006E ldarg.0 
+   006F ldc.i4.s 16
+   0071 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0076 brtrue IL_0088: ldarg.0
+   007B ldarg.0 
+   007C ldc.i4.1 
+   007D call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0082 brtrue IL_0088: ldarg.0
+   0087 ret 
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   008E callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0093 brfalse IL_00a3: ldarg.0
+   0098 ldarg.0 
+   0099 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::IsNeedUpdateNoneHero()
+   009E brtrue IL_00cf: ldarg.0
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00A9 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00AE brfalse IL_00c4: ldarg.0
+   00B3 ldarg.0 
+   00B4 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00B9 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00BE ldc.i4.4 
+   00BF bne.un IL_0116: ldarg.0
+   00C4 ldarg.0 
+   00C5 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::IsNeedUpdateHero()
+   00CA brfalse IL_0116: ldarg.0
+   00CF ldarg.0 
+   00D0 call System.Void Assets.Scripts.GameLogic.MinimapComponent::CheckPositionChange()
+   00D5 ldarg.0 
+   00D6 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00DB callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00E0 brfalse IL_00f6: ldarg.0
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00EB callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00F0 ldc.i4.4 
+   00F1 bne.un IL_0116: ldarg.0
+   00F6 ldarg.0 
+   00F7 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   00FC brtrue IL_0110: ldarg.0
+   0101 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0106 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   010B brfalse IL_0116: ldarg.0
+   0110 ldarg.0 
+   0111 call System.Void Assets.Scripts.GameLogic.MinimapComponent::CheckRotationChange()
+   0116 ldarg.0 
+   0117 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   011C ldc.i4.0 
+   011D ble IL_015f: ret
+   0122 ldarg.0 
+   0123 ldc.i4.1 
+   0124 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0129 brfalse IL_0134: ldarg.0
+   012E ldarg.0 
+   012F call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap()
+   0134 ldarg.0 
+   0135 ldc.i4.2 
+   0136 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   013B brfalse IL_0146: ldarg.0
+   0140 ldarg.0 
+   0141 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateMiniMapHeroRotation()
+   0146 ldarg.0 
+   0147 ldc.i4.s 16
+   0149 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   014E brfalse IL_0159: ldarg.0
+   0153 ldarg.0 
+   0154 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateVisible()
+   0159 ldarg.0 
+   015A call System.Void Assets.Scripts.GameLogic.MinimapComponent::ClearDirtyFlags()
+   015F ret 
+== System.Void ActorHideInMinimap(System.Boolean input) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldc.i4.0 
+   0003 ceq 
+   0005 stfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   000A ret 
+== System.Void OnActorDying() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_0064: ldarg.0
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0023 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0028 ldc.i4.1 
+   0029 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0034 ldstr img
+   0039 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   003E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0043 ldc.i4.1 
+   0044 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   004F ldstr dead
+   0054 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0059 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005E ldc.i4.0 
+   005F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   006A ldnull 
+   006B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0070 brfalse IL_00bc: ret
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   007B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0080 ldc.i4.1 
+   0081 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   008C ldstr img
+   0091 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0096 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009B ldc.i4.1 
+   009C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00A7 ldstr dead
+   00AC callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00B1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00B6 ldc.i4.0 
+   00B7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BC ret 
+== System.Void OnActorDyingRevive() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_002e: ldarg.0
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0023 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0028 ldc.i4.0 
+   0029 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A brfalse IL_0050: ret
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   0045 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   004A ldc.i4.0 
+   004B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0050 ret 
+== System.Void OnActorDead() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   000D brtrue IL_0013: ldarg.0
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   0019 brfalse IL_003b: ldarg.0
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 stfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   002B ldfld CPooledGameObjectScript::Go
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   0036 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0041 ldnull 
+   0042 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0047 brfalse IL_0093: ldarg.0
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0052 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0057 ldc.i4.1 
+   0058 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0063 ldstr img
+   0068 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0072 ldc.i4.0 
+   0073 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   007E ldstr dead
+   0083 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0088 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   008D ldc.i4.1 
+   008E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   0099 ldnull 
+   009A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   009F brfalse IL_00eb: ldarg.0
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00AA callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AF ldc.i4.1 
+   00B0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00BB ldstr img
+   00C0 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00C5 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00CA ldc.i4.0 
+   00CB call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D0 ldarg.0 
+   00D1 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00D6 ldstr dead
+   00DB callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00E0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00E5 ldc.i4.1 
+   00E6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00EB ldarg.0 
+   00EC ldfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   00F1 brfalse IL_0175: ldarg.0
+   00F6 ldarg.0 
+   00F7 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   00FC ldnull 
+   00FD call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0102 brfalse IL_012a: ldarg.0
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   010D callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0112 stloc.0 
+   0113 ldloc.0 
+   0114 ldnull 
+   0115 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   011A brfalse IL_012a: ldarg.0
+   011F ldloc.0 
+   0120 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_Grey
+   0125 callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   012A ldarg.0 
+   012B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0130 ldnull 
+   0131 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0136 brfalse IL_015e: ldarg.0
+   013B ldarg.0 
+   013C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0141 callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0146 stloc.1 
+   0147 ldloc.1 
+   0148 ldnull 
+   0149 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   014E brfalse IL_015e: ldarg.0
+   0153 ldloc.1 
+   0154 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_Grey
+   0159 callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   015E ldarg.0 
+   015F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0164 brtrue IL_0174: ret
+   0169 ldarg.0 
+   016A call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   016F stfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   0174 ret 
+   0175 ldarg.0 
+   0176 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   017B ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   0180 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheBaseAttribute
+   0185 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/BaseAttribute::DeadControl
+   018A brfalse IL_0190: ldarg.0
+   018F ret 
+   0190 ldarg.0 
+   0191 call System.Void Assets.Scripts.GameLogic.MinimapComponent::clearAfterDeadDisappear()
+   0196 ret 
+== System.Void clearAfterDeadDisappear() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.s 16
+   0003 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0008 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000D callvirt Assets.Scripts.GameSystem.TowerHitMgr Assets.Scripts.GameSystem.CBattleSystem::get_TowerHitMgr()
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 brfalse IL_002a: ldarg.0
+   0019 ldloc.0 
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0020 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0025 callvirt System.Void Assets.Scripts.GameSystem.TowerHitMgr::Remove(System.UInt32)
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0030 brfalse IL_004c: ldarg.0
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   003B ldc.i4.1 
+   003C stfld Assets.Scripts.GameSystem.UI3DEventCom::isDead
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0047 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventCom::Clear()
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0052 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0057 brfalse IL_006d: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0062 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0067 ldc.i4.3 
+   0068 bne.un IL_00a9: ldarg.0
+   006D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0072 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0077 brfalse IL_0090: ldnull
+   007C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0081 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0086 ldfld Assets.Scripts.GameSystem.MinimapSys::miniMapEffectModule
+   008B br IL_0091: stloc.1
+   0090 ldnull 
+   0091 stloc.1 
+   0092 ldloc.1 
+   0093 brfalse IL_00a9: ldarg.0
+   0098 ldloc.1 
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   009F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00A4 callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule::StopFollowActorEffect(System.UInt32)
+   00A9 ldarg.0 
+   00AA ldc.i4.0 
+   00AB call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterCurTime(System.Int32)
+   00B0 ldarg.0 
+   00B1 ldc.i4.0 
+   00B2 call System.Void Assets.Scripts.GameLogic.MinimapComponent::set_CallMonsterLifeTime(System.Int32)
+   00B7 ret 
+== System.Void OnActorRevive() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0006 brfalse IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0011 ldc.i4.0 
+   0012 stfld Assets.Scripts.GameSystem.UI3DEventCom::isDead
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   001D brfalse IL_008a: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0056: ldarg.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0039 callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   003E stloc.0 
+   003F ldloc.0 
+   0040 ldnull 
+   0041 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0046 brfalse IL_0056: ldarg.0
+   004B ldloc.0 
+   004C ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   0051 callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   005C ldnull 
+   005D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0062 brfalse IL_008a: ldarg.0
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   006D callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0072 stloc.1 
+   0073 ldloc.1 
+   0074 ldnull 
+   0075 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   007A brfalse IL_008a: ldarg.0
+   007F ldloc.1 
+   0080 ldsfld Assets.Scripts.UI.CUIUtility::s_Color_White
+   0085 callvirt System.Void Sprite3D::set_color(UnityEngine.Color)
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0090 ldnull 
+   0091 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0096 brfalse IL_00ac: ldarg.0
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   00A1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A6 ldc.i4.0 
+   00A7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00AC ldarg.0 
+   00AD ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00B2 ldnull 
+   00B3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B8 brfalse IL_00ce: ldarg.0
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   00C3 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C8 ldc.i4.0 
+   00C9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00CE ldarg.0 
+   00CF ldc.r4 0
+   00D4 stfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   00D9 ldarg.0 
+   00DA ldc.i4.1 
+   00DB call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00E0 ldarg.0 
+   00E1 ldc.i4.s 16
+   00E3 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00E8 ret 
+== System.Void RegisterEvents() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   000B ldc.i4.2 
+   000C bne.un IL_0060: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0017 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   001C ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0021 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0026 ldc.i4.2 
+   0027 bne.un IL_0044: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   002C call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0031 ldc.i4.s 15
+   0033 ldarg.0 
+   0034 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnBaseAttacked(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   003A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   003F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0044 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0049 ldc.i4.1 
+   004A ldarg.0 
+   004B ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnBaseHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   0051 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0056 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   005B br IL_0098: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0066 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   006B brfalse IL_0081: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0076 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   007B ldc.i4.4 
+   007C bne.un IL_0098: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0081 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0086 ldc.i4.1 
+   0087 ldarg.0 
+   0088 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   008E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0093 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0098 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   009D ldc.i4.s 80
+   009F ldarg.0 
+   00A0 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnCameraRotationChange(Assets.Scripts.GameLogic.stCameraRotationChangeEventParams&)
+   00A6 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.stCameraRotationChangeEventParams>::.ctor(System.Object,System.IntPtr)
+   00AB callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.stCameraRotationChangeEventParams>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00B0 ret 
+== System.Void UnRegisterEvents() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   000B ldc.i4.2 
+   000C bne.un IL_0060: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0017 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   001C ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0021 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0026 ldc.i4.2 
+   0027 bne.un IL_0044: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   002C call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0031 ldc.i4.s 15
+   0033 ldarg.0 
+   0034 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnBaseAttacked(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   003A newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   003F callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0044 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0049 ldc.i4.1 
+   004A ldarg.0 
+   004B ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnBaseHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   0051 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0056 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   005B br IL_0098: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0066 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   006B brfalse IL_0081: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0076 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   007B ldc.i4.4 
+   007C bne.un IL_0098: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0081 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0086 ldc.i4.1 
+   0087 ldarg.0 
+   0088 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam&)
+   008E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>::.ctor(System.Object,System.IntPtr)
+   0093 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0098 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   009D ldc.i4.s 80
+   009F ldarg.0 
+   00A0 ldftn System.Void Assets.Scripts.GameLogic.MinimapComponent::OnCameraRotationChange(Assets.Scripts.GameLogic.stCameraRotationChangeEventParams&)
+   00A6 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.stCameraRotationChangeEventParams>::.ctor(System.Object,System.IntPtr)
+   00AB callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.stCameraRotationChangeEventParams>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00B0 ret 
+== System.Boolean IsNeedMiniMapComponent(Assets.Scripts.GameLogic.ActorLinker actor) attrs=Public, Static, HideBySig maxstack=3
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   000C brtrue IL_0013: ldarg.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldarg.0 
+   0014 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0019 ldc.i4.2 
+   001A bne.un IL_004b: ldarg.0
+   001F ldarg.0 
+   0020 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   0025 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   002A ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::ShowInMinimap
+   002F brfalse IL_0044: ldc.i4.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.ActorLinker::ObjLinker
+   003A ldfld Assets.Scripts.GameLogic.ActorConfig::Invincible
+   003F brfalse IL_0046: br IL_00d6
+   0044 ldc.i4.0 
+   0045 ret 
+   0046 br IL_00d6: ldc.i4.1
+   004B ldarg.0 
+   004C callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0051 ldc.i4.1 
+   0052 bne.un IL_00a6: ldarg.0
+   0057 ldc.i4.0 
+   0058 stloc.2 
+   0059 ldarg.0 
+   005A ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   005F ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   0064 ldarg.0 
+   0065 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   006A ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::Difficuty
+   006F ldloca.s V_1
+   0071 call System.Boolean MonsterDataHelper::GetDataCfgInfo(System.Int32,System.Int32,ResData.ResMonsterCfgInfo&)
+   0076 brfalse IL_0089: ldloca.s V_1
+   007B ldloca.s V_1
+   007D ldfld ResData.ResMonsterCfgInfo::bHideInMinimap
+   0082 ldc.i4.0 
+   0083 cgt 
+   0085 ldc.i4.0 
+   0086 ceq 
+   0088 stloc.2 
+   0089 ldloca.s V_1
+   008B ldfld ResData.ResMonsterCfgInfo::bUseMinimapElement
+   0090 ldc.i4.0 
+   0091 cgt 
+   0093 ldc.i4.0 
+   0094 ceq 
+   0096 stloc.3 
+   0097 ldloc.2 
+   0098 brfalse IL_00a0: ldc.i4.0
+   009D ldloc.3 
+   009E br.s IL_00a1: stloc.s V_4
+   00A0 ldc.i4.0 
+   00A1 stloc.s V_4
+   00A3 ldloc.s V_4
+   00A5 ret 
+   00A6 ldarg.0 
+   00A7 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00AC brtrue IL_00d6: ldc.i4.1
+   00B1 ldloca.s V_5
+   00B3 ldarg.0 
+   00B4 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   00B9 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00BE call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   00C3 brfalse IL_00d6: ldc.i4.1
+   00C8 ldloca.s V_5
+   00CA ldfld ResData.ResHeroCfgInfo::bHideInMinimap
+   00CF ldc.i4.0 
+   00D0 cgt 
+   00D2 ldc.i4.0 
+   00D3 ceq 
+   00D5 ret 
+   00D6 ldc.i4.1 
+   00D7 ret 
+== System.Void InitMinimapUI() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0006 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000B stfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0010 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0015 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001A stloc.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   0021 brtrue IL_0134: ldarg.0
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   002C brfalse IL_0134: ldarg.0
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0037 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateViewPort()
+   003C brfalse IL_0134: ldarg.0
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0047 brfalse IL_0134: ldarg.0
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0052 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0057 brtrue IL_0134: ldarg.0
+   005C ldarg.0 
+   005D call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::get_IsHostView()
+   0062 brfalse IL_0134: ldarg.0
+   0067 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   006C callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   0071 brfalse IL_0134: ldarg.0
+   0076 ldloc.0 
+   0077 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   007C brfalse IL_0134: ldarg.0
+   0081 ldc.i4.1 
+   0082 stloc.2 
+   0083 ldloca.s V_1
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   008B ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0090 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   0095 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   009A brfalse IL_00aa: ldloc.2
+   009F ldloca.s V_1
+   00A1 ldfld ResData.ResHeroCfgInfo::bLevelDynamicHero
+   00A6 ldc.i4.0 
+   00A7 ceq 
+   00A9 stloc.2 
+   00AA ldloc.2 
+   00AB brfalse IL_0134: ldarg.0
+   00B0 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   00B5 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   00BA callvirt Assets.Scripts.GameSystem.SignalPanel Assets.Scripts.GameSystem.FightForm::GetSignalPanel()
+   00BF ldarg.0 
+   00C0 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00C5 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   00CA callvirt System.Int32 Assets.Scripts.GameSystem.SignalPanel::GetPlayerIndex(System.UInt32)
+   00CF stloc.3 
+   00D0 ldarg.0 
+   00D1 ldsfld Assets.Scripts.GameLogic.MinimapComponent::MarkCenterSpriteNameList
+   00D6 ldloc.3 
+   00D7 ldelem.ref 
+   00D8 ldsfld Assets.Scripts.GameLogic.MinimapComponent::MarkHeadSpriteNameList
+   00DD ldloc.3 
+   00DE ldelem.ref 
+   00DF call CPooledGameObjectScript Assets.Scripts.GameSystem.MiniMapSysUT::GetMarkSignalGameObject(System.String,System.String)
+   00E4 stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00EF brfalse IL_0134: ldarg.0
+   00F4 ldarg.0 
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00FB ldfld CPooledGameObjectScript::Go
+   0100 ldstr Pivot
+   0105 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   010A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   010F stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_Pivot
+   0114 ldarg.0 
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   011B ldfld CPooledGameObjectScript::Go
+   0120 ldstr Pivot/CenterImg
+   0125 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   012A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   012F stfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_CenterImg
+   0134 ldarg.0 
+   0135 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   013A brtrue IL_0157: ldarg.0
+   013F ldc.i4.1 
+   0140 stloc.s V_4
+   0142 ldloc.s V_4
+   0144 brfalse IL_0157: ldarg.0
+   0149 ldarg.0 
+   014A ldloc.0 
+   014B ldc.i4.1 
+   014C ldarg.0 
+   014D ldflda Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0152 call System.Void Assets.Scripts.GameLogic.MinimapComponent::InitMinimapIcon(Assets.Scripts.GameLogic.CLevelContext,System.Boolean,CPooledGameObjectScript&)
+   0157 ldarg.0 
+   0158 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   015D brtrue IL_01b5: ldarg.0
+   0162 ldarg.0 
+   0163 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0168 brfalse IL_01b5: ldarg.0
+   016D ldarg.0 
+   016E ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0173 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::HasBigMap()
+   0178 brfalse IL_01b5: ldarg.0
+   017D ldc.i4.1 
+   017E stloc.s V_5
+   0180 ldarg.0 
+   0181 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0186 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateViewPort()
+   018B brfalse IL_01a0: ldloc.s V_5
+   0190 ldarg.0 
+   0191 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0196 call System.Boolean Assets.Scripts.GameSystem.MinimapSys::IsYellowPointMonster(Assets.Scripts.GameLogic.ActorLinker)
+   019B ldc.i4.0 
+   019C ceq 
+   019E stloc.s V_5
+   01A0 ldloc.s V_5
+   01A2 brfalse IL_01b5: ldarg.0
+   01A7 ldarg.0 
+   01A8 ldloc.0 
+   01A9 ldc.i4.0 
+   01AA ldarg.0 
+   01AB ldflda Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01B0 call System.Void Assets.Scripts.GameLogic.MinimapComponent::InitMinimapIcon(Assets.Scripts.GameLogic.CLevelContext,System.Boolean,CPooledGameObjectScript&)
+   01B5 ldarg.0 
+   01B6 call System.Void Assets.Scripts.GameLogic.MinimapComponent::InitSpecialMonster()
+   01BB ret 
+== System.Void InitSpecialMonster() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 brfalse IL_008d: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0011 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0016 ldc.i4.1 
+   0017 bne.un IL_008d: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0022 ldfld Assets.Scripts.GameLogic.ActorLinker::extraSubType
+   0027 ldc.i4.s 22
+   0029 bne.un IL_008d: ret
+   002E ldstr Blue
+   0033 stloc.0 
+   0034 ldstr Red
+   0039 stloc.1 
+   003A ldarg.0 
+   003B call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::get_IsHostView()
+   0040 stloc.2 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0047 ldloc.2 
+   0048 ldstr icon
+   004D ldloc.0 
+   004E ldloc.1 
+   004F call System.Void Utility::SetSpiriteCamp(CPooledGameObjectScript,System.Boolean,System.String,System.String,System.String)
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   005A ldloc.2 
+   005B ldstr icon/front
+   0060 ldloc.0 
+   0061 ldloc.1 
+   0062 call System.Void Utility::SetSpiriteCamp(CPooledGameObjectScript,System.Boolean,System.String,System.String,System.String)
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   006D ldloc.2 
+   006E ldstr icon
+   0073 ldloc.0 
+   0074 ldloc.1 
+   0075 call System.Void Utility::SetSpiriteCamp(CPooledGameObjectScript,System.Boolean,System.String,System.String,System.String)
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0080 ldloc.2 
+   0081 ldstr icon/front
+   0086 ldloc.0 
+   0087 ldloc.1 
+   0088 call System.Void Utility::SetSpiriteCamp(CPooledGameObjectScript,System.Boolean,System.String,System.String,System.String)
+   008D ret 
+== System.Boolean IsNeedUpdateNoneHero() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   000B ldc.i4.4 
+   000C rem.un 
+   000D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0012 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   0017 ldc.i4.4 
+   0018 rem.un 
+   0019 ceq 
+   001B ret 
+== System.Boolean IsNeedUpdateHero() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   000B ldc.i4.2 
+   000C rem.un 
+   000D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0012 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   0017 ldc.i4.2 
+   0018 rem.un 
+   0019 ceq 
+   001B ret 
+== System.Void CheckPositionChange() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   000B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0010 stloc.0 
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   0017 ldloc.0 
+   0018 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   001D brfalse IL_0029: ret
+   0022 ldarg.0 
+   0023 ldc.i4.1 
+   0024 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0029 ret 
+== System.Void CheckRotationChange() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 ldfld Assets.Scripts.GameLogic.ActorLinker::forward
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_actorForward
+   0012 ldloc.0 
+   0013 call System.Boolean VInt3::op_Inequality(VInt3,VInt3)
+   0018 brfalse IL_002b: ret
+   001D ldarg.0 
+   001E ldc.i4.2 
+   001F call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0024 ldarg.0 
+   0025 ldloc.0 
+   0026 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorForward
+   002B ret 
+== System.Boolean get_IsHostView() attrs=Private, HideBySig, SpecialName maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   000A brfalse IL_0040: ldarg.0
+   000F call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0014 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0019 ldfld Assets.Scripts.GameSystem.WatchController::TargetUID
+   001E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayerByUid(System.UInt64)
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 brtrue IL_002c: ldloc.0
+   002A ldc.i4.0 
+   002B ret 
+   002C ldloc.0 
+   002D ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0038 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   003D ceq 
+   003F ret 
+   0040 ldarg.0 
+   0041 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0046 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   004B ret 
+== UnityEngine.GameObject GetHeroMapGameObjectParent(System.Boolean bMiniMap) attrs=Family, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0011 ldnull 
+   0012 ret 
+   0013 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0018 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   001D brfalse IL_0035: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0028 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   002D ldc.i4.1 
+   002E ceq 
+   0030 br IL_0040: stloc.1
+   0035 ldarg.0 
+   0036 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   003B call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0040 stloc.1 
+   0041 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0046 stloc.2 
+   0047 ldloc.2 
+   0048 brfalse IL_005e: ldarg.1
+   004D ldloc.2 
+   004E callvirt ResData.RES_MINIMAPHEAD_ORDER_TYPE Assets.Scripts.GameLogic.CLevelContext::GetMinimapHeadOrder()
+   0053 ldc.i4.1 
+   0054 bne.un IL_005e: ldarg.1
+   0059 ldloc.1 
+   005A ldc.i4.0 
+   005B ceq 
+   005D stloc.1 
+   005E ldarg.1 
+   005F brfalse IL_007c: ldloc.1
+   0064 ldloc.1 
+   0065 brfalse IL_0075: ldloc.0
+   006A ldloc.0 
+   006B callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcHeroBgFrame_Friend()
+   0070 br IL_007b: ret
+   0075 ldloc.0 
+   0076 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcHeroBgFrame_Enemy()
+   007B ret 
+   007C ldloc.1 
+   007D brfalse IL_008d: ldloc.0
+   0082 ldloc.0 
+   0083 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcHeroBgFrame_Friend()
+   0088 br IL_0093: ret
+   008D ldloc.0 
+   008E callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcHeroBgFrame_Enemy()
+   0093 ret 
+== CPooledGameObjectScript GetMapGameObject(System.Boolean bMiniMap, Assets.Scripts.GameSystem.UI3DEventCom& evtCom) attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=6
+   0000 ldarg.2 
+   0001 ldnull 
+   0002 stind.ref 
+   0003 ldc.r4 1
+   0008 stloc.0 
+   0009 ldnull 
+   000A stloc.1 
+   000B ldsfld System.String::Empty
+   0010 stloc.2 
+   0011 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0016 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   001B brfalse IL_0033: ldarg.0
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0026 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   002B ldc.i4.1 
+   002C ceq 
+   002E br IL_003e: stloc.3
+   0033 ldarg.0 
+   0034 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0039 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   003E stloc.3 
+   003F call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0044 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0049 stloc.s V_4
+   004B ldloc.s V_4
+   004D brfalse IL_08c6: ldnull
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0058 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   005D ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   0062 brfalse IL_007d: ldloc.3
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   006D ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0072 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   0077 ldc.i4.4 
+   0078 bne.un IL_01fb: ldarg.0
+   007D ldloc.3 
+   007E brtrue IL_00d1: ldloc.3
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0089 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   008E ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   0093 ldc.i4.4 
+   0094 bne.un IL_00d1: ldloc.3
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   009F ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   00A4 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   00A9 ldc.i4.4 
+   00AA bne.un IL_00d1: ldloc.3
+   00AF ldarg.0 
+   00B0 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00B5 ldfld Assets.Scripts.GameLogic.ActorLinker::IsTrueType
+   00BA brtrue IL_00d1: ldloc.3
+   00BF ldarg.0 
+   00C0 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00C5 ldfld Assets.Scripts.GameLogic.ActorLinker::IsSimpleCallActor
+   00CA brtrue IL_00d1: ldloc.3
+   00CF ldc.i4.1 
+   00D0 stloc.3 
+   00D1 ldloc.3 
+   00D2 brfalse IL_00e2: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   00D7 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroAlice_prefab
+   00DC stloc.2 
+   00DD br IL_0102: ldarg.0
+   00E2 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   00E7 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   00EC brfalse IL_00fc: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroEnemy_prefab
+   00F1 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroEnemy_Watch_prefab
+   00F6 stloc.2 
+   00F7 br IL_0102: ldarg.0
+   00FC ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroEnemy_prefab
+   0101 stloc.2 
+   0102 ldarg.0 
+   0103 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0108 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   010D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0112 ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   0117 bne.un IL_012b: ldc.i4.0
+   011C call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0121 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   0126 ldc.i4.0 
+   0127 ceq 
+   0129 br.s IL_012c: stloc.s V_6
+   012B ldc.i4.0 
+   012C stloc.s V_6
+   012E ldloc.s V_6
+   0130 brfalse IL_013b: ldarg.0
+   0135 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroSelf_prefab
+   013A stloc.2 
+   013B ldarg.0 
+   013C ldarg.1 
+   013D call UnityEngine.GameObject Assets.Scripts.GameLogic.MinimapComponent::GetHeroMapGameObjectParent(System.Boolean)
+   0142 stloc.1 
+   0143 ldarg.1 
+   0144 brfalse IL_0153: ldc.r4 1.3
+   0149 ldc.r4 0.68
+   014E br IL_0158: stloc.0
+   0153 ldc.r4 1.3
+   0158 stloc.0 
+   0159 ldarg.1 
+   015A brfalse IL_016a: ldloc.s V_4
+   015F ldc.r4 0.68
+   0164 stloc.0 
+   0165 br IL_01f6: br IL_0861
+   016A ldloc.s V_4
+   016C callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUI3DEventCom()
+   0171 brfalse IL_01d9: ldloc.s V_4
+   0176 ldarg.2 
+   0177 ldind.ref 
+   0178 brtrue IL_0184: ldarg.2
+   017D ldarg.2 
+   017E newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   0183 stind.ref 
+   0184 ldarg.2 
+   0185 ldind.ref 
+   0186 ldc.r4 40
+   018B ldc.r4 40
+   0190 ldc.r4 1
+   0195 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   019A ldarg.2 
+   019B ldind.ref 
+   019C ldarg.0 
+   019D ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   01A2 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   01A7 ldc.i4.3 
+   01A8 ldarg.0 
+   01A9 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   01AE callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01B3 ldarg.0 
+   01B4 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   01B9 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   01BE call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   01C3 ldarg.2 
+   01C4 ldind.ref 
+   01C5 brfalse IL_01d9: ldloc.s V_4
+   01CA ldloc.s V_4
+   01CC ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   01D1 ldarg.2 
+   01D2 ldind.ref 
+   01D3 ldc.i4.0 
+   01D4 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   01D9 ldloc.s V_4
+   01DB callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateBigMapViewPort()
+   01E0 brfalse IL_01f0: ldc.r4 1.3
+   01E5 ldc.r4 0.68
+   01EA stloc.0 
+   01EB br IL_01f6: br IL_0861
+   01F0 ldc.r4 1.3
+   01F5 stloc.0 
+   01F6 br IL_0861: ldloc.2
+   01FB ldarg.0 
+   01FC ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0201 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0206 ldc.i4.3 
+   0207 bne.un IL_02c5: ldarg.0
+   020C ldloc.3 
+   020D brfalse IL_021c: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_EyeEnemy_prefab
+   0212 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_EyeAlice_prefab
+   0217 br IL_0221: stloc.2
+   021C ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_EyeEnemy_prefab
+   0221 stloc.2 
+   0222 ldarg.1 
+   0223 brfalse IL_0234: ldloc.s V_4
+   0228 ldloc.s V_4
+   022A callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcEye()
+   022F br IL_023b: stloc.1
+   0234 ldloc.s V_4
+   0236 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcEye()
+   023B stloc.1 
+   023C ldarg.1 
+   023D brfalse IL_024c: ldc.r4 1
+   0242 ldc.r4 0.5
+   0247 br IL_0251: stloc.0
+   024C ldc.r4 1
+   0251 stloc.0 
+   0252 ldarg.1 
+   0253 brtrue IL_02c0: br IL_0861
+   0258 ldloc.s V_4
+   025A callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUI3DEventCom()
+   025F brfalse IL_02c0: br IL_0861
+   0264 ldarg.2 
+   0265 newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   026A stind.ref 
+   026B ldarg.2 
+   026C ldind.ref 
+   026D ldc.r4 30
+   0272 ldc.r4 18
+   0277 ldc.r4 1
+   027C call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   0281 ldarg.2 
+   0282 ldind.ref 
+   0283 ldarg.0 
+   0284 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0289 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   028E ldc.i4.7 
+   028F ldarg.0 
+   0290 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0295 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   029A ldarg.0 
+   029B ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   02A0 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   02A5 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   02AA ldarg.2 
+   02AB ldind.ref 
+   02AC brfalse IL_02c0: br IL_0861
+   02B1 ldloc.s V_4
+   02B3 ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   02B8 ldarg.2 
+   02B9 ldind.ref 
+   02BA ldc.i4.2 
+   02BB callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   02C0 br IL_0861: ldloc.2
+   02C5 ldarg.0 
+   02C6 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   02CB callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   02D0 ldc.i4.1 
+   02D1 bne.un IL_0657: ldarg.0
+   02D6 ldarg.0 
+   02D7 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   02DC ldfld Assets.Scripts.GameLogic.ActorLinker::actorSubType
+   02E1 conv.u1 
+   02E2 stloc.s V_7
+   02E4 ldloc.s V_7
+   02E6 ldc.i4.2 
+   02E7 bne.un IL_052d: ldarg.1
+   02EC ldarg.0 
+   02ED ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   02F2 ldfld Assets.Scripts.GameLogic.ActorLinker::extraSubType
+   02F7 stloc.s V_8
+   02F9 ldloc.s V_8
+   02FB ldc.i4.8 
+   02FC beq IL_033f: ldnull
+   0301 ldloc.s V_8
+   0303 ldc.i4.s 9
+   0305 beq IL_033f: ldnull
+   030A ldloc.s V_8
+   030C ldc.i4.s 17
+   030E beq IL_033f: ldnull
+   0313 ldloc.s V_8
+   0315 ldc.i4.s 13
+   0317 beq IL_033f: ldnull
+   031C ldloc.s V_8
+   031E ldc.i4.7 
+   031F beq IL_033f: ldnull
+   0324 ldloc.s V_8
+   0326 ldc.i4.s 19
+   0328 beq IL_033f: ldnull
+   032D ldloc.s V_8
+   032F ldc.i4.s 23
+   0331 beq IL_033f: ldnull
+   0336 ldloc.s V_8
+   0338 ldc.i4.s 24
+   033A bne.un IL_0341: ldloc.s V_8
+   033F ldnull 
+   0340 ret 
+   0341 ldloc.s V_8
+   0343 ldc.i4.s 11
+   0345 bne.un IL_0385: ldloc.s V_8
+   034A ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_RedBuff_prefab
+   034F stloc.2 
+   0350 ldarg.1 
+   0351 brfalse IL_0362: ldloc.s V_4
+   0356 ldloc.s V_4
+   0358 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcRedBuff()
+   035D br IL_0369: stloc.1
+   0362 ldloc.s V_4
+   0364 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcRedBuff()
+   0369 stloc.1 
+   036A ldarg.1 
+   036B brfalse IL_037a: ldc.r4 1
+   0370 ldc.r4 0.6
+   0375 br IL_037f: stloc.0
+   037A ldc.r4 1
+   037F stloc.0 
+   0380 br IL_0528: br IL_0631
+   0385 ldloc.s V_8
+   0387 ldc.i4.s 10
+   0389 bne.un IL_03c9: ldloc.s V_8
+   038E ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_BlueBuff_prefab
+   0393 stloc.2 
+   0394 ldarg.1 
+   0395 brfalse IL_03a6: ldloc.s V_4
+   039A ldloc.s V_4
+   039C callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcBlueBuff()
+   03A1 br IL_03ad: stloc.1
+   03A6 ldloc.s V_4
+   03A8 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcBlueBuff()
+   03AD stloc.1 
+   03AE ldarg.1 
+   03AF brfalse IL_03be: ldc.r4 1
+   03B4 ldc.r4 0.6
+   03B9 br IL_03c3: stloc.0
+   03BE ldc.r4 1
+   03C3 stloc.0 
+   03C4 br IL_0528: br IL_0631
+   03C9 ldloc.s V_8
+   03CB ldc.i4.s 20
+   03CD bne.un IL_040d: ldloc.s V_8
+   03D2 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_YellowBuff_prefab
+   03D7 stloc.2 
+   03D8 ldarg.1 
+   03D9 brfalse IL_03ea: ldloc.s V_4
+   03DE ldloc.s V_4
+   03E0 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcYellowBuff()
+   03E5 br IL_03f1: stloc.1
+   03EA ldloc.s V_4
+   03EC callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcYellowBuff()
+   03F1 stloc.1 
+   03F2 ldarg.1 
+   03F3 brfalse IL_0402: ldc.r4 1
+   03F8 ldc.r4 0.6
+   03FD br IL_0407: stloc.0
+   0402 ldc.r4 1
+   0407 stloc.0 
+   0408 br IL_0528: br IL_0631
+   040D ldloc.s V_8
+   040F ldc.i4.s 18
+   0411 bne.un IL_0451: ldloc.s V_8
+   0416 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Trap_prefab
+   041B stloc.2 
+   041C ldarg.1 
+   041D brfalse IL_042e: ldloc.s V_4
+   0422 ldloc.s V_4
+   0424 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcJungle()
+   0429 br IL_0435: stloc.1
+   042E ldloc.s V_4
+   0430 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcJungle()
+   0435 stloc.1 
+   0436 ldarg.1 
+   0437 brfalse IL_0446: ldc.r4 1.3
+   043C ldc.r4 1
+   0441 br IL_044b: stloc.0
+   0446 ldc.r4 1.3
+   044B stloc.0 
+   044C br IL_0528: br IL_0631
+   0451 ldloc.s V_8
+   0453 ldc.i4.s 22
+   0455 bne.un IL_0495: ldloc.s V_8
+   045A ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Watchtower_prefab
+   045F stloc.2 
+   0460 ldarg.1 
+   0461 brfalse IL_0472: ldloc.s V_4
+   0466 ldloc.s V_4
+   0468 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcJungle()
+   046D br IL_0479: stloc.1
+   0472 ldloc.s V_4
+   0474 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcJungle()
+   0479 stloc.1 
+   047A ldarg.1 
+   047B brfalse IL_048a: ldc.r4 1.8
+   0480 ldc.r4 1.2
+   0485 br IL_048f: stloc.0
+   048A ldc.r4 1.8
+   048F stloc.0 
+   0490 br IL_0528: br IL_0631
+   0495 ldloc.s V_8
+   0497 ldc.i4.s 27
+   0499 bne.un IL_04f2: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_Jungle_prefab
+   049E call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   04A3 brfalse IL_04f2: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_Jungle_prefab
+   04A8 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   04AD callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   04B2 brfalse IL_04f2: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_Jungle_prefab
+   04B7 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_TaoshaFinalBoss_prefab
+   04BC stloc.2 
+   04BD ldarg.1 
+   04BE brfalse IL_04cf: ldloc.s V_4
+   04C3 ldloc.s V_4
+   04C5 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcJungle()
+   04CA br IL_04d6: stloc.1
+   04CF ldloc.s V_4
+   04D1 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcJungle()
+   04D6 stloc.1 
+   04D7 ldarg.1 
+   04D8 brfalse IL_04e7: ldc.r4 1.3
+   04DD ldc.r4 1
+   04E2 br IL_04ec: stloc.0
+   04E7 ldc.r4 1.3
+   04EC stloc.0 
+   04ED br IL_0528: br IL_0631
+   04F2 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Jungle_prefab
+   04F7 stloc.2 
+   04F8 ldarg.1 
+   04F9 brfalse IL_050a: ldloc.s V_4
+   04FE ldloc.s V_4
+   0500 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcJungle()
+   0505 br IL_0511: stloc.1
+   050A ldloc.s V_4
+   050C callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcJungle()
+   0511 stloc.1 
+   0512 ldarg.1 
+   0513 brfalse IL_0522: ldc.r4 1.3
+   0518 ldc.r4 1
+   051D br IL_0527: stloc.0
+   0522 ldc.r4 1.3
+   0527 stloc.0 
+   0528 br IL_0631: ldarg.0
+   052D ldarg.1 
+   052E brfalse IL_0552: ldloc.3
+   0533 ldloc.3 
+   0534 brfalse IL_0545: ldloc.s V_4
+   0539 ldloc.s V_4
+   053B callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcAlies()
+   0540 br IL_054c: stloc.1
+   0545 ldloc.s V_4
+   0547 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcEnemy()
+   054C stloc.1 
+   054D br IL_056c: ldloc.3
+   0552 ldloc.3 
+   0553 brfalse IL_0564: ldloc.s V_4
+   0558 ldloc.s V_4
+   055A callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcAlies()
+   055F br IL_056b: stloc.1
+   0564 ldloc.s V_4
+   0566 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcEnemy()
+   056B stloc.1 
+   056C ldloc.3 
+   056D brfalse IL_057c: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_SoilderEnemy_prefab
+   0572 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_SoilderAlice_prefab
+   0577 br IL_0581: stloc.2
+   057C ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_SoilderEnemy_prefab
+   0581 stloc.2 
+   0582 ldarg.1 
+   0583 brfalse IL_0592: ldc.r4 0.6
+   0588 ldc.r4 0.3
+   058D br IL_0597: stloc.0
+   0592 ldc.r4 0.6
+   0597 stloc.0 
+   0598 ldarg.0 
+   0599 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   059E ldfld Assets.Scripts.GameLogic.ActorLinker::extraSubType
+   05A3 stloc.s V_9
+   05A5 ldloc.s V_9
+   05A7 ldc.i4.s 16
+   05A9 bne.un IL_05ca: ldarg.1
+   05AE ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_Vanguard_prefab
+   05B3 stloc.2 
+   05B4 ldarg.1 
+   05B5 brfalse IL_05c4: ldc.r4 1.5
+   05BA ldc.r4 1
+   05BF br IL_05c9: stloc.0
+   05C4 ldc.r4 1.5
+   05C9 stloc.0 
+   05CA ldarg.1 
+   05CB brtrue IL_0631: ldarg.0
+   05D0 ldloc.s V_4
+   05D2 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUI3DEventCom()
+   05D7 brfalse IL_0631: ldarg.0
+   05DC ldarg.2 
+   05DD newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   05E2 stind.ref 
+   05E3 ldarg.2 
+   05E4 ldind.ref 
+   05E5 ldc.r4 30
+   05EA ldc.r4 18
+   05EF ldc.r4 1
+   05F4 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   05F9 ldarg.2 
+   05FA ldind.ref 
+   05FB ldarg.0 
+   05FC ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0601 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0606 ldc.i4.8 
+   0607 ldarg.0 
+   0608 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   060D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0612 ldarg.0 
+   0613 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0618 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   061D call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   0622 ldloc.s V_4
+   0624 ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   0629 ldarg.2 
+   062A ldind.ref 
+   062B ldc.i4.3 
+   062C callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   0631 ldarg.0 
+   0632 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0637 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   063C call System.String MonsterDataHelper::GetMonsterMinimapIconPath(System.Int32)
+   0641 stloc.s V_10
+   0643 ldloc.s V_10
+   0645 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   064A brtrue IL_0652: br IL_0861
+   064F ldloc.s V_10
+   0651 stloc.2 
+   0652 br IL_0861: ldloc.2
+   0657 ldarg.0 
+   0658 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   065D callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0662 ldc.i4.2 
+   0663 bne.un IL_0861: ldloc.2
+   0668 ldarg.0 
+   0669 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   066E ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   0673 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0678 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   067D ldc.i4.1 
+   067E beq IL_069e: ldloc.3
+   0683 ldarg.0 
+   0684 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0689 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   068E ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0693 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0698 ldc.i4.4 
+   0699 bne.un IL_0771: ldarg.0
+   069E ldloc.3 
+   069F brfalse IL_06ae: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_OrganEnemy_prefab
+   06A4 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_OrganAlice_prefab
+   06A9 br IL_06b3: stloc.2
+   06AE ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_OrganEnemy_prefab
+   06B3 stloc.2 
+   06B4 ldarg.1 
+   06B5 brfalse IL_06c6: ldloc.s V_4
+   06BA ldloc.s V_4
+   06BC callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcOrgan()
+   06C1 br IL_06cd: stloc.1
+   06C6 ldloc.s V_4
+   06C8 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcOrgan()
+   06CD stloc.1 
+   06CE ldarg.1 
+   06CF brfalse IL_06de: ldc.r4 1
+   06D4 ldc.r4 0.5
+   06D9 br IL_06e3: stloc.0
+   06DE ldc.r4 1
+   06E3 stloc.0 
+   06E4 ldarg.1 
+   06E5 brtrue IL_076c: br IL_0861
+   06EA ldloc.s V_4
+   06EC callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUI3DEventCom()
+   06F1 brfalse IL_0737: ldloc.3
+   06F6 ldarg.2 
+   06F7 newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   06FC stind.ref 
+   06FD ldarg.2 
+   06FE ldind.ref 
+   06FF ldc.r4 30
+   0704 ldc.r4 32
+   0709 ldc.r4 1
+   070E call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   0713 ldarg.2 
+   0714 ldind.ref 
+   0715 ldloc.3 
+   0716 ldc.i4.1 
+   0717 ldarg.0 
+   0718 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   071D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0722 ldc.i4.0 
+   0723 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   0728 ldloc.s V_4
+   072A ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   072F ldarg.2 
+   0730 ldind.ref 
+   0731 ldc.i4.1 
+   0732 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   0737 ldloc.3 
+   0738 brfalse IL_076c: br IL_0861
+   073D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0742 callvirt Assets.Scripts.GameSystem.TowerHitMgr Assets.Scripts.GameSystem.CBattleSystem::get_TowerHitMgr()
+   0747 ldarg.0 
+   0748 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   074D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0752 ldarg.0 
+   0753 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0758 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   075D ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0762 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0767 callvirt System.Void Assets.Scripts.GameSystem.TowerHitMgr::Register(System.UInt32,ResData.RES_ORGAN_TYPE)
+   076C br IL_0861: ldloc.2
+   0771 ldarg.0 
+   0772 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0777 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   077C ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0781 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0786 ldc.i4.2 
+   0787 bne.un IL_085f: ldnull
+   078C ldloc.3 
+   078D brfalse IL_079c: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_BaseEnemy_prefab
+   0792 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_BaseAlice_prefab
+   0797 br IL_07a1: stloc.2
+   079C ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_BaseEnemy_prefab
+   07A1 stloc.2 
+   07A2 ldarg.1 
+   07A3 brfalse IL_07b4: ldloc.s V_4
+   07A8 ldloc.s V_4
+   07AA callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmpcOrgan()
+   07AF br IL_07bb: stloc.1
+   07B4 ldloc.s V_4
+   07B6 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmpcOrgan()
+   07BB stloc.1 
+   07BC ldarg.1 
+   07BD brfalse IL_07cc: ldc.r4 1
+   07C2 ldc.r4 0.5
+   07C7 br IL_07d1: stloc.0
+   07CC ldc.r4 1
+   07D1 stloc.0 
+   07D2 ldarg.1 
+   07D3 brtrue IL_085a: br IL_0861
+   07D8 ldloc.s V_4
+   07DA callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUI3DEventCom()
+   07DF brfalse IL_0825: ldloc.3
+   07E4 ldarg.2 
+   07E5 newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   07EA stind.ref 
+   07EB ldarg.2 
+   07EC ldind.ref 
+   07ED ldc.r4 30
+   07F2 ldc.r4 32
+   07F7 ldc.r4 1
+   07FC call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   0801 ldarg.2 
+   0802 ldind.ref 
+   0803 ldloc.3 
+   0804 ldc.i4.2 
+   0805 ldarg.0 
+   0806 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   080B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0810 ldc.i4.0 
+   0811 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   0816 ldloc.s V_4
+   0818 ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   081D ldarg.2 
+   081E ldind.ref 
+   081F ldc.i4.1 
+   0820 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   0825 ldloc.3 
+   0826 brfalse IL_085a: br IL_0861
+   082B call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0830 callvirt Assets.Scripts.GameSystem.TowerHitMgr Assets.Scripts.GameSystem.CBattleSystem::get_TowerHitMgr()
+   0835 ldarg.0 
+   0836 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   083B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0840 ldarg.0 
+   0841 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0846 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   084B ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheOrganOnlyInfo
+   0850 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/OrganOnlyInfo::OrganType
+   0855 callvirt System.Void Assets.Scripts.GameSystem.TowerHitMgr::Register(System.UInt32,ResData.RES_ORGAN_TYPE)
+   085A br IL_0861: ldloc.2
+   085F ldnull 
+   0860 ret 
+   0861 ldloc.2 
+   0862 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0867 brtrue IL_0878: ldnull
+   086C ldloc.1 
+   086D ldnull 
+   086E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0873 brfalse IL_087a: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0878 ldnull 
+   0879 ret 
+   087A call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   087F ldloc.2 
+   0880 ldc.i4.0 
+   0881 ldnull 
+   0882 ldc.i4.0 
+   0883 ldc.i4.1 
+   0884 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   0889 stloc.s V_5
+   088B ldloc.s V_5
+   088D brfalse IL_08c3: ldloc.s V_5
+   0892 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0897 ldloc.s V_5
+   0899 ldfld CPooledGameObjectScript::Go
+   089E ldloc.1 
+   089F ldloc.0 
+   08A0 ldloc.0 
+   08A1 ldc.r4 1
+   08A6 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   08AB ldc.i4.1 
+   08AC callvirt Assets.Scripts.UI.C3DUIGameObject Assets.Scripts.UI.C3DUIManager::AddGameObjectToGroup(UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.Vector3,System.Boolean)
+   08B1 pop 
+   08B2 ldloc.s V_5
+   08B4 ldfld CPooledGameObjectScript::Trans
+   08B9 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   08BE callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   08C3 ldloc.s V_5
+   08C5 ret 
+   08C6 ldnull 
+   08C7 ret 
+== UnityEngine.GameObject GetHeroIconParent(System.Boolean bMiniMap) attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldarg.0
+   0011 ldnull 
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0019 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   001E call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0023 ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   0028 bne.un IL_003c: ldc.i4.0
+   002D call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0032 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   0037 ldc.i4.0 
+   0038 ceq 
+   003A br.s IL_003d: stloc.1
+   003C ldc.i4.0 
+   003D stloc.1 
+   003E call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0043 stloc.2 
+   0044 ldloc.2 
+   0045 brfalse IL_00b0: ldarg.1
+   004A ldloc.2 
+   004B callvirt ResData.RES_MINIMAPHEAD_ORDER_TYPE Assets.Scripts.GameLogic.CLevelContext::GetMinimapHeadOrder()
+   0050 ldc.i4.1 
+   0051 bne.un IL_00b0: ldarg.1
+   0056 ldarg.1 
+   0057 brfalse IL_0086: ldloc.1
+   005C ldloc.1 
+   005D brfalse IL_0069: ldarg.0
+   0062 ldloc.0 
+   0063 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Middle()
+   0068 ret 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   006F brfalse IL_007f: ldloc.0
+   0074 ldloc.0 
+   0075 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Above()
+   007A br IL_0085: ret
+   007F ldloc.0 
+   0080 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Below()
+   0085 ret 
+   0086 ldloc.1 
+   0087 brfalse IL_0093: ldarg.0
+   008C ldloc.0 
+   008D callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Middle()
+   0092 ret 
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0099 brfalse IL_00a9: ldloc.0
+   009E ldloc.0 
+   009F callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Above()
+   00A4 br IL_00af: ret
+   00A9 ldloc.0 
+   00AA callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Below()
+   00AF ret 
+   00B0 ldarg.1 
+   00B1 brfalse IL_00e0: ldloc.1
+   00B6 ldloc.1 
+   00B7 brfalse IL_00c3: ldarg.0
+   00BC ldloc.0 
+   00BD callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Below()
+   00C2 ret 
+   00C3 ldarg.0 
+   00C4 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   00C9 brfalse IL_00d9: ldloc.0
+   00CE ldloc.0 
+   00CF callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Middle()
+   00D4 br IL_00df: ret
+   00D9 ldloc.0 
+   00DA callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_mmHeroIconNode_Above()
+   00DF ret 
+   00E0 ldloc.1 
+   00E1 brfalse IL_00ed: ldarg.0
+   00E6 ldloc.0 
+   00E7 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Below()
+   00EC ret 
+   00ED ldarg.0 
+   00EE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   00F3 brfalse IL_0103: ldloc.0
+   00F8 ldloc.0 
+   00F9 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Middle()
+   00FE br IL_0109: ret
+   0103 ldloc.0 
+   0104 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MinimapSys::get_bmHeroIconNode_Above()
+   0109 ret 
+== CPooledGameObjectScript GetHeroIconObj(System.String path, System.Boolean bMiniMap, UnityEngine.GameObject& parentGO) attrs=Family, HideBySig maxstack=6
+   0000 ldarg.3 
+   0001 ldarg.0 
+   0002 ldarg.2 
+   0003 callvirt UnityEngine.GameObject Assets.Scripts.GameLogic.MinimapComponent::GetHeroIconParent(System.Boolean)
+   0008 stind.ref 
+   0009 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000E callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 brtrue IL_001c: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   001A ldnull 
+   001B ret 
+   001C call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0021 ldarg.1 
+   0022 ldc.i4.5 
+   0023 ldnull 
+   0024 ldc.i4.0 
+   0025 ldc.i4.1 
+   0026 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   002B stloc.1 
+   002C ldloc.1 
+   002D brfalse IL_0063: ldloc.1
+   0032 ldarg.2 
+   0033 brfalse IL_0040: ldloc.0
+   0038 ldc.i4.s 20
+   003A stloc.2 
+   003B br IL_0056: ldloc.1
+   0040 ldloc.0 
+   0041 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateBigMapViewPort()
+   0046 brfalse IL_0053: ldc.i4.s 40
+   004B ldc.i4.s 20
+   004D stloc.2 
+   004E br IL_0056: ldloc.1
+   0053 ldc.i4.s 40
+   0055 stloc.2 
+   0056 ldloc.1 
+   0057 ldfld CPooledGameObjectScript::Go
+   005C ldloc.2 
+   005D ldloc.2 
+   005E call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::NativeSizeLize(UnityEngine.GameObject,System.Int32,System.Int32)
+   0063 ldloc.1 
+   0064 ret 
+== System.Void InitMinimapIcon(Assets.Scripts.GameLogic.CLevelContext levelContext, System.Boolean bMiniMap, CPooledGameObjectScript& mapPointer) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.3 
+   0001 ldnull 
+   0002 stind.ref 
+   0003 ldarg.0 
+   0004 ldarg.0 
+   0005 call System.Boolean Assets.Scripts.GameLogic.MinimapComponent::get_IsHostView()
+   000A stfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0015 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::UnRegisterEventCom(Assets.Scripts.GameSystem.UI3DEventCom)
+   001A ldarg.0 
+   001B ldnull 
+   001C stfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0021 ldarg.3 
+   0022 ldarg.0 
+   0023 ldarg.2 
+   0024 ldarg.0 
+   0025 ldflda Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   002A callvirt CPooledGameObjectScript Assets.Scripts.GameLogic.MinimapComponent::GetMapGameObject(System.Boolean,Assets.Scripts.GameSystem.UI3DEventCom&)
+   002F stind.ref 
+   0030 ldarg.3 
+   0031 ldind.ref 
+   0032 brtrue IL_0038: ldarg.3
+   0037 ret 
+   0038 ldarg.3 
+   0039 ldind.ref 
+   003A ldfld CPooledGameObjectScript::Go
+   003F ldc.i4.0 
+   0040 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0045 ldarg.3 
+   0046 ldind.ref 
+   0047 ldfld CPooledGameObjectScript::Trans
+   004C stloc.0 
+   004D ldloc.0 
+   004E ldnull 
+   004F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0054 brfalse IL_005a: ldarg.0
+   0059 ret 
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0060 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0065 brfalse IL_007b: ldarg.3
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0070 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0075 ldc.i4.4 
+   0076 bne.un IL_0520: ldarg.0
+   007B ldarg.3 
+   007C ldind.ref 
+   007D ldfld CPooledGameObjectScript::Trans
+   0082 ldstr bg
+   0087 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   008C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0091 stloc.1 
+   0092 ldarg.2 
+   0093 brfalse IL_00a4: ldarg.0
+   0098 ldarg.0 
+   0099 ldloc.1 
+   009A stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_small
+   009F br IL_00ab: ldarg.0
+   00A4 ldarg.0 
+   00A5 ldloc.1 
+   00A6 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_big
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00B1 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   00B6 ldc.i4.4 
+   00B7 bne.un IL_011a: ldarg.0
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00C2 ldfld Assets.Scripts.GameLogic.ActorLinker::IsTrueType
+   00C7 brtrue IL_0108: ldarg.0
+   00CC ldarg.0 
+   00CD ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00D2 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorLinker::get_ImposterActor()
+   00D7 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00DC brfalse IL_0108: ldarg.0
+   00E1 ldarg.0 
+   00E2 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00E7 ldfld Assets.Scripts.GameLogic.ActorLinker::IsSimpleCallActor
+   00EC brtrue IL_0108: ldarg.0
+   00F1 ldarg.0 
+   00F2 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00F7 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorLinker::get_ImposterActor()
+   00FC ldc.i4.1 
+   00FD call System.String Assets.Scripts.GameSystem.KillNotifyUT::GetHero_Icon(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0102 stloc.2 
+   0103 br IL_0115: br IL_0127
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   010E ldc.i4.1 
+   010F call System.String Assets.Scripts.GameSystem.KillNotifyUT::GetHero_Icon(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0114 stloc.2 
+   0115 br IL_0127: ldarg.1
+   011A ldarg.0 
+   011B ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0120 ldc.i4.1 
+   0121 call System.String Assets.Scripts.GameSystem.KillNotifyUT::GetHero_Icon(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0126 stloc.2 
+   0127 ldarg.1 
+   0128 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   012D brfalse IL_01ba: ldnull
+   0132 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0137 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   013C brfalse IL_0154: ldarg.0
+   0141 ldarg.0 
+   0142 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0147 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   014C ldc.i4.1 
+   014D ceq 
+   014F br IL_015f: stloc.3
+   0154 ldarg.0 
+   0155 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   015A call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   015F stloc.3 
+   0160 ldloc.1 
+   0161 callvirt !!0 UnityEngine.GameObject::GetComponent<Sprite3D>()
+   0166 stloc.s V_4
+   0168 ldloc.s V_4
+   016A ldnull 
+   016B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0170 brfalse IL_018d: ldarg.0
+   0175 ldloc.s V_4
+   0177 ldarg.0 
+   0178 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   017D callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   0182 ldloc.3 
+   0183 call System.String Assets.Scripts.GameSystem.MiniMapSysUT::GetMinimapIconBgNameByCamp(CSProtocol.COM_PLAYERCAMP,System.Boolean)
+   0188 callvirt System.Void Sprite3D::set_spriteName(System.String)
+   018D ldarg.0 
+   018E ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0193 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0198 stloc.s V_5
+   019A ldloc.s V_5
+   019C brfalse IL_01ba: ldnull
+   01A1 ldsfld Assets.Scripts.UI.CUIUtility::s_WuJunSelf_CircleIcon
+   01A6 ldarg.0 
+   01A7 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   01AC call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01B1 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   01B6 ldc.i4.1 
+   01B7 sub 
+   01B8 ldelem.ref 
+   01B9 stloc.2 
+   01BA ldnull 
+   01BB stloc.s V_6
+   01BD ldarg.0 
+   01BE ldloc.2 
+   01BF ldarg.2 
+   01C0 ldloca.s V_6
+   01C2 call CPooledGameObjectScript Assets.Scripts.GameLogic.MinimapComponent::GetHeroIconObj(System.String,System.Boolean,UnityEngine.GameObject&)
+   01C7 stloc.s V_7
+   01C9 ldloc.s V_7
+   01CB brfalse IL_020d: ldarg.1
+   01D0 ldloc.s V_7
+   01D2 ldfld CPooledGameObjectScript::Go
+   01D7 ldarg.3 
+   01D8 ldind.ref 
+   01D9 ldfld CPooledGameObjectScript::Go
+   01DE callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   01E3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01E8 ldarg.2 
+   01E9 brfalse IL_0200: ldarg.0
+   01EE ldarg.0 
+   01EF ldloc.s V_7
+   01F1 ldfld CPooledGameObjectScript::Trans
+   01F6 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   01FB br IL_020d: ldarg.1
+   0200 ldarg.0 
+   0201 ldloc.s V_7
+   0203 ldfld CPooledGameObjectScript::Trans
+   0208 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   020D ldarg.1 
+   020E callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0213 brfalse IL_02f5: ldarg.2
+   0218 ldarg.0 
+   0219 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   021E call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0223 stloc.s V_8
+   0225 ldarg.0 
+   0226 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   022B call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0230 stloc.s V_9
+   0232 ldloc.s V_8
+   0234 brtrue IL_02f5: ldarg.2
+   0239 ldloc.s V_9
+   023B brfalse IL_02f5: ldarg.2
+   0240 ldarg.2 
+   0241 brfalse IL_02a0: ldarg.0
+   0246 ldarg.0 
+   0247 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   024C ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_FriendIconSmall_prefab
+   0251 ldc.i4.5 
+   0252 ldnull 
+   0253 ldc.i4.0 
+   0254 ldc.i4.1 
+   0255 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   025A stfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   025F ldarg.0 
+   0260 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   0265 ldfld CPooledGameObjectScript::Trans
+   026A ldarg.0 
+   026B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0270 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   0275 ldarg.0 
+   0276 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   027B ldfld CPooledGameObjectScript::Trans
+   0280 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0285 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   028A ldarg.0 
+   028B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconSmall
+   0290 ldfld CPooledGameObjectScript::Go
+   0295 ldc.i4.1 
+   0296 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   029B br IL_02f5: ldarg.2
+   02A0 ldarg.0 
+   02A1 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   02A6 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_FriendIconBig_prefab
+   02AB ldc.i4.5 
+   02AC ldnull 
+   02AD ldc.i4.0 
+   02AE ldc.i4.1 
+   02AF callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   02B4 stfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   02B9 ldarg.0 
+   02BA ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   02BF ldfld CPooledGameObjectScript::Trans
+   02C4 ldarg.0 
+   02C5 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   02CA callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   02CF ldarg.0 
+   02D0 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   02D5 ldfld CPooledGameObjectScript::Trans
+   02DA call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   02DF callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   02E4 ldarg.0 
+   02E5 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_friendIconBig
+   02EA ldfld CPooledGameObjectScript::Go
+   02EF ldc.i4.1 
+   02F0 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02F5 ldarg.2 
+   02F6 brfalse IL_03c3: ldarg.0
+   02FB ldarg.0 
+   02FC ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0301 brfalse IL_0310: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Enemy_Warning_prefab
+   0306 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Alice_Warning_prefab
+   030B br IL_0315: stloc.s V_10
+   0310 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Enemy_Warning_prefab
+   0315 stloc.s V_10
+   0317 ldarg.0 
+   0318 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   031D ldloc.s V_10
+   031F ldc.i4.5 
+   0320 ldnull 
+   0321 ldc.i4.0 
+   0322 ldc.i4.1 
+   0323 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   0328 stfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   032D ldarg.0 
+   032E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   0333 ldfld CPooledGameObjectScript::Trans
+   0338 ldarg.0 
+   0339 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   033E callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   0343 ldarg.0 
+   0344 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   0349 ldfld CPooledGameObjectScript::Trans
+   034E call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0353 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0358 ldarg.0 
+   0359 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   035E ldfld CPooledGameObjectScript::Go
+   0363 ldc.i4.0 
+   0364 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0369 ldarg.0 
+   036A ldarg.0 
+   036B ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0370 ldarg.2 
+   0371 call UnityEngine.Transform Assets.Scripts.GameSystem.MiniMapSysUT::GetMapDyingGameObject(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0376 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   037B ldarg.0 
+   037C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0381 ldnull 
+   0382 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0387 brfalse IL_03be: br IL_04d1
+   038C ldarg.0 
+   038D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   0392 ldarg.0 
+   0393 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0398 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   039D ldarg.0 
+   039E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   03A3 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   03A8 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   03AD ldarg.0 
+   03AE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_small_Trans
+   03B3 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   03B8 ldc.i4.0 
+   03B9 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03BE br IL_04d1: ldloc.s V_7
+   03C3 ldarg.0 
+   03C4 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   03C9 brfalse IL_03d8: ldsfld System.String Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Enemy_BigMap_prefab
+   03CE ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Alice_BigMap_prefab
+   03D3 br IL_03dd: stloc.s V_11
+   03D8 ldsfld Assets.Scripts.GameSystem.MiniMapSysUT::Map_HeroBlood_Enemy_BigMap_prefab
+   03DD stloc.s V_11
+   03DF ldarg.0 
+   03E0 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   03E5 ldloc.s V_11
+   03E7 ldc.i4.5 
+   03E8 ldnull 
+   03E9 ldc.i4.0 
+   03EA ldc.i4.1 
+   03EB callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   03F0 stfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   03F5 ldarg.0 
+   03F6 ldarg.0 
+   03F7 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   03FC ldfld CPooledGameObjectScript::Trans
+   0401 ldstr HPBlood
+   0406 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   040B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0410 callvirt !!0 UnityEngine.GameObject::GetComponent<Sprite3D>()
+   0415 stfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBloodSprite
+   041A ldarg.0 
+   041B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   0420 ldfld CPooledGameObjectScript::Go
+   0425 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::NativeSizeLize(UnityEngine.GameObject)
+   042A ldarg.0 
+   042B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   0430 ldfld CPooledGameObjectScript::Trans
+   0435 ldarg.0 
+   0436 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   043B callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   0440 ldarg.0 
+   0441 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   0446 ldfld CPooledGameObjectScript::Trans
+   044B ldc.r4 0
+   0450 ldc.r4 -0.4
+   0455 ldc.r4 0
+   045A newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   045F callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0464 ldarg.0 
+   0465 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBlood
+   046A ldfld CPooledGameObjectScript::Go
+   046F ldsfld Assets.Scripts.GameLogic.MinimapComponent::s_showBigmapHP
+   0474 ldc.i4.1 
+   0475 ceq 
+   0477 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   047C ldarg.0 
+   047D ldarg.0 
+   047E ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0483 ldarg.2 
+   0484 call UnityEngine.Transform Assets.Scripts.GameSystem.MiniMapSysUT::GetMapDyingGameObject(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0489 stfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   048E ldarg.0 
+   048F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   0494 ldnull 
+   0495 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   049A brfalse IL_04d1: ldloc.s V_7
+   049F ldarg.0 
+   04A0 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   04A5 ldarg.0 
+   04A6 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   04AB callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   04B0 ldarg.0 
+   04B1 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   04B6 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   04BB callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   04C0 ldarg.0 
+   04C1 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroDying_big_Trans
+   04C6 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   04CB ldc.i4.0 
+   04CC call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   04D1 ldloc.s V_7
+   04D3 brfalse IL_04f2: ldarg.0
+   04D8 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   04DD ldloc.s V_7
+   04DF ldfld CPooledGameObjectScript::Go
+   04E4 ldloc.s V_6
+   04E6 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   04EB ldc.i4.0 
+   04EC callvirt Assets.Scripts.UI.C3DUIGameObject Assets.Scripts.UI.C3DUIManager::AddGameObjectToGroup(UnityEngine.GameObject,UnityEngine.GameObject,UnityEngine.Vector3,System.Boolean)
+   04F1 pop 
+   04F2 ldarg.0 
+   04F3 ldarg.0 
+   04F4 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   04F9 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   04FE callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0503 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   0508 ldarg.0 
+   0509 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap()
+   050E ldarg.3 
+   050F ldind.ref 
+   0510 ldfld CPooledGameObjectScript::Go
+   0515 ldc.i4.0 
+   0516 call System.Void Assets.Scripts.GameSystem.BackCityCom_3DUI::SetVisible(UnityEngine.GameObject,System.Boolean)
+   051B br IL_07bb: ldarg.3
+   0520 ldarg.0 
+   0521 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0526 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   052B ldc.i4.2 
+   052C bne.un IL_0662: ldarg.0
+   0531 ldarg.3 
+   0532 ldind.ref 
+   0533 ldfld CPooledGameObjectScript::Trans
+   0538 ldstr icon
+   053D callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0542 stloc.s V_12
+   0544 ldloc.s V_12
+   0546 ldnull 
+   0547 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   054C brfalse IL_0630: ldarg.0
+   0551 ldloc.s V_12
+   0553 callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0558 stloc.s V_13
+   055A ldarg.2 
+   055B brfalse IL_056d: ldarg.0
+   0560 ldarg.0 
+   0561 ldloc.s V_13
+   0563 stfld Assets.Scripts.GameLogic.MinimapComponent::smallTower_spt3d
+   0568 br IL_0575: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   056D ldarg.0 
+   056E ldloc.s V_13
+   0570 stfld Assets.Scripts.GameLogic.MinimapComponent::bigTower_spt3d
+   0575 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   057A callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   057F brfalse IL_0597: ldarg.0
+   0584 ldarg.0 
+   0585 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   058A callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   058F ldc.i4.1 
+   0590 ceq 
+   0592 br IL_05a2: stloc.s V_14
+   0597 ldarg.0 
+   0598 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   059D call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   05A2 stloc.s V_14
+   05A4 ldarg.0 
+   05A5 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   05AA callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   05AF ldloca.s V_15
+   05B1 call System.Boolean OrganDataHelper::GetDataCfgInfoByCurLevelDiff(System.Int32,ResData.ResOrganCfgInfo&)
+   05B6 brfalse IL_0630: ldarg.0
+   05BB ldloca.s V_15
+   05BD call System.String ResData.ResOrganCfgInfo::get_szMinimapIconPath()
+   05C2 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   05C7 brtrue IL_0630: ldarg.0
+   05CC ldloca.s V_15
+   05CE call System.String ResData.ResOrganCfgInfo::get_szMinimapIconPath()
+   05D3 stloc.s V_16
+   05D5 ldloc.s V_16
+   05D7 ldloc.s V_14
+   05D9 brfalse IL_05e8: ldstr "_Red"
+   05DE ldstr _Bule
+   05E3 br IL_05ed: call System.String System.String::Concat(System.String,System.String)
+   05E8 ldstr _Red
+   05ED call System.String System.String::Concat(System.String,System.String)
+   05F2 stloc.s V_16
+   05F4 ldloc.s V_13
+   05F6 ldloc.s V_16
+   05F8 callvirt System.Void Sprite3D::set_spriteName(System.String)
+   05FD ldloc.s V_12
+   05FF ldstr front
+   0604 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0609 stloc.s V_17
+   060B ldloc.s V_17
+   060D ldnull 
+   060E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0613 brfalse IL_0630: ldarg.0
+   0618 ldloc.s V_17
+   061A callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   061F ldloc.s V_16
+   0621 ldstr _Outline
+   0626 call System.String System.String::Concat(System.String,System.String)
+   062B callvirt System.Void Sprite3D::set_spriteName(System.String)
+   0630 ldarg.0 
+   0631 ldarg.0 
+   0632 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0637 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   063C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0641 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   0646 ldarg.1 
+   0647 brfalse IL_065d: br IL_07bb
+   064C ldarg.1 
+   064D callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0652 brfalse IL_065d: br IL_07bb
+   0657 ldarg.0 
+   0658 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap()
+   065D br IL_07bb: ldarg.3
+   0662 ldarg.0 
+   0663 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0668 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   066D ldc.i4.3 
+   066E bne.un IL_06e5: ldarg.0
+   0673 ldarg.0 
+   0674 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0679 brfalse IL_0688: ldstr "UGUI/Sprite/Battle/Img_Map_RedEye"
+   067E ldstr UGUI/Sprite/Battle/Img_Map_BlueEye
+   0683 br IL_068d: stloc.s V_18
+   0688 ldstr UGUI/Sprite/Battle/Img_Map_RedEye
+   068D stloc.s V_18
+   068F ldarg.3 
+   0690 ldind.ref 
+   0691 ldfld CPooledGameObjectScript::Trans
+   0696 ldstr eye
+   069B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   06A0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   06A5 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   06AA stloc.s V_19
+   06AC ldloc.s V_19
+   06AE ldloc.s V_18
+   06B0 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   06B5 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   06BA ldc.i4.1 
+   06BB ldc.i4.0 
+   06BC ldc.i4.0 
+   06BD ldc.i4.0 
+   06BE ldc.i4.0 
+   06BF call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   06C4 ldarg.0 
+   06C5 ldarg.0 
+   06C6 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   06CB ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   06D0 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   06D5 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   06DA ldarg.0 
+   06DB call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap()
+   06E0 br IL_07bb: ldarg.3
+   06E5 ldarg.0 
+   06E6 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   06EB callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   06F0 ldc.i4.1 
+   06F1 bne.un IL_07bb: ldarg.3
+   06F6 ldarg.0 
+   06F7 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   06FC ldfld Assets.Scripts.GameLogic.ActorLinker::extraSubType
+   0701 stloc.s V_20
+   0703 ldloc.s V_20
+   0705 ldc.i4.s 22
+   0707 bne.un IL_0750: ldloc.s V_20
+   070C ldarg.3 
+   070D ldind.ref 
+   070E ldfld CPooledGameObjectScript::Trans
+   0713 ldstr icon
+   0718 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   071D stloc.s V_21
+   071F ldloc.s V_21
+   0721 ldnull 
+   0722 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0727 brfalse IL_0750: ldloc.s V_20
+   072C ldloc.s V_21
+   072E callvirt !!0 UnityEngine.Component::GetComponent<Sprite3D>()
+   0733 stloc.s V_22
+   0735 ldarg.2 
+   0736 brfalse IL_0748: ldarg.0
+   073B ldarg.0 
+   073C ldloc.s V_22
+   073E stfld Assets.Scripts.GameLogic.MinimapComponent::smallCallMonster_spt3d
+   0743 br IL_0750: ldloc.s V_20
+   0748 ldarg.0 
+   0749 ldloc.s V_22
+   074B stfld Assets.Scripts.GameLogic.MinimapComponent::bigCallMonster_spt3d
+   0750 ldloc.s V_20
+   0752 ldc.i4.8 
+   0753 beq IL_0783: ldc.i4.1
+   0758 ldloc.s V_20
+   075A ldc.i4.s 9
+   075C beq IL_0783: ldc.i4.1
+   0761 ldloc.s V_20
+   0763 ldc.i4.s 17
+   0765 beq IL_0783: ldc.i4.1
+   076A ldloc.s V_20
+   076C ldc.i4.7 
+   076D beq IL_0783: ldc.i4.1
+   0772 ldloc.s V_20
+   0774 ldc.i4.s 13
+   0776 beq IL_0783: ldc.i4.1
+   077B ldloc.s V_20
+   077D ldc.i4.s 23
+   077F ceq 
+   0781 br.s IL_0784: stloc.s V_23
+   0783 ldc.i4.1 
+   0784 stloc.s V_23
+   0786 ldloc.s V_23
+   0788 brfalse IL_078e: ldarg.1
+   078D ret 
+   078E ldarg.1 
+   078F brfalse IL_07bb: ldarg.3
+   0794 ldarg.1 
+   0795 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   079A brfalse IL_07bb: ldarg.3
+   079F ldarg.0 
+   07A0 ldarg.0 
+   07A1 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   07A6 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   07AB callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   07B0 stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   07B5 ldarg.0 
+   07B6 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap()
+   07BB ldarg.3 
+   07BC ldind.ref 
+   07BD ldfld CPooledGameObjectScript::Go
+   07C2 ldc.i4.0 
+   07C3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   07C8 ldarg.0 
+   07C9 ldc.i4.0 
+   07CA stfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   07CF ret 
+== UnityEngine.Vector3 GetSmallMapPointer_WorldPosition() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0006 brfalse IL_001c: ldc.r4 0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0011 ldfld CPooledGameObjectScript::Trans
+   0016 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   001B ret 
+   001C ldc.r4 0
+   0021 ldc.r4 0
+   0026 ldc.r4 0
+   002B newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0030 ret 
+== System.Void OnBaseHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam& eventParams) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brfalse IL_0036: ret
+   0016 ldarg.1 
+   0017 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::nowValue
+   001C stloc.0 
+   001D ldarg.1 
+   001E ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::par1
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 ldc.i4.0 
+   0026 ble IL_0036: ret
+   002B ldarg.0 
+   002C ldloc.0 
+   002D conv.r4 
+   002E ldloc.1 
+   002F conv.r4 
+   0030 div 
+   0031 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateTowerMinimapBloodBar(System.Single)
+   0036 ret 
+== System.Void OnCameraRotationChange(Assets.Scripts.GameLogic.stCameraRotationChangeEventParams& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0006 brtrue IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddForceUpdateFlag()
+   001D ret 
+== System.Void OnHeroHpChange(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam& eventParams) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brfalse IL_0035: ret
+   0016 ldarg.1 
+   0017 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::nowValue
+   001C stloc.0 
+   001D ldarg.1 
+   001E ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::par1
+   0023 stloc.1 
+   0024 ldarg.0 
+   0025 ldloc.0 
+   0026 conv.r4 
+   0027 ldloc.1 
+   0028 conv.r4 
+   0029 div 
+   002A stfld Assets.Scripts.GameLogic.MinimapComponent::m_bloodRate
+   002F ldarg.0 
+   0030 call System.Void Assets.Scripts.GameLogic.MinimapComponent::RefreshHeroBlood()
+   0035 ret 
+== System.Void RefreshHeroBlood() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBloodSprite
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0022: ldc.i4.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bigBloodSprite
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bloodRate
+   001D callvirt System.Void Sprite3D::set_fillAmount(System.Single)
+   0022 ldc.i4.0 
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bloodRate
+   002A ldc.r4 0.2
+   002F bge.un IL_008f: ldloc.0
+   0034 ldarg.0 
+   0035 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   003A call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   003F brtrue IL_008f: ldloc.0
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   004A brtrue IL_006c: ldarg.0
+   004F ldsfld Assets.Scripts.GameLogic.MinimapComponent::s_showAliceLowHpWarning
+   0054 ldc.i4.1 
+   0055 beq IL_0065: ldc.i4.1
+   005A ldsfld Assets.Scripts.GameLogic.MinimapComponent::s_showAliceLowHpWarning
+   005F ldc.i4.3 
+   0060 bne.un IL_006c: ldarg.0
+   0065 ldc.i4.1 
+   0066 stloc.0 
+   0067 br IL_008f: ldloc.0
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   0072 brfalse IL_008f: ldloc.0
+   0077 ldsfld Assets.Scripts.GameLogic.MinimapComponent::s_showAliceLowHpWarning
+   007C ldc.i4.2 
+   007D beq IL_008d: ldc.i4.1
+   0082 ldsfld Assets.Scripts.GameLogic.MinimapComponent::s_showAliceLowHpWarning
+   0087 ldc.i4.3 
+   0088 bne.un IL_008f: ldloc.0
+   008D ldc.i4.1 
+   008E stloc.0 
+   008F ldloc.0 
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   0096 beq IL_00aa: ret
+   009B ldarg.0 
+   009C ldloc.0 
+   009D stfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   00A2 ldarg.0 
+   00A3 ldc.i4.s 16
+   00A5 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00AA ret 
+== System.Void OnBaseAttacked(Assets.Scripts.GameLogic.ActorCommonEventParam& evtParam) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_00de: ret
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0020 ldarg.0 
+   0021 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   0026 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0030 bne.un IL_00de: ret
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   003B brfalse IL_00de: ret
+   0040 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0045 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   004A conv.u8 
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameLogic.MinimapComponent::LastBaseAttackTime
+   0051 sub 
+   0052 ldc.i4 20000
+   0057 conv.i8 
+   0058 ble.un IL_00b6: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0063 stloc.0 
+   0064 ldloc.0 
+   0065 brfalse IL_0095: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   006A ldloc.0 
+   006B callvirt UnityEngine.Animator CPooledGameObjectScript::get_mecAnim()
+   0070 stloc.1 
+   0071 ldloc.1 
+   0072 ldnull 
+   0073 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0078 brfalse IL_0095: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   007D ldloc.1 
+   007E ldc.i4.1 
+   007F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0084 ldloc.1 
+   0085 ldstr BaseTip
+   008A ldc.i4.0 
+   008B ldc.r4 0
+   0090 callvirt System.Void UnityEngine.Animator::Play(System.String,System.Int32,System.Single)
+   0095 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   009A ldstr UI_retreat
+   009F callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   00A4 pop 
+   00A5 ldarg.0 
+   00A6 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00AB ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   00B0 conv.u8 
+   00B1 stfld Assets.Scripts.GameLogic.MinimapComponent::LastBaseAttackTime
+   00B6 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00BB callvirt Assets.Scripts.GameSystem.TowerHitMgr Assets.Scripts.GameSystem.CBattleSystem::get_TowerHitMgr()
+   00C0 stloc.2 
+   00C1 ldloc.2 
+   00C2 brfalse IL_00de: ret
+   00C7 ldloc.2 
+   00C8 ldarg.0 
+   00C9 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00CE callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00D3 ldarg.0 
+   00D4 call UnityEngine.GameObject Assets.Scripts.GameLogic.MinimapComponent::get_MapPointerSmall()
+   00D9 callvirt System.Void Assets.Scripts.GameSystem.TowerHitMgr::TryActive(System.UInt32,UnityEngine.GameObject)
+   00DE ret 
+== System.Void UpdateTowerMinimapBloodBar(System.Single v) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::bigTower_spt3d
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_003c: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.MinimapComponent::smallTower_spt3d
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_003c: ret
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameLogic.MinimapComponent::smallTower_spt3d
+   0028 ldarg.1 
+   0029 stloc.0 
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameLogic.MinimapComponent::bigTower_spt3d
+   0030 ldloc.0 
+   0031 callvirt System.Void Sprite3D::set_fillAmount(System.Single)
+   0036 ldloc.0 
+   0037 callvirt System.Void Sprite3D::set_fillAmount(System.Single)
+   003C ret 
+== System.Void setLogicVisible(System.Boolean show) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   0007 bne.un IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldarg.1 
+   000F stfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   0014 ldarg.0 
+   0015 call System.Void Assets.Scripts.GameLogic.MinimapComponent::refreshLogicVisible()
+   001A ret 
+== System.Void refreshLogicVisible() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0007 ldarg.0 
+   0008 ldc.i4.s 16
+   000A call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   000F ret 
+== System.Void UpdateVisible() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0008 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   000D ldc.i4.2 
+   000E beq IL_0029: ldarg.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_isVanguard
+   0019 brtrue IL_0029: ldarg.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_isTaoShaFinalBoss
+   0024 brfalse IL_0045: ldarg.0
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   002F ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0034 callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0039 brtrue IL_0045: ldarg.0
+   003E ldc.i4.1 
+   003F stloc.0 
+   0040 br IL_00bf: ldarg.0
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_pointerLogicVisible
+   004B brfalse IL_00bd: ldc.i4.0
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0056 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   005B brfalse IL_00bd: ldc.i4.0
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0066 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   006B callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0070 brfalse IL_00ba: ldc.i4.1
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   007B ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   0080 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheBaseAttribute
+   0085 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/BaseAttribute::DeadControl
+   008A brtrue IL_00ba: ldc.i4.1
+   008F ldarg.0 
+   0090 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_needShowAfterDead
+   0095 brfalse IL_00b7: ldc.i4.0
+   009A ldarg.0 
+   009B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   00A0 brtrue IL_00b4: ldc.i4.1
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_deadShowStartTime
+   00AB ldc.r4 0
+   00B0 cgt 
+   00B2 br.s IL_00b5: br.s IL_00b8
+   00B4 ldc.i4.1 
+   00B5 br.s IL_00b8: br.s IL_00bb
+   00B7 ldc.i4.0 
+   00B8 br.s IL_00bb: br.s IL_00be
+   00BA ldc.i4.1 
+   00BB br.s IL_00be: stloc.0
+   00BD ldc.i4.0 
+   00BE stloc.0 
+   00BF ldarg.0 
+   00C0 ldloc.0 
+   00C1 call System.Void Assets.Scripts.GameLogic.MinimapComponent::SetVisibleState(System.Boolean)
+   00C6 ldarg.0 
+   00C7 ldc.i4.s 16
+   00C9 call System.Void Assets.Scripts.GameLogic.MinimapComponent::RemoveDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00CE ret 
+== System.Void SetVisibleState(System.Boolean display) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 brfalse IL_0014: ldc.i4.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   0012 br.s IL_0015: stloc.1
+   0014 ldc.i4.0 
+   0015 stloc.1 
+   0016 ldarg.1 
+   0017 brfalse IL_0024: ldc.i4.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0022 br.s IL_0025: stloc.2
+   0024 ldc.i4.0 
+   0025 stloc.2 
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   002C brfalse IL_0042: ldarg.0
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0037 ldfld CPooledGameObjectScript::Go
+   003C ldloc.2 
+   003D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0048 brfalse IL_005e: ldarg.0
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0053 ldfld CPooledGameObjectScript::Go
+   0058 ldloc.1 
+   0059 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0064 ldnull 
+   0065 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006A brfalse IL_0080: ldarg.0
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0075 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   007A ldloc.2 
+   007B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0086 ldnull 
+   0087 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008C brfalse IL_00a2: ldarg.0
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0097 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009C ldloc.1 
+   009D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A2 ldarg.0 
+   00A3 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   00A8 brfalse IL_00cc: ldarg.0
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameLogic.MinimapComponent::m_smallBloodWarning
+   00B3 ldfld CPooledGameObjectScript::Go
+   00B8 ldarg.0 
+   00B9 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_lowHPWarningShow
+   00BE brfalse IL_00c6: ldc.i4.0
+   00C3 ldloc.2 
+   00C4 br.s IL_00c7: call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C6 ldc.i4.0 
+   00C7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00CC ldarg.0 
+   00CD ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00D2 brfalse IL_010e: ldarg.0
+   00D7 ldarg.0 
+   00D8 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   00DD ldfld CPooledGameObjectScript::Go
+   00E2 ldarg.1 
+   00E3 brfalse IL_0108: ldc.i4.0
+   00E8 ldarg.0 
+   00E9 ldfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   00EE brtrue IL_0108: ldc.i4.0
+   00F3 ldarg.0 
+   00F4 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   00F9 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00FE callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0103 ldc.i4.0 
+   0104 ceq 
+   0106 br.s IL_0109: call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0108 ldc.i4.0 
+   0109 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   010E ldarg.0 
+   010F ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0114 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0119 brtrue IL_01fb: ret
+   011E call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0123 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0128 brfalse IL_0141: ldnull
+   012D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0132 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0137 ldfld Assets.Scripts.GameSystem.MinimapSys::miniMapEffectModule
+   013C br IL_0142: stloc.3
+   0141 ldnull 
+   0142 stloc.3 
+   0143 ldloc.3 
+   0144 brfalse IL_0164: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0149 ldloc.3 
+   014A ldarg.0 
+   014B ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0150 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0155 ldloc.2 
+   0156 brfalse IL_015e: ldc.i4.0
+   015B ldloc.1 
+   015C br.s IL_015f: callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule::SetFollowActorEffectVisible(System.UInt32,System.Boolean)
+   015E ldc.i4.0 
+   015F callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule::SetFollowActorEffectVisible(System.UInt32,System.Boolean)
+   0164 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0169 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   016E ldc.i4 3000
+   0173 bge.un IL_01fb: ret
+   0178 ldloc.1 
+   0179 brtrue IL_0184: ldarg.0
+   017E ldloc.2 
+   017F brfalse IL_01fb: ret
+   0184 ldarg.0 
+   0185 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   018A call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostEnemyActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   018F brfalse IL_01fb: ret
+   0194 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0199 ldfld Assets.Scripts.GameLogic.BattleLogic::battleStat
+   019E brfalse IL_01fb: ret
+   01A3 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01A8 ldfld Assets.Scripts.GameLogic.BattleLogic::battleStat
+   01AD ldfld Assets.Scripts.GameLogic.BattleStatistic::m_hostVisibelHeroObjIdList
+   01B2 brfalse IL_01fb: ret
+   01B7 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01BC ldfld Assets.Scripts.GameLogic.BattleLogic::battleStat
+   01C1 ldfld Assets.Scripts.GameLogic.BattleStatistic::m_hostVisibelHeroObjIdList
+   01C6 ldarg.0 
+   01C7 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   01CC callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01D1 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::IndexOf(!0)
+   01D6 ldc.i4.m1 
+   01D7 bne.un IL_01fb: ret
+   01DC call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01E1 ldfld Assets.Scripts.GameLogic.BattleLogic::battleStat
+   01E6 ldfld Assets.Scripts.GameLogic.BattleStatistic::m_hostVisibelHeroObjIdList
+   01EB ldarg.0 
+   01EC ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   01F1 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01F6 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   01FB ret 
+== UnityEngine.GameObject get_MapPointerSmall() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0006 brfalse IL_001b: ldnull
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0011 ldfld CPooledGameObjectScript::Go
+   0016 br IL_001c: ret
+   001B ldnull 
+   001C ret 
+== UnityEngine.GameObject get_MapPointerBig() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0006 brfalse IL_001b: ldnull
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0011 ldfld CPooledGameObjectScript::Go
+   0016 br IL_001c: ret
+   001B ldnull 
+   001C ret 
+== System.Int32 get_CallMonsterLifeTime() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::callMonsterLifeTime
+   0006 ret 
+== System.Void set_CallMonsterLifeTime(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.MinimapComponent::callMonsterLifeTime
+   0007 ret 
+== System.Int32 get_CallMonsterCurTime() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::callMonsterCurTime
+   0006 ret 
+== System.Void set_CallMonsterCurTime(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.MinimapComponent::callMonsterCurTime
+   0007 ret 
+== System.Void UpdateUIMap() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.MinimapComponent::UpdateUIMap_Inside()
+   0006 ret 
+== System.Void UpdateMiniMapHeroRotation() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameLogic.MinimapComponent::m_actorForward
+   0006 call UnityEngine.Quaternion Assets.Scripts.GameLogic.MinimapComponent::GetActorForward_MiniMap(VInt3&)
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_small
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_0044: ldarg.0
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_small
+   0023 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0044: ldarg.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_small
+   0039 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   003E ldloc.0 
+   003F callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_big
+   004A ldnull 
+   004B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0050 brfalse IL_007c: ret
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_big
+   005B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0060 ldnull 
+   0061 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0066 brfalse IL_007c: ret
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroIconBG_big
+   0071 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0076 ldloc.0 
+   0077 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   007C ret 
+== UnityEngine.Quaternion GetActorForward_MiniMap(VInt3& forward) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld VInt3::z
+   0006 conv.r4 
+   0007 ldarg.0 
+   0008 ldfld VInt3::x
+   000D conv.r4 
+   000E call System.Single UnityEngine.Mathf::Atan2(System.Single,System.Single)
+   0013 ldc.r4 57.29578
+   0018 mul 
+   0019 ldc.r4 90
+   001E sub 
+   001F stloc.0 
+   0020 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0025 stloc.1 
+   0026 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   002B callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0030 stloc.2 
+   0031 ldloc.2 
+   0032 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   0037 brfalse IL_0054: ldloc.0
+   003C ldloc.0 
+   003D ldloc.2 
+   003E ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotationByCamp
+   0043 add 
+   0044 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   0049 call UnityEngine.Quaternion UnityEngine.Quaternion::AngleAxis(System.Single,UnityEngine.Vector3)
+   004E stloc.1 
+   004F br IL_0060: ldloc.1
+   0054 ldloc.0 
+   0055 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   005A call UnityEngine.Quaternion UnityEngine.Quaternion::AngleAxis(System.Single,UnityEngine.Vector3)
+   005F stloc.1 
+   0060 ldloc.1 
+   0061 ret 
+== System.Void UpdateUIMap_Inside() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0006 brfalse IL_002c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0011 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001C brtrue IL_002c: ret
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0027 brtrue IL_002d: ldarg.0
+   002C ret 
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0033 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   0038 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   003D stloc.0 
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0044 callvirt Assets.Scripts.GameSystem.MinimapSys/EMapType Assets.Scripts.GameSystem.MinimapSys::CurMapType()
+   0049 stloc.1 
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   0050 brfalse IL_01b9: ldarg.0
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   005B ldfld CPooledGameObjectScript::Trans
+   0060 ldnull 
+   0061 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0066 brfalse IL_01b9: ldarg.0
+   006B ldloc.1 
+   006C ldc.i4.1 
+   006D beq IL_01b9: ldarg.0
+   0072 ldc.i4.0 
+   0073 stloc.2 
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   007A callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateViewPort()
+   007F brfalse IL_0098: ldarg.0
+   0084 ldarg.0 
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   008B ldloc.0 
+   008C callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::ViewPortContains(UnityEngine.Vector3)
+   0091 stfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0096 ldc.i4.1 
+   0097 stloc.2 
+   0098 ldarg.0 
+   0099 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   009E callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateBigMapViewPort()
+   00A3 brfalse IL_00bc: ldloc.2
+   00A8 ldarg.0 
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   00AF ldloc.0 
+   00B0 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::BigViewPortContains(UnityEngine.Vector3)
+   00B5 stfld Assets.Scripts.GameLogic.MinimapComponent::bInBigMapViewPort
+   00BA ldc.i4.1 
+   00BB stloc.2 
+   00BC ldloc.2 
+   00BD brfalse IL_00ca: ldarg.0
+   00C2 ldarg.0 
+   00C3 ldc.i4.s 16
+   00C5 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   00D0 ldloc.0 
+   00D1 ldc.i4.0 
+   00D2 callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInMap(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   00D7 stloc.3 
+   00D8 ldarg.0 
+   00D9 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_small
+   00DE ldfld CPooledGameObjectScript::Trans
+   00E3 ldloc.3 
+   00E4 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   00EF ldnull 
+   00F0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F5 brfalse IL_0106: ldarg.0
+   00FA ldarg.0 
+   00FB ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_small_Trans
+   0100 ldloc.3 
+   0101 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   010C callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0111 brtrue IL_01b9: ldarg.0
+   0116 ldarg.0 
+   0117 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_bHeroSameCamp
+   011C brfalse IL_01b9: ldarg.0
+   0121 ldarg.0 
+   0122 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0127 callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedUpdateViewPort()
+   012C brfalse IL_01b9: ldarg.0
+   0131 ldarg.0 
+   0132 ldfld Assets.Scripts.GameLogic.MinimapComponent::bInViewPort
+   0137 brtrue IL_01b9: ldarg.0
+   013C ldarg.0 
+   013D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   0142 brfalse IL_01b9: ldarg.0
+   0147 ldarg.0 
+   0148 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_Pivot
+   014D ldnull 
+   014E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0153 brfalse IL_01b9: ldarg.0
+   0158 ldarg.0 
+   0159 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_CenterImg
+   015E ldnull 
+   015F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0164 brfalse IL_01b9: ldarg.0
+   0169 ldloc.3 
+   016A stloc.s V_4
+   016C ldarg.0 
+   016D ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   0172 ldloca.s V_4
+   0174 ldc.i4.0 
+   0175 callvirt System.Void Assets.Scripts.GameSystem.MinimapSys::LimitPointerInMapRect(UnityEngine.Vector3&,Assets.Scripts.GameSystem.enMiniMapType)
+   017A ldarg.0 
+   017B ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small
+   0180 ldfld CPooledGameObjectScript::Trans
+   0185 ldloc.s V_4
+   0187 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   018C ldarg.0 
+   018D ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_Pivot
+   0192 ldloc.3 
+   0193 ldloc.s V_4
+   0195 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   019A call UnityEngine.Vector3 UnityEngine.Vector3::get_back()
+   019F call UnityEngine.Quaternion UnityEngine.Quaternion::LookRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+   01A4 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   01A9 ldarg.0 
+   01AA ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapOutBoundPointer_small_CenterImg
+   01AF call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   01B4 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   01B9 ldarg.0 
+   01BA ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01BF brfalse IL_026d: ldarg.0
+   01C4 ldarg.0 
+   01C5 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   01CA ldfld CPooledGameObjectScript::Trans
+   01CF ldnull 
+   01D0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01D5 brfalse IL_026d: ldarg.0
+   01DA ldloc.1 
+   01DB brfalse IL_026d: ldarg.0
+   01E0 ldarg.0 
+   01E1 ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   01E6 ldc.i4.1 
+   01E7 callvirt Assets.Scripts.GameSystem.enMiniMapType Assets.Scripts.GameSystem.MinimapSys::GetUsedMiniMapType(System.Boolean)
+   01EC stloc.s V_5
+   01EE ldarg.0 
+   01EF ldfld Assets.Scripts.GameLogic.MinimapComponent::theMmpSys
+   01F4 ldloc.0 
+   01F5 ldloc.s V_5
+   01F7 ldloca.s V_6
+   01F9 ldloca.s V_7
+   01FB callvirt System.Void Assets.Scripts.GameSystem.MinimapSys::GetPositionInMapAndScreen(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType,UnityEngine.Vector3&,UnityEngine.Vector3&)
+   0200 ldarg.0 
+   0201 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_mapPointer_big
+   0206 ldfld CPooledGameObjectScript::Trans
+   020B ldloc.s V_6
+   020D callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0212 ldarg.0 
+   0213 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0218 ldnull 
+   0219 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   021E brfalse IL_0230: ldarg.0
+   0223 ldarg.0 
+   0224 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_heroHead_big_Trans
+   0229 ldloc.s V_6
+   022B callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0230 ldarg.0 
+   0231 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0236 brfalse IL_026d: ldarg.0
+   023B ldarg.0 
+   023C ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0241 ldflda Assets.Scripts.GameSystem.UI3DEventCom::m_screenSize
+   0246 ldloc.s V_7
+   0248 call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   024D call System.Void UnityEngine.Rect::set_center(UnityEngine.Vector2)
+   0252 ldarg.0 
+   0253 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0258 ldfld Assets.Scripts.GameSystem.UI3DEventCom::bCreateParticleByPosition
+   025D brfalse IL_026d: ldarg.0
+   0262 ldarg.0 
+   0263 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0268 callvirt System.Void Assets.Scripts.GameSystem.UI3DEventCom::CreateParticleByInsidePos()
+   026D ldarg.0 
+   026E ldloc.0 
+   026F stfld Assets.Scripts.GameLogic.MinimapComponent::m_actorPos
+   0274 ret 
+== System.Void AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   0007 ldarg.1 
+   0008 or 
+   0009 stfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   000E ret 
+== System.Void RemoveDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   0007 ldarg.1 
+   0008 not 
+   0009 and 
+   000A stfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   000F ret 
+== System.Boolean HasDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag dirtyFlag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   0006 ldarg.1 
+   0007 and 
+   0008 ldc.i4.0 
+   0009 ceq 
+   000B ldc.i4.0 
+   000C ceq 
+   000E ret 
+== System.Void ClearDirtyFlags() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.MinimapComponent::m_dirtyFlags
+   0007 ret 
+== System.Void AddForceUpdateFlag() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0007 ret 
+== System.Void ExternalAddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag flag) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameLogic.MinimapComponent::AddDirtyFlag(Assets.Scripts.GameLogic.enMinimapDirtyFlag)
+   0007 ret 
+== System.Void CreateEventComByGM() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0006 brtrue IL_0083: ret
+   000B ldarg.0 
+   000C newobj System.Void Assets.Scripts.GameSystem.UI3DEventCom::.ctor()
+   0011 stfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   001C ldc.r4 40
+   0021 ldc.r4 40
+   0026 ldc.r4 1
+   002B call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetEventComScreenSize(Assets.Scripts.GameSystem.UI3DEventCom,System.Single,System.Single,System.Single)
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0036 ldarg.0 
+   0037 ldflda Assets.Scripts.GameLogic.LogicComponent::actorPtr
+   003C call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0041 ldc.i4.3 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0048 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameLogic.LogicComponent::actor
+   0053 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0058 call System.Void Assets.Scripts.GameSystem.MiniMapSysUT::SetMapElement_EventParam(Assets.Scripts.GameSystem.UI3DEventCom,System.Boolean,Assets.Scripts.GameSystem.MinimapSys/ElementType,System.UInt32,System.UInt32)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   0063 brfalse IL_0083: ret
+   0068 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   006D callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0072 ldfld Assets.Scripts.GameSystem.MinimapSys::UI3DEventMgr
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.GameLogic.MinimapComponent::m_evtCom
+   007D ldc.i4.0 
+   007E callvirt System.Void Assets.Scripts.GameSystem.UI3DEventMgr::Register(Assets.Scripts.GameSystem.UI3DEventCom,Assets.Scripts.GameSystem.UI3DEventMgr/EventComType)
+   0083 ret 
+== System.Void RefreshMapPointerLayer() attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.5 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr MiniMap_MarkedDi01_Map
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldstr MiniMap_MarkedDi02_Map
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.2 
+   0018 ldstr MiniMap_MarkedDi03_Map
+   001D stelem.ref 
+   001E dup 
+   001F ldc.i4.3 
+   0020 ldstr MiniMap_MarkedDi04_Map
+   0025 stelem.ref 
+   0026 dup 
+   0027 ldc.i4.4 
+   0028 ldstr MiniMap_MarkedDi05_Map
+   002D stelem.ref 
+   002E stsfld Assets.Scripts.GameLogic.MinimapComponent::MarkCenterSpriteNameList
+   0033 ldc.i4.5 
+   0034 newarr System.String
+   0039 dup 
+   003A ldc.i4.0 
+   003B ldstr MiniMap_JianTou01
+   0040 stelem.ref 
+   0041 dup 
+   0042 ldc.i4.1 
+   0043 ldstr MiniMap_JianTou02
+   0048 stelem.ref 
+   0049 dup 
+   004A ldc.i4.2 
+   004B ldstr MiniMap_JianTou03
+   0050 stelem.ref 
+   0051 dup 
+   0052 ldc.i4.3 
+   0053 ldstr MiniMap_JianTou04
+   0058 stelem.ref 
+   0059 dup 
+   005A ldc.i4.4 
+   005B ldstr MiniMap_JianTou05
+   0060 stelem.ref 
+   0061 stsfld Assets.Scripts.GameLogic.MinimapComponent::MarkHeadSpriteNameList
+   0066 ldc.i4.3 
+   0067 stsfld Assets.Scripts.GameLogic.MinimapComponent::s_showAliceLowHpWarning
+   006C ldc.i4.1 
+   006D stsfld Assets.Scripts.GameLogic.MinimapComponent::s_showBigmapHP
+   0072 ret 

@@ -1,0 +1,98 @@
+// TYPE Assets.Scripts.GameLogic.UsePositionSkillCommand  base=Assets.Scripts.Framework.FrameCommand  attrs=Public, BeforeFieldInit
+  FIELD VInt2 Position
+  FIELD CoreDef.SkillSlotType SlotType
+  FIELD System.Int32 iSkillID
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.FrameCommand::.ctor()
+   0006 ret 
+== Assets.Scripts.Framework.FrameCommand Creator(CSProtocol.CSDT_GAMING_CSSYNCINFO& msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UsePositionSkillCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 ldind.ref 
+   0009 ldfld CSProtocol.CSDT_GAMING_CSSYNCINFO::stCSSyncDt
+   000E callvirt CSProtocol.CSDT_CMD_USEPOSITIONSKILL CSProtocol.CSDT_GAMING_CSSYNCUN::get_stPositionSkill()
+   0013 ldfld CSProtocol.CSDT_CMD_USEPOSITIONSKILL::chSlotType
+   0018 conv.i4 
+   0019 stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::SlotType
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 ldind.ref 
+   0021 ldfld CSProtocol.CSDT_GAMING_CSSYNCINFO::stCSSyncDt
+   0026 callvirt CSProtocol.CSDT_CMD_USEPOSITIONSKILL CSProtocol.CSDT_GAMING_CSSYNCUN::get_stPositionSkill()
+   002B ldfld CSProtocol.CSDT_CMD_USEPOSITIONSKILL::stPosition
+   0030 call VInt2 CommonTools::ToVector2(CSProtocol.CSDT_VECTOR2)
+   0035 stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::Position
+   003A ldloc.0 
+   003B ret 
+== System.Boolean TransProtocol(CSProtocol.FRAME_CMD_PKG msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.FRAME_CMD_PKG)
+   0007 ret 
+== System.Boolean TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.CSDT_GAMING_CSSYNCINFO::stCSSyncDt
+   0006 callvirt CSProtocol.CSDT_CMD_USEPOSITIONSKILL CSProtocol.CSDT_GAMING_CSSYNCUN::get_stPositionSkill()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::SlotType
+   0011 conv.i1 
+   0012 stfld CSProtocol.CSDT_CMD_USEPOSITIONSKILL::chSlotType
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::Position
+   001D ldarg.1 
+   001E ldfld CSProtocol.CSDT_GAMING_CSSYNCINFO::stCSSyncDt
+   0023 callvirt CSProtocol.CSDT_CMD_USEPOSITIONSKILL CSProtocol.CSDT_GAMING_CSSYNCUN::get_stPositionSkill()
+   0028 ldflda CSProtocol.CSDT_CMD_USEPOSITIONSKILL::stPosition
+   002D call System.Void CommonTools::CSDTFromVector2(VInt2,CSProtocol.CSDT_VECTOR2&)
+   0032 ldarg.0 
+   0033 ldarg.1 
+   0034 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO)
+   0039 ret 
+== System.Void OnReceive(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_frameNum()
+   0006 ldarg.1 
+   0007 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::Position
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::SlotType
+   0018 conv.u1 
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::iSkillID
+   001F call System.Void SGW::PushUsePositionSkillCmd(System.UInt32,System.UInt32,VInt2,System.Byte,System.UInt32)
+   0024 ldarg.1 
+   0025 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   002A call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   002F ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   0034 bne.un IL_0091: ret
+   0039 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   003E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0043 stloc.0 
+   0044 ldloc.0 
+   0045 brfalse IL_0091: ret
+   004A ldloc.0 
+   004B ldflda Assets.Scripts.GameLogic.Player::Captain
+   0050 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0055 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   005A ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   005F brfalse IL_0091: ret
+   0064 ldloc.0 
+   0065 ldflda Assets.Scripts.GameLogic.Player::Captain
+   006A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006F ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0074 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameLogic.UsePositionSkillCommand::SlotType
+   007F ldelema Assets.Scripts.GameLogic.SkillSlotUsedTimes
+   0084 dup 
+   0085 ldfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseRcvTimes
+   008A ldc.i4.1 
+   008B add 
+   008C stfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseRcvTimes
+   0091 ret 
+== System.Void ExecLocal(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 

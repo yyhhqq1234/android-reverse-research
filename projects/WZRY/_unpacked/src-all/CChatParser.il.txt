@@ -1,0 +1,1109 @@
+// TYPE CChatParser  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 chat_entry_lineHeight
+  FIELD System.Int32 chat_list_max_width_entry
+  FIELD System.Int32 chat_list_max_width_Lobby
+  FIELD System.Int32 chat_list_max_width_right
+  FIELD System.Int32 chat_guild_list_max_width
+  FIELD System.Int32 chat_entry_channel_img_width
+  FIELD System.Int32 chat_list_max_width_chat_room
+  FIELD System.Int32 start_x
+  FIELD System.Int32 chatFaceWidth
+  FIELD System.Int32 chatFaceHeight
+  FIELD System.Int32 lineHeight
+  FIELD System.Int32 maxWidth
+  FIELD System.Int32 viewFontSize
+  FIELD System.Single element_width
+  FIELD System.Single element_height
+  FIELD System.Single element_half_height
+  FIELD System.Single element_chatRecruit_height
+  FIELD System.Int32 mPositionX
+  FIELD System.Int32 mPositionY
+  FIELD System.Int32 mOriginalPositionX
+  FIELD System.Int32 mWidth
+  FIELD ListView`1<CChatParser/LabelType> mList
+  FIELD Assets.Scripts.GameSystem.CChatEntity curEntNode
+  FIELD System.Int32 chatCell_InitHeight
+  FIELD System.Int32 chatCell_patchHeight
+  FIELD System.Int32 chatCell_DeltaHeight
+  FIELD System.Boolean bProc_ChatEntry
+  FIELD System.Int32[] ascii_width
+  FIELD System.String SPEAKER_STR =        
+  FIELD System.String SPEAKER_REP_STR = {0}{1}
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 18
+   0003 stfld CChatParser::viewFontSize
+   0008 ldarg.0 
+   0009 ldc.i4.5 
+   000A stfld CChatParser::mOriginalPositionX
+   000F ldarg.0 
+   0010 newobj System.Void ListView`1<CChatParser/LabelType>::.ctor()
+   0015 stfld CChatParser::mList
+   001A ldarg.0 
+   001B ldc.i4.s 80
+   001D stfld CChatParser::chatCell_InitHeight
+   0022 ldarg.0 
+   0023 ldc.i4.s 10
+   0025 stfld CChatParser::chatCell_patchHeight
+   002A ldarg.0 
+   002B ldc.i4.s 30
+   002D stfld CChatParser::chatCell_DeltaHeight
+   0032 ldarg.0 
+   0033 call System.Void System.Object::.ctor()
+   0038 ret 
+== System.Void Parse(System.String value, System.Int32 startX, Assets.Scripts.GameSystem.CChatEntity entNode) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldarg.3 
+   000E stfld CChatParser::curEntNode
+   0013 ldarg.0 
+   0014 ldfld CChatParser::mList
+   0019 callvirt System.Void ListViewBase::Clear()
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 stfld CChatParser::mWidth
+   0025 ldarg.0 
+   0026 ldsfld CChatParser::chatFaceHeight
+   002B neg 
+   002C stfld CChatParser::mPositionY
+   0031 ldarg.0 
+   0032 ldarg.0 
+   0033 ldc.i4.8 
+   0034 dup 
+   0035 stloc.0 
+   0036 stfld CChatParser::mOriginalPositionX
+   003B ldloc.0 
+   003C stfld CChatParser::mPositionX
+   0041 ldarg.0 
+   0042 ldarg.1 
+   0043 call System.Void CChatParser::ParseText(System.String)
+   0048 ldarg.0 
+   0049 call System.Void CChatParser::ShowText()
+   004E ret 
+== System.Void ParseText(System.String value) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CChatParser::curEntNode
+   0006 brfalse IL_0050: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld CChatParser::curEntNode
+   0011 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0016 ldc.i4.6 
+   0017 beq IL_003e: ldstr "{0}{1}"
+   001C ldarg.0 
+   001D ldfld CChatParser::curEntNode
+   0022 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0027 ldc.i4.7 
+   0028 beq IL_003e: ldstr "{0}{1}"
+   002D ldarg.0 
+   002E ldfld CChatParser::curEntNode
+   0033 callvirt Assets.Scripts.GameSystem.CChatEntity/VoiceFlag Assets.Scripts.GameSystem.CChatEntity::IsVoice()
+   0038 ldc.i4.2 
+   0039 bne.un IL_0050: ldc.i4.0
+   003E ldstr {0}{1}
+   0043 ldstr        
+   0048 ldarg.1 
+   0049 call System.String System.String::Format(System.String,System.Object,System.Object)
+   004E starg.s value
+   0050 ldc.i4.0 
+   0051 stloc.0 
+   0052 ldc.i4.0 
+   0053 stloc.1 
+   0054 ldarg.1 
+   0055 stloc.3 
+   0056 ldstr (%\d+)|(\[(\d+)#(\d+)#([a-z0-9]{32})\])|(\\ud83c(.+)\\ud83c(.+))
+   005B stloc.s V_4
+   005D ldnull 
+   005E stloc.s V_5
+   0060 ldarg.1 
+   0061 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0066 brtrue IL_0080: ldloc.s V_5
+   006B ldarg.1 
+   006C ldloc.s V_4
+   006E call System.Text.RegularExpressions.MatchCollection System.Text.RegularExpressions.Regex::Matches(System.String,System.String)
+   0073 stloc.s V_5
+   0075 leave IL_0080: ldloc.s V_5
+   007A pop 
+   007B leave IL_0080: ldloc.s V_5
+   0080 ldloc.s V_5
+   0082 brfalse IL_030e: ldarg.0
+   0087 ldloc.s V_5
+   0089 callvirt System.Int32 System.Text.RegularExpressions.MatchCollection::get_Count()
+   008E ldc.i4.0 
+   008F ble IL_030e: ldarg.0
+   0094 ldloc.s V_5
+   0096 callvirt System.Int32 System.Text.RegularExpressions.MatchCollection::get_Count()
+   009B stloc.s V_7
+   009D ldc.i4.0 
+   009E stloc.s V_8
+   00A0 br IL_02e3: ldloc.s V_8
+   00A5 ldloc.s V_5
+   00A7 ldloc.s V_8
+   00A9 callvirt System.Text.RegularExpressions.Match System.Text.RegularExpressions.MatchCollection::get_Item(System.Int32)
+   00AE stloc.s V_9
+   00B0 ldloc.s V_9
+   00B2 callvirt System.String System.Text.RegularExpressions.Capture::get_Value()
+   00B7 stloc.s V_6
+   00B9 ldloc.s V_6
+   00BB call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00C0 brfalse IL_00ca: ldloc.3
+   00C5 br IL_02dd: ldloc.s V_8
+   00CA ldloc.3 
+   00CB ldloc.s V_6
+   00CD callvirt System.Int32 System.String::IndexOf(System.String)
+   00D2 stloc.0 
+   00D3 ldloc.0 
+   00D4 ldloc.s V_6
+   00D6 callvirt System.Int32 System.String::get_Length()
+   00DB add 
+   00DC stloc.1 
+   00DD ldloc.0 
+   00DE ldc.i4.m1 
+   00DF ble IL_02dd: ldloc.s V_8
+   00E4 ldloc.3 
+   00E5 ldc.i4.0 
+   00E6 ldloc.0 
+   00E7 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   00EC stloc.2 
+   00ED ldloc.2 
+   00EE call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00F3 brtrue IL_010a: ldloc.s V_6
+   00F8 ldarg.0 
+   00F9 ldfld CChatParser::mList
+   00FE ldloc.2 
+   00FF ldc.i4.0 
+   0100 newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   0105 callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   010A ldloc.s V_6
+   010C call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0111 brtrue IL_013b: ldloc.s V_6
+   0116 ldloc.s V_6
+   0118 ldstr %
+   011D callvirt System.Int32 System.String::IndexOf(System.String)
+   0122 ldc.i4.m1 
+   0123 beq IL_013b: ldloc.s V_6
+   0128 ldarg.0 
+   0129 ldfld CChatParser::mList
+   012E ldloc.s V_6
+   0130 ldc.i4.1 
+   0131 newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   0136 callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   013B ldloc.s V_6
+   013D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0142 brtrue IL_0252: ldloc.s V_6
+   0147 ldloc.s V_6
+   0149 ldstr [
+   014E callvirt System.Int32 System.String::IndexOf(System.String)
+   0153 ldc.i4.m1 
+   0154 beq IL_0252: ldloc.s V_6
+   0159 ldloc.s V_9
+   015B callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   0160 callvirt System.Int32 System.Text.RegularExpressions.GroupCollection::get_Count()
+   0165 ldc.i4.s 9
+   0167 bne.un IL_0252: ldloc.s V_6
+   016C ldloc.s V_9
+   016E callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   0173 ldc.i4.3 
+   0174 callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   0179 callvirt System.String System.Object::ToString()
+   017E call System.Int32 System.Convert::ToInt32(System.String)
+   0183 stloc.s V_10
+   0185 ldloc.s V_9
+   0187 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   018C ldc.i4.4 
+   018D callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   0192 callvirt System.String System.Object::ToString()
+   0197 call System.Int32 System.Convert::ToInt32(System.String)
+   019C stloc.s V_11
+   019E ldloc.s V_9
+   01A0 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   01A5 ldc.i4.5 
+   01A6 callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   01AB call System.String System.Convert::ToString(System.Object)
+   01B0 stloc.s V_12
+   01B2 ldnull 
+   01B3 stloc.s V_13
+   01B5 ldloc.s V_11
+   01B7 ldc.i4 4042
+   01BC bne.un IL_01ee: ldloc.s V_11
+   01C1 ldstr {0}{1}{2}
+   01C6 ldloc.s V_10
+   01C8 box System.Int32
+   01CD ldc.i4 4042
+   01D2 box System.Int32
+   01D7 ldstr j9cWiS6lPjw4g
+   01DC call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   01E1 ldc.i4.1 
+   01E2 call System.String Utility::CreateMD5Hash(System.String,Utility/MD5_STRING_CASE)
+   01E7 stloc.s V_13
+   01E9 br IL_0231: ldloc.s V_12
+   01EE ldloc.s V_11
+   01F0 ldc.i4 31121
+   01F5 bne.un IL_020c: ldstr "{0}{1}{2}"
+   01FA ldsfld System.String::Empty
+   01FF ldc.i4.1 
+   0200 call System.String Utility::CreateMD5Hash(System.String,Utility/MD5_STRING_CASE)
+   0205 stloc.s V_13
+   0207 br IL_0231: ldloc.s V_12
+   020C ldstr {0}{1}{2}
+   0211 ldloc.s V_10
+   0213 box System.Int32
+   0218 ldloc.s V_11
+   021A box System.Int32
+   021F ldstr j9cWiS6lPjw4g
+   0224 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0229 ldc.i4.1 
+   022A call System.String Utility::CreateMD5Hash(System.String,Utility/MD5_STRING_CASE)
+   022F stloc.s V_13
+   0231 ldloc.s V_12
+   0233 ldloc.s V_13
+   0235 call System.Boolean System.String::op_Equality(System.String,System.String)
+   023A brfalse IL_0252: ldloc.s V_6
+   023F ldarg.0 
+   0240 ldfld CChatParser::mList
+   0245 ldloc.s V_6
+   0247 ldc.i4.2 
+   0248 newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   024D callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   0252 ldloc.s V_6
+   0254 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0259 brtrue IL_02d5: ldloc.3
+   025E ldloc.s V_6
+   0260 ldstr u
+   0265 callvirt System.Int32 System.String::IndexOf(System.String)
+   026A ldc.i4.m1 
+   026B beq IL_02d5: ldloc.3
+   0270 ldloc.s V_9
+   0272 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   0277 callvirt System.Int32 System.Text.RegularExpressions.GroupCollection::get_Count()
+   027C ldc.i4.s 9
+   027E bne.un IL_02d5: ldloc.3
+   0283 ldloc.s V_9
+   0285 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   028A ldc.i4.7 
+   028B callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   0290 call System.String System.Convert::ToString(System.Object)
+   0295 stloc.s V_14
+   0297 ldloc.s V_9
+   0299 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   029E ldc.i4.8 
+   029F callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   02A4 call System.String System.Convert::ToString(System.Object)
+   02A9 stloc.s V_15
+   02AB ldarg.0 
+   02AC ldfld CChatParser::mList
+   02B1 call !0 Singleton`1<CTextManager>::GetInstance()
+   02B6 ldstr Guild_RedENvelope_Thankness_Chat
+   02BB ldc.i4.1 
+   02BC callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02C1 ldloc.s V_14
+   02C3 ldloc.s V_15
+   02C5 call System.String System.String::Format(System.String,System.Object,System.Object)
+   02CA ldc.i4.0 
+   02CB newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   02D0 callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   02D5 ldloc.3 
+   02D6 ldloc.1 
+   02D7 callvirt System.String System.String::Substring(System.Int32)
+   02DC stloc.3 
+   02DD ldloc.s V_8
+   02DF ldc.i4.1 
+   02E0 add 
+   02E1 stloc.s V_8
+   02E3 ldloc.s V_8
+   02E5 ldloc.s V_7
+   02E7 blt IL_00a5: ldloc.s V_5
+   02EC ldloc.3 
+   02ED call System.Boolean System.String::IsNullOrEmpty(System.String)
+   02F2 brtrue IL_0309: br IL_0320
+   02F7 ldarg.0 
+   02F8 ldfld CChatParser::mList
+   02FD ldloc.3 
+   02FE ldc.i4.0 
+   02FF newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   0304 callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   0309 br IL_0320: ret
+   030E ldarg.0 
+   030F ldfld CChatParser::mList
+   0314 ldloc.3 
+   0315 ldc.i4.0 
+   0316 newobj System.Void CChatParser/LabelType::.ctor(System.String,CChatParser/InfoType)
+   031B callvirt System.Void ListView`1<CChatParser/LabelType>::Add(!0)
+   0320 ret 
+== System.Boolean ParseActionBtnContent(System.String value, System.String& btnName, System.String& desc, Assets.Scripts.UI.enUIEventID& uiEventID, System.Int32& customIntPara) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldstr \[(\d+)#(\d+)#([a-z0-9]{32})\]
+   0005 stloc.0 
+   0006 ldnull 
+   0007 stloc.1 
+   0008 ldarg.1 
+   0009 ldnull 
+   000A stind.ref 
+   000B ldarg.3 
+   000C ldc.i4.0 
+   000D stind.i4 
+   000E ldarg.2 
+   000F ldnull 
+   0010 stind.ref 
+   0011 ldarg.s customIntPara
+   0013 ldc.i4.0 
+   0014 stind.i4 
+   0015 ldarg.0 
+   0016 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   001B brtrue IL_0035: ldloc.1
+   0020 ldarg.0 
+   0021 ldloc.0 
+   0022 call System.Text.RegularExpressions.MatchCollection System.Text.RegularExpressions.Regex::Matches(System.String,System.String)
+   0027 stloc.1 
+   0028 leave IL_0035: ldloc.1
+   002D pop 
+   002E ldc.i4.0 
+   002F stloc.2 
+   0030 leave IL_00a2: ldloc.2
+   0035 ldloc.1 
+   0036 brfalse IL_00a0: ldc.i4.0
+   003B ldloc.1 
+   003C callvirt System.Int32 System.Text.RegularExpressions.MatchCollection::get_Count()
+   0041 ldc.i4.0 
+   0042 ble IL_00a0: ldc.i4.0
+   0047 ldloc.1 
+   0048 ldc.i4.0 
+   0049 callvirt System.Text.RegularExpressions.Match System.Text.RegularExpressions.MatchCollection::get_Item(System.Int32)
+   004E stloc.s V_4
+   0050 ldloc.s V_4
+   0052 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   0057 callvirt System.Int32 System.Text.RegularExpressions.GroupCollection::get_Count()
+   005C ldc.i4.4 
+   005D bne.un IL_00a0: ldc.i4.0
+   0062 ldarg.3 
+   0063 ldloc.s V_4
+   0065 callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   006A ldc.i4.2 
+   006B callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   0070 callvirt System.String System.Object::ToString()
+   0075 call System.Int32 System.Convert::ToInt32(System.String)
+   007A stind.i4 
+   007B ldarg.s customIntPara
+   007D ldloc.s V_4
+   007F callvirt System.Text.RegularExpressions.GroupCollection System.Text.RegularExpressions.Match::get_Groups()
+   0084 ldc.i4.1 
+   0085 callvirt System.Text.RegularExpressions.Group System.Text.RegularExpressions.GroupCollection::get_Item(System.Int32)
+   008A callvirt System.String System.Object::ToString()
+   008F call System.Int32 System.Convert::ToInt32(System.String)
+   0094 stind.i4 
+   0095 ldarg.3 
+   0096 ldind.i4 
+   0097 ldarg.1 
+   0098 ldarg.2 
+   0099 call System.Void CChatParser::GetActionBtnNameAndDesc(Assets.Scripts.UI.enUIEventID,System.String&,System.String&)
+   009E ldc.i4.1 
+   009F ret 
+   00A0 ldc.i4.0 
+   00A1 ret 
+   00A2 ldloc.2 
+   00A3 ret 
+== System.Void GetActionBtnNameAndDesc(Assets.Scripts.UI.enUIEventID uiEventID, System.String& btnName, System.String& btnDesc) attrs=Private, Static, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 stind.ref 
+   0003 ldarg.2 
+   0004 ldnull 
+   0005 stind.ref 
+   0006 ldarg.0 
+   0007 ldc.i4 4042
+   000C beq IL_0021: ldarg.1
+   0011 ldarg.0 
+   0012 ldc.i4 31121
+   0017 beq IL_004a: ldarg.1
+   001C br IL_0073: br IL_0078
+   0021 ldarg.1 
+   0022 call !0 Singleton`1<CTextManager>::GetInstance()
+   0027 ldstr Guild_Platform_Remind_Join_Chat_Btn_Text
+   002C ldc.i4.1 
+   002D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0032 stind.ref 
+   0033 ldarg.2 
+   0034 call !0 Singleton`1<CTextManager>::GetInstance()
+   0039 ldstr Guild_Platform_Remind_Join_Chat_Text
+   003E ldc.i4.1 
+   003F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0044 stind.ref 
+   0045 br IL_0078: ret
+   004A ldarg.1 
+   004B call !0 Singleton`1<CTextManager>::GetInstance()
+   0050 ldstr Guild_Red_Envelope_Capture
+   0055 ldc.i4.1 
+   0056 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   005B stind.ref 
+   005C ldarg.2 
+   005D call !0 Singleton`1<CTextManager>::GetInstance()
+   0062 ldstr Guild_Red_Envelope_New_Data_In_Chat
+   0067 ldc.i4.1 
+   0068 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   006D stind.ref 
+   006E br IL_0078: ret
+   0073 br IL_0078: ret
+   0078 ret 
+== System.Void ShowText() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CChatParser::curEntNode
+   0006 brfalse IL_001b: ldarg.0
+   000B ldarg.0 
+   000C ldfld CChatParser::curEntNode
+   0011 ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   0016 callvirt System.Void ListViewBase::Clear()
+   001B ldarg.0 
+   001C ldfld CChatParser::mList
+   0021 callvirt System.Int32 ListViewBase::get_Count()
+   0026 stloc.0 
+   0027 ldc.i4.0 
+   0028 stloc.1 
+   0029 ldc.i4.0 
+   002A stloc.2 
+   002B br IL_0099: ldloc.2
+   0030 ldarg.0 
+   0031 ldfld CChatParser::mList
+   0036 ldloc.2 
+   0037 callvirt !0 ListView`1<CChatParser/LabelType>::get_Item(System.Int32)
+   003C stloc.3 
+   003D ldloc.3 
+   003E ldfld CChatParser/LabelType::type
+   0043 stloc.s V_4
+   0045 ldloc.s V_4
+   0047 brfalse IL_0061: ldarg.0
+   004C ldloc.s V_4
+   004E ldc.i4.1 
+   004F beq IL_0073: ldarg.0
+   0054 ldloc.s V_4
+   0056 ldc.i4.2 
+   0057 beq IL_0084: ldarg.0
+   005C br IL_0095: ldloc.2
+   0061 ldarg.0 
+   0062 ldloc.3 
+   0063 ldfld CChatParser/LabelType::info
+   0068 ldc.i4.0 
+   0069 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   006E br IL_0095: ldloc.2
+   0073 ldarg.0 
+   0074 ldloc.3 
+   0075 ldfld CChatParser/LabelType::info
+   007A call System.Void CChatParser::CreateTextFace(System.String)
+   007F br IL_0095: ldloc.2
+   0084 ldarg.0 
+   0085 ldloc.3 
+   0086 ldfld CChatParser/LabelType::info
+   008B call System.Void CChatParser::CreateButton(System.String)
+   0090 br IL_0095: ldloc.2
+   0095 ldloc.2 
+   0096 ldc.i4.1 
+   0097 add 
+   0098 stloc.2 
+   0099 ldloc.2 
+   009A ldloc.0 
+   009B blt IL_0030: ldarg.0
+   00A0 ldarg.0 
+   00A1 ldfld CChatParser::curEntNode
+   00A6 brfalse IL_00c2: ret
+   00AB ldarg.0 
+   00AC ldfld CChatParser::curEntNode
+   00B1 dup 
+   00B2 ldfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   00B7 ldc.r4 8
+   00BC add 
+   00BD stfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   00C2 ret 
+== System.Void CreateText(System.String value, System.Boolean forceHoldSecondLine) attrs=Private, HideBySig maxstack=7
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldsfld System.String::Empty
+   000B stloc.1 
+   000C ldarg.2 
+   000D brfalse IL_0024: ldarg.1
+   0012 ldarg.1 
+   0013 ldstr \n
+   0018 ldsfld System.String::Empty
+   001D callvirt System.String System.String::Replace(System.String,System.String)
+   0022 starg.s value
+   0024 ldarg.1 
+   0025 ldstr \n
+   002A callvirt System.Int32 System.String::IndexOf(System.String)
+   002F stloc.2 
+   0030 ldloc.2 
+   0031 ldc.i4.m1 
+   0032 beq IL_009f: ldsfld System.String System.String::Empty
+   0037 ldarg.1 
+   0038 ldc.i4.0 
+   0039 ldloc.2 
+   003A callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   003F stloc.0 
+   0040 ldarg.1 
+   0041 ldloc.2 
+   0042 ldc.i4.2 
+   0043 add 
+   0044 callvirt System.String System.String::Substring(System.Int32)
+   0049 stloc.1 
+   004A ldloc.0 
+   004B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0050 brtrue IL_005d: ldarg.0
+   0055 ldarg.0 
+   0056 ldloc.0 
+   0057 ldc.i4.0 
+   0058 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   005D ldarg.0 
+   005E ldfld CChatParser::bProc_ChatEntry
+   0063 brfalse IL_0069: ldarg.0
+   0068 ret 
+   0069 ldarg.0 
+   006A ldarg.0 
+   006B ldfld CChatParser::mOriginalPositionX
+   0070 stfld CChatParser::mPositionX
+   0075 ldarg.0 
+   0076 dup 
+   0077 ldfld CChatParser::mPositionY
+   007C ldsfld CChatParser::lineHeight
+   0081 sub 
+   0082 stfld CChatParser::mPositionY
+   0087 ldloc.1 
+   0088 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   008D brtrue IL_009a: br IL_0246
+   0092 ldarg.0 
+   0093 ldloc.1 
+   0094 ldc.i4.1 
+   0095 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   009A br IL_0246: ret
+   009F ldsfld System.String::Empty
+   00A4 stloc.3 
+   00A5 ldc.r4 0
+   00AA stloc.s V_4
+   00AC ldarg.0 
+   00AD ldarg.1 
+   00AE ldarg.0 
+   00AF ldfld CChatParser::mPositionX
+   00B4 conv.r4 
+   00B5 ldloca.s V_3
+   00B7 ldloca.s V_4
+   00B9 call System.Boolean CChatParser::WrapText(System.String,System.Single,System.String&,System.Single&)
+   00BE stloc.s V_5
+   00C0 ldloc.s V_5
+   00C2 brfalse IL_0144: ldloc.s V_4
+   00C7 ldloc.3 
+   00C8 ldstr \n
+   00CD callvirt System.Int32 System.String::IndexOf(System.String)
+   00D2 stloc.s V_6
+   00D4 ldloc.3 
+   00D5 ldc.i4.0 
+   00D6 ldloc.s V_6
+   00D8 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   00DD stloc.0 
+   00DE ldloc.3 
+   00DF ldloc.s V_6
+   00E1 ldc.i4.2 
+   00E2 add 
+   00E3 callvirt System.String System.String::Substring(System.Int32)
+   00E8 stloc.1 
+   00E9 ldloc.0 
+   00EA call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00EF brtrue IL_00fc: ldarg.0
+   00F4 ldarg.0 
+   00F5 ldloc.0 
+   00F6 ldc.i4.0 
+   00F7 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   00FC ldarg.0 
+   00FD ldfld CChatParser::bProc_ChatEntry
+   0102 brtrue IL_010d: ret
+   0107 ldarg.2 
+   0108 brfalse IL_010e: ldarg.0
+   010D ret 
+   010E ldarg.0 
+   010F ldarg.0 
+   0110 ldfld CChatParser::mOriginalPositionX
+   0115 stfld CChatParser::mPositionX
+   011A ldarg.0 
+   011B dup 
+   011C ldfld CChatParser::mPositionY
+   0121 ldsfld CChatParser::lineHeight
+   0126 sub 
+   0127 stfld CChatParser::mPositionY
+   012C ldloc.1 
+   012D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0132 brtrue IL_013f: br IL_0246
+   0137 ldarg.0 
+   0138 ldloc.1 
+   0139 ldc.i4.0 
+   013A call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   013F br IL_0246: ret
+   0144 ldloc.s V_4
+   0146 ldc.r4 2.5
+   014B add 
+   014C stloc.s V_4
+   014E ldarg.0 
+   014F ldfld CChatParser::curEntNode
+   0154 brtrue IL_015a: ldarg.0
+   0159 ret 
+   015A ldarg.0 
+   015B ldfld CChatParser::curEntNode
+   0160 ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   0165 ldarg.1 
+   0166 ldc.i4.0 
+   0167 ldloc.s V_4
+   0169 ldc.r4 0
+   016E ldarg.0 
+   016F ldfld CChatParser::mPositionX
+   0174 conv.r4 
+   0175 ldarg.0 
+   0176 ldfld CChatParser::mPositionY
+   017B conv.r4 
+   017C newobj System.Void Assets.Scripts.GameSystem.CTextImageNode::.ctor(System.String,CChatParser/InfoType,System.Single,System.Single,System.Single,System.Single)
+   0181 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CTextImageNode>::Add(!0)
+   0186 ldarg.0 
+   0187 ldfld CChatParser::mPositionY
+   018C conv.r4 
+   018D ldarg.0 
+   018E ldfld CChatParser::curEntNode
+   0193 ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   0198 bge.un IL_01af: ldarg.0
+   019D ldarg.0 
+   019E ldfld CChatParser::curEntNode
+   01A3 ldarg.0 
+   01A4 ldfld CChatParser::mPositionY
+   01A9 conv.r4 
+   01AA stfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   01AF ldarg.0 
+   01B0 ldfld CChatParser::curEntNode
+   01B5 ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   01BA ldsfld CChatParser::lineHeight
+   01BF neg 
+   01C0 ldc.i4.2 
+   01C1 mul 
+   01C2 conv.r4 
+   01C3 bge.un IL_01d9: ldarg.0
+   01C8 ldarg.0 
+   01C9 ldfld CChatParser::curEntNode
+   01CE ldc.i4.3 
+   01CF stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   01D4 br IL_020d: ldarg.0
+   01D9 ldarg.0 
+   01DA ldfld CChatParser::curEntNode
+   01DF ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   01E4 ldsfld CChatParser::lineHeight
+   01E9 neg 
+   01EA conv.r4 
+   01EB bge.un IL_0201: ldarg.0
+   01F0 ldarg.0 
+   01F1 ldfld CChatParser::curEntNode
+   01F6 ldc.i4.2 
+   01F7 stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   01FC br IL_020d: ldarg.0
+   0201 ldarg.0 
+   0202 ldfld CChatParser::curEntNode
+   0207 ldc.i4.1 
+   0208 stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   020D ldarg.0 
+   020E dup 
+   020F ldfld CChatParser::mPositionX
+   0214 ldloc.s V_4
+   0216 conv.i4 
+   0217 add 
+   0218 stfld CChatParser::mPositionX
+   021D ldarg.0 
+   021E ldfld CChatParser::mPositionX
+   0223 conv.r4 
+   0224 ldarg.0 
+   0225 ldfld CChatParser::curEntNode
+   022A ldfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   022F ble.un IL_0246: ret
+   0234 ldarg.0 
+   0235 ldfld CChatParser::curEntNode
+   023A ldarg.0 
+   023B ldfld CChatParser::mPositionX
+   0240 conv.r4 
+   0241 stfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   0246 ret 
+== System.Void CreateTextFace(System.String value) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld CChatParser::curEntNode
+   0006 brtrue IL_000c: ldc.i4.0
+   000B ret 
+   000C ldc.i4.0 
+   000D stloc.0 
+   000E ldsfld CChatParser::chatFaceWidth
+   0013 ldarg.0 
+   0014 ldfld CChatParser::mPositionX
+   0019 add 
+   001A ldarg.0 
+   001B ldfld CChatParser::maxWidth
+   0020 ble IL_005d: ldarg.0
+   0025 ldarg.0 
+   0026 ldfld CChatParser::bProc_ChatEntry
+   002B brfalse IL_0031: ldarg.0
+   0030 ret 
+   0031 ldarg.0 
+   0032 ldarg.0 
+   0033 ldfld CChatParser::mOriginalPositionX
+   0038 stfld CChatParser::mPositionX
+   003D ldarg.0 
+   003E dup 
+   003F ldfld CChatParser::mPositionY
+   0044 ldsfld CChatParser::chatFaceHeight
+   0049 sub 
+   004A stfld CChatParser::mPositionY
+   004F ldarg.0 
+   0050 ldfld CChatParser::curEntNode
+   0055 ldc.i4.2 
+   0056 stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   005B ldc.i4.1 
+   005C stloc.0 
+   005D ldarg.0 
+   005E ldfld CChatParser::curEntNode
+   0063 ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   0068 ldarg.1 
+   0069 ldc.i4.1 
+   006A callvirt System.String System.String::Substring(System.Int32)
+   006F ldc.i4.1 
+   0070 ldsfld CChatParser::chatFaceWidth
+   0075 conv.r4 
+   0076 ldc.r4 0
+   007B ldarg.0 
+   007C ldfld CChatParser::mPositionX
+   0081 conv.r4 
+   0082 ldarg.0 
+   0083 ldfld CChatParser::mPositionY
+   0088 conv.r4 
+   0089 newobj System.Void Assets.Scripts.GameSystem.CTextImageNode::.ctor(System.String,CChatParser/InfoType,System.Single,System.Single,System.Single,System.Single)
+   008E callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CTextImageNode>::Add(!0)
+   0093 ldarg.0 
+   0094 dup 
+   0095 ldfld CChatParser::mPositionX
+   009A ldsfld CChatParser::chatFaceWidth
+   009F add 
+   00A0 stfld CChatParser::mPositionX
+   00A5 ldarg.0 
+   00A6 ldarg.0 
+   00A7 ldfld CChatParser::mPositionX
+   00AC ldarg.0 
+   00AD ldfld CChatParser::mWidth
+   00B2 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   00B7 stfld CChatParser::mWidth
+   00BC ldloc.0 
+   00BD brtrue IL_00da: ret
+   00C2 ldarg.0 
+   00C3 ldfld CChatParser::curEntNode
+   00C8 dup 
+   00C9 ldfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   00CE ldsfld CChatParser::chatFaceWidth
+   00D3 conv.r4 
+   00D4 add 
+   00D5 stfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   00DA ret 
+== System.Void CreateButton(System.String value) attrs=Private, HideBySig maxstack=7
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldsfld System.String::Empty
+   000B stloc.1 
+   000C ldnull 
+   000D stloc.2 
+   000E ldnull 
+   000F stloc.3 
+   0010 ldc.i4.0 
+   0011 stloc.s V_5
+   0013 ldarg.1 
+   0014 ldloca.s V_2
+   0016 ldloca.s V_3
+   0018 ldloca.s V_5
+   001A ldloca.s V_4
+   001C call System.Boolean CChatParser::ParseActionBtnContent(System.String,System.String&,System.String&,Assets.Scripts.UI.enUIEventID&,System.Int32&)
+   0021 brtrue IL_0027: ldsfld System.String System.String::Empty
+   0026 ret 
+   0027 ldsfld System.String::Empty
+   002C stloc.s V_6
+   002E ldc.r4 0
+   0033 stloc.s V_7
+   0035 ldarg.0 
+   0036 ldloc.3 
+   0037 ldarg.0 
+   0038 ldfld CChatParser::mPositionX
+   003D conv.r4 
+   003E ldloca.s V_6
+   0040 ldloca.s V_7
+   0042 call System.Boolean CChatParser::WrapText(System.String,System.Single,System.String&,System.Single&)
+   0047 stloc.s V_8
+   0049 ldloc.s V_8
+   004B brfalse IL_010c: ldloc.s V_6
+   0050 ldloc.s V_6
+   0052 ldstr \n
+   0057 callvirt System.Int32 System.String::IndexOf(System.String)
+   005C stloc.s V_9
+   005E ldloc.s V_6
+   0060 ldc.i4.0 
+   0061 ldloc.s V_9
+   0063 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0068 stloc.0 
+   0069 ldloc.s V_6
+   006B ldloc.s V_9
+   006D ldc.i4.2 
+   006E add 
+   006F callvirt System.String System.String::Substring(System.Int32)
+   0074 stloc.1 
+   0075 ldloc.0 
+   0076 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   007B brtrue IL_0088: ldarg.0
+   0080 ldarg.0 
+   0081 ldloc.0 
+   0082 ldc.i4.0 
+   0083 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   0088 ldarg.0 
+   0089 ldfld CChatParser::bProc_ChatEntry
+   008E brfalse IL_0094: ldarg.0
+   0093 ret 
+   0094 ldarg.0 
+   0095 ldarg.0 
+   0096 ldfld CChatParser::mOriginalPositionX
+   009B stfld CChatParser::mPositionX
+   00A0 ldarg.0 
+   00A1 dup 
+   00A2 ldfld CChatParser::mPositionY
+   00A7 ldsfld CChatParser::lineHeight
+   00AC sub 
+   00AD stfld CChatParser::mPositionY
+   00B2 ldloc.1 
+   00B3 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00B8 brtrue IL_00c5: ldloc.s V_7
+   00BD ldarg.0 
+   00BE ldloc.1 
+   00BF ldc.i4.0 
+   00C0 call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   00C5 ldloc.s V_7
+   00C7 ldc.r4 2.5
+   00CC add 
+   00CD stloc.s V_7
+   00CF ldarg.0 
+   00D0 ldfld CChatParser::curEntNode
+   00D5 brtrue IL_00db: ldarg.0
+   00DA ret 
+   00DB ldarg.0 
+   00DC ldfld CChatParser::curEntNode
+   00E1 ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   00E6 ldarg.1 
+   00E7 ldc.i4.2 
+   00E8 ldloc.s V_7
+   00EA ldc.r4 0
+   00EF ldarg.0 
+   00F0 ldfld CChatParser::mPositionX
+   00F5 conv.r4 
+   00F6 ldarg.0 
+   00F7 ldfld CChatParser::mPositionY
+   00FC conv.r4 
+   00FD newobj System.Void Assets.Scripts.GameSystem.CTextImageNode::.ctor(System.String,CChatParser/InfoType,System.Single,System.Single,System.Single,System.Single)
+   0102 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CTextImageNode>::Add(!0)
+   0107 br IL_0213: ret
+   010C ldloc.s V_6
+   010E call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0113 brtrue IL_0121: ldloc.s V_7
+   0118 ldarg.0 
+   0119 ldloc.s V_6
+   011B ldc.i4.0 
+   011C call System.Void CChatParser::CreateText(System.String,System.Boolean)
+   0121 ldloc.s V_7
+   0123 ldc.r4 2.5
+   0128 add 
+   0129 stloc.s V_7
+   012B ldarg.0 
+   012C ldfld CChatParser::curEntNode
+   0131 brtrue IL_0137: ldarg.0
+   0136 ret 
+   0137 ldarg.0 
+   0138 ldfld CChatParser::curEntNode
+   013D ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   0142 ldarg.1 
+   0143 ldc.i4.2 
+   0144 ldloc.s V_7
+   0146 ldc.r4 0
+   014B ldarg.0 
+   014C ldfld CChatParser::mPositionX
+   0151 conv.r4 
+   0152 ldarg.0 
+   0153 ldfld CChatParser::mPositionY
+   0158 conv.r4 
+   0159 newobj System.Void Assets.Scripts.GameSystem.CTextImageNode::.ctor(System.String,CChatParser/InfoType,System.Single,System.Single,System.Single,System.Single)
+   015E callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CTextImageNode>::Add(!0)
+   0163 ldarg.0 
+   0164 ldfld CChatParser::mPositionY
+   0169 conv.r4 
+   016A ldarg.0 
+   016B ldfld CChatParser::curEntNode
+   0170 ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   0175 bge.un IL_018c: ldarg.0
+   017A ldarg.0 
+   017B ldfld CChatParser::curEntNode
+   0180 ldarg.0 
+   0181 ldfld CChatParser::mPositionY
+   0186 conv.r4 
+   0187 stfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   018C ldarg.0 
+   018D ldfld CChatParser::curEntNode
+   0192 ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   0197 ldsfld CChatParser::lineHeight
+   019C neg 
+   019D ldc.i4.2 
+   019E mul 
+   019F conv.r4 
+   01A0 bge.un IL_01b6: ldarg.0
+   01A5 ldarg.0 
+   01A6 ldfld CChatParser::curEntNode
+   01AB ldc.i4.3 
+   01AC stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   01B1 br IL_01ea: ldarg.0
+   01B6 ldarg.0 
+   01B7 ldfld CChatParser::curEntNode
+   01BC ldfld Assets.Scripts.GameSystem.CChatEntity::final_height
+   01C1 ldsfld CChatParser::lineHeight
+   01C6 neg 
+   01C7 conv.r4 
+   01C8 bge.un IL_01de: ldarg.0
+   01CD ldarg.0 
+   01CE ldfld CChatParser::curEntNode
+   01D3 ldc.i4.2 
+   01D4 stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   01D9 br IL_01ea: ldarg.0
+   01DE ldarg.0 
+   01DF ldfld CChatParser::curEntNode
+   01E4 ldc.i4.1 
+   01E5 stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   01EA ldarg.0 
+   01EB ldfld CChatParser::mPositionX
+   01F0 conv.r4 
+   01F1 ldarg.0 
+   01F2 ldfld CChatParser::curEntNode
+   01F7 ldfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   01FC ble.un IL_0213: ret
+   0201 ldarg.0 
+   0202 ldfld CChatParser::curEntNode
+   0207 ldarg.0 
+   0208 ldfld CChatParser::mPositionX
+   020D conv.r4 
+   020E stfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   0213 ret 
+== System.Boolean WrapText(System.String text, System.Single curPosX, System.String& finalText, System.Single& length) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.2 
+   0001 stloc.0 
+   0002 ldc.r4 0
+   0007 stloc.1 
+   0008 ldc.r4 0
+   000D stloc.2 
+   000E ldc.i4.m1 
+   000F stloc.3 
+   0010 ldc.i4.0 
+   0011 stloc.s V_4
+   0013 br IL_0054: ldloc.s V_4
+   0018 ldarg.1 
+   0019 ldloc.s V_4
+   001B callvirt System.Char System.String::get_Chars(System.Int32)
+   0020 stloc.s V_5
+   0022 ldloc.s V_5
+   0024 ldarg.0 
+   0025 ldfld CChatParser::viewFontSize
+   002A call System.Int32 CChatParser::GetCharacterWidth(System.Char,System.Int32)
+   002F conv.r4 
+   0030 stloc.2 
+   0031 ldloc.0 
+   0032 ldloc.2 
+   0033 add 
+   0034 stloc.0 
+   0035 ldloc.1 
+   0036 ldloc.2 
+   0037 add 
+   0038 stloc.1 
+   0039 ldloc.0 
+   003A ldarg.0 
+   003B ldfld CChatParser::maxWidth
+   0040 conv.r4 
+   0041 ble.un IL_004e: ldloc.s V_4
+   0046 ldloc.s V_4
+   0048 stloc.3 
+   0049 br IL_0061: ldarg.s length
+   004E ldloc.s V_4
+   0050 ldc.i4.1 
+   0051 add 
+   0052 stloc.s V_4
+   0054 ldloc.s V_4
+   0056 ldarg.1 
+   0057 callvirt System.Int32 System.String::get_Length()
+   005C blt IL_0018: ldarg.1
+   0061 ldarg.s length
+   0063 ldloc.1 
+   0064 stind.r4 
+   0065 ldloc.3 
+   0066 ldc.i4.m1 
+   0067 beq IL_007a: ldarg.3
+   006C ldarg.1 
+   006D ldloc.3 
+   006E ldstr \n
+   0073 callvirt System.String System.String::Insert(System.Int32,System.String)
+   0078 starg.s text
+   007A ldarg.3 
+   007B ldarg.1 
+   007C stind.ref 
+   007D ldloc.3 
+   007E ldc.i4.m1 
+   007F ceq 
+   0081 ldc.i4.0 
+   0082 ceq 
+   0084 ret 
+== System.Int32 GetCharacterWidth(System.Char ch, System.Int32 fontSize) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 ldc.i4.s 32
+   0005 blt IL_001d: ldarg.1
+   000A ldloc.0 
+   000B ldc.i4.s 126
+   000D bgt IL_001d: ldarg.1
+   0012 ldsfld CChatParser::ascii_width
+   0017 ldloc.0 
+   0018 ldc.i4.s 32
+   001A sub 
+   001B ldelem.i4 
+   001C ret 
+   001D ldarg.1 
+   001E ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=3
+   0000 ldc.i4.s 39
+   0002 stsfld CChatParser::chat_entry_lineHeight
+   0007 ldc.i4 355
+   000C stsfld CChatParser::chat_list_max_width_entry
+   0011 ldc.i4 677
+   0016 stsfld CChatParser::chat_list_max_width_Lobby
+   001B ldc.i4 400
+   0020 stsfld CChatParser::chat_list_max_width_right
+   0025 ldc.i4 308
+   002A stsfld CChatParser::chat_guild_list_max_width
+   002F ldc.i4.s 47
+   0031 stsfld CChatParser::chat_entry_channel_img_width
+   0036 ldc.i4 580
+   003B stsfld CChatParser::chat_list_max_width_chat_room
+   0040 ldc.i4.s 53
+   0042 stsfld CChatParser::start_x
+   0047 ldc.i4.s 26
+   0049 stsfld CChatParser::chatFaceWidth
+   004E ldc.i4.s 34
+   0050 stsfld CChatParser::chatFaceHeight
+   0055 ldc.i4.s 34
+   0057 stsfld CChatParser::lineHeight
+   005C ldc.r4 547.4
+   0061 stsfld CChatParser::element_width
+   0066 ldc.r4 86
+   006B stsfld CChatParser::element_height
+   0070 ldc.r4 43
+   0075 stsfld CChatParser::element_half_height
+   007A ldc.r4 150
+   007F stsfld CChatParser::element_chatRecruit_height
+   0084 ldc.i4.s 95
+   0086 newarr System.Int32
+   008B dup 
+   008C ldtoken <PrivateImplementationDetails>::$field-FCE161F9BD060985312532682053AB97FA081A07
+   0091 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0096 stsfld CChatParser::ascii_width
+   009B ret 
+  NESTED CChatParser/LabelType
+  NESTED CChatParser/InfoType

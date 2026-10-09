@@ -1,0 +1,142 @@
+// TYPE Blur  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.RenderTexture m_Rt
+  FIELD System.Single m_Radius
+  FIELD System.Int32 m_Iterator
+  FIELD UnityEngine.Material m_Mat
+  FIELD System.Int32 m_IDRadius
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 2
+   0006 stfld Blur::m_Radius
+   000B ldarg.0 
+   000C ldc.i4.8 
+   000D stfld Blur::m_Iterator
+   0012 ldarg.0 
+   0013 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0018 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldc.i4 256
+   0006 ldc.i4 256
+   000B ldc.i4.s 24
+   000D call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32)
+   0012 stfld Blur::m_Rt
+   0017 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001C ldstr Shaders/Post/Blur
+   0021 ldtoken UnityEngine.Shader
+   0026 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   002B ldc.i4.0 
+   002C ldc.i4.1 
+   002D ldc.i4.1 
+   002E ldc.i4.0 
+   002F callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0034 ldfld CResource::m_content
+   0039 isinst UnityEngine.Shader
+   003E stloc.0 
+   003F ldarg.0 
+   0040 ldloc.0 
+   0041 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   0046 stfld Blur::m_Mat
+   004B ldarg.0 
+   004C ldstr _Radius
+   0051 call System.Int32 UnityEngine.Shader::PropertyToID(System.String)
+   0056 stfld Blur::m_IDRadius
+   005B ret 
+== System.Void OnRenderImage(UnityEngine.RenderTexture src, UnityEngine.RenderTexture dst) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Blur::m_Mat
+   0006 ldarg.0 
+   0007 ldfld Blur::m_IDRadius
+   000C ldarg.0 
+   000D ldfld Blur::m_Radius
+   0012 callvirt System.Void UnityEngine.Material::SetFloat(System.Int32,System.Single)
+   0017 ldarg.0 
+   0018 ldfld Blur::m_Rt
+   001D callvirt System.Int32 UnityEngine.Texture::get_width()
+   0022 stloc.0 
+   0023 ldarg.0 
+   0024 ldfld Blur::m_Rt
+   0029 callvirt System.Int32 UnityEngine.Texture::get_height()
+   002E stloc.1 
+   002F ldarg.0 
+   0030 ldfld Blur::m_Rt
+   0035 callvirt System.Int32 UnityEngine.RenderTexture::get_depth()
+   003A stloc.2 
+   003B ldloc.0 
+   003C ldloc.1 
+   003D ldloc.2 
+   003E call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32)
+   0043 stloc.3 
+   0044 ldc.i4.0 
+   0045 stloc.s V_4
+   0047 br IL_00a5: ldloc.s V_4
+   004C ldloc.s V_4
+   004E brtrue IL_0079: ldarg.0
+   0053 ldarg.1 
+   0054 ldloc.3 
+   0055 ldarg.0 
+   0056 ldfld Blur::m_Mat
+   005B ldc.i4.0 
+   005C call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0061 ldloc.3 
+   0062 ldarg.0 
+   0063 ldfld Blur::m_Rt
+   0068 ldarg.0 
+   0069 ldfld Blur::m_Mat
+   006E ldc.i4.1 
+   006F call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0074 br IL_009f: ldloc.s V_4
+   0079 ldarg.0 
+   007A ldfld Blur::m_Rt
+   007F ldloc.3 
+   0080 ldarg.0 
+   0081 ldfld Blur::m_Mat
+   0086 ldc.i4.0 
+   0087 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   008C ldloc.3 
+   008D ldarg.0 
+   008E ldfld Blur::m_Rt
+   0093 ldarg.0 
+   0094 ldfld Blur::m_Mat
+   0099 ldc.i4.1 
+   009A call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   009F ldloc.s V_4
+   00A1 ldc.i4.1 
+   00A2 add 
+   00A3 stloc.s V_4
+   00A5 ldloc.s V_4
+   00A7 ldarg.0 
+   00A8 ldfld Blur::m_Iterator
+   00AD blt IL_004c: ldloc.s V_4
+   00B2 ldloc.3 
+   00B3 callvirt System.Void UnityEngine.RenderTexture::DiscardContents()
+   00B8 ldloc.3 
+   00B9 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   00BE ldnull 
+   00BF stloc.3 
+   00C0 ldarg.1 
+   00C1 ldarg.2 
+   00C2 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture)
+   00C7 ret 
+== System.Void Release() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Blur::m_Mat
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_0022: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld Blur::m_Mat
+   0016 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   001B ldarg.0 
+   001C ldnull 
+   001D stfld Blur::m_Mat
+   0022 ldarg.0 
+   0023 ldfld Blur::m_Rt
+   0028 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002D brfalse IL_0044: ret
+   0032 ldarg.0 
+   0033 ldfld Blur::m_Rt
+   0038 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   003D ldarg.0 
+   003E ldnull 
+   003F stfld Blur::m_Rt
+   0044 ret 

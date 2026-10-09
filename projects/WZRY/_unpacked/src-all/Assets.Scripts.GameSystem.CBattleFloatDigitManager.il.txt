@@ -1,0 +1,1882 @@
+// TYPE Assets.Scripts.GameSystem.CBattleFloatDigitManager  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String[] s_restrictTextKeys
+  FIELD System.String s_restrictTextAnimatorState
+  FIELD System.String[] s_otherFloatTextKeys
+  FIELD System.String[] s_otherFloatTextAnimatorStates
+  FIELD System.String s_pickupTextAnimatorState
+  FIELD System.String FLOAT_TEXT_PREFAB
+  FIELD System.String UGUI_FLOAT_TEXT_PREFAB = Text/FloatText/UGUIFloatText.prefab
+  FIELD UnityEngine.Vector3 scale
+  FIELD System.UInt32 DEFAULT_FONT_SIZE = 6
+  FIELD System.Int32 DEFAULT_UGUI_FONT_SIZE = 18
+  FIELD System.UInt32 HP_RECOVER_SHOW_THRESHOLD = 50
+  FIELD System.Int32 m_lastSeparateDigitTime
+  FIELD Assets.Scripts.GameSystem.DigitTextContext[] m_digitalTextContext
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo> m_floatDigitInfoList
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo> m_delayDigitInfoList
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType> m_delayDigitInfoActorList
+  FIELD DictionaryView`2<System.UInt32,CPooledGameObjectScript> m_textPrefabDic
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 6.25
+   0006 ldc.r4 6.25
+   000B ldc.r4 6.25
+   0010 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0015 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::scale
+   001A ldarg.0 
+   001B newobj System.Void DictionaryView`2<System.UInt32,CPooledGameObjectScript>::.ctor()
+   0020 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_textPrefabDic
+   0025 ldarg.0 
+   0026 call System.Void System.Object::.ctor()
+   002B ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.s 16
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::OnActorDamage(Assets.Scripts.GameLogic.ActorDamageEventParam&)
+   000E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDamageEventParam>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorDamageEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0018 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001D ldc.i4.s 17
+   001F ldarg.0 
+   0020 ldftn System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::onActorHemophagia(Assets.Scripts.GameLogic.ActorHemophagiaEventParam&)
+   0026 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorHemophagiaEventParam>::.ctor(System.Object,System.IntPtr)
+   002B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorHemophagiaEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0030 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::FLOAT_TEXT_PREFAB
+   0035 call System.String Assets.Scripts.UI.CUIUtility::GetAssetPathOfMultiLan(System.String)
+   003A stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::FLOAT_TEXT_PREFAB
+   003F ldarg.0 
+   0040 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::InitDigitTextContext()
+   0045 ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::ClearAllBattleFloatText()
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   000B ldc.i4.s 16
+   000D ldarg.0 
+   000E ldftn System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::OnActorDamage(Assets.Scripts.GameLogic.ActorDamageEventParam&)
+   0014 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorDamageEventParam>::.ctor(System.Object,System.IntPtr)
+   0019 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorDamageEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   001E call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0023 ldc.i4.s 17
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::onActorHemophagia(Assets.Scripts.GameLogic.ActorHemophagiaEventParam&)
+   002C newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorHemophagiaEventParam>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorHemophagiaEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0036 ldarg.0 
+   0037 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::UnInitDigitTextContext()
+   003C ret 
+== System.Void onActorHemophagia(Assets.Scripts.GameLogic.ActorHemophagiaEventParam& eventParams) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_003b: ldarg.1
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0020 brfalse IL_003a: ret
+   0025 ldarg.1 
+   0026 ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   002B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0030 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_InCamera()
+   0035 brtrue IL_003b: ldarg.1
+   003A ret 
+   003B ldarg.1 
+   003C ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0041 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0046 brtrue IL_005b: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   004B ldarg.1 
+   004C ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0051 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0056 brfalse IL_009c: ret
+   005B call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0060 stloc.0 
+   0061 ldarg.1 
+   0062 ldfld Assets.Scripts.GameLogic.ActorHemophagiaEventParam::hpChanged
+   0067 brfalse IL_009c: ret
+   006C ldarg.0 
+   006D ldarg.1 
+   006E ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0073 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0078 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   007D ldarg.1 
+   007E ldflda Assets.Scripts.GameLogic.ActorHemophagiaEventParam::src
+   0083 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0088 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   008D ldc.i4.6 
+   008E ldarg.1 
+   008F ldfld Assets.Scripts.GameLogic.ActorHemophagiaEventParam::hpChanged
+   0094 ldc.i4.0 
+   0095 ldc.i4.s 16
+   0097 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CollectFloatDigitInSingleFrame(System.UInt32,System.UInt32,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32,System.Boolean,CoreDef.SkillSlotType)
+   009C ret 
+== System.Void InitDigitTextContext() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.s 11
+   0003 newarr Assets.Scripts.GameSystem.DigitTextContext
+   0008 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_digitalTextContext
+   000D call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsCooperationPlayMode()
+   0017 ldc.i4.0 
+   0018 ceq 
+   001A stloc.0 
+   001B ldc.i4.0 
+   001C stloc.1 
+   001D br IL_003a: ldloc.1
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_digitalTextContext
+   0028 ldloc.1 
+   0029 conv.u 
+   002A ldelema Assets.Scripts.GameSystem.DigitTextContext
+   002F ldloc.1 
+   0030 ldloc.0 
+   0031 call System.Void Assets.Scripts.GameSystem.DigitTextContext::Init(System.UInt32,System.Boolean)
+   0036 ldloc.1 
+   0037 ldc.i4.1 
+   0038 add 
+   0039 stloc.1 
+   003A ldloc.1 
+   003B ldc.i4.s 11
+   003D blt.un IL_0022: ldarg.0
+   0042 ret 
+== System.Void UnInitDigitTextContext() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_digitalTextContext
+   0006 brfalse IL_002f: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0027: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_digitalTextContext
+   0018 ldloc.0 
+   0019 ldelema Assets.Scripts.GameSystem.DigitTextContext
+   001E call System.Void Assets.Scripts.GameSystem.DigitTextContext::Uninit()
+   0023 ldloc.0 
+   0024 ldc.i4.1 
+   0025 add 
+   0026 stloc.0 
+   0027 ldloc.0 
+   0028 ldc.i4.s 11
+   002A blt IL_0012: ldarg.0
+   002F ret 
+== System.Void OnActorDamage(Assets.Scripts.GameLogic.ActorDamageEventParam& eventParams) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0050: ldc.i4.s 11
+   0010 ldarg.1 
+   0011 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0020 brfalse IL_004f: ret
+   0025 ldarg.1 
+   0026 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   002B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0030 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_InCamera()
+   0035 brfalse IL_004f: ret
+   003A ldarg.1 
+   003B ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0040 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0045 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_HitEffect()
+   004A brtrue IL_0050: ldc.i4.s 11
+   004F ret 
+   0050 ldc.i4.s 11
+   0052 stloc.0 
+   0053 ldarg.1 
+   0054 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0059 stloc.1 
+   005A ldarg.1 
+   005B ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   0060 stloc.2 
+   0061 ldloc.1 
+   0062 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0067 brfalse IL_0084: ldloc.2
+   006C ldloca.s V_1
+   006E call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0073 brtrue IL_00a7: ldarg.1
+   0078 ldloca.s V_1
+   007A call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   007F brtrue IL_00a7: ldarg.1
+   0084 ldloc.2 
+   0085 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   008A brfalse IL_0117: ldloc.0
+   008F ldloca.s V_2
+   0091 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0096 brtrue IL_00a7: ldarg.1
+   009B ldloca.s V_2
+   009D call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   00A2 brfalse IL_0117: ldloc.0
+   00A7 ldarg.1 
+   00A8 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtType
+   00AD ldc.i4.3 
+   00AE bne.un IL_00ba: ldarg.1
+   00B3 ldc.i4.6 
+   00B4 stloc.0 
+   00B5 br IL_0117: ldloc.0
+   00BA ldarg.1 
+   00BB ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtType
+   00C0 ldc.i4.1 
+   00C1 bne.un IL_00df: ldarg.1
+   00C6 ldarg.1 
+   00C7 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_critValue
+   00CC ldc.i4.0 
+   00CD ble IL_00d8: ldc.i4.2
+   00D2 ldc.i4.3 
+   00D3 br IL_00d9: stloc.0
+   00D8 ldc.i4.2 
+   00D9 stloc.0 
+   00DA br IL_0117: ldloc.0
+   00DF ldarg.1 
+   00E0 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtType
+   00E5 brtrue IL_0103: ldarg.1
+   00EA ldarg.1 
+   00EB ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_critValue
+   00F0 ldc.i4.0 
+   00F1 ble IL_00fc: ldc.i4.0
+   00F6 ldc.i4.1 
+   00F7 br IL_00fd: stloc.0
+   00FC ldc.i4.0 
+   00FD stloc.0 
+   00FE br IL_0117: ldloc.0
+   0103 ldarg.1 
+   0104 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_critValue
+   0109 ldc.i4.0 
+   010A ble IL_0115: ldc.i4.4
+   010F ldc.i4.5 
+   0110 br IL_0116: stloc.0
+   0115 ldc.i4.4 
+   0116 stloc.0 
+   0117 ldloc.0 
+   0118 ldc.i4.s 11
+   011A beq IL_01ef: ret
+   011F ldarg.1 
+   0120 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hpChanged
+   0125 brfalse IL_01ef: ret
+   012A ldloc.0 
+   012B ldc.i4.6 
+   012C bne.un IL_013c: ldarg.1
+   0131 ldarg.1 
+   0132 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hpChanged
+   0137 br IL_0142: stloc.3
+   013C ldarg.1 
+   013D ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtTotal
+   0142 stloc.3 
+   0143 ldarg.1 
+   0144 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_extHpChanged
+   0149 ldc.i4.0 
+   014A ceq 
+   014C ldc.i4.0 
+   014D ceq 
+   014F stloc.s V_4
+   0151 ldarg.1 
+   0152 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   0157 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   015C brfalse IL_01ef: ret
+   0161 ldarg.1 
+   0162 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0167 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   016C brfalse IL_01ef: ret
+   0171 ldarg.0 
+   0172 ldarg.1 
+   0173 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   0178 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   017D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0182 ldarg.1 
+   0183 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0188 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   018D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0192 ldloc.0 
+   0193 ldloc.3 
+   0194 ldc.i4.0 
+   0195 ldarg.1 
+   0196 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataSlotType
+   019B call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CollectFloatDigitInSingleFrame(System.UInt32,System.UInt32,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32,System.Boolean,CoreDef.SkillSlotType)
+   01A0 ldloc.s V_4
+   01A2 brfalse IL_01ef: ret
+   01A7 ldloc.0 
+   01A8 ldc.i4.6 
+   01A9 bne.un IL_01b9: ldarg.1
+   01AE ldarg.1 
+   01AF ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_extHpChanged
+   01B4 br IL_01bf: stloc.3
+   01B9 ldarg.1 
+   01BA ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_extHurtTotal
+   01BF stloc.3 
+   01C0 ldarg.0 
+   01C1 ldarg.1 
+   01C2 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   01C7 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01CC callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01D1 ldarg.1 
+   01D2 ldflda Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   01D7 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01DC callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01E1 ldloc.0 
+   01E2 ldloc.3 
+   01E3 ldc.i4.1 
+   01E4 ldarg.1 
+   01E5 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataSlotType
+   01EA call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CollectFloatDigitInSingleFrame(System.UInt32,System.UInt32,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32,System.Boolean,CoreDef.SkillSlotType)
+   01EF ret 
+== System.Boolean CanMergeToCritText(Assets.Scripts.GameSystem.DIGIT_TYPE& type1, Assets.Scripts.GameSystem.DIGIT_TYPE type2) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldind.i4 
+   0002 brtrue IL_000e: ldarg.1
+   0007 ldarg.2 
+   0008 ldc.i4.1 
+   0009 beq IL_0058: ldarg.1
+   000E ldarg.1 
+   000F ldind.i4 
+   0010 ldc.i4.1 
+   0011 bne.un IL_001c: ldarg.1
+   0016 ldarg.2 
+   0017 brfalse IL_0058: ldarg.1
+   001C ldarg.1 
+   001D ldind.i4 
+   001E ldc.i4.2 
+   001F bne.un IL_002b: ldarg.1
+   0024 ldarg.2 
+   0025 ldc.i4.3 
+   0026 beq IL_0058: ldarg.1
+   002B ldarg.1 
+   002C ldind.i4 
+   002D ldc.i4.3 
+   002E bne.un IL_003a: ldarg.1
+   0033 ldarg.2 
+   0034 ldc.i4.2 
+   0035 beq IL_0058: ldarg.1
+   003A ldarg.1 
+   003B ldind.i4 
+   003C ldc.i4.4 
+   003D bne.un IL_0049: ldarg.1
+   0042 ldarg.2 
+   0043 ldc.i4.5 
+   0044 beq IL_0058: ldarg.1
+   0049 ldarg.1 
+   004A ldind.i4 
+   004B ldc.i4.5 
+   004C bne.un IL_0065: ldc.i4.0
+   0051 ldarg.2 
+   0052 ldc.i4.4 
+   0053 bne.un IL_0065: ldc.i4.0
+   0058 ldarg.1 
+   0059 ldind.i4 
+   005A ldarg.2 
+   005B bge IL_0063: ldc.i4.1
+   0060 ldarg.1 
+   0061 ldarg.2 
+   0062 stind.i4 
+   0063 ldc.i4.1 
+   0064 ret 
+   0065 ldc.i4.0 
+   0066 ret 
+== System.Void CollectFloatDigitInSingleFrame(System.UInt32 attackerID, System.UInt32 targetID, Assets.Scripts.GameSystem.DIGIT_TYPE digitType, System.Int32 value, System.Boolean bExclusiveFloatDigit, CoreDef.SkillSlotType slotType) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   000F ret 
+   0010 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0015 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   001A brfalse IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0026 brtrue IL_0036: ldarg.s bExclusiveFloatDigit
+   002B ldarg.0 
+   002C newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::.ctor()
+   0031 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0036 ldarg.s bExclusiveFloatDigit
+   0038 brtrue IL_00f9: ldarg.0
+   003D ldc.i4.0 
+   003E stloc.0 
+   003F br IL_00e8: ldloc.0
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   004A ldloc.0 
+   004B callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::get_Item(System.Int32)
+   0050 stloc.1 
+   0051 ldloca.s V_1
+   0053 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_attacker
+   0058 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   005D brfalse IL_0073: br IL_00e4
+   0062 ldloca.s V_1
+   0064 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_target
+   0069 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   006E brtrue IL_0078: ldloca.s V_1
+   0073 br IL_00e4: ldloc.0
+   0078 ldloca.s V_1
+   007A ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_attacker
+   007F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0084 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0089 ldarg.1 
+   008A bne.un IL_00e4: ldloc.0
+   008F ldloca.s V_1
+   0091 ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_target
+   0096 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   009B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   00A0 ldarg.2 
+   00A1 bne.un IL_00e4: ldloc.0
+   00A6 ldloca.s V_1
+   00A8 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   00AD ldarg.3 
+   00AE beq IL_00c6: ldloca.s V_1
+   00B3 ldarg.0 
+   00B4 ldloca.s V_1
+   00B6 ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   00BB ldarg.3 
+   00BC call System.Boolean Assets.Scripts.GameSystem.CBattleFloatDigitManager::CanMergeToCritText(Assets.Scripts.GameSystem.DIGIT_TYPE&,Assets.Scripts.GameSystem.DIGIT_TYPE)
+   00C1 brfalse IL_00e4: ldloc.0
+   00C6 ldloca.s V_1
+   00C8 dup 
+   00C9 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_value
+   00CE ldarg.s value
+   00D0 add 
+   00D1 stfld Assets.Scripts.GameSystem.FloatDigitInfo::m_value
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   00DC ldloc.0 
+   00DD ldloc.1 
+   00DE callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::set_Item(System.Int32,!0)
+   00E3 ret 
+   00E4 ldloc.0 
+   00E5 ldc.i4.1 
+   00E6 add 
+   00E7 stloc.0 
+   00E8 ldloc.0 
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   00EF callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::get_Count()
+   00F4 blt IL_0044: ldarg.0
+   00F9 ldarg.0 
+   00FA ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   00FF ldarg.1 
+   0100 ldarg.2 
+   0101 ldarg.3 
+   0102 ldarg.s value
+   0104 newobj System.Void Assets.Scripts.GameSystem.FloatDigitInfo::.ctor(System.UInt32,System.UInt32,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32)
+   0109 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::Add(!0)
+   010E ret 
+== System.Void updateFloatDigitInLastFrame() attrs=Private, HideBySig maxstack=5
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0016 brfalse IL_002b: ret
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0021 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::get_Count()
+   0026 brtrue IL_002c: ldc.i4.0
+   002B ret 
+   002C ldc.i4.0 
+   002D stloc.0 
+   002E br IL_0238: ldloc.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0039 ldloc.0 
+   003A callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::get_Item(System.Int32)
+   003F stloc.1 
+   0040 ldloca.s V_1
+   0042 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_attacker
+   0047 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   004C brfalse IL_0062: br IL_0234
+   0051 ldloca.s V_1
+   0053 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_target
+   0058 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   005D brtrue IL_0067: ldloca.s V_1
+   0062 br IL_0234: ldloc.0
+   0067 ldloca.s V_1
+   0069 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   006E ldc.i4.6 
+   006F bne.un IL_00a7: ldloca.s V_1
+   0074 ldloca.s V_1
+   0076 ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_target
+   007B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0080 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   0085 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   008A stloc.2 
+   008B ldarg.0 
+   008C ldloca.s V_1
+   008E ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_value
+   0093 ldloca.s V_1
+   0095 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   009A ldloca.s V_2
+   009C ldc.i4.0 
+   009D call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   00A2 br IL_0234: ldloc.0
+   00A7 ldloca.s V_1
+   00A9 ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_target
+   00AE call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B3 ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   00B8 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00BD stloc.3 
+   00BE ldloca.s V_1
+   00C0 ldflda Assets.Scripts.GameSystem.FloatDigitInfo::m_attacker
+   00C5 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00CA ldfld Assets.Scripts.GameLogic.ActorLinker::myTransform
+   00CF callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00D4 stloc.s V_4
+   00D6 ldloc.s V_4
+   00D8 stloc.s V_5
+   00DA ldloc.3 
+   00DB stloc.s V_6
+   00DD ldc.r4 -1
+   00E2 ldc.r4 -0.5
+   00E7 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   00EC stloc.s V_7
+   00EE ldc.r4 0.5
+   00F3 ldc.r4 1
+   00F8 call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   00FD stloc.s V_8
+   00FF call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0104 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0109 stloc.s V_9
+   010B ldloc.s V_9
+   010D brfalse IL_0197: ldloc.s V_5
+   0112 ldloc.s V_9
+   0114 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   0119 brfalse IL_0197: ldloc.s V_5
+   011E ldloc.s V_9
+   0120 ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotQInverse3d
+   0125 ldloc.s V_4
+   0127 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   012C stloc.s V_5
+   012E ldloc.s V_9
+   0130 ldfld Assets.Scripts.GameLogic.CLevelContext::cameraRotQInverse3d
+   0135 ldloc.3 
+   0136 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   013B stloc.s V_6
+   013D ldloc.s V_9
+   013F callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ3d()
+   0144 ldloc.s V_7
+   0146 ldc.r4 0
+   014B newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0150 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0155 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   015A call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   015F stloc.s V_10
+   0161 ldloc.s V_9
+   0163 callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ3d()
+   0168 ldloc.s V_8
+   016A ldc.r4 0
+   016F newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0174 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0179 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   017E call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   0183 stloc.s V_11
+   0185 ldloca.s V_10
+   0187 ldfld UnityEngine.Vector2::x
+   018C stloc.s V_7
+   018E ldloca.s V_11
+   0190 ldfld UnityEngine.Vector2::x
+   0195 stloc.s V_8
+   0197 ldloc.s V_5
+   0199 ldloc.s V_6
+   019B call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   01A0 stloc.s V_12
+   01A2 ldloca.s V_12
+   01A4 ldfld UnityEngine.Vector3::x
+   01A9 ldc.r4 0
+   01AE ble.un IL_01f6: ldloca.s V_2
+   01B3 ldloca.s V_2
+   01B5 ldloca.s V_3
+   01B7 ldfld UnityEngine.Vector3::x
+   01BC ldloc.s V_7
+   01BE add 
+   01BF ldloca.s V_3
+   01C1 ldfld UnityEngine.Vector3::y
+   01C6 ldloc.s V_7
+   01C8 call System.Single System.Math::Abs(System.Single)
+   01CD add 
+   01CE ldloca.s V_3
+   01D0 ldfld UnityEngine.Vector3::z
+   01D5 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   01DA ldarg.0 
+   01DB ldloca.s V_1
+   01DD ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_value
+   01E2 ldloca.s V_1
+   01E4 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   01E9 ldloca.s V_2
+   01EB ldc.i4.0 
+   01EC call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   01F1 br IL_0234: ldloc.0
+   01F6 ldloca.s V_2
+   01F8 ldloca.s V_3
+   01FA ldfld UnityEngine.Vector3::x
+   01FF ldloc.s V_8
+   0201 add 
+   0202 ldloca.s V_3
+   0204 ldfld UnityEngine.Vector3::y
+   0209 ldloc.s V_8
+   020B call System.Single System.Math::Abs(System.Single)
+   0210 add 
+   0211 ldloca.s V_3
+   0213 ldfld UnityEngine.Vector3::z
+   0218 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   021D ldarg.0 
+   021E ldloca.s V_1
+   0220 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_value
+   0225 ldloca.s V_1
+   0227 ldfld Assets.Scripts.GameSystem.FloatDigitInfo::m_digitType
+   022C ldloca.s V_2
+   022E ldc.i4.1 
+   022F call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   0234 ldloc.0 
+   0235 ldc.i4.1 
+   0236 add 
+   0237 stloc.0 
+   0238 ldloc.0 
+   0239 ldarg.0 
+   023A ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   023F callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::get_Count()
+   0244 blt IL_0033: ldarg.0
+   0249 ldarg.0 
+   024A ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   024F callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::Clear()
+   0254 ret 
+== System.Void CreateSeparateBattleFloatDigit(System.Int32 digitValue, Assets.Scripts.GameSystem.DIGIT_TYPE digitType, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, System.Int32 minSeparateFloatTime) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.3 
+   0001 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0006 brtrue IL_000c: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0011 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_lastSeparateDigitTime
+   001E sub 
+   001F ldarg.s minSeparateFloatTime
+   0021 ble IL_0052: ldarg.s minSeparateFloatTime
+   0026 ldloca.s V_1
+   0028 initobj UnityEngine.Vector3
+   002E ldarga.s actor
+   0030 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0035 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   003A stloc.1 
+   003B ldarg.0 
+   003C ldarg.1 
+   003D ldarg.2 
+   003E ldloca.s V_1
+   0040 ldc.i4.0 
+   0041 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   0046 ldarg.0 
+   0047 ldloc.0 
+   0048 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_lastSeparateDigitTime
+   004D br IL_0071: ret
+   0052 ldarg.s minSeparateFloatTime
+   0054 ldloc.0 
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_lastSeparateDigitTime
+   005B sub 
+   005C sub 
+   005D stloc.2 
+   005E ldarg.0 
+   005F ldarg.1 
+   0060 ldarg.2 
+   0061 ldarg.3 
+   0062 ldloc.2 
+   0063 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::AddActorDelayBattleFloatText(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   0068 ldarg.0 
+   0069 ldloc.0 
+   006A ldloc.2 
+   006B add 
+   006C stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_lastSeparateDigitTime
+   0071 ret 
+== System.Boolean ForbidFloatTextInLowQuality(Assets.Scripts.GameSystem.DIGIT_TYPE digitType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.3 
+   0002 beq IL_0026: ldc.i4.0
+   0007 ldarg.1 
+   0008 ldc.i4.1 
+   0009 beq IL_0026: ldc.i4.0
+   000E ldarg.1 
+   000F ldc.i4.5 
+   0010 beq IL_0026: ldc.i4.0
+   0015 ldarg.1 
+   0016 ldc.i4.8 
+   0017 beq IL_0026: ldc.i4.0
+   001C ldarg.1 
+   001D ldc.i4.s 9
+   001F ceq 
+   0021 ldc.i4.0 
+   0022 ceq 
+   0024 br.s IL_0027: ret
+   0026 ldc.i4.0 
+   0027 ret 
+== System.Void CreateBattleFloatDigit(System.Int32 digitValue, Assets.Scripts.GameSystem.DIGIT_TYPE digitType, UnityEngine.Vector3& worldPosition, System.Boolean bRight) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: ldsfld Assets.Scripts.Framework.SGameRenderQuality Assets.Scripts.Framework.GameSettings::RenderQuality
+   000F ret 
+   0010 ldsfld Assets.Scripts.Framework.GameSettings::RenderQuality
+   0015 ldc.i4.3 
+   0016 bne.un IL_0028: ldloca.s V_0
+   001B ldarg.0 
+   001C ldarg.2 
+   001D call System.Boolean Assets.Scripts.GameSystem.CBattleFloatDigitManager::ForbidFloatTextInLowQuality(Assets.Scripts.GameSystem.DIGIT_TYPE)
+   0022 brfalse IL_0028: ldloca.s V_0
+   0027 ret 
+   0028 ldloca.s V_0
+   002A initobj Assets.Scripts.GameSystem.FloatTextParam
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_digitalTextContext
+   0036 ldarg.2 
+   0037 ldelema Assets.Scripts.GameSystem.DigitTextContext
+   003C ldloca.s V_0
+   003E ldarg.1 
+   003F ldarg.2 
+   0040 ldarg.s bRight
+   0042 call System.Boolean Assets.Scripts.GameSystem.DigitTextContext::GetDigitTextParam(Assets.Scripts.GameSystem.FloatTextParam&,System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Boolean)
+   0047 brfalse IL_005f: ret
+   004C ldarg.0 
+   004D ldloca.s V_0
+   004F ldarg.3 
+   0050 ldc.r4 0
+   0055 ldc.i4 2000
+   005A call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   005F ret 
+== System.Void CreateRestrictFloatText(ResData.RESTRICT_TYPE restrictType, UnityEngine.Vector3& worldPosition) attrs=Public, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: call !0 Singleton`1<CTextManager>::GetInstance()
+   000F ret 
+   0010 call !0 Singleton`1<CTextManager>::GetInstance()
+   0015 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextKeys
+   001A ldarg.1 
+   001B ldelem.ref 
+   001C ldc.i4.1 
+   001D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0022 stloc.0 
+   0023 ldloca.s V_1
+   0025 ldloc.0 
+   0026 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextAnimatorState
+   002B ldc.r4 6
+   0030 ldc.r4 1
+   0035 ldc.r4 0
+   003A ldc.r4 0
+   003F call System.Void Assets.Scripts.GameSystem.FloatTextParam::.ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Single)
+   0044 ldarg.0 
+   0045 ldloca.s V_1
+   0047 ldarg.2 
+   0048 ldc.r4 0
+   004D ldc.i4 2000
+   0052 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   0057 ret 
+== System.Void CreateSpecifiedFloatText(System.UInt32 floatTextID, UnityEngine.Vector3& worldPosition) attrs=Public, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: ldloca.s V_0
+   000F ret 
+   0010 ldloca.s V_0
+   0012 ldarg.1 
+   0013 call System.Boolean ResData.GameDataMgr/floatTextDatabin::FindByKey(ResData.ResBattleFloatText&,System.UInt32)
+   0018 brfalse IL_007b: ret
+   001D ldloca.s V_0
+   001F call System.String ResData.ResBattleFloatText::get_szAnimation()
+   0024 callvirt System.Int32 System.String::get_Length()
+   0029 ldc.i4.0 
+   002A ble IL_003b: ldsfld System.String Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextAnimatorState
+   002F ldloca.s V_0
+   0031 call System.String ResData.ResBattleFloatText::get_szAnimation()
+   0036 br IL_0040: stloc.1
+   003B ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextAnimatorState
+   0040 stloc.1 
+   0041 ldloca.s V_2
+   0043 ldloca.s V_0
+   0045 call System.String ResData.ResBattleFloatText::get_szText()
+   004A ldloc.1 
+   004B ldloca.s V_0
+   004D ldfld ResData.ResBattleFloatText::dwFontsize
+   0052 conv.r.un 
+   0053 conv.r4 
+   0054 ldc.r4 1
+   0059 ldc.r4 0
+   005E ldc.r4 0
+   0063 call System.Void Assets.Scripts.GameSystem.FloatTextParam::.ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Single)
+   0068 ldarg.0 
+   0069 ldloca.s V_2
+   006B ldarg.2 
+   006C ldc.r4 0
+   0071 ldc.i4 2000
+   0076 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   007B ret 
+== System.Void CreateOtherFloatText(Assets.Scripts.GameSystem.enOtherFloatTextContent otherFloatTextContent, UnityEngine.Vector3& worldPosition, System.String[] args) attrs=Public, HideBySig maxstack=7
+   0000 ldsfld Assets.Scripts.Framework.GameSettings::RenderQuality
+   0005 ldc.i4.3 
+   0006 bne.un IL_000c: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   0016 brtrue IL_001c: call !0 Singleton`1<CTextManager>::GetInstance()
+   001B ret 
+   001C call !0 Singleton`1<CTextManager>::GetInstance()
+   0021 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_otherFloatTextKeys
+   0026 ldarg.1 
+   0027 ldelem.ref 
+   0028 ldarg.3 
+   0029 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   002E stloc.0 
+   002F ldloca.s V_1
+   0031 ldloc.0 
+   0032 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_otherFloatTextAnimatorStates
+   0037 ldarg.1 
+   0038 ldelem.ref 
+   0039 ldc.r4 6
+   003E ldc.r4 1
+   0043 ldc.r4 0
+   0048 ldc.r4 0
+   004D call System.Void Assets.Scripts.GameSystem.FloatTextParam::.ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Single)
+   0052 ldarg.0 
+   0053 ldloca.s V_1
+   0055 ldarg.2 
+   0056 ldc.r4 0
+   005B ldc.i4 2000
+   0060 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   0065 ret 
+== System.Void CreateFloatText(System.String content, System.String anim, UnityEngine.Vector3& worldPosition) attrs=Public, HideBySig maxstack=7
+   0000 ldsfld Assets.Scripts.Framework.GameSettings::RenderQuality
+   0005 ldc.i4.3 
+   0006 bne.un IL_000c: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   0016 brtrue IL_001c: ldloca.s V_0
+   001B ret 
+   001C ldloca.s V_0
+   001E ldarg.1 
+   001F ldarg.2 
+   0020 ldc.r4 6
+   0025 ldc.r4 1
+   002A ldc.r4 0
+   002F ldc.r4 0
+   0034 call System.Void Assets.Scripts.GameSystem.FloatTextParam::.ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Single)
+   0039 ldarg.0 
+   003A ldloca.s V_0
+   003C ldarg.3 
+   003D ldc.r4 0
+   0042 ldc.i4 2000
+   0047 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   004C ret 
+== System.Void CreateStringFloatText(System.String text, UnityEngine.Vector3& worldPosition, System.String aniState, System.UInt32 fontsize, System.Single offsetY, System.Int32 recycleDelay, System.Single offset1, System.Single offset2) attrs=Public, HideBySig maxstack=7
+   0000 ldsfld Assets.Scripts.Framework.GameSettings::RenderQuality
+   0005 ldc.i4.3 
+   0006 bne.un IL_000c: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   0016 brtrue IL_001c: ldloca.s V_0
+   001B ret 
+   001C ldloca.s V_0
+   001E ldarg.1 
+   001F ldarg.3 
+   0020 ldarg.s fontsize
+   0022 conv.r.un 
+   0023 conv.r4 
+   0024 ldc.r4 1
+   0029 ldarg.s offset1
+   002B ldarg.s offset2
+   002D call System.Void Assets.Scripts.GameSystem.FloatTextParam::.ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Single)
+   0032 ldarg.0 
+   0033 ldloca.s V_0
+   0035 ldarg.2 
+   0036 ldarg.s offsetY
+   0038 ldarg.s recycleDelay
+   003A call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam&,UnityEngine.Vector3&,System.Single,System.Int32)
+   003F ret 
+== System.Void CreateUGUIFloatTextAtFixedPos(System.String content, Assets.Scripts.GameSystem.CBattleFloatDigitManager/enUGUIFloatFixedPos fixedPos, System.String animatorState, System.Int32 fontSize, System.Single offsetY, System.Int32 recycleDelay) attrs=Private, HideBySig maxstack=6
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   000A brfalse IL_0010: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   000F ret 
+   0010 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0015 ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   001A brtrue IL_0020: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   001F ret 
+   0020 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0025 callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.CBattleSystem::get_FloatTextContainer()
+   002A stloc.0 
+   002B ldloc.0 
+   002C ldnull 
+   002D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0032 brfalse IL_0038: ldarg.1
+   0037 ret 
+   0038 ldarg.1 
+   0039 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   003E brtrue IL_004e: ret
+   0043 ldarg.3 
+   0044 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0049 brfalse IL_004f: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   004E ret 
+   004F call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0054 ldstr Text/FloatText/UGUIFloatText.prefab
+   0059 ldc.i4.0 
+   005A ldnull 
+   005B ldc.i4.0 
+   005C ldc.i4.1 
+   005D callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   0062 stloc.1 
+   0063 ldloc.1 
+   0064 brtrue IL_006a: ldloc.1
+   0069 ret 
+   006A ldloc.1 
+   006B ldfld CPooledGameObjectScript::Trans
+   0070 ldloc.0 
+   0071 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0076 callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   007B ldloc.1 
+   007C ldfld CPooledGameObjectScript::Trans
+   0081 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0086 callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   008B ldloc.1 
+   008C ldfld CPooledGameObjectScript::Trans
+   0091 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   0096 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   009B ldloc.1 
+   009C ldfld CPooledGameObjectScript::Trans
+   00A1 ldstr Text
+   00A6 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00AB callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   00B0 stloc.2 
+   00B1 ldloc.1 
+   00B2 ldfld CPooledGameObjectScript::Trans
+   00B7 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.Animator>()
+   00BC stloc.3 
+   00BD ldloc.1 
+   00BE ldfld CPooledGameObjectScript::Trans
+   00C3 ldloc.0 
+   00C4 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIComponent>()
+   00C9 ldarg.2 
+   00CA callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIComponent::GetWidget(System.Int32)
+   00CF callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00D4 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00D9 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00DE ldloc.3 
+   00DF ldnull 
+   00E0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00E5 brfalse IL_00f1: ldloc.2
+   00EA ldloc.3 
+   00EB ldarg.3 
+   00EC callvirt System.Void UnityEngine.Animator::Play(System.String)
+   00F1 ldloc.2 
+   00F2 ldnull 
+   00F3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F8 brfalse IL_011b: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   00FD ldloc.2 
+   00FE ldarg.1 
+   00FF callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0104 ldloc.2 
+   0105 ldarg.s fontSize
+   0107 ldc.i4.0 
+   0108 ble IL_0114: ldc.i4.s 18
+   010D ldarg.s fontSize
+   010F br IL_0116: callvirt System.Void UnityEngine.UI.Text::set_fontSize(System.Int32)
+   0114 ldc.i4.s 18
+   0116 callvirt System.Void UnityEngine.UI.Text::set_fontSize(System.Int32)
+   011B call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0120 ldloc.1 
+   0121 ldarg.s recycleDelay
+   0123 ldnull 
+   0124 ldnull 
+   0125 ldnull 
+   0126 callvirt System.Void CGameObjectPool::RecycleGameObjectDelay(CPooledGameObjectScript,System.Int32,CGameObjectPool/OnDelayRecycleDelegate,System.Single[],UnityEngine.Vector3[])
+   012B ret 
+== System.Void CreatePickupFloatText(System.String content) attrs=Public, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   000F ret 
+   0010 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0015 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   001A stloc.0 
+   001B ldloc.0 
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0027 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   002C brtrue IL_0032: ldarg.0
+   0031 ret 
+   0032 ldarg.0 
+   0033 ldarg.1 
+   0034 ldc.i4.0 
+   0035 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_pickupTextAnimatorState
+   003A ldc.i4.0 
+   003B ldc.r4 0
+   0040 ldc.i4 2000
+   0045 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateUGUIFloatTextAtFixedPos(System.String,Assets.Scripts.GameSystem.CBattleFloatDigitManager/enUGUIFloatFixedPos,System.String,System.Int32,System.Single,System.Int32)
+   004A ret 
+== System.Void ClearAllBattleFloatText() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0006 brfalse IL_001d: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   0011 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.FloatDigitInfo>::Clear()
+   0016 ldarg.0 
+   0017 ldnull 
+   0018 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_floatDigitInfoList
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0023 brfalse IL_003a: ldarg.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   002E callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::Clear()
+   0033 ldarg.0 
+   0034 ldnull 
+   0035 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   003A ldarg.0 
+   003B ldc.i4.0 
+   003C stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_lastSeparateDigitTime
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_textPrefabDic
+   0047 brfalse IL_00a1: ret
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_textPrefabDic
+   0052 callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,CPooledGameObjectScript>::GetEnumerator()
+   0057 stloc.0 
+   0058 br IL_008a: ldloca.s V_0
+   005D ldloca.s V_0
+   005F call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   0064 stloc.1 
+   0065 ldloca.s V_1
+   0067 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   006C brfalse IL_008a: ldloca.s V_0
+   0071 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0076 ldloca.s V_0
+   0078 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   007D stloc.2 
+   007E ldloca.s V_2
+   0080 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   0085 callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   008A ldloca.s V_0
+   008C call System.Boolean DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::MoveNext()
+   0091 brtrue IL_005d: ldloca.s V_0
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_textPrefabDic
+   009C callvirt System.Void DictionaryView`2<System.UInt32,CPooledGameObjectScript>::Clear()
+   00A1 ret 
+== System.Void LateUpdate() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::updateFloatDigitInLastFrame()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::UpdateDelayFloat()
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::UpdateTextPrefabPos()
+   0012 ret 
+== System.Void Preload(Assets.Scripts.GameLogic.PreloadResTypeDelegate loadFunc) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.5 
+   0002 ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::FLOAT_TEXT_PREFAB
+   0007 ldc.i4.0 
+   0008 conv.i8 
+   0009 ldnull 
+   000A callvirt System.Void Assets.Scripts.GameLogic.PreloadResTypeDelegate::Invoke(AssetRefType,System.String,System.UInt64,Assets.Scripts.GameLogic.ActorPreloadMeta)
+   000F ret 
+== System.Void CreateBattleFloatText(Assets.Scripts.GameSystem.FloatTextParam& param, UnityEngine.Vector3& worldPosition, System.Single offsetY, System.Int32 recycleDelay) attrs=Private, HideBySig maxstack=6
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   000A brfalse IL_0010: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   000F ret 
+   0010 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0015 ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   001A brtrue IL_0020: ldarg.1
+   001F ret 
+   0020 ldarg.1 
+   0021 ldfld Assets.Scripts.GameSystem.FloatTextParam::content
+   0026 stloc.0 
+   0027 ldarg.1 
+   0028 ldfld Assets.Scripts.GameSystem.FloatTextParam::animName
+   002D stloc.1 
+   002E ldloc.0 
+   002F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0034 brtrue IL_0044: ret
+   0039 ldloc.1 
+   003A call System.Boolean System.String::IsNullOrEmpty(System.String)
+   003F brfalse IL_0045: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0044 ret 
+   0045 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   004A ldsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::FLOAT_TEXT_PREFAB
+   004F ldc.i4.0 
+   0050 ldnull 
+   0051 ldc.i4.0 
+   0052 ldc.i4.1 
+   0053 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   0058 stloc.2 
+   0059 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   005E ldloc.2 
+   005F ldc.i4.0 
+   0060 callvirt !!0 CGameObjectPool::GetCachedComponent<BattleFloatTextComponent>(CPooledGameObjectScript,System.Boolean)
+   0065 stloc.3 
+   0066 ldloc.2 
+   0067 brfalse IL_0078: ret
+   006C ldloc.3 
+   006D ldnull 
+   006E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0073 brfalse IL_0079: call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0078 ret 
+   0079 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   007E stloc.s V_4
+   0080 ldloc.2 
+   0081 ldfld CPooledGameObjectScript::Trans
+   0086 ldloc.s V_4
+   0088 callvirt UnityEngine.Transform Assets.Scripts.UI.C3DUIManager::GetFloatTextRootTransform()
+   008D callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   0092 ldloc.2 
+   0093 ldfld CPooledGameObjectScript::Trans
+   0098 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   009D callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   00A2 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   00A7 ldfld CameraSystem::m_mainCamera
+   00AC ldarg.2 
+   00AD ldobj UnityEngine.Vector3
+   00B2 callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   00B7 stloc.s V_5
+   00B9 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   00BE callvirt Assets.Scripts.UI.C3DUIManager/IndirectCamera Assets.Scripts.UI.C3DUIManager::GetCurrentCamera()
+   00C3 ldfld Assets.Scripts.UI.C3DUIManager/IndirectCamera::camera
+   00C8 ldloc.s V_5
+   00CA callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToWorldPoint(UnityEngine.Vector3)
+   00CF stloc.s V_6
+   00D1 ldloc.2 
+   00D2 ldfld CPooledGameObjectScript::Trans
+   00D7 ldloca.s V_6
+   00D9 ldfld UnityEngine.Vector3::x
+   00DE ldloca.s V_6
+   00E0 ldfld UnityEngine.Vector3::y
+   00E5 ldc.r4 1
+   00EA newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00EF callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00F4 ldloc.2 
+   00F5 ldfld CPooledGameObjectScript::Trans
+   00FA dup 
+   00FB callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0100 ldc.r4 0
+   0105 ldarg.3 
+   0106 ldc.r4 0
+   010B newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0110 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0115 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   011A ldarg.1 
+   011B ldfld Assets.Scripts.GameSystem.FloatTextParam::iconOffset1
+   0120 ldc.r4 0
+   0125 bne.un IL_013a: ldloc.3
+   012A ldarg.1 
+   012B ldfld Assets.Scripts.GameSystem.FloatTextParam::iconOffset2
+   0130 ldc.r4 0
+   0135 beq IL_0181: ldloca.s V_8
+   013A ldloc.3 
+   013B ldfld BattleFloatTextComponent::iconTrans
+   0140 ldnull 
+   0141 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0146 brfalse IL_0181: ldloca.s V_8
+   014B ldloc.3 
+   014C ldfld BattleFloatTextComponent::iconTrans
+   0151 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localPosition()
+   0156 stloc.s V_7
+   0158 ldloca.s V_7
+   015A ldarg.1 
+   015B ldfld Assets.Scripts.GameSystem.FloatTextParam::iconOffset1
+   0160 ldloc.0 
+   0161 callvirt System.Int32 System.String::get_Length()
+   0166 conv.r4 
+   0167 mul 
+   0168 ldarg.1 
+   0169 ldfld Assets.Scripts.GameSystem.FloatTextParam::iconOffset2
+   016E add 
+   016F stfld UnityEngine.Vector3::x
+   0174 ldloc.3 
+   0175 ldfld BattleFloatTextComponent::iconTrans
+   017A ldloc.s V_7
+   017C callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0181 ldloca.s V_8
+   0183 ldloc.2 
+   0184 ldflda CPooledGameObjectScript::m_defaultScale
+   0189 ldfld UnityEngine.Vector3::x
+   018E ldarg.0 
+   018F ldflda Assets.Scripts.GameSystem.CBattleFloatDigitManager::scale
+   0194 ldfld UnityEngine.Vector3::x
+   0199 mul 
+   019A ldloc.2 
+   019B ldflda CPooledGameObjectScript::m_defaultScale
+   01A0 ldfld UnityEngine.Vector3::y
+   01A5 ldarg.0 
+   01A6 ldflda Assets.Scripts.GameSystem.CBattleFloatDigitManager::scale
+   01AB ldfld UnityEngine.Vector3::y
+   01B0 mul 
+   01B1 ldloc.2 
+   01B2 ldflda CPooledGameObjectScript::m_defaultScale
+   01B7 ldfld UnityEngine.Vector3::z
+   01BC ldarg.0 
+   01BD ldflda Assets.Scripts.GameSystem.CBattleFloatDigitManager::scale
+   01C2 ldfld UnityEngine.Vector3::z
+   01C7 mul 
+   01C8 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   01CD ldloca.s V_8
+   01CF dup 
+   01D0 ldfld UnityEngine.Vector3::x
+   01D5 ldarg.1 
+   01D6 ldfld Assets.Scripts.GameSystem.FloatTextParam::scale
+   01DB mul 
+   01DC stfld UnityEngine.Vector3::x
+   01E1 ldloca.s V_8
+   01E3 dup 
+   01E4 ldfld UnityEngine.Vector3::y
+   01E9 ldarg.1 
+   01EA ldfld Assets.Scripts.GameSystem.FloatTextParam::scale
+   01EF mul 
+   01F0 stfld UnityEngine.Vector3::y
+   01F5 ldloc.2 
+   01F6 ldfld CPooledGameObjectScript::Trans
+   01FB ldloc.s V_8
+   01FD callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0202 ldloc.3 
+   0203 ldfld BattleFloatTextComponent::anim
+   0208 ldnull 
+   0209 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   020E brfalse IL_021f: ldloc.3
+   0213 ldloc.3 
+   0214 ldfld BattleFloatTextComponent::anim
+   0219 ldloc.1 
+   021A callvirt System.Void UnityEngine.Animator::Play(System.String)
+   021F ldloc.3 
+   0220 ldfld BattleFloatTextComponent::texMeshPro
+   0225 ldnull 
+   0226 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   022B brfalse IL_024d: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0230 ldloc.3 
+   0231 ldfld BattleFloatTextComponent::texMeshPro
+   0236 ldloc.0 
+   0237 callvirt System.Void TMPro.TextMeshPro::set_text(System.String)
+   023C ldloc.3 
+   023D ldfld BattleFloatTextComponent::texMeshPro
+   0242 ldarg.1 
+   0243 ldfld Assets.Scripts.GameSystem.FloatTextParam::size
+   0248 callvirt System.Void TMPro.TextMeshPro::set_fontSize(System.Single)
+   024D call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0252 ldloc.2 
+   0253 ldarg.s recycleDelay
+   0255 ldnull 
+   0256 ldnull 
+   0257 ldnull 
+   0258 callvirt System.Void CGameObjectPool::RecycleGameObjectDelay(CPooledGameObjectScript,System.Int32,CGameObjectPool/OnDelayRecycleDelegate,System.Single[],UnityEngine.Vector3[])
+   025D ret 
+== System.Void ClearBattleFloatText(Assets.Scripts.UI.CUIAnimatorScript animatorScript) attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void AddDelayBattleFloatText(System.Int32 digitValue, Assets.Scripts.GameSystem.DIGIT_TYPE digitType, UnityEngine.Vector3& worldPosition, System.Int32 iDelayTime) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   000F ret 
+   0010 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0015 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   001A brfalse IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0026 brtrue IL_0036: ldloca.s V_0
+   002B ldarg.0 
+   002C newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo>::.ctor()
+   0031 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0036 ldloca.s V_0
+   0038 ldarg.3 
+   0039 ldarg.2 
+   003A ldarg.1 
+   003B ldarg.s iDelayTime
+   003D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0042 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0047 call System.Void Assets.Scripts.GameSystem.DelayFloatInfo::.ctor(UnityEngine.Vector3&,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32,System.Int32,System.Int32)
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0052 ldloc.0 
+   0053 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo>::Add(!0)
+   0058 ret 
+== System.Void AddActorDelayBattleFloatText(System.Int32 digitValue, Assets.Scripts.GameSystem.DIGIT_TYPE digitType, Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actor, System.Int32 iDelayTime) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brtrue IL_0010: call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   000F ret 
+   0010 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0015 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   001A brfalse IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0026 brtrue IL_0036: ldloca.s V_0
+   002B ldarg.0 
+   002C newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::.ctor()
+   0031 stfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0036 ldloca.s V_0
+   0038 ldarg.3 
+   0039 ldarg.2 
+   003A ldarg.1 
+   003B ldarg.s iDelayTime
+   003D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0042 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0047 call System.Void Assets.Scripts.GameSystem.DelayFloatInfoActorType::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,Assets.Scripts.GameSystem.DIGIT_TYPE,System.Int32,System.Int32,System.Int32)
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0052 ldloc.0 
+   0053 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::Add(!0)
+   0058 ret 
+== System.Void UpdateDelayFloat() attrs=Private, HideBySig maxstack=5
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0016 brfalse IL_0093: ldarg.0
+   001B ldc.i4.0 
+   001C stloc.0 
+   001D br IL_0082: ldloc.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0028 ldloc.0 
+   0029 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo>::get_Item(System.Int32)
+   002E stloc.1 
+   002F call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0034 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0039 conv.u8 
+   003A ldloca.s V_1
+   003C ldfld Assets.Scripts.GameSystem.DelayFloatInfo::m_iStartTime
+   0041 conv.i8 
+   0042 sub 
+   0043 ldloca.s V_1
+   0045 ldfld Assets.Scripts.GameSystem.DelayFloatInfo::m_iDelayTime
+   004A conv.i8 
+   004B ble IL_007e: ldloc.0
+   0050 ldarg.0 
+   0051 ldloca.s V_1
+   0053 ldfld Assets.Scripts.GameSystem.DelayFloatInfo::m_value
+   0058 ldloca.s V_1
+   005A ldfld Assets.Scripts.GameSystem.DelayFloatInfo::m_digitType
+   005F ldloca.s V_1
+   0061 ldflda Assets.Scripts.GameSystem.DelayFloatInfo::m_stVecPosition
+   0066 ldc.i4.0 
+   0067 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0072 ldloc.1 
+   0073 callvirt System.Boolean System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo>::Remove(!0)
+   0078 pop 
+   0079 br IL_0082: ldloc.0
+   007E ldloc.0 
+   007F ldc.i4.1 
+   0080 add 
+   0081 stloc.0 
+   0082 ldloc.0 
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoList
+   0089 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfo>::get_Count()
+   008E blt IL_0022: ldarg.0
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0099 brfalse IL_017f: ret
+   009E ldarg.0 
+   009F ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   00A4 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::get_Count()
+   00A9 ldc.i4.1 
+   00AA blt IL_017f: ret
+   00AF ldarg.0 
+   00B0 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   00B5 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::get_Count()
+   00BA ldc.i4.1 
+   00BB sub 
+   00BC stloc.2 
+   00BD br IL_015b: ldloc.2
+   00C2 ldarg.0 
+   00C3 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   00C8 ldloc.2 
+   00C9 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::get_Item(System.Int32)
+   00CE stloc.3 
+   00CF call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00D4 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   00D9 conv.u8 
+   00DA ldloca.s V_3
+   00DC ldfld Assets.Scripts.GameSystem.DelayFloatInfoActorType::m_iStartTime
+   00E1 conv.i8 
+   00E2 sub 
+   00E3 ldloca.s V_3
+   00E5 ldfld Assets.Scripts.GameSystem.DelayFloatInfoActorType::m_iDelayTime
+   00EA conv.i8 
+   00EB ble IL_0157: ldloc.2
+   00F0 ldloca.s V_3
+   00F2 ldfld Assets.Scripts.GameSystem.DelayFloatInfoActorType::actor
+   00F7 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00FC brtrue IL_0113: ldloca.s V_4
+   0101 ldarg.0 
+   0102 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0107 ldloc.3 
+   0108 callvirt System.Boolean System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::Remove(!0)
+   010D pop 
+   010E br IL_0157: ldloc.2
+   0113 ldloca.s V_4
+   0115 initobj UnityEngine.Vector3
+   011B ldloca.s V_3
+   011D ldflda Assets.Scripts.GameSystem.DelayFloatInfoActorType::actor
+   0122 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0127 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   012C stloc.s V_4
+   012E ldarg.0 
+   012F ldloca.s V_3
+   0131 ldfld Assets.Scripts.GameSystem.DelayFloatInfoActorType::m_value
+   0136 ldloca.s V_3
+   0138 ldfld Assets.Scripts.GameSystem.DelayFloatInfoActorType::m_digitType
+   013D ldloca.s V_4
+   013F ldc.i4.0 
+   0140 call System.Void Assets.Scripts.GameSystem.CBattleFloatDigitManager::CreateBattleFloatDigit(System.Int32,Assets.Scripts.GameSystem.DIGIT_TYPE,UnityEngine.Vector3&,System.Boolean)
+   0145 ldarg.0 
+   0146 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   014B ldloc.3 
+   014C callvirt System.Boolean System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::Remove(!0)
+   0151 pop 
+   0152 br IL_0157: ldloc.2
+   0157 ldloc.2 
+   0158 ldc.i4.1 
+   0159 sub 
+   015A stloc.2 
+   015B ldloc.2 
+   015C ldc.i4.0 
+   015D bge IL_00c2: ldarg.0
+   0162 ldarg.0 
+   0163 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   0168 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::get_Count()
+   016D ldc.i4.s 100
+   016F ble IL_017f: ret
+   0174 ldarg.0 
+   0175 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_delayDigitInfoActorList
+   017A callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.DelayFloatInfoActorType>::Clear()
+   017F ret 
+== System.Void UpdateTextPrefabPos() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.C3DUIManager>::GetInstance()
+   0005 callvirt Assets.Scripts.UI.C3DUIManager/IndirectCamera Assets.Scripts.UI.C3DUIManager::GetCurrentCamera()
+   000A stloc.0 
+   000B call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0010 ldfld CameraSystem::m_mainCamera
+   0015 stloc.1 
+   0016 ldloc.0 
+   0017 brfalse IL_00e5: ret
+   001C ldloc.1 
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_00e5: ret
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::m_textPrefabDic
+   002E callvirt DictionaryView`2/Enumerator<!0,!1> DictionaryView`2<System.UInt32,CPooledGameObjectScript>::GetEnumerator()
+   0033 stloc.2 
+   0034 br IL_00d9: ldloca.s V_2
+   0039 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   003E ldloca.s V_2
+   0040 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   0045 stloc.s V_4
+   0047 ldloca.s V_4
+   0049 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Key()
+   004E callvirt UnityEngine.GameObject UnityObjMgr::GetGameObject(System.UInt32)
+   0053 stloc.3 
+   0054 ldloc.3 
+   0055 ldnull 
+   0056 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005B brfalse IL_00d9: ldloca.s V_2
+   0060 ldloca.s V_2
+   0062 call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   0067 stloc.s V_5
+   0069 ldloca.s V_5
+   006B call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   0070 brfalse IL_00d9: ldloca.s V_2
+   0075 ldloc.1 
+   0076 ldloc.3 
+   0077 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0081 callvirt UnityEngine.Vector3 UnityEngine.Camera::WorldToScreenPoint(UnityEngine.Vector3)
+   0086 stloc.s V_6
+   0088 ldloc.0 
+   0089 ldfld Assets.Scripts.UI.C3DUIManager/IndirectCamera::camera
+   008E ldloc.s V_6
+   0090 callvirt UnityEngine.Vector3 UnityEngine.Camera::ScreenToWorldPoint(UnityEngine.Vector3)
+   0095 stloc.s V_7
+   0097 ldloc.s V_7
+   0099 ldloca.s V_2
+   009B call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   00A0 stloc.s V_8
+   00A2 ldloca.s V_8
+   00A4 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   00A9 ldfld CPooledGameObjectScript::Trans
+   00AE callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00B3 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   00B8 brfalse IL_00d9: ldloca.s V_2
+   00BD ldloca.s V_2
+   00BF call System.Collections.Generic.KeyValuePair`2<!0,!1> DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::get_Current()
+   00C4 stloc.s V_9
+   00C6 ldloca.s V_9
+   00C8 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,CPooledGameObjectScript>::get_Value()
+   00CD ldfld CPooledGameObjectScript::Trans
+   00D2 ldloc.s V_7
+   00D4 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00D9 ldloca.s V_2
+   00DB call System.Boolean DictionaryView`2/Enumerator<System.UInt32,CPooledGameObjectScript>::MoveNext()
+   00E0 brtrue IL_0039: call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   00E5 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.s 55
+   0002 newarr System.String
+   0007 dup 
+   0008 ldc.i4.0 
+   0009 ldstr Restrict_None
+   000E stelem.ref 
+   000F dup 
+   0010 ldc.i4.1 
+   0011 ldstr Restrict_Dizzy
+   0016 stelem.ref 
+   0017 dup 
+   0018 ldc.i4.2 
+   0019 ldstr Restrict_SlowDown
+   001E stelem.ref 
+   001F dup 
+   0020 ldc.i4.3 
+   0021 ldstr Restrict_Taunt
+   0026 stelem.ref 
+   0027 dup 
+   0028 ldc.i4.4 
+   0029 ldstr Restrict_Fear
+   002E stelem.ref 
+   002F dup 
+   0030 ldc.i4.5 
+   0031 ldstr Restrict_Frozen
+   0036 stelem.ref 
+   0037 dup 
+   0038 ldc.i4.6 
+   0039 ldstr Restrict_Floating
+   003E stelem.ref 
+   003F dup 
+   0040 ldc.i4.7 
+   0041 ldstr Restrict_Slient
+   0046 stelem.ref 
+   0047 dup 
+   0048 ldc.i4.8 
+   0049 ldstr Restrict_Stone
+   004E stelem.ref 
+   004F dup 
+   0050 ldc.i4.s 9
+   0052 ldstr SkillBuff_Custom_Type_1
+   0057 stelem.ref 
+   0058 dup 
+   0059 ldc.i4.s 10
+   005B ldstr SkillBuff_Custom_Type_2
+   0060 stelem.ref 
+   0061 dup 
+   0062 ldc.i4.s 11
+   0064 ldstr SkillBuff_Custom_Type_3
+   0069 stelem.ref 
+   006A dup 
+   006B ldc.i4.s 12
+   006D ldstr SkillBuff_Custom_Type_4
+   0072 stelem.ref 
+   0073 dup 
+   0074 ldc.i4.s 13
+   0076 ldstr SkillBuff_Custom_Type_5
+   007B stelem.ref 
+   007C dup 
+   007D ldc.i4.s 14
+   007F ldstr SkillBuff_Custom_Type_6
+   0084 stelem.ref 
+   0085 dup 
+   0086 ldc.i4.s 15
+   0088 ldstr SkillBuff_Custom_Type_7
+   008D stelem.ref 
+   008E dup 
+   008F ldc.i4.s 16
+   0091 ldstr SkillBuff_Custom_Type_8
+   0096 stelem.ref 
+   0097 dup 
+   0098 ldc.i4.s 17
+   009A ldstr SkillBuff_Custom_Type_9
+   009F stelem.ref 
+   00A0 dup 
+   00A1 ldc.i4.s 18
+   00A3 ldstr SkillBuff_Custom_Type_10
+   00A8 stelem.ref 
+   00A9 dup 
+   00AA ldc.i4.s 19
+   00AC ldstr SkillBuff_Custom_Type_11
+   00B1 stelem.ref 
+   00B2 dup 
+   00B3 ldc.i4.s 20
+   00B5 ldstr SkillBuff_Custom_Type_12
+   00BA stelem.ref 
+   00BB dup 
+   00BC ldc.i4.s 21
+   00BE ldstr SkillBuff_Custom_Type_13
+   00C3 stelem.ref 
+   00C4 dup 
+   00C5 ldc.i4.s 22
+   00C7 ldstr SkillBuff_Custom_Type_14
+   00CC stelem.ref 
+   00CD dup 
+   00CE ldc.i4.s 23
+   00D0 ldstr SkillBuff_Custom_Type_15
+   00D5 stelem.ref 
+   00D6 dup 
+   00D7 ldc.i4.s 24
+   00D9 ldstr SkillBuff_Custom_Type_16
+   00DE stelem.ref 
+   00DF dup 
+   00E0 ldc.i4.s 25
+   00E2 ldstr SkillBuff_Custom_Type_17
+   00E7 stelem.ref 
+   00E8 dup 
+   00E9 ldc.i4.s 26
+   00EB ldstr SkillBuff_Custom_Type_18
+   00F0 stelem.ref 
+   00F1 dup 
+   00F2 ldc.i4.s 27
+   00F4 ldstr SkillBuff_Custom_Type_19
+   00F9 stelem.ref 
+   00FA dup 
+   00FB ldc.i4.s 28
+   00FD ldstr SkillBuff_Custom_Type_20
+   0102 stelem.ref 
+   0103 dup 
+   0104 ldc.i4.s 29
+   0106 ldstr SkillBuff_Custom_Type_21
+   010B stelem.ref 
+   010C dup 
+   010D ldc.i4.s 30
+   010F ldstr SkillBuff_Custom_Type_22
+   0114 stelem.ref 
+   0115 dup 
+   0116 ldc.i4.s 31
+   0118 ldstr SkillBuff_Custom_Type_23
+   011D stelem.ref 
+   011E dup 
+   011F ldc.i4.s 32
+   0121 ldstr SkillBuff_Custom_Type_24
+   0126 stelem.ref 
+   0127 dup 
+   0128 ldc.i4.s 33
+   012A ldstr SkillBuff_Custom_Type_25
+   012F stelem.ref 
+   0130 dup 
+   0131 ldc.i4.s 34
+   0133 ldstr SkillBuff_Custom_Type_26
+   0138 stelem.ref 
+   0139 dup 
+   013A ldc.i4.s 35
+   013C ldstr SkillBuff_Custom_Type_27
+   0141 stelem.ref 
+   0142 dup 
+   0143 ldc.i4.s 36
+   0145 ldstr SkillBuff_Custom_Type_28
+   014A stelem.ref 
+   014B dup 
+   014C ldc.i4.s 37
+   014E ldstr SkillBuff_Custom_Type_29
+   0153 stelem.ref 
+   0154 dup 
+   0155 ldc.i4.s 38
+   0157 ldstr SkillBuff_Custom_Type_30
+   015C stelem.ref 
+   015D dup 
+   015E ldc.i4.s 39
+   0160 ldstr SkillBuff_Custom_Type_31
+   0165 stelem.ref 
+   0166 dup 
+   0167 ldc.i4.s 40
+   0169 ldstr SkillBuff_Custom_Type_32
+   016E stelem.ref 
+   016F dup 
+   0170 ldc.i4.s 41
+   0172 ldstr SkillBuff_Custom_Type_33
+   0177 stelem.ref 
+   0178 dup 
+   0179 ldc.i4.s 42
+   017B ldstr SkillBuff_Custom_Type_34
+   0180 stelem.ref 
+   0181 dup 
+   0182 ldc.i4.s 43
+   0184 ldstr SkillBuff_Custom_Type_35
+   0189 stelem.ref 
+   018A dup 
+   018B ldc.i4.s 44
+   018D ldstr SkillBuff_Custom_Type_36
+   0192 stelem.ref 
+   0193 dup 
+   0194 ldc.i4.s 45
+   0196 ldstr SkillBuff_Custom_Type_37
+   019B stelem.ref 
+   019C dup 
+   019D ldc.i4.s 46
+   019F ldstr SkillBuff_Custom_Type_38
+   01A4 stelem.ref 
+   01A5 dup 
+   01A6 ldc.i4.s 47
+   01A8 ldstr SkillBuff_Custom_Type_39
+   01AD stelem.ref 
+   01AE dup 
+   01AF ldc.i4.s 48
+   01B1 ldstr SkillBuff_Custom_Type_40
+   01B6 stelem.ref 
+   01B7 dup 
+   01B8 ldc.i4.s 49
+   01BA ldstr SkillBuff_Custom_Type_41
+   01BF stelem.ref 
+   01C0 dup 
+   01C1 ldc.i4.s 50
+   01C3 ldstr SkillBuff_Custom_Type_42
+   01C8 stelem.ref 
+   01C9 dup 
+   01CA ldc.i4.s 51
+   01CC ldstr SkillBuff_Custom_Type_43
+   01D1 stelem.ref 
+   01D2 dup 
+   01D3 ldc.i4.s 52
+   01D5 ldstr SkillBuff_Custom_Type_44
+   01DA stelem.ref 
+   01DB dup 
+   01DC ldc.i4.s 53
+   01DE ldstr SkillBuff_Custom_Type_45
+   01E3 stelem.ref 
+   01E4 dup 
+   01E5 ldc.i4.s 54
+   01E7 ldstr Restrict_Immobilize
+   01EC stelem.ref 
+   01ED stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextKeys
+   01F2 ldstr RestrictText_Anim
+   01F7 stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_restrictTextAnimatorState
+   01FC ldc.i4.s 16
+   01FE newarr System.String
+   0203 dup 
+   0204 ldc.i4.0 
+   0205 ldstr Accept_Task
+   020A stelem.ref 
+   020B dup 
+   020C ldc.i4.1 
+   020D ldstr Complete_Task
+   0212 stelem.ref 
+   0213 dup 
+   0214 ldc.i4.2 
+   0215 ldstr Level_Up
+   021A stelem.ref 
+   021B dup 
+   021C ldc.i4.3 
+   021D ldstr Talent_Open
+   0222 stelem.ref 
+   0223 dup 
+   0224 ldc.i4.4 
+   0225 ldstr Talent_Learn
+   022A stelem.ref 
+   022B dup 
+   022C ldc.i4.5 
+   022D ldstr DragonBuff_Get1
+   0232 stelem.ref 
+   0233 dup 
+   0234 ldc.i4.6 
+   0235 ldstr DragonBuff_Get2
+   023A stelem.ref 
+   023B dup 
+   023C ldc.i4.7 
+   023D ldstr DragonBuff_Get3
+   0242 stelem.ref 
+   0243 dup 
+   0244 ldc.i4.8 
+   0245 ldstr Battle_Absorb
+   024A stelem.ref 
+   024B dup 
+   024C ldc.i4.s 9
+   024E ldstr Battle_ShieldDisappear
+   0253 stelem.ref 
+   0254 dup 
+   0255 ldc.i4.s 10
+   0257 ldstr Battle_Immunity
+   025C stelem.ref 
+   025D dup 
+   025E ldc.i4.s 11
+   0260 ldstr Battle_InCooldown
+   0265 stelem.ref 
+   0266 dup 
+   0267 ldc.i4.s 12
+   0269 ldstr Battle_NoTarget
+   026E stelem.ref 
+   026F dup 
+   0270 ldc.i4.s 13
+   0272 ldstr Battle_Blindess
+   0277 stelem.ref 
+   0278 dup 
+   0279 ldc.i4.s 14
+   027B ldstr Battle_BeanShortage
+   0280 stelem.ref 
+   0281 dup 
+   0282 ldc.i4.s 15
+   0284 ldstr Battle_TargetNotInSkillRange
+   0289 stelem.ref 
+   028A stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_otherFloatTextKeys
+   028F ldc.i4.s 15
+   0291 newarr System.String
+   0296 dup 
+   0297 ldc.i4.0 
+   0298 ldstr Other_Anim
+   029D stelem.ref 
+   029E dup 
+   029F ldc.i4.1 
+   02A0 ldstr Other_Anim
+   02A5 stelem.ref 
+   02A6 dup 
+   02A7 ldc.i4.2 
+   02A8 ldstr Other_Anim
+   02AD stelem.ref 
+   02AE dup 
+   02AF ldc.i4.3 
+   02B0 ldstr Other_Anim
+   02B5 stelem.ref 
+   02B6 dup 
+   02B7 ldc.i4.4 
+   02B8 ldstr Other_Anim
+   02BD stelem.ref 
+   02BE dup 
+   02BF ldc.i4.5 
+   02C0 ldstr Other_Anim
+   02C5 stelem.ref 
+   02C6 dup 
+   02C7 ldc.i4.6 
+   02C8 ldstr Other_Anim
+   02CD stelem.ref 
+   02CE dup 
+   02CF ldc.i4.7 
+   02D0 ldstr Other_Anim
+   02D5 stelem.ref 
+   02D6 dup 
+   02D7 ldc.i4.8 
+   02D8 ldstr Other_Anim
+   02DD stelem.ref 
+   02DE dup 
+   02DF ldc.i4.s 9
+   02E1 ldstr Other_Anim
+   02E6 stelem.ref 
+   02E7 dup 
+   02E8 ldc.i4.s 10
+   02EA ldstr Other_Anim
+   02EF stelem.ref 
+   02F0 dup 
+   02F1 ldc.i4.s 11
+   02F3 ldstr Other_Anim
+   02F8 stelem.ref 
+   02F9 dup 
+   02FA ldc.i4.s 12
+   02FC ldstr Other_Anim
+   0301 stelem.ref 
+   0302 dup 
+   0303 ldc.i4.s 13
+   0305 ldstr Other_Anim
+   030A stelem.ref 
+   030B dup 
+   030C ldc.i4.s 14
+   030E ldstr Other_Anim
+   0313 stelem.ref 
+   0314 stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_otherFloatTextAnimatorStates
+   0319 ldstr PickupText_Anim
+   031E stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::s_pickupTextAnimatorState
+   0323 ldstr Text/FloatText/FloatText.prefab
+   0328 stsfld Assets.Scripts.GameSystem.CBattleFloatDigitManager::FLOAT_TEXT_PREFAB
+   032D ret 
+  NESTED Assets.Scripts.GameSystem.CBattleFloatDigitManager/enUGUIFloatFixedPos

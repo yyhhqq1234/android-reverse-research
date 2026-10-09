@@ -1,0 +1,1196 @@
+// TYPE Assets.Scripts.Framework.FrameWindow  base=Singleton`1<Assets.Scripts.Framework.FrameWindow>  attrs=Public, BeforeFieldInit
+  FIELD System.UInt32 _sendCmdSeq
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32> _sendCmdSeqDic
+  FIELD System.Byte _svrSession
+  FIELD System.UInt32 FRQ_WIN_LEN = 900
+  FIELD CSProtocol.SCPKG_FRAPBOOT_SINGLE[] _receiveWindow
+  FIELD System.UInt32 _basFrqNo
+  FIELD System.UInt32 _begFrqNo
+  FIELD System.UInt32 _maxFrqNo
+  FIELD System.UInt32 _repairBegNo
+  FIELD System.Int32 _repairCounter
+  FIELD System.Int32 _repairTimes
+  FIELD System.Int32 _repairSteps
+  FIELD System.Int32 _timeoutTimes
+  FIELD System.Int32 _timeoutCounter
+  FIELD System.Int32 _timeoutSteps
+  FIELD System.Boolean <ValidRunning>k__BackingField
+  FIELD System.Int32[] _frameCommandExceptionCounts
+  PROP System.Boolean ValidRunning
+  PROP System.UInt32 NewSendCmdSeq
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::.ctor()
+   0006 stfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeqDic
+   000B ldarg.0 
+   000C ldc.i4.3 
+   000D stfld Assets.Scripts.Framework.FrameWindow::_svrSession
+   0012 ldarg.0 
+   0013 call System.Void Singleton`1<Assets.Scripts.Framework.FrameWindow>::.ctor()
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.Framework.FrameWindow::Reset()
+   001E ret 
+== System.Void onFrapBootInfoMultipleNtf(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_FRAPBOOTINFO CSProtocol.CSPkgBody::get_stFrapBootInfo()
+   000B stloc.0 
+   000C call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0011 ldloc.0 
+   0012 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::bSession
+   0017 stfld Assets.Scripts.Framework.FrameWindow::_svrSession
+   001C ldc.i4.0 
+   001D stloc.1 
+   001E br IL_0061: ldloc.1
+   0023 ldloc.0 
+   0024 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::astSpareFrap
+   0029 ldloc.1 
+   002A callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.SCPKG_FRAPBOOT_SINGLE>::get_Item(System.Int32)
+   002F stloc.2 
+   0030 ldloc.0 
+   0031 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::astSpareFrap
+   0036 ldloc.1 
+   0037 ldnull 
+   0038 callvirt System.Void Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.SCPKG_FRAPBOOT_SINGLE>::set_Item(System.Int32,!0)
+   003D call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0042 ldloc.2 
+   0043 callvirt System.Boolean Assets.Scripts.Framework.FrameWindow::HandleFraqBootSingle(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   0048 brfalse IL_005d: ldloc.1
+   004D call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0052 ldarg.0 
+   0053 callvirt System.Void Assets.Scripts.Framework.Reconnection::UpdateCachedLen(CSProtocol.CSPkg)
+   0058 br IL_006d: ldarg.0
+   005D ldloc.1 
+   005E ldc.i4.1 
+   005F add 
+   0060 stloc.1 
+   0061 ldloc.1 
+   0062 ldloc.0 
+   0063 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::bSpareNum
+   0068 blt IL_0023: ldloc.0
+   006D ldarg.0 
+   006E callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0073 ret 
+== System.Void onFrapBootInfoSingleNtf(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_FRAPBOOT_SINGLE CSProtocol.CSPkgBody::get_stFrapBootSingle()
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldfld CSProtocol.CSPkg::stPkgData
+   0012 ldnull 
+   0013 callvirt System.Void CSProtocol.CSPkgBody::set_stFrapBootSingle(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   0018 call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   001D ldloc.0 
+   001E callvirt System.Boolean Assets.Scripts.Framework.FrameWindow::HandleFraqBootSingle(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   0023 brfalse IL_0033: ldarg.0
+   0028 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   002D ldarg.0 
+   002E callvirt System.Void Assets.Scripts.Framework.Reconnection::UpdateCachedLen(CSProtocol.CSPkg)
+   0033 ldarg.0 
+   0034 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0039 ret 
+== System.Boolean HandleFraqBootSingle(CSProtocol.SCPKG_FRAPBOOT_SINGLE fbid) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0008 stloc.1 
+   0009 ldloc.1 
+   000A ldarg.0 
+   000B ldfld Assets.Scripts.Framework.FrameWindow::_maxFrqNo
+   0010 ble.un IL_001c: ldarg.0
+   0015 ldarg.0 
+   0016 ldloc.1 
+   0017 stfld Assets.Scripts.Framework.FrameWindow::_maxFrqNo
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0022 ldloc.1 
+   0023 bgt.un IL_00ac: ldloc.1
+   0028 ldloc.1 
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   002F ldc.i4 900
+   0034 add 
+   0035 bge.un IL_00ac: ldloc.1
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.Framework.FrameWindow::_receiveWindow
+   0040 ldarg.0 
+   0041 ldloc.1 
+   0042 call System.UInt32 Assets.Scripts.Framework.FrameWindow::_FrqNoToWinIdx_(System.UInt32)
+   0047 conv.u 
+   0048 ldarg.1 
+   0049 stelem.ref 
+   004A ldnull 
+   004B starg.s fbid
+   004D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0052 ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   0057 brfalse IL_00a7: br IL_00b8
+   005C ldnull 
+   005D stloc.2 
+   005E br IL_0094: ldarg.0
+   0063 ldarg.0 
+   0064 dup 
+   0065 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   006A ldc.i4.1 
+   006B add 
+   006C dup 
+   006D stloc.3 
+   006E stfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0073 ldloc.3 
+   0074 ldc.i4 900
+   0079 rem.un 
+   007A brtrue IL_008b: ldarg.0
+   007F ldarg.0 
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0086 stfld Assets.Scripts.Framework.FrameWindow::_basFrqNo
+   008B ldarg.0 
+   008C ldloc.2 
+   008D call System.Void Assets.Scripts.Framework.FrameWindow::HandleFraqBootInfo(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   0092 ldc.i4.1 
+   0093 stloc.0 
+   0094 ldarg.0 
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   009B call CSProtocol.SCPKG_FRAPBOOT_SINGLE Assets.Scripts.Framework.FrameWindow::_FetchFBI_(System.UInt32)
+   00A0 dup 
+   00A1 stloc.2 
+   00A2 brtrue IL_0063: ldarg.0
+   00A7 br IL_00b8: ldarg.1
+   00AC ldloc.1 
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   00B3 ble.un IL_00b8: ldarg.1
+   00B8 ldarg.1 
+   00B9 brfalse IL_00c4: ldarg.0
+   00BE ldarg.1 
+   00BF callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   00C4 ldarg.0 
+   00C5 ldc.i4.0 
+   00C6 stfld Assets.Scripts.Framework.FrameWindow::_timeoutTimes
+   00CB ldarg.0 
+   00CC ldc.i4.0 
+   00CD stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   00D2 ldloc.0 
+   00D3 ret 
+== System.Boolean get_ValidRunning() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.FrameWindow::<ValidRunning>k__BackingField
+   0006 ret 
+== System.Void set_ValidRunning(System.Boolean value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.FrameWindow::<ValidRunning>k__BackingField
+   0007 ret 
+== System.UInt32 _FrqNoToWinIdx_(System.UInt32 theFrqNo) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.Framework.FrameWindow::_basFrqNo
+   0007 sub 
+   0008 ldc.i4 900
+   000D rem.un 
+   000E ret 
+== System.UInt32 get_NewSendCmdSeq() attrs=Private, HideBySig, SpecialName maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeq
+   0007 ldc.i4.1 
+   0008 add 
+   0009 dup 
+   000A stloc.0 
+   000B stfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeq
+   0010 ldloc.0 
+   0011 ret 
+== System.UInt32 GetNewSendCmdSeqByPlayerId(System.UInt32 playerId) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeqDic
+   0006 ldarg.1 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::ContainsKey(!0)
+   000C brfalse IL_002e: ldc.i4.1
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeqDic
+   0017 dup 
+   0018 stloc.0 
+   0019 ldarg.1 
+   001A dup 
+   001B stloc.1 
+   001C ldloc.0 
+   001D ldloc.1 
+   001E callvirt !1 System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::get_Item(!0)
+   0023 ldc.i4.1 
+   0024 add 
+   0025 dup 
+   0026 stloc.2 
+   0027 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::set_Item(!0,!1)
+   002C ldloc.2 
+   002D ret 
+   002E ldc.i4.1 
+   002F stloc.3 
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeqDic
+   0036 ldarg.1 
+   0037 ldloc.3 
+   0038 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Add(!0,!1)
+   003D ldloc.3 
+   003E ret 
+== System.Void ResetSendCmdSeq() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeqDic
+   0006 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::Clear()
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld Assets.Scripts.Framework.FrameWindow::_sendCmdSeq
+   0012 ret 
+== System.Void Reset() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4 900
+   0006 conv.u 
+   0007 newarr CSProtocol.SCPKG_FRAPBOOT_SINGLE
+   000C stfld Assets.Scripts.Framework.FrameWindow::_receiveWindow
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld Assets.Scripts.Framework.FrameWindow::_basFrqNo
+   0018 ldarg.0 
+   0019 ldc.i4.1 
+   001A stfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   001F ldarg.0 
+   0020 ldc.i4.0 
+   0021 stfld Assets.Scripts.Framework.FrameWindow::_maxFrqNo
+   0026 ldarg.0 
+   0027 ldc.i4.0 
+   0028 stfld Assets.Scripts.Framework.FrameWindow::_repairBegNo
+   002D ldarg.0 
+   002E ldc.i4.0 
+   002F stfld Assets.Scripts.Framework.FrameWindow::_repairCounter
+   0034 ldarg.0 
+   0035 ldc.i4.0 
+   0036 stfld Assets.Scripts.Framework.FrameWindow::_repairTimes
+   003B ldarg.0 
+   003C ldc.i4.3 
+   003D stfld Assets.Scripts.Framework.FrameWindow::_repairSteps
+   0042 ldarg.0 
+   0043 ldc.i4.0 
+   0044 stfld Assets.Scripts.Framework.FrameWindow::_timeoutTimes
+   0049 ldarg.0 
+   004A ldc.i4.0 
+   004B stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   0050 ldarg.0 
+   0051 ldc.i4.s 30
+   0053 stfld Assets.Scripts.Framework.FrameWindow::_timeoutSteps
+   0058 ldarg.0 
+   0059 ldc.i4.1 
+   005A call System.Void Assets.Scripts.Framework.FrameWindow::set_ValidRunning(System.Boolean)
+   005F ldarg.0 
+   0060 ldc.i4.3 
+   0061 stfld Assets.Scripts.Framework.FrameWindow::_svrSession
+   0066 call System.Void Assets.Scripts.Framework.FrameWindow::ResetFrameCommandExceptionCounts()
+   006B ret 
+== System.Void UpdateFrame() attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::inMultiGame
+   000A brfalse IL_003c: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0014 ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   0019 brfalse IL_003c: ret
+   001E call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0023 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsRelayCast()
+   0028 brtrue IL_003c: ret
+   002D call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0032 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::get_isProcessingRelayRecover()
+   0037 brfalse IL_003d: ldarg.0
+   003C ret 
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.Framework.FrameWindow::_maxFrqNo
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0049 ble.un IL_00d2: ldarg.0
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.Framework.FrameWindow::_repairBegNo
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   005A beq IL_008b: ldarg.0
+   005F ldarg.0 
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0066 stfld Assets.Scripts.Framework.FrameWindow::_repairBegNo
+   006B ldarg.0 
+   006C call System.Void Assets.Scripts.Framework.FrameWindow::RequestRepairFraqBootInfo()
+   0071 ldarg.0 
+   0072 ldc.i4.0 
+   0073 stfld Assets.Scripts.Framework.FrameWindow::_repairTimes
+   0078 ldarg.0 
+   0079 ldc.i4.0 
+   007A stfld Assets.Scripts.Framework.FrameWindow::_repairCounter
+   007F ldarg.0 
+   0080 ldc.i4.0 
+   0081 stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   0086 br IL_00d2: ldarg.0
+   008B ldarg.0 
+   008C dup 
+   008D ldfld Assets.Scripts.Framework.FrameWindow::_repairCounter
+   0092 ldc.i4.1 
+   0093 add 
+   0094 dup 
+   0095 stloc.0 
+   0096 stfld Assets.Scripts.Framework.FrameWindow::_repairCounter
+   009B ldloc.0 
+   009C ldc.i4.2 
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.Framework.FrameWindow::_repairTimes
+   00A3 xor 
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.Framework.FrameWindow::_repairSteps
+   00AA mul 
+   00AB ble IL_00d2: ldarg.0
+   00B0 ldarg.0 
+   00B1 call System.Void Assets.Scripts.Framework.FrameWindow::RequestRepairFraqBootInfo()
+   00B6 ldarg.0 
+   00B7 dup 
+   00B8 ldfld Assets.Scripts.Framework.FrameWindow::_repairTimes
+   00BD ldc.i4.1 
+   00BE add 
+   00BF stfld Assets.Scripts.Framework.FrameWindow::_repairTimes
+   00C4 ldarg.0 
+   00C5 ldc.i4.0 
+   00C6 stfld Assets.Scripts.Framework.FrameWindow::_repairCounter
+   00CB ldarg.0 
+   00CC ldc.i4.0 
+   00CD stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   00D2 ldarg.0 
+   00D3 dup 
+   00D4 ldfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   00D9 ldc.i4.1 
+   00DA add 
+   00DB dup 
+   00DC stloc.0 
+   00DD stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   00E2 ldloc.0 
+   00E3 ldc.i4.2 
+   00E4 ldarg.0 
+   00E5 ldfld Assets.Scripts.Framework.FrameWindow::_timeoutTimes
+   00EA xor 
+   00EB ldarg.0 
+   00EC ldfld Assets.Scripts.Framework.FrameWindow::_timeoutSteps
+   00F1 mul 
+   00F2 ble IL_0112: ret
+   00F7 ldarg.0 
+   00F8 call System.Void Assets.Scripts.Framework.FrameWindow::RequestTimeoutFraqBootInfo()
+   00FD ldarg.0 
+   00FE dup 
+   00FF ldfld Assets.Scripts.Framework.FrameWindow::_timeoutTimes
+   0104 ldc.i4.1 
+   0105 add 
+   0106 stfld Assets.Scripts.Framework.FrameWindow::_timeoutTimes
+   010B ldarg.0 
+   010C ldc.i4.0 
+   010D stfld Assets.Scripts.Framework.FrameWindow::_timeoutCounter
+   0112 ret 
+== CSProtocol.SCPKG_FRAPBOOT_SINGLE _FetchFBI_(System.UInt32 frqNo) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.Framework.FrameWindow::_FrqNoToWinIdx_(System.UInt32)
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.Framework.FrameWindow::_receiveWindow
+   000E ldloc.0 
+   000F conv.u 
+   0010 ldelem.ref 
+   0011 stloc.1 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.Framework.FrameWindow::_receiveWindow
+   0018 ldloc.0 
+   0019 conv.u 
+   001A ldnull 
+   001B stelem.ref 
+   001C ldloc.1 
+   001D ret 
+== System.Void RequestRepairFraqBootInfo() attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4 1036
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE CSProtocol.CSPkgBody::get_stReqFrapBootSingle()
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 ldc.i4.0 
+   0019 stfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bNum
+   001E ldc.i4.0 
+   001F stloc.2 
+   0020 ldc.i4.0 
+   0021 stloc.3 
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   0028 stloc.s V_4
+   002A br IL_0099: ldloc.s V_4
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.Framework.FrameWindow::_receiveWindow
+   0035 ldarg.0 
+   0036 ldloc.s V_4
+   0038 call System.UInt32 Assets.Scripts.Framework.FrameWindow::_FrqNoToWinIdx_(System.UInt32)
+   003D conv.u 
+   003E ldelem.ref 
+   003F brtrue IL_0088: ldloc.2
+   0044 ldloc.2 
+   0045 ldc.i4.1 
+   0046 add 
+   0047 conv.u1 
+   0048 stloc.2 
+   0049 ldloc.1 
+   004A ldfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bNum
+   004F ldloc.1 
+   0050 ldfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::KFrapsNo
+   0055 ldlen 
+   0056 conv.i4 
+   0057 bge IL_007e: br IL_00a6
+   005C ldloc.1 
+   005D ldfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::KFrapsNo
+   0062 ldloc.1 
+   0063 dup 
+   0064 ldfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bNum
+   0069 dup 
+   006A stloc.s V_5
+   006C ldc.i4.1 
+   006D add 
+   006E conv.u1 
+   006F stfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bNum
+   0074 ldloc.s V_5
+   0076 ldloc.s V_4
+   0078 stelem.i4 
+   0079 br IL_0083: br IL_0093
+   007E br IL_00a6: ldloc.1
+   0083 br IL_0093: ldloc.s V_4
+   0088 ldloc.2 
+   0089 ldloc.3 
+   008A ble IL_0091: ldc.i4.0
+   008F ldloc.2 
+   0090 stloc.3 
+   0091 ldc.i4.0 
+   0092 stloc.2 
+   0093 ldloc.s V_4
+   0095 ldc.i4.1 
+   0096 add 
+   0097 stloc.s V_4
+   0099 ldloc.s V_4
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.Framework.FrameWindow::_maxFrqNo
+   00A1 blt.un IL_002f: ldarg.0
+   00A6 ldloc.1 
+   00A7 ldfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bNum
+   00AC ldc.i4.0 
+   00AD ble IL_00d3: ret
+   00B2 ldloc.1 
+   00B3 ldloc.3 
+   00B4 stfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bFrapDiff
+   00B9 ldloc.1 
+   00BA ldarg.0 
+   00BB ldfld Assets.Scripts.Framework.FrameWindow::_svrSession
+   00C0 stfld CSProtocol.CSPKG_REQUESTFRAPBOOTSINGLE::bSession
+   00C5 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00CA ldloca.s V_0
+   00CC ldc.i4.0 
+   00CD callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   00D2 pop 
+   00D3 ret 
+== System.Void RequestTimeoutFraqBootInfo() attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4 1037
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_REQUESTFRAPBOOTTIMEOUT CSProtocol.CSPkgBody::get_stReqFrapBootTimeout()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.Framework.FrameWindow::_begFrqNo
+   001C stfld CSProtocol.CSPKG_REQUESTFRAPBOOTTIMEOUT::dwCurKFrapsNo
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_REQUESTFRAPBOOTTIMEOUT CSProtocol.CSPkgBody::get_stReqFrapBootTimeout()
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.Framework.FrameWindow::_svrSession
+   0032 stfld CSProtocol.CSPKG_REQUESTFRAPBOOTTIMEOUT::bSession
+   0037 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   003C ldloca.s V_0
+   003E ldc.i4.0 
+   003F callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0044 pop 
+   0045 ret 
+== System.Void HandleFraqBootInfo(CSProtocol.SCPKG_FRAPBOOT_SINGLE fbi) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void Assets.Scripts.Framework.GameReplayModule::CacheRecord(System.Object)
+   000B ldarg.0 
+   000C ldarg.1 
+   000D ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0017 ldfld Assets.Scripts.GameLogic.BattleLogic::startFrame
+   001C cgt.un 
+   001E call System.Void Assets.Scripts.Framework.FrameWindow::set_ValidRunning(System.Boolean)
+   0023 ldarg.0 
+   0024 call System.Boolean Assets.Scripts.Framework.FrameWindow::get_ValidRunning()
+   0029 brfalse IL_0262: ldarg.1
+   002E ldarg.1 
+   002F ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::wLen
+   0034 ldc.i4.0 
+   0035 ble IL_0251: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   003A ldc.i4.0 
+   003B stloc.0 
+   003C call CSProtocol.CSDT_FRAPBOOT_INFO CSProtocol.CSDT_FRAPBOOT_INFO::New()
+   0041 stloc.1 
+   0042 ldloc.1 
+   0043 ldarg.1 
+   0044 ldflda CSProtocol.SCPKG_FRAPBOOT_SINGLE::szInfoBuff
+   0049 ldarg.1 
+   004A ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::wLen
+   004F ldloca.s V_0
+   0051 ldc.i4.0 
+   0052 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0057 stloc.2 
+   0058 ldloc.2 
+   0059 brtrue IL_024b: ldloc.1
+   005E ldloc.0 
+   005F ldc.i4.0 
+   0060 ble IL_024b: ldloc.1
+   0065 ldc.i4.0 
+   0066 stloc.3 
+   0067 br IL_023a: ldloc.3
+   006C ldloc.1 
+   006D ldfld CSProtocol.CSDT_FRAPBOOT_INFO::astBootInfo
+   0072 ldloc.3 
+   0073 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_FRAPBOOT_DETAIL>::get_Item(System.Int32)
+   0078 stloc.s V_4
+   007A ldloc.s V_4
+   007C ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::bType
+   0081 stloc.s V_5
+   0083 ldloc.s V_5
+   0085 ldc.i4.1 
+   0086 sub 
+   0087 switch Mono.Cecil.Cil.Instruction[]
+   00C0 br IL_0231: br IL_0236
+   00C5 ldarg.1 
+   00C6 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   00CB ldloc.s V_4
+   00CD ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   00D2 callvirt CSProtocol.CSDT_FRAPBOOT_CC CSProtocol.UN_FRAPBOOT_DT::get_stCCBoot()
+   00D7 call System.Void Assets.Scripts.Framework.FrameWindow::HandleClientClientSyncCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_CC)
+   00DC br IL_0236: ldloc.3
+   00E1 ldarg.1 
+   00E2 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   00E7 ldloc.s V_4
+   00E9 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   00EE callvirt CSProtocol.CSDT_FRAPBOOT_CS CSProtocol.UN_FRAPBOOT_DT::get_stCSBoot()
+   00F3 call System.Void Assets.Scripts.Framework.FrameWindow::HandleClientServerSyncCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_CS)
+   00F8 br IL_0236: ldloc.3
+   00FD ldarg.1 
+   00FE ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0103 ldloc.s V_4
+   0105 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   010A callvirt CSProtocol.CSDT_FRAPBOOT_ACNTSTATE CSProtocol.UN_FRAPBOOT_DT::get_stAcntState()
+   010F call System.Void Assets.Scripts.Framework.FrameWindow::HandleClientStateSyncCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_ACNTSTATE)
+   0114 br IL_0236: ldloc.3
+   0119 ldarg.1 
+   011A ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   011F ldloc.s V_4
+   0121 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   0126 callvirt CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE CSProtocol.UN_FRAPBOOT_DT::get_stAssistState()
+   012B call System.Void Assets.Scripts.Framework.FrameWindow::HandleAssistChgSyncCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE)
+   0130 br IL_0236: ldloc.3
+   0135 ldarg.1 
+   0136 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   013B ldloc.s V_4
+   013D ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   0142 callvirt CSProtocol.CSDT_FRAPBOOT_AISTATE CSProtocol.UN_FRAPBOOT_DT::get_stAiState()
+   0147 call System.Void Assets.Scripts.Framework.FrameWindow::HandleAIChgSyncCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_AISTATE)
+   014C br IL_0236: ldloc.3
+   0151 ldarg.1 
+   0152 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0157 ldloc.s V_4
+   0159 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   015E callvirt CSProtocol.CSDT_FRAPBOOT_GAMEOVERNTF CSProtocol.UN_FRAPBOOT_DT::get_stGameOverNtf()
+   0163 call System.Void Assets.Scripts.Framework.FrameWindow::HandleGameOverCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_GAMEOVERNTF)
+   0168 br IL_0236: ldloc.3
+   016D ldarg.1 
+   016E ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0173 ldloc.s V_4
+   0175 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   017A callvirt CSProtocol.CSDT_FRAPBOOT_PAUSE CSProtocol.UN_FRAPBOOT_DT::get_stPause()
+   017F call System.Void Assets.Scripts.Framework.FrameWindow::HandleGamePauseCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_PAUSE)
+   0184 br IL_0236: ldloc.3
+   0189 ldarg.1 
+   018A ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   018F ldloc.s V_4
+   0191 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   0196 callvirt CSProtocol.CSDT_FRAPBOOT_CAMPSTATE CSProtocol.UN_FRAPBOOT_DT::get_stCampState()
+   019B call System.Void Assets.Scripts.Framework.FrameWindow::HandleCampStateCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_CAMPSTATE)
+   01A0 br IL_0236: ldloc.3
+   01A5 ldarg.1 
+   01A6 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   01AB ldloc.s V_4
+   01AD ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   01B2 callvirt CSProtocol.CSDT_FRAPBOOT_CAMP_SURRENDER CSProtocol.UN_FRAPBOOT_DT::get_stCampSurrender()
+   01B7 call System.Void Assets.Scripts.Framework.FrameWindow::HandleMultiCampSurrenderCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_CAMP_SURRENDER)
+   01BC br IL_0236: ldloc.3
+   01C1 ldarg.1 
+   01C2 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   01C7 ldloc.s V_4
+   01C9 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   01CE callvirt CSProtocol.CSDT_FRAPBOOT_MOVETOBORN CSProtocol.UN_FRAPBOOT_DT::get_stMoveToBorn()
+   01D3 call System.Void Assets.Scripts.Framework.FrameWindow::HandleCampTransportCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_MOVETOBORN)
+   01D8 br IL_0236: ldloc.3
+   01DD ldarg.1 
+   01DE ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   01E3 ldloc.s V_4
+   01E5 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   01EA callvirt CSProtocol.CSDT_FRAPBOOT_QUITBATTLENTF CSProtocol.UN_FRAPBOOT_DT::get_stQuitBattleNtf()
+   01EF call System.Void Assets.Scripts.Framework.FrameWindow::HandlePlayerQuitBattleCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_QUITBATTLENTF)
+   01F4 br IL_0236: ldloc.3
+   01F9 ldarg.1 
+   01FA ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   01FF ldloc.s V_4
+   0201 ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   0206 callvirt CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW CSProtocol.UN_FRAPBOOT_DT::get_stBornFollow()
+   020B call System.Void Assets.Scripts.Framework.FrameWindow::HandlePlayerBornFollowCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW)
+   0210 br IL_0236: ldloc.3
+   0215 ldarg.1 
+   0216 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   021B ldloc.s V_4
+   021D ldfld CSProtocol.CSDT_FRAPBOOT_DETAIL::stDetail
+   0222 callvirt CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF CSProtocol.UN_FRAPBOOT_DT::get_stPveObjNtf()
+   0227 call System.Void Assets.Scripts.Framework.FrameWindow::HandlePVEObjNtfCommand(System.UInt32,CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF)
+   022C br IL_0236: ldloc.3
+   0231 br IL_0236: ldloc.3
+   0236 ldloc.3 
+   0237 ldc.i4.1 
+   0238 add 
+   0239 stloc.3 
+   023A ldloc.3 
+   023B ldloc.1 
+   023C ldfld CSProtocol.CSDT_FRAPBOOT_INFO::bNum
+   0241 blt IL_006c: ldloc.1
+   0246 br IL_024b: ldloc.1
+   024B ldloc.1 
+   024C callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0251 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0256 ldarg.1 
+   0257 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   025C callvirt System.Boolean Assets.Scripts.Framework.FrameSynchr::SetKeyFrameIndex(System.UInt32)
+   0261 pop 
+   0262 ldarg.1 
+   0263 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0268 ret 
+== System.Void HandleClientClientSyncCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_CC ccSynDt) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call CSProtocol.FRAME_CMD_PKG CSProtocol.FRAME_CMD_PKG::New()
+   0007 stloc.1 
+   0008 ldloc.1 
+   0009 ldarg.1 
+   000A ldfld CSProtocol.CSDT_FRAPBOOT_CC::stSyncInfo
+   000F ldflda CSProtocol.CSDT_GAMING_CCSYNCINFO::szBuff
+   0014 ldarg.1 
+   0015 ldfld CSProtocol.CSDT_FRAPBOOT_CC::stSyncInfo
+   001A ldfld CSProtocol.CSDT_GAMING_CCSYNCINFO::wLen
+   001F ldloca.s V_0
+   0021 ldc.i4.0 
+   0022 callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0027 stloc.2 
+   0028 ldloc.2 
+   0029 brtrue IL_006a: ldc.i4.0
+   002E ldloca.s V_1
+   0030 call Assets.Scripts.Framework.FrameCommand Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand(CSProtocol.FRAME_CMD_PKG&)
+   0035 stloc.3 
+   0036 ldloc.3 
+   0037 brfalse IL_005f: ldc.i4.1
+   003C ldloc.3 
+   003D ldarg.1 
+   003E ldfld CSProtocol.CSDT_FRAPBOOT_CC::dwObjID
+   0043 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_playerID(System.UInt32)
+   0048 ldloc.3 
+   0049 ldarg.0 
+   004A callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   004F call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0054 ldloc.3 
+   0055 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   005A br IL_0065: br IL_0070
+   005F ldc.i4.1 
+   0060 call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   0065 br IL_0070: ldloc.1
+   006A ldc.i4.0 
+   006B call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   0070 ldloc.1 
+   0071 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   0076 ret 
+== System.Void HandleClientServerSyncCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_CS csSynDt) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldflda CSProtocol.CSDT_FRAPBOOT_CS::stSyncInfo
+   0006 call Assets.Scripts.Framework.FrameCommand Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommandByCSSyncInfo(CSProtocol.CSDT_GAMING_CSSYNCINFO&)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brfalse IL_0035: ldc.i4.2
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_CS::dwObjID
+   0019 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_playerID(System.UInt32)
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0025 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   002A ldloc.0 
+   002B callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0030 br IL_003b: ret
+   0035 ldc.i4.2 
+   0036 call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   003B ret 
+== System.Void HandleClientStateSyncCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_ACNTSTATE stateSyncDt) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldfld CSProtocol.CSDT_FRAPBOOT_ACNTSTATE::bStateChgType
+   0008 stloc.1 
+   0009 ldloc.1 
+   000A ldc.i4.1 
+   000B sub 
+   000C switch Mono.Cecil.Cil.Instruction[]
+   001D br IL_0043: br IL_0048
+   0022 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrReconnectCommand>()
+   0027 stloc.0 
+   0028 br IL_0048: ldloc.0
+   002D call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrDisconnectCommand>()
+   0032 stloc.0 
+   0033 br IL_0048: ldloc.0
+   0038 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrRunawayCommand>()
+   003D stloc.0 
+   003E br IL_0048: ldloc.0
+   0043 br IL_0048: ldloc.0
+   0048 ldloc.0 
+   0049 brfalse IL_0071: ldc.i4.4
+   004E ldloc.0 
+   004F ldarg.1 
+   0050 ldfld CSProtocol.CSDT_FRAPBOOT_ACNTSTATE::dwObjID
+   0055 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_playerID(System.UInt32)
+   005A ldloc.0 
+   005B ldarg.0 
+   005C callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0061 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0066 ldloc.0 
+   0067 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   006C br IL_0077: ret
+   0071 ldc.i4.4 
+   0072 call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   0077 ret 
+== System.Void HandleAssistChgSyncCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE assistChgState) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.AssistStateChgCommand>()
+   0007 stloc.1 
+   0008 ldloc.1 
+   0009 ldarg.1 
+   000A ldfld CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE::bType
+   000F stfld Assets.Scripts.GameLogic.AssistStateChgCommand::m_chgType
+   0014 ldloc.1 
+   0015 ldarg.1 
+   0016 ldfld CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE::dwAiPlayerObjID
+   001B stfld Assets.Scripts.GameLogic.AssistStateChgCommand::m_aiPlayerID
+   0020 ldloc.1 
+   0021 ldarg.1 
+   0022 ldfld CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE::dwMasterObjID
+   0027 stfld Assets.Scripts.GameLogic.AssistStateChgCommand::m_masterPlayerID
+   002C ldloc.1 
+   002D stloc.0 
+   002E ldloc.0 
+   002F brfalse IL_0057: ldc.i4.5
+   0034 ldloc.0 
+   0035 ldarg.1 
+   0036 ldfld CSProtocol.CSDT_FRAPBOOT_ASSISTSTATE::dwAiPlayerObjID
+   003B callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_playerID(System.UInt32)
+   0040 ldloc.0 
+   0041 ldarg.0 
+   0042 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0047 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   004C ldloc.0 
+   004D callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0052 br IL_005d: ret
+   0057 ldc.i4.5 
+   0058 call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   005D ret 
+== System.Void HandleAIChgSyncCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_AISTATE AIState) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.AutoAIChgCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_AISTATE::bType
+   000D stfld Assets.Scripts.GameLogic.AutoAIChgCommand::m_autoType
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_AISTATE::dwPlayerObjID
+   0019 stfld Assets.Scripts.GameLogic.AutoAIChgCommand::m_playerID
+   001E ldloc.0 
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 ldarg.1 
+   0022 ldfld CSProtocol.CSDT_FRAPBOOT_AISTATE::dwPlayerObjID
+   0027 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_playerID(System.UInt32)
+   002C ldloc.1 
+   002D ldarg.0 
+   002E callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0033 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0038 ldloc.1 
+   0039 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   003E leave IL_004f: ret
+   0043 pop 
+   0044 ldc.i4.6 
+   0045 call System.Void Assets.Scripts.Framework.FrameWindow::AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException)
+   004A leave IL_004f: ret
+   004F ret 
+== System.Void HandleGameOverCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_GAMEOVERNTF OverNtf) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrNtfGameOverCommand>()
+   0007 stloc.1 
+   0008 ldloc.1 
+   0009 ldarg.1 
+   000A ldfld CSProtocol.CSDT_FRAPBOOT_GAMEOVERNTF::bWinCamp
+   000F stfld Assets.Scripts.GameLogic.SvrNtfGameOverCommand::m_bWinCamp
+   0014 ldloc.1 
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_002e: ret
+   001C ldloc.0 
+   001D ldarg.0 
+   001E callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0023 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0028 ldloc.0 
+   0029 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   002E ret 
+== System.Void HandleGamePauseCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_PAUSE pauseNtf) attrs=Private, Static, HideBySig maxstack=5
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.PauseResumeGameCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_PAUSE::bType
+   000D stfld Assets.Scripts.GameLogic.PauseResumeGameCommand::PauseCommand
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_PAUSE::bCamp
+   0019 stfld Assets.Scripts.GameLogic.PauseResumeGameCommand::PauseByCamp
+   001E ldloc.0 
+   001F ldarg.1 
+   0020 ldfld CSProtocol.CSDT_FRAPBOOT_PAUSE::szCampPauseNum
+   0025 ldlen 
+   0026 conv.i4 
+   0027 newarr System.Byte
+   002C stfld Assets.Scripts.GameLogic.PauseResumeGameCommand::CampPauseTimes
+   0031 ldarg.1 
+   0032 ldfld CSProtocol.CSDT_FRAPBOOT_PAUSE::szCampPauseNum
+   0037 ldc.i4.0 
+   0038 ldloc.0 
+   0039 ldfld Assets.Scripts.GameLogic.PauseResumeGameCommand::CampPauseTimes
+   003E ldc.i4.0 
+   003F ldarg.1 
+   0040 ldfld CSProtocol.CSDT_FRAPBOOT_PAUSE::szCampPauseNum
+   0045 ldlen 
+   0046 conv.i4 
+   0047 call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   004C ldloc.0 
+   004D stloc.1 
+   004E ldloc.1 
+   004F brfalse IL_0066: ret
+   0054 ldloc.1 
+   0055 ldarg.0 
+   0056 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   005B call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0060 ldloc.1 
+   0061 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0066 ret 
+== System.Void HandleMultiCampSurrenderCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_CAMP_SURRENDER campSurrender) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.CampSurrenderCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_CAMP_SURRENDER::bCamp
+   000D stfld Assets.Scripts.GameLogic.CampSurrenderCommand::camp
+   0012 ldloc.0 
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 brfalse IL_002c: ret
+   001A ldloc.1 
+   001B ldarg.0 
+   001C callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0021 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0026 ldloc.1 
+   0027 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   002C ret 
+== System.Void HandleCampStateCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_CAMPSTATE campState) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.CampStateCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_CAMPSTATE::bCamp
+   000D stfld Assets.Scripts.GameLogic.CampStateCommand::camp
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_CAMPSTATE::bState
+   0019 stfld Assets.Scripts.GameLogic.CampStateCommand::state
+   001E ldloc.0 
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 brfalse IL_0038: ret
+   0026 ldloc.1 
+   0027 ldarg.0 
+   0028 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   002D call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0032 ldloc.1 
+   0033 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0038 ret 
+== System.Void HandleCampTransportCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_MOVETOBORN transportInfo) attrs=Public, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrNtfTransportCmd>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldflda Assets.Scripts.GameLogic.SvrNtfTransportCmd::destPosition
+   000C ldarg.1 
+   000D ldfld CSProtocol.CSDT_FRAPBOOT_MOVETOBORN::stPos
+   0012 ldfld CSProtocol.COMDT_POS::iPosX
+   0017 stfld VInt3::x
+   001C ldloc.0 
+   001D ldflda Assets.Scripts.GameLogic.SvrNtfTransportCmd::destPosition
+   0022 ldarg.1 
+   0023 ldfld CSProtocol.CSDT_FRAPBOOT_MOVETOBORN::stPos
+   0028 ldfld CSProtocol.COMDT_POS::iPosY
+   002D stfld VInt3::z
+   0032 ldloc.0 
+   0033 ldarg.1 
+   0034 ldfld CSProtocol.CSDT_FRAPBOOT_MOVETOBORN::dwObjID
+   0039 stfld Assets.Scripts.GameLogic.SvrNtfTransportCmd::playerId
+   003E ldloc.0 
+   003F ldarg.1 
+   0040 ldfld CSProtocol.CSDT_FRAPBOOT_MOVETOBORN::bObjType
+   0045 stfld Assets.Scripts.GameLogic.SvrNtfTransportCmd::playerType
+   004A ldloc.0 
+   004B stloc.1 
+   004C ldloc.1 
+   004D brfalse IL_0064: ret
+   0052 ldloc.1 
+   0053 ldarg.0 
+   0054 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0059 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   005E ldloc.1 
+   005F callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0064 ret 
+== System.Void HandlePVEObjNtfCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF ntf) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.PVEObjNtfCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF::dwObjID
+   000D stfld Assets.Scripts.GameLogic.PVEObjNtfCommand::m_playerId
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF::bDieOrRevive
+   0019 stfld Assets.Scripts.GameLogic.PVEObjNtfCommand::m_dieOrRevive
+   001E ldloc.0 
+   001F ldarg.1 
+   0020 ldfld CSProtocol.CSDT_FRAPBOOT_PVEOBJNTF::bCouponsReviveCnt
+   0025 stfld Assets.Scripts.GameLogic.PVEObjNtfCommand::m_CouponsReviveCnt
+   002A ldloc.0 
+   002B stloc.1 
+   002C ldloc.1 
+   002D brfalse IL_0044: ret
+   0032 ldloc.1 
+   0033 ldarg.0 
+   0034 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0039 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   003E ldloc.1 
+   003F callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0044 ret 
+== System.Void HandlePlayerQuitBattleCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_QUITBATTLENTF quitInfo) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrNtfPlayerQuitBattleCmd>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_QUITBATTLENTF::dwObjID
+   000D stfld Assets.Scripts.GameLogic.SvrNtfPlayerQuitBattleCmd::playerId
+   0012 ldloc.0 
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 brfalse IL_002c: ret
+   001A ldloc.1 
+   001B ldarg.0 
+   001C callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0021 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0026 ldloc.1 
+   0027 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   002C ret 
+== System.Void HandlePlayerBornFollowCommand(System.UInt32 dwFrqNo, CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW bornFollow) attrs=Private, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateSCSyncFrameCommand<Assets.Scripts.GameLogic.SvrNtfPlayerBornFollowCmd>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW::dwObjectID
+   000D stfld Assets.Scripts.GameLogic.SvrNtfPlayerBornFollowCmd::playerId
+   0012 ldloc.0 
+   0013 ldarg.1 
+   0014 ldfld CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW::dwFollowObjID
+   0019 stfld Assets.Scripts.GameLogic.SvrNtfPlayerBornFollowCmd::followPlayerId
+   001E ldloc.0 
+   001F ldarg.1 
+   0020 ldfld CSProtocol.CSDT_FRAPBOOT_BORNFOLLOW::bState
+   0025 stfld Assets.Scripts.GameLogic.SvrNtfPlayerBornFollowCmd::state
+   002A ldloc.0 
+   002B stloc.1 
+   002C ldloc.1 
+   002D brfalse IL_0044: ret
+   0032 ldloc.1 
+   0033 ldarg.0 
+   0034 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   0039 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   003E ldloc.1 
+   003F callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   0044 ret 
+== System.Boolean SendGameCmd(Assets.Scripts.Framework.FrameCommand cmd, System.Boolean bMultiGame, System.Boolean bAI) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   000A brfalse IL_0017: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   000F ldarg.1 
+   0010 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0015 ldc.i4.0 
+   0016 ret 
+   0017 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   001C callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0021 brfalse IL_00b5: ldc.i4.1
+   0026 ldarg.2 
+   0027 brfalse IL_009a: ldarg.1
+   002C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0031 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0036 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   003B brtrue IL_0048: ldarg.3
+   0040 ldarg.1 
+   0041 callvirt System.Void Assets.Scripts.Common.PooledClassObject::Release()
+   0046 ldc.i4.0 
+   0047 ret 
+   0048 ldarg.3 
+   0049 brfalse IL_0065: ldarg.1
+   004E ldarg.1 
+   004F ldarg.0 
+   0050 ldarg.1 
+   0051 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   0056 call System.UInt32 Assets.Scripts.Framework.FrameWindow::GetNewSendCmdSeqByPlayerId(System.UInt32)
+   005B callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_cmdId(System.UInt32)
+   0060 br IL_0071: ldarg.1
+   0065 ldarg.1 
+   0066 ldarg.0 
+   0067 call System.UInt32 Assets.Scripts.Framework.FrameWindow::get_NewSendCmdSeq()
+   006C callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_cmdId(System.UInt32)
+   0071 ldarg.1 
+   0072 call System.Int32 UnityEngine.Time::get_frameCount()
+   0077 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   007C ldarg.1 
+   007D ldc.i4.0 
+   007E callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_sendCnt(System.Byte)
+   0083 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0088 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   008D ldarga.s cmd
+   008F ldarg.3 
+   0090 callvirt System.Void Assets.Scripts.Framework.GameConnector::ImmeSendCmd(Assets.Scripts.Framework.FrameCommand&,System.Boolean)
+   0095 br IL_00b5: ldc.i4.1
+   009A ldarg.1 
+   009B call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00A0 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   00A5 callvirt System.Void Assets.Scripts.Framework.FrameCommand::set_frameNum(System.UInt32)
+   00AA call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00AF ldarg.1 
+   00B0 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::PushFrameCommand(Assets.Scripts.Framework.FrameCommand)
+   00B5 ldc.i4.1 
+   00B6 ret 
+== System.Void ResetFrameCommandExceptionCounts() attrs=Private, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0013: ldloc.0
+   0007 ldsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   000C ldloc.0 
+   000D ldc.i4.0 
+   000E stelem.i4 
+   000F ldloc.0 
+   0010 ldc.i4.1 
+   0011 add 
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 ldc.i4.7 
+   0015 blt IL_0007: ldsfld System.Int32[] Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   001A ret 
+== System.Void AddFrameCommandExceptionCount(Assets.Scripts.Framework.FrameWindow/enFrameCommandException frameCommandException) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   0005 ldarg.0 
+   0006 ldelema System.Int32
+   000B dup 
+   000C ldind.i4 
+   000D ldc.i4.1 
+   000E add 
+   000F stind.i4 
+   0010 ret 
+== System.Void ReportFrameCommandExceptionCounts() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 br IL_0067: ldloc.1
+   000D ldsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   0012 ldloc.1 
+   0013 ldelem.i4 
+   0014 ldc.i4.0 
+   0015 ble IL_0063: ldloc.1
+   001A ldc.i4.5 
+   001B newarr System.Object
+   0020 dup 
+   0021 ldc.i4.0 
+   0022 ldloc.0 
+   0023 stelem.ref 
+   0024 dup 
+   0025 ldc.i4.1 
+   0026 ldstr _
+   002B stelem.ref 
+   002C dup 
+   002D ldc.i4.2 
+   002E ldloc.1 
+   002F stloc.2 
+   0030 ldloca.s V_2
+   0032 constrained. Assets.Scripts.Framework.FrameWindow/enFrameCommandException
+   0038 callvirt System.String System.Object::ToString()
+   003D stelem.ref 
+   003E dup 
+   003F ldc.i4.3 
+   0040 ldstr *
+   0045 stelem.ref 
+   0046 dup 
+   0047 ldc.i4.4 
+   0048 ldsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   004D ldloc.1 
+   004E ldelem.i4 
+   004F box System.Int32
+   0054 stelem.ref 
+   0055 call System.String System.String::Concat(System.Object[])
+   005A stloc.0 
+   005B ldsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   0060 ldloc.1 
+   0061 ldc.i4.0 
+   0062 stelem.i4 
+   0063 ldloc.1 
+   0064 ldc.i4.1 
+   0065 add 
+   0066 stloc.1 
+   0067 ldloc.1 
+   0068 ldc.i4.7 
+   0069 blt IL_000d: ldsfld System.Int32[] Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   006E ldloc.0 
+   006F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0074 brtrue IL_0089: ret
+   0079 call !0 Singleton`1<BeaconHelper>::GetInstance()
+   007E ldstr FrameCommandException
+   0083 ldloc.0 
+   0084 callvirt System.Void BeaconHelper::Event_CommonReport(System.String,System.String)
+   0089 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.7 
+   0001 newarr System.Int32
+   0006 stsfld Assets.Scripts.Framework.FrameWindow::_frameCommandExceptionCounts
+   000B ret 
+  NESTED Assets.Scripts.Framework.FrameWindow/enFrameCommandException

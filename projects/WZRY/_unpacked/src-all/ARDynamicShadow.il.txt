@@ -1,0 +1,554 @@
+// TYPE ARDynamicShadow  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Camera depthCam_
+  FIELD UnityEngine.RenderTexture[] depthTextures_
+  FIELD UnityEngine.Shader depthShader_
+  FIELD System.Int32 shadowSize
+  FIELD System.Boolean useDepthTex
+  FIELD System.Boolean supportShadow
+  FIELD System.Single ShadowIntensity
+  FIELD UnityEngine.LayerMask ShadowCastersMask
+  FIELD UnityEngine.GameObject HeroParent
+  FIELD UnityEngine.Vector3 LookingDirection
+  FIELD System.Single nearPlane
+  FIELD System.Single farPlane
+  FIELD ListView`1<ARDynamicShadow> shadowList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 1024
+   0006 stfld ARDynamicShadow::shadowSize
+   000B ldarg.0 
+   000C ldc.r4 0.5
+   0011 stfld ARDynamicShadow::ShadowIntensity
+   0016 ldarg.0 
+   0017 ldc.i4.m1 
+   0018 call UnityEngine.LayerMask UnityEngine.LayerMask::op_Implicit(System.Int32)
+   001D stfld ARDynamicShadow::ShadowCastersMask
+   0022 ldarg.0 
+   0023 ldc.r4 1.3
+   0028 stfld ARDynamicShadow::nearPlane
+   002D ldarg.0 
+   002E ldc.r4 1.7
+   0033 stfld ARDynamicShadow::farPlane
+   0038 ldarg.0 
+   0039 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   003E ret 
+== System.Boolean SupportHighpFloat() attrs=Private, HideBySig maxstack=2
+   0000 call System.String UnityEngine.SystemInfo::get_graphicsDeviceName()
+   0005 callvirt System.String System.String::ToLower()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldstr adreno
+   0011 callvirt System.Boolean System.String::Contains(System.String)
+   0016 brfalse IL_001d: ldloc.0
+   001B ldc.i4.1 
+   001C ret 
+   001D ldloc.0 
+   001E ldstr powervr
+   0023 callvirt System.Boolean System.String::Contains(System.String)
+   0028 brtrue IL_003d: ldc.i4.1
+   002D ldloc.0 
+   002E ldstr sgx
+   0033 callvirt System.Boolean System.String::Contains(System.String)
+   0038 brfalse IL_003f: ldloc.0
+   003D ldc.i4.1 
+   003E ret 
+   003F ldloc.0 
+   0040 ldstr nvidia
+   0045 callvirt System.Boolean System.String::Contains(System.String)
+   004A brtrue IL_005f: ldc.i4.1
+   004F ldloc.0 
+   0050 ldstr tegra
+   0055 callvirt System.Boolean System.String::Contains(System.String)
+   005A brfalse IL_0061: ldloc.0
+   005F ldc.i4.1 
+   0060 ret 
+   0061 ldloc.0 
+   0062 ldstr mali
+   0067 callvirt System.Boolean System.String::Contains(System.String)
+   006C brtrue IL_0081: ldc.i4.1
+   0071 ldloc.0 
+   0072 ldstr arm
+   0077 callvirt System.Boolean System.String::Contains(System.String)
+   007C brfalse IL_0083: ldc.i4.0
+   0081 ldc.i4.1 
+   0082 ret 
+   0083 ldc.i4.0 
+   0084 ret 
+== System.Boolean SupportRGBABilinear() attrs=Private, HideBySig maxstack=2
+   0000 call System.String UnityEngine.SystemInfo::get_graphicsDeviceName()
+   0005 callvirt System.String System.String::ToLower()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldstr adreno
+   0011 callvirt System.Boolean System.String::Contains(System.String)
+   0016 brfalse IL_001d: ldloc.0
+   001B ldc.i4.1 
+   001C ret 
+   001D ldloc.0 
+   001E ldstr powervr
+   0023 callvirt System.Boolean System.String::Contains(System.String)
+   0028 brtrue IL_003d: ldc.i4.0
+   002D ldloc.0 
+   002E ldstr sgx
+   0033 callvirt System.Boolean System.String::Contains(System.String)
+   0038 brfalse IL_003f: ldloc.0
+   003D ldc.i4.0 
+   003E ret 
+   003F ldloc.0 
+   0040 ldstr nvidia
+   0045 callvirt System.Boolean System.String::Contains(System.String)
+   004A brtrue IL_005f: ldc.i4.0
+   004F ldloc.0 
+   0050 ldstr tegra
+   0055 callvirt System.Boolean System.String::Contains(System.String)
+   005A brfalse IL_0061: ldloc.0
+   005F ldc.i4.0 
+   0060 ret 
+   0061 ldloc.0 
+   0062 ldstr mali
+   0067 callvirt System.Boolean System.String::Contains(System.String)
+   006C brtrue IL_0081: ldc.i4.1
+   0071 ldloc.0 
+   0072 ldstr arm
+   0077 callvirt System.Boolean System.String::Contains(System.String)
+   007C brfalse IL_0083: ldc.i4.0
+   0081 ldc.i4.1 
+   0082 ret 
+   0083 ldc.i4.0 
+   0084 ret 
+== System.Void InitDefaultGlobalVariables() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldstr _ARShadowParams
+   0005 ldc.r4 -0.48625442
+   000A ldc.r4 -0.27075738
+   000F ldc.r4 0.8308111
+   0014 ldc.r4 0.5
+   0019 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   001E call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0023 ldstr _SGameShadowParams
+   0028 ldc.r4 -0.48625442
+   002D ldc.r4 -0.27075738
+   0032 ldc.r4 0.8308111
+   0037 ldc.r4 0.5
+   003C newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0041 call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0046 ldstr _ARShadowTexture
+   004B ldnull 
+   004C call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0051 ret 
+== System.Void EnableDynamicShow(UnityEngine.GameObject go, System.Boolean enable) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E callvirt !!0[] UnityEngine.GameObject::GetComponentsInChildren<ARDynamicShadow>()
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 brfalse IL_0022: ret
+   001A ldloc.0 
+   001B ldlen 
+   001C conv.i4 
+   001D brtrue IL_0023: ldc.i4.0
+   0022 ret 
+   0023 ldc.i4.0 
+   0024 stloc.1 
+   0025 br IL_0070: ldloc.1
+   002A ldloc.0 
+   002B ldloc.1 
+   002C ldelem.ref 
+   002D stloc.2 
+   002E ldarg.1 
+   002F brfalse IL_005a: ldloc.2
+   0034 ldloc.2 
+   0035 callvirt System.Void ARDynamicShadow::InitShadow()
+   003A ldsfld ARDynamicShadow::shadowList
+   003F ldloc.2 
+   0040 callvirt System.Boolean ListView`1<ARDynamicShadow>::Contains(!0)
+   0045 brtrue IL_0055: br IL_006c
+   004A ldsfld ARDynamicShadow::shadowList
+   004F ldloc.2 
+   0050 callvirt System.Void ListView`1<ARDynamicShadow>::Add(!0)
+   0055 br IL_006c: ldloc.1
+   005A ldloc.2 
+   005B callvirt System.Void ARDynamicShadow::CloseShadow()
+   0060 ldsfld ARDynamicShadow::shadowList
+   0065 ldloc.2 
+   0066 callvirt System.Boolean ListView`1<ARDynamicShadow>::Remove(!0)
+   006B pop 
+   006C ldloc.1 
+   006D ldc.i4.1 
+   006E add 
+   006F stloc.1 
+   0070 ldloc.1 
+   0071 ldloc.0 
+   0072 ldlen 
+   0073 conv.i4 
+   0074 blt IL_002a: ldloc.0
+   0079 ldarg.1 
+   007A brfalse IL_0084: ldsfld ListView`1<ARDynamicShadow> ARDynamicShadow::shadowList
+   007F br IL_0093: ret
+   0084 ldsfld ARDynamicShadow::shadowList
+   0089 callvirt System.Int32 ListViewBase::get_Count()
+   008E brtrue IL_0093: ret
+   0093 ret 
+== System.Void DisableAllDynamicShadows() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0028: ldloc.0
+   0007 ldsfld ARDynamicShadow::shadowList
+   000C ldloc.0 
+   000D callvirt !0 ListView`1<ARDynamicShadow>::get_Item(System.Int32)
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0019 brfalse IL_0024: ldloc.0
+   001E ldloc.1 
+   001F callvirt System.Void ARDynamicShadow::CloseShadow()
+   0024 ldloc.0 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldsfld ARDynamicShadow::shadowList
+   002E callvirt System.Int32 ListViewBase::get_Count()
+   0033 blt IL_0007: ldsfld ListView`1<ARDynamicShadow> ARDynamicShadow::shadowList
+   0038 ldsfld ARDynamicShadow::shadowList
+   003D callvirt System.Void ListViewBase::Clear()
+   0042 ret 
+== System.Void InitShadow() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ARDynamicShadow::depthTextures_
+   0006 brfalse IL_000c: ldstr "_SGAME_HIGH_QUALITY_SHADOW_ON"
+   000B ret 
+   000C ldstr _SGAME_HIGH_QUALITY_SHADOW_ON
+   0011 call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   0016 ldarg.0 
+   0017 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001C ldstr Shaders/Shadow/ShadowDepth
+   0021 ldtoken UnityEngine.Shader
+   0026 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   002B ldc.i4.0 
+   002C ldc.i4.1 
+   002D ldc.i4.1 
+   002E ldc.i4.0 
+   002F callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0034 ldfld CResource::m_content
+   0039 isinst UnityEngine.Shader
+   003E stfld ARDynamicShadow::depthShader_
+   0043 ldarg.0 
+   0044 ldc.i4.0 
+   0045 stfld ARDynamicShadow::useDepthTex
+   004A ldarg.0 
+   004B ldc.i4.0 
+   004C stfld ARDynamicShadow::supportShadow
+   0051 ldc.i4.0 
+   0052 stloc.0 
+   0053 ldarg.0 
+   0054 ldc.i4.1 
+   0055 stfld ARDynamicShadow::supportShadow
+   005A ldc.i4.1 
+   005B stloc.0 
+   005C ldarg.0 
+   005D ldfld ARDynamicShadow::supportShadow
+   0062 brfalse IL_006c: ret
+   0067 br IL_006d: ldarg.0
+   006C ret 
+   006D ldarg.0 
+   006E ldfld ARDynamicShadow::useDepthTex
+   0073 brfalse IL_007e: ldc.i4.0
+   0078 ldc.i4.1 
+   0079 br IL_007f: stloc.1
+   007E ldc.i4.0 
+   007F stloc.1 
+   0080 ldarg.0 
+   0081 ldloc.0 
+   0082 newarr UnityEngine.RenderTexture
+   0087 stfld ARDynamicShadow::depthTextures_
+   008C ldarg.0 
+   008D call System.Boolean ARDynamicShadow::SupportRGBABilinear()
+   0092 stloc.2 
+   0093 ldc.i4.0 
+   0094 stloc.3 
+   0095 br IL_00e3: ldloc.3
+   009A ldarg.0 
+   009B ldfld ARDynamicShadow::depthTextures_
+   00A0 ldloc.3 
+   00A1 ldarg.0 
+   00A2 ldfld ARDynamicShadow::shadowSize
+   00A7 ldarg.0 
+   00A8 ldfld ARDynamicShadow::shadowSize
+   00AD ldc.i4.s 24
+   00AF ldloc.1 
+   00B0 ldc.i4.0 
+   00B1 newobj System.Void UnityEngine.RenderTexture::.ctor(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat,UnityEngine.RenderTextureReadWrite)
+   00B6 stelem.ref 
+   00B7 ldarg.0 
+   00B8 ldfld ARDynamicShadow::depthTextures_
+   00BD ldloc.3 
+   00BE ldelem.ref 
+   00BF ldc.i4.0 
+   00C0 callvirt System.Void UnityEngine.RenderTexture::set_autoGenerateMips(System.Boolean)
+   00C5 ldarg.0 
+   00C6 ldfld ARDynamicShadow::depthTextures_
+   00CB ldloc.3 
+   00CC ldelem.ref 
+   00CD ldloc.2 
+   00CE brfalse IL_00d9: ldc.i4.0
+   00D3 ldc.i4.1 
+   00D4 br IL_00da: callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   00D9 ldc.i4.0 
+   00DA callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   00DF ldloc.3 
+   00E0 ldc.i4.1 
+   00E1 add 
+   00E2 stloc.3 
+   00E3 ldloc.3 
+   00E4 ldarg.0 
+   00E5 ldfld ARDynamicShadow::depthTextures_
+   00EA ldlen 
+   00EB conv.i4 
+   00EC blt IL_009a: ldarg.0
+   00F1 ldarg.0 
+   00F2 ldarg.0 
+   00F3 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   00F8 stfld ARDynamicShadow::depthCam_
+   00FD ldarg.0 
+   00FE ldfld ARDynamicShadow::depthCam_
+   0103 ldnull 
+   0104 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0109 brfalse IL_0143: ldarg.0
+   010E ldarg.0 
+   010F ldarg.0 
+   0110 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0115 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.Camera>()
+   011A stfld ARDynamicShadow::depthCam_
+   011F ldarg.0 
+   0120 ldfld ARDynamicShadow::depthCam_
+   0125 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   012A ldc.r4 0
+   012F ldc.r4 0
+   0134 ldc.r4 -5
+   0139 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   013E callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0143 ldarg.0 
+   0144 ldfld ARDynamicShadow::depthCam_
+   0149 ldc.i4.1 
+   014A callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   014F ldarg.0 
+   0150 ldfld ARDynamicShadow::depthCam_
+   0155 ldarg.0 
+   0156 ldfld ARDynamicShadow::depthTextures_
+   015B ldc.i4.0 
+   015C ldelem.ref 
+   015D callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   0162 ldarg.0 
+   0163 ldfld ARDynamicShadow::depthCam_
+   0168 ldc.r4 -50
+   016D callvirt System.Void UnityEngine.Camera::set_depth(System.Single)
+   0172 ldarg.0 
+   0173 ldfld ARDynamicShadow::depthCam_
+   0178 ldarg.0 
+   0179 ldfld ARDynamicShadow::farPlane
+   017E callvirt System.Void UnityEngine.Camera::set_farClipPlane(System.Single)
+   0183 ldarg.0 
+   0184 ldfld ARDynamicShadow::depthCam_
+   0189 ldarg.0 
+   018A ldfld ARDynamicShadow::nearPlane
+   018F callvirt System.Void UnityEngine.Camera::set_nearClipPlane(System.Single)
+   0194 ldarg.0 
+   0195 ldfld ARDynamicShadow::depthCam_
+   019A ldc.r4 1
+   019F ldc.r4 1
+   01A4 ldc.r4 1
+   01A9 ldc.r4 1
+   01AE newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   01B3 callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   01B8 ldarg.0 
+   01B9 ldfld ARDynamicShadow::depthCam_
+   01BE ldarg.0 
+   01BF ldfld ARDynamicShadow::ShadowCastersMask
+   01C4 call System.Int32 UnityEngine.LayerMask::op_Implicit(UnityEngine.LayerMask)
+   01C9 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   01CE ldarg.0 
+   01CF ldfld ARDynamicShadow::depthCam_
+   01D4 ldc.i4.2 
+   01D5 callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   01DA ldarg.0 
+   01DB ldfld ARDynamicShadow::depthCam_
+   01E0 ldarg.0 
+   01E1 ldfld ARDynamicShadow::depthShader_
+   01E6 ldstr RenderType
+   01EB callvirt System.Void UnityEngine.Camera::SetReplacementShader(UnityEngine.Shader,System.String)
+   01F0 ret 
+== System.Void CloseShadow() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld ARDynamicShadow::depthTextures_
+   0006 brfalse IL_003a: ldarg.0
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_002c: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld ARDynamicShadow::depthTextures_
+   0018 ldloc.0 
+   0019 ldelem.ref 
+   001A callvirt System.Void UnityEngine.RenderTexture::Release()
+   001F ldarg.0 
+   0020 ldfld ARDynamicShadow::depthTextures_
+   0025 ldloc.0 
+   0026 ldnull 
+   0027 stelem.ref 
+   0028 ldloc.0 
+   0029 ldc.i4.1 
+   002A add 
+   002B stloc.0 
+   002C ldloc.0 
+   002D ldarg.0 
+   002E ldfld ARDynamicShadow::depthTextures_
+   0033 ldlen 
+   0034 conv.i4 
+   0035 blt IL_0012: ldarg.0
+   003A ldarg.0 
+   003B ldnull 
+   003C stfld ARDynamicShadow::depthTextures_
+   0041 ldarg.0 
+   0042 ldfld ARDynamicShadow::depthCam_
+   0047 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004C brfalse IL_005d: ldarg.0
+   0051 ldarg.0 
+   0052 ldfld ARDynamicShadow::depthCam_
+   0057 ldc.i4.0 
+   0058 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   005D ldarg.0 
+   005E ldnull 
+   005F stfld ARDynamicShadow::depthCam_
+   0064 ldstr _ARShadowTexture
+   0069 ldnull 
+   006A call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   006F ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void ARDynamicShadow::InitShadow()
+   0006 ret 
+== System.Void LateUpdate() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld ARDynamicShadow::depthCam_
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0027: ret
+   0011 ldarg.0 
+   0012 ldfld ARDynamicShadow::depthTextures_
+   0017 brfalse IL_0027: ret
+   001C ldarg.0 
+   001D ldfld ARDynamicShadow::supportShadow
+   0022 brtrue IL_0028: ldarg.0
+   0027 ret 
+   0028 ldarg.0 
+   0029 ldfld ARDynamicShadow::HeroParent
+   002E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.BoxCollider>()
+   0033 stloc.0 
+   0034 ldc.r4 0
+   0039 stloc.1 
+   003A ldloc.0 
+   003B call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0040 brfalse IL_005a: ldarg.0
+   0045 ldloc.0 
+   0046 callvirt UnityEngine.Vector3 UnityEngine.BoxCollider::get_size()
+   004B stloc.2 
+   004C ldloca.s V_2
+   004E ldfld UnityEngine.Vector3::y
+   0053 ldc.r4 0.5
+   0058 mul 
+   0059 stloc.1 
+   005A ldarg.0 
+   005B ldflda ARDynamicShadow::LookingDirection
+   0060 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0065 stloc.3 
+   0066 ldarg.0 
+   0067 ldfld ARDynamicShadow::depthCam_
+   006C callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0071 ldarg.0 
+   0072 ldfld ARDynamicShadow::HeroParent
+   0077 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0081 ldc.r4 0
+   0086 ldloc.1 
+   0087 ldc.r4 0
+   008C newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0091 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0096 ldloc.3 
+   0097 ldarg.0 
+   0098 ldfld ARDynamicShadow::nearPlane
+   009D ldarg.0 
+   009E ldfld ARDynamicShadow::farPlane
+   00A3 add 
+   00A4 ldc.r4 0.5
+   00A9 mul 
+   00AA call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   00AF call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   00B4 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00B9 ldarg.0 
+   00BA ldfld ARDynamicShadow::depthCam_
+   00BF callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00C4 ldloc.3 
+   00C5 callvirt System.Void UnityEngine.Transform::set_forward(UnityEngine.Vector3)
+   00CA ldarg.0 
+   00CB ldfld ARDynamicShadow::depthCam_
+   00D0 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   00D5 ldc.i4.0 
+   00D6 call UnityEngine.Matrix4x4 UnityEngine.GL::GetGPUProjectionMatrix(UnityEngine.Matrix4x4,System.Boolean)
+   00DB stloc.s V_4
+   00DD ldloc.s V_4
+   00DF ldarg.0 
+   00E0 ldfld ARDynamicShadow::depthCam_
+   00E5 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   00EA call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   00EF stloc.s V_4
+   00F1 ldloc.3 
+   00F2 ldarg.0 
+   00F3 ldfld ARDynamicShadow::ShadowIntensity
+   00F8 call UnityEngine.Vector4 MMGame_Math::toVec4(UnityEngine.Vector3,System.Single)
+   00FD stloc.s V_5
+   00FF ldstr _ARShadowMatrix
+   0104 ldloc.s V_4
+   0106 call System.Void UnityEngine.Shader::SetGlobalMatrix(System.String,UnityEngine.Matrix4x4)
+   010B ldstr _ARShadowParams
+   0110 ldloc.s V_5
+   0112 call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0117 ldstr _SGameShadowParams
+   011C ldloc.s V_5
+   011E call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0123 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void ARDynamicShadow::CloseShadow()
+   0006 ret 
+== System.Void OnPreRender() attrs=Private, HideBySig maxstack=8
+   0000 ldstr _ARShadowTexture
+   0005 ldnull 
+   0006 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   000B ret 
+== System.Void OnPostRender() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ARDynamicShadow::depthCam_
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0027: ret
+   0011 ldarg.0 
+   0012 ldfld ARDynamicShadow::depthTextures_
+   0017 brfalse IL_0027: ret
+   001C ldarg.0 
+   001D ldfld ARDynamicShadow::supportShadow
+   0022 brtrue IL_0028: ldstr "_ARShadowTexture"
+   0027 ret 
+   0028 ldstr _ARShadowTexture
+   002D ldarg.0 
+   002E ldfld ARDynamicShadow::depthTextures_
+   0033 ldc.i4.0 
+   0034 ldelem.ref 
+   0035 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   003A ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void ListView`1<ARDynamicShadow>::.ctor()
+   0005 stsfld ARDynamicShadow::shadowList
+   000A ret 

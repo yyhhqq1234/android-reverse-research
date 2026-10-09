@@ -1,0 +1,681 @@
+// TYPE New_ShadowMapping  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Single editorOrthoSize
+  FIELD System.Int32 m_ShadowSize
+  FIELD UnityEngine.LayerMask ShadowCastersMask
+  FIELD UnityEngine.RenderTexture m_RTShadow
+  FIELD UnityEngine.Shader m_SdrShadow
+  FIELD UnityEngine.Camera m_CamShadow
+  FIELD UnityEngine.Transform m_Transform
+  FIELD System.Single SMCacheRange
+  FIELD System.Int32 SMShiftRangeFactor = 8
+  FIELD UnityEngine.Vector2 SMSnappedCenter
+  FIELD VInt2 SMSnappedCenterIndex
+  FIELD UnityEngine.Vector3 SMShadowDirection
+  FIELD UnityEngine.Vector3 SMSnappedShadowPosition
+  FIELD UnityEngine.Matrix4x4 SMShadowMatrix
+  FIELD System.Boolean bSMCacheForceUpdate
+  FIELD UnityEngine.Vector2 SMCachedBoundsMin
+  FIELD UnityEngine.Vector2 SMCachedBoundsMax
+  FIELD New_ShadowMapping Instance
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldc.r4 50
+   0006 stfld New_ShadowMapping::editorOrthoSize
+   000B ldarg.0 
+   000C ldc.i4 1024
+   0011 stfld New_ShadowMapping::m_ShadowSize
+   0016 ldarg.0 
+   0017 ldc.i4.m1 
+   0018 call UnityEngine.LayerMask UnityEngine.LayerMask::op_Implicit(System.Int32)
+   001D stfld New_ShadowMapping::ShadowCastersMask
+   0022 ldarg.0 
+   0023 ldc.r4 64
+   0028 stfld New_ShadowMapping::SMCacheRange
+   002D ldarg.0 
+   002E ldc.r4 0
+   0033 ldc.r4 0
+   0038 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   003D stfld New_ShadowMapping::SMSnappedCenter
+   0042 ldarg.0 
+   0043 ldc.i4.0 
+   0044 ldc.i4.0 
+   0045 newobj System.Void VInt2::.ctor(System.Int32,System.Int32)
+   004A stfld New_ShadowMapping::SMSnappedCenterIndex
+   004F ldarg.0 
+   0050 ldc.r4 0
+   0055 ldc.r4 0
+   005A ldc.r4 0
+   005F newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0064 stfld New_ShadowMapping::SMSnappedShadowPosition
+   0069 ldarg.0 
+   006A call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_identity()
+   006F stfld New_ShadowMapping::SMShadowMatrix
+   0074 ldarg.0 
+   0075 ldc.r4 0
+   007A ldc.r4 0
+   007F newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0084 stfld New_ShadowMapping::SMCachedBoundsMin
+   0089 ldarg.0 
+   008A ldc.r4 0
+   008F ldc.r4 0
+   0094 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0099 stfld New_ShadowMapping::SMCachedBoundsMax
+   009E ldarg.0 
+   009F call System.Void UnityEngine.MonoBehaviour::.ctor()
+   00A4 ret 
+== System.Void InitShadow() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld New_ShadowMapping::m_RTShadow
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0018 ldstr Shaders/Shadow/New_ShadowMapping.shader
+   001D ldtoken UnityEngine.Shader
+   0022 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0027 ldc.i4.0 
+   0028 ldc.i4.1 
+   0029 ldc.i4.1 
+   002A ldc.i4.0 
+   002B callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0030 ldfld CResource::m_content
+   0035 isinst UnityEngine.Shader
+   003A stfld New_ShadowMapping::m_SdrShadow
+   003F ldarg.0 
+   0040 ldarg.0 
+   0041 ldfld New_ShadowMapping::m_ShadowSize
+   0046 ldarg.0 
+   0047 ldfld New_ShadowMapping::m_ShadowSize
+   004C ldc.i4.s 24
+   004E ldc.i4.0 
+   004F newobj System.Void UnityEngine.RenderTexture::.ctor(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0054 stfld New_ShadowMapping::m_RTShadow
+   0059 ldarg.0 
+   005A ldfld New_ShadowMapping::m_RTShadow
+   005F ldc.i4.0 
+   0060 callvirt System.Void UnityEngine.RenderTexture::set_autoGenerateMips(System.Boolean)
+   0065 ldarg.0 
+   0066 ldfld New_ShadowMapping::m_RTShadow
+   006B ldc.i4.0 
+   006C callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   0071 ldarg.0 
+   0072 ldfld New_ShadowMapping::m_RTShadow
+   0077 ldstr Shadow
+   007C callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0081 ldarg.0 
+   0082 ldarg.0 
+   0083 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   0088 stfld New_ShadowMapping::m_CamShadow
+   008D ldarg.0 
+   008E ldfld New_ShadowMapping::m_CamShadow
+   0093 ldnull 
+   0094 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0099 brfalse IL_00af: ldarg.0
+   009E ldarg.0 
+   009F ldarg.0 
+   00A0 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A5 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.Camera>()
+   00AA stfld New_ShadowMapping::m_CamShadow
+   00AF ldarg.0 
+   00B0 ldfld New_ShadowMapping::m_CamShadow
+   00B5 ldc.i4.1 
+   00B6 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   00BB ldarg.0 
+   00BC ldfld New_ShadowMapping::m_CamShadow
+   00C1 ldarg.0 
+   00C2 ldfld New_ShadowMapping::m_RTShadow
+   00C7 callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   00CC ldarg.0 
+   00CD ldfld New_ShadowMapping::m_CamShadow
+   00D2 ldc.r4 -1
+   00D7 callvirt System.Void UnityEngine.Camera::set_depth(System.Single)
+   00DC ldarg.0 
+   00DD ldfld New_ShadowMapping::m_CamShadow
+   00E2 ldc.r4 1
+   00E7 ldc.r4 1
+   00EC ldc.r4 1
+   00F1 ldc.r4 1
+   00F6 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00FB callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   0100 ldarg.0 
+   0101 ldfld New_ShadowMapping::m_CamShadow
+   0106 ldarg.0 
+   0107 ldfld New_ShadowMapping::ShadowCastersMask
+   010C call System.Int32 UnityEngine.LayerMask::op_Implicit(UnityEngine.LayerMask)
+   0111 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0116 ldarg.0 
+   0117 ldfld New_ShadowMapping::m_CamShadow
+   011C ldc.i4.2 
+   011D callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   0122 ldarg.0 
+   0123 ldfld New_ShadowMapping::m_CamShadow
+   0128 ldarg.0 
+   0129 ldfld New_ShadowMapping::m_SdrShadow
+   012E ldsfld System.String::Empty
+   0133 callvirt System.Void UnityEngine.Camera::SetReplacementShader(UnityEngine.Shader,System.String)
+   0138 ldarg.0 
+   0139 ldfld New_ShadowMapping::m_CamShadow
+   013E ldc.i4.0 
+   013F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0144 ldarg.0 
+   0145 stsfld New_ShadowMapping::Instance
+   014A ret 
+== System.Void CloseShadow() attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stsfld New_ShadowMapping::Instance
+   0006 ldarg.0 
+   0007 ldfld New_ShadowMapping::m_RTShadow
+   000C call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0011 brfalse IL_0028: ldarg.0
+   0016 ldarg.0 
+   0017 ldfld New_ShadowMapping::m_RTShadow
+   001C callvirt System.Void UnityEngine.RenderTexture::Release()
+   0021 ldarg.0 
+   0022 ldnull 
+   0023 stfld New_ShadowMapping::m_RTShadow
+   0028 ldarg.0 
+   0029 ldfld New_ShadowMapping::m_CamShadow
+   002E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0033 brfalse IL_004b: ldstr "_PST_Global_ShadowTex"
+   0038 ldarg.0 
+   0039 ldfld New_ShadowMapping::m_CamShadow
+   003E ldc.i4.0 
+   003F callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0044 ldarg.0 
+   0045 ldnull 
+   0046 stfld New_ShadowMapping::m_CamShadow
+   004B ldstr _PST_Global_ShadowTex
+   0050 ldnull 
+   0051 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0056 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=2
+   0000 ldstr Global_Use_SphericalLight
+   0005 call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   000A ldstr _Global_DirLight
+   000F ldarg.0 
+   0010 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0015 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   001A call UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+   001F call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   0024 call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0029 call System.Boolean Assets.Scripts.Framework.GameSettings::get_IsHighQuality()
+   002E brtrue IL_0044: ldstr "Global_Use_ShadowMapping"
+   0033 ldstr Global_Use_ShadowMapping
+   0038 call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   003D ldarg.0 
+   003E call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0043 ret 
+   0044 ldstr Global_Use_ShadowMapping
+   0049 call System.Void UnityEngine.Shader::EnableKeyword(System.String)
+   004E ldstr _PST_Global_ShadowTex
+   0053 ldnull 
+   0054 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0059 ldarg.0 
+   005A call System.Void New_ShadowMapping::InitShadow()
+   005F ldarg.0 
+   0060 ldarg.0 
+   0061 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Transform>()
+   0066 stfld New_ShadowMapping::m_Transform
+   006B ldarg.0 
+   006C ldarg.0 
+   006D ldfld New_ShadowMapping::m_Transform
+   0072 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0077 call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   007C stfld New_ShadowMapping::SMSnappedCenter
+   0081 ldarg.0 
+   0082 ldarg.0 
+   0083 ldfld New_ShadowMapping::m_Transform
+   0088 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   008D stfld New_ShadowMapping::SMShadowDirection
+   0092 ret 
+== UnityEngine.Matrix4x4 StabilizeShadowProj(UnityEngine.Matrix4x4 proj, UnityEngine.Matrix4x4 view) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldc.r4 0
+   000F ldc.r4 0
+   0014 ldc.r4 0
+   0019 ldc.r4 1
+   001E call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0023 ldloc.0 
+   0024 ldloc.1 
+   0025 call UnityEngine.Vector4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Vector4)
+   002A stloc.1 
+   002B ldloc.1 
+   002C ldc.r4 0.5
+   0031 call UnityEngine.Vector4 UnityEngine.Vector4::op_Multiply(UnityEngine.Vector4,System.Single)
+   0036 ldarg.0 
+   0037 ldfld New_ShadowMapping::m_ShadowSize
+   003C conv.r4 
+   003D call UnityEngine.Vector4 UnityEngine.Vector4::op_Multiply(UnityEngine.Vector4,System.Single)
+   0042 stloc.1 
+   0043 ldloca.s V_2
+   0045 ldloca.s V_1
+   0047 ldfld UnityEngine.Vector4::x
+   004C call System.Single UnityEngine.Mathf::Round(System.Single)
+   0051 ldloca.s V_1
+   0053 ldfld UnityEngine.Vector4::y
+   0058 call System.Single UnityEngine.Mathf::Round(System.Single)
+   005D ldloca.s V_1
+   005F ldfld UnityEngine.Vector4::z
+   0064 call System.Single UnityEngine.Mathf::Round(System.Single)
+   0069 ldc.r4 1
+   006E call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0073 ldloc.2 
+   0074 ldloc.1 
+   0075 call UnityEngine.Vector4 UnityEngine.Vector4::op_Subtraction(UnityEngine.Vector4,UnityEngine.Vector4)
+   007A stloc.3 
+   007B ldloc.3 
+   007C ldc.r4 2
+   0081 call UnityEngine.Vector4 UnityEngine.Vector4::op_Multiply(UnityEngine.Vector4,System.Single)
+   0086 ldarg.0 
+   0087 ldfld New_ShadowMapping::m_ShadowSize
+   008C conv.r4 
+   008D call UnityEngine.Vector4 UnityEngine.Vector4::op_Division(UnityEngine.Vector4,System.Single)
+   0092 stloc.3 
+   0093 ldarga.s proj
+   0095 dup 
+   0096 stloc.s V_4
+   0098 ldc.i4.0 
+   0099 ldc.i4.3 
+   009A ldloc.s V_4
+   009C ldc.i4.0 
+   009D ldc.i4.3 
+   009E call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   00A3 ldloca.s V_3
+   00A5 ldfld UnityEngine.Vector4::x
+   00AA add 
+   00AB call System.Void UnityEngine.Matrix4x4::set_Item(System.Int32,System.Int32,System.Single)
+   00B0 ldarga.s proj
+   00B2 dup 
+   00B3 stloc.s V_4
+   00B5 ldc.i4.1 
+   00B6 ldc.i4.3 
+   00B7 ldloc.s V_4
+   00B9 ldc.i4.1 
+   00BA ldc.i4.3 
+   00BB call System.Single UnityEngine.Matrix4x4::get_Item(System.Int32,System.Int32)
+   00C0 ldloca.s V_3
+   00C2 ldfld UnityEngine.Vector4::y
+   00C7 add 
+   00C8 call System.Void UnityEngine.Matrix4x4::set_Item(System.Int32,System.Int32,System.Single)
+   00CD ldarg.1 
+   00CE ret 
+== System.Void LateUpdate() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld New_ShadowMapping::m_CamShadow
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0022: ret
+   0011 ldarg.0 
+   0012 ldfld New_ShadowMapping::m_RTShadow
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_0023: ldarg.0
+   0022 ret 
+   0023 ldarg.0 
+   0024 call System.Void New_ShadowMapping::ConditionalUpdateShadowMapCache()
+   0029 ldarg.0 
+   002A ldfld New_ShadowMapping::SMShadowMatrix
+   002F stloc.0 
+   0030 ldstr _PST_Global_ShadowMatrix
+   0035 ldloc.0 
+   0036 call System.Void UnityEngine.Shader::SetGlobalMatrix(System.String,UnityEngine.Matrix4x4)
+   003B ldstr _Global_DirLight
+   0040 ldarg.0 
+   0041 ldfld New_ShadowMapping::m_Transform
+   0046 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   004B call UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+   0050 call UnityEngine.Vector4 UnityEngine.Vector4::op_Implicit(UnityEngine.Vector3)
+   0055 call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   005A ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void New_ShadowMapping::CloseShadow()
+   0006 ret 
+== System.Void OnPreCull() attrs=Private, HideBySig maxstack=3
+   0000 ldstr _PST_Global_ShadowTex
+   0005 ldnull 
+   0006 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   000B ldarg.0 
+   000C ldarg.0 
+   000D ldfld New_ShadowMapping::m_CamShadow
+   0012 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   0017 ldarg.0 
+   0018 ldfld New_ShadowMapping::m_CamShadow
+   001D callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   0022 call UnityEngine.Matrix4x4 New_ShadowMapping::StabilizeShadowProj(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0027 stloc.0 
+   0028 ldarg.0 
+   0029 ldfld New_ShadowMapping::m_CamShadow
+   002E ldloc.0 
+   002F callvirt System.Void UnityEngine.Camera::set_projectionMatrix(UnityEngine.Matrix4x4)
+   0034 ret 
+== System.Void OnPostRender() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld New_ShadowMapping::m_CamShadow
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0022: ret
+   0011 ldarg.0 
+   0012 ldfld New_ShadowMapping::m_RTShadow
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001D brfalse IL_0023: ldstr "_PST_Global_ShadowTex"
+   0022 ret 
+   0023 ldstr _PST_Global_ShadowTex
+   0028 ldarg.0 
+   0029 ldfld New_ShadowMapping::m_RTShadow
+   002E call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0033 ret 
+== System.Void ConditionalMarkDirty(UnityEngine.Bounds bounds) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld New_ShadowMapping::Instance
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_0011: ldsfld New_ShadowMapping New_ShadowMapping::Instance
+   0010 ret 
+   0011 ldsfld New_ShadowMapping::Instance
+   0016 ldfld New_ShadowMapping::SMSnappedCenter
+   001B stloc.0 
+   001C ldarga.s bounds
+   001E call UnityEngine.Vector3 UnityEngine.Bounds::get_min()
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 ldfld UnityEngine.Vector3::x
+   002B ldsfld New_ShadowMapping::Instance
+   0030 ldflda New_ShadowMapping::SMCachedBoundsMax
+   0035 ldfld UnityEngine.Vector2::x
+   003A bgt IL_00a9: ret
+   003F ldarga.s bounds
+   0041 call UnityEngine.Vector3 UnityEngine.Bounds::get_min()
+   0046 stloc.2 
+   0047 ldloca.s V_2
+   0049 ldfld UnityEngine.Vector3::z
+   004E ldsfld New_ShadowMapping::Instance
+   0053 ldflda New_ShadowMapping::SMCachedBoundsMax
+   0058 ldfld UnityEngine.Vector2::y
+   005D bgt IL_00a9: ret
+   0062 ldarga.s bounds
+   0064 call UnityEngine.Vector3 UnityEngine.Bounds::get_max()
+   0069 stloc.3 
+   006A ldloca.s V_3
+   006C ldfld UnityEngine.Vector3::x
+   0071 ldsfld New_ShadowMapping::Instance
+   0076 ldflda New_ShadowMapping::SMCachedBoundsMin
+   007B ldfld UnityEngine.Vector2::x
+   0080 blt IL_00a9: ret
+   0085 ldarga.s bounds
+   0087 call UnityEngine.Vector3 UnityEngine.Bounds::get_max()
+   008C stloc.s V_4
+   008E ldloca.s V_4
+   0090 ldfld UnityEngine.Vector3::z
+   0095 ldsfld New_ShadowMapping::Instance
+   009A ldflda New_ShadowMapping::SMCachedBoundsMin
+   009F ldfld UnityEngine.Vector2::y
+   00A4 bge.un IL_00aa: ldsfld New_ShadowMapping New_ShadowMapping::Instance
+   00A9 ret 
+   00AA ldsfld New_ShadowMapping::Instance
+   00AF ldc.i4.1 
+   00B0 stfld New_ShadowMapping::bSMCacheForceUpdate
+   00B5 ret 
+== System.Void ConditionalUpdateShadowMapCache() attrs=Private, HideBySig maxstack=4
+   0000 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0005 ldfld CameraSystem::MobaCamera
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0012 brtrue IL_0039: ret
+   0017 ldarg.0 
+   0018 ldfld New_ShadowMapping::m_CamShadow
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0023 brtrue IL_0039: ret
+   0028 ldarg.0 
+   0029 ldfld New_ShadowMapping::m_Transform
+   002E ldnull 
+   002F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0034 brfalse IL_003a: ldloc.0
+   0039 ret 
+   003A ldloc.0 
+   003B callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0040 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0045 stloc.1 
+   0046 ldarg.0 
+   0047 ldfld New_ShadowMapping::SMCacheRange
+   004C ldc.r4 8
+   0051 div 
+   0052 stloc.2 
+   0053 ldc.r4 2
+   0058 ldloc.2 
+   0059 mul 
+   005A stloc.3 
+   005B ldarg.0 
+   005C ldfld New_ShadowMapping::SMCacheRange
+   0061 ldc.r4 0.5
+   0066 mul 
+   0067 stloc.s V_4
+   0069 ldarg.0 
+   006A ldfld New_ShadowMapping::SMSnappedCenterIndex
+   006F stloc.s V_5
+   0071 ldarg.0 
+   0072 ldfld New_ShadowMapping::bSMCacheForceUpdate
+   0077 brtrue IL_00e0: ldloca.s V_5
+   007C ldloca.s V_1
+   007E ldfld UnityEngine.Vector3::x
+   0083 ldarg.0 
+   0084 ldflda New_ShadowMapping::SMSnappedCenter
+   0089 ldfld UnityEngine.Vector2::x
+   008E ldloc.3 
+   008F add 
+   0090 bge IL_00e0: ldloca.s V_5
+   0095 ldloca.s V_1
+   0097 ldfld UnityEngine.Vector3::x
+   009C ldarg.0 
+   009D ldflda New_ShadowMapping::SMSnappedCenter
+   00A2 ldfld UnityEngine.Vector2::x
+   00A7 ldloc.3 
+   00A8 sub 
+   00A9 ble IL_00e0: ldloca.s V_5
+   00AE ldloca.s V_1
+   00B0 ldfld UnityEngine.Vector3::z
+   00B5 ldarg.0 
+   00B6 ldflda New_ShadowMapping::SMSnappedCenter
+   00BB ldfld UnityEngine.Vector2::y
+   00C0 ldloc.3 
+   00C1 add 
+   00C2 bge IL_00e0: ldloca.s V_5
+   00C7 ldloca.s V_1
+   00C9 ldfld UnityEngine.Vector3::z
+   00CE ldarg.0 
+   00CF ldflda New_ShadowMapping::SMSnappedCenter
+   00D4 ldfld UnityEngine.Vector2::y
+   00D9 ldloc.3 
+   00DA sub 
+   00DB bgt.un IL_02a8: ret
+   00E0 ldloca.s V_5
+   00E2 ldloca.s V_1
+   00E4 ldfld UnityEngine.Vector3::x
+   00E9 ldloc.2 
+   00EA div 
+   00EB call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   00F0 stfld VInt2::x
+   00F5 ldloca.s V_5
+   00F7 ldloca.s V_1
+   00F9 ldfld UnityEngine.Vector3::z
+   00FE ldloc.2 
+   00FF div 
+   0100 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   0105 stfld VInt2::y
+   010A ldarg.0 
+   010B ldfld New_ShadowMapping::bSMCacheForceUpdate
+   0110 brtrue IL_0127: ldarg.0
+   0115 ldloc.s V_5
+   0117 ldarg.0 
+   0118 ldfld New_ShadowMapping::SMSnappedCenterIndex
+   011D call System.Boolean VInt2::op_Inequality(VInt2,VInt2)
+   0122 brfalse IL_02a8: ret
+   0127 ldarg.0 
+   0128 ldc.i4.0 
+   0129 stfld New_ShadowMapping::bSMCacheForceUpdate
+   012E ldarg.0 
+   012F ldloc.s V_5
+   0131 stfld New_ShadowMapping::SMSnappedCenterIndex
+   0136 ldarg.0 
+   0137 ldflda New_ShadowMapping::SMSnappedCenter
+   013C ldloc.2 
+   013D ldarg.0 
+   013E ldflda New_ShadowMapping::SMSnappedCenterIndex
+   0143 ldfld VInt2::x
+   0148 conv.r4 
+   0149 mul 
+   014A stfld UnityEngine.Vector2::x
+   014F ldarg.0 
+   0150 ldflda New_ShadowMapping::SMSnappedCenter
+   0155 ldloc.2 
+   0156 ldarg.0 
+   0157 ldflda New_ShadowMapping::SMSnappedCenterIndex
+   015C ldfld VInt2::y
+   0161 conv.r4 
+   0162 mul 
+   0163 stfld UnityEngine.Vector2::y
+   0168 ldarg.0 
+   0169 ldflda New_ShadowMapping::SMCachedBoundsMin
+   016E ldarg.0 
+   016F ldflda New_ShadowMapping::SMSnappedCenter
+   0174 ldfld UnityEngine.Vector2::x
+   0179 ldloc.s V_4
+   017B sub 
+   017C stfld UnityEngine.Vector2::x
+   0181 ldarg.0 
+   0182 ldflda New_ShadowMapping::SMCachedBoundsMin
+   0187 ldarg.0 
+   0188 ldflda New_ShadowMapping::SMSnappedCenter
+   018D ldfld UnityEngine.Vector2::y
+   0192 ldloc.s V_4
+   0194 sub 
+   0195 stfld UnityEngine.Vector2::y
+   019A ldarg.0 
+   019B ldflda New_ShadowMapping::SMCachedBoundsMax
+   01A0 ldarg.0 
+   01A1 ldflda New_ShadowMapping::SMSnappedCenter
+   01A6 ldfld UnityEngine.Vector2::x
+   01AB ldloc.s V_4
+   01AD add 
+   01AE stfld UnityEngine.Vector2::x
+   01B3 ldarg.0 
+   01B4 ldflda New_ShadowMapping::SMCachedBoundsMax
+   01B9 ldarg.0 
+   01BA ldflda New_ShadowMapping::SMSnappedCenter
+   01BF ldfld UnityEngine.Vector2::y
+   01C4 ldloc.s V_4
+   01C6 add 
+   01C7 stfld UnityEngine.Vector2::y
+   01CC ldarg.0 
+   01CD ldflda New_ShadowMapping::SMShadowDirection
+   01D2 ldfld UnityEngine.Vector3::y
+   01D7 neg 
+   01D8 stloc.s V_6
+   01DA ldc.r4 1
+   01DF ldloc.s V_6
+   01E1 ldloc.s V_6
+   01E3 mul 
+   01E4 sub 
+   01E5 call System.Single UnityEngine.Mathf::Sqrt(System.Single)
+   01EA stloc.s V_7
+   01EC ldloc.s V_6
+   01EE ldarg.0 
+   01EF ldfld New_ShadowMapping::SMCacheRange
+   01F4 mul 
+   01F5 stloc.s V_8
+   01F7 ldarg.0 
+   01F8 ldfld New_ShadowMapping::SMCacheRange
+   01FD ldloc.s V_7
+   01FF div 
+   0200 ldc.r4 2
+   0205 mul 
+   0206 stloc.s V_9
+   0208 ldarg.0 
+   0209 ldarg.0 
+   020A ldflda New_ShadowMapping::SMSnappedCenter
+   020F ldfld UnityEngine.Vector2::x
+   0214 ldc.r4 0
+   0219 ldarg.0 
+   021A ldflda New_ShadowMapping::SMSnappedCenter
+   021F ldfld UnityEngine.Vector2::y
+   0224 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0229 ldarg.0 
+   022A ldfld New_ShadowMapping::SMShadowDirection
+   022F ldloc.s V_9
+   0231 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0236 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   023B stfld New_ShadowMapping::SMSnappedShadowPosition
+   0240 ldarg.0 
+   0241 ldfld New_ShadowMapping::m_Transform
+   0246 ldarg.0 
+   0247 ldfld New_ShadowMapping::SMSnappedShadowPosition
+   024C callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0251 ldarg.0 
+   0252 ldfld New_ShadowMapping::m_CamShadow
+   0257 ldloc.s V_8
+   0259 callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   025E ldarg.0 
+   025F ldfld New_ShadowMapping::m_CamShadow
+   0264 ldc.i4.1 
+   0265 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   026A ldarg.0 
+   026B ldfld New_ShadowMapping::m_CamShadow
+   0270 callvirt System.Void UnityEngine.Camera::Render()
+   0275 ldarg.0 
+   0276 ldfld New_ShadowMapping::m_CamShadow
+   027B ldc.i4.0 
+   027C callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0281 ldarg.0 
+   0282 ldarg.0 
+   0283 ldfld New_ShadowMapping::m_CamShadow
+   0288 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   028D ldc.i4.0 
+   028E call UnityEngine.Matrix4x4 UnityEngine.GL::GetGPUProjectionMatrix(UnityEngine.Matrix4x4,System.Boolean)
+   0293 ldarg.0 
+   0294 ldfld New_ShadowMapping::m_CamShadow
+   0299 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   029E call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   02A3 stfld New_ShadowMapping::SMShadowMatrix
+   02A8 ret 
+== System.Void ForceUpdateShadowMapCache() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld New_ShadowMapping::m_CamShadow
+   0006 ldc.i4.1 
+   0007 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   000C ldarg.0 
+   000D ldfld New_ShadowMapping::m_CamShadow
+   0012 ldarg.0 
+   0013 ldfld New_ShadowMapping::editorOrthoSize
+   0018 callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   001D ldarg.0 
+   001E ldarg.0 
+   001F ldfld New_ShadowMapping::m_CamShadow
+   0024 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   0029 ldc.i4.0 
+   002A call UnityEngine.Matrix4x4 UnityEngine.GL::GetGPUProjectionMatrix(UnityEngine.Matrix4x4,System.Boolean)
+   002F ldarg.0 
+   0030 ldfld New_ShadowMapping::m_CamShadow
+   0035 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   003A call UnityEngine.Matrix4x4 New_ShadowMapping::StabilizeShadowProj(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   003F stloc.0 
+   0040 ldloc.0 
+   0041 ldarg.0 
+   0042 ldfld New_ShadowMapping::m_CamShadow
+   0047 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_worldToCameraMatrix()
+   004C call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::op_Multiply(UnityEngine.Matrix4x4,UnityEngine.Matrix4x4)
+   0051 stloc.1 
+   0052 ldarg.0 
+   0053 ldloc.1 
+   0054 stfld New_ShadowMapping::SMShadowMatrix
+   0059 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

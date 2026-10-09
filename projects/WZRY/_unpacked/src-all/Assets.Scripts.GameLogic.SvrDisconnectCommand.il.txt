@@ -1,0 +1,93 @@
+// TYPE Assets.Scripts.GameLogic.SvrDisconnectCommand  base=Assets.Scripts.Framework.FrameCommand  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.FrameCommand::.ctor()
+   0006 ret 
+== System.Boolean TransProtocol(CSProtocol.FRAME_CMD_PKG msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.FRAME_CMD_PKG)
+   0007 ret 
+== System.Boolean TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO)
+   0007 ret 
+== System.Void OnReceive(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_frameNum()
+   0006 ldarg.1 
+   0007 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   000C call System.Void SGW::PushSvrDisconnectCmd(System.UInt32,System.UInt32)
+   0011 ret 
+== System.Void ExecLocal(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   000B callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 brfalse IL_0105: ret
+   0017 ldloc.0 
+   0018 ldfld Assets.Scripts.GameLogic.Player::Captain
+   001D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0022 brfalse IL_0105: ret
+   0027 ldloc.0 
+   0028 ldflda Assets.Scripts.GameLogic.Player::Captain
+   002D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0032 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0037 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ObjLinkerWrapper::GetOrignalActor()
+   003C stloc.1 
+   003D ldloc.1 
+   003E call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0043 brfalse IL_00f9: ldc.i4.0
+   0048 ldloca.s V_1
+   004A call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCampActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   004F brfalse IL_00f9: ldc.i4.0
+   0054 ldloca.s V_2
+   0056 initobj Assets.Scripts.GameSystem.stKillInfo
+   005C ldloca.s V_2
+   005E ldloca.s V_1
+   0060 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0065 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   006A stfld Assets.Scripts.GameSystem.stKillInfo::m_killerObjID
+   006F ldloca.s V_2
+   0071 ldloca.s V_2
+   0073 ldfld Assets.Scripts.GameSystem.stKillInfo::m_killerObjID
+   0078 call System.String Assets.Scripts.GameSystem.KillNotifyUT::GetIcon(System.UInt32)
+   007D stfld Assets.Scripts.GameSystem.stKillInfo::m_killerImgSrc
+   0082 ldloca.s V_2
+   0084 ldloca.s V_2
+   0086 ldfld Assets.Scripts.GameSystem.stKillInfo::m_killerObjID
+   008B call System.String Assets.Scripts.GameSystem.KillNotifyUT::GetPlayerName(System.UInt32)
+   0090 stfld Assets.Scripts.GameSystem.stKillInfo::m_killerPlayerName
+   0095 ldloca.s V_2
+   0097 ldc.i4 2002
+   009C stfld Assets.Scripts.GameSystem.stKillInfo::m_killType
+   00A1 ldloca.s V_2
+   00A3 ldc.i4.1 
+   00A4 stfld Assets.Scripts.GameSystem.stKillInfo::m_bSrcAllies
+   00A9 ldloca.s V_2
+   00AB call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00B0 ldloca.s V_1
+   00B2 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B7 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_playerId()
+   00BC callvirt System.UInt32 Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayerKillSkinID(System.UInt32)
+   00C1 stfld Assets.Scripts.GameSystem.stKillInfo::m_skinID
+   00C6 ldloca.s V_2
+   00C8 ldloca.s V_2
+   00CA ldfld Assets.Scripts.GameSystem.stKillInfo::m_killType
+   00CF call System.Byte Assets.Scripts.GameSystem.CKillNotify::GetPriority(Assets.Scripts.GameLogic.KillInfoType)
+   00D4 stfld Assets.Scripts.GameSystem.stKillInfo::m_priority
+   00D9 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00DE callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   00E3 brfalse IL_00f9: ldc.i4.0
+   00E8 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   00ED callvirt Assets.Scripts.GameSystem.CKillNotify Assets.Scripts.GameSystem.CBattleSystem::get_TheKillNotify()
+   00F2 ldloca.s V_2
+   00F4 callvirt System.Void Assets.Scripts.GameSystem.CKillNotify::AddKillInfo(Assets.Scripts.GameSystem.stKillInfo&)
+   00F9 ldc.i4.0 
+   00FA ldloc.0 
+   00FB ldflda Assets.Scripts.GameLogic.Player::Captain
+   0100 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::ExecuteInOutEquipShopFrameCommand(System.Byte,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0105 ret 

@@ -1,0 +1,798 @@
+// TYPE com.tencent.pandora.WaterfallScrollViewHelper  base=UnityEngine.EventSystems.UIBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 MOVE_DELTA
+  FIELD UnityEngine.GameObject itemTemplate
+  FIELD UnityEngine.GameObject itemPool
+  FIELD System.Action`2<UnityEngine.GameObject,System.Int32> _itemFillDelegate
+  FIELD System.Action`1<UnityEngine.GameObject> _itemRecycleDelegate
+  FIELD UnityEngine.UI.ScrollRect _scrollRect
+  FIELD System.Single _upBoundary
+  FIELD System.Single _bottomBoundary
+  FIELD System.Int32 _startIndex
+  FIELD System.Int32 _endIndex
+  FIELD System.Int32 _itemCount
+  FIELD System.Single _lastContentPositionY
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject> _onAirItemDict
+  FIELD UnityEngine.Events.UnityEvent onReachTop
+  FIELD UnityEngine.Events.UnityEvent onReachBottom
+  FIELD System.Single <ItemDefaultHeight>k__BackingField
+  PROP System.Single ItemDefaultHeight
+  PROP System.Int32 ItemCount
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.m1 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0007 ldarg.0 
+   0008 newobj System.Void UnityEngine.Events.UnityEvent::.ctor()
+   000D stfld com.tencent.pandora.WaterfallScrollViewHelper::onReachTop
+   0012 ldarg.0 
+   0013 newobj System.Void UnityEngine.Events.UnityEvent::.ctor()
+   0018 stfld com.tencent.pandora.WaterfallScrollViewHelper::onReachBottom
+   001D ldarg.0 
+   001E call System.Void UnityEngine.EventSystems.UIBehaviour::.ctor()
+   0023 ret 
+== System.Void Awake() attrs=Family, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::.ctor()
+   0006 stfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   000B ldarg.0 
+   000C ldarg.0 
+   000D call !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.ScrollRect>()
+   0012 stfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0017 ldarg.0 
+   0018 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   001D callvirt UnityEngine.UI.ScrollRect/ScrollRectEvent UnityEngine.UI.ScrollRect::get_onValueChanged()
+   0022 ldarg.0 
+   0023 ldftn System.Void com.tencent.pandora.WaterfallScrollViewHelper::OnScrollValueChanged(UnityEngine.Vector2)
+   0029 newobj System.Void UnityEngine.Events.UnityAction`1<UnityEngine.Vector2>::.ctor(System.Object,System.IntPtr)
+   002E callvirt System.Void UnityEngine.Events.UnityEvent`1<UnityEngine.Vector2>::AddListener(UnityEngine.Events.UnityAction`1<!0>)
+   0033 ldarg.0 
+   0034 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::InitTemplate()
+   0039 ldarg.0 
+   003A call System.Void com.tencent.pandora.WaterfallScrollViewHelper::InitPool()
+   003F ret 
+== System.Void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ret 
+== System.Void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ldarg.0 
+   0001 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   0006 ldc.r4 0
+   000B bge.un IL_001b: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld com.tencent.pandora.WaterfallScrollViewHelper::onReachTop
+   0016 callvirt System.Void UnityEngine.Events.UnityEvent::Invoke()
+   001B ldarg.0 
+   001C call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   0021 ldarg.0 
+   0022 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentHeight()
+   0027 ldarg.0 
+   0028 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetViewportHeight()
+   002D sub 
+   002E ble.un IL_003e: ret
+   0033 ldarg.0 
+   0034 ldfld com.tencent.pandora.WaterfallScrollViewHelper::onReachBottom
+   0039 callvirt System.Void UnityEngine.Events.UnityEvent::Invoke()
+   003E ret 
+== System.Void OnScrollValueChanged(UnityEngine.Vector2 position) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldarg.0 
+   0009 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_lastContentPositionY
+   000E sub 
+   000F stloc.1 
+   0010 ldloc.1 
+   0011 ldsfld com.tencent.pandora.WaterfallScrollViewHelper::MOVE_DELTA
+   0016 conv.r4 
+   0017 ble.un IL_002e: ldloc.1
+   001C ldarg.0 
+   001D call System.Void com.tencent.pandora.WaterfallScrollViewHelper::Forward()
+   0022 ldarg.0 
+   0023 ldloc.0 
+   0024 stfld com.tencent.pandora.WaterfallScrollViewHelper::_lastContentPositionY
+   0029 br IL_0048: ret
+   002E ldloc.1 
+   002F ldsfld com.tencent.pandora.WaterfallScrollViewHelper::MOVE_DELTA
+   0034 neg 
+   0035 conv.r4 
+   0036 bge.un IL_0048: ret
+   003B ldarg.0 
+   003C call System.Void com.tencent.pandora.WaterfallScrollViewHelper::Backward()
+   0041 ldarg.0 
+   0042 ldloc.0 
+   0043 stfld com.tencent.pandora.WaterfallScrollViewHelper::_lastContentPositionY
+   0048 ret 
+== System.Void InitTemplate() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_003f: ldarg.0
+   0011 ldarg.0 
+   0012 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0017 ldstr itemTemplate
+   001C callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0021 isinst UnityEngine.RectTransform
+   0026 stloc.0 
+   0027 ldloc.0 
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_003f: ldarg.0
+   0033 ldarg.0 
+   0034 ldloc.0 
+   0035 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003A stfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   003F ldarg.0 
+   0040 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   0045 ldnull 
+   0046 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004B brfalse IL_0084: ldstr "请正确设置Item模版对象"
+   0050 ldarg.0 
+   0051 ldarg.0 
+   0052 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   0057 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   005C isinst UnityEngine.RectTransform
+   0061 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0066 stloc.1 
+   0067 ldloca.s V_1
+   0069 call System.Single UnityEngine.Rect::get_height()
+   006E call System.Void com.tencent.pandora.WaterfallScrollViewHelper::set_ItemDefaultHeight(System.Single)
+   0073 ldarg.0 
+   0074 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   0079 ldc.i4.0 
+   007A callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   007F br IL_008e: ret
+   0084 ldstr 请正确设置Item模版对象
+   0089 call System.Void UnityEngine.Debug::LogError(System.Object)
+   008E ret 
+== System.Void InitPool() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_003f: ldarg.0
+   0011 ldarg.0 
+   0012 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0017 ldstr Container_pool
+   001C callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0021 isinst UnityEngine.RectTransform
+   0026 stloc.0 
+   0027 ldloc.0 
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_003f: ldarg.0
+   0033 ldarg.0 
+   0034 ldloc.0 
+   0035 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003A stfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   003F ldarg.0 
+   0040 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   0045 ldnull 
+   0046 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   004B brfalse IL_0061: ldstr "请正确设置ItemPool对象"
+   0050 ldarg.0 
+   0051 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   0056 ldc.i4.0 
+   0057 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   005C br IL_006b: ret
+   0061 ldstr 请正确设置ItemPool对象
+   0066 call System.Void UnityEngine.Debug::LogError(System.Object)
+   006B ret 
+== System.Single get_ItemDefaultHeight() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::<ItemDefaultHeight>k__BackingField
+   0006 ret 
+== System.Void set_ItemDefaultHeight(System.Single value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::<ItemDefaultHeight>k__BackingField
+   0007 ret 
+== System.Int32 get_ItemCount() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_itemCount
+   0006 ret 
+== System.Void set_ItemCount(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::_itemCount
+   0007 ldarg.0 
+   0008 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::CalculateContentSize()
+   000D ret 
+== System.Void SetItemFillDelegate(System.Action`2<UnityEngine.GameObject,System.Int32> itemFillDelegate) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::_itemFillDelegate
+   0007 ret 
+== System.Void SetItemRecycleDelegate(System.Action`1<UnityEngine.GameObject> itemRecycleDelegate) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::_itemRecycleDelegate
+   0007 ret 
+== System.Void Fill() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0007 ldarg.0 
+   0008 ldc.i4.m1 
+   0009 stfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   000E ldarg.0 
+   000F ldc.r4 0
+   0014 stfld com.tencent.pandora.WaterfallScrollViewHelper::_upBoundary
+   0019 ldarg.0 
+   001A ldc.r4 0
+   001F stfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   0024 ldarg.0 
+   0025 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   002A callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Clear()
+   002F ldarg.0 
+   0030 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::ResetContentPosition()
+   0035 ldarg.0 
+   0036 ldarg.0 
+   0037 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   003C stfld com.tencent.pandora.WaterfallScrollViewHelper::_lastContentPositionY
+   0041 ldarg.0 
+   0042 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::Forward()
+   0047 ret 
+== System.Void RefreshLayout(System.Int32 index) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 stloc.0 
+   0002 br IL_0057: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   000D ldloc.0 
+   000E callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   001A stloc.2 
+   001B ldloc.0 
+   001C ldarg.1 
+   001D ble IL_0034: ldarg.0
+   0022 ldarg.0 
+   0023 ldloc.1 
+   0024 ldc.r4 0
+   0029 ldarg.0 
+   002A ldfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   002F call System.Void com.tencent.pandora.WaterfallScrollViewHelper::SetItemPosition(UnityEngine.GameObject,System.Single,System.Single)
+   0034 ldarg.0 
+   0035 ldloc.1 
+   0036 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetItemHeight(UnityEngine.GameObject)
+   003B stloc.3 
+   003C ldarg.0 
+   003D ldloc.2 
+   003E callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0043 stloc.s V_4
+   0045 ldloca.s V_4
+   0047 ldfld UnityEngine.Vector2::y
+   004C ldloc.3 
+   004D sub 
+   004E stfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   0053 ldloc.0 
+   0054 ldc.i4.1 
+   0055 add 
+   0056 stloc.0 
+   0057 ldloc.0 
+   0058 ldarg.0 
+   0059 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   005E ble IL_0007: ldarg.0
+   0063 ldarg.0 
+   0064 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::CalculateContentSize()
+   0069 ldarg.0 
+   006A call System.Void com.tencent.pandora.WaterfallScrollViewHelper::Forward()
+   006F ret 
+== System.Void Forward() attrs=Public, HideBySig maxstack=4
+   0000 br IL_0050: ldarg.0
+   0005 ldarg.0 
+   0006 dup 
+   0007 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   000C ldc.i4.1 
+   000D add 
+   000E stfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0013 ldarg.0 
+   0014 ldarg.0 
+   0015 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   001A call UnityEngine.GameObject com.tencent.pandora.WaterfallScrollViewHelper::CreateItem(System.Int32)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0026 ldarg.0 
+   0027 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   002C ldloc.0 
+   002D callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Add(!0,!1)
+   0032 ldarg.0 
+   0033 ldloc.0 
+   0034 ldc.r4 0
+   0039 ldarg.0 
+   003A ldfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   003F call System.Void com.tencent.pandora.WaterfallScrollViewHelper::SetItemPosition(UnityEngine.GameObject,System.Single,System.Single)
+   0044 ldarg.0 
+   0045 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RefreshBottomBundary()
+   004A ldarg.0 
+   004B call System.Void com.tencent.pandora.WaterfallScrollViewHelper::CalculateContentSize()
+   0050 ldarg.0 
+   0051 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0056 ldarg.0 
+   0057 call System.Int32 com.tencent.pandora.WaterfallScrollViewHelper::get_ItemCount()
+   005C ldc.i4.1 
+   005D sub 
+   005E bge IL_007c: ldarg.0
+   0063 ldarg.0 
+   0064 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   0069 ldarg.0 
+   006A call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   006F ldarg.0 
+   0070 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetViewportHeight()
+   0075 add 
+   0076 neg 
+   0077 bgt IL_0005: ldarg.0
+   007C ldarg.0 
+   007D call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RecycleTop()
+   0082 ret 
+== System.Void RecycleTop() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0007 ldc.i4.1 
+   0008 add 
+   0009 ldarg.0 
+   000A ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   000F call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetRangeItemHeight(System.Int32,System.Int32)
+   0014 ldarg.0 
+   0015 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetViewportHeight()
+   001A bge.un IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0026 stloc.0 
+   0027 br IL_006e: ldloc.0
+   002C ldarg.0 
+   002D ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0032 ldloc.0 
+   0033 callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0038 stloc.1 
+   0039 ldarg.0 
+   003A ldloc.1 
+   003B call System.Boolean com.tencent.pandora.WaterfallScrollViewHelper::IsItemUpOfViewport(UnityEngine.GameObject)
+   0040 brfalse IL_005e: ldarg.0
+   0045 ldarg.0 
+   0046 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   004B ldloc.0 
+   004C callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Remove(!0)
+   0051 pop 
+   0052 ldarg.0 
+   0053 ldloc.1 
+   0054 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RecycleItem(UnityEngine.GameObject)
+   0059 br IL_006a: ldloc.0
+   005E ldarg.0 
+   005F ldloc.0 
+   0060 stfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0065 br IL_007a: ldarg.0
+   006A ldloc.0 
+   006B ldc.i4.1 
+   006C add 
+   006D stloc.0 
+   006E ldloc.0 
+   006F ldarg.0 
+   0070 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0075 ble IL_002c: ldarg.0
+   007A ldarg.0 
+   007B call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RefreshUpBundary()
+   0080 ret 
+== System.Void Backward() attrs=Public, HideBySig maxstack=5
+   0000 br IL_0054: ldarg.0
+   0005 ldarg.0 
+   0006 dup 
+   0007 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   000C ldc.i4.1 
+   000D sub 
+   000E stfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0013 ldarg.0 
+   0014 ldarg.0 
+   0015 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   001A call UnityEngine.GameObject com.tencent.pandora.WaterfallScrollViewHelper::CreateItem(System.Int32)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0026 ldarg.0 
+   0027 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   002C ldloc.0 
+   002D callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Add(!0,!1)
+   0032 ldarg.0 
+   0033 ldloc.0 
+   0034 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetItemHeight(UnityEngine.GameObject)
+   0039 stloc.1 
+   003A ldarg.0 
+   003B ldloc.0 
+   003C ldc.r4 0
+   0041 ldarg.0 
+   0042 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_upBoundary
+   0047 ldloc.1 
+   0048 add 
+   0049 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::SetItemPosition(UnityEngine.GameObject,System.Single,System.Single)
+   004E ldarg.0 
+   004F call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RefreshUpBundary()
+   0054 ldarg.0 
+   0055 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   005A ldc.i4.0 
+   005B ble IL_0077: ldarg.0
+   0060 ldarg.0 
+   0061 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_upBoundary
+   0066 ldarg.0 
+   0067 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   006C add 
+   006D ldc.r4 0
+   0072 blt IL_0005: ldarg.0
+   0077 ldarg.0 
+   0078 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RecycleBottom()
+   007D ret 
+== System.Void RecycleBottom() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0007 ldarg.0 
+   0008 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   000D ldc.i4.1 
+   000E sub 
+   000F call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetRangeItemHeight(System.Int32,System.Int32)
+   0014 ldarg.0 
+   0015 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetViewportHeight()
+   001A bge.un IL_0020: ldarg.0
+   001F ret 
+   0020 ldarg.0 
+   0021 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0026 stloc.0 
+   0027 br IL_006e: ldloc.0
+   002C ldarg.0 
+   002D ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0032 ldloc.0 
+   0033 callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0038 stloc.1 
+   0039 ldarg.0 
+   003A ldloc.1 
+   003B call System.Boolean com.tencent.pandora.WaterfallScrollViewHelper::IsItemBottomOfViewport(UnityEngine.GameObject)
+   0040 brfalse IL_005e: ldarg.0
+   0045 ldarg.0 
+   0046 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   004B ldloc.0 
+   004C callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Remove(!0)
+   0051 pop 
+   0052 ldarg.0 
+   0053 ldloc.1 
+   0054 call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RecycleItem(UnityEngine.GameObject)
+   0059 br IL_006a: ldloc.0
+   005E ldarg.0 
+   005F ldloc.0 
+   0060 stfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0065 br IL_007a: ldarg.0
+   006A ldloc.0 
+   006B ldc.i4.1 
+   006C sub 
+   006D stloc.0 
+   006E ldloc.0 
+   006F ldarg.0 
+   0070 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0075 bge IL_002c: ldarg.0
+   007A ldarg.0 
+   007B call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RefreshBottomBundary()
+   0080 ret 
+== System.Single GetRangeItemHeight(System.Int32 startIndex, System.Int32 endIndex) attrs=Private, HideBySig maxstack=2
+   0000 ldc.r4 0
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 stloc.1 
+   0008 br IL_003c: ldloc.1
+   000D ldarg.0 
+   000E ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0013 ldloc.1 
+   0014 callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0019 stloc.2 
+   001A ldloc.2 
+   001B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0020 isinst UnityEngine.RectTransform
+   0025 stloc.3 
+   0026 ldloc.0 
+   0027 ldloc.3 
+   0028 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   002D stloc.s V_4
+   002F ldloca.s V_4
+   0031 call System.Single UnityEngine.Rect::get_height()
+   0036 add 
+   0037 stloc.0 
+   0038 ldloc.1 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.1 
+   003C ldloc.1 
+   003D ldarg.2 
+   003E ble IL_000d: ldarg.0
+   0043 ldloc.0 
+   0044 ret 
+== System.Void RefreshUpBundary() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0006 ldarg.0 
+   0007 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   000C callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0018 stloc.1 
+   0019 ldarg.0 
+   001A ldloc.1 
+   001B callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0020 stloc.2 
+   0021 ldloca.s V_2
+   0023 ldfld UnityEngine.Vector2::y
+   0028 stfld com.tencent.pandora.WaterfallScrollViewHelper::_upBoundary
+   002D ret 
+== System.Void RefreshBottomBundary() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0006 ldarg.0 
+   0007 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   000C callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0018 stloc.1 
+   0019 ldarg.0 
+   001A ldloc.1 
+   001B callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0020 stloc.2 
+   0021 ldloca.s V_2
+   0023 ldfld UnityEngine.Vector2::y
+   0028 ldloc.1 
+   0029 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   002E stloc.3 
+   002F ldloca.s V_3
+   0031 call System.Single UnityEngine.Rect::get_height()
+   0036 sub 
+   0037 stfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   003C ret 
+== System.Void CalculateContentSize() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_bottomBoundary
+   0006 ldc.r4 -1
+   000B mul 
+   000C ldarg.0 
+   000D call System.Int32 com.tencent.pandora.WaterfallScrollViewHelper::get_ItemCount()
+   0012 ldarg.0 
+   0013 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   0018 sub 
+   0019 ldc.i4.1 
+   001A sub 
+   001B conv.r4 
+   001C ldarg.0 
+   001D call System.Single com.tencent.pandora.WaterfallScrollViewHelper::get_ItemDefaultHeight()
+   0022 mul 
+   0023 add 
+   0024 stloc.0 
+   0025 ldarg.0 
+   0026 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   002B callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_content()
+   0030 ldc.r4 0
+   0035 ldloc.0 
+   0036 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   003B callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0040 ret 
+== UnityEngine.GameObject CreateItem(System.Int32 index) attrs=Private, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   0008 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   000D callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   0012 ldc.i4.0 
+   0013 ble IL_0034: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   001E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0023 ldc.i4.0 
+   0024 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0029 isinst UnityEngine.RectTransform
+   002E stloc.0 
+   002F br IL_0053: ldloc.0
+   0034 ldarg.0 
+   0035 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemTemplate
+   003A call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0)
+   003F stloc.1 
+   0040 ldloc.1 
+   0041 ldc.i4.1 
+   0042 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0047 ldloc.1 
+   0048 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   004D isinst UnityEngine.RectTransform
+   0052 stloc.0 
+   0053 ldloc.0 
+   0054 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0059 ldstr item_
+   005E ldarga.s index
+   0060 constrained. System.Int32
+   0066 callvirt System.String System.Object::ToString()
+   006B call System.String System.String::Concat(System.String,System.String)
+   0070 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0075 ldarg.0 
+   0076 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_itemFillDelegate
+   007B ldloc.0 
+   007C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0081 ldarg.1 
+   0082 callvirt System.Void System.Action`2<UnityEngine.GameObject,System.Int32>::Invoke(!0,!1)
+   0087 ldloc.0 
+   0088 ldarg.0 
+   0089 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   008E callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_content()
+   0093 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0098 ldloc.0 
+   0099 ldc.r4 0
+   009E ldc.r4 0
+   00A3 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00A8 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   00AD ldloc.0 
+   00AE call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   00B3 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00B8 ldloc.0 
+   00B9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00BE ret 
+== System.Void RecycleItem(UnityEngine.GameObject item) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_itemRecycleDelegate
+   0006 ldarg.1 
+   0007 callvirt System.Void System.Action`1<UnityEngine.GameObject>::Invoke(!0)
+   000C ldarg.1 
+   000D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0012 ldarg.0 
+   0013 ldfld com.tencent.pandora.WaterfallScrollViewHelper::itemPool
+   0018 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   001D callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0022 ret 
+== System.Single GetContentPositionY() attrs=Private, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0006 callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_content()
+   000B callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 ldfld UnityEngine.Vector2::y
+   0018 ret 
+== System.Single GetContentHeight() attrs=Private, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0006 callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_content()
+   000B callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 call System.Single UnityEngine.Rect::get_height()
+   0018 ret 
+== System.Single GetViewportHeight() attrs=Private, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0006 callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_viewport()
+   000B callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 call System.Single UnityEngine.Rect::get_height()
+   0018 ret 
+== System.Single GetItemHeight(UnityEngine.GameObject item) attrs=Private, HideBySig maxstack=1
+   0000 ldarg.1 
+   0001 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0006 isinst UnityEngine.RectTransform
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0012 stloc.1 
+   0013 ldloca.s V_1
+   0015 call System.Single UnityEngine.Rect::get_height()
+   001A ret 
+== System.Void SetItemPosition(UnityEngine.GameObject item, System.Single x, System.Single y) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0006 isinst UnityEngine.RectTransform
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldarg.2 
+   000E ldarg.3 
+   000F newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0014 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0019 ret 
+== System.Boolean IsItemUpOfViewport(UnityEngine.GameObject item) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   000D stloc.2 
+   000E ldloca.s V_2
+   0010 ldfld UnityEngine.Vector2::y
+   0015 ldloc.0 
+   0016 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   001B stloc.3 
+   001C ldloca.s V_3
+   001E call System.Single UnityEngine.Rect::get_height()
+   0023 sub 
+   0024 ldarg.0 
+   0025 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   002A add 
+   002B stloc.1 
+   002C ldloc.1 
+   002D ldc.r4 0
+   0032 ble.un IL_0039: ldc.i4.0
+   0037 ldc.i4.1 
+   0038 ret 
+   0039 ldc.i4.0 
+   003A ret 
+== System.Boolean IsItemBottomOfViewport(UnityEngine.GameObject item) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   000D stloc.2 
+   000E ldloca.s V_2
+   0010 ldfld UnityEngine.Vector2::y
+   0015 ldarg.0 
+   0016 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   001B add 
+   001C stloc.1 
+   001D ldloc.1 
+   001E ldarg.0 
+   001F call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetViewportHeight()
+   0024 neg 
+   0025 bge.un IL_002c: ldc.i4.0
+   002A ldc.i4.1 
+   002B ret 
+   002C ldc.i4.0 
+   002D ret 
+== System.Void ResetContentPosition() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0006 callvirt UnityEngine.RectTransform UnityEngine.UI.ScrollRect::get_content()
+   000B ldc.r4 0
+   0010 ldc.r4 0
+   0015 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   001A callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   001F ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0006 stloc.0 
+   0007 br IL_0024: ldloc.0
+   000C ldarg.0 
+   000D ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0012 ldloc.0 
+   0013 callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::get_Item(!0)
+   0018 stloc.1 
+   0019 ldarg.0 
+   001A ldloc.1 
+   001B call System.Void com.tencent.pandora.WaterfallScrollViewHelper::RecycleItem(UnityEngine.GameObject)
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 ldarg.0 
+   0026 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   002B ble IL_000c: ldarg.0
+   0030 ldarg.0 
+   0031 ldfld com.tencent.pandora.WaterfallScrollViewHelper::_onAirItemDict
+   0036 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.GameObject>::Clear()
+   003B ldarg.0 
+   003C ldfld com.tencent.pandora.WaterfallScrollViewHelper::_scrollRect
+   0041 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0046 callvirt System.Void UnityEngine.UI.ScrollRect::set_velocity(UnityEngine.Vector2)
+   004B ldarg.0 
+   004C call System.Void com.tencent.pandora.WaterfallScrollViewHelper::ResetContentPosition()
+   0051 ldarg.0 
+   0052 ldarg.0 
+   0053 call System.Single com.tencent.pandora.WaterfallScrollViewHelper::GetContentPositionY()
+   0058 stfld com.tencent.pandora.WaterfallScrollViewHelper::_lastContentPositionY
+   005D ldarg.0 
+   005E ldc.i4.0 
+   005F stfld com.tencent.pandora.WaterfallScrollViewHelper::_startIndex
+   0064 ldarg.0 
+   0065 ldc.i4.m1 
+   0066 stfld com.tencent.pandora.WaterfallScrollViewHelper::_endIndex
+   006B ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.s 10
+   0002 stsfld com.tencent.pandora.WaterfallScrollViewHelper::MOVE_DELTA
+   0007 ret 

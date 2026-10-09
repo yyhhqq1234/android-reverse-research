@@ -1,0 +1,3035 @@
+// TYPE Assets.Scripts.GameSystem.CBattleEquipSystem  base=Assets.Scripts.GameSystem.CBattleBaseEquipSystem  attrs=Public, BeforeFieldInit
+  FIELD System.String s_equipFormPath
+  FIELD Assets.Scripts.GameSystem.enEquipPanelShowMode m_equipPanelShowMode
+  FIELD System.Collections.Generic.List`1<System.UInt16>[] m_recommendEquipSimple
+  FIELD Assets.Scripts.GameSystem.stEquipTree m_equipTree
+  FIELD System.Boolean m_isEquipTreeOpened
+  FIELD Assets.Scripts.GameSystem.CEquipInfo m_rootEquipInTree
+  FIELD SGW/stQueryEquipStatusListTypeDelegate <>f__mg$cache0
+  FIELD SGW/stQueryEquipStatusListTypeDelegate <>f__mg$cache1
+  FIELD SGW/stQuicklyBuyEquipListTypeDelegate <>f__mg$cache2
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.3 
+   0002 ldc.i4.2 
+   0003 ldc.i4.s 20
+   0005 newobj System.Void Assets.Scripts.GameSystem.stEquipTree::.ctor(System.Int32,System.Int32,System.Int32)
+   000A stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   000F ldarg.0 
+   0010 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::.ctor()
+   0015 ldarg.0 
+   0016 ldc.i4.4 
+   0017 newarr System.Collections.Generic.List`1<System.UInt16>
+   001C stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   0021 ldc.i4.0 
+   0022 stloc.0 
+   0023 br IL_0039: ldloc.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   002E ldloc.0 
+   002F newobj System.Void System.Collections.Generic.List`1<System.UInt16>::.ctor()
+   0034 stelem.ref 
+   0035 ldloc.0 
+   0036 ldc.i4.1 
+   0037 add 
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A ldc.i4.4 
+   003B blt IL_0028: ldarg.0
+   0040 ldarg.0 
+   0041 newobj System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::.ctor()
+   0046 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   004B ldarg.0 
+   004C newobj System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::.ctor()
+   0051 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0056 ldarg.0 
+   0057 newobj System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::.ctor()
+   005C stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0061 ldarg.0 
+   0062 newobj System.Void Assets.Scripts.GameSystem.CEquipInfoUIComponent::.ctor()
+   0067 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   006C ldarg.0 
+   006D newobj System.Void Assets.Scripts.GameSystem.CEquipQuicklyBuyUIComponent::.ctor()
+   0072 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipQuicklyBuyUIComponent
+   0077 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript battleFormScript, System.Boolean enable, Assets.Scripts.GameLogic.Player hostPlayer) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::Clear()
+   0006 ldarg.0 
+   0007 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitBattleEquipList()
+   000C ldarg.0 
+   000D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitializeBackEquipListForEachEquip()
+   0012 ldarg.0 
+   0013 ldarg.1 
+   0014 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_battleFormScript
+   0019 ldarg.0 
+   001A ldarg.2 
+   001B stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   0020 ldarg.3 
+   0021 brfalse IL_0042: ldarg.0
+   0026 ldarg.0 
+   0027 ldarg.3 
+   0028 ldfld Assets.Scripts.GameLogic.Player::Captain
+   002D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0032 ldarg.0 
+   0033 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0038 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003D brtrue IL_0042: ldarg.0
+   0042 ldarg.0 
+   0043 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::InitRecommendEquipSimpleConfig()
+   0048 ldarg.0 
+   0049 ldc.i4.1 
+   004A stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlHeroPermitedToBuyEquip
+   004F ldarg.0 
+   0050 ldc.i4.1 
+   0051 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlHeroPermitedToSellEquip
+   0056 ldarg.0 
+   0057 ldc.i4.0 
+   0058 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   005D ldarg.0 
+   005E ldnull 
+   005F stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0064 ldarg.0 
+   0065 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   006A ldfld Assets.Scripts.GameLogic.CLevelContext::iItemSellDiscount
+   006F stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_iItemSellDiscount
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   007A brtrue IL_0080: call System.Boolean NewbieGuideManager::IsLongTimeNotBuyEquipGuideComplete()
+   007F ret 
+   0080 call System.Boolean NewbieGuideManager::IsLongTimeNotBuyEquipGuideComplete()
+   0085 brfalse IL_0091: ldarg.3
+   008A ldarg.0 
+   008B ldc.i4.0 
+   008C stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::c_disptchNotBuyEquipTime
+   0091 ldarg.3 
+   0092 brfalse IL_0154: ldc.i4.1
+   0097 ldarg.3 
+   0098 callvirt Assets.Scripts.GameLogic.DataCenter.PlayerServerData Assets.Scripts.GameLogic.Player::GetPlayerServerData()
+   009D stloc.0 
+   009E ldloc.0 
+   009F brfalse IL_0154: ldc.i4.1
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   00AA call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00AF brfalse IL_0154: ldc.i4.1
+   00B4 ldloc.0 
+   00B5 ldarg.0 
+   00B6 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   00BB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00C0 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   00C5 callvirt Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData Assets.Scripts.GameLogic.DataCenter.PlayerServerData::GetHeroData(System.UInt32)
+   00CA stloc.1 
+   00CB ldloc.1 
+   00CC brfalse IL_0154: ldc.i4.1
+   00D1 ldarg.0 
+   00D2 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   00D7 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00DC ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   00E1 ldloc.1 
+   00E2 ldflda Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   00E7 ldloc.1 
+   00E8 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   00ED callvirt System.Void Assets.Scripts.GameLogic.EquipLinkerComponent::SetRecommendEquipData(Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData[]&,System.UInt32)
+   00F2 ldloc.1 
+   00F3 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   00F8 brfalse IL_0154: ldc.i4.1
+   00FD ldloc.1 
+   00FE ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   0103 ldc.i4.0 
+   0104 blt IL_0154: ldc.i4.1
+   0109 ldloc.1 
+   010A ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   010F ldloc.1 
+   0110 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   0115 ldlen 
+   0116 conv.i4 
+   0117 bge IL_0154: ldc.i4.1
+   011C ldarg.0 
+   011D ldloc.1 
+   011E ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   0123 ldloc.1 
+   0124 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   0129 ldelema Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData
+   012E ldfld Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData::m_equipIDs
+   0133 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitializeRecommendEquipList(System.UInt16[])
+   0138 ldarg.0 
+   0139 ldloc.1 
+   013A ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   013F ldloc.1 
+   0140 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   0145 ldelema Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData
+   014A ldfld Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData::m_equipIDs
+   014F callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitRecommendEquipSimple(System.UInt16[])
+   0154 ldc.i4.1 
+   0155 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   015A ceq 
+   015C call System.Void SGW::SetHostIsEquipSimpleMode(System.Boolean)
+   0161 ldarg.0 
+   0162 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipQuicklyBuyUIComponent
+   0167 brfalse IL_0178: ret
+   016C ldarg.0 
+   016D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipQuicklyBuyUIComponent
+   0172 ldarg.1 
+   0173 callvirt System.Void Assets.Scripts.GameSystem.CEquipQuicklyBuyUIComponent::Init(Assets.Scripts.UI.CUIFormScript)
+   0178 ret 
+== System.Void PreLoadEquipForm() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0010 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::s_equipFormPath
+   0015 ldc.i4.1 
+   0016 ldc.i4.1 
+   0017 ldnull 
+   0018 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   001D pop 
+   001E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0023 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::s_equipFormPath
+   0028 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   002D ret 
+== System.Void RegisterEvents() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RegisterEvents()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 10100
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OpenEquipForm(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 10101
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipFormClose(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 10102
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipTypeListSelect(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 10103
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipItemSelect(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 10104
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0092 ldc.i4 10105
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipBuyBtnClick(Assets.Scripts.UI.CUIEvent)
+   009E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AD ldc.i4 10106
+   00B2 ldarg.0 
+   00B3 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipSaleBtnClick(Assets.Scripts.UI.CUIEvent)
+   00B9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BE callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C8 ldc.i4 10118
+   00CD ldarg.0 
+   00CE ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnSetPreBuyEquip(Assets.Scripts.UI.CUIEvent)
+   00D4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E3 ldc.i4 10119
+   00E8 ldarg.0 
+   00E9 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnCanclePreBuyEquip(Assets.Scripts.UI.CUIEvent)
+   00EF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FE ldc.i4 10107
+   0103 ldarg.0 
+   0104 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipQuicklyBuy(Assets.Scripts.UI.CUIEvent)
+   010A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   010F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0114 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0119 ldc.i4 10108
+   011E ldarg.0 
+   011F ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipOpenEquipTree(Assets.Scripts.UI.CUIEvent)
+   0125 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0134 ldc.i4 10109
+   0139 ldarg.0 
+   013A ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipCloseEquipTree(Assets.Scripts.UI.CUIEvent)
+   0140 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0145 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   014F ldc.i4 10110
+   0154 ldarg.0 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipSelectItemInEquipTree(Assets.Scripts.UI.CUIEvent)
+   015B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0160 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0165 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   016A ldc.i4 10111
+   016F ldarg.0 
+   0170 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListSelectedChanged(Assets.Scripts.UI.CUIEvent)
+   0176 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   017B callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0180 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0185 ldc.i4 10112
+   018A ldarg.0 
+   018B ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListScrollChanged(Assets.Scripts.UI.CUIEvent)
+   0191 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0196 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   019B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01A0 ldc.i4 10113
+   01A5 ldarg.0 
+   01A6 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListMoreLeftClicked(Assets.Scripts.UI.CUIEvent)
+   01AC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01B1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01B6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01BB ldc.i4 10114
+   01C0 ldarg.0 
+   01C1 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListMoreRightClicked(Assets.Scripts.UI.CUIEvent)
+   01C7 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01CC callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01D1 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01D6 ldc.i4 10115
+   01DB ldarg.0 
+   01DC ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipShowOrHideInBattleBtnClicked(Assets.Scripts.UI.CUIEvent)
+   01E2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01E7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01EC call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01F1 ldc.i4 10122
+   01F6 ldarg.0 
+   01F7 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipSwitchExtraActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent)
+   01FD newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0202 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0207 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   020C ldc.i4 10120
+   0211 ldarg.0 
+   0212 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnSwitchEquipPanelShowMode(Assets.Scripts.UI.CUIEvent)
+   0218 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   021D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0222 ret 
+== System.Void UnRegisterEvents() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UnRegisterEvents()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 10100
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OpenEquipForm(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 10101
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipFormClose(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 10102
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipTypeListSelect(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 10103
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipItemSelect(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 10104
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0092 ldc.i4 10105
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipBuyBtnClick(Assets.Scripts.UI.CUIEvent)
+   009E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AD ldc.i4 10106
+   00B2 ldarg.0 
+   00B3 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnEquipSaleBtnClick(Assets.Scripts.UI.CUIEvent)
+   00B9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BE callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C8 ldc.i4 10118
+   00CD ldarg.0 
+   00CE ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnSetPreBuyEquip(Assets.Scripts.UI.CUIEvent)
+   00D4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E3 ldc.i4 10119
+   00E8 ldarg.0 
+   00E9 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnCanclePreBuyEquip(Assets.Scripts.UI.CUIEvent)
+   00EF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FE ldc.i4 10107
+   0103 ldarg.0 
+   0104 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipQuicklyBuy(Assets.Scripts.UI.CUIEvent)
+   010A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   010F callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0114 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0119 ldc.i4 10108
+   011E ldarg.0 
+   011F ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipOpenEquipTree(Assets.Scripts.UI.CUIEvent)
+   0125 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012A callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0134 ldc.i4 10109
+   0139 ldarg.0 
+   013A ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipCloseEquipTree(Assets.Scripts.UI.CUIEvent)
+   0140 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0145 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   014F ldc.i4 10110
+   0154 ldarg.0 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipSelectItemInEquipTree(Assets.Scripts.UI.CUIEvent)
+   015B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0160 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0165 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   016A ldc.i4 10111
+   016F ldarg.0 
+   0170 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListSelectedChanged(Assets.Scripts.UI.CUIEvent)
+   0176 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   017B callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0180 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0185 ldc.i4 10112
+   018A ldarg.0 
+   018B ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListScrollChanged(Assets.Scripts.UI.CUIEvent)
+   0191 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0196 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   019B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01A0 ldc.i4 10113
+   01A5 ldarg.0 
+   01A6 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListMoreLeftClicked(Assets.Scripts.UI.CUIEvent)
+   01AC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01B1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01B6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01BB ldc.i4 10114
+   01C0 ldarg.0 
+   01C1 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipBackEquipListMoreRightClicked(Assets.Scripts.UI.CUIEvent)
+   01C7 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01CC callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01D1 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01D6 ldc.i4 10115
+   01DB ldarg.0 
+   01DC ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipShowOrHideInBattleBtnClicked(Assets.Scripts.UI.CUIEvent)
+   01E2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01E7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01EC call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01F1 ldc.i4 10122
+   01F6 ldarg.0 
+   01F7 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnBattleEquipSwitchExtraActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent)
+   01FD newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0202 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0207 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   020C ldc.i4 10120
+   0211 ldarg.0 
+   0212 ldftn System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OnSwitchEquipPanelShowMode(Assets.Scripts.UI.CUIEvent)
+   0218 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   021D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0222 ret 
+== System.Void Clear() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0018: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   000D ldloc.0 
+   000E ldelem.ref 
+   000F callvirt System.Void System.Collections.Generic.List`1<System.UInt16>::Clear()
+   0014 ldloc.0 
+   0015 ldc.i4.1 
+   0016 add 
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ldc.i4.4 
+   001A blt IL_0007: ldarg.0
+   001F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0024 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::s_equipFormPath
+   0029 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   002E ldarg.0 
+   002F call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::Clear()
+   0034 ret 
+== System.Void UpdateLogic(System.Int32 delta) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_tickNotBuyEquipTime
+   0012 ldc.i4.0 
+   0013 ble IL_0089: ldarg.0
+   0018 ldarg.0 
+   0019 dup 
+   001A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_tickNotBuyEquipTime
+   001F ldarg.1 
+   0020 sub 
+   0021 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_tickNotBuyEquipTime
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_tickNotBuyEquipTime
+   002C ldc.i4.0 
+   002D bgt IL_0089: ldarg.0
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipStatusMap
+   0038 callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt16,SGW/stEquipInBattleStatus>::GetEnumerator()
+   003D stloc.0 
+   003E ldc.i4.1 
+   003F stloc.1 
+   0040 br IL_0068: ldloca.s V_0
+   0045 ldloca.s V_0
+   0047 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt16,SGW/stEquipInBattleStatus>::get_Current()
+   004C stloc.2 
+   004D ldloca.s V_2
+   004F call !1 System.Collections.Generic.KeyValuePair`2<System.UInt16,SGW/stEquipInBattleStatus>::get_Value()
+   0054 stloc.3 
+   0055 ldloca.s V_3
+   0057 call System.Boolean SGW/stEquipInBattleStatus::get_m_isCanBought()
+   005C brtrue IL_0068: ldloca.s V_0
+   0061 ldc.i4.0 
+   0062 stloc.1 
+   0063 br IL_0074: ldloc.1
+   0068 ldloca.s V_0
+   006A call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt16,SGW/stEquipInBattleStatus>::MoveNext()
+   006F brtrue IL_0045: ldloca.s V_0
+   0074 ldloc.1 
+   0075 brfalse IL_0089: ldarg.0
+   007A call !0 Singleton`1<EventRouter>::GetInstance()
+   007F ldsfld EventID::EQUIP_LONGTIME_NOT_BUY_EQUIP
+   0084 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipQuicklyBuyUIComponent
+   008F brfalse IL_00a0: ret
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipQuicklyBuyUIComponent
+   009A ldarg.1 
+   009B callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::Update(System.Int32)
+   00A0 ret 
+== System.Void Update() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_enable
+   0006 brfalse IL_001a: ret
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0010 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0015 brfalse IL_001b: ldc.i4.0
+   001A ret 
+   001B ldc.i4.0 
+   001C stloc.0 
+   001D ldc.i4.0 
+   001E stloc.1 
+   001F ldc.i4.0 
+   0020 stloc.2 
+   0021 ldc.i4.0 
+   0022 stloc.3 
+   0023 ldarg.0 
+   0024 ldc.i4.4 
+   0025 call System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::HasEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   002A brfalse IL_0033: ldarg.0
+   002F ldc.i4.1 
+   0030 stloc.1 
+   0031 ldc.i4.1 
+   0032 stloc.3 
+   0033 ldarg.0 
+   0034 ldc.i4.s 16
+   0036 call System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::HasEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   003B brfalse IL_0042: ldarg.0
+   0040 ldc.i4.1 
+   0041 stloc.3 
+   0042 ldarg.0 
+   0043 ldc.i4.2 
+   0044 call System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::HasEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0049 brfalse IL_006d: ldarg.0
+   004E ldc.i4.1 
+   004F stloc.0 
+   0050 ldc.i4.1 
+   0051 stloc.1 
+   0052 ldc.i4.1 
+   0053 stloc.2 
+   0054 ldc.i4.1 
+   0055 stloc.3 
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   005C ldnull 
+   005D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0062 brfalse IL_006d: ldarg.0
+   0067 ldarg.0 
+   0068 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipBagPanel()
+   006D ldarg.0 
+   006E ldc.i4.1 
+   006F call System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::HasEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0074 brfalse IL_009d: ldloc.1
+   0079 ldc.i4.1 
+   007A stloc.0 
+   007B ldc.i4.1 
+   007C stloc.1 
+   007D ldc.i4.1 
+   007E stloc.2 
+   007F ldc.i4.1 
+   0080 stloc.3 
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0087 ldnull 
+   0088 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008D brfalse IL_009d: ldloc.1
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0098 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::RefreshGoldCoin()
+   009D ldloc.1 
+   009E brfalse IL_00c0: ldarg.0
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlHeroPermitedToBuyEquip
+   00A9 brfalse IL_00b9: ldarg.0
+   00AE ldarg.0 
+   00AF callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshHostPlayerQuicklyBuyEquipList()
+   00B4 br IL_00c0: ldarg.0
+   00B9 ldarg.0 
+   00BA ldc.i4.0 
+   00BB callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::EnableHostPlayerQuicklyBuyEquipPanel(System.Boolean)
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   00C6 ldnull 
+   00C7 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00CC brfalse IL_010f: ldarg.0
+   00D1 ldloc.0 
+   00D2 brfalse IL_00de: ldloc.2
+   00D7 ldarg.0 
+   00D8 ldc.i4.1 
+   00D9 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   00DE ldloc.2 
+   00DF brfalse IL_0102: ldloc.3
+   00E4 ldarg.0 
+   00E5 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   00EA brfalse IL_00fb: ldarg.0
+   00EF ldarg.0 
+   00F0 ldc.i4.1 
+   00F1 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   00F6 br IL_0102: ldloc.3
+   00FB ldarg.0 
+   00FC ldc.i4.1 
+   00FD callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0102 ldloc.3 
+   0103 brfalse IL_010f: ldarg.0
+   0108 ldarg.0 
+   0109 ldc.i4.1 
+   010A callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   010F ldarg.0 
+   0110 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearEquipChangeFlag()
+   0115 ret 
+== System.Void InitRecommendEquipSimpleConfig() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_00ef: ret
+   0010 ldc.i4.0 
+   0011 stloc.0 
+   0012 br IL_00e8: ldloc.0
+   0017 ldloc.0 
+   0018 ldc.i4.1 
+   0019 bne.un IL_0023: ldnull
+   001E br IL_00e4: ldloc.0
+   0023 ldnull 
+   0024 stloc.2 
+   0025 ldloca.s V_1
+   0027 ldarg.0 
+   0028 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0032 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0037 ldloc.0 
+   0038 conv.u1 
+   0039 call System.Boolean ResData.GameDataMgr/m_recommendEquipSimpleDatabin::FindByKey(ResData.ResRecommendEquipSimple&,System.UInt32,System.Byte)
+   003E brfalse IL_00e4: ldloc.0
+   0043 ldc.i4.0 
+   0044 stloc.3 
+   0045 br IL_00dc: ldloc.3
+   004A ldloca.s V_1
+   004C ldloc.3 
+   004D call System.UInt16 ResData.ResRecommendEquipSimple::EquipId(System.Int32)
+   0052 stloc.s V_4
+   0054 ldloc.s V_4
+   0056 ldc.i4.0 
+   0057 ble IL_00d8: ldloc.3
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0062 ldloc.s V_4
+   0064 ldloca.s V_2
+   0066 callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::TryGetValue(!0,!1&)
+   006B brfalse IL_00d8: ldloc.3
+   0070 ldloc.2 
+   0071 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isAvailable
+   0076 brfalse IL_00d8: ldloc.3
+   007B ldloc.2 
+   007C ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isForbidInShop
+   0081 brfalse IL_00c9: ldarg.0
+   0086 ldloc.2 
+   0087 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_forbidReplaceEquipID
+   008C stloc.s V_4
+   008E ldloc.s V_4
+   0090 ldc.i4.0 
+   0091 ble IL_00c4: br IL_00d8
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   009C ldloc.s V_4
+   009E ldloca.s V_2
+   00A0 callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::TryGetValue(!0,!1&)
+   00A5 brfalse IL_00c4: br IL_00d8
+   00AA ldloc.2 
+   00AB ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isAvailable
+   00B0 brfalse IL_00c4: br IL_00d8
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   00BB ldloc.0 
+   00BC ldelem.ref 
+   00BD ldloc.s V_4
+   00BF callvirt System.Void System.Collections.Generic.List`1<System.UInt16>::Add(!0)
+   00C4 br IL_00d8: ldloc.3
+   00C9 ldarg.0 
+   00CA ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   00CF ldloc.0 
+   00D0 ldelem.ref 
+   00D1 ldloc.s V_4
+   00D3 callvirt System.Void System.Collections.Generic.List`1<System.UInt16>::Add(!0)
+   00D8 ldloc.3 
+   00D9 ldc.i4.1 
+   00DA add 
+   00DB stloc.3 
+   00DC ldloc.3 
+   00DD ldc.i4.s 15
+   00DF blt IL_004a: ldloca.s V_1
+   00E4 ldloc.0 
+   00E5 ldc.i4.1 
+   00E6 add 
+   00E7 stloc.0 
+   00E8 ldloc.0 
+   00E9 ldc.i4.4 
+   00EA blt IL_0017: ldloc.0
+   00EF ret 
+== System.Void InitRecommendEquipSimple(System.UInt16[] equipList) attrs=Family, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   0006 ldc.i4.1 
+   0007 ldelem.ref 
+   0008 callvirt System.Void System.Collections.Generic.List`1<System.UInt16>::Clear()
+   000D ldarg.1 
+   000E brfalse IL_00a0: ret
+   0013 ldnull 
+   0014 stloc.0 
+   0015 ldc.i4.0 
+   0016 stloc.1 
+   0017 br IL_0097: ldloc.1
+   001C ldarg.1 
+   001D ldloc.1 
+   001E ldelem.u2 
+   001F stloc.2 
+   0020 ldloc.2 
+   0021 ldc.i4.0 
+   0022 ble IL_0093: ldloc.1
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   002D ldloc.2 
+   002E ldloca.s V_0
+   0030 callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::TryGetValue(!0,!1&)
+   0035 brfalse IL_0093: ldloc.1
+   003A ldloc.0 
+   003B ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isAvailable
+   0040 brfalse IL_0093: ldloc.1
+   0045 ldloc.0 
+   0046 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isForbidInShop
+   004B brfalse IL_007e: ldloc.2
+   0050 ldloc.0 
+   0051 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_forbidReplaceEquipID
+   0056 stloc.2 
+   0057 ldloc.2 
+   0058 ldc.i4.0 
+   0059 ble IL_007c: ldc.i4.0
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0064 ldloc.2 
+   0065 ldloca.s V_0
+   0067 callvirt System.Boolean DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>::TryGetValue(!0,!1&)
+   006C brfalse IL_007c: ldc.i4.0
+   0071 ldloc.0 
+   0072 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_isAvailable
+   0077 brtrue IL_007e: ldloc.2
+   007C ldc.i4.0 
+   007D stloc.2 
+   007E ldloc.2 
+   007F ldc.i4.0 
+   0080 ble IL_0093: ldloc.1
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   008B ldc.i4.1 
+   008C ldelem.ref 
+   008D ldloc.2 
+   008E callvirt System.Void System.Collections.Generic.List`1<System.UInt16>::Add(!0)
+   0093 ldloc.1 
+   0094 ldc.i4.1 
+   0095 add 
+   0096 stloc.1 
+   0097 ldloc.1 
+   0098 ldarg.1 
+   0099 ldlen 
+   009A conv.i4 
+   009B blt IL_001c: ldarg.1
+   00A0 ret 
+== System.Void GetDisplayedEquipStatus(System.Boolean onlyRefreshPriceAndOwned) attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0021: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brtrue IL_0022: ldloca.s V_0
+   0021 ret 
+   0022 ldloca.s V_0
+   0024 initobj SGW/stQueryEquipIDList
+   002A ldloca.s V_0
+   002C ldc.i4.0 
+   002D stfld SGW/stQueryEquipIDList::m_equipIDCount
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0038 brfalse IL_01c2: ldsfld Assets.Scripts.GameSystem.enEquipPanelShowMode Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   003D ldarg.0 
+   003E ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   0043 ldfld Assets.Scripts.GameSystem.stEquipTree::m_rootEquipID
+   0048 ldc.i4.0 
+   0049 ble IL_011f: ldarg.0
+   004E ldloca.s V_0
+   0050 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   0055 ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   005A ldloca.s V_0
+   005C dup 
+   005D ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   0062 dup 
+   0063 stloc.1 
+   0064 ldc.i4.1 
+   0065 add 
+   0066 conv.u1 
+   0067 stfld SGW/stQueryEquipIDList::m_equipIDCount
+   006C ldloc.1 
+   006D conv.i 
+   006E ldc.i4.2 
+   006F mul 
+   0070 add 
+   0071 ldarg.0 
+   0072 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   0077 ldfld Assets.Scripts.GameSystem.stEquipTree::m_rootEquipID
+   007C stind.i2 
+   007D ldc.i4.0 
+   007E stloc.2 
+   007F br IL_010c: ldloc.2
+   0084 ldloca.s V_0
+   0086 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   008B ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   0090 ldloca.s V_0
+   0092 dup 
+   0093 ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   0098 dup 
+   0099 stloc.1 
+   009A ldc.i4.1 
+   009B add 
+   009C conv.u1 
+   009D stfld SGW/stQueryEquipIDList::m_equipIDCount
+   00A2 ldloc.1 
+   00A3 conv.i 
+   00A4 ldc.i4.2 
+   00A5 mul 
+   00A6 add 
+   00A7 ldarg.0 
+   00A8 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   00AD ldfld Assets.Scripts.GameSystem.stEquipTree::m_2ndEquipIDs
+   00B2 ldloc.2 
+   00B3 ldelem.u2 
+   00B4 stind.i2 
+   00B5 ldc.i4.0 
+   00B6 stloc.3 
+   00B7 br IL_00f3: ldloc.3
+   00BC ldloca.s V_0
+   00BE ldflda SGW/stQueryEquipIDList::m_equipIDList
+   00C3 ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   00C8 ldloca.s V_0
+   00CA dup 
+   00CB ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   00D0 dup 
+   00D1 stloc.1 
+   00D2 ldc.i4.1 
+   00D3 add 
+   00D4 conv.u1 
+   00D5 stfld SGW/stQueryEquipIDList::m_equipIDCount
+   00DA ldloc.1 
+   00DB conv.i 
+   00DC ldc.i4.2 
+   00DD mul 
+   00DE add 
+   00DF ldarg.0 
+   00E0 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   00E5 ldfld Assets.Scripts.GameSystem.stEquipTree::m_3rdEquipIDs
+   00EA ldloc.2 
+   00EB ldelem.ref 
+   00EC ldloc.3 
+   00ED ldelem.u2 
+   00EE stind.i2 
+   00EF ldloc.3 
+   00F0 ldc.i4.1 
+   00F1 add 
+   00F2 stloc.3 
+   00F3 ldloc.3 
+   00F4 conv.i8 
+   00F5 ldarg.0 
+   00F6 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   00FB ldfld Assets.Scripts.GameSystem.stEquipTree::m_3rdEquipCounts
+   0100 ldloc.2 
+   0101 ldelem.u4 
+   0102 conv.u8 
+   0103 blt IL_00bc: ldloca.s V_0
+   0108 ldloc.2 
+   0109 ldc.i4.1 
+   010A add 
+   010B stloc.2 
+   010C ldloc.2 
+   010D conv.i8 
+   010E ldarg.0 
+   010F ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   0114 ldfld Assets.Scripts.GameSystem.stEquipTree::m_2ndEquipCount
+   0119 conv.u8 
+   011A blt IL_0084: ldloca.s V_0
+   011F ldarg.0 
+   0120 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0125 ldc.i4.m1 
+   0126 beq IL_01bd: br IL_02cd
+   012B ldarg.0 
+   012C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0131 ldarg.0 
+   0132 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0137 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   013C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0141 brfalse IL_01bd: br IL_02cd
+   0146 ldarg.0 
+   0147 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   014C ldarg.0 
+   014D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0152 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0157 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   015C ldfld Assets.Scripts.GameSystem.CEquipInfo::m_backEquipIDs
+   0161 stloc.s V_4
+   0163 ldloc.s V_4
+   0165 brtrue IL_0170: ldloc.s V_4
+   016A ldc.i4.0 
+   016B br IL_0177: stloc.s V_5
+   0170 ldloc.s V_4
+   0172 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   0177 stloc.s V_5
+   0179 ldc.i4.0 
+   017A stloc.s V_6
+   017C br IL_01b4: ldloc.s V_6
+   0181 ldloca.s V_0
+   0183 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   0188 ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   018D ldloca.s V_0
+   018F dup 
+   0190 ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   0195 dup 
+   0196 stloc.1 
+   0197 ldc.i4.1 
+   0198 add 
+   0199 conv.u1 
+   019A stfld SGW/stQueryEquipIDList::m_equipIDCount
+   019F ldloc.1 
+   01A0 conv.i 
+   01A1 ldc.i4.2 
+   01A2 mul 
+   01A3 add 
+   01A4 ldloc.s V_4
+   01A6 ldloc.s V_6
+   01A8 callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   01AD stind.i2 
+   01AE ldloc.s V_6
+   01B0 ldc.i4.1 
+   01B1 add 
+   01B2 stloc.s V_6
+   01B4 ldloc.s V_6
+   01B6 ldloc.s V_5
+   01B8 blt IL_0181: ldloca.s V_0
+   01BD br IL_02cd: ldarg.1
+   01C2 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   01C7 ldc.i4.1 
+   01C8 bne.un IL_024e: ldc.i4.0
+   01CD ldarg.0 
+   01CE ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   01D3 brtrue IL_024e: ldc.i4.0
+   01D8 ldc.i4.0 
+   01D9 stloc.s V_7
+   01DB br IL_023a: ldloc.s V_7
+   01E0 ldarg.0 
+   01E1 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   01E6 ldloc.s V_7
+   01E8 ldelem.ref 
+   01E9 stloc.s V_8
+   01EB ldc.i4.0 
+   01EC stloc.s V_9
+   01EE br IL_0226: ldloc.s V_9
+   01F3 ldloca.s V_0
+   01F5 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   01FA ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   01FF ldloca.s V_0
+   0201 dup 
+   0202 ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   0207 dup 
+   0208 stloc.1 
+   0209 ldc.i4.1 
+   020A add 
+   020B conv.u1 
+   020C stfld SGW/stQueryEquipIDList::m_equipIDCount
+   0211 ldloc.1 
+   0212 conv.i 
+   0213 ldc.i4.2 
+   0214 mul 
+   0215 add 
+   0216 ldloc.s V_8
+   0218 ldloc.s V_9
+   021A callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   021F stind.i2 
+   0220 ldloc.s V_9
+   0222 ldc.i4.1 
+   0223 add 
+   0224 stloc.s V_9
+   0226 ldloc.s V_9
+   0228 ldloc.s V_8
+   022A callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   022F blt IL_01f3: ldloca.s V_0
+   0234 ldloc.s V_7
+   0236 ldc.i4.1 
+   0237 add 
+   0238 stloc.s V_7
+   023A ldloc.s V_7
+   023C ldarg.0 
+   023D ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   0242 ldlen 
+   0243 conv.i4 
+   0244 blt IL_01e0: ldarg.0
+   0249 br IL_02cd: ldarg.1
+   024E ldc.i4.0 
+   024F stloc.s V_10
+   0251 br IL_02b7: ldloc.s V_10
+   0256 ldarg.0 
+   0257 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   025C ldarg.0 
+   025D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0262 ldelem.ref 
+   0263 ldloc.s V_10
+   0265 ldelem.ref 
+   0266 stloc.s V_11
+   0268 ldc.i4.0 
+   0269 stloc.s V_12
+   026B br IL_02a3: ldloc.s V_12
+   0270 ldloca.s V_0
+   0272 ldflda SGW/stQueryEquipIDList::m_equipIDList
+   0277 ldflda SGW/stQueryEquipIDList/<m_equipIDList>__FixedBuffer13::FixedElementField
+   027C ldloca.s V_0
+   027E dup 
+   027F ldfld SGW/stQueryEquipIDList::m_equipIDCount
+   0284 dup 
+   0285 stloc.1 
+   0286 ldc.i4.1 
+   0287 add 
+   0288 conv.u1 
+   0289 stfld SGW/stQueryEquipIDList::m_equipIDCount
+   028E ldloc.1 
+   028F conv.i 
+   0290 ldc.i4.2 
+   0291 mul 
+   0292 add 
+   0293 ldloc.s V_11
+   0295 ldloc.s V_12
+   0297 callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   029C stind.i2 
+   029D ldloc.s V_12
+   029F ldc.i4.1 
+   02A0 add 
+   02A1 stloc.s V_12
+   02A3 ldloc.s V_12
+   02A5 ldloc.s V_11
+   02A7 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   02AC blt IL_0270: ldloca.s V_0
+   02B1 ldloc.s V_10
+   02B3 ldc.i4.1 
+   02B4 add 
+   02B5 stloc.s V_10
+   02B7 ldloc.s V_10
+   02B9 ldarg.0 
+   02BA ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   02BF ldarg.0 
+   02C0 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   02C5 ldelem.ref 
+   02C6 ldlen 
+   02C7 conv.i4 
+   02C8 blt IL_0256: ldarg.0
+   02CD ldarg.1 
+   02CE brfalse IL_030c: ldarg.0
+   02D3 ldarg.0 
+   02D4 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   02D9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   02DE callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   02E3 ldloca.s V_0
+   02E5 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache0
+   02EA brtrue.s IL_02fd: ldsfld SGW/stQueryEquipStatusListTypeDelegate Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache0
+   02EC ldnull 
+   02ED ldftn System.Void Assets.Scripts.GameSystem.EquipCallBack::OnGetEquipStatusListCallbackOnlyRefreshPriceAndOwned(SGW/stQueryEquipStatusList&)
+   02F3 newobj System.Void SGW/stQueryEquipStatusListTypeDelegate::.ctor(System.Object,System.IntPtr)
+   02F8 stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache0
+   02FD ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache0
+   0302 call System.Void SGW::GetEquipStatusList(System.UInt32,SGW/stQueryEquipIDList&,SGW/stQueryEquipStatusListTypeDelegate)
+   0307 br IL_0340: ret
+   030C ldarg.0 
+   030D ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0312 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0317 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   031C ldloca.s V_0
+   031E ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache1
+   0323 brtrue.s IL_0336: ldsfld SGW/stQueryEquipStatusListTypeDelegate Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache1
+   0325 ldnull 
+   0326 ldftn System.Void Assets.Scripts.GameSystem.EquipCallBack::OnGetEquipStatusListCallbackRefreshAll(SGW/stQueryEquipStatusList&)
+   032C newobj System.Void SGW/stQueryEquipStatusListTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0331 stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache1
+   0336 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache1
+   033B call System.Void SGW::GetEquipStatusList(System.UInt32,SGW/stQueryEquipIDList&,SGW/stQueryEquipStatusListTypeDelegate)
+   0340 ret 
+== System.Int32 GetCurEquipUsageByListSelectedIndex(System.Int32 selectedIndex) attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_0028: ldloc.1
+   0009 ldloc.1 
+   000A brfalse IL_0024: ldloc.1
+   000F ldloc.1 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   0016 call System.Boolean Assets.Scripts.GameSystem.CEquipSystem::IsHaveAvailableEquip(CoreDef.enEquipUsage,System.Collections.Generic.List`1<System.UInt16>[][])
+   001B brtrue IL_0024: ldloc.1
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 ldloc.1 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.1 
+   0028 ldloc.1 
+   0029 ldarg.1 
+   002A ble IL_0009: ldloc.1
+   002F ldloc.0 
+   0030 ldc.i4.6 
+   0031 blt IL_0049: ldloc.0
+   0036 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   003B ldfld Assets.Scripts.GameLogic.CLevelContext::m_bEnableShopHorizonTab
+   0040 brtrue IL_0049: ldloc.0
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ret 
+== System.Int32 GetListSelectedIndexByCurEquipUsage(System.Int32 equipUsage) attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_0028: ldloc.1
+   0009 ldloc.1 
+   000A brfalse IL_0024: ldloc.1
+   000F ldloc.1 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   0016 call System.Boolean Assets.Scripts.GameSystem.CEquipSystem::IsHaveAvailableEquip(CoreDef.enEquipUsage,System.Collections.Generic.List`1<System.UInt16>[][])
+   001B brtrue IL_0024: ldloc.1
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 sub 
+   0023 stloc.0 
+   0024 ldloc.1 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.1 
+   0028 ldloc.1 
+   0029 ldloc.0 
+   002A ble IL_0009: ldloc.1
+   002F ldarg.1 
+   0030 ldc.i4.6 
+   0031 ble IL_0049: ldloc.0
+   0036 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   003B ldfld Assets.Scripts.GameLogic.CLevelContext::m_bEnableShopHorizonTab
+   0040 brtrue IL_0049: ldloc.0
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 sub 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ret 
+== System.Void OpenEquipForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=7
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 ldc.i4.0 
+   0006 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DumpRecovery(System.UInt32)
+   000B ldarg.0 
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0011 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::s_equipFormPath
+   0016 ldc.i4.1 
+   0017 ldc.i4.1 
+   0018 ldnull 
+   0019 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   001E stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_03c4: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   003A call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   003F brfalse IL_03c4: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   004A ldc.i4.0 
+   004B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0050 stloc.0 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0057 ldloc.0 
+   0058 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::Init(UnityEngine.GameObject)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0063 ldc.i4.1 
+   0064 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0069 stloc.1 
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0070 ldloc.1 
+   0071 callvirt System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::Init(UnityEngine.GameObject)
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   007C ldc.i4.2 
+   007D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0082 stloc.2 
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0089 ldloc.2 
+   008A callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::Init(UnityEngine.GameObject)
+   008F ldarg.0 
+   0090 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0095 ldc.i4.3 
+   0096 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   009B stloc.3 
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   00A2 ldloc.3 
+   00A3 callvirt System.Void Assets.Scripts.GameSystem.CEquipInfoUIComponent::Init(UnityEngine.GameObject)
+   00A8 ldc.i4.1 
+   00A9 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendInOutEquipShopFrameCommand(System.Byte)
+   00AE ldarg.0 
+   00AF ldc.i4.0 
+   00B0 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   00BB callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::RefreshGoldCoin()
+   00C0 ldarg.0 
+   00C1 ldloca.s V_4
+   00C3 ldloca.s V_5
+   00C5 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipSelectData(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem[]&,Assets.Scripts.GameSystem.enSelectedEquipOrigin&)
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   00D0 stloc.s V_6
+   00D2 ldarg.0 
+   00D3 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   00D8 stloc.s V_7
+   00DA ldarg.0 
+   00DB callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   00E0 ldarg.0 
+   00E1 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   00E6 ldarg.0 
+   00E7 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   00EC callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::RefreshRcmdEquipPlanName()
+   00F1 ldarg.0 
+   00F2 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   00F7 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   00FC callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::SetEquipPanelShowMode(Assets.Scripts.GameSystem.enEquipPanelShowMode)
+   0101 call !0 Singleton`1<CTextManager>::GetInstance()
+   0106 stloc.s V_8
+   0108 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   010D stloc.s V_9
+   010F ldc.i4.s 9
+   0111 newarr System.String
+   0116 dup 
+   0117 ldc.i4.0 
+   0118 ldloc.s V_8
+   011A ldstr Equip_Usage_Recommend
+   011F ldc.i4.1 
+   0120 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0125 stelem.ref 
+   0126 dup 
+   0127 ldc.i4.1 
+   0128 ldloc.s V_8
+   012A ldstr Equip_Usage_PhyAttack
+   012F ldc.i4.1 
+   0130 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0135 stelem.ref 
+   0136 dup 
+   0137 ldc.i4.2 
+   0138 ldloc.s V_8
+   013A ldstr Equip_Usage_MagicAttack
+   013F ldc.i4.1 
+   0140 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0145 stelem.ref 
+   0146 dup 
+   0147 ldc.i4.3 
+   0148 ldloc.s V_8
+   014A ldstr Equip_Usage_Defence
+   014F ldc.i4.1 
+   0150 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0155 stelem.ref 
+   0156 dup 
+   0157 ldc.i4.4 
+   0158 ldloc.s V_8
+   015A ldstr Equip_Usage_Move
+   015F ldc.i4.1 
+   0160 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0165 stelem.ref 
+   0166 dup 
+   0167 ldc.i4.5 
+   0168 ldloc.s V_8
+   016A ldstr Equip_Usage_Jungle
+   016F ldc.i4.1 
+   0170 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0175 stelem.ref 
+   0176 dup 
+   0177 ldc.i4.6 
+   0178 ldloc.s V_9
+   017A ldfld Assets.Scripts.GameLogic.CLevelContext::m_bEnableShopHorizonTab
+   017F brfalse IL_0196: ldsfld System.String System.String::Empty
+   0184 ldloc.s V_8
+   0186 ldstr Equip_Usage_Horizon
+   018B ldc.i4.1 
+   018C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0191 br IL_019b: stelem.ref
+   0196 ldsfld System.String::Empty
+   019B stelem.ref 
+   019C dup 
+   019D ldc.i4.7 
+   019E ldloc.s V_8
+   01A0 ldstr Equip_Usage_Aid
+   01A5 ldc.i4.1 
+   01A6 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01AB stelem.ref 
+   01AC dup 
+   01AD ldc.i4.8 
+   01AE ldsfld System.String::Empty
+   01B3 stelem.ref 
+   01B4 stloc.s V_10
+   01B6 ldloc.s V_10
+   01B8 ldlen 
+   01B9 conv.i4 
+   01BA newobj System.Void System.Collections.Generic.List`1<System.String>::.ctor(System.Int32)
+   01BF stloc.s V_11
+   01C1 ldc.i4.0 
+   01C2 stloc.s V_12
+   01C4 br IL_0203: ldloc.s V_12
+   01C9 ldloc.s V_10
+   01CB ldloc.s V_12
+   01CD ldelem.ref 
+   01CE call System.Boolean System.String::IsNullOrEmpty(System.String)
+   01D3 brtrue IL_01fd: ldloc.s V_12
+   01D8 ldloc.s V_12
+   01DA brfalse IL_01f1: ldloc.s V_11
+   01DF ldloc.s V_12
+   01E1 ldarg.0 
+   01E2 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   01E7 call System.Boolean Assets.Scripts.GameSystem.CEquipSystem::IsHaveAvailableEquip(CoreDef.enEquipUsage,System.Collections.Generic.List`1<System.UInt16>[][])
+   01EC brfalse IL_01fd: ldloc.s V_12
+   01F1 ldloc.s V_11
+   01F3 ldloc.s V_10
+   01F5 ldloc.s V_12
+   01F7 ldelem.ref 
+   01F8 callvirt System.Void System.Collections.Generic.List`1<System.String>::Add(!0)
+   01FD ldloc.s V_12
+   01FF ldc.i4.1 
+   0200 add 
+   0201 stloc.s V_12
+   0203 ldloc.s V_12
+   0205 ldsfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::s_equipUsageAmount
+   020A blt IL_01c9: ldloc.s V_10
+   020F ldarg.0 
+   0210 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0215 ldloc.s V_11
+   0217 callvirt !0[] System.Collections.Generic.List`1<System.String>::ToArray()
+   021C ldarg.0 
+   021D ldarg.0 
+   021E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0223 callvirt System.Int32 Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetListSelectedIndexByCurEquipUsage(System.Int32)
+   0228 ldarg.0 
+   0229 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   022E callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::InitEquipUsageList(System.String[],System.Int32,Assets.Scripts.UI.CUIFormScript)
+   0233 ldarg.0 
+   0234 ldloc.s V_6
+   0236 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   023B ldarg.0 
+   023C ldloc.s V_7
+   023E stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0243 ldarg.0 
+   0244 ldloca.s V_4
+   0246 ldloca.s V_5
+   0248 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipSelectData(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem[]&,Assets.Scripts.GameSystem.enSelectedEquipOrigin&)
+   024D ldarg.0 
+   024E ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0253 brtrue IL_0263: ldarg.0
+   0258 ldarg.0 
+   0259 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipTreePanel()
+   025E br IL_0286: ldarg.0
+   0263 ldarg.0 
+   0264 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0269 brfalse IL_0286: ldarg.0
+   026E ldarg.0 
+   026F ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0274 brfalse IL_0286: ldarg.0
+   0279 ldarg.0 
+   027A ldarg.0 
+   027B ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0280 ldc.i4.0 
+   0281 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OpenEquipTreePanel(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   0286 ldarg.0 
+   0287 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipBagPanel()
+   028C ldarg.0 
+   028D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0292 ldc.i4.m1 
+   0293 beq IL_03b1: ldarg.0
+   0298 ldarg.0 
+   0299 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   029E ldarg.0 
+   029F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   02A4 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   02A9 ldobj Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   02AE stloc.s V_13
+   02B0 ldloca.s V_13
+   02B2 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   02B7 brfalse IL_0377: ldarg.0
+   02BC ldloca.s V_13
+   02BE ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   02C3 ldnull 
+   02C4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   02C9 brfalse IL_0377: ldarg.0
+   02CE ldarg.0 
+   02CF ldarg.0 
+   02D0 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   02D5 ldloca.s V_13
+   02D7 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   02DC ldloca.s V_13
+   02DE ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   02E3 ldloca.s V_13
+   02E5 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_containerType
+   02EA ldloca.s V_13
+   02EC ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_positionInBag
+   02F1 ldc.i4.1 
+   02F2 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   02F7 ldarg.0 
+   02F8 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   02FD ldc.i4.1 
+   02FE bne.un IL_0361: ldarg.0
+   0303 ldarg.0 
+   0304 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0309 ldc.i4.0 
+   030A ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   030F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0314 brfalse IL_0361: ldarg.0
+   0319 ldarg.0 
+   031A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   031F ldc.i4.0 
+   0320 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0325 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   032A ldnull 
+   032B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0330 brfalse IL_0361: ldarg.0
+   0335 ldarg.0 
+   0336 ldc.i4.0 
+   0337 ldarg.0 
+   0338 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   033D ldc.i4.0 
+   033E ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0343 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0348 ldarg.0 
+   0349 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   034E ldc.i4.0 
+   034F ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0354 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   0359 ldc.i4.3 
+   035A ldc.i4.m1 
+   035B ldc.i4.1 
+   035C callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   0361 ldarg.0 
+   0362 ldloca.s V_13
+   0364 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0369 ldarg.0 
+   036A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   036F ldc.i4.2 
+   0370 ceq 
+   0372 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   0377 ldarg.0 
+   0378 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   037D ldc.i4.2 
+   037E ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0383 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0388 brtrue IL_03a6: ldc.i4.1
+   038D ldarg.0 
+   038E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0393 ldc.i4.0 
+   0394 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0399 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   039E ldnull 
+   039F ceq 
+   03A1 ldc.i4.0 
+   03A2 ceq 
+   03A4 br.s IL_03a7: stloc.s V_14
+   03A6 ldc.i4.1 
+   03A7 stloc.s V_14
+   03A9 ldarg.0 
+   03AA ldloc.s V_14
+   03AC call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   03B1 ldarg.0 
+   03B2 ldc.i4.0 
+   03B3 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   03B8 ldarg.0 
+   03B9 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   03BE ldc.i4.0 
+   03BF callvirt System.Void Assets.Scripts.UI.CUIFormScript::SetPixelPerfect(System.Boolean)
+   03C4 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   03C9 ldnull 
+   03CA callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Hide(Assets.Scripts.UI.CUIEvent)
+   03CF ldc.i4.s 62
+   03D1 ldc.i4.0 
+   03D2 newarr System.UInt32
+   03D7 call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   03DC pop 
+   03DD ret 
+== System.Void OnEquipFormClose(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   000D brfalse IL_001d: ldarg.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0018 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::Clear()
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0023 brfalse IL_0033: ldarg.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   002E callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::Clear()
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0039 brfalse IL_0049: ldarg.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0044 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::Clear()
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   004F brfalse IL_005f: ldarg.0
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   005A callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::Clear()
+   005F ldarg.0 
+   0060 ldnull 
+   0061 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   006C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0071 brfalse IL_007c: call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0076 ldc.i4.0 
+   0077 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendInOutEquipShopFrameCommand(System.Byte)
+   007C call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0081 ldnull 
+   0082 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Show(Assets.Scripts.UI.CUIEvent)
+   0087 ret 
+== System.Void OnEquipTypeListSelect(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0006 brfalse IL_0011: ldarg.0
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipTreePanel()
+   0011 ldarg.0 
+   0012 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   001D ldarg.1 
+   001E ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0023 castclass Assets.Scripts.UI.CUIListScript
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_006c: ldarg.0
+   0035 ldarg.0 
+   0036 ldarg.0 
+   0037 ldloc.0 
+   0038 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   003D callvirt System.Int32 Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetCurEquipUsageByListSelectedIndex(System.Int32)
+   0042 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   004D brtrue IL_0065: ldarg.0
+   0052 ldarg.0 
+   0053 ldc.i4.0 
+   0054 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   0059 ldarg.0 
+   005A ldc.i4.0 
+   005B callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0060 br IL_006c: ldarg.0
+   0065 ldarg.0 
+   0066 ldc.i4.1 
+   0067 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0078 ldc.i4.6 
+   0079 ceq 
+   007B callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::SetHorizonEquipTipVisible(System.Boolean)
+   0080 ret 
+== System.Void OnEquipItemSelect(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0006 brtrue IL_0062: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0017 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   001C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0021 ldarg.1 
+   0022 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0027 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   002C ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0031 bne.un IL_0062: ldarg.0
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0042 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0047 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   004C ldarg.1 
+   004D ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0052 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0057 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   005C brfalse IL_0062: ldarg.0
+   0061 ret 
+   0062 ldarg.0 
+   0063 ldc.i4.1 
+   0064 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0069 ldarg.0 
+   006A ldc.i4.2 
+   006B callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0070 ldarg.0 
+   0071 ldc.i4.0 
+   0072 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0077 ldarg.0 
+   0078 ldarg.1 
+   0079 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   007E ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0083 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0088 ldc.i4.0 
+   0089 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   008E ldarg.0 
+   008F ldc.i4.0 
+   0090 ldarg.1 
+   0091 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0096 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   009B ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   00A0 ldarg.1 
+   00A1 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   00A6 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00AB ldc.i4.3 
+   00AC ldc.i4.m1 
+   00AD ldc.i4.0 
+   00AE callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   00B3 ldarg.0 
+   00B4 ldc.i4.0 
+   00B5 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   00BA ldarg.0 
+   00BB ldc.i4.1 
+   00BC call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   00C1 ret 
+== System.Void OnEquipBagItemSelect(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0006 ldc.i4.2 
+   0007 bne.un IL_0088: ldarg.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0018 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   001D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0022 brfalse IL_0088: ldarg.0
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0033 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0038 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   003D ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0042 ldarg.1 
+   0043 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0048 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   004D ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0052 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0057 bne.un IL_0088: ldarg.0
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0068 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   006D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   0072 ldarg.1 
+   0073 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0078 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0082 brfalse IL_0088: ldarg.0
+   0087 ret 
+   0088 ldarg.0 
+   0089 ldc.i4.0 
+   008A callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   008F ldarg.0 
+   0090 ldc.i4.1 
+   0091 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0096 ldarg.0 
+   0097 ldarg.1 
+   0098 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   009D ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   00A2 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   00A7 ldc.i4.1 
+   00A8 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   00AD ldarg.0 
+   00AE ldc.i4.2 
+   00AF ldarg.1 
+   00B0 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   00B5 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   00BA ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   00BF ldarg.1 
+   00C0 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   00C5 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00CA ldarg.1 
+   00CB ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   00D0 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   00D5 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::contType
+   00DA ldarg.1 
+   00DB ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   00E0 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   00E5 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::pos
+   00EA ldc.i4.0 
+   00EB callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   00F0 ldarg.0 
+   00F1 ldc.i4.2 
+   00F2 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   00FD brfalse IL_014c: ldarg.0
+   0102 ldarg.0 
+   0103 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   0108 ldarg.1 
+   0109 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   010E ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0113 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0118 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   011D ldarg.0 
+   011E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0123 call System.Void Assets.Scripts.GameSystem.stEquipTree::Create(System.UInt16,DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>)
+   0128 ldarg.0 
+   0129 ldarg.1 
+   012A ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   012F ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0134 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0139 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   013E ldarg.0 
+   013F ldc.i4.0 
+   0140 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   0145 ldarg.0 
+   0146 ldc.i4.0 
+   0147 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   014C ldarg.0 
+   014D ldc.i4.0 
+   014E callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   0153 ldarg.0 
+   0154 ldc.i4.1 
+   0155 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   015A ret 
+== System.Void OnEquipBuyBtnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0007 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   000C call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 brfalse IL_0025: ldarg.0
+   0018 ldarg.0 
+   0019 ldloc.0 
+   001A ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   001F ldc.i4.0 
+   0020 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::SendBuyEquipFrameCommand(System.UInt16,System.Boolean)
+   0025 ldarg.0 
+   0026 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   002B ldarg.0 
+   002C call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   0031 ret 
+== System.Void OnEquipSaleBtnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0007 ldfld Assets.Scripts.UI.stUIEventParams::selectIndex
+   000C ldarg.1 
+   000D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0012 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0017 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SendSellEquipFrameCommand(System.Int32,CoreDef.enEquipContainerType)
+   001C ldarg.0 
+   001D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   0022 ldarg.0 
+   0023 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   0028 ret 
+== System.Void OnSetPreBuyEquip(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_009f: ret
+   0010 ldarg.0 
+   0011 ldarg.1 
+   0012 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0017 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   001C call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 brfalse IL_009f: ret
+   0028 ldarg.0 
+   0029 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0033 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0038 ldloc.0 
+   0039 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   003E stfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   0043 ldarg.0 
+   0044 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0049 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0053 ldloc.0 
+   0054 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0059 call System.Void SGW::PreBuyEquipChange(System.UInt32,System.UInt32)
+   005E ldarg.0 
+   005F ldc.i4.1 
+   0060 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0065 ldarg.0 
+   0066 ldc.i4.1 
+   0067 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   006C ldarg.0 
+   006D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshHostPlayerQuicklyBuyEquipList()
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0078 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   007D brfalse IL_009f: ret
+   0082 ldarg.0 
+   0083 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0088 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008D ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0092 dup 
+   0093 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipCount
+   0098 ldc.i4.1 
+   0099 add 
+   009A stfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipCount
+   009F ret 
+== System.Void OnCanclePreBuyEquip(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0064: ret
+   0010 ldarg.0 
+   0011 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0020 ldc.i4.0 
+   0021 stfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   0026 ldarg.0 
+   0027 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0031 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0036 ldarg.0 
+   0037 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   003C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0041 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0046 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   004B call System.Void SGW::PreBuyEquipChange(System.UInt32,System.UInt32)
+   0050 ldarg.0 
+   0051 ldc.i4.1 
+   0052 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0057 ldarg.0 
+   0058 ldc.i4.1 
+   0059 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   005E ldarg.0 
+   005F callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshHostPlayerQuicklyBuyEquipList()
+   0064 ret 
+== System.Void OnBattleEquipQuicklyBuy(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   000B ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0010 brfalse IL_0031: ret
+   0015 ldarg.0 
+   0016 ldarg.1 
+   0017 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001C ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0021 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0026 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   002B ldc.i4.1 
+   002C call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::SendBuyEquipFrameCommand(System.UInt16,System.Boolean)
+   0031 ret 
+== System.Void OnBattleEquipOpenEquipTree(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0006 brfalse IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0011 ldc.i4.2 
+   0012 bne.un IL_0044: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0023 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0028 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   002D stloc.0 
+   002E ldloc.0 
+   002F brfalse IL_0044: ret
+   0034 ldarg.0 
+   0035 ldloc.0 
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   003C ldc.i4.0 
+   003D ceq 
+   003F call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::OpenEquipTreePanel(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   0044 ret 
+== System.Void OnBattleEquipCloseEquipTree(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipTreePanel()
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0013 ldc.i4.1 
+   0014 beq IL_0025: ldarg.0
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   001F ldc.i4.m1 
+   0020 bne.un IL_0036: ldarg.0
+   0025 ldarg.0 
+   0026 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   002B ldarg.0 
+   002C call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   0031 br IL_0061: ret
+   0036 ldarg.0 
+   0037 ldc.i4.1 
+   0038 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   003D ldarg.0 
+   003E ldc.i4.0 
+   003F callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   0044 ldarg.0 
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0051 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0056 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   005B ldc.i4.0 
+   005C callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   0061 ret 
+== System.Void OnBattleEquipSelectItemInEquipTree(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0006 ldc.i4.2 
+   0007 bne.un IL_0018: ldarg.0
+   000C ldarg.0 
+   000D ldc.i4.2 
+   000E callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0013 br IL_0083: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   001E ldc.i4.1 
+   001F bne.un IL_0083: ldarg.0
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0030 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0035 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   003A stloc.0 
+   003B ldloc.0 
+   003C brfalse IL_0083: ldarg.0
+   0041 ldloc.0 
+   0042 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0047 ldarg.1 
+   0048 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   004D ldfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   0052 bne.un IL_0083: ldarg.0
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0063 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0068 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   006D ldarg.1 
+   006E ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0073 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0078 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   007D brfalse IL_0083: ldarg.0
+   0082 ret 
+   0083 ldarg.0 
+   0084 ldc.i4.1 
+   0085 ldarg.0 
+   0086 ldarg.1 
+   0087 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   008C ldfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   0091 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   0096 ldarg.1 
+   0097 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   009C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A1 ldc.i4.3 
+   00A2 ldc.i4.m1 
+   00A3 ldc.i4.0 
+   00A4 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   00A9 ldarg.0 
+   00AA ldc.i4.1 
+   00AB stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   00B0 ldarg.0 
+   00B1 ldc.i4.0 
+   00B2 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   00B7 ldarg.0 
+   00B8 ldc.i4.0 
+   00B9 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshBackEquipList(System.Boolean)
+   00BE ldarg.0 
+   00BF ldc.i4.0 
+   00C0 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   00C5 ret 
+== System.Void OnBattleEquipBackEquipListSelectedChanged(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=7
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldarg.0 
+   0005 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   000A ldc.i4.m1 
+   000B beq IL_005a: ldarg.1
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   001C ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0021 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0026 brfalse IL_005a: ldarg.1
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0037 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   003C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0041 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_backEquipIDs
+   0046 stloc.0 
+   0047 ldloc.0 
+   0048 brtrue IL_0053: ldloc.0
+   004D ldc.i4.0 
+   004E br IL_0059: stloc.1
+   0053 ldloc.0 
+   0054 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt16>::get_Count()
+   0059 stloc.1 
+   005A ldarg.1 
+   005B ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0060 isinst Assets.Scripts.UI.CUIListScript
+   0065 stloc.2 
+   0066 ldloc.2 
+   0067 ldnull 
+   0068 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006D brfalse IL_00ee: ret
+   0072 ldloc.2 
+   0073 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0078 stloc.3 
+   0079 ldloc.3 
+   007A ldc.i4.0 
+   007B blt IL_00ee: ret
+   0080 ldloc.3 
+   0081 ldloc.1 
+   0082 bge IL_00ee: ret
+   0087 ldloc.0 
+   0088 ldloc.3 
+   0089 callvirt !0 System.Collections.Generic.List`1<System.UInt16>::get_Item(System.Int32)
+   008E stloc.s V_4
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0096 callvirt UnityEngine.Transform Assets.Scripts.GameSystem.CEquipTreeUIComponent::GetEquipTreeRootTransform()
+   009B stloc.s V_5
+   009D ldarg.0 
+   009E ldc.i4.1 
+   009F ldarg.0 
+   00A0 ldloc.s V_4
+   00A2 call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   00A7 ldloc.s V_5
+   00A9 ldc.i4.3 
+   00AA ldc.i4.m1 
+   00AB ldc.i4.0 
+   00AC callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   00B1 ldarg.0 
+   00B2 ldc.i4.1 
+   00B3 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   00B8 ldarg.0 
+   00B9 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   00BE ldloc.s V_4
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   00C6 call System.Void Assets.Scripts.GameSystem.stEquipTree::Create(System.UInt16,DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>)
+   00CB ldarg.0 
+   00CC ldarg.0 
+   00CD ldloc.s V_4
+   00CF call Assets.Scripts.GameSystem.CEquipInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetEquipInfo(System.UInt16)
+   00D4 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   00D9 ldarg.0 
+   00DA ldc.i4.0 
+   00DB callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   00E0 ldarg.0 
+   00E1 ldc.i4.0 
+   00E2 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   00E7 ldarg.0 
+   00E8 ldc.i4.0 
+   00E9 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   00EE ret 
+== System.Void OnBattleEquipBackEquipListScrollChanged(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0011 callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::OnBattleEquipBackEquipListScrollChanged()
+   0016 ret 
+== System.Void OnBattleEquipBackEquipListMoreLeftClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0011 callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::OnBattleEquipBackEquipListMoreLeftClicked()
+   0016 ret 
+== System.Void OnBattleEquipBackEquipListMoreRightClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0011 callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::OnBattleEquipBackEquipListMoreRightClicked()
+   0016 ret 
+== System.Void OnBattleEquipShowOrHideInBattleBtnClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   000B ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0010 brfalse IL_0030: ret
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0020 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0025 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   002A ldc.i4.0 
+   002B call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendPlayerChooseEquipSkillFrameCommand(System.UInt16,System.Int32)
+   0030 ret 
+== System.Void OnBattleEquipSwitchExtraActiveSkillBtnClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   000B ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0010 brfalse IL_0030: ret
+   0015 ldarg.1 
+   0016 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001B ldflda Assets.Scripts.UI.stUIEventParams::battleEquipPar
+   0020 ldfld Assets.Scripts.GameSystem.stBattleEquipParams::equipInfo
+   0025 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   002A ldc.i4.0 
+   002B call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendPlayerChooseEquipSkillFrameCommand(System.UInt16,System.Int32)
+   0030 ret 
+== System.Void OnSwitchEquipPanelShowMode(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0006 brfalse IL_000c: ldsfld Assets.Scripts.GameSystem.enEquipPanelShowMode Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   000B ret 
+   000C ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0011 brtrue IL_0021: ldsfld Assets.Scripts.GameSystem.enEquipPanelShowMode Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0016 ldc.i4.1 
+   0017 stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   001C br IL_0032: ldarg.0
+   0021 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0026 ldc.i4.1 
+   0027 bne.un IL_0032: ldarg.0
+   002C ldc.i4.0 
+   002D stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0038 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   003D callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::SetEquipPanelShowMode(Assets.Scripts.GameSystem.enEquipPanelShowMode)
+   0042 ldarg.0 
+   0043 ldc.i4.0 
+   0044 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0049 ldarg.0 
+   004A ldc.i4.0 
+   004B callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0050 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0055 brtrue IL_0065: ldarg.0
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0060 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::ResetEquipRelationPath()
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   006B brtrue IL_0085: ldc.i4.1
+   0070 ldarg.0 
+   0071 ldc.i4.m1 
+   0072 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0077 ldarg.0 
+   0078 ldc.i4.0 
+   0079 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   007E ldarg.0 
+   007F ldc.i4.0 
+   0080 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   0085 ldc.i4.1 
+   0086 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   008B ceq 
+   008D call System.Void SGW::SetHostIsEquipSimpleMode(System.Boolean)
+   0092 ret 
+== System.Void EnableOpenEquipTreeButton(System.Boolean enabled) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0011 ldarg.1 
+   0012 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::EnableOpenEquipTreeButton(System.Boolean)
+   0017 ret 
+== System.Void SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo equipInfo, System.Boolean switchUsage) attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 brfalse IL_0017: ret
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldarg.1 
+   001A ldarg.2 
+   001B call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetFocusEquipInEquipLibrary(Assets.Scripts.GameSystem.CEquipInfo,System.Boolean)
+   0020 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipPanelShowMode
+   0025 brtrue IL_004e: ret
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0030 ldarg.1 
+   0031 ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0042 ldelem.ref 
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   0049 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::OnDisplayEquipRelationPath(System.UInt16,System.Collections.Generic.List`1<System.UInt16>[],DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>)
+   004E ret 
+== System.Void SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin equipSelectedOrigin, Assets.Scripts.GameSystem.CEquipInfo equipInfo, UnityEngine.Transform equipItemTransform, CoreDef.enEquipContainerType contType, System.Int32 positionInBag, System.Boolean bForceSelect) attrs=Family, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0006 ldarg.1 
+   0007 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   0011 stloc.0 
+   0012 ldc.i4.0 
+   0013 stloc.1 
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   001A ldarg.1 
+   001B ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0020 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0025 brfalse IL_0047: ldarg.0
+   002A ldarg.0 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0031 ldarg.1 
+   0032 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0037 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   003C ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0041 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::IsActiveEquipButNotHorizon(System.UInt16)
+   0046 stloc.1 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   004D ldarg.1 
+   004E ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0053 ldarg.2 
+   0054 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   005F ldarg.1 
+   0060 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0065 ldarg.3 
+   0066 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipItemTransform
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0071 ldarg.1 
+   0072 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0077 ldarg.s positionInBag
+   0079 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_positionInBag
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0084 ldarg.1 
+   0085 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   008A ldarg.s contType
+   008C stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_containerType
+   0091 ldc.i4.0 
+   0092 stloc.2 
+   0093 ldarg.2 
+   0094 brfalse IL_00a6: ldarg.s bForceSelect
+   0099 ldarg.0 
+   009A ldarg.2 
+   009B ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   00A0 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleBaseEquipSystem::IsActiveEquipButNotHorizon(System.UInt16)
+   00A5 stloc.2 
+   00A6 ldarg.s bForceSelect
+   00A8 brtrue IL_00b9: ldloc.0
+   00AD ldloc.0 
+   00AE ldarg.3 
+   00AF call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B4 brfalse IL_00e5: ret
+   00B9 ldloc.0 
+   00BA ldnull 
+   00BB call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00C0 brfalse IL_00cf: ldarg.3
+   00C5 ldarg.0 
+   00C6 ldloc.0 
+   00C7 ldc.i4.0 
+   00C8 ldarg.1 
+   00C9 ldloc.1 
+   00CA callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipItemSelectFlag(UnityEngine.Transform,System.Boolean,Assets.Scripts.GameSystem.enSelectedEquipOrigin,System.Boolean)
+   00CF ldarg.3 
+   00D0 ldnull 
+   00D1 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D6 brfalse IL_00e5: ret
+   00DB ldarg.0 
+   00DC ldarg.3 
+   00DD ldc.i4.1 
+   00DE ldarg.1 
+   00DF ldloc.2 
+   00E0 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipItemSelectFlag(UnityEngine.Transform,System.Boolean,Assets.Scripts.GameSystem.enSelectedEquipOrigin,System.Boolean)
+   00E5 ret 
+== System.Void ClearSelectedEquipItem() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   000C callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::ResetEquipRelationPath()
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   0018 ret 
+== System.Void SetEquipItemSelectFlag(UnityEngine.Transform equipItemObj, System.Boolean bSelect, Assets.Scripts.GameSystem.enSelectedEquipOrigin equipSelectedOrigin, System.Boolean bIsActiveSKillEquip) attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_00db: ret
+   000C ldarg.3 
+   000D ldc.i4.2 
+   000E beq IL_003c: ldnull
+   0013 ldarg.1 
+   0014 ldstr selectImg
+   0019 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_0037: br IL_00db
+   002B ldloc.0 
+   002C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0031 ldarg.2 
+   0032 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0037 br IL_00db: ret
+   003C ldnull 
+   003D stloc.1 
+   003E ldarg.s bIsActiveSKillEquip
+   0040 brfalse IL_00b7: ldarg.1
+   0045 ldarg.1 
+   0046 ldstr Beingused
+   004B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0050 stloc.2 
+   0051 ldloc.2 
+   0052 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0057 callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   005C brfalse IL_0072: ldarg.1
+   0061 ldarg.1 
+   0062 ldstr selectImg
+   0067 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006C stloc.1 
+   006D br IL_00b2: br IL_00c3
+   0072 ldarg.1 
+   0073 ldstr SelectImg_InBattle
+   0078 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   007D stloc.1 
+   007E ldarg.1 
+   007F ldstr BtnShowInBattle
+   0084 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0089 stloc.3 
+   008A ldloc.3 
+   008B call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0090 brfalse IL_00b2: br IL_00c3
+   0095 ldloc.3 
+   0096 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009B callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   00A0 ldarg.2 
+   00A1 beq IL_00b2: br IL_00c3
+   00A6 ldloc.3 
+   00A7 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AC ldarg.2 
+   00AD call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00B2 br IL_00c3: ldloc.1
+   00B7 ldarg.1 
+   00B8 ldstr selectImg
+   00BD callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00C2 stloc.1 
+   00C3 ldloc.1 
+   00C4 ldnull 
+   00C5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00CA brfalse IL_00db: ret
+   00CF ldloc.1 
+   00D0 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D5 ldarg.2 
+   00D6 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00DB ret 
+== System.Void OpenEquipTreePanel(Assets.Scripts.GameSystem.CEquipInfo rootEquipInfo, System.Boolean selectRootItem) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0018 ldc.i4.0 
+   0019 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::SetEquipPanelVisible(System.Boolean)
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0024 ldc.i4.1 
+   0025 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   002A ldarg.0 
+   002B ldc.i4.1 
+   002C stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0031 ldarg.0 
+   0032 ldarg.1 
+   0033 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0038 ldarg.0 
+   0039 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   003E ldarg.1 
+   003F ldfld Assets.Scripts.GameSystem.CEquipInfo::m_equipID
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoDictionary
+   004A call System.Void Assets.Scripts.GameSystem.stEquipTree::Create(System.UInt16,DictionaryView`2<System.UInt16,Assets.Scripts.GameSystem.CEquipInfo>)
+   004F ldarg.0 
+   0050 ldc.i4.0 
+   0051 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   0056 ldarg.2 
+   0057 brfalse IL_007b: ldarg.0
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0062 callvirt UnityEngine.Transform Assets.Scripts.GameSystem.CEquipTreeUIComponent::GetEquipTreeRootTransform()
+   0067 stloc.0 
+   0068 ldarg.0 
+   0069 ldc.i4.1 
+   006A ldarg.1 
+   006B ldloc.0 
+   006C ldc.i4.3 
+   006D ldc.i4.m1 
+   006E ldc.i4.0 
+   006F callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,UnityEngine.Transform,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   0074 ldarg.0 
+   0075 ldc.i4.1 
+   0076 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   007B ldarg.0 
+   007C ldc.i4.0 
+   007D call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   0082 ldarg.0 
+   0083 ldc.i4.0 
+   0084 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   0089 ret 
+== System.Void RefreshEquipTreePanel(System.Boolean onlyRefreshPriceAndOwned) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0006 brfalse IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldarg.0
+   001C ret 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0023 ldarg.0 
+   0024 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   0029 ldarg.1 
+   002A callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::OnRefresh(Assets.Scripts.GameSystem.stEquipTree&,System.Boolean)
+   002F ldarg.0 
+   0030 ldarg.1 
+   0031 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshBackEquipList(System.Boolean)
+   0036 ret 
+== System.Void RefreshBackEquipList(System.Boolean onlyRefreshPriceAndOwned) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0006 brfalse IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldnull
+   001C ret 
+   001D ldnull 
+   001E stloc.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0025 ldc.i4.m1 
+   0026 beq IL_0062: ldarg.0
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0037 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   003C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0041 brfalse IL_0062: ldarg.0
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0052 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0057 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   005C ldfld Assets.Scripts.GameSystem.CEquipInfo::m_backEquipIDs
+   0061 stloc.0 
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0068 ldloc.0 
+   0069 ldarg.1 
+   006A callvirt System.Void Assets.Scripts.GameSystem.CEquipTreeUIComponent::RefreshBackEquipList(System.Collections.Generic.List`1<System.UInt16>,System.Boolean)
+   006F ret 
+== System.Void CloseEquipTreePanel() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0018 ldc.i4.1 
+   0019 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::SetEquipPanelVisible(System.Boolean)
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipTreeUIComponent
+   0024 ldc.i4.0 
+   0025 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   002A ldarg.0 
+   002B ldc.i4.0 
+   002C stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0031 ldarg.0 
+   0032 ldnull 
+   0033 stfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_rootEquipInTree
+   0038 ldarg.0 
+   0039 ldflda Assets.Scripts.GameSystem.CBattleEquipSystem::m_equipTree
+   003E call System.Void Assets.Scripts.GameSystem.stEquipTree::Clear()
+   0043 ldarg.0 
+   0044 ldc.i4.0 
+   0045 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   004A ldarg.0 
+   004B ldc.i4.1 
+   004C callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0057 ldc.i4.1 
+   0058 bne.un IL_0086: ldarg.0
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0063 ldc.i4.0 
+   0064 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0069 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   006E brfalse IL_007f: ldarg.0
+   0073 ldarg.0 
+   0074 ldc.i4.0 
+   0075 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   007A br IL_0086: ldarg.0
+   007F ldarg.0 
+   0080 ldc.i4.m1 
+   0081 stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   008C ldc.i4.m1 
+   008D bne.un IL_009d: ldarg.0
+   0092 ldarg.0 
+   0093 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   0098 br IL_00a4: ret
+   009D ldarg.0 
+   009E ldc.i4.0 
+   009F callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   00A4 ret 
+== System.Void CloseEquipFormRightPanel() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   0011 ldc.i4.0 
+   0012 callvirt System.Void Assets.Scripts.GameSystem.CEquipBaseUIComponent::SetVisible(System.Boolean)
+   0017 ret 
+== System.Void RefreshEquipFormRightPanel(System.Boolean onlyRefreshPrice) attrs=Family, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0018 ldc.i4.m1 
+   0019 beq IL_0039: ldarg.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   002A ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   002F ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0034 brtrue IL_0040: ldarg.0
+   0039 ldarg.0 
+   003A call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::CloseEquipFormRightPanel()
+   003F ret 
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   004C ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0051 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_equipInfo
+   0056 stloc.0 
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipInfoUIComponent
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0063 ldloc.0 
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0070 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   0075 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_containerType
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipItems
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0086 ldelema Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem
+   008B ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem/stSelectedEquipItem::m_positionInBag
+   0090 ldarg.1 
+   0091 callvirt System.Void Assets.Scripts.GameSystem.CEquipInfoUIComponent::OnRefresh(Assets.Scripts.GameSystem.enSelectedEquipOrigin,Assets.Scripts.GameSystem.CEquipInfo,CoreDef.enEquipContainerType,System.Int32,System.Boolean)
+   0096 ret 
+== System.Void RefreshEquipBagPanel() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipBagUIComponent
+   0011 callvirt System.Void Assets.Scripts.GameSystem.CEquipBagUIComponent::OnRefresh()
+   0016 ret 
+== System.Void RefreshEquipLibraryPanel(System.Boolean onlyRefreshPriceAndOwned) attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0018 brfalse IL_003b: ret
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0023 ldarg.0 
+   0024 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipList
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   002F ldarg.1 
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_recommendEquipSimple
+   0036 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::OnRefresh(System.Collections.Generic.List`1<System.UInt16>[][]&,CoreDef.enEquipUsage,System.Boolean,System.Collections.Generic.List`1<System.UInt16>[])
+   003B ret 
+== System.Void RefreshEquipPanelOnRcmdGroupChange() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_curEquipUsage
+   0006 brtrue IL_0056: ldarg.0
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0018 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::ResetEquipRelationPath()
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   0023 brtrue IL_003d: ldarg.0
+   0028 ldarg.0 
+   0029 ldc.i4.m1 
+   002A stfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_selectedEquipOrigin
+   002F ldarg.0 
+   0030 ldc.i4.0 
+   0031 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::EnableOpenEquipTreeButton(System.Boolean)
+   0036 ldarg.0 
+   0037 ldc.i4.0 
+   0038 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipFormRightPanel(System.Boolean)
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   0043 brtrue IL_0056: ldarg.0
+   0048 ldarg.0 
+   0049 ldc.i4.0 
+   004A callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::GetDisplayedEquipStatus(System.Boolean)
+   004F ldarg.0 
+   0050 ldc.i4.0 
+   0051 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0056 ldarg.0 
+   0057 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshHostPlayerQuicklyBuyEquipList()
+   005C ret 
+== System.Void OnHostCtrlActorEnabledActiveSkillEquipChanged(Assets.Scripts.GameLogic.HostCtrlActorEnabledActiveSkillEquipChangedEventParam& param) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnHostCtrlActorEnabledActiveSkillEquipChanged(Assets.Scripts.GameLogic.HostCtrlActorEnabledActiveSkillEquipChangedEventParam&)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipFormScript
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 brfalse IL_001e: ret
+   0018 ldarg.0 
+   0019 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipBagPanel()
+   001E ret 
+== System.Void OnHostCtrlActorEquipInBattleChanged(Assets.Scripts.GameLogic.EquipChangeEvtParam& param) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0082: ldarg.0
+   0010 ldarg.0 
+   0011 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0020 brfalse IL_0082: ldarg.0
+   0025 ldarg.0 
+   0026 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0030 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0035 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   003A ldc.i4.0 
+   003B ble IL_0082: ldarg.0
+   0040 ldarg.1 
+   0041 ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_changedEquipID
+   0046 ldarg.0 
+   0047 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   004C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0051 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0056 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   005B bne.un IL_0082: ldarg.0
+   0060 ldarg.1 
+   0061 ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_equipOperateType
+   0066 ldc.i4.1 
+   0067 bne.un IL_0082: ldarg.0
+   006C ldarg.0 
+   006D ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0072 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0077 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   007C ldc.i4.0 
+   007D stfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   0082 ldarg.0 
+   0083 ldc.i4.2 
+   0084 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0089 ldarg.0 
+   008A ldarg.1 
+   008B ldfld Assets.Scripts.GameLogic.EquipChangeEvtParam::m_changedEquipID
+   0090 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::UpdateActiveEquipAmountText(System.UInt16)
+   0095 ret 
+== System.Void OnActorGoldCoinInBattleChanged(Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam& pars) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   000A brtrue IL_0010: ldarg.1
+   000F ret 
+   0010 ldarg.1 
+   0011 ldfld Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0016 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001B brfalse IL_0040: ret
+   0020 ldarg.1 
+   0021 ldflda Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0026 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   002B brtrue IL_0041: ldarg.0
+   0030 ldarg.1 
+   0031 ldflda Assets.Scripts.GameLogic.ActorCommonPropChangeEventParam::src
+   0036 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostCtrlActorCaller(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   003B brtrue IL_0041: ldarg.0
+   0040 ret 
+   0041 ldarg.0 
+   0042 ldc.i4.1 
+   0043 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::SetEquipChangeFlag(Assets.Scripts.GameSystem.CBattleBaseEquipSystem/enEquipChangeFlag)
+   0048 ret 
+== System.Void RefreshHostPlayerQuicklyBuyEquipList() attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0006 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   000B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0010 ldarg.0 
+   0011 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0020 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::preBuyEquipId
+   0025 ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache2
+   002A brtrue.s IL_003d: ldsfld SGW/stQuicklyBuyEquipListTypeDelegate Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache2
+   002C ldnull 
+   002D ldftn System.Void Assets.Scripts.GameSystem.EquipCallBack::OnGetQuicklyBuyEquipListCallback(SGW/stQuicklyBuyEquipList&)
+   0033 newobj System.Void SGW/stQuicklyBuyEquipListTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0038 stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache2
+   003D ldsfld Assets.Scripts.GameSystem.CBattleEquipSystem::<>f__mg$cache2
+   0042 call System.Void SGW::GetQuicklyBuyEquipList(System.UInt32,System.UInt16,SGW/stQuicklyBuyEquipListTypeDelegate)
+   0047 ret 
+== System.Void OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Family, Virtual, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0007 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   000C callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0011 callvirt Assets.Scripts.GameLogic.DataCenter.PlayerServerData Assets.Scripts.GameLogic.Player::GetPlayerServerData()
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 brfalse IL_0142: ret
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0023 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0028 brfalse IL_0142: ret
+   002D ldarg.0 
+   002E ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0033 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0038 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   003D callvirt System.Boolean Assets.Scripts.GameLogic.EquipLinkerComponent::IsSetRecommendEquipData()
+   0042 brtrue IL_0085: ldarg.0
+   0047 ldloc.0 
+   0048 ldarg.0 
+   0049 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   004E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0053 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0058 callvirt Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData Assets.Scripts.GameLogic.DataCenter.PlayerServerData::GetHeroData(System.UInt32)
+   005D stloc.1 
+   005E ldloc.1 
+   005F brfalse IL_0085: ldarg.0
+   0064 ldarg.0 
+   0065 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   006A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006F ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0074 ldloc.1 
+   0075 ldflda Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::EquipData
+   007A ldloc.1 
+   007B ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::UsedRecommendEquipGroup
+   0080 callvirt System.Void Assets.Scripts.GameLogic.EquipLinkerComponent::SetRecommendEquipData(Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData[]&,System.UInt32)
+   0085 ldarg.0 
+   0086 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   008B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0090 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0095 callvirt Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData[] Assets.Scripts.GameLogic.EquipLinkerComponent::GetRecommendEquipData()
+   009A stloc.2 
+   009B ldarg.0 
+   009C ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   00A1 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00A6 ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   00AB callvirt System.UInt32 Assets.Scripts.GameLogic.EquipLinkerComponent::GetCurUsedRecommendEquipGroupIndex()
+   00B0 stloc.3 
+   00B1 ldloc.2 
+   00B2 brfalse IL_0142: ret
+   00B7 ldloc.3 
+   00B8 ldc.i4.0 
+   00B9 blt.un IL_0142: ret
+   00BE ldloc.3 
+   00BF conv.u8 
+   00C0 ldloc.2 
+   00C1 ldlen 
+   00C2 conv.i4 
+   00C3 conv.i8 
+   00C4 bge IL_0142: ret
+   00C9 ldarg.0 
+   00CA ldloc.2 
+   00CB ldloc.3 
+   00CC conv.u 
+   00CD ldelema Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData
+   00D2 ldfld Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData::m_equipIDs
+   00D7 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitializeRecommendEquipList(System.UInt16[])
+   00DC ldarg.0 
+   00DD ldloc.2 
+   00DE ldloc.3 
+   00DF conv.u 
+   00E0 ldelema Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData
+   00E5 ldfld Assets.Scripts.GameLogic.DataCenter.stHeroRecommendEquipData::m_equipIDs
+   00EA callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::InitRecommendEquipSimple(System.UInt16[])
+   00EF call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   00F4 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   00F9 brtrue IL_0142: ret
+   00FE ldarg.0 
+   00FF ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_equipShopUIComponent
+   0104 callvirt System.Void Assets.Scripts.GameSystem.CEquipShopUIComponent::RefreshRcmdEquipPlanName()
+   0109 ldarg.0 
+   010A ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   010F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0114 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0119 stloc.s V_4
+   011B ldarg.0 
+   011C call Assets.Scripts.GameSystem.stRcmdEquipListInfo Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ConvertRcmdEquipListInfo()
+   0121 stloc.s V_5
+   0123 ldloc.s V_4
+   0125 ldloca.s V_5
+   0127 ldc.i4 10116
+   012C ldc.i4.0 
+   012D ldc.i4.1 
+   012E ldc.i4.0 
+   012F ldc.i4.0 
+   0130 call System.Void Assets.Scripts.GameSystem.CEquipSystem::RefreshSelfEquipPlanForm(System.UInt32,Assets.Scripts.GameSystem.stRcmdEquipListInfo&,Assets.Scripts.UI.enUIEventID,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0135 ldarg.0 
+   0136 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipPanelOnRcmdGroupChange()
+   013B ldarg.0 
+   013C ldc.i4.2 
+   013D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::ClearSelectedEquipItem(Assets.Scripts.GameSystem.enSelectedEquipOrigin)
+   0142 ret 
+== System.Void SendBuyEquipFrameCommand(System.UInt16 equipID, System.Boolean isQuicklyBuy) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0008 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000D brfalse IL_0023: ldarg.1
+   0012 ldarg.0 
+   0013 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0018 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0022 stloc.0 
+   0023 ldarg.1 
+   0024 ldarg.0 
+   0025 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   002A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0034 call System.Void Assets.Scripts.GameSystem.EquipCommonHandle::SendBuyEquipFrameCommand(System.UInt16,System.UInt32)
+   0039 ldarg.2 
+   003A brfalse IL_0082: ldarg.0
+   003F call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0044 ldstr UI_junei_ani_goumai
+   0049 ldnull 
+   004A callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   004F pop 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0056 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   005B brfalse IL_007d: br IL_00af
+   0060 ldarg.0 
+   0061 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0066 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006B ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   0070 dup 
+   0071 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::fastBuyEquipCount
+   0076 ldc.i4.1 
+   0077 add 
+   0078 stfld Assets.Scripts.GameLogic.EquipLinkerComponent::fastBuyEquipCount
+   007D br IL_00af: ret
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0088 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   008D brfalse IL_00af: ret
+   0092 ldarg.0 
+   0093 ldflda Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlActorLinker
+   0098 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   009D ldfld Assets.Scripts.GameLogic.ActorLinker::EquipComponent
+   00A2 dup 
+   00A3 ldfld Assets.Scripts.GameLogic.EquipLinkerComponent::buyEquipCount
+   00A8 ldc.i4.1 
+   00A9 add 
+   00AA stfld Assets.Scripts.GameLogic.EquipLinkerComponent::buyEquipCount
+   00AF ret 
+== System.Void DoRefreshHostPlayerQuicklyBuyEquipList(SGW/stQuicklyBuyEquipList& quicklyBuyEquipList) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostCtrlHeroPermitedToBuyEquip
+   0006 brfalse IL_0012: ldc.i4.0
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::EnableHostPlayerQuicklyBuyEquipPanel(System.Boolean)
+   0012 ldc.i4.0 
+   0013 stloc.0 
+   0014 ldc.i4.0 
+   0015 stloc.1 
+   0016 br IL_007b: ldloc.1
+   001B ldarg.1 
+   001C ldloc.1 
+   001D call SGW/stEquipInBattleStatus SGW/stQuicklyBuyEquipList::getM_equipStatusList(System.Int32)
+   0022 stloc.2 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostPlayerQuicklyBuyEquipIDs
+   0029 ldloc.1 
+   002A ldelema SGW/stEquipInBattleStatus
+   002F ldfld SGW/stEquipInBattleStatus::m_equipID
+   0034 ldloca.s V_2
+   0036 ldfld SGW/stEquipInBattleStatus::m_equipID
+   003B bne.un IL_005d: ldloc.0
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostPlayerQuicklyBuyEquipIDs
+   0046 ldloc.1 
+   0047 ldelema SGW/stEquipInBattleStatus
+   004C ldfld SGW/stEquipInBattleStatus::m_buyPrice
+   0051 ldloca.s V_2
+   0053 ldfld SGW/stEquipInBattleStatus::m_buyPrice
+   0058 beq IL_0065: ldarg.0
+   005D ldloc.0 
+   005E brtrue IL_0065: ldarg.0
+   0063 ldc.i4.1 
+   0064 stloc.0 
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameSystem.CBattleBaseEquipSystem::m_hostPlayerQuicklyBuyEquipIDs
+   006B ldloc.1 
+   006C ldelema SGW/stEquipInBattleStatus
+   0071 ldloc.2 
+   0072 stobj SGW/stEquipInBattleStatus
+   0077 ldloc.1 
+   0078 ldc.i4.1 
+   0079 add 
+   007A stloc.1 
+   007B ldloc.1 
+   007C ldc.i4.2 
+   007D blt IL_001b: ldarg.1
+   0082 ldloc.0 
+   0083 brfalse IL_008f: ret
+   0088 ldarg.0 
+   0089 ldloc.0 
+   008A call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshQuicklyBuyPanel(System.Boolean)
+   008F ret 
+== System.Void OnGetEquipStatusList(SGW/stQueryEquipStatusList& list, System.Boolean onlyRefreshPriceAndOwned) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 call System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::OnGetEquipStatusList(SGW/stQueryEquipStatusList&,System.Boolean)
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CBattleEquipSystem::m_isEquipTreeOpened
+   000E brfalse IL_001f: ldarg.0
+   0013 ldarg.0 
+   0014 ldarg.2 
+   0015 call System.Void Assets.Scripts.GameSystem.CBattleEquipSystem::RefreshEquipTreePanel(System.Boolean)
+   001A br IL_0026: ret
+   001F ldarg.0 
+   0020 ldarg.2 
+   0021 callvirt System.Void Assets.Scripts.GameSystem.CBattleBaseEquipSystem::RefreshEquipLibraryPanel(System.Boolean)
+   0026 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/Battle/Form_Battle_Equip.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CBattleEquipSystem::s_equipFormPath
+   000A ret 
+  NESTED Assets.Scripts.GameSystem.CBattleEquipSystem/enFormWidget

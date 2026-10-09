@@ -1,0 +1,361 @@
+// TYPE PostProcessingManager  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD DistortionProxy s_distortionProxy
+  FIELD BloomProxy s_bloomProxy
+  FIELD System.Collections.Generic.List`1<System.String> s_cameraNames
+  FIELD UnityEngine.GameObject s_hostGo
+  FIELD System.Int32 s_devicePerformanceScore
+  FIELD UnityEngine.RenderTexture s_mainSceneColor
+  FIELD UnityEngine.RenderTexture s_mainSceneDepth
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0006 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=2
+   0000 ldsfld PostProcessingManager::s_distortionProxy
+   0005 callvirt System.Void PostProxyBase::ShutDown()
+   000A ldsfld PostProcessingManager::s_bloomProxy
+   000F callvirt System.Void PostProxyBase::ShutDown()
+   0014 ldsfld PostProcessingManager::s_mainSceneColor
+   0019 ldnull 
+   001A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001F brfalse IL_0034: ldsfld UnityEngine.RenderTexture PostProcessingManager::s_mainSceneDepth
+   0024 ldsfld PostProcessingManager::s_mainSceneColor
+   0029 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   002E ldnull 
+   002F stsfld PostProcessingManager::s_mainSceneColor
+   0034 ldsfld PostProcessingManager::s_mainSceneDepth
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003F brfalse IL_0054: ret
+   0044 ldsfld PostProcessingManager::s_mainSceneDepth
+   0049 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   004E ldnull 
+   004F stsfld PostProcessingManager::s_mainSceneDepth
+   0054 ret 
+== UnityEngine.GameObject GetHostObject() attrs=Public, Static, HideBySig maxstack=1
+   0000 ldstr BootObj
+   0005 call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ret 
+== UnityEngine.Camera GetDistortCopyCamera() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 call UnityEngine.Camera[] UnityEngine.Camera::get_allCameras()
+   0007 stloc.2 
+   0008 ldc.i4.0 
+   0009 stloc.3 
+   000A br IL_0056: ldloc.3
+   000F ldloc.2 
+   0010 ldloc.3 
+   0011 ldelem.ref 
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 callvirt System.String UnityEngine.Object::get_name()
+   0019 ldstr HeroShowCamera
+   001E call System.Boolean System.String::op_Equality(System.String,System.String)
+   0023 brfalse IL_002f: ldloc.1
+   0028 ldloc.1 
+   0029 stloc.0 
+   002A br IL_0052: ldloc.3
+   002F ldloc.1 
+   0030 callvirt System.String UnityEngine.Object::get_name()
+   0035 ldstr 3DImage
+   003A call System.Boolean System.String::op_Equality(System.String,System.String)
+   003F brfalse IL_0052: ldloc.3
+   0044 ldloc.0 
+   0045 ldnull 
+   0046 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   004B brfalse IL_0052: ldloc.3
+   0050 ldloc.1 
+   0051 stloc.0 
+   0052 ldloc.3 
+   0053 ldc.i4.1 
+   0054 add 
+   0055 stloc.3 
+   0056 ldloc.3 
+   0057 ldloc.2 
+   0058 ldlen 
+   0059 conv.i4 
+   005A blt IL_000f: ldloc.2
+   005F ldloc.0 
+   0060 ret 
+== System.Void PrepareCamera() attrs=Private, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call UnityEngine.Camera[] UnityEngine.Camera::get_allCameras()
+   0007 stloc.2 
+   0008 ldc.i4.0 
+   0009 stloc.3 
+   000A br IL_00af: ldloc.3
+   000F ldloc.2 
+   0010 ldloc.3 
+   0011 ldelem.ref 
+   0012 stloc.1 
+   0013 ldsfld PostProcessingManager::s_cameraNames
+   0018 ldloc.1 
+   0019 callvirt System.String UnityEngine.Object::get_name()
+   001E callvirt System.Boolean System.Collections.Generic.List`1<System.String>::Contains(!0)
+   0023 brfalse IL_00ab: ldloc.3
+   0028 ldloc.1 
+   0029 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002E callvirt !!0 UnityEngine.GameObject::GetComponent<PostProcessingRenderer>()
+   0033 stloc.s V_4
+   0035 ldloc.1 
+   0036 callvirt System.Boolean UnityEngine.Behaviour::get_enabled()
+   003B brfalse IL_0097: ldloc.s V_4
+   0040 call System.Boolean PostProcessingManager::IsWorking()
+   0045 brfalse IL_0097: ldloc.s V_4
+   004A ldloc.0 
+   004B brtrue IL_0097: ldloc.s V_4
+   0050 ldloc.s V_4
+   0052 ldnull 
+   0053 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0058 brfalse IL_0090: ldc.i4.1
+   005D ldloc.1 
+   005E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0063 callvirt !!0 UnityEngine.GameObject::AddComponent<PostProcessingRenderer>()
+   0068 pop 
+   0069 ldsfld PostProcessingManager::s_distortionProxy
+   006E callvirt System.Boolean PostProxyBase::IsWorking()
+   0073 brfalse IL_0090: ldc.i4.1
+   0078 ldloc.1 
+   0079 dup 
+   007A callvirt System.Int32 UnityEngine.Camera::get_cullingMask()
+   007F ldsfld PostProcessingManager::s_distortionProxy
+   0084 ldfld DistortionProxy::m_LayerMask
+   0089 not 
+   008A and 
+   008B callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0090 ldc.i4.1 
+   0091 stloc.0 
+   0092 br IL_00ab: ldloc.3
+   0097 ldloc.s V_4
+   0099 ldnull 
+   009A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   009F brfalse IL_00ab: ldloc.3
+   00A4 ldloc.s V_4
+   00A6 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00AB ldloc.3 
+   00AC ldc.i4.1 
+   00AD add 
+   00AE stloc.3 
+   00AF ldloc.3 
+   00B0 ldloc.2 
+   00B1 ldlen 
+   00B2 conv.i4 
+   00B3 blt IL_000f: ldloc.2
+   00B8 ret 
+== System.Void PrepareHostGameObject() attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld PostProcessingManager::s_hostGo
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_0011: call UnityEngine.GameObject PostProcessingManager::GetHostObject()
+   0010 ret 
+   0011 call UnityEngine.GameObject PostProcessingManager::GetHostObject()
+   0016 stloc.0 
+   0017 newobj System.Void UnityEngine.GameObject::.ctor()
+   001C stsfld PostProcessingManager::s_hostGo
+   0021 ldsfld PostProcessingManager::s_hostGo
+   0026 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002B ldloc.0 
+   002C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0031 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0036 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   003B ldsfld PostProcessingManager::s_hostGo
+   0040 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0045 ldloc.0 
+   0046 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   004B callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0050 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0055 ldsfld PostProcessingManager::s_hostGo
+   005A ldloc.0 
+   005B callvirt System.String UnityEngine.Object::get_name()
+   0060 ldstr  PostProcessing
+   0065 call System.String System.String::Concat(System.String,System.String)
+   006A callvirt System.Void UnityEngine.Object::set_name(System.String)
+   006F ldsfld PostProcessingManager::s_hostGo
+   0074 callvirt !!0 UnityEngine.GameObject::AddComponent<PostProcessingManager>()
+   0079 pop 
+   007A ret 
+== System.Void EnableDistortion(System.Int32 byWhoID, System.Single distortIntensity) attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void PostProcessingManager::PrepareHostGameObject()
+   0005 ldsfld PostProcessingManager::s_distortionProxy
+   000A ldarg.0 
+   000B ldarg.1 
+   000C callvirt System.Void DistortionProxy::Enable(System.Int32,System.Single)
+   0011 call System.Void PostProcessingManager::PrepareCamera()
+   0016 ret 
+== System.Void DisableDistortion(System.Int32 byWhoID) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_distortionProxy
+   0005 ldarg.0 
+   0006 callvirt System.Void DistortionProxy::Disable(System.Int32)
+   000B call System.Void PostProcessingManager::PrepareCamera()
+   0010 ret 
+== System.Void EnableBloom(System.Single intensity, System.Single threshold, UnityEngine.Color bloomColor, System.Int32 downScale, System.Int32 blurNum) attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void PostProcessingManager::PrepareHostGameObject()
+   0005 ldsfld PostProcessingManager::s_bloomProxy
+   000A ldarg.0 
+   000B ldarg.1 
+   000C ldarg.2 
+   000D ldarg.3 
+   000E ldarg.s blurNum
+   0010 callvirt System.Void BloomProxy::Enable(System.Single,System.Single,UnityEngine.Color,System.Int32,System.Int32)
+   0015 call System.Void PostProcessingManager::PrepareCamera()
+   001A ret 
+== System.Void DisableBloom() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_bloomProxy
+   0005 callvirt System.Void BloomProxy::Disable()
+   000A call System.Void PostProcessingManager::PrepareCamera()
+   000F ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 call System.Void PostProcessingManager::PrepareCamera()
+   0005 ret 
+== UnityEngine.Camera AddCamera() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_hostGo
+   0005 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.Camera>()
+   000A ret 
+== System.Void SetProjMatrix(UnityEngine.Camera camera) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0041: ret
+   000C ldsfld PostProcessingManager::s_distortionProxy
+   0011 ldfld DistortionProxy::m_CamDistortion
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001C brfalse IL_0041: ret
+   0021 ldsfld PostProcessingManager::s_distortionProxy
+   0026 ldarg.0 
+   0027 callvirt System.Void DistortionProxy::SetDistortCamera(UnityEngine.Camera)
+   002C ldsfld PostProcessingManager::s_distortionProxy
+   0031 ldfld DistortionProxy::m_CamDistortion
+   0036 ldarg.0 
+   0037 callvirt UnityEngine.Matrix4x4 UnityEngine.Camera::get_projectionMatrix()
+   003C callvirt System.Void UnityEngine.Camera::set_projectionMatrix(UnityEngine.Matrix4x4)
+   0041 ret 
+== System.Void Render(UnityEngine.RenderTexture src, UnityEngine.RenderTexture dst) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld PostProcessingManager::s_distortionProxy
+   0005 callvirt System.Boolean PostProxyBase::IsWorking()
+   000A brfalse IL_0036: ldsfld BloomProxy PostProcessingManager::s_bloomProxy
+   000F ldsfld PostProcessingManager::s_bloomProxy
+   0014 callvirt System.Boolean PostProxyBase::IsWorking()
+   0019 brfalse IL_002a: ldarg.0
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 call System.Void PostProcessingManager::RenderDistortionBloom(UnityEngine.RenderTexture,UnityEngine.RenderTexture)
+   0025 br IL_0031: br IL_0058
+   002A ldarg.0 
+   002B ldarg.1 
+   002C call System.Void PostProcessingManager::RenderDistortion(UnityEngine.RenderTexture,UnityEngine.RenderTexture)
+   0031 br IL_0058: ret
+   0036 ldsfld PostProcessingManager::s_bloomProxy
+   003B callvirt System.Boolean PostProxyBase::IsWorking()
+   0040 brfalse IL_0058: ret
+   0045 ldsfld PostProcessingManager::s_bloomProxy
+   004A ldarg.0 
+   004B ldarg.1 
+   004C ldc.i4.2 
+   004D ldnull 
+   004E ldc.r4 -1
+   0053 callvirt System.Void BloomProxy::RenderBloom(UnityEngine.RenderTexture,UnityEngine.RenderTexture,System.Int32,UnityEngine.RenderTexture,System.Single)
+   0058 ret 
+== System.Void RenderDistortion(UnityEngine.RenderTexture src, UnityEngine.RenderTexture dst) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_distortionProxy
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 callvirt System.Void DistortionProxy::Render(UnityEngine.RenderTexture,UnityEngine.RenderTexture)
+   000C ret 
+== System.Void RenderDistortionBloom(UnityEngine.RenderTexture src, UnityEngine.RenderTexture dst) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_bloomProxy
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 ldc.i4.5 
+   0008 ldsfld PostProcessingManager::s_distortionProxy
+   000D ldfld DistortionProxy::m_DistortionRT
+   0012 ldsfld PostProcessingManager::s_distortionProxy
+   0017 ldfld DistortionProxy::m_Intensity
+   001C callvirt System.Void BloomProxy::RenderBloom(UnityEngine.RenderTexture,UnityEngine.RenderTexture,System.Int32,UnityEngine.RenderTexture,System.Single)
+   0021 ret 
+== System.Boolean IsDistortionSupported() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void PostProcessingManager::CalcDevicePerformanceScore()
+   0005 ldsfld PostProcessingManager::s_devicePerformanceScore
+   000A ldc.i4 7000
+   000F clt 
+   0011 ldc.i4.0 
+   0012 ceq 
+   0014 ret 
+== System.Boolean IsBloomSupported() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void PostProcessingManager::CalcDevicePerformanceScore()
+   0005 ldsfld PostProcessingManager::s_devicePerformanceScore
+   000A ldc.i4 7000
+   000F clt 
+   0011 ldc.i4.0 
+   0012 ceq 
+   0014 ret 
+== System.Void CalcDevicePerformanceScore() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_devicePerformanceScore
+   0005 ldc.i4.m1 
+   0006 bne.un IL_0015: ret
+   000B call System.Int32 Assets.Scripts.Framework.DetectRenderQuality::getAndroidScore()
+   0010 stsfld PostProcessingManager::s_devicePerformanceScore
+   0015 ret 
+== System.Boolean IsWorking() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld PostProcessingManager::s_distortionProxy
+   0005 callvirt System.Boolean PostProxyBase::IsWorking()
+   000A brtrue IL_001b: ldc.i4.1
+   000F ldsfld PostProcessingManager::s_bloomProxy
+   0014 callvirt System.Boolean PostProxyBase::IsWorking()
+   0019 br.s IL_001c: ret
+   001B ldc.i4.1 
+   001C ret 
+== System.Void GetRenderTextures(UnityEngine.RenderTexture& colorRT, UnityEngine.RenderTexture& depthRT) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldsfld PostProcessingManager::s_mainSceneColor
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_0026: ldsfld UnityEngine.RenderTexture PostProcessingManager::s_mainSceneDepth
+   0010 call System.Int32 UnityEngine.Screen::get_width()
+   0015 call System.Int32 UnityEngine.Screen::get_height()
+   001A ldc.i4.0 
+   001B ldc.i4.0 
+   001C newobj System.Void UnityEngine.RenderTexture::.ctor(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0021 stsfld PostProcessingManager::s_mainSceneColor
+   0026 ldsfld PostProcessingManager::s_mainSceneDepth
+   002B ldnull 
+   002C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0031 brfalse IL_004d: ldarg.0
+   0036 call System.Int32 UnityEngine.Screen::get_width()
+   003B call System.Int32 UnityEngine.Screen::get_height()
+   0040 ldc.i4.s 24
+   0042 ldc.i4.1 
+   0043 newobj System.Void UnityEngine.RenderTexture::.ctor(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   0048 stsfld PostProcessingManager::s_mainSceneDepth
+   004D ldarg.0 
+   004E ldsfld PostProcessingManager::s_mainSceneColor
+   0053 stind.ref 
+   0054 ldarg.1 
+   0055 ldsfld PostProcessingManager::s_mainSceneDepth
+   005A stind.ref 
+   005B ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 newobj System.Void DistortionProxy::.ctor()
+   0005 stsfld PostProcessingManager::s_distortionProxy
+   000A newobj System.Void BloomProxy::.ctor()
+   000F stsfld PostProcessingManager::s_bloomProxy
+   0014 newobj System.Void System.Collections.Generic.List`1<System.String>::.ctor()
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldstr 3DImage
+   0020 callvirt System.Void System.Collections.Generic.List`1<System.String>::Add(!0)
+   0025 ldloc.0 
+   0026 ldstr HeroShowCamera
+   002B callvirt System.Void System.Collections.Generic.List`1<System.String>::Add(!0)
+   0030 ldloc.0 
+   0031 stsfld PostProcessingManager::s_cameraNames
+   0036 ldc.i4.m1 
+   0037 stsfld PostProcessingManager::s_devicePerformanceScore
+   003C ldnull 
+   003D stsfld PostProcessingManager::s_mainSceneColor
+   0042 ldnull 
+   0043 stsfld PostProcessingManager::s_mainSceneDepth
+   0048 ret 

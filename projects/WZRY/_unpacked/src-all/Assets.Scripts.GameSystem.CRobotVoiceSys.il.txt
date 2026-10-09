@@ -1,0 +1,297 @@
+// TYPE Assets.Scripts.GameSystem.CRobotVoiceSys  base=MonoSingleton`1<Assets.Scripts.GameSystem.CRobotVoiceSys>  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.GameSystem.RobotVoiceCache m_robotVoiceCache
+  FIELD UnityEngine.WWW www
+  FIELD System.Int32 m_postGetVoiceTimeOut
+  FIELD ListView`1<Assets.Scripts.GameSystem.CVoiceDownloadInfo> m_downloadingInfoList
+  FIELD System.Boolean m_bIsLoading
+  FIELD Assets.Scripts.GameSystem.CVoiceDownloadInfo m_curVoiceDownloadInfo
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CVoiceDownloadInfo>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   000B ldarg.0 
+   000C call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.CRobotVoiceSys>::.ctor()
+   0011 ret 
+== System.Void Init() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 newobj System.Void Assets.Scripts.GameSystem.RobotVoiceCache::.ctor()
+   0005 stsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   000A ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   0006 call !0 Singleton`1<CTimerManager>::GetInstance()
+   000B ldarg.0 
+   000C ldftn System.Void Assets.Scripts.GameSystem.CRobotVoiceSys::OnPostGetVoiceTimeOut(System.Int32)
+   0012 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0017 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   001C ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   0021 brfalse IL_0030: ldarg.0
+   0026 ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   002B callvirt System.Void Assets.Scripts.GameSystem.RobotVoiceCache::Clear()
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   0036 brfalse IL_004d: ldarg.0
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   0041 callvirt System.Void UnityEngine.WWW::Dispose()
+   0046 ldarg.0 
+   0047 ldnull 
+   0048 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   004D ldarg.0 
+   004E call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.CRobotVoiceSys>::OnDestroy()
+   0053 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CRobotVoiceSys::UpdateDownLoadVoice()
+   0006 ret 
+== Assets.Scripts.GameSystem.RobotVoiceCache GetRobotVoiceCache() attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   0005 brtrue IL_0014: ldsfld Assets.Scripts.GameSystem.RobotVoiceCache Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   000A newobj System.Void Assets.Scripts.GameSystem.RobotVoiceCache::.ctor()
+   000F stsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   0014 ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   0019 ret 
+== System.Void RequestVoiceWithURL(System.String url, System.Int32 eventID, System.Int32 tag) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0016: ret
+   000B ldarg.1 
+   000C call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0011 brfalse IL_0017: newobj System.Void Assets.Scripts.GameSystem.CVoiceDownloadInfo::.ctor()
+   0016 ret 
+   0017 newobj System.Void Assets.Scripts.GameSystem.CVoiceDownloadInfo::.ctor()
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldc.i4.0 
+   001F stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::state
+   0024 ldloc.0 
+   0025 ldarg.2 
+   0026 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::eventID
+   002B ldloc.0 
+   002C ldarg.1 
+   002D stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::downLoadUrl
+   0032 ldloc.0 
+   0033 ldc.i4.0 
+   0034 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::bPost
+   0039 ldloc.0 
+   003A ldarg.3 
+   003B stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::tag
+   0040 ldloc.0 
+   0041 ldc.i4.1 
+   0042 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::state
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   004D ldloc.0 
+   004E callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CVoiceDownloadInfo>::Add(!0)
+   0053 ret 
+== System.Void UpdateDownLoadVoice() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_bIsLoading
+   0006 brtrue IL_0082: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   0011 callvirt System.Int32 ListViewBase::get_Count()
+   0016 ldc.i4.0 
+   0017 ble IL_0082: ret
+   001C ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   0027 ldc.i4.0 
+   0028 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CVoiceDownloadInfo>::get_Item(System.Int32)
+   002D ldfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::downLoadUrl
+   0032 callvirt Assets.Scripts.GameSystem.CRobotVoiceInfo Assets.Scripts.GameSystem.RobotVoiceCache::GetCachedVoiceInfo(System.String)
+   0037 brfalse IL_0047: ldarg.0
+   003C ldarg.0 
+   003D call System.Void Assets.Scripts.GameSystem.CRobotVoiceSys::GetCachedClip()
+   0042 br IL_0082: ret
+   0047 ldarg.0 
+   0048 ldarg.0 
+   0049 call System.Collections.IEnumerator Assets.Scripts.GameSystem.CRobotVoiceSys::PostGetVoice()
+   004E call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   0053 pop 
+   0054 leave IL_0082: ret
+   0059 pop 
+   005A ldarg.0 
+   005B call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   0066 brfalse IL_007d: leave IL_0082
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   0071 callvirt System.Void UnityEngine.WWW::Dispose()
+   0076 ldarg.0 
+   0077 ldnull 
+   0078 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   007D leave IL_0082: ret
+   0082 ret 
+== System.Void OnPostGetVoiceTimeOut(System.Int32 seq) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 call !0 Singleton`1<CTextManager>::GetInstance()
+   000A ldstr MiShuRobot_PostGetVoice_TimeOut
+   000F ldc.i4.1 
+   0010 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0015 ldc.i4.0 
+   0016 ldc.r4 1.5
+   001B ldnull 
+   001C ldc.i4.0 
+   001D newarr System.Object
+   0022 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0027 ldarg.0 
+   0028 call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   0033 brfalse IL_004a: ldarg.0
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   003E callvirt System.Void UnityEngine.WWW::Dispose()
+   0043 ldarg.0 
+   0044 ldnull 
+   0045 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::www
+   004A ldarg.0 
+   004B ldc.i4.0 
+   004C stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_bIsLoading
+   0051 ret 
+== System.Void GetCachedClip() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_bIsLoading
+   0007 ldarg.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   000E ldc.i4.0 
+   000F callvirt !0 ListView`1<Assets.Scripts.GameSystem.CVoiceDownloadInfo>::get_Item(System.Int32)
+   0014 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_downloadingInfoList
+   001F ldc.i4.0 
+   0020 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0025 ldsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_robotVoiceCache
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0030 ldfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::downLoadUrl
+   0035 callvirt Assets.Scripts.GameSystem.CRobotVoiceInfo Assets.Scripts.GameSystem.RobotVoiceCache::GetCachedVoiceInfo(System.String)
+   003A stloc.0 
+   003B ldloc.0 
+   003C brtrue IL_0049: ldarg.0
+   0041 ldarg.0 
+   0042 ldc.i4.0 
+   0043 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_bIsLoading
+   0048 ret 
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   004F ldc.i4.2 
+   0050 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::state
+   0055 ldsfld Assets.Scripts.GameSystem.RobotVoiceCache::s_cachedVoiceInfoDirectory
+   005A ldloc.0 
+   005B ldfld Assets.Scripts.GameSystem.CRobotVoiceInfo::key
+   0060 ldstr .bytes
+   0065 call System.String System.String::Concat(System.String,System.String)
+   006A call System.String CFileManager::CombinePath(System.String,System.String)
+   006F stloc.1 
+   0070 ldsfld Assets.Scripts.GameSystem.RobotVoiceCache::s_cachedVoiceInfoDirectory
+   0075 ldloc.0 
+   0076 ldfld Assets.Scripts.GameSystem.CRobotVoiceInfo::key
+   007B ldsfld Assets.Scripts.GameSystem.RobotVoiceCache::s_cachedVoiceFileInfoName
+   0080 ldstr .bytes
+   0085 call System.String System.String::Concat(System.String,System.String,System.String)
+   008A call System.String CFileManager::CombinePath(System.String,System.String)
+   008F stloc.2 
+   0090 ldloc.1 
+   0091 call System.Boolean CFileManager::IsFileExist(System.String)
+   0096 brfalse IL_015f: ldarg.0
+   009B call System.Byte[] CFileManager::LockFileBuffer()
+   00A0 stloc.3 
+   00A1 ldloc.1 
+   00A2 ldloc.3 
+   00A3 ldloc.3 
+   00A4 ldlen 
+   00A5 conv.i4 
+   00A6 call System.UInt32 CFileManager::ReadFile(System.String,System.Byte[],System.UInt32)
+   00AB stloc.s V_4
+   00AD ldloc.s V_4
+   00AF ldc.i4.4 
+   00B0 div.un 
+   00B1 conv.u 
+   00B2 newarr System.Single
+   00B7 stloc.s V_5
+   00B9 ldloca.s V_3
+   00BB ldloc.s V_4
+   00BD ldloca.s V_5
+   00BF call System.Int32 Assets.Scripts.GameSystem.RobotVoiceCache::ConvertByteToFloat(System.Byte[]&,System.Int32,System.Single[]&)
+   00C4 pop 
+   00C5 ldloc.3 
+   00C6 stloc.s V_6
+   00C8 ldloc.2 
+   00C9 ldloc.s V_6
+   00CB ldloc.s V_6
+   00CD ldlen 
+   00CE conv.i4 
+   00CF call System.UInt32 CFileManager::ReadFile(System.String,System.Byte[],System.UInt32)
+   00D4 stloc.s V_7
+   00D6 ldc.i4.0 
+   00D7 stloc.s V_8
+   00D9 ldloc.s V_6
+   00DB ldloca.s V_8
+   00DD call System.Int32 CMemoryManager::ReadInt(System.Byte[],System.Int32&)
+   00E2 stloc.s V_9
+   00E4 ldloc.s V_6
+   00E6 ldloca.s V_8
+   00E8 call System.Int32 CMemoryManager::ReadInt(System.Byte[],System.Int32&)
+   00ED stloc.s V_10
+   00EF ldstr MiShuVoice
+   00F4 ldloc.s V_5
+   00F6 ldlen 
+   00F7 conv.i4 
+   00F8 ldloc.s V_9
+   00FA ldloc.s V_10
+   00FC ldc.i4.0 
+   00FD ldc.i4.0 
+   00FE call UnityEngine.AudioClip UnityEngine.AudioClip::Create(System.String,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean)
+   0103 stloc.s V_11
+   0105 ldloc.s V_11
+   0107 ldloc.s V_5
+   0109 ldc.i4.0 
+   010A callvirt System.Boolean UnityEngine.AudioClip::SetData(System.Single[],System.Int32)
+   010F pop 
+   0110 ldarg.0 
+   0111 ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0116 ldloc.s V_11
+   0118 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::clip
+   011D ldarg.0 
+   011E ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0123 ldc.i4.3 
+   0124 stfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::state
+   0129 ldarg.0 
+   012A ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   012F ldfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::eventID
+   0134 brfalse IL_0154: leave IL_015f
+   0139 call !0 Singleton`1<EventRouter>::GetInstance()
+   013E ldarg.0 
+   013F ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0144 ldfld Assets.Scripts.GameSystem.CVoiceDownloadInfo::eventID
+   0149 ldarg.0 
+   014A ldfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   014F callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.CVoiceDownloadInfo>(System.Int32,!!0)
+   0154 leave IL_015f: ldarg.0
+   0159 call System.Void CFileManager::UnLockFileBuffer()
+   015E endfinally 
+   015F ldarg.0 
+   0160 ldnull 
+   0161 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_curVoiceDownloadInfo
+   0166 ldarg.0 
+   0167 ldc.i4.0 
+   0168 stfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_bIsLoading
+   016D ret 
+== System.Collections.IEnumerator PostGetVoice() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameSystem.CRobotVoiceSys/<PostGetVoice>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameSystem.CRobotVoiceSys/<PostGetVoice>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4 5000
+   0005 stsfld Assets.Scripts.GameSystem.CRobotVoiceSys::m_postGetVoiceTimeOut
+   000A ret 
+  NESTED Assets.Scripts.GameSystem.CRobotVoiceSys/<PostGetVoice>c__Iterator0

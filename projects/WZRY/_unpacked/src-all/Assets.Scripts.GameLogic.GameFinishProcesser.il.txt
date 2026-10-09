@@ -1,0 +1,713 @@
+// TYPE Assets.Scripts.GameLogic.GameFinishProcesser  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 _lastGameDuration
+  FIELD System.Int32 _lastGameStartTime
+  FIELD System.Int32 _lastGameSvrResult
+  FIELD System.Int32 _lastGameSvrErrorCode
+  FIELD CSProtocol.COMDT_SETTLE_RESULT_DETAIL _lastGameResultCachedInfo
+  FIELD CSProtocol.SCDT_SETTLE_ALL_ACNT_DETAIL _lastGameResultCachedAllPlayerInfo
+  FIELD System.Boolean _hasDestoryGameCore
+  FIELD System.Boolean _isWatchMode
+  FIELD System.UInt32 _gameFinishFlag
+  FIELD System.Int32 _GameFinishTimerSeq
+  FIELD System.Int32 _checkCount
+  FIELD System.Int32 _extraSendInfo
+  FIELD System.Int32 s_clearMemoryBeforeShowWinLoseStep
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void AddNewPlayerSettleTempInfo() attrs=Public, Static, HideBySig maxstack=8
+   0000 ret 
+== System.Void ClearNewPlayerSettleTempInfo() attrs=Public, Static, HideBySig maxstack=8
+   0000 ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.s 85
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnGameEndEvent(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   000E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0018 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001D ldc.i4.s 87
+   001F ldarg.0 
+   0020 ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnSvrSettleArrivedAndGameEndTicked(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0026 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   002B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0030 call !0 Singleton`1<EventRouter>::GetInstance()
+   0035 ldsfld EventID::Battle_ALL_PLAYER_KDA_NTFED
+   003A ldarg.0 
+   003B ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCppDataArrived(System.Boolean)
+   0041 newobj System.Void System.Action`1<System.Boolean>::.ctor(System.Object,System.IntPtr)
+   0046 callvirt System.Void EventRouter::AddEventHandler<System.Boolean>(System.Int32,System.Action`1<!!0>)
+   004B ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0005 ldc.i4.s 85
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnGameEndEvent(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   000E newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0018 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   001D ldc.i4.s 87
+   001F ldarg.0 
+   0020 ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnSvrSettleArrivedAndGameEndTicked(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0026 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   002B callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0030 call !0 Singleton`1<EventRouter>::GetInstance()
+   0035 ldsfld EventID::Battle_ALL_PLAYER_KDA_NTFED
+   003A ldarg.0 
+   003B ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCppDataArrived(System.Boolean)
+   0041 newobj System.Void System.Action`1<System.Boolean>::.ctor(System.Object,System.IntPtr)
+   0046 callvirt System.Void EventRouter::RemoveEventHandler<System.Boolean>(System.Int32,System.Action`1<!!0>)
+   004B ret 
+== System.Void GetLastGameTimeInfo(System.Int32& duration, System.Int32& startTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameDuration
+   0007 stind.i4 
+   0008 ldarg.2 
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameStartTime
+   000F stind.i4 
+   0010 ret 
+== System.Void SetGameTimeInfo(System.Int32 duration, System.Int32 startTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameDuration
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameStartTime
+   000E ret 
+== System.Int32 GetLastSvrGameResult() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameSvrResult
+   0006 ret 
+== CSProtocol.COMDT_SETTLE_RESULT_DETAIL GetLastGameCachedInfo() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedInfo
+   0006 ret 
+== CSProtocol.SCDT_SETTLE_ALL_ACNT_DETAIL GetLastGameCachedAllPlayerInfo() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedAllPlayerInfo
+   0006 ret 
+== System.Void OnNeedToReportOnePlayerSettle(System.UInt32 playerId) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_hasDestoryGameCore
+   0006 brtrue IL_0011: ret
+   000B ldarg.1 
+   000C call System.Void SGW::NtfGameCoreReportOnePlayer(System.UInt32)
+   0011 ret 
+== System.Void OnRecvGameSettleInfo(CSProtocol.SCPKG_GAME_OVER_RSP settleInfo) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.SCPKG_GAME_OVER_RSP::iErrCode
+   0007 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameSvrErrorCode
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldfld CSProtocol.SCPKG_GAME_OVER_RSP::stDetail
+   0013 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0018 ldfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   001D stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameSvrResult
+   0022 ldarg.0 
+   0023 ldarg.1 
+   0024 ldfld CSProtocol.SCPKG_GAME_OVER_RSP::stDetail
+   0029 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedInfo
+   002E ldarg.0 
+   002F ldarg.1 
+   0030 ldfld CSProtocol.SCPKG_GAME_OVER_RSP::stAllAcntDetail
+   0035 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedAllPlayerInfo
+   003A call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   003F callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0044 stloc.0 
+   0045 ldloc.0 
+   0046 brfalse IL_0088: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedInfo
+   0051 brfalse IL_0088: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedInfo
+   005C ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::bGameType
+   0061 ldc.i4.s 16
+   0063 bne.un IL_0088: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0068 ldloc.0 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedInfo
+   006F ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stSettleDetail
+   0074 callvirt CSProtocol.COMDT_PVE_SETTLE_INFO CSProtocol.COMDT_SETTLE_RESULT_EXTRA_DETAIL::get_stPve()
+   0079 ldfld CSProtocol.COMDT_PVE_SETTLE_INFO::stPveFinishDetail
+   007E call Assets.Scripts.GameSystem.PveFinishData Assets.Scripts.GameSystem.PveFinishData::MakePVEFinishData(CSProtocol.COMDT_PVE_LEVEL_FINISH_DETAIL)
+   0083 stfld Assets.Scripts.GameSystem.CRoleInfo::m_pveFinishDetail
+   0088 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   008D callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0092 stloc.1 
+   0093 ldarg.1 
+   0094 ldfld CSProtocol.SCPKG_GAME_OVER_RSP::stDetail
+   0099 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   009E ldfld CSProtocol.COMDT_GAME_INFO::bIsSingle
+   00A3 ldc.i4.0 
+   00A4 cgt 
+   00A6 stloc.2 
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameSvrErrorCode
+   00AD brfalse IL_00e1: ldloc.2
+   00B2 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00B7 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   00BC ldloc.2 
+   00BD brtrue IL_00dc: br IL_0186
+   00C2 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   00C7 ldc.i4.1 
+   00C8 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::LeaveRoom(System.Int32)
+   00CD call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   00D2 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::ResetVoiceSTTMode()
+   00D7 br IL_00dc: br IL_0186
+   00DC br IL_0186: ret
+   00E1 ldloc.2 
+   00E2 brtrue IL_015f: ldloc.1
+   00E7 ldarg.0 
+   00E8 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedAllPlayerInfo
+   00ED ldfld CSProtocol.SCDT_SETTLE_ALL_ACNT_DETAIL::bAcntNum
+   00F2 stloc.3 
+   00F3 ldc.i4.0 
+   00F4 stloc.s V_4
+   00F6 br IL_0152: ldloc.s V_4
+   00FB ldarg.0 
+   00FC ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedAllPlayerInfo
+   0101 ldfld CSProtocol.SCDT_SETTLE_ALL_ACNT_DETAIL::astAcntDetail
+   0106 ldloc.s V_4
+   0108 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.SCDT_SETTLE_ALL_ACNT_INFO>::get_Item(System.Int32)
+   010D ldfld CSProtocol.SCDT_SETTLE_ALL_ACNT_INFO::stBranchInfo
+   0112 ldfld CSProtocol.COMDT_SETTLE_BRANCHINFO::dwObjID
+   0117 stloc.s V_5
+   0119 ldarg.0 
+   011A ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_lastGameResultCachedAllPlayerInfo
+   011F ldfld CSProtocol.SCDT_SETTLE_ALL_ACNT_DETAIL::astAcntDetail
+   0124 ldloc.s V_4
+   0126 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.SCDT_SETTLE_ALL_ACNT_INFO>::get_Item(System.Int32)
+   012B ldfld CSProtocol.SCDT_SETTLE_ALL_ACNT_INFO::dwFightFlag
+   0130 ldc.i4 2048
+   0135 and 
+   0136 ldc.i4.0 
+   0137 ceq 
+   0139 ldc.i4.0 
+   013A ceq 
+   013C stloc.s V_6
+   013E call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::get_instance()
+   0143 ldloc.s V_5
+   0145 ldloc.s V_6
+   0147 callvirt System.Void Assets.Scripts.GameLogic.CSettleDataManager::SetRunAwayFlag(System.UInt32,System.Boolean)
+   014C ldloc.s V_4
+   014E ldc.i4.1 
+   014F add 
+   0150 stloc.s V_4
+   0152 ldloc.s V_4
+   0154 ldloc.3 
+   0155 blt IL_00fb: ldarg.0
+   015A br IL_0174: ldarg.0
+   015F ldloc.1 
+   0160 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeBurning()
+   0165 brfalse IL_0174: ldarg.0
+   016A call !0 Singleton`1<Assets.Scripts.GameLogic.BurnExpeditionController>::get_instance()
+   016F callvirt System.Void Assets.Scripts.GameLogic.BurnExpeditionController::OnBurnFightOverInfoApplied()
+   0174 ldarg.0 
+   0175 ldc.i4.0 
+   0176 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SetFlag(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   017B ldarg.0 
+   017C ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   0181 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCheckGameFinishTimer(System.Int32)
+   0186 ret 
+== System.Void LastChanceToSetKDALocalData() attrs=Public, HideBySig maxstack=3
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   000C brfalse IL_0095: ret
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0016 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.GamePlayerCenter::get_hostPlayerCamp()
+   001B stloc.1 
+   001C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0021 ldloc.1 
+   0022 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllCampPlayers(CSProtocol.COM_PLAYERCAMP)
+   0027 stloc.2 
+   0028 ldc.i4.0 
+   0029 stloc.3 
+   002A br IL_0089: ldloc.3
+   002F ldloc.2 
+   0030 ldloc.3 
+   0031 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0036 ldfld Assets.Scripts.GameLogic.Player::Captain
+   003B stloc.s V_4
+   003D ldloc.s V_4
+   003F call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0044 brfalse IL_0085: ldloc.3
+   0049 ldloca.s V_4
+   004B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0050 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0055 brfalse IL_0085: ldloc.3
+   005A ldloca.s V_4
+   005C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0061 ldfld Assets.Scripts.GameLogic.ActorLinker::ValueComponent
+   0066 ldfld Assets.Scripts.GameLogic.ValueLinkerComponent::m_growValue
+   006B stloc.s V_5
+   006D call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::get_instance()
+   0072 ldloc.2 
+   0073 ldloc.3 
+   0074 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0079 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   007E ldloc.s V_5
+   0080 callvirt System.Void Assets.Scripts.GameLogic.CSettleDataManager::SetTaoShaFaYuZhi(System.UInt32,System.Int32)
+   0085 ldloc.3 
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.3 
+   0089 ldloc.3 
+   008A ldloc.2 
+   008B callvirt System.Int32 ListViewBase::get_Count()
+   0090 blt IL_002f: ldloc.2
+   0095 ret 
+== System.Void EndGameCore() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::StopCheckGameFinishTimer()
+   0006 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   000B callvirt System.Void CGameObjectPool::RecordGameObjectInPoolStatisticAmount()
+   0010 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0015 callvirt System.Boolean Assets.Scripts.Framework.GameFramework::get_IsGameCoreWorkingOnClient()
+   001A brfalse IL_0029: ldarg.0
+   001F call System.Void SGW::DestroyGame()
+   0024 call System.Void SGamePInvoke::FlushCppPackBuffer()
+   0029 ldarg.0 
+   002A call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::Reset()
+   002F ldarg.0 
+   0030 ldc.i4.1 
+   0031 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_hasDestoryGameCore
+   0036 ret 
+== System.Void OnGameEndEvent(Assets.Scripts.GameLogic.GameCommonEventParam& prm) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SetFlag(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   000D call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCheckGameFinishTimer(System.Int32)
+   0012 ret 
+== System.Void OnSvrSettleArrivedAndGameEndTicked(Assets.Scripts.GameLogic.GameCommonEventParam& prm) attrs=Public, HideBySig maxstack=8
+   0000 call System.Boolean DeviceCheckSys::IsLowMemoryDevice()
+   0005 brfalse IL_002f: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000A ldc.i4.0 
+   000B stsfld Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   0010 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0015 ldc.i4.s 100
+   0017 ldc.i4.m1 
+   0018 ldarg.0 
+   0019 ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnClearMemoryBeforeShowWinLoseTimer(System.Int32)
+   001F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0024 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0029 pop 
+   002A br IL_0039: ret
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0034 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ShowWinLose()
+   0039 ret 
+== System.Void OnCppDataArrived(System.Boolean isWatchMode) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SetFlag(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   000D call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCheckGameFinishTimer(System.Int32)
+   0012 ret 
+== System.Void OnObserverFightOver() attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void OnSelfReqBeginQuitBattle() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMultiPlayerGame()
+   0011 brfalse IL_0095: ldarg.0
+   0016 ldc.i4 1086
+   001B call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0020 stloc.1 
+   0021 ldloc.1 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   002C ldfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   0031 brtrue IL_004c: ldloc.1
+   0036 ldloc.1 
+   0037 ldfld CSProtocol.CSPkg::stPkgData
+   003C callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0041 ldc.i4.5 
+   0042 newarr System.UInt32
+   0047 stfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   004C ldloc.1 
+   004D ldfld CSProtocol.CSPkg::stPkgData
+   0052 callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0057 ldc.i4.1 
+   0058 stfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::bObjNum
+   005D ldloc.1 
+   005E ldfld CSProtocol.CSPkg::stPkgData
+   0063 callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0068 ldfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   006D ldc.i4.0 
+   006E call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0073 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0078 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   007D stelem.i4 
+   007E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0083 ldloca.s V_1
+   0085 ldc.i4 1086
+   008A callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   008F pop 
+   0090 br IL_009e: ret
+   0095 ldarg.0 
+   0096 ldc.i4.0 
+   0097 ldc.i4.0 
+   0098 ldc.i4.1 
+   0099 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SoloGameFinishWithResult(System.Boolean,System.Boolean,System.Boolean)
+   009E ret 
+== System.Void OnTeamMustReqBeginQuitBattle(CSProtocol.COM_PLAYERCAMP allDeadCamp) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMultiPlayerGame()
+   0011 brfalse IL_00bb: ldarg.1
+   0016 ldc.i4 1086
+   001B call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0020 stloc.1 
+   0021 ldloc.1 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   002C ldfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   0031 brtrue IL_004c: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0036 ldloc.1 
+   0037 ldfld CSProtocol.CSPkg::stPkgData
+   003C callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0041 ldc.i4.5 
+   0042 newarr System.UInt32
+   0047 stfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   004C call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0051 ldarg.1 
+   0052 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllCampPlayers(CSProtocol.COM_PLAYERCAMP)
+   0057 stloc.2 
+   0058 ldloc.1 
+   0059 ldfld CSProtocol.CSPkg::stPkgData
+   005E callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0063 ldloc.2 
+   0064 callvirt System.Int32 ListViewBase::get_Count()
+   0069 conv.u1 
+   006A stfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::bObjNum
+   006F ldc.i4.0 
+   0070 stloc.3 
+   0071 br IL_0098: ldloc.3
+   0076 ldloc.1 
+   0077 ldfld CSProtocol.CSPkg::stPkgData
+   007C callvirt CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ CSProtocol.CSPkgBody::get_stQuitBattleReq()
+   0081 ldfld CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::ObjID
+   0086 ldloc.3 
+   0087 ldloc.2 
+   0088 ldloc.3 
+   0089 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   008E ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   0093 stelem.i4 
+   0094 ldloc.3 
+   0095 ldc.i4.1 
+   0096 add 
+   0097 stloc.3 
+   0098 ldloc.3 
+   0099 ldloc.2 
+   009A callvirt System.Int32 ListViewBase::get_Count()
+   009F blt IL_0076: ldloc.1
+   00A4 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00A9 ldloca.s V_1
+   00AB ldc.i4 1086
+   00B0 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   00B5 pop 
+   00B6 br IL_00d4: ret
+   00BB ldarg.1 
+   00BC call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00C1 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.GamePlayerCenter::get_hostPlayerCamp()
+   00C6 bne.un IL_00d4: ret
+   00CB ldarg.0 
+   00CC ldc.i4.0 
+   00CD ldc.i4.0 
+   00CE ldc.i4.1 
+   00CF call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SoloGameFinishWithResult(System.Boolean,System.Boolean,System.Boolean)
+   00D4 ret 
+== System.Void OnSoloGameReqQuit(System.Boolean win) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 ldarg.1 
+   0003 ldc.i4.1 
+   0004 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SoloGameFinishWithResult(System.Boolean,System.Boolean,System.Boolean)
+   0009 ret 
+== System.Void OnGmCommandEndGame() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 ldc.i4.1 
+   0003 ldc.i4.0 
+   0004 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SoloGameFinishWithResult(System.Boolean,System.Boolean,System.Boolean)
+   0009 ret 
+== System.Void SoloGameFinishWithResult(System.Boolean isGm, System.Boolean win, System.Boolean isQuit) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldarg.1 
+   0006 ldarg.2 
+   0007 ldarg.3 
+   0008 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ForceFightOver(System.Boolean,System.Boolean,System.Boolean)
+   000D ret 
+== System.Void Reset() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_gameFinishFlag
+   0007 ldc.i4.0 
+   0008 stsfld Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   000D ldarg.0 
+   000E ldc.i4.0 
+   000F stfld Assets.Scripts.GameLogic.GameFinishProcesser::_isWatchMode
+   0014 ldarg.0 
+   0015 ldc.i4.0 
+   0016 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_hasDestoryGameCore
+   001B ret 
+== System.Boolean IsFlagBeSet(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag flag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_gameFinishFlag
+   0006 conv.u8 
+   0007 ldc.i4.1 
+   0008 ldarg.1 
+   0009 ldc.i4.s 31
+   000B and 
+   000C shl 
+   000D conv.i8 
+   000E and 
+   000F ldc.i4.0 
+   0010 conv.i8 
+   0011 cgt 
+   0013 ret 
+== System.Void SetFlag(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag flag) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_gameFinishFlag
+   0007 ldc.i4.1 
+   0008 ldarg.1 
+   0009 ldc.i4.s 31
+   000B and 
+   000C shl 
+   000D or 
+   000E stfld Assets.Scripts.GameLogic.GameFinishProcesser::_gameFinishFlag
+   0013 ret 
+== System.Boolean AllBeSet() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 call System.Boolean Assets.Scripts.GameLogic.GameFinishProcesser::IsFlagBeSet(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   0007 brfalse IL_0021: ldc.i4.0
+   000C ldarg.0 
+   000D ldc.i4.1 
+   000E call System.Boolean Assets.Scripts.GameLogic.GameFinishProcesser::IsFlagBeSet(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   0013 brfalse IL_0021: ldc.i4.0
+   0018 ldarg.0 
+   0019 ldc.i4.0 
+   001A call System.Boolean Assets.Scripts.GameLogic.GameFinishProcesser::IsFlagBeSet(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   001F br.s IL_0022: ret
+   0021 ldc.i4.0 
+   0022 ret 
+== System.UInt32 GetAllFlagStatus() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_gameFinishFlag
+   0006 ret 
+== System.Boolean IsLastGameIsWatchingMode() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_isWatchMode
+   0006 ret 
+== System.Void SetOfflineSvrFlag(SGW/GameOverData data) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call CSProtocol.SCPKG_GAME_OVER_RSP Assets.Scripts.GameLogic.GameFinishProcesser::CreateOfflineGAME_OVER_RSP(SGW/GameOverData)
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldloc.0 
+   000A call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnRecvGameSettleInfo(CSProtocol.SCPKG_GAME_OVER_RSP)
+   000F ldarg.0 
+   0010 ldc.i4.0 
+   0011 call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::SetFlag(Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag)
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   001C call System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCheckGameFinishTimer(System.Int32)
+   0021 ret 
+== CSProtocol.SCPKG_GAME_OVER_RSP CreateOfflineGAME_OVER_RSP(SGW/GameOverData data) attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarga.s data
+   0004 ldfld SGW/GameOverData::data
+   0009 ldc.i4.0 
+   000A ldelema System.Byte
+   000F stloc.1 
+   0010 ldloc.1 
+   0011 stloc.2 
+   0012 ldloc.2 
+   0013 brfalse IL_006b: ldc.i4.0
+   0018 newobj System.Void CSProtocol.SCPKG_GAME_OVER_RSP::.ctor()
+   001D stloc.0 
+   001E ldc.i4 1080
+   0023 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0028 stloc.3 
+   0029 ldloc.2 
+   002A ldloc.3 
+   002B ldfld CSProtocol.CSPkg::stPkgData
+   0030 callvirt CSProtocol.CSPKG_GAME_OVER_REQ CSProtocol.CSPkgBody::get_stGameOverReq()
+   0035 call System.Void CSProtocolWrapper.CSPKG_GAME_OVER_REQ::CopyTo(CSProtocol.CSPKG_GAME_OVER_REQ)
+   003A ldloc.0 
+   003B ldc.i4.0 
+   003C stfld CSProtocol.SCPKG_GAME_OVER_RSP::iErrCode
+   0041 ldloc.0 
+   0042 ldfld CSProtocol.SCPKG_GAME_OVER_RSP::stDetail
+   0047 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   004C ldloc.3 
+   004D ldfld CSProtocol.CSPkg::stPkgData
+   0052 callvirt CSProtocol.CSPKG_GAME_OVER_REQ CSProtocol.CSPkgBody::get_stGameOverReq()
+   0057 ldfld CSProtocol.CSPKG_GAME_OVER_REQ::stObjData
+   005C ldfld CSProtocol.COMDT_GAME_OVER_INFO::stBattleParam
+   0061 ldfld CSProtocol.COMDT_SETTLE_GAME_PARAM::bGameResult
+   0066 stfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   006B ldc.i4.0 
+   006C conv.u 
+   006D stloc.1 
+   006E ldloc.0 
+   006F ret 
+== System.Void StartCheckGameFinishTimer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   0006 brtrue IL_003e: ret
+   000B ldarg.0 
+   000C call !0 Singleton`1<CTimerManager>::GetInstance()
+   0011 ldc.i4 500
+   0016 ldc.i4.m1 
+   0017 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::<>f__mg$cache0
+   001C brtrue.s IL_002f: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameLogic.GameFinishProcesser::<>f__mg$cache0
+   001E ldnull 
+   001F ldftn System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnCheckGameFinishTimer(System.Int32)
+   0025 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   002A stsfld Assets.Scripts.GameLogic.GameFinishProcesser::<>f__mg$cache0
+   002F ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::<>f__mg$cache0
+   0034 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0039 stfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   003E ret 
+== System.Void StopCheckGameFinishTimer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   0006 brfalse IL_0022: ret
+   000B call !0 Singleton`1<CTimerManager>::GetInstance()
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   0016 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   001B ldarg.0 
+   001C ldc.i4.0 
+   001D stfld Assets.Scripts.GameLogic.GameFinishProcesser::_GameFinishTimerSeq
+   0022 ret 
+== System.Void OnCheckGameFinishTimer(System.Int32 timerSequence) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 brfalse IL_00a8: ret
+   0006 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   000B ldc.i4.1 
+   000C add 
+   000D stsfld Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0017 callvirt System.Boolean Assets.Scripts.GameLogic.BattleLogic::IsAllCheckGameFinishFlagSet()
+   001C brfalse IL_0046: ldsfld System.Int32 Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   0021 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0026 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::StopCheckGameFinishTimer()
+   002B ldloca.s V_0
+   002D initobj Assets.Scripts.GameLogic.GameCommonEventParam
+   0033 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0038 ldc.i4.s 87
+   003A ldloca.s V_0
+   003C callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   0041 br IL_00a8: ret
+   0046 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   004B ldc.i4.s 40
+   004D ble IL_00a8: ret
+   0052 ldc.i4.0 
+   0053 stsfld Assets.Scripts.GameLogic.GameFinishProcesser::_checkCount
+   0058 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   005D callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::StopCheckGameFinishTimer()
+   0062 ldstr Settle Fail!
+   0067 newobj System.Void System.Exception::.ctor(System.String)
+   006C ldstr Do not settle cause {0}[{1}]
+   0071 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0076 callvirt System.UInt32 Assets.Scripts.GameLogic.BattleLogic::GetAllGameFinishFlag()
+   007B box System.UInt32
+   0080 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::_extraSendInfo
+   0085 box System.Int32
+   008A call System.String System.String::Format(System.String,System.Object,System.Object)
+   008F call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   0094 call !0 Singleton`1<Assets.Scripts.GameSystem.CArenaSystem>::get_instance()
+   0099 callvirt System.Void Assets.Scripts.GameSystem.CArenaSystem::CheckBattleResultUpdate()
+   009E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00A3 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   00A8 ret 
+== System.Void ResetSendExtraInfo() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameLogic.GameFinishProcesser::_extraSendInfo
+   0006 ret 
+== System.Void SetSendExtraInfo(System.Int32 flag) attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::_extraSendInfo
+   0005 ldarg.1 
+   0006 add 
+   0007 stsfld Assets.Scripts.GameLogic.GameFinishProcesser::_extraSendInfo
+   000C ret 
+== System.Boolean ClearMemoryBeforeShowWinLose() attrs=Private, HideBySig maxstack=4
+   0000 ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 switch Mono.Cecil.Cil.Instruction[]
+   0018 br IL_008d: ldc.i4.1
+   001D call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0022 ldnull 
+   0023 ldc.i4.1 
+   0024 ldc.i4.1 
+   0025 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseAllForm(System.String[],System.Boolean,System.Boolean)
+   002A call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   002F ldstr Effect_Common
+   0034 ldc.i4.1 
+   0035 ldc.i4.1 
+   0036 callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBank(System.String,System.Boolean,System.Boolean)
+   003B call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0040 ldstr Ambience
+   0045 ldc.i4.1 
+   0046 ldc.i4.1 
+   0047 callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBank(System.String,System.Boolean,System.Boolean)
+   004C call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0051 ldstr Music
+   0056 ldc.i4.1 
+   0057 ldc.i4.1 
+   0058 callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBank(System.String,System.Boolean,System.Boolean)
+   005D call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0062 callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadHeroAndMonsterBattleSoundBank()
+   0067 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   006C ldc.i4.1 
+   006D ldc.i4.0 
+   006E callvirt System.Void CGameObjectPool::ClearPooledObjects(System.Boolean,System.Boolean)
+   0073 br IL_008f: ldsfld System.Int32 Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   0078 call !0 Singleton`1<CResourceManager>::GetInstance()
+   007D ldc.i4.0 
+   007E callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0083 br IL_008f: ldsfld System.Int32 Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   0088 br IL_008f: ldsfld System.Int32 Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   008D ldc.i4.1 
+   008E ret 
+   008F ldsfld Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   0094 ldc.i4.1 
+   0095 add 
+   0096 stsfld Assets.Scripts.GameLogic.GameFinishProcesser::s_clearMemoryBeforeShowWinLoseStep
+   009B ldc.i4.0 
+   009C ret 
+== System.Void OnClearMemoryBeforeShowWinLoseTimer(System.Int32 timerSequence) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameLogic.GameFinishProcesser::ClearMemoryBeforeShowWinLose()
+   0006 brfalse IL_0020: ret
+   000B call !0 Singleton`1<CTimerManager>::GetInstance()
+   0010 ldarg.1 
+   0011 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   0016 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   001B callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ShowWinLose()
+   0020 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 
+  NESTED Assets.Scripts.GameLogic.GameFinishProcesser/WaitGameFinishFlag

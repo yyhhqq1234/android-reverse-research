@@ -1,0 +1,2096 @@
+// TYPE NetworkAccelerator  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean s_inited
+  FIELD System.Boolean m_expireTimeSent
+  FIELD System.String key
+  FIELD System.Int32 KEY_GET_NETDELAY
+  FIELD System.Int32 KEY_GET_ACCEL_STAT
+  FIELD System.Int32 KEY_GET_ACCEL_EFFECT
+  FIELD System.Int32 KEY_LOG_LEVLE
+  FIELD System.String PLAYER_PREF_NET_ACC
+  FIELD System.String PLAYER_PREF_AUTO_NET_ACC
+  FIELD System.Int32 LOG_LEVEL_DEBUG
+  FIELD System.Int32 LOG_LEVEL_INFO
+  FIELD System.Int32 LOG_LEVEL_WARNING
+  FIELD System.Int32 LOG_LEVEL_ERROR
+  FIELD System.Int32 LOG_LEVEL_FATAL
+  FIELD NetworkAccelerator/XunYouMode s_mode
+  FIELD NetworkAccelerator/AccelRecommendation_State CurState
+  FIELD System.UInt16 m_Vport
+  FIELD System.String m_IP
+  FIELD System.Boolean m_bLog
+  FIELD System.Boolean m_bAccel
+  FIELD System.Action`1<Assets.Scripts.UI.CUIEvent> <>f__mg$cache0
+  FIELD System.Action`1<Assets.Scripts.UI.CUIEvent> <>f__mg$cache1
+  FIELD System.Action`1<Assets.Scripts.UI.CUIEvent> <>f__mg$cache2
+  FIELD System.Action`1<Assets.Scripts.UI.CUIEvent> <>f__mg$cache3
+  FIELD System.Action`1<Assets.Scripts.UI.CUIEvent> <>f__mg$cache4
+  PROP System.Boolean started
+  PROP System.Boolean Inited
+  PROP System.UInt16 Vport
+  PROP System.String ConnectIP
+  PROP NetworkAccelerator/XunYouMode Mode
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Boolean get_started() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld NetworkAccelerator::m_bAccel
+   0005 ret 
+== System.Boolean get_Inited() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brfalse IL_0014: ldc.i4.0
+   000A ldsfld NetworkAccelerator::s_mode
+   000F ldc.i4.0 
+   0010 cgt 
+   0012 br.s IL_0015: ret
+   0014 ldc.i4.0 
+   0015 ret 
+== System.UInt16 get_Vport() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld NetworkAccelerator::m_Vport
+   0005 ret 
+== System.Void set_Vport(System.UInt16 value) attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 stsfld NetworkAccelerator::m_Vport
+   0006 ret 
+== System.String get_ConnectIP() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld NetworkAccelerator::m_IP
+   0005 ret 
+== System.Void set_ConnectIP(System.String value) attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 stsfld NetworkAccelerator::m_IP
+   0006 ret 
+== System.Void SetConnectIP(System.String ip, System.UInt16 port) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void NetworkAccelerator::set_ConnectIP(System.String)
+   0006 ldarg.1 
+   0007 call System.Void NetworkAccelerator::set_Vport(System.UInt16)
+   000C call System.String NetworkAccelerator::get_ConnectIP()
+   0011 ldarg.1 
+   0012 call System.Void NetworkAccelerator::SetGameIp(System.String,System.UInt16)
+   0017 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   001C callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 brfalse IL_0033: ret
+   0028 ldloc.0 
+   0029 callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PvpLevel()
+   002E call System.Void NetworkAccelerator::SetPlayerLevel(System.Int32)
+   0033 ret 
+== System.Void ClearConnectIP() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld System.String::Empty
+   0005 call System.Void NetworkAccelerator::set_ConnectIP(System.String)
+   000A ldc.i4.0 
+   000B call System.Void NetworkAccelerator::set_Vport(System.UInt16)
+   0010 ret 
+== System.String GetConnectIPstr() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldstr {0}_{1}
+   0005 call System.String NetworkAccelerator::get_ConnectIP()
+   000A call System.UInt16 NetworkAccelerator::get_Vport()
+   000F box System.UInt16
+   0014 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0019 ret 
+== System.Void PrintLog(System.String log) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsfld NetworkAccelerator::m_bLog
+   0005 brfalse IL_001a: ret
+   000A ldstr [NetSpeed ACC] 
+   000F ldarg.0 
+   0010 call System.String System.String::Concat(System.String,System.String)
+   0015 call System.Void UnityEngine.Debug::Log(System.Object)
+   001A ret 
+== System.Void InitACC(NetworkAccelerator/XunYouMode mode) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldstr 84CC36C0-839F-4D72-8D6A-4B80D45BCD1C
+   0005 stsfld NetworkAccelerator::key
+   000A ldstr Begin Network Acc
+   000F call System.Void NetworkAccelerator::PrintLog(System.String)
+   0014 ldarg.0 
+   0015 call System.Void NetworkAccelerator::setSDKMode(NetworkAccelerator/XunYouMode)
+   001A ldarg.0 
+   001B brtrue IL_0036: ldsfld System.Boolean NetworkAccelerator::s_inited
+   0020 ldstr mode 
+   0025 ldarg.0 
+   0026 box NetworkAccelerator/XunYouMode
+   002B call System.String System.String::Concat(System.Object,System.Object)
+   0030 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0035 ret 
+   0036 ldsfld NetworkAccelerator::s_inited
+   003B brfalse IL_0072: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0040 ldstr already init
+   0045 call System.Void NetworkAccelerator::PrintLog(System.String)
+   004A ldarg.0 
+   004B call System.Void NetworkAccelerator::setSDKMode(NetworkAccelerator/XunYouMode)
+   0050 call System.Void NetworkAccelerator::SetUserToken()
+   0055 call System.Void NetworkAccelerator::SetFreeFlow()
+   005A call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   005F callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0064 stloc.0 
+   0065 ldloca.s V_0
+   0067 ldfld TdirUrl::logicWorldID
+   006C call System.Void NetworkAccelerator::setGameId(System.Int32)
+   0071 ret 
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 14100
+   007C ldsfld NetworkAccelerator::<>f__mg$cache0
+   0081 brtrue.s IL_0094: ldsfld System.Action`1<Assets.Scripts.UI.CUIEvent> NetworkAccelerator::<>f__mg$cache0
+   0083 ldnull 
+   0084 ldftn System.Void NetworkAccelerator::OnEventTurnOn(Assets.Scripts.UI.CUIEvent)
+   008A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   008F stsfld NetworkAccelerator::<>f__mg$cache0
+   0094 ldsfld NetworkAccelerator::<>f__mg$cache0
+   0099 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   009E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A3 ldc.i4 14101
+   00A8 ldsfld NetworkAccelerator::<>f__mg$cache1
+   00AD brtrue.s IL_00c0: ldsfld System.Action`1<Assets.Scripts.UI.CUIEvent> NetworkAccelerator::<>f__mg$cache1
+   00AF ldnull 
+   00B0 ldftn System.Void NetworkAccelerator::OnEventTurnIgnore(Assets.Scripts.UI.CUIEvent)
+   00B6 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BB stsfld NetworkAccelerator::<>f__mg$cache1
+   00C0 ldsfld NetworkAccelerator::<>f__mg$cache1
+   00C5 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00CA call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00CF ldc.i4 14105
+   00D4 ldsfld NetworkAccelerator::<>f__mg$cache2
+   00D9 brtrue.s IL_00ec: ldsfld System.Action`1<Assets.Scripts.UI.CUIEvent> NetworkAccelerator::<>f__mg$cache2
+   00DB ldnull 
+   00DC ldftn System.Void NetworkAccelerator::OnEventTurnIgnoreBuy(Assets.Scripts.UI.CUIEvent)
+   00E2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00E7 stsfld NetworkAccelerator::<>f__mg$cache2
+   00EC ldsfld NetworkAccelerator::<>f__mg$cache2
+   00F1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FB ldc.i4 14102
+   0100 ldsfld NetworkAccelerator::<>f__mg$cache3
+   0105 brtrue.s IL_0118: ldsfld System.Action`1<Assets.Scripts.UI.CUIEvent> NetworkAccelerator::<>f__mg$cache3
+   0107 ldnull 
+   0108 ldftn System.Void NetworkAccelerator::OnEventTurnOnWIFI(Assets.Scripts.UI.CUIEvent)
+   010E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0113 stsfld NetworkAccelerator::<>f__mg$cache3
+   0118 ldsfld NetworkAccelerator::<>f__mg$cache3
+   011D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0122 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0127 ldc.i4 14104
+   012C ldsfld NetworkAccelerator::<>f__mg$cache4
+   0131 brtrue.s IL_0144: ldsfld System.Action`1<Assets.Scripts.UI.CUIEvent> NetworkAccelerator::<>f__mg$cache4
+   0133 ldnull 
+   0134 ldftn System.Void NetworkAccelerator::OnEventWifi4GConfirm(Assets.Scripts.UI.CUIEvent)
+   013A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   013F stsfld NetworkAccelerator::<>f__mg$cache4
+   0144 ldsfld NetworkAccelerator::<>f__mg$cache4
+   0149 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014E ldc.i4.4 
+   014F newarr System.Object
+   0154 dup 
+   0155 ldc.i4.0 
+   0156 ldstr key:
+   015B stelem.ref 
+   015C dup 
+   015D ldc.i4.1 
+   015E ldsfld NetworkAccelerator::key
+   0163 stelem.ref 
+   0164 dup 
+   0165 ldc.i4.2 
+   0166 ldstr  mode 
+   016B stelem.ref 
+   016C dup 
+   016D ldc.i4.3 
+   016E ldarg.0 
+   016F box NetworkAccelerator/XunYouMode
+   0174 stelem.ref 
+   0175 call System.String System.String::Concat(System.Object[])
+   017A call System.Void NetworkAccelerator::PrintLog(System.String)
+   017F ldstr com.subao.gamemaster.GameMaster
+   0184 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0189 stloc.1 
+   018A ldloc.1 
+   018B brfalse IL_0207: leave IL_0227
+   0190 ldloc.1 
+   0191 ldstr setU3DObserver
+   0196 ldc.i4.2 
+   0197 newarr System.Object
+   019C dup 
+   019D ldc.i4.0 
+   019E ldstr BootObj/GSDKsys
+   01A3 stelem.ref 
+   01A4 dup 
+   01A5 ldc.i4.1 
+   01A6 ldstr OnGameMasterInitResult
+   01AB stelem.ref 
+   01AC callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   01B1 ldloc.1 
+   01B2 ldstr init
+   01B7 ldc.i4.6 
+   01B8 newarr System.Object
+   01BD dup 
+   01BE ldc.i4.1 
+   01BF ldc.i4.1 
+   01C0 box System.Int32
+   01C5 stelem.ref 
+   01C6 dup 
+   01C7 ldc.i4.2 
+   01C8 ldsfld NetworkAccelerator::key
+   01CD stelem.ref 
+   01CE dup 
+   01CF ldc.i4.3 
+   01D0 ldstr KingsGlory
+   01D5 stelem.ref 
+   01D6 dup 
+   01D7 ldc.i4.4 
+   01D8 ldstr libapollo.so
+   01DD stelem.ref 
+   01DE dup 
+   01DF ldc.i4.5 
+   01E0 ldc.i4 13001
+   01E5 box System.Int32
+   01EA stelem.ref 
+   01EB callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Int32>(System.String,System.Object[])
+   01F0 stloc.2 
+   01F1 ldstr gameMasterResult = 
+   01F6 ldloc.2 
+   01F7 box System.Int32
+   01FC call System.String System.String::Concat(System.Object,System.Object)
+   0201 ldc.i4.1 
+   0202 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0207 leave IL_0227: ret
+   020C stloc.3 
+   020D ldstr catch ex 
+   0212 ldloc.3 
+   0213 callvirt System.String System.Object::ToString()
+   0218 call System.String System.String::Concat(System.String,System.String)
+   021D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0222 leave IL_0227: ret
+   0227 ret 
+== System.Void OnNetACC_CallBack(System.String gameMasterInitResult) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldloca.s V_0
+   0003 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0008 brfalse IL_005d: ldstr "Initialize GameMaster Fail!, ret:"
+   000D ldloc.0 
+   000E brtrue IL_005d: ldstr "Initialize GameMaster Fail!, ret:"
+   0013 ldstr Initialize GameMaster Success!
+   0018 call System.Void NetworkAccelerator::PrintLog(System.String)
+   001D ldc.i4.1 
+   001E stsfld NetworkAccelerator::s_inited
+   0023 ldsfld NetworkAccelerator::s_mode
+   0028 call System.Void NetworkAccelerator::setSDKMode(NetworkAccelerator/XunYouMode)
+   002D call System.Void NetworkAccelerator::SetUserToken()
+   0032 call System.Void NetworkAccelerator::SetFreeFlow()
+   0037 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   003C callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0041 stloc.1 
+   0042 ldloca.s V_1
+   0044 ldfld TdirUrl::logicWorldID
+   0049 call System.Void NetworkAccelerator::setGameId(System.Int32)
+   004E ldsfld NetworkAccelerator::LOG_LEVEL_ERROR
+   0053 call System.Void NetworkAccelerator::ChangeLogLevel(System.Int32)
+   0058 br IL_0072: leave IL_0092
+   005D ldstr Initialize GameMaster Fail!, ret:
+   0062 ldloc.0 
+   0063 box System.Int32
+   0068 call System.String System.String::Concat(System.Object,System.Object)
+   006D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0072 leave IL_0092: ret
+   0077 stloc.2 
+   0078 ldstr Initialize GameMaster Fail!:
+   007D ldloc.2 
+   007E callvirt System.String System.Object::ToString()
+   0083 call System.String System.String::Concat(System.String,System.String)
+   0088 call System.Void NetworkAccelerator::PrintLog(System.String)
+   008D leave IL_0092: ret
+   0092 ret 
+== System.Void SetNetAccConfig(System.Boolean open) attrs=Public, Static, HideBySig maxstack=8
+   0000 ret 
+== System.Void SetAutoNetAccConfig(System.Boolean open) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld NetworkAccelerator::PLAYER_PREF_AUTO_NET_ACC
+   0005 ldarg.0 
+   0006 brfalse IL_0011: ldc.i4.0
+   000B ldc.i4.1 
+   000C br IL_0012: call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0011 ldc.i4.0 
+   0012 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0017 call System.Void UnityEngine.PlayerPrefs::Save()
+   001C ret 
+== System.Void OnEventTurnOn(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldc.i4.1 
+   0001 call System.Void NetworkAccelerator::SetNetAccConfig(System.Boolean)
+   0006 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   000B ldstr NetACCturnOK
+   0010 ldnull 
+   0011 ldc.i4.1 
+   0012 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0017 ldsfld NetworkAccelerator::CurState
+   001C ldc.i4.1 
+   001D call System.Void NetworkAccelerator::OnAccelRecommendationResult(System.Int32,System.Boolean)
+   0022 ret 
+== System.Void OnEventTurnIgnore(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 ldstr NetACCIgore
+   000A ldnull 
+   000B ldc.i4.1 
+   000C callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0011 ldsfld NetworkAccelerator::CurState
+   0016 ldc.i4.0 
+   0017 call System.Void NetworkAccelerator::OnAccelRecommendationResult(System.Int32,System.Boolean)
+   001C ret 
+== System.Void OnEventTurnIgnoreBuy(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 ldstr NetACCIgnoreBuy
+   000A ldnull 
+   000B ldc.i4.1 
+   000C callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0011 ldc.i4.8 
+   0012 ldc.i4.0 
+   0013 call System.Void NetworkAccelerator::OnAccelRecommendationResult(System.Int32,System.Boolean)
+   0018 ret 
+== System.Void OnEventTurnOnWIFI(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldc.i4.1 
+   0001 call System.Void NetworkAccelerator::setWiFiAccelSwitch(System.Boolean)
+   0006 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   000B ldstr NetACCturnOKWIFI
+   0010 ldnull 
+   0011 ldc.i4.1 
+   0012 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0017 ldsfld NetworkAccelerator::CurState
+   001C ldc.i4.1 
+   001D call System.Void NetworkAccelerator::OnAccelRecommendationResult(System.Int32,System.Boolean)
+   0022 ret 
+== System.Void OnEventWifi4GConfirm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld NetworkAccelerator::CurState
+   0005 call System.String NetworkAccelerator::getWebUIUrl(System.Int32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0019: ldsfld NetworkAccelerator/AccelRecommendation_State NetworkAccelerator::CurState
+   0011 ldloc.0 
+   0012 ldc.i4.1 
+   0013 ldc.i4.0 
+   0014 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenUrl(System.String,System.Boolean,System.Int32)
+   0019 ldsfld NetworkAccelerator::CurState
+   001E ldc.i4.1 
+   001F call System.Void NetworkAccelerator::OnAccelRecommendationResult(System.Int32,System.Boolean)
+   0024 ret 
+== System.Void setSDKMode(NetworkAccelerator/XunYouMode mode) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldstr com.subao.gamemaster.GameMaster
+   0005 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_004a: leave IL_006a
+   0011 ldloc.0 
+   0012 ldstr setSDKMode
+   0017 ldc.i4.1 
+   0018 newarr System.Object
+   001D dup 
+   001E ldc.i4.0 
+   001F ldarg.0 
+   0020 box System.Int32
+   0025 stelem.ref 
+   0026 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   002B ldarg.0 
+   002C stsfld NetworkAccelerator::s_mode
+   0031 ldstr setSDKMode 
+   0036 ldsfld NetworkAccelerator::s_mode
+   003B box NetworkAccelerator/XunYouMode
+   0040 call System.String System.String::Concat(System.Object,System.Object)
+   0045 call System.Void NetworkAccelerator::PrintLog(System.String)
+   004A leave IL_006a: ret
+   004F stloc.1 
+   0050 ldstr ex 
+   0055 ldloc.1 
+   0056 callvirt System.String System.Object::ToString()
+   005B call System.String System.String::Concat(System.String,System.String)
+   0060 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0065 leave IL_006a: ret
+   006A ret 
+== System.Void SetUserToken() attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 ldc.i4.0 
+   0006 callvirt Apollo.ApolloAccountInfo ApolloHelper::GetAccountInfo(System.Boolean)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brfalse IL_0031: ret
+   0012 ldloc.0 
+   0013 ldc.i4.1 
+   0014 callvirt Apollo.ApolloToken Apollo.ApolloAccountInfo::GetToken(Apollo.ApolloTokenType)
+   0019 stloc.1 
+   001A ldloc.1 
+   001B brfalse IL_0031: ret
+   0020 ldloc.0 
+   0021 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   0026 ldloc.1 
+   0027 callvirt System.String Apollo.ApolloToken::get_Value()
+   002C call System.Void NetworkAccelerator::setUserToken(System.String,System.String)
+   0031 ret 
+== System.Void SetFreeFlow() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.m1 
+   0001 stloc.0 
+   0002 call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0007 callvirt System.Boolean CTongCaiSys::IsTongCaiUserAndCanUse()
+   000C brfalse IL_0051: ldloc.0
+   0011 call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0016 ldfld CTongCaiSys::supplierType
+   001B ldc.i4.1 
+   001C bne.un IL_0028: call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0021 ldc.i4.2 
+   0022 stloc.0 
+   0023 br IL_0051: ldloc.0
+   0028 call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   002D ldfld CTongCaiSys::supplierType
+   0032 ldc.i4.2 
+   0033 bne.un IL_003f: call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0038 ldc.i4.1 
+   0039 stloc.0 
+   003A br IL_0051: ldloc.0
+   003F call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0044 ldfld CTongCaiSys::supplierType
+   0049 ldc.i4.3 
+   004A bne.un IL_0051: ldloc.0
+   004F ldc.i4.0 
+   0050 stloc.0 
+   0051 ldloc.0 
+   0052 call System.Void NetworkAccelerator::setFreeFlowUser(System.Int32)
+   0057 ret 
+== System.Void setUserToken(System.String openid, System.String token) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldstr com.subao.gamemaster.GameMaster
+   0005 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0038: leave IL_0058
+   0011 ldloc.0 
+   0012 ldstr setUserToken
+   0017 ldc.i4.3 
+   0018 newarr System.Object
+   001D dup 
+   001E ldc.i4.0 
+   001F ldarg.0 
+   0020 stelem.ref 
+   0021 dup 
+   0022 ldc.i4.1 
+   0023 ldarg.1 
+   0024 stelem.ref 
+   0025 dup 
+   0026 ldc.i4.2 
+   0027 call System.String ApolloConfig::GetAppID()
+   002C stelem.ref 
+   002D callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0032 ldc.i4.0 
+   0033 stsfld NetworkAccelerator::m_expireTimeSent
+   0038 leave IL_0058: ret
+   003D stloc.1 
+   003E ldstr ex 
+   0043 ldloc.1 
+   0044 callvirt System.String System.Object::ToString()
+   0049 call System.String System.String::Concat(System.String,System.String)
+   004E call System.Void NetworkAccelerator::PrintLog(System.String)
+   0053 leave IL_0058: ret
+   0058 ret 
+== System.Void setWiFiAccelSwitch(System.Boolean on) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldstr com.subao.gamemaster.GameMaster
+   0005 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_002b: leave IL_004b
+   0011 ldloc.0 
+   0012 ldstr setWiFiAccelSwitch
+   0017 ldc.i4.1 
+   0018 newarr System.Object
+   001D dup 
+   001E ldc.i4.0 
+   001F ldarg.0 
+   0020 box System.Boolean
+   0025 stelem.ref 
+   0026 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   002B leave IL_004b: ret
+   0030 stloc.1 
+   0031 ldstr ex 
+   0036 ldloc.1 
+   0037 callvirt System.String System.Object::ToString()
+   003C call System.String System.String::Concat(System.String,System.String)
+   0041 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0046 leave IL_004b: ret
+   004B ret 
+== System.Boolean isAccelOpened() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stsfld NetworkAccelerator::m_bAccel
+   0008 ldstr com.subao.gamemaster.GameMaster
+   000D newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 brfalse IL_002b: leave IL_004b
+   0019 ldloc.1 
+   001A ldstr isAccelOpened
+   001F ldc.i4.0 
+   0020 newarr System.Object
+   0025 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Boolean>(System.String,System.Object[])
+   002A stloc.0 
+   002B leave IL_004b: ldloc.0
+   0030 stloc.2 
+   0031 ldstr ex 
+   0036 ldloc.2 
+   0037 callvirt System.String System.Object::ToString()
+   003C call System.String System.String::Concat(System.String,System.String)
+   0041 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0046 leave IL_004b: ldloc.0
+   004B ldloc.0 
+   004C stsfld NetworkAccelerator::m_bAccel
+   0051 ldloc.0 
+   0052 ret 
+== System.String getWebUIUrl(System.Int32 type) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldstr com.subao.gamemaster.GameMaster
+   000B newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 brfalse IL_0032: leave IL_0052
+   0017 ldloc.1 
+   0018 ldstr getWebUIUrl
+   001D ldc.i4.1 
+   001E newarr System.Object
+   0023 dup 
+   0024 ldc.i4.0 
+   0025 ldarg.0 
+   0026 box System.Int32
+   002B stelem.ref 
+   002C callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.String>(System.String,System.Object[])
+   0031 stloc.0 
+   0032 leave IL_0052: ldstr "getWebUIUrl "
+   0037 stloc.2 
+   0038 ldstr ex 
+   003D ldloc.2 
+   003E callvirt System.String System.Object::ToString()
+   0043 call System.String System.String::Concat(System.String,System.String)
+   0048 call System.Void NetworkAccelerator::PrintLog(System.String)
+   004D leave IL_0052: ldstr "getWebUIUrl "
+   0052 ldstr getWebUIUrl 
+   0057 ldloc.0 
+   0058 call System.String System.String::Concat(System.String,System.String)
+   005D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0062 ldloc.0 
+   0063 ret 
+== System.Void SetPlayerLevel(System.Int32 playLevel) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldstr com.subao.gamemaster.GameMaster
+   0005 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_002b: leave IL_004b
+   0011 ldloc.0 
+   0012 ldstr setPlayerLevel
+   0017 ldc.i4.1 
+   0018 newarr System.Object
+   001D dup 
+   001E ldc.i4.0 
+   001F ldarg.0 
+   0020 box System.Int32
+   0025 stelem.ref 
+   0026 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   002B leave IL_004b: ret
+   0030 stloc.1 
+   0031 ldstr ex 
+   0036 ldloc.1 
+   0037 callvirt System.String System.Object::ToString()
+   003C call System.String System.String::Concat(System.String,System.String)
+   0041 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0046 leave IL_004b: ret
+   004B ret 
+== System.String getVIPValidTime() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldstr com.subao.gamemaster.GameMaster
+   000B newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 brfalse IL_0029: leave IL_0049
+   0017 ldloc.1 
+   0018 ldstr getVIPValidTime
+   001D ldc.i4.0 
+   001E newarr System.Object
+   0023 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.String>(System.String,System.Object[])
+   0028 stloc.0 
+   0029 leave IL_0049: ldstr "getVIPValidTime "
+   002E stloc.2 
+   002F ldstr ex 
+   0034 ldloc.2 
+   0035 callvirt System.String System.Object::ToString()
+   003A call System.String System.String::Concat(System.String,System.String)
+   003F call System.Void NetworkAccelerator::PrintLog(System.String)
+   0044 leave IL_0049: ldstr "getVIPValidTime "
+   0049 ldstr getVIPValidTime 
+   004E ldloc.0 
+   004F call System.String System.String::Concat(System.String,System.String)
+   0054 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0059 ldloc.0 
+   005A ret 
+== NetworkAccelerator/UserStatus GetUserStatus() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldstr com.subao.gamemaster.GameMaster
+   0007 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000C stloc.1 
+   000D ldloc.1 
+   000E brfalse IL_0025: ldstr "GetUserStatus "
+   0013 ldloc.1 
+   0014 ldstr getAccelerationStatus
+   0019 ldc.i4.0 
+   001A newarr System.Object
+   001F callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Int32>(System.String,System.Object[])
+   0024 stloc.0 
+   0025 ldstr GetUserStatus 
+   002A ldloc.0 
+   002B box NetworkAccelerator/UserStatus
+   0030 call System.String System.String::Concat(System.Object,System.Object)
+   0035 call System.Void NetworkAccelerator::PrintLog(System.String)
+   003A leave IL_005a: ldloc.0
+   003F stloc.2 
+   0040 ldstr ex 
+   0045 ldloc.2 
+   0046 callvirt System.String System.Object::ToString()
+   004B call System.String System.String::Concat(System.String,System.String)
+   0050 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0055 leave IL_005a: ldloc.0
+   005A ldloc.0 
+   005B ret 
+== System.Void ChangeLogLevel(System.Int32 level) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldarg.0
+   000A ret 
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D ldc.i4.5 
+   000E call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   0013 conv.i8 
+   0014 stloc.0 
+   0015 ldstr com.subao.gamemaster.GameMaster
+   001A newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   001F stloc.1 
+   0020 ldloc.1 
+   0021 brfalse IL_004d: leave IL_006d
+   0026 ldloc.1 
+   0027 ldstr setLong
+   002C ldc.i4.2 
+   002D newarr System.Object
+   0032 dup 
+   0033 ldc.i4.0 
+   0034 ldsfld NetworkAccelerator::KEY_LOG_LEVLE
+   0039 box System.Int32
+   003E stelem.ref 
+   003F dup 
+   0040 ldc.i4.1 
+   0041 ldloc.0 
+   0042 box System.Int64
+   0047 stelem.ref 
+   0048 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   004D leave IL_006d: ret
+   0052 stloc.2 
+   0053 ldstr ex 
+   0058 ldloc.2 
+   0059 callvirt System.String System.Object::ToString()
+   005E call System.String System.String::Concat(System.String,System.String)
+   0063 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0068 leave IL_006d: ret
+   006D ret 
+== System.Void SetEchoPort(System.Int32 port) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldstr Set UD Echo Port to :
+   0005 ldarg.0 
+   0006 box System.Int32
+   000B call System.String System.String::Concat(System.Object,System.Object)
+   0010 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0015 ldsfld NetworkAccelerator::s_inited
+   001A brtrue IL_0020: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   001F ret 
+   0020 ldsfld NetworkAccelerator::s_mode
+   0025 brtrue IL_002b: ldstr "com.subao.gamemaster.GameMaster"
+   002A ret 
+   002B ldstr com.subao.gamemaster.GameMaster
+   0030 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0035 stloc.0 
+   0036 ldloc.0 
+   0037 brfalse IL_0056: leave IL_0076
+   003C ldloc.0 
+   003D ldstr setUdpEchoPort
+   0042 ldc.i4.1 
+   0043 newarr System.Object
+   0048 dup 
+   0049 ldc.i4.0 
+   004A ldarg.0 
+   004B box System.Int32
+   0050 stelem.ref 
+   0051 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0056 leave IL_0076: ldstr "Set UD Echo Port Success!"
+   005B stloc.1 
+   005C ldstr ex 
+   0061 ldloc.1 
+   0062 callvirt System.String System.Object::ToString()
+   0067 call System.String System.String::Concat(System.String,System.String)
+   006C call System.Void NetworkAccelerator::PrintLog(System.String)
+   0071 leave IL_0076: ldstr "Set UD Echo Port Success!"
+   0076 ldstr Set UD Echo Port Success!
+   007B call System.Void NetworkAccelerator::PrintLog(System.String)
+   0080 ret 
+== System.Void setRecommendationGameIP(System.String ip, System.Int32 port) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldc.i4.4 
+   0001 newarr System.Object
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr setRecommendationGameIP :
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldarg.0 
+   0011 stelem.ref 
+   0012 dup 
+   0013 ldc.i4.2 
+   0014 ldstr , port :
+   0019 stelem.ref 
+   001A dup 
+   001B ldc.i4.3 
+   001C ldarg.1 
+   001D box System.Int32
+   0022 stelem.ref 
+   0023 call System.String System.String::Concat(System.Object[])
+   0028 call System.Void NetworkAccelerator::PrintLog(System.String)
+   002D ldsfld NetworkAccelerator::s_inited
+   0032 brtrue IL_0038: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   0037 ret 
+   0038 ldsfld NetworkAccelerator::s_mode
+   003D brtrue IL_0043: ldstr "com.subao.gamemaster.GameMaster"
+   0042 ret 
+   0043 ldstr com.subao.gamemaster.GameMaster
+   0048 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   004D stloc.0 
+   004E ldloc.0 
+   004F brfalse IL_0072: leave IL_0092
+   0054 ldloc.0 
+   0055 ldstr setRecommendationGameIP
+   005A ldc.i4.2 
+   005B newarr System.Object
+   0060 dup 
+   0061 ldc.i4.0 
+   0062 ldarg.0 
+   0063 stelem.ref 
+   0064 dup 
+   0065 ldc.i4.1 
+   0066 ldarg.1 
+   0067 box System.Int32
+   006C stelem.ref 
+   006D callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0072 leave IL_0092: ldstr "Set setRecommendationGameIP Success!"
+   0077 stloc.1 
+   0078 ldstr ex 
+   007D ldloc.1 
+   007E callvirt System.String System.Object::ToString()
+   0083 call System.String System.String::Concat(System.String,System.String)
+   0088 call System.Void NetworkAccelerator::PrintLog(System.String)
+   008D leave IL_0092: ldstr "Set setRecommendationGameIP Success!"
+   0092 ldstr Set setRecommendationGameIP Success!
+   0097 call System.Void NetworkAccelerator::PrintLog(System.String)
+   009C ret 
+== System.Void SetGameIp(System.String ip, System.UInt16 port) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldc.i4.4 
+   0001 newarr System.Object
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr SetGameIp :
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldarg.0 
+   0011 stelem.ref 
+   0012 dup 
+   0013 ldc.i4.2 
+   0014 ldstr port 
+   0019 stelem.ref 
+   001A dup 
+   001B ldc.i4.3 
+   001C ldarg.1 
+   001D box System.UInt16
+   0022 stelem.ref 
+   0023 call System.String System.String::Concat(System.Object[])
+   0028 call System.Void NetworkAccelerator::PrintLog(System.String)
+   002D ldsfld NetworkAccelerator::s_inited
+   0032 brtrue IL_0038: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   0037 ret 
+   0038 ldsfld NetworkAccelerator::s_mode
+   003D brtrue IL_0043: ldstr "com.subao.gamemaster.GameMaster"
+   0042 ret 
+   0043 ldstr com.subao.gamemaster.GameMaster
+   0048 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   004D stloc.0 
+   004E ldloc.0 
+   004F brfalse IL_007a: leave IL_009a
+   0054 ldloc.0 
+   0055 ldstr addAccelAddress
+   005A ldc.i4.3 
+   005B newarr System.Object
+   0060 dup 
+   0061 ldc.i4.0 
+   0062 ldstr udp
+   0067 stelem.ref 
+   0068 dup 
+   0069 ldc.i4.1 
+   006A ldarg.0 
+   006B stelem.ref 
+   006C dup 
+   006D ldc.i4.2 
+   006E ldarg.1 
+   006F box System.Int32
+   0074 stelem.ref 
+   0075 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   007A leave IL_009a: ldstr "Set SetGameIp Success!"
+   007F stloc.1 
+   0080 ldstr ex 
+   0085 ldloc.1 
+   0086 callvirt System.String System.Object::ToString()
+   008B call System.String System.String::Concat(System.String,System.String)
+   0090 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0095 leave IL_009a: ldstr "Set SetGameIp Success!"
+   009A ldstr Set SetGameIp Success!
+   009F call System.Void NetworkAccelerator::PrintLog(System.String)
+   00A4 ret 
+== System.Void OnNetDelay(System.Int32 millis) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brfalse IL_0014: ret
+   000A ldsfld NetworkAccelerator::m_bAccel
+   000F brfalse IL_0015: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   0014 ret 
+   0015 ldsfld NetworkAccelerator::s_mode
+   001A brtrue IL_0020: ldstr "com.subao.gamemaster.GameMaster"
+   001F ret 
+   0020 ldstr com.subao.gamemaster.GameMaster
+   0025 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   002A stloc.0 
+   002B ldloc.0 
+   002C brfalse IL_004b: leave IL_006b
+   0031 ldloc.0 
+   0032 ldstr onNetDelay
+   0037 ldc.i4.1 
+   0038 newarr System.Object
+   003D dup 
+   003E ldc.i4.0 
+   003F ldarg.0 
+   0040 box System.Int32
+   0045 stelem.ref 
+   0046 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   004B leave IL_006b: ret
+   0050 stloc.1 
+   0051 ldstr ex 
+   0056 ldloc.1 
+   0057 callvirt System.String System.Object::ToString()
+   005C call System.String System.String::Concat(System.String,System.String)
+   0061 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0066 leave IL_006b: ret
+   006B ret 
+== NetworkAccelerator/AccelRecommendation_State getAccelRecommendation() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldsfld NetworkAccelerator::s_inited
+   0007 brtrue IL_000e: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   000C ldloc.0 
+   000D ret 
+   000E ldsfld NetworkAccelerator::s_mode
+   0013 brtrue IL_001a: ldstr "com.subao.gamemaster.GameMaster"
+   0018 ldloc.0 
+   0019 ret 
+   001A ldstr com.subao.gamemaster.GameMaster
+   001F newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0024 stloc.1 
+   0025 ldloc.1 
+   0026 brfalse IL_0052: leave IL_0072
+   002B ldloc.1 
+   002C ldstr getAccelRecommendation
+   0031 ldc.i4.0 
+   0032 newarr System.Object
+   0037 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Int32>(System.String,System.Object[])
+   003C stloc.0 
+   003D ldstr getAccelRecommendation :
+   0042 ldloc.0 
+   0043 box NetworkAccelerator/AccelRecommendation_State
+   0048 call System.String System.String::Concat(System.Object,System.Object)
+   004D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0052 leave IL_0072: ldloc.0
+   0057 stloc.2 
+   0058 ldstr ex 
+   005D ldloc.2 
+   005E callvirt System.String System.Object::ToString()
+   0063 call System.String System.String::Concat(System.String,System.String)
+   0068 call System.Void NetworkAccelerator::PrintLog(System.String)
+   006D leave IL_0072: ldloc.0
+   0072 ldloc.0 
+   0073 ret 
+== System.String getAccelRecommendationData(System.Int32 type) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldsfld NetworkAccelerator::s_inited
+   000B brtrue IL_0012: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   0010 ldloc.0 
+   0011 ret 
+   0012 ldsfld NetworkAccelerator::s_mode
+   0017 brtrue IL_001e: ldstr "com.subao.gamemaster.GameMaster"
+   001C ldloc.0 
+   001D ret 
+   001E ldstr com.subao.gamemaster.GameMaster
+   0023 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A brfalse IL_005a: leave IL_007a
+   002F ldloc.1 
+   0030 ldstr getAccelRecommendationData
+   0035 ldc.i4.1 
+   0036 newarr System.Object
+   003B dup 
+   003C ldc.i4.0 
+   003D ldarg.0 
+   003E box System.Int32
+   0043 stelem.ref 
+   0044 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.String>(System.String,System.Object[])
+   0049 stloc.0 
+   004A ldstr getAccelRecommendationData :
+   004F ldloc.0 
+   0050 call System.String System.String::Concat(System.String,System.String)
+   0055 call System.Void NetworkAccelerator::PrintLog(System.String)
+   005A leave IL_007a: ldloc.0
+   005F stloc.2 
+   0060 ldstr ex 
+   0065 ldloc.2 
+   0066 callvirt System.String System.Object::ToString()
+   006B call System.String System.String::Concat(System.String,System.String)
+   0070 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0075 leave IL_007a: ldloc.0
+   007A ldloc.0 
+   007B ret 
+== System.Void OnAccelRecommendationResult(System.Int32 type, System.Boolean bconfrim) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   000A ret 
+   000B ldsfld NetworkAccelerator::s_mode
+   0010 brtrue IL_0016: ldstr "com.subao.gamemaster.GameMaster"
+   0015 ret 
+   0016 ldstr com.subao.gamemaster.GameMaster
+   001B newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0020 stloc.0 
+   0021 ldloc.0 
+   0022 brfalse IL_004a: leave IL_006a
+   0027 ldloc.0 
+   0028 ldstr onAccelRecommendationResult
+   002D ldc.i4.2 
+   002E newarr System.Object
+   0033 dup 
+   0034 ldc.i4.0 
+   0035 ldarg.0 
+   0036 box System.Int32
+   003B stelem.ref 
+   003C dup 
+   003D ldc.i4.1 
+   003E ldarg.1 
+   003F box System.Boolean
+   0044 stelem.ref 
+   0045 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   004A leave IL_006a: ret
+   004F stloc.1 
+   0050 ldstr ex 
+   0055 ldloc.1 
+   0056 callvirt System.String System.Object::ToString()
+   005B call System.String System.String::Concat(System.String,System.String)
+   0060 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0065 leave IL_006a: ret
+   006A ret 
+== System.Void ClearUDPCache() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   000A ret 
+   000B ldsfld NetworkAccelerator::s_mode
+   0010 brtrue IL_0016: ldstr "com.subao.gamemaster.GameMaster"
+   0015 ret 
+   0016 ldstr com.subao.gamemaster.GameMaster
+   001B newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0020 stloc.0 
+   0021 ldloc.0 
+   0022 brfalse IL_0038: leave IL_0058
+   0027 ldloc.0 
+   0028 ldstr clearUDPCache
+   002D ldc.i4.0 
+   002E newarr System.Object
+   0033 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0038 leave IL_0058: ret
+   003D stloc.1 
+   003E ldstr ex 
+   0043 ldloc.1 
+   0044 callvirt System.String System.Object::ToString()
+   0049 call System.String System.String::Concat(System.String,System.String)
+   004E call System.Void NetworkAccelerator::PrintLog(System.String)
+   0053 leave IL_0058: ret
+   0058 ret 
+== System.Int64 GetDelay() attrs=Public, Static, HideBySig maxstack=6
+   0000 ldc.i4.m1 
+   0001 conv.i8 
+   0002 stloc.0 
+   0003 ldsfld NetworkAccelerator::s_mode
+   0008 brtrue IL_000f: ldstr "com.subao.gamemaster.GameMaster"
+   000D ldloc.0 
+   000E ret 
+   000F ldstr com.subao.gamemaster.GameMaster
+   0014 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0019 stloc.1 
+   001A ldloc.1 
+   001B brfalse IL_003f: leave IL_005f
+   0020 ldloc.1 
+   0021 ldstr getLong
+   0026 ldc.i4.1 
+   0027 newarr System.Object
+   002C dup 
+   002D ldc.i4.0 
+   002E ldsfld NetworkAccelerator::KEY_GET_NETDELAY
+   0033 box System.Int32
+   0038 stelem.ref 
+   0039 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Int64>(System.String,System.Object[])
+   003E stloc.0 
+   003F leave IL_005f: ldloc.0
+   0044 stloc.2 
+   0045 ldstr ex 
+   004A ldloc.2 
+   004B callvirt System.String System.Object::ToString()
+   0050 call System.String System.String::Concat(System.String,System.String)
+   0055 call System.Void NetworkAccelerator::PrintLog(System.String)
+   005A leave IL_005f: ldloc.0
+   005F ldloc.0 
+   0060 ret 
+== System.String GetEffect() attrs=Public, Static, HideBySig maxstack=6
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldstr com.subao.gamemaster.GameMaster
+   0007 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   000C stloc.1 
+   000D ldloc.1 
+   000E brfalse IL_0032: leave IL_0052
+   0013 ldloc.1 
+   0014 ldstr getString
+   0019 ldc.i4.1 
+   001A newarr System.Object
+   001F dup 
+   0020 ldc.i4.0 
+   0021 ldsfld NetworkAccelerator::KEY_GET_ACCEL_EFFECT
+   0026 box System.Int32
+   002B stelem.ref 
+   002C callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.String>(System.String,System.Object[])
+   0031 stloc.0 
+   0032 leave IL_0052: ldloc.0
+   0037 stloc.2 
+   0038 ldstr ex 
+   003D ldloc.2 
+   003E callvirt System.String System.Object::ToString()
+   0043 call System.String System.String::Concat(System.String,System.String)
+   0048 call System.Void NetworkAccelerator::PrintLog(System.String)
+   004D leave IL_0052: ldloc.0
+   0052 ldloc.0 
+   0053 ret 
+== System.Int32 GetNetType() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.m1 
+   0001 stloc.0 
+   0002 ldsfld NetworkAccelerator::s_inited
+   0007 brtrue IL_000e: ldsfld NetworkAccelerator/XunYouMode NetworkAccelerator::s_mode
+   000C ldloc.0 
+   000D ret 
+   000E ldsfld NetworkAccelerator::s_mode
+   0013 brtrue IL_001a: ldstr "com.subao.gamemaster.GameMaster"
+   0018 ldloc.0 
+   0019 ret 
+   001A ldstr com.subao.gamemaster.GameMaster
+   001F newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0024 stloc.1 
+   0025 ldloc.1 
+   0026 brfalse IL_003d: leave IL_005d
+   002B ldloc.1 
+   002C ldstr getCurrentConnectionType
+   0031 ldc.i4.0 
+   0032 newarr System.Object
+   0037 callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Int32>(System.String,System.Object[])
+   003C stloc.0 
+   003D leave IL_005d: ldloc.0
+   0042 stloc.2 
+   0043 ldstr ex 
+   0048 ldloc.2 
+   0049 callvirt System.String System.Object::ToString()
+   004E call System.String System.String::Concat(System.String,System.String)
+   0053 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0058 leave IL_005d: ldloc.0
+   005D ldloc.0 
+   005E ret 
+== System.Boolean isAccerating() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldsfld NetworkAccelerator::s_mode
+   0007 brtrue IL_000e: ldstr "com.subao.gamemaster.GameMaster"
+   000C ldc.i4.0 
+   000D ret 
+   000E ldstr com.subao.gamemaster.GameMaster
+   0013 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A brfalse IL_0031: leave IL_0051
+   001F ldloc.1 
+   0020 ldstr isUDPProxy
+   0025 ldc.i4.0 
+   0026 newarr System.Object
+   002B callvirt !!0 UnityEngine.AndroidJavaObject::CallStatic<System.Boolean>(System.String,System.Object[])
+   0030 stloc.0 
+   0031 leave IL_0051: ldloc.0
+   0036 stloc.2 
+   0037 ldstr ex 
+   003C ldloc.2 
+   003D callvirt System.String System.Object::ToString()
+   0042 call System.String System.String::Concat(System.String,System.String)
+   0047 call System.Void NetworkAccelerator::PrintLog(System.String)
+   004C leave IL_0051: ldloc.0
+   0051 ldloc.0 
+   0052 ret 
+== System.Void GoFront() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldstr "Begin GoFront"
+   000A ret 
+   000B ldstr Begin GoFront
+   0010 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0015 ldstr com.subao.gamemaster.GameMaster
+   001A newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 brfalse IL_0037: leave IL_0057
+   0026 ldloc.0 
+   0027 ldstr gameForeground
+   002C ldc.i4.0 
+   002D newarr System.Object
+   0032 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0037 leave IL_0057: ret
+   003C stloc.1 
+   003D ldstr ex 
+   0042 ldloc.1 
+   0043 callvirt System.String System.Object::ToString()
+   0048 call System.String System.String::Concat(System.String,System.String)
+   004D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0052 leave IL_0057: ret
+   0057 ret 
+== System.Void GoBack() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldstr "Begin GoBack"
+   000A ret 
+   000B ldstr Begin GoBack
+   0010 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0015 ldstr com.subao.gamemaster.GameMaster
+   001A newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 brfalse IL_0037: leave IL_0057
+   0026 ldloc.0 
+   0027 ldstr gameBackground
+   002C ldc.i4.0 
+   002D newarr System.Object
+   0032 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0037 leave IL_0057: ret
+   003C stloc.1 
+   003D ldstr ex 
+   0042 ldloc.1 
+   0043 callvirt System.String System.Object::ToString()
+   0048 call System.String System.String::Concat(System.String,System.String)
+   004D call System.Void NetworkAccelerator::PrintLog(System.String)
+   0052 leave IL_0057: ret
+   0057 ret 
+== System.Void setFreeFlowUser(System.Int32 isFreeFlowUser) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldstr "BesetFreeFlowUser "
+   000A ret 
+   000B ldstr BesetFreeFlowUser 
+   0010 ldarg.0 
+   0011 box System.Int32
+   0016 call System.String System.String::Concat(System.Object,System.Object)
+   001B call System.Void NetworkAccelerator::PrintLog(System.String)
+   0020 ldstr com.subao.gamemaster.GameMaster
+   0025 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   002A stloc.0 
+   002B ldloc.0 
+   002C brfalse IL_004b: leave IL_006b
+   0031 ldloc.0 
+   0032 ldstr setFreeFlowUser
+   0037 ldc.i4.1 
+   0038 newarr System.Object
+   003D dup 
+   003E ldc.i4.0 
+   003F ldarg.0 
+   0040 box System.Int32
+   0045 stelem.ref 
+   0046 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   004B leave IL_006b: ret
+   0050 stloc.1 
+   0051 ldstr ex 
+   0056 ldloc.1 
+   0057 callvirt System.String System.Object::ToString()
+   005C call System.String System.String::Concat(System.String,System.String)
+   0061 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0066 leave IL_006b: ret
+   006B ret 
+== System.Void closeWebUI() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: leave IL_002b
+   000A ret 
+   000B leave IL_002b: ret
+   0010 stloc.0 
+   0011 ldstr ex 
+   0016 ldloc.0 
+   0017 callvirt System.String System.Object::ToString()
+   001C call System.String System.String::Concat(System.String,System.String)
+   0021 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0026 leave IL_002b: ret
+   002B ret 
+== System.Void setGameId(System.Int32 worldID) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldstr "worldID "
+   000A ret 
+   000B ldstr worldID 
+   0010 ldarg.0 
+   0011 box System.Int32
+   0016 call System.String System.String::Concat(System.Object,System.Object)
+   001B call System.Void NetworkAccelerator::PrintLog(System.String)
+   0020 ldstr com.subao.gamemaster.GameMaster
+   0025 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   002A stloc.0 
+   002B ldloc.0 
+   002C brfalse IL_004b: leave IL_006b
+   0031 ldloc.0 
+   0032 ldstr setGameId
+   0037 ldc.i4.1 
+   0038 newarr System.Object
+   003D dup 
+   003E ldc.i4.0 
+   003F ldarg.0 
+   0040 box System.Int32
+   0045 stelem.ref 
+   0046 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   004B leave IL_006b: ret
+   0050 stloc.1 
+   0051 ldstr ex 
+   0056 ldloc.1 
+   0057 callvirt System.String System.Object::ToString()
+   005C call System.String System.String::Concat(System.String,System.String)
+   0061 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0066 leave IL_006b: ret
+   006B ret 
+== System.Void onNetDelayQuality(System.Single average, System.Single variance, System.Single lostRate, System.Single exPkgNum, System.Single pingrate, System.Int32 roundResult) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld NetworkAccelerator::s_inited
+   0005 brtrue IL_000b: ldstr "com.subao.gamemaster.GameMaster"
+   000A ret 
+   000B ldstr com.subao.gamemaster.GameMaster
+   0010 newobj System.Void UnityEngine.AndroidJavaClass::.ctor(System.String)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0065: leave IL_0085
+   001C ldloc.0 
+   001D ldstr onNetDelayQuality3
+   0022 ldc.i4.6 
+   0023 newarr System.Object
+   0028 dup 
+   0029 ldc.i4.0 
+   002A ldarg.0 
+   002B box System.Single
+   0030 stelem.ref 
+   0031 dup 
+   0032 ldc.i4.1 
+   0033 ldarg.1 
+   0034 box System.Single
+   0039 stelem.ref 
+   003A dup 
+   003B ldc.i4.2 
+   003C ldarg.2 
+   003D box System.Single
+   0042 stelem.ref 
+   0043 dup 
+   0044 ldc.i4.3 
+   0045 ldarg.3 
+   0046 box System.Single
+   004B stelem.ref 
+   004C dup 
+   004D ldc.i4.4 
+   004E ldarg.s pingrate
+   0050 box System.Single
+   0055 stelem.ref 
+   0056 dup 
+   0057 ldc.i4.5 
+   0058 ldarg.s roundResult
+   005A box System.Int32
+   005F stelem.ref 
+   0060 callvirt System.Void UnityEngine.AndroidJavaObject::CallStatic(System.String,System.Object[])
+   0065 leave IL_0085: ret
+   006A stloc.1 
+   006B ldstr ex 
+   0070 ldloc.1 
+   0071 callvirt System.String System.Object::ToString()
+   0076 call System.String System.String::Concat(System.String,System.String)
+   007B call System.Void NetworkAccelerator::PrintLog(System.String)
+   0080 leave IL_0085: ret
+   0085 ret 
+== NetworkAccelerator/XunYouMode get_Mode() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld NetworkAccelerator::s_mode
+   0005 ret 
+== System.Boolean IsCommercialized() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld NetworkAccelerator::s_mode
+   0005 ldc.i4.1 
+   0006 beq IL_0015: ldc.i4.1
+   000B ldsfld NetworkAccelerator::s_mode
+   0010 ldc.i4.2 
+   0011 ceq 
+   0013 br.s IL_0016: ret
+   0015 ldc.i4.1 
+   0016 ret 
+== System.Void SendAMailXunYou() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.s 10
+   0002 call System.String NetworkAccelerator::getWebUIUrl(System.Int32)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000E brtrue IL_007c: ret
+   0013 ldstr SendAMailXunYou
+   0018 ldloc.0 
+   0019 call System.String System.String::Concat(System.String,System.String)
+   001E call System.Void UnityEngine.Debug::Log(System.Object)
+   0023 ldc.i4 1480
+   0028 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   002D stloc.1 
+   002E newobj System.Void CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::.ctor()
+   0033 stloc.2 
+   0034 ldloc.0 
+   0035 ldloc.2 
+   0036 ldflda CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::szBaoBiaoUrl
+   003B call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0040 ldloc.1 
+   0041 ldfld CSProtocol.CSPkg::stPkgData
+   0046 ldloc.2 
+   0047 callvirt System.Void CSProtocol.CSPkgBody::set_stChkXunyouServ(CSProtocol.CSPKG_CHKXUNYOUSERV_REQ)
+   004C ldloc.1 
+   004D ldfld CSProtocol.CSPkg::stPkgData
+   0052 callvirt CSProtocol.CSPKG_CHKXUNYOUSERV_REQ CSProtocol.CSPkgBody::get_stChkXunyouServ()
+   0057 ldc.i4.0 
+   0058 stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::dwServEndTime
+   005D ldloc.1 
+   005E ldfld CSProtocol.CSPkg::stPkgData
+   0063 callvirt CSProtocol.CSPKG_CHKXUNYOUSERV_REQ CSProtocol.CSPkgBody::get_stChkXunyouServ()
+   0068 ldc.i4.1 
+   0069 stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::bFirstUse
+   006E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0073 ldloca.s V_1
+   0075 ldc.i4.0 
+   0076 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   007B pop 
+   007C ret 
+== System.Void TryToSendExpireTime(System.String url) attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.Boolean NetworkAccelerator::get_Inited()
+   0005 brfalse IL_0116: ret
+   000A ldsfld NetworkAccelerator::s_mode
+   000F ldc.i4.2 
+   0010 bne.un IL_0116: ret
+   0015 call NetworkAccelerator/UserStatus NetworkAccelerator::GetUserStatus()
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldc.i4.4 
+   001D beq IL_0029: ldc.i4.0
+   0022 ldloc.0 
+   0023 ldc.i4.5 
+   0024 bne.un IL_0116: ret
+   0029 ldc.i4.0 
+   002A stloc.1 
+   002B ldc.i4 1480
+   0030 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0035 stloc.2 
+   0036 newobj System.Void CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::.ctor()
+   003B stloc.3 
+   003C ldloc.0 
+   003D ldc.i4.5 
+   003E bne.un IL_0059: ldarg.0
+   0043 ldc.i4.5 
+   0044 call System.String NetworkAccelerator::getWebUIUrl(System.Int32)
+   0049 ldloc.3 
+   004A ldflda CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::szBaoBiaoUrl
+   004F call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0054 br IL_0072: ldloc.1
+   0059 ldarg.0 
+   005A call System.Boolean System.String::IsNullOrEmpty(System.String)
+   005F brtrue IL_0072: ldloc.1
+   0064 ldc.i4.1 
+   0065 stloc.1 
+   0066 ldarg.0 
+   0067 ldloc.3 
+   0068 ldflda CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::szBaoBiaoUrl
+   006D call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0072 ldloc.1 
+   0073 brfalse IL_00af: ldsfld System.Boolean NetworkAccelerator::m_expireTimeSent
+   0078 ldloc.3 
+   0079 ldc.i4.0 
+   007A stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::dwServEndTime
+   007F ldloc.2 
+   0080 ldfld CSProtocol.CSPkg::stPkgData
+   0085 ldloc.3 
+   0086 callvirt System.Void CSProtocol.CSPkgBody::set_stChkXunyouServ(CSProtocol.CSPKG_CHKXUNYOUSERV_REQ)
+   008B ldloc.2 
+   008C ldfld CSProtocol.CSPkg::stPkgData
+   0091 callvirt CSProtocol.CSPKG_CHKXUNYOUSERV_REQ CSProtocol.CSPkgBody::get_stChkXunyouServ()
+   0096 ldc.i4.0 
+   0097 stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::bFirstUse
+   009C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00A1 ldloca.s V_2
+   00A3 ldc.i4.0 
+   00A4 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   00A9 pop 
+   00AA br IL_010c: ldstr "TryToSendExpireTime Done!"
+   00AF ldsfld NetworkAccelerator::m_expireTimeSent
+   00B4 brtrue IL_010c: ldstr "TryToSendExpireTime Done!"
+   00B9 call System.String NetworkAccelerator::getVIPValidTime()
+   00BE stloc.s V_4
+   00C0 ldloc.s V_4
+   00C2 ldstr yyyy-MM-dd HH:mm:ss
+   00C7 call System.DateTime Utility::StrToDateTime(System.String,System.String)
+   00CC call System.UInt32 Utility::ToUtcSeconds(System.DateTime)
+   00D1 stloc.s V_5
+   00D3 ldloc.3 
+   00D4 ldloc.s V_5
+   00D6 stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::dwServEndTime
+   00DB ldloc.2 
+   00DC ldfld CSProtocol.CSPkg::stPkgData
+   00E1 ldloc.3 
+   00E2 callvirt System.Void CSProtocol.CSPkgBody::set_stChkXunyouServ(CSProtocol.CSPKG_CHKXUNYOUSERV_REQ)
+   00E7 ldloc.2 
+   00E8 ldfld CSProtocol.CSPkg::stPkgData
+   00ED callvirt CSProtocol.CSPKG_CHKXUNYOUSERV_REQ CSProtocol.CSPkgBody::get_stChkXunyouServ()
+   00F2 ldc.i4.0 
+   00F3 stfld CSProtocol.CSPKG_CHKXUNYOUSERV_REQ::bFirstUse
+   00F8 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00FD ldloca.s V_2
+   00FF ldc.i4.0 
+   0100 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0105 pop 
+   0106 ldc.i4.1 
+   0107 stsfld NetworkAccelerator::m_expireTimeSent
+   010C ldstr TryToSendExpireTime Done!
+   0111 call System.Void NetworkAccelerator::PrintLog(System.String)
+   0116 ret 
+== System.Void TryToOpenTips() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call NetworkAccelerator/AccelRecommendation_State NetworkAccelerator::getAccelRecommendation()
+   0007 stsfld NetworkAccelerator::CurState
+   000C ldsfld NetworkAccelerator::CurState
+   0011 stloc.1 
+   0012 ldloc.1 
+   0013 ldc.i4.1 
+   0014 sub 
+   0015 switch Mono.Cecil.Cil.Instruction[]
+   0032 br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   0037 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   003C ldstr NetAccelRecommendation
+   0041 ldnull 
+   0042 ldc.i4.1 
+   0043 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0048 ldc.i4.1 
+   0049 stloc.0 
+   004A br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   004F call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0054 ldstr NetAccelRecommendationWIFI
+   0059 ldnull 
+   005A ldc.i4.1 
+   005B callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0060 ldc.i4.1 
+   0061 stloc.0 
+   0062 br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   0067 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   006C ldstr NetAccelRecommendationTrialAgain
+   0071 ldnull 
+   0072 ldc.i4.1 
+   0073 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0078 ldc.i4.1 
+   0079 stloc.0 
+   007A br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   007F call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0084 ldstr NetAccelRecommendationMonthlyReport
+   0089 ldnull 
+   008A ldc.i4.1 
+   008B callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0090 br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   0095 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   009A ldstr NetAccelRecommendationWIFI4GTIPS
+   009F ldnull 
+   00A0 ldc.i4.1 
+   00A1 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00A6 ldc.i4.1 
+   00A7 stloc.0 
+   00A8 br IL_00ad: call System.Boolean NetworkAccelerator::IsCommercialized()
+   00AD call System.Boolean NetworkAccelerator::IsCommercialized()
+   00B2 brfalse IL_027b: ldstr "NET_ACC_RECOMMENDED"
+   00B7 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   00BC stloc.2 
+   00BD ldloc.2 
+   00BE stloc.3 
+   00BF call NetworkAccelerator/UserStatus NetworkAccelerator::GetUserStatus()
+   00C4 stloc.s V_4
+   00C6 ldloc.s V_4
+   00C8 ldc.i4.1 
+   00C9 sub 
+   00CA switch Mono.Cecil.Cil.Instruction[]
+   00E3 br IL_0276: br IL_0368
+   00E8 ldstr NET_ACC_RECOMMENDED_FIRST_SETTLEMENT_V2
+   00ED ldc.i4.0 
+   00EE call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   00F3 stloc.3 
+   00F4 ldloc.3 
+   00F5 brfalse IL_0136: ldsfld NetworkAccelerator/AccelRecommendation_State NetworkAccelerator::CurState
+   00FA ldstr NET_ACC_RECOMMENDED_FIRST_SETTLEMENT_V2
+   00FF ldc.i4.0 
+   0100 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0105 ldstr NET_ACC_RECOMMENDED_V2
+   010A ldc.i4.0 
+   010B call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0110 ldstr NET_ACC_RECOMMENDED_V2_CNT
+   0115 ldc.i4.0 
+   0116 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   011B ldstr NET_ACC_RECOMMENDED_V2_TRIAL
+   0120 ldc.i4.0 
+   0121 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0126 ldstr NET_ACC_RECOMMENDED_V2_TRIAL_CNT
+   012B ldc.i4.0 
+   012C call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0131 call System.Void UnityEngine.PlayerPrefs::Save()
+   0136 ldsfld NetworkAccelerator::CurState
+   013B stloc.s V_5
+   013D ldloc.s V_5
+   013F ldc.i4.2 
+   0140 beq IL_015a: ldc.i4.2
+   0145 ldloc.s V_5
+   0147 ldc.i4.4 
+   0148 beq IL_017c: ldsfld NetworkAccelerator/AccelRecommendation_State NetworkAccelerator::CurState
+   014D ldloc.s V_5
+   014F ldc.i4.6 
+   0150 beq IL_0190: ldc.i4.4
+   0155 br IL_01b2: br IL_0276
+   015A ldc.i4.2 
+   015B call System.Boolean NetworkAccelerator::IsTipsCycleLimit(NetworkAccelerator/PopTipsType)
+   0160 brtrue IL_0177: br IL_01b2
+   0165 ldc.i4.2 
+   0166 call System.Boolean NetworkAccelerator::IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType)
+   016B brtrue IL_0177: br IL_01b2
+   0170 ldc.i4.2 
+   0171 ldnull 
+   0172 call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   0177 br IL_01b2: br IL_0276
+   017C ldsfld NetworkAccelerator::CurState
+   0181 call System.String NetworkAccelerator::getWebUIUrl(System.Int32)
+   0186 call System.Void NetworkAccelerator::TryToSendExpireTime(System.String)
+   018B br IL_01b2: br IL_0276
+   0190 ldc.i4.4 
+   0191 call System.Boolean NetworkAccelerator::IsTipsCycleLimit(NetworkAccelerator/PopTipsType)
+   0196 brtrue IL_01ad: br IL_01b2
+   019B ldc.i4.4 
+   019C call System.Boolean NetworkAccelerator::IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType)
+   01A1 brtrue IL_01ad: br IL_01b2
+   01A6 ldc.i4.4 
+   01A7 ldnull 
+   01A8 call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   01AD br IL_01b2: br IL_0276
+   01B2 br IL_0276: br IL_0368
+   01B7 ldstr NET_ACC_RECOMMENDED_FIRST_SETTLEMENT_V2
+   01BC ldc.i4.0 
+   01BD call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   01C2 stloc.3 
+   01C3 ldloc.3 
+   01C4 brtrue IL_01dc: ldloc.0
+   01C9 ldc.i4.1 
+   01CA ldnull 
+   01CB call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   01D0 ldstr NET_ACC_RECOMMENDED_FIRST_SETTLEMENT_V2
+   01D5 ldloc.2 
+   01D6 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   01DB ret 
+   01DC ldloc.0 
+   01DD brfalse IL_0239: br IL_0276
+   01E2 ldsfld NetworkAccelerator::CurState
+   01E7 ldc.i4.3 
+   01E8 bne.un IL_021c: ldc.i4.1
+   01ED ldc.i4.3 
+   01EE call System.Boolean NetworkAccelerator::IsTipsCycleLimit(NetworkAccelerator/PopTipsType)
+   01F3 brtrue IL_0217: br IL_0239
+   01F8 ldc.i4.3 
+   01F9 call System.Boolean NetworkAccelerator::IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType)
+   01FE brtrue IL_0217: br IL_0239
+   0203 ldsfld NetworkAccelerator::CurState
+   0208 call System.String NetworkAccelerator::getAccelRecommendationData(System.Int32)
+   020D stloc.s V_6
+   020F ldc.i4.3 
+   0210 ldloc.s V_6
+   0212 call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   0217 br IL_0239: br IL_0276
+   021C ldc.i4.1 
+   021D call System.Boolean NetworkAccelerator::IsTipsCycleLimit(NetworkAccelerator/PopTipsType)
+   0222 brtrue IL_0239: br IL_0276
+   0227 ldc.i4.1 
+   0228 call System.Boolean NetworkAccelerator::IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType)
+   022D brtrue IL_0239: br IL_0276
+   0232 ldc.i4.1 
+   0233 ldnull 
+   0234 call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   0239 br IL_0276: br IL_0368
+   023E ldloc.0 
+   023F brfalse IL_0271: br IL_0276
+   0244 ldc.i4.0 
+   0245 call System.Boolean NetworkAccelerator::IsLevelLimit(NetworkAccelerator/PopTipsType)
+   024A brtrue IL_0271: br IL_0276
+   024F ldc.i4.0 
+   0250 call System.Boolean NetworkAccelerator::IsTipsCycleLimit(NetworkAccelerator/PopTipsType)
+   0255 brtrue IL_0271: br IL_0276
+   025A ldc.i4.0 
+   025B call System.Boolean NetworkAccelerator::IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType)
+   0260 brtrue IL_0271: br IL_0276
+   0265 ldc.i4.0 
+   0266 ldnull 
+   0267 call System.Void NetworkAccelerator::PopTips(NetworkAccelerator/PopTipsType,System.String)
+   026C call System.Void NetworkAccelerator::SendAMailXunYou()
+   0271 br IL_0276: br IL_0368
+   0276 br IL_0368: ret
+   027B ldstr NET_ACC_RECOMMENDED
+   0280 call System.Boolean UnityEngine.PlayerPrefs::HasKey(System.String)
+   0285 brtrue IL_02f4: ldstr "NET_ACC_RECOMMENDED_WIFI"
+   028A ldloc.0 
+   028B brfalse IL_02f4: ldstr "NET_ACC_RECOMMENDED_WIFI"
+   0290 ldsfld NetworkAccelerator::CurState
+   0295 ldc.i4.1 
+   0296 bne.un IL_02f4: ldstr "NET_ACC_RECOMMENDED_WIFI"
+   029B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   02A0 call !0 Singleton`1<CTextManager>::GetInstance()
+   02A5 ldstr NETWORK_ACCELERATOR_RECOMMENDED_MSGBOX
+   02AA ldc.i4.1 
+   02AB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02B0 ldc.i4 14100
+   02B5 ldc.i4 14101
+   02BA call !0 Singleton`1<CTextManager>::GetInstance()
+   02BF ldstr NETWORK_ACCELERATOR_RECOMMENDED_MSGBOX_OK
+   02C4 ldc.i4.1 
+   02C5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02CA call !0 Singleton`1<CTextManager>::GetInstance()
+   02CF ldstr NETWORK_ACCELERATOR_RECOMMENDED_MSGBOX_CANCEL
+   02D4 ldc.i4.1 
+   02D5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   02DA ldc.i4.0 
+   02DB callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String,System.Boolean)
+   02E0 ldstr NET_ACC_RECOMMENDED
+   02E5 ldstr Y
+   02EA call System.Void UnityEngine.PlayerPrefs::SetString(System.String,System.String)
+   02EF call System.Void NetworkAccelerator::SendAMailXunYou()
+   02F4 ldstr NET_ACC_RECOMMENDED_WIFI
+   02F9 call System.Boolean UnityEngine.PlayerPrefs::HasKey(System.String)
+   02FE brtrue IL_0368: ret
+   0303 ldloc.0 
+   0304 brfalse IL_0368: ret
+   0309 ldsfld NetworkAccelerator::CurState
+   030E ldc.i4.2 
+   030F bne.un IL_0368: ret
+   0314 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0319 call !0 Singleton`1<CTextManager>::GetInstance()
+   031E ldstr NETWORK_ACCELERATOR_RECOMMENDED_WIFI_MSGBOX
+   0323 ldc.i4.1 
+   0324 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0329 ldc.i4 14102
+   032E ldc.i4 14101
+   0333 call !0 Singleton`1<CTextManager>::GetInstance()
+   0338 ldstr NETWORK_ACCELERATOR_RECOMMENDED_MSGBOX_OK
+   033D ldc.i4.1 
+   033E callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0343 call !0 Singleton`1<CTextManager>::GetInstance()
+   0348 ldstr NETWORK_ACCELERATOR_RECOMMENDED_MSGBOX_CANCEL
+   034D ldc.i4.1 
+   034E callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0353 ldc.i4.0 
+   0354 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String,System.Boolean)
+   0359 ldstr NET_ACC_RECOMMENDED_WIFI
+   035E ldstr Y
+   0363 call System.Void UnityEngine.PlayerPrefs::SetString(System.String,System.String)
+   0368 ret 
+== System.Int32 GetLastPopTime(NetworkAccelerator/PopTipsType tipsType) attrs=Private, Static, HideBySig maxstack=2
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 switch Mono.Cecil.Cil.Instruction[]
+   0020 br IL_0069: ldloc.0
+   0025 ldstr NET_ACC_RECOMMENDED_V2_TRIAL
+   002A ldc.i4.0 
+   002B call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0030 stloc.0 
+   0031 br IL_0069: ldloc.0
+   0036 ldstr NET_ACC_RECOMMENDED_V2_WIFI
+   003B ldc.i4.0 
+   003C call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0041 stloc.0 
+   0042 br IL_0069: ldloc.0
+   0047 ldstr NET_ACC_RECOMMENDED_V2
+   004C ldc.i4.0 
+   004D call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0052 stloc.0 
+   0053 br IL_0069: ldloc.0
+   0058 ldstr NET_ACC_RECOMMENDED_V2_WIFI_4G
+   005D ldc.i4.0 
+   005E call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0063 stloc.0 
+   0064 br IL_0069: ldloc.0
+   0069 ldloc.0 
+   006A ret 
+== System.Void SetPopTimeAndCnt(NetworkAccelerator/PopTipsType tipsType) attrs=Private, Static, HideBySig maxstack=3
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 switch Mono.Cecil.Cil.Instruction[]
+   0020 br IL_00c1: call System.Void UnityEngine.PlayerPrefs::Save()
+   0025 ldstr NET_ACC_RECOMMENDED_V2_TRIAL
+   002A ldloc.0 
+   002B call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0030 ldstr NET_ACC_RECOMMENDED_V2_TRIAL_CNT
+   0035 ldstr NET_ACC_RECOMMENDED_V2_TRIAL_CNT
+   003A ldc.i4.0 
+   003B call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0040 ldc.i4.1 
+   0041 add 
+   0042 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0047 br IL_00c1: call System.Void UnityEngine.PlayerPrefs::Save()
+   004C ldstr NET_ACC_RECOMMENDED_V2_WIFI
+   0051 ldloc.0 
+   0052 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0057 ldstr NET_ACC_RECOMMENDED_V2_WIFI_CNT
+   005C ldstr NET_ACC_RECOMMENDED_V2_WIFI_CNT
+   0061 ldc.i4.0 
+   0062 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0067 ldc.i4.1 
+   0068 add 
+   0069 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   006E br IL_00c1: call System.Void UnityEngine.PlayerPrefs::Save()
+   0073 ldstr NET_ACC_RECOMMENDED_V2
+   0078 ldloc.0 
+   0079 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   007E ldstr NET_ACC_RECOMMENDED_V2_CNT
+   0083 ldstr NET_ACC_RECOMMENDED_V2_CNT
+   0088 ldc.i4.0 
+   0089 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   008E ldc.i4.1 
+   008F add 
+   0090 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0095 br IL_00c1: call System.Void UnityEngine.PlayerPrefs::Save()
+   009A ldstr NET_ACC_RECOMMENDED_V2_WIFI_4G
+   009F ldloc.0 
+   00A0 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   00A5 ldstr NET_ACC_RECOMMENDED_V2_WIFI_4G_CNT
+   00AA ldstr NET_ACC_RECOMMENDED_V2_WIFI_4G_CNT
+   00AF ldc.i4.0 
+   00B0 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   00B5 ldc.i4.1 
+   00B6 add 
+   00B7 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   00BC br IL_00c1: call System.Void UnityEngine.PlayerPrefs::Save()
+   00C1 call System.Void UnityEngine.PlayerPrefs::Save()
+   00C6 ret 
+== System.Boolean IsLevelLimit(NetworkAccelerator/PopTipsType tipsType) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_001e: ldc.i4.0
+   0011 ldc.i4.0 
+   0012 ldstr Master RoleInfo Is Null
+   0017 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   001C ldc.i4.1 
+   001D ret 
+   001E ldc.i4.0 
+   001F stloc.1 
+   0020 ldarg.0 
+   0021 brfalse IL_002b: ldc.i4.s 91
+   0026 br IL_0038: ldloc.0
+   002B ldc.i4.s 91
+   002D call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0032 stloc.1 
+   0033 br IL_0038: ldloc.0
+   0038 ldloc.0 
+   0039 callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PvpLevel()
+   003E ldloc.1 
+   003F clt.un 
+   0041 ret 
+== System.Boolean IsTipsCycleLimit(NetworkAccelerator/PopTipsType tipsType) attrs=Private, Static, HideBySig maxstack=3
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 stloc.0 
+   0006 ldc.i4 360
+   000B stloc.1 
+   000C ldloc.0 
+   000D stloc.2 
+   000E ldarg.0 
+   000F switch Mono.Cecil.Cil.Instruction[]
+   0028 br IL_007d: ldloc.2
+   002D ldc.i4.s 48
+   002F call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0034 stloc.1 
+   0035 ldarg.0 
+   0036 call System.Int32 NetworkAccelerator::GetLastPopTime(NetworkAccelerator/PopTipsType)
+   003B stloc.2 
+   003C br IL_007d: ldloc.2
+   0041 ldc.i4.s 34
+   0043 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0048 stloc.1 
+   0049 ldarg.0 
+   004A call System.Int32 NetworkAccelerator::GetLastPopTime(NetworkAccelerator/PopTipsType)
+   004F stloc.2 
+   0050 br IL_007d: ldloc.2
+   0055 ldc.i4.s 49
+   0057 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   005C stloc.1 
+   005D ldarg.0 
+   005E call System.Int32 NetworkAccelerator::GetLastPopTime(NetworkAccelerator/PopTipsType)
+   0063 stloc.2 
+   0064 br IL_007d: ldloc.2
+   0069 ldc.i4.s 89
+   006B call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0070 stloc.1 
+   0071 ldarg.0 
+   0072 call System.Int32 NetworkAccelerator::GetLastPopTime(NetworkAccelerator/PopTipsType)
+   0077 stloc.2 
+   0078 br IL_007d: ldloc.2
+   007D ldloc.2 
+   007E ldloc.1 
+   007F ldc.i4 86400
+   0084 mul 
+   0085 add 
+   0086 ldloc.0 
+   0087 blt IL_008e: ldc.i4.0
+   008C ldc.i4.1 
+   008D ret 
+   008E ldc.i4.0 
+   008F ret 
+== System.Boolean IsTipsMaxCntLimit(NetworkAccelerator/PopTipsType tipsType) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 switch Mono.Cecil.Cil.Instruction[]
+   001A br IL_00af: ldc.i4.0
+   001F ldc.i4.s 79
+   0021 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0026 stloc.0 
+   0027 ldstr NET_ACC_RECOMMENDED_V2_CNT
+   002C ldc.i4.0 
+   002D call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0032 stloc.1 
+   0033 ldloc.1 
+   0034 ldloc.0 
+   0035 blt.un IL_003c: br IL_00af
+   003A ldc.i4.1 
+   003B ret 
+   003C br IL_00af: ldc.i4.0
+   0041 ldc.i4.s 87
+   0043 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0048 stloc.2 
+   0049 ldstr NET_ACC_RECOMMENDED_V2_TRIAL_CNT
+   004E ldc.i4.0 
+   004F call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0054 stloc.3 
+   0055 ldloc.3 
+   0056 ldloc.2 
+   0057 blt.un IL_005e: br IL_00af
+   005C ldc.i4.1 
+   005D ret 
+   005E br IL_00af: ldc.i4.0
+   0063 ldc.i4.s 88
+   0065 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   006A stloc.s V_4
+   006C ldstr NET_ACC_RECOMMENDED_V2_WIFI_CNT
+   0071 ldc.i4.0 
+   0072 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   0077 stloc.s V_5
+   0079 ldloc.s V_5
+   007B ldloc.s V_4
+   007D blt.un IL_0084: br IL_00af
+   0082 ldc.i4.1 
+   0083 ret 
+   0084 br IL_00af: ldc.i4.0
+   0089 ldc.i4.s 90
+   008B call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0090 stloc.s V_6
+   0092 ldstr NET_ACC_RECOMMENDED_V2_WIFI_4G_CNT
+   0097 ldc.i4.0 
+   0098 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   009D stloc.s V_7
+   009F ldloc.s V_7
+   00A1 ldloc.s V_6
+   00A3 blt.un IL_00aa: br IL_00af
+   00A8 ldc.i4.1 
+   00A9 ret 
+   00AA br IL_00af: ldc.i4.0
+   00AF ldc.i4.0 
+   00B0 ret 
+== System.Void PopTips(NetworkAccelerator/PopTipsType type, System.String tips) attrs=Public, Static, HideBySig maxstack=11
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.OfflineGamePlayMgr::IsOfflineMode()
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 switch Mono.Cecil.Cil.Instruction[]
+   002A br IL_01eb: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0034 call !0 Singleton`1<CTextManager>::GetInstance()
+   0039 ldstr NETWORK_ACCELERATOR_RECOMMENDED_WIFI_MSGBOX
+   003E ldc.i4.1 
+   003F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0044 ldc.i4 14102
+   0049 ldc.i4 14101
+   004E call !0 Singleton`1<CTextManager>::GetInstance()
+   0053 ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX_OK
+   0058 ldc.i4.1 
+   0059 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   005E call !0 Singleton`1<CTextManager>::GetInstance()
+   0063 ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX_CANCEL
+   0068 ldc.i4.1 
+   0069 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   006E ldc.i4.0 
+   006F callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String,System.Boolean)
+   0074 br IL_0235: ldarg.0
+   0079 ldloca.s V_0
+   007B initobj Assets.Scripts.UI.stUIEventParams
+   0081 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0086 call !0 Singleton`1<CTextManager>::GetInstance()
+   008B ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX
+   0090 ldc.i4.1 
+   0091 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0096 ldc.i4 15705
+   009B ldc.i4 14105
+   00A0 ldloc.0 
+   00A1 call !0 Singleton`1<CTextManager>::GetInstance()
+   00A6 ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX_OK
+   00AB ldc.i4.1 
+   00AC callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00B1 call !0 Singleton`1<CTextManager>::GetInstance()
+   00B6 ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX_CANCEL
+   00BB ldc.i4.1 
+   00BC callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00C1 ldc.i4.0 
+   00C2 call !0 Singleton`1<CTextManager>::GetInstance()
+   00C7 ldstr NETWORK_ACCELERATOR_RECOMMENDED_BUY_MSGBOX_TITLE
+   00CC ldc.i4.1 
+   00CD callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00D2 ldc.i4.0 
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String,System.String,System.Boolean,System.String,System.Boolean)
+   00D8 br IL_0235: ldarg.0
+   00DD ldloca.s V_1
+   00DF initobj Assets.Scripts.UI.stUIEventParams
+   00E5 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00EA call !0 Singleton`1<CTextManager>::GetInstance()
+   00EF ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX
+   00F4 ldc.i4.1 
+   00F5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00FA ldc.i4 15706
+   00FF ldc.i4 14101
+   0104 ldloc.1 
+   0105 call !0 Singleton`1<CTextManager>::GetInstance()
+   010A ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX_OK
+   010F ldc.i4.1 
+   0110 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0115 call !0 Singleton`1<CTextManager>::GetInstance()
+   011A ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX_CANCEL
+   011F ldc.i4.1 
+   0120 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0125 ldc.i4.0 
+   0126 call !0 Singleton`1<CTextManager>::GetInstance()
+   012B ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX_TITLE
+   0130 ldc.i4.1 
+   0131 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0136 ldc.i4.0 
+   0137 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String,System.String,System.Boolean,System.String,System.Boolean)
+   013C br IL_0235: ldarg.0
+   0141 ldarg.1 
+   0142 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0147 brtrue IL_019c: br IL_0235
+   014C ldloca.s V_2
+   014E initobj Assets.Scripts.UI.stUIEventParams
+   0154 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0159 ldarg.1 
+   015A ldc.i4 15707
+   015F ldc.i4 14101
+   0164 ldloc.2 
+   0165 call !0 Singleton`1<CTextManager>::GetInstance()
+   016A ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_AGAIN_MSGBOX_OK
+   016F ldc.i4.1 
+   0170 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0175 call !0 Singleton`1<CTextManager>::GetInstance()
+   017A ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_AGAIN_MSGBOX_CANCEL
+   017F ldc.i4.1 
+   0180 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0185 ldc.i4.0 
+   0186 call !0 Singleton`1<CTextManager>::GetInstance()
+   018B ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_AGAIN_MSGBOX_TITLE
+   0190 ldc.i4.1 
+   0191 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0196 ldc.i4.0 
+   0197 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String,System.String,System.Boolean,System.String,System.Boolean)
+   019C br IL_0235: ldarg.0
+   01A1 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   01A6 call !0 Singleton`1<CTextManager>::GetInstance()
+   01AB ldstr NETWORK_ACCELERATOR_RECOMMENDED_WIFI_4G_MSGBOX
+   01B0 ldc.i4.1 
+   01B1 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01B6 ldc.i4 14104
+   01BB ldc.i4 14101
+   01C0 call !0 Singleton`1<CTextManager>::GetInstance()
+   01C5 ldstr NETWORK_ACCELERATOR_RECOMMENDED_WIFI_4G_MSGBOX_OK
+   01CA ldc.i4.1 
+   01CB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01D0 call !0 Singleton`1<CTextManager>::GetInstance()
+   01D5 ldstr NETWORK_ACCELERATOR_RECOMMENDED_WIFI_4G_MSGBOX_CANCEL
+   01DA ldc.i4.1 
+   01DB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01E0 ldc.i4.0 
+   01E1 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String,System.Boolean)
+   01E6 br IL_0235: ldarg.0
+   01EB call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   01F0 call !0 Singleton`1<CTextManager>::GetInstance()
+   01F5 ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX
+   01FA ldc.i4.1 
+   01FB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0200 ldc.i4 15701
+   0205 ldc.i4 14101
+   020A call !0 Singleton`1<CTextManager>::GetInstance()
+   020F ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX_OK
+   0214 ldc.i4.1 
+   0215 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   021A call !0 Singleton`1<CTextManager>::GetInstance()
+   021F ldstr NETWORK_ACCELERATOR_RECOMMENDED_TRIAL_MSGBOX_CANCEL
+   0224 ldc.i4.1 
+   0225 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   022A ldc.i4.0 
+   022B callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.String,System.String,System.Boolean)
+   0230 br IL_0235: ldarg.0
+   0235 ldarg.0 
+   0236 call System.Void NetworkAccelerator::SetPopTimeAndCnt(NetworkAccelerator/PopTipsType)
+   023B ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=1
+   0000 ldsfld System.String::Empty
+   0005 stsfld NetworkAccelerator::key
+   000A ldc.i4.s 100
+   000C stsfld NetworkAccelerator::KEY_GET_NETDELAY
+   0011 ldc.i4.s 102
+   0013 stsfld NetworkAccelerator::KEY_GET_ACCEL_STAT
+   0018 ldc.i4.s 107
+   001A stsfld NetworkAccelerator::KEY_GET_ACCEL_EFFECT
+   001F ldc.i4 308
+   0024 stsfld NetworkAccelerator::KEY_LOG_LEVLE
+   0029 ldstr NET_ACC
+   002E stsfld NetworkAccelerator::PLAYER_PREF_NET_ACC
+   0033 ldstr AUTO_NET_ACC
+   0038 stsfld NetworkAccelerator::PLAYER_PREF_AUTO_NET_ACC
+   003D ldc.i4.1 
+   003E stsfld NetworkAccelerator::LOG_LEVEL_DEBUG
+   0043 ldc.i4.2 
+   0044 stsfld NetworkAccelerator::LOG_LEVEL_INFO
+   0049 ldc.i4.3 
+   004A stsfld NetworkAccelerator::LOG_LEVEL_WARNING
+   004F ldc.i4.4 
+   0050 stsfld NetworkAccelerator::LOG_LEVEL_ERROR
+   0055 ldc.i4.5 
+   0056 stsfld NetworkAccelerator::LOG_LEVEL_FATAL
+   005B ldsfld System.String::Empty
+   0060 stsfld NetworkAccelerator::m_IP
+   0065 ldc.i4.1 
+   0066 stsfld NetworkAccelerator::m_bLog
+   006B ret 
+  NESTED NetworkAccelerator/UserStatus
+  NESTED NetworkAccelerator/PopTipsType
+  NESTED NetworkAccelerator/XunYouMode
+  NESTED NetworkAccelerator/AccelRecommendation_State

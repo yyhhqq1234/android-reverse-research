@@ -1,0 +1,55 @@
+// TYPE ReplayEntryCommand  base=CheatCommandCommon  attrs=Public, BeforeFieldInit
+  FIELD CheatCommandName newcommandName
+  FIELD System.String _comment
+  FIELD ReplayEntry _entry
+  PROP System.String comment
+  PROP CheatCommandName command
+== System.Void .ctor(ReplayEntry entry) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void CheatCommandCommon::.ctor()
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 stfld ReplayEntryCommand::_entry
+   000D ldarg.0 
+   000E ldarg.0 
+   000F ldfld ReplayEntryCommand::_entry
+   0014 ldfld ReplayEntry::commandName
+   0019 stfld ReplayEntryCommand::_comment
+   001E ldarg.0 
+   001F ldstr Replay/List/
+   0024 ldarg.0 
+   0025 ldfld ReplayEntryCommand::_entry
+   002A ldfld ReplayEntry::path
+   002F call System.String System.String::Concat(System.String,System.String)
+   0034 newobj System.Void CheatCommandName::.ctor(System.String)
+   0039 stfld ReplayEntryCommand::newcommandName
+   003E ret 
+== System.String get_comment() attrs=Public, Virtual, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ReplayEntryCommand::_comment
+   0006 ret 
+== CheatCommandName get_command() attrs=Public, Virtual, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ReplayEntryCommand::newcommandName
+   0006 ret 
+== System.String Execute(System.String[] InArguments) attrs=Family, Virtual, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   000A brtrue IL_004a: ldstr "done"
+   000F call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0014 ldarg.0 
+   0015 ldfld ReplayEntryCommand::_entry
+   001A ldfld ReplayEntry::fullPath
+   001F ldc.i4.0 
+   0020 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::BeginReplay(System.String,System.Boolean)
+   0025 brfalse IL_004a: ldstr "done"
+   002A leave IL_0035: call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   002F pop 
+   0030 leave IL_0035: call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0035 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   003A ldarg.0 
+   003B ldfld ReplayEntryCommand::_entry
+   0040 ldfld ReplayEntry::idx
+   0045 stfld Assets.Scripts.Framework.GameReplayModule::HostPlayerIndex
+   004A ldstr done
+   004F ret 

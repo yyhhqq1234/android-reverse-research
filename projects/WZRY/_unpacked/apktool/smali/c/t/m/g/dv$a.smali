@@ -1,0 +1,149 @@
+.class public final Lc/t/m/g/dv$a;
+.super Ljava/lang/Object;
+.source "TL"
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lc/t/m/g/dv;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x9
+    name = "a"
+.end annotation
+
+
+# instance fields
+.field public a:Ljava/lang/String;
+
+.field public b:Lc/t/m/g/dv;
+
+.field public c:I
+
+.field public d:Ljava/lang/String;
+
+.field public e:Ljava/lang/String;
+
+.field private f:Landroid/location/Location;
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 1
+
+    .prologue
+    .line 489
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    .line 495
+    const-string v0, "network"
+
+    iput-object v0, p0, Lc/t/m/g/dv$a;->d:Ljava/lang/String;
+
+    .line 496
+    const-string v0, "network"
+
+    iput-object v0, p0, Lc/t/m/g/dv$a;->e:Ljava/lang/String;
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public final a(Landroid/location/Location;)Lc/t/m/g/dv$a;
+    .locals 1
+
+    .prologue
+    .line 544
+    new-instance v0, Landroid/location/Location;
+
+    invoke-direct {v0, p1}, Landroid/location/Location;-><init>(Landroid/location/Location;)V
+
+    iput-object v0, p0, Lc/t/m/g/dv$a;->f:Landroid/location/Location;
+
+    .line 545
+    return-object p0
+.end method
+
+.method public final a()Lc/t/m/g/dv;
+    .locals 3
+
+    .prologue
+    .line 500
+    iget-object v0, p0, Lc/t/m/g/dv$a;->a:Ljava/lang/String;
+
+    if-eqz v0, :cond_0
+
+    .line 504
+    :try_start_0
+    new-instance v0, Lc/t/m/g/dv;
+
+    iget-object v1, p0, Lc/t/m/g/dv$a;->a:Ljava/lang/String;
+
+    const/4 v2, 0x0
+
+    invoke-direct {v0, v1, v2}, Lc/t/m/g/dv;-><init>(Ljava/lang/String;B)V
+    :try_end_0
+    .catch Lorg/json/JSONException; {:try_start_0 .. :try_end_0} :catch_0
+
+    .line 512
+    :goto_0
+    iget v1, p0, Lc/t/m/g/dv$a;->c:I
+
+    invoke-static {v0, v1}, Lc/t/m/g/dv;->b(Lc/t/m/g/dv;I)Lc/t/m/g/dv;
+
+    move-result-object v1
+
+    iget-object v2, p0, Lc/t/m/g/dv$a;->d:Ljava/lang/String;
+
+    invoke-static {v1, v2}, Lc/t/m/g/dv;->b(Lc/t/m/g/dv;Ljava/lang/String;)Lc/t/m/g/dv;
+
+    move-result-object v1
+
+    iget-object v2, p0, Lc/t/m/g/dv$a;->e:Ljava/lang/String;
+
+    invoke-static {v1, v2}, Lc/t/m/g/dv;->c(Lc/t/m/g/dv;Ljava/lang/String;)Lc/t/m/g/dv;
+
+    move-result-object v1
+
+    iget-object v2, p0, Lc/t/m/g/dv$a;->f:Landroid/location/Location;
+
+    .line 513
+    invoke-static {v1, v2}, Lc/t/m/g/dv;->a(Lc/t/m/g/dv;Landroid/location/Location;)Lc/t/m/g/dv;
+
+    .line 514
+    iget-object v1, p0, Lc/t/m/g/dv$a;->f:Landroid/location/Location;
+
+    invoke-static {v0, v1}, Lcom/tencent/map/geolocation/internal/TencentExtraKeys;->setRawGps(Lcom/tencent/map/geolocation/TencentLocation;Landroid/location/Location;)V
+
+    .line 515
+    :goto_1
+    return-object v0
+
+    .line 505
+    :catch_0
+    move-exception v0
+
+    .line 506
+    const-string v1, "TxLocation"
+
+    const-string v2, "build: "
+
+    invoke-static {v1, v2, v0}, Lc/t/m/g/f$a;->a(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    .line 507
+    sget-object v0, Lc/t/m/g/dv;->a:Lc/t/m/g/dv;
+
+    goto :goto_1
+
+    .line 510
+    :cond_0
+    iget-object v0, p0, Lc/t/m/g/dv$a;->b:Lc/t/m/g/dv;
+
+    invoke-static {v0}, Lc/t/m/g/dv;->c(Lc/t/m/g/dv;)Lc/t/m/g/dv;
+
+    move-result-object v0
+
+    goto :goto_0
+.end method

@@ -1,0 +1,180 @@
+// TYPE Assets.Scripts.GameSystem.CRobotVideoHelper  base=Singleton`1<Assets.Scripts.GameSystem.CRobotVideoHelper>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean m_RobotVideoSwitch
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CRobotVideoHelper>::.ctor()
+   0006 ret 
+== System.Void Reset() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CRobotVideoHelper>::Init()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CRobotVideoHelper::Reset()
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameSystem.CRobotVideoHelper::InitGlobeValue()
+   0012 ret 
+== System.Void InitGlobeValue() attrs=Private, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldc.i4 203
+   0007 call System.Boolean ResData.GameDataMgr/svr2CltCfgDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   000C brfalse IL_0021: ldarg.0
+   0011 ldarg.0 
+   0012 ldloca.s V_0
+   0014 ldfld ResData.ResGlobalInfo::dwConfValue
+   0019 ldc.i4.0 
+   001A cgt.un 
+   001C stfld Assets.Scripts.GameSystem.CRobotVideoHelper::m_RobotVideoSwitch
+   0021 ldarg.0 
+   0022 call System.Void Assets.Scripts.GameSystem.CRobotVideoHelper::RobotVideoInitUserInfo()
+   0027 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CRobotVideoHelper>::UnInit()
+   0006 ret 
+== System.Void RobotVideoInitUserInfo() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRobotVideoHelper::m_RobotVideoSwitch
+   0006 brtrue IL_000c: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0011 ldc.i4.0 
+   0012 callvirt Apollo.ApolloAccountInfo ApolloHelper::GetAccountInfo(System.Boolean)
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 brfalse IL_0047: ret
+   001E call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0023 ldloc.0 
+   0024 callvirt Apollo.ApolloPlatform Apollo.ApolloAccountInfo::get_Platform()
+   0029 callvirt System.String ApolloHelper::GetAccessToken(Apollo.ApolloPlatform)
+   002E stloc.1 
+   002F ldloc.0 
+   0030 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   0035 ldloc.1 
+   0036 call System.String CFileManager::GetRobotVideoResourcePath()
+   003B ldc.i4.1 
+   003C ldloc.0 
+   003D callvirt Apollo.ApolloPlatform Apollo.ApolloAccountInfo::get_Platform()
+   0042 call System.Void RobotVideo.RobotVideoUpload::init(System.String,System.String,System.String,System.Int32,RobotVideo.UserType)
+   0047 ret 
+== System.Void RobotVideoStart() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRobotVideoHelper::m_RobotVideoSwitch
+   0006 brtrue IL_000c: ldc.i4.1
+   000B ret 
+   000C ldc.i4.1 
+   000D call System.Void SGW::SetRobotVideoState(System.Boolean)
+   0012 call System.Int32 RobotVideo.RobotVideoUpload::notifyVideoBegin()
+   0017 pop 
+   0018 ret 
+== System.Void RobotVideoEnd() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRobotVideoHelper::m_RobotVideoSwitch
+   0006 brtrue IL_000c: ldc.i4.0
+   000B ret 
+   000C ldc.i4.0 
+   000D call System.Void SGW::SetRobotVideoState(System.Boolean)
+   0012 ret 
+== System.Int32 GetRobotVideoInfo(GameJoyAPI.TimeStamp& InKillBroadcastTimeStamp) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRobotVideoHelper::m_RobotVideoSwitch
+   0006 brtrue IL_000d: call RobotVideo.GameEndVideo RobotVideo.RobotVideoUpload::getGameEndVideo()
+   000B ldc.i4.0 
+   000C ret 
+   000D call RobotVideo.GameEndVideo RobotVideo.RobotVideoUpload::getGameEndVideo()
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 brfalse IL_0128: ldc.i4.0
+   0019 ldloc.0 
+   001A ldfld RobotVideo.GameEndVideo::videoType
+   001F ldc.i4.1 
+   0020 bne.un IL_0128: ldc.i4.0
+   0025 ldloc.0 
+   0026 ldfld RobotVideo.GameEndVideo::fragmentList
+   002B brfalse IL_0128: ldc.i4.0
+   0030 ldstr GetRobotVideoInfo startTime:{0}, endTime:{1}, priority:{2}, title: {3}, bgm: {4}
+   0035 ldc.i4.5 
+   0036 newarr System.Object
+   003B dup 
+   003C ldc.i4.0 
+   003D ldloc.0 
+   003E ldfld RobotVideo.GameEndVideo::fragmentList
+   0043 ldc.i4.0 
+   0044 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   0049 ldfld RobotVideo.VideoFragmentInfo::startTime
+   004E box System.Int64
+   0053 stelem.ref 
+   0054 dup 
+   0055 ldc.i4.1 
+   0056 ldloc.0 
+   0057 ldfld RobotVideo.GameEndVideo::fragmentList
+   005C ldc.i4.0 
+   005D callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   0062 ldfld RobotVideo.VideoFragmentInfo::endTime
+   0067 box System.Int64
+   006C stelem.ref 
+   006D dup 
+   006E ldc.i4.2 
+   006F ldloc.0 
+   0070 ldfld RobotVideo.GameEndVideo::fragmentList
+   0075 ldc.i4.0 
+   0076 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   007B ldfld RobotVideo.VideoFragmentInfo::priority
+   0080 box System.Int32
+   0085 stelem.ref 
+   0086 dup 
+   0087 ldc.i4.3 
+   0088 ldloc.0 
+   0089 ldfld RobotVideo.GameEndVideo::fragmentList
+   008E ldc.i4.0 
+   008F callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   0094 ldfld RobotVideo.VideoFragmentInfo::title
+   0099 stelem.ref 
+   009A dup 
+   009B ldc.i4.4 
+   009C ldloc.0 
+   009D ldfld RobotVideo.GameEndVideo::fragmentList
+   00A2 ldc.i4.0 
+   00A3 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   00A8 ldfld RobotVideo.VideoFragmentInfo::bgmFilePath
+   00AD stelem.ref 
+   00AE call System.Void DebugHelper::CustomLog(System.String,System.Object[])
+   00B3 ldarg.1 
+   00B4 ldloc.0 
+   00B5 ldfld RobotVideo.GameEndVideo::fragmentList
+   00BA ldc.i4.0 
+   00BB callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   00C0 ldfld RobotVideo.VideoFragmentInfo::startTime
+   00C5 stfld GameJoyAPI.TimeStamp::startTime
+   00CA ldarg.1 
+   00CB ldloc.0 
+   00CC ldfld RobotVideo.GameEndVideo::fragmentList
+   00D1 ldc.i4.0 
+   00D2 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   00D7 ldfld RobotVideo.VideoFragmentInfo::endTime
+   00DC stfld GameJoyAPI.TimeStamp::endTime
+   00E1 ldarg.1 
+   00E2 ldloc.0 
+   00E3 ldfld RobotVideo.GameEndVideo::fragmentList
+   00E8 ldc.i4.0 
+   00E9 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   00EE ldfld RobotVideo.VideoFragmentInfo::priority
+   00F3 stfld GameJoyAPI.TimeStamp::priority
+   00F8 ldarg.1 
+   00F9 ldloc.0 
+   00FA ldfld RobotVideo.GameEndVideo::fragmentList
+   00FF ldc.i4.0 
+   0100 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   0105 ldfld RobotVideo.VideoFragmentInfo::title
+   010A stfld GameJoyAPI.TimeStamp::title
+   010F ldarg.1 
+   0110 ldloc.0 
+   0111 ldfld RobotVideo.GameEndVideo::fragmentList
+   0116 ldc.i4.0 
+   0117 callvirt !0 System.Collections.Generic.List`1<RobotVideo.VideoFragmentInfo>::get_Item(System.Int32)
+   011C ldfld RobotVideo.VideoFragmentInfo::bgmFilePath
+   0121 stfld GameJoyAPI.TimeStamp::bgmFilePath
+   0126 ldc.i4.1 
+   0127 ret 
+   0128 ldc.i4.0 
+   0129 ret 

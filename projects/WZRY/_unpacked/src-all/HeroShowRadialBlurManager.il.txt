@@ -1,0 +1,214 @@
+// TYPE HeroShowRadialBlurManager  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD RadialBlurRendererData BlurData
+  FIELD System.Single m_elapsedTime
+  FIELD System.Boolean m_started
+  FIELD System.Boolean m_ended
+  FIELD RadialBlur m_blurScript
+  FIELD System.Boolean m_blurExists
+  FIELD System.Int32 s_devicePerformanceScore
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0006 ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 0
+   0006 stfld HeroShowRadialBlurManager::m_elapsedTime
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld HeroShowRadialBlurManager::m_started
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld HeroShowRadialBlurManager::m_ended
+   0019 ldarg.0 
+   001A ldnull 
+   001B stfld HeroShowRadialBlurManager::m_blurScript
+   0020 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld HeroShowRadialBlurManager::m_elapsedTime
+   0007 call System.Single UnityEngine.Time::get_deltaTime()
+   000C add 
+   000D stfld HeroShowRadialBlurManager::m_elapsedTime
+   0012 ldarg.0 
+   0013 ldfld HeroShowRadialBlurManager::m_ended
+   0018 brfalse IL_001e: ldarg.0
+   001D ret 
+   001E ldarg.0 
+   001F ldfld HeroShowRadialBlurManager::m_started
+   0024 brtrue IL_0045: ldarg.0
+   0029 ldarg.0 
+   002A ldfld HeroShowRadialBlurManager::m_elapsedTime
+   002F ldarg.0 
+   0030 ldfld HeroShowRadialBlurManager::BlurData
+   0035 ldfld RadialBlurRendererData::StartDelay
+   003A blt.un IL_0045: ldarg.0
+   003F ldarg.0 
+   0040 call System.Void HeroShowRadialBlurManager::StartRadialBlur()
+   0045 ldarg.0 
+   0046 ldfld HeroShowRadialBlurManager::m_started
+   004B brfalse IL_0078: ldarg.0
+   0050 ldarg.0 
+   0051 ldfld HeroShowRadialBlurManager::m_elapsedTime
+   0056 ldarg.0 
+   0057 ldfld HeroShowRadialBlurManager::BlurData
+   005C ldfld RadialBlurRendererData::StartDelay
+   0061 sub 
+   0062 ldarg.0 
+   0063 ldfld HeroShowRadialBlurManager::BlurData
+   0068 ldfld RadialBlurRendererData::LifeTime
+   006D blt.un IL_0078: ldarg.0
+   0072 ldarg.0 
+   0073 call System.Void HeroShowRadialBlurManager::EndRadialBlur()
+   0078 ldarg.0 
+   0079 ldfld HeroShowRadialBlurManager::m_started
+   007E brfalse IL_00c0: ret
+   0083 ldarg.0 
+   0084 ldfld HeroShowRadialBlurManager::m_blurScript
+   0089 ldnull 
+   008A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   008F brfalse IL_00c0: ret
+   0094 ldarg.0 
+   0095 ldfld HeroShowRadialBlurManager::m_blurScript
+   009A ldarg.0 
+   009B ldfld HeroShowRadialBlurManager::BlurData
+   00A0 ldfld RadialBlurRendererData::StrengthOverLife
+   00A5 ldarg.0 
+   00A6 ldfld HeroShowRadialBlurManager::m_elapsedTime
+   00AB callvirt System.Single UnityEngine.AnimationCurve::Evaluate(System.Single)
+   00B0 stfld RadialBlur::blurScale
+   00B5 ldarg.0 
+   00B6 ldfld HeroShowRadialBlurManager::m_blurScript
+   00BB callvirt System.Void RadialBlur::UpdateParameters()
+   00C0 ret 
+== UnityEngine.Camera GetCamera() attrs=Private, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 call UnityEngine.Camera[] UnityEngine.Camera::get_allCameras()
+   0007 stloc.2 
+   0008 ldc.i4.0 
+   0009 stloc.3 
+   000A br IL_0033: ldloc.3
+   000F ldloc.2 
+   0010 ldloc.3 
+   0011 ldelem.ref 
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 callvirt System.String UnityEngine.Object::get_name()
+   0019 ldstr 3DImage
+   001E call System.Boolean System.String::op_Equality(System.String,System.String)
+   0023 brfalse IL_002f: ldloc.3
+   0028 ldloc.1 
+   0029 stloc.0 
+   002A br IL_003c: ldloc.0
+   002F ldloc.3 
+   0030 ldc.i4.1 
+   0031 add 
+   0032 stloc.3 
+   0033 ldloc.3 
+   0034 ldloc.2 
+   0035 ldlen 
+   0036 conv.i4 
+   0037 blt IL_000f: ldloc.2
+   003C ldloc.0 
+   003D ldnull 
+   003E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0043 brfalse IL_004e: ldloc.0
+   0048 call UnityEngine.Camera UnityEngine.Camera::get_main()
+   004D stloc.0 
+   004E ldloc.0 
+   004F ret 
+== System.Void StartRadialBlur() attrs=Private, HideBySig maxstack=2
+   0000 call System.Boolean HeroShowRadialBlurManager::IsSupported()
+   0005 brtrue IL_000b: ldarg.0
+   000A ret 
+   000B ldarg.0 
+   000C ldfld HeroShowRadialBlurManager::m_started
+   0011 brfalse IL_0017: ldsfld System.Boolean HeroShowRadialBlurManager::m_blurExists
+   0016 ret 
+   0017 ldsfld HeroShowRadialBlurManager::m_blurExists
+   001C brfalse IL_0022: call UnityEngine.Camera HeroShowRadialBlurManager::GetCamera()
+   0021 ret 
+   0022 call UnityEngine.Camera HeroShowRadialBlurManager::GetCamera()
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_0035: ldc.i4.1
+   0034 ret 
+   0035 ldc.i4.1 
+   0036 stsfld HeroShowRadialBlurManager::m_blurExists
+   003B ldarg.0 
+   003C ldc.i4.1 
+   003D stfld HeroShowRadialBlurManager::m_started
+   0042 ldarg.0 
+   0043 ldloc.0 
+   0044 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0049 callvirt !!0 UnityEngine.GameObject::AddComponent<RadialBlur>()
+   004E stfld HeroShowRadialBlurManager::m_blurScript
+   0053 ret 
+== System.Void EndRadialBlur() attrs=Private, HideBySig maxstack=2
+   0000 call System.Boolean HeroShowRadialBlurManager::IsSupported()
+   0005 brtrue IL_000b: ldarg.0
+   000A ret 
+   000B ldarg.0 
+   000C ldfld HeroShowRadialBlurManager::m_ended
+   0011 brfalse IL_0017: ldsfld System.Boolean HeroShowRadialBlurManager::m_blurExists
+   0016 ret 
+   0017 ldsfld HeroShowRadialBlurManager::m_blurExists
+   001C brtrue IL_0022: call UnityEngine.Camera HeroShowRadialBlurManager::GetCamera()
+   0021 ret 
+   0022 call UnityEngine.Camera HeroShowRadialBlurManager::GetCamera()
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_0035: ldc.i4.0
+   0034 ret 
+   0035 ldc.i4.0 
+   0036 stsfld HeroShowRadialBlurManager::m_blurExists
+   003B ldarg.0 
+   003C ldc.i4.1 
+   003D stfld HeroShowRadialBlurManager::m_ended
+   0042 ldarg.0 
+   0043 ldnull 
+   0044 stfld HeroShowRadialBlurManager::m_blurScript
+   0049 ldloc.0 
+   004A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   004F callvirt !!0 UnityEngine.GameObject::GetComponent<RadialBlur>()
+   0054 stloc.1 
+   0055 ldloc.1 
+   0056 ldnull 
+   0057 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005C brfalse IL_0067: ret
+   0061 ldloc.1 
+   0062 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0067 ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void HeroShowRadialBlurManager::EndRadialBlur()
+   0006 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void HeroShowRadialBlurManager::EndRadialBlur()
+   0006 ret 
+== System.Boolean IsWorking() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld HeroShowRadialBlurManager::m_blurExists
+   0005 ret 
+== System.Boolean IsSupported() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld HeroShowRadialBlurManager::s_devicePerformanceScore
+   0005 ldc.i4.m1 
+   0006 bne.un IL_0015: ldsfld System.Int32 HeroShowRadialBlurManager::s_devicePerformanceScore
+   000B call System.Int32 Assets.Scripts.Framework.DetectRenderQuality::getAndroidScore()
+   0010 stsfld HeroShowRadialBlurManager::s_devicePerformanceScore
+   0015 ldsfld HeroShowRadialBlurManager::s_devicePerformanceScore
+   001A ldc.i4 7000
+   001F clt 
+   0021 ldc.i4.0 
+   0022 ceq 
+   0024 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.m1 
+   0001 stsfld HeroShowRadialBlurManager::s_devicePerformanceScore
+   0006 ret 

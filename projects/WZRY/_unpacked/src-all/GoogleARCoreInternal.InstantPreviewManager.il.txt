@@ -1,0 +1,259 @@
+// TYPE GoogleARCoreInternal.InstantPreviewManager  base=System.Object  attrs=Public, Abstract, Sealed, BeforeFieldInit
+  FIELD System.String InstantPreviewNativeApi = arcore_instant_preview_unity_plugin
+  FIELD System.String k_ApkGuid = cf7b10762fe921e40a18151a6c92a8a6
+  FIELD System.String k_NoDevicesFoundAdbResult = error: no devices/emulators found
+  FIELD System.Single k_MaxTolerableAspectRatioDifference = 0.1
+  FIELD System.String k_MismatchedAspectRatioWarningFormatString = The aspect ratio of your game window is different from the aspect ratio of your Instant Preview camera texture. Please resize your game window's aspect ratio to match, or your preview will be distorted. The camera texture resolution is {0}, {1}.
+  FIELD UnityEngine.WaitForEndOfFrame k_WaitForEndOfFrame
+  FIELD System.Boolean s_PauseWarned
+  FIELD System.Boolean s_DisabledLightEstimationWarned
+  FIELD System.Boolean s_DisabledPlaneFindingWarned
+== System.Collections.IEnumerator InitializeIfNeeded() attrs=Public, Static, HideBySig maxstack=1
+   0000 newobj System.Void GoogleARCoreInternal.InstantPreviewManager/<InitializeIfNeeded>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ret 
+== System.Boolean UpdateBackgroundTextureIfNeeded(UnityEngine.Texture2D& backgroundTexture) attrs=Public, Static, HideBySig maxstack=5
+   0000 call System.Boolean UnityEngine.Application::get_isEditor()
+   0005 brtrue IL_000c: ldloca.s V_0
+   000A ldc.i4.0 
+   000B ret 
+   000C ldloca.s V_0
+   000E ldloca.s V_1
+   0010 ldloca.s V_2
+   0012 call System.Boolean GoogleARCoreInternal.InstantPreviewManager/NativeApi::LockCameraTexture(System.IntPtr&,System.Int32&,System.Int32&)
+   0017 brfalse IL_0068: ldc.i4.1
+   001C ldarg.0 
+   001D ldind.ref 
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0024 brtrue IL_0043: ldarg.0
+   0029 ldloc.1 
+   002A ldarg.0 
+   002B ldind.ref 
+   002C callvirt System.Int32 UnityEngine.Texture::get_width()
+   0031 bne.un IL_0043: ldarg.0
+   0036 ldloc.2 
+   0037 ldarg.0 
+   0038 ldind.ref 
+   0039 callvirt System.Int32 UnityEngine.Texture::get_height()
+   003E beq IL_004f: ldarg.0
+   0043 ldarg.0 
+   0044 ldloc.1 
+   0045 ldloc.2 
+   0046 ldc.i4.s 14
+   0048 ldc.i4.0 
+   0049 newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   004E stind.ref 
+   004F ldarg.0 
+   0050 ldind.ref 
+   0051 ldloc.0 
+   0052 ldloc.1 
+   0053 ldloc.2 
+   0054 mul 
+   0055 ldc.i4.4 
+   0056 mul 
+   0057 callvirt System.Void UnityEngine.Texture2D::LoadRawTextureData(System.IntPtr,System.Int32)
+   005C ldarg.0 
+   005D ldind.ref 
+   005E callvirt System.Void UnityEngine.Texture2D::Apply()
+   0063 call System.Void GoogleARCoreInternal.InstantPreviewManager/NativeApi::UnlockCameraTexture()
+   0068 ldc.i4.1 
+   0069 ret 
+== System.Void OnEarlyUpdate() attrs=Public, Static, HideBySig maxstack=2
+   0000 call GoogleARCoreInternal.ILifecycleManager GoogleARCoreInternal.LifecycleManager::get_Instance()
+   0005 callvirt GoogleARCore.ARCoreSession GoogleARCoreInternal.ILifecycleManager::get_SessionComponent()
+   000A stloc.0 
+   000B call System.Boolean UnityEngine.Application::get_isEditor()
+   0010 brfalse IL_0021: ret
+   0015 ldloc.0 
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001C brfalse IL_0022: ldsfld System.Boolean GoogleARCoreInternal.InstantPreviewManager::s_PauseWarned
+   0021 ret 
+   0022 ldsfld GoogleARCoreInternal.InstantPreviewManager::s_PauseWarned
+   0027 brtrue IL_0047: ldloc.0
+   002C ldloc.0 
+   002D callvirt System.Boolean UnityEngine.Behaviour::get_enabled()
+   0032 brtrue IL_0047: ldloc.0
+   0037 ldstr Disabling ARCore session is not available in editor.
+   003C call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   0041 ldc.i4.1 
+   0042 stsfld GoogleARCoreInternal.InstantPreviewManager::s_PauseWarned
+   0047 ldloc.0 
+   0048 ldfld GoogleARCore.ARCoreSession::SessionConfig
+   004D stloc.1 
+   004E ldloc.1 
+   004F ldnull 
+   0050 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0055 brfalse IL_005b: ldsfld System.Boolean GoogleARCoreInternal.InstantPreviewManager::s_DisabledLightEstimationWarned
+   005A ret 
+   005B ldsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledLightEstimationWarned
+   0060 brtrue IL_0080: ldsfld System.Boolean GoogleARCoreInternal.InstantPreviewManager::s_DisabledPlaneFindingWarned
+   0065 ldloc.1 
+   0066 ldfld GoogleARCore.ARCoreSessionConfigX::EnableLightEstimation
+   006B brtrue IL_0080: ldsfld System.Boolean GoogleARCoreInternal.InstantPreviewManager::s_DisabledPlaneFindingWarned
+   0070 ldstr ARCore light estimation cannot be disabled in editor.
+   0075 call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   007A ldc.i4.1 
+   007B stsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledLightEstimationWarned
+   0080 ldsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledPlaneFindingWarned
+   0085 brtrue IL_00a5: ret
+   008A ldloc.1 
+   008B ldfld GoogleARCore.ARCoreSessionConfigX::PlaneFindingMode
+   0090 brtrue IL_00a5: ret
+   0095 ldstr ARCore plane finding cannot be disabled in editor.
+   009A call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   009F ldc.i4.1 
+   00A0 stsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledPlaneFindingWarned
+   00A5 ret 
+== System.Collections.IEnumerator UpdateLoop(System.String adbPath) attrs=Private, Static, HideBySig maxstack=2
+   0000 newobj System.Void GoogleARCoreInternal.InstantPreviewManager/<UpdateLoop>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld GoogleARCoreInternal.InstantPreviewManager/<UpdateLoop>c__Iterator1::adbPath
+   000D ldloc.0 
+   000E ret 
+== System.Void AddInstantPreviewTrackedPoseDriverWhenNeeded() attrs=Private, Static, HideBySig maxstack=2
+   0000 call !!0[] UnityEngine.Object::FindObjectsOfType<UnityEngine.SpatialTracking.TrackedPoseDriver>()
+   0005 stloc.1 
+   0006 ldc.i4.0 
+   0007 stloc.2 
+   0008 br IL_003f: ldloc.2
+   000D ldloc.1 
+   000E ldloc.2 
+   000F ldelem.ref 
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldc.i4.0 
+   0013 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0018 ldloc.0 
+   0019 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   001E stloc.3 
+   001F ldloc.3 
+   0020 callvirt !!0 UnityEngine.GameObject::GetComponent<GoogleARCore.InstantPreviewTrackedPoseDriver>()
+   0025 ldnull 
+   0026 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002B stloc.s V_4
+   002D ldloc.s V_4
+   002F brtrue IL_003b: ldloc.2
+   0034 ldloc.3 
+   0035 callvirt !!0 UnityEngine.GameObject::AddComponent<GoogleARCore.InstantPreviewTrackedPoseDriver>()
+   003A pop 
+   003B ldloc.2 
+   003C ldc.i4.1 
+   003D add 
+   003E stloc.2 
+   003F ldloc.2 
+   0040 ldloc.1 
+   0041 ldlen 
+   0042 conv.i4 
+   0043 blt IL_000d: ldloc.1
+   0048 ret 
+== System.String GetAdbPath() attrs=Private, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0008 brfalse IL_000f: ldloc.0
+   000D ldnull 
+   000E ret 
+   000F ldloc.0 
+   0010 call System.String System.IO.Path::GetFullPath(System.String)
+   0015 ldstr platform-tools
+   001A ldsfld System.IO.Path::DirectorySeparatorChar
+   001F box System.Char
+   0024 ldstr adb
+   0029 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   002E call System.String System.IO.Path::Combine(System.String,System.String)
+   0033 stloc.1 
+   0034 call UnityEngine.RuntimePlatform UnityEngine.Application::get_platform()
+   0039 ldc.i4.7 
+   003A bne.un IL_004b: ldloc.1
+   003F ldloc.1 
+   0040 ldstr exe
+   0045 call System.String System.IO.Path::ChangeExtension(System.String,System.String)
+   004A stloc.1 
+   004B ldloc.1 
+   004C ret 
+== System.Collections.IEnumerator InstallApkAndRunIfConnected(System.String adbPath, System.String localVersion) attrs=Private, Static, HideBySig maxstack=2
+   0000 newobj System.Void GoogleARCoreInternal.InstantPreviewManager/<InstallApkAndRunIfConnected>c__Iterator2::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld GoogleARCoreInternal.InstantPreviewManager/<InstallApkAndRunIfConnected>c__Iterator2::adbPath
+   000D ldloc.0 
+   000E ldarg.1 
+   000F stfld GoogleARCoreInternal.InstantPreviewManager/<InstallApkAndRunIfConnected>c__Iterator2::localVersion
+   0014 ldloc.0 
+   0015 ret 
+== System.Boolean PromptToInstall() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 ret 
+== System.Boolean PromptToRebuildAugmentedImagesDatabase() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 ret 
+== System.Boolean StartServer(System.String adbPath, System.String& version) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldc.i4.s 64
+   0002 newobj System.Void System.Text.StringBuilder::.ctor(System.Int32)
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldloc.0 
+   000A ldloc.0 
+   000B callvirt System.Int32 System.Text.StringBuilder::get_Capacity()
+   0010 call System.Boolean GoogleARCoreInternal.InstantPreviewManager/NativeApi::InitializeInstantPreview(System.String,System.Text.StringBuilder,System.Int32)
+   0015 stloc.1 
+   0016 ldloc.1 
+   0017 brtrue IL_0035: ldarg.1
+   001C ldstr Couldn't start Instant Preview server with adb path "{0}".
+   0021 ldc.i4.1 
+   0022 newarr System.Object
+   0027 dup 
+   0028 ldc.i4.0 
+   0029 ldarg.0 
+   002A stelem.ref 
+   002B call System.Void UnityEngine.Debug::LogErrorFormat(System.String,System.Object[])
+   0030 ldarg.1 
+   0031 ldnull 
+   0032 stind.ref 
+   0033 ldc.i4.0 
+   0034 ret 
+   0035 ldarg.1 
+   0036 ldloc.0 
+   0037 callvirt System.String System.Object::ToString()
+   003C stind.ref 
+   003D ldstr Instant Preview version {0}
+To disable Instant Preview, uncheck 'Instant Preview Enabled' under 'Edit > Project Settings > ARCore'.
+   0042 ldc.i4.1 
+   0043 newarr System.Object
+   0048 dup 
+   0049 ldc.i4.0 
+   004A ldarg.1 
+   004B ldind.ref 
+   004C stelem.ref 
+   004D call System.Void UnityEngine.Debug::LogFormat(System.String,System.Object[])
+   0052 ldc.i4.1 
+   0053 ret 
+== System.Int32 RoundUpToNearestMultipleOf16(System.Int32 value) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 15
+   0003 add 
+   0004 ldc.i4.s -16
+   0006 and 
+   0007 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void UnityEngine.WaitForEndOfFrame::.ctor()
+   0005 stsfld GoogleARCoreInternal.InstantPreviewManager::k_WaitForEndOfFrame
+   000A ldc.i4.0 
+   000B stsfld GoogleARCoreInternal.InstantPreviewManager::s_PauseWarned
+   0010 ldc.i4.0 
+   0011 stsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledLightEstimationWarned
+   0016 ldc.i4.0 
+   0017 stsfld GoogleARCoreInternal.InstantPreviewManager::s_DisabledPlaneFindingWarned
+   001C ret 
+  NESTED GoogleARCoreInternal.InstantPreviewManager/NativeApi
+  NESTED GoogleARCoreInternal.InstantPreviewManager/Result
+  NESTED GoogleARCoreInternal.InstantPreviewManager/<InitializeIfNeeded>c__Iterator0
+  NESTED GoogleARCoreInternal.InstantPreviewManager/<UpdateLoop>c__Iterator1
+  NESTED GoogleARCoreInternal.InstantPreviewManager/<InstallApkAndRunIfConnected>c__Iterator2

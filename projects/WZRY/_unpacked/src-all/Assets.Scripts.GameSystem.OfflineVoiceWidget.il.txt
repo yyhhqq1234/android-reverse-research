@@ -1,0 +1,534 @@
+// TYPE Assets.Scripts.GameSystem.OfflineVoiceWidget  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.GameObject offLineObj
+  FIELD UnityEngine.GameObject ShowTipsPanelObj
+  FIELD UnityEngine.UI.Image m_voiceInputCD
+  FIELD UnityEngine.UI.Text m_voiceInputCDInfoText
+  FIELD Assets.Scripts.UI.CUITimerScript m_voiceInputCDTimer
+  FIELD Assets.Scripts.UI.CUITimerScript m_voiceDownloadTimer
+  FIELD Assets.Scripts.UI.CUITimerScript m_voiceInputTipsTimer
+  FIELD UnityEngine.GameObject m_SendBtnObj
+  FIELD UnityEngine.UI.InputField m_inputField
+  FIELD UnityEngine.GameObject startShowTips
+  FIELD UnityEngine.GameObject SendTextToSvrObj
+  FIELD UnityEngine.GameObject RecordUIObj
+  FIELD System.Single m_voiceInputStartTimeStamp
+  FIELD System.Single s_voiceInputTimeGap
+  FIELD System.Single s_voiceInputDownloadTimeout
+  FIELD System.Single s_voiceInputTipsTimeout
+  FIELD System.Boolean m_bInint
+  FIELD System.Boolean m_bStartRecord
+  FIELD Assets.Scripts.GameSystem.OfflineVoiceWidget/On_Send_TextForOfflineDel m_On_Send_TextForOfflineDel
+  FIELD Assets.Scripts.GameSystem.EChatChannel m_ChatChannel
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.7 
+   0002 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   0007 ldarg.0 
+   0008 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   000D ret 
+== System.Void ShowOfflineWidget(System.Boolean bshwow) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bInint
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::offLineObj
+   0011 ldarg.1 
+   0012 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0017 ret 
+== System.Void Updatechanell(Assets.Scripts.GameSystem.EChatChannel chanel) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   0007 ldc.i4.2 
+   0008 stloc.0 
+   0009 ldarg.1 
+   000A brfalse IL_00bc: ret
+   000F ldarg.1 
+   0010 ldc.i4.7 
+   0011 beq IL_00bc: ret
+   0016 ldstr offlineShowTips_{0}_{1}_{2}
+   001B call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0020 ldfld ApolloHelper::LastOpenID
+   0025 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   002A callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   002F callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0034 box System.UInt64
+   0039 ldloca.s V_0
+   003B constrained. Assets.Scripts.GameSystem.EChatChannel
+   0041 callvirt System.String System.Object::ToString()
+   0046 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   004B stloc.1 
+   004C ldloc.1 
+   004D call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   0052 ldc.i4.1 
+   0053 beq IL_00a0: ldarg.0
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputTipsTimer
+   005E ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTipsTimeout
+   0063 callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputTipsTimer
+   006E callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   0079 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   007E brfalse IL_008f: ldloc.1
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   0089 ldc.i4.1 
+   008A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   008F ldloc.1 
+   0090 ldc.i4.1 
+   0091 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0096 call System.Void UnityEngine.PlayerPrefs::Save()
+   009B br IL_00bc: ret
+   00A0 ldarg.0 
+   00A1 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   00A6 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00AB brfalse IL_00bc: ret
+   00B0 ldarg.0 
+   00B1 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   00B6 ldc.i4.0 
+   00B7 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BC ret 
+== System.Void Init(Assets.Scripts.GameSystem.OfflineVoiceWidget/On_Send_TextForOfflineDel callBack, Assets.Scripts.GameSystem.EChatChannel chanel) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_On_Send_TextForOfflineDel
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   0014 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0019 brfalse IL_002a: ldarg.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   0024 ldc.i4.0 
+   0025 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDTimer
+   0030 callvirt System.Void Assets.Scripts.UI.CUITimerScript::EndTimer()
+   0035 ldc.i4.0 
+   0036 stloc.0 
+   0037 ldc.i4.s 83
+   0039 ldloca.s V_0
+   003B call System.Boolean ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE,System.UInt32&)
+   0040 brfalse IL_0053: ldc.i4.s 84
+   0045 ldloc.0 
+   0046 conv.r.un 
+   0047 conv.r4 
+   0048 ldc.r4 1000
+   004D div 
+   004E stsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTimeGap
+   0053 ldc.i4.s 84
+   0055 ldloca.s V_0
+   0057 call System.Boolean ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE,System.UInt32&)
+   005C brfalse IL_006f: ldarg.0
+   0061 ldloc.0 
+   0062 conv.r.un 
+   0063 conv.r4 
+   0064 ldc.r4 1000
+   0069 div 
+   006A stsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputDownloadTimeout
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   0075 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   007A brfalse IL_008b: ldc.i4.2
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   0085 ldc.i4.0 
+   0086 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   008B ldc.i4.2 
+   008C stloc.1 
+   008D ldarg.2 
+   008E brfalse IL_009a: ldarg.2
+   0093 ldarg.2 
+   0094 ldc.i4.7 
+   0095 bne.un IL_0142: ldarg.0
+   009A ldarg.2 
+   009B stloc.1 
+   009C ldstr offlineShowTips_{0}_{1}_{2}
+   00A1 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00A6 ldfld ApolloHelper::LastOpenID
+   00AB call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   00B0 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   00B5 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   00BA box System.UInt64
+   00BF ldloca.s V_1
+   00C1 constrained. Assets.Scripts.GameSystem.EChatChannel
+   00C7 callvirt System.String System.Object::ToString()
+   00CC call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00D1 stloc.2 
+   00D2 ldloc.2 
+   00D3 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   00D8 ldc.i4.1 
+   00D9 beq IL_0126: ldarg.0
+   00DE ldarg.0 
+   00DF ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputTipsTimer
+   00E4 ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTipsTimeout
+   00E9 callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   00EE ldarg.0 
+   00EF ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputTipsTimer
+   00F4 callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   00F9 ldarg.0 
+   00FA ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   00FF call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0104 brfalse IL_0115: ldloc.2
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   010F ldc.i4.1 
+   0110 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0115 ldloc.2 
+   0116 ldc.i4.1 
+   0117 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   011C call System.Void UnityEngine.PlayerPrefs::Save()
+   0121 br IL_0142: ldarg.0
+   0126 ldarg.0 
+   0127 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   012C call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0131 brfalse IL_0142: ldarg.0
+   0136 ldarg.0 
+   0137 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   013C ldc.i4.0 
+   013D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0142 ldarg.0 
+   0143 ldc.i4.1 
+   0144 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bInint
+   0149 ldarg.0 
+   014A ldc.i4.0 
+   014B stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   0150 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0155 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   015A ldarg.0 
+   015B callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::AddOfflineWidget(Assets.Scripts.GameSystem.OfflineVoiceWidget)
+   0160 ret 
+== System.Void Uninit() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 19
+   0003 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   0008 ldarg.0 
+   0009 ldc.i4.0 
+   000A stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bInint
+   000F ldarg.0 
+   0010 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::HideUI()
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   001C ldarg.0 
+   001D ldnull 
+   001E stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_On_Send_TextForOfflineDel
+   0023 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   000A ldarg.0 
+   000B callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::RemoveOfflineWidget(Assets.Scripts.GameSystem.OfflineVoiceWidget)
+   0010 ret 
+== System.Void StartRecord() attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   000B callvirt System.Boolean Assets.Scripts.GameSystem.CChatController::CheckSendVoice(Assets.Scripts.GameSystem.EChatChannel)
+   0010 brtrue IL_0016: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0015 ret 
+   0016 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   001B callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   0020 callvirt System.Boolean Assets.Scripts.GameSystem.OfflineVoiceSys::IsStartRecord()
+   0025 brfalse IL_002b: ldarg.0
+   002A ret 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   0031 brfalse IL_0037: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0036 ret 
+   0037 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   003C callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::TestMic()
+   0041 brtrue IL_0063: ldarg.0
+   0046 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   004B ldstr Voice_Open_Mic_Competence
+   0050 ldc.i4.1 
+   0051 ldc.r4 1.5
+   0056 ldnull 
+   0057 ldc.i4.0 
+   0058 newarr System.Object
+   005D callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0062 ret 
+   0063 ldarg.0 
+   0064 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::CloseStartTipes()
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   006F call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0074 brfalse IL_0085: ldarg.0
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   007F ldc.i4.1 
+   0080 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::RecordUIObj
+   008B call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0090 brfalse IL_00a1: ldarg.0
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::RecordUIObj
+   009B ldc.i4.1 
+   009C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::SendTextToSvrObj
+   00A7 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00AC brfalse IL_00bd: ldarg.0
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::SendTextToSvrObj
+   00B7 ldc.i4.0 
+   00B8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00BD ldarg.0 
+   00BE call System.Single UnityEngine.Time::get_time()
+   00C3 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputStartTimeStamp
+   00C8 ldarg.0 
+   00C9 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCD
+   00CE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D3 ldc.i4.1 
+   00D4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D9 ldarg.0 
+   00DA ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCD
+   00DF ldc.r4 0
+   00E4 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDTimer
+   00EF ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTimeGap
+   00F4 callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   00F9 ldarg.0 
+   00FA ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDTimer
+   00FF callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   0104 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0109 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   010E ldc.i4.3 
+   010F callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::StartRecord(ApolloVoiceMode)
+   0114 ldarg.0 
+   0115 ldc.i4.1 
+   0116 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   011B ret 
+== System.Void StopRecord() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::CloseStartTipes()
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_SendBtnObj
+   0013 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0018 brfalse IL_002f: ldarg.0
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_SendBtnObj
+   0023 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0028 ldc.i4.0 
+   0029 ldc.i4.1 
+   002A call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.Transform,System.Boolean,System.Boolean)
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCD
+   0035 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003A ldc.i4.0 
+   003B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDInfoText
+   0046 call !0 Singleton`1<CTextManager>::GetInstance()
+   004B ldstr INGAME_VOICEMSG_DOWNLOADING
+   0050 ldc.i4.1 
+   0051 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0056 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   005B call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0060 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   006B ldc.i4.0 
+   006C ldc.i4.0 
+   006D callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::StopRecord(Assets.Scripts.GameSystem.EChatChannel,System.Boolean,System.Boolean)
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDTimer
+   0078 callvirt System.Void Assets.Scripts.UI.CUITimerScript::EndTimer()
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceDownloadTimer
+   0083 ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputDownloadTimeout
+   0088 callvirt System.Void Assets.Scripts.UI.CUITimerScript::SetTotalTime(System.Single)
+   008D ldarg.0 
+   008E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceDownloadTimer
+   0093 callvirt System.Void Assets.Scripts.UI.CUITimerScript::ReStartTimer()
+   0098 ret 
+== System.Void CancelRecord() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bStartRecord
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::CloseStartTipes()
+   000D call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0012 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_ChatChannel
+   001D ldc.i4.1 
+   001E ldc.i4.0 
+   001F callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::StopRecord(Assets.Scripts.GameSystem.EChatChannel,System.Boolean,System.Boolean)
+   0024 ldarg.0 
+   0025 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::HideUI()
+   002A ret 
+== System.Void HideUI() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::CloseStartTipes()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   000C call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0011 brfalse IL_0022: ldarg.0
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   001C ldc.i4.0 
+   001D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_SendBtnObj
+   0028 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002D brfalse IL_0044: ldarg.0
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_SendBtnObj
+   0038 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   003D ldc.i4.1 
+   003E ldc.i4.1 
+   003F call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.Transform,System.Boolean,System.Boolean)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDTimer
+   004A callvirt System.Void Assets.Scripts.UI.CUITimerScript::EndTimer()
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceDownloadTimer
+   0055 callvirt System.Void Assets.Scripts.UI.CUITimerScript::EndTimer()
+   005A ret 
+== System.Void OnOfflineVoiceTimeChg(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=9
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCD
+   0006 call System.Single UnityEngine.Time::get_time()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputStartTimeStamp
+   0011 sub 
+   0012 ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTimeGap
+   0017 div 
+   0018 callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDInfoText
+   0023 call !0 Singleton`1<CTextManager>::GetInstance()
+   0028 ldstr INGAME_VOICEMSG_SPEAKDURINGCD
+   002D ldc.i4.1 
+   002E newarr System.String
+   0033 dup 
+   0034 ldc.i4.0 
+   0035 ldsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTimeGap
+   003A call System.Single UnityEngine.Time::get_time()
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputStartTimeStamp
+   0045 sub 
+   0046 sub 
+   0047 ldc.r4 1
+   004C add 
+   004D conv.i4 
+   004E stloc.0 
+   004F ldloca.s V_0
+   0051 constrained. System.Int32
+   0057 callvirt System.String System.Object::ToString()
+   005C stelem.ref 
+   005D callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0062 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0067 ret 
+== System.Void OnOfflineVoiceTimeEnd(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::StopRecord()
+   0006 ret 
+== System.Void OnOfflineDownLoadVoiceEnd(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputCDInfoText
+   0006 call !0 Singleton`1<CTextManager>::GetInstance()
+   000B ldstr INGAME_VOICEMSG_DOWNLOADING_TIMEOUT
+   0010 ldc.i4.1 
+   0011 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0016 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   001B ret 
+== System.Void OnTipsTimerEnd(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_voiceInputTipsTimer
+   0006 callvirt System.Void Assets.Scripts.UI.CUITimerScript::EndTimer()
+   000B ret 
+== System.Void CloseStartTipes() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::startShowTips
+   0006 ldc.i4.0 
+   0007 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   000C ret 
+== System.Void SetLocalText(System.String text) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::HideUI()
+   0006 ldarg.1 
+   0007 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   0018 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   001D brfalse IL_002e: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::ShowTipsPanelObj
+   0028 ldc.i4.1 
+   0029 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::RecordUIObj
+   0034 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0039 brfalse IL_004a: ldarg.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::RecordUIObj
+   0044 ldc.i4.0 
+   0045 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::SendTextToSvrObj
+   0050 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0055 brfalse IL_0066: ldarg.0
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::SendTextToSvrObj
+   0060 ldc.i4.1 
+   0061 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_inputField
+   006C call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0071 brfalse IL_0099: ret
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_bInint
+   007C brfalse IL_0099: ret
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_inputField
+   0087 ldc.i4.0 
+   0088 callvirt System.Void UnityEngine.UI.Selectable::set_interactable(System.Boolean)
+   008D ldarg.0 
+   008E ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_inputField
+   0093 ldarg.1 
+   0094 callvirt System.Void UnityEngine.UI.InputField::set_text(System.String)
+   0099 ret 
+== System.Void OnChat_offline_SendTextSvr() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_inputField
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_002d: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_On_Send_TextForOfflineDel
+   0017 brfalse IL_002d: ldarg.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_On_Send_TextForOfflineDel
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.OfflineVoiceWidget::m_inputField
+   0028 callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget/On_Send_TextForOfflineDel::Invoke(UnityEngine.UI.InputField)
+   002D ldarg.0 
+   002E call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::HideUI()
+   0033 ret 
+== System.Void OnChat_offline_CancelSendTextSvr() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.OfflineVoiceWidget::HideUI()
+   0006 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.r4 5
+   0005 stsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTimeGap
+   000A ldc.r4 10
+   000F stsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputDownloadTimeout
+   0014 ldc.r4 2
+   0019 stsfld Assets.Scripts.GameSystem.OfflineVoiceWidget::s_voiceInputTipsTimeout
+   001E ret 
+  NESTED Assets.Scripts.GameSystem.OfflineVoiceWidget/On_Send_TextForOfflineDel

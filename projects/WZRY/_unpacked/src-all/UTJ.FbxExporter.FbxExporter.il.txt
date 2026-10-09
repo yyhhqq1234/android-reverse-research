@@ -1,0 +1,696 @@
+// TYPE UTJ.FbxExporter.FbxExporter  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD UTJ.FbxExporter.FbxExporter/ExportOptions m_opt
+  FIELD UTJ.FbxExporter.FbxExporter/Context m_ctx
+  FIELD System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node> m_nodes
+== System.Void .ctor(UTJ.FbxExporter.FbxExporter/ExportOptions opt) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call UTJ.FbxExporter.FbxExporter/ExportOptions UTJ.FbxExporter.FbxExporter/ExportOptions::get_defaultValue()
+   0006 stfld UTJ.FbxExporter.FbxExporter::m_opt
+   000B ldarg.0 
+   000C call System.Void System.Object::.ctor()
+   0011 ldarg.0 
+   0012 ldarg.1 
+   0013 stfld UTJ.FbxExporter.FbxExporter::m_opt
+   0018 ret 
+== System.Void Finalize() attrs=Family, Virtual, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 call System.Void UTJ.FbxExporter.FbxExporter::Release()
+   0006 leave IL_0012: ret
+   000B ldarg.0 
+   000C call System.Void System.Object::Finalize()
+   0011 endfinally 
+   0012 ret 
+== System.Void Release() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0006 call System.Void UTJ.FbxExporter.FbxExporter::fbxeReleaseContext(UTJ.FbxExporter.FbxExporter/Context)
+   000B ldarg.0 
+   000C call UTJ.FbxExporter.FbxExporter/Context UTJ.FbxExporter.FbxExporter/Context::get_Null()
+   0011 stfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0016 ret 
+== System.Boolean CreateScene(System.String name) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UTJ.FbxExporter.FbxExporter::Release()
+   0006 ldarg.0 
+   0007 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   000C call System.Boolean UTJ.FbxExporter.FbxExporter/Context::op_Implicit(UTJ.FbxExporter.FbxExporter/Context)
+   0011 brtrue IL_0027: ldarg.0
+   0016 ldarg.0 
+   0017 ldarg.0 
+   0018 ldflda UTJ.FbxExporter.FbxExporter::m_opt
+   001D call UTJ.FbxExporter.FbxExporter/Context UTJ.FbxExporter.FbxExporter::fbxeCreateContext(UTJ.FbxExporter.FbxExporter/ExportOptions&)
+   0022 stfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0027 ldarg.0 
+   0028 newobj System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::.ctor()
+   002D stfld UTJ.FbxExporter.FbxExporter::m_nodes
+   0032 ldarg.0 
+   0033 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0038 ldarg.1 
+   0039 call System.Boolean UTJ.FbxExporter.FbxExporter::fbxeCreateScene(UTJ.FbxExporter.FbxExporter/Context,System.String)
+   003E ret 
+== System.Void AddNodeRecursive(UnityEngine.GameObject go, System.Boolean rootObejct, UTJ.FbxExporter.FbxExporter/Node parent, System.String fbxName) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.2 
+   0001 brfalse IL_0016: ldarg.3
+   0006 ldarg.0 
+   0007 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   000C call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::fbxeGetRootNode(UTJ.FbxExporter.FbxExporter/Context)
+   0011 br IL_0017: stloc.0
+   0016 ldarg.3 
+   0017 stloc.0 
+   0018 ldarg.2 
+   0019 brfalse IL_0025: ldarg.1
+   001E ldarg.s fbxName
+   0020 br IL_002b: stloc.1
+   0025 ldarg.1 
+   0026 callvirt System.String UnityEngine.Object::get_name()
+   002B stloc.1 
+   002C ldarg.0 
+   002D ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0032 ldloc.0 
+   0033 ldloc.1 
+   0034 call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::fbxeCreateNode(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.String)
+   0039 stloc.2 
+   003A ldarg.0 
+   003B ldflda UTJ.FbxExporter.FbxExporter::m_opt
+   0040 ldfld UTJ.FbxExporter.FbxExporter/ExportOptions::transform
+   0045 brfalse IL_0077: ldarg.0
+   004A ldarg.0 
+   004B ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0050 ldloc.2 
+   0051 ldarg.1 
+   0052 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0057 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localPosition()
+   005C ldarg.1 
+   005D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0062 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_localRotation()
+   0067 ldarg.1 
+   0068 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   006D callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0072 call System.Void UTJ.FbxExporter.FbxExporter::fbxeSetTRS(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Vector3)
+   0077 ldarg.0 
+   0078 ldfld UTJ.FbxExporter.FbxExporter::m_nodes
+   007D ldarg.1 
+   007E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0083 ldloc.2 
+   0084 callvirt System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::Add(!0,!1)
+   0089 ldarg.0 
+   008A ldarg.1 
+   008B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0090 ldloc.2 
+   0091 call System.Void UTJ.FbxExporter.FbxExporter::ProcessNode(UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node)
+   0096 ldc.i4.0 
+   0097 stloc.3 
+   0098 br IL_00c0: ldloc.3
+   009D ldarg.1 
+   009E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A3 ldloc.3 
+   00A4 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   00A9 stloc.s V_4
+   00AB ldarg.0 
+   00AC ldloc.s V_4
+   00AE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00B3 ldc.i4.0 
+   00B4 ldloc.2 
+   00B5 ldarg.s fbxName
+   00B7 call System.Void UTJ.FbxExporter.FbxExporter::AddNodeRecursive(UnityEngine.GameObject,System.Boolean,UTJ.FbxExporter.FbxExporter/Node,System.String)
+   00BC ldloc.3 
+   00BD ldc.i4.1 
+   00BE add 
+   00BF stloc.3 
+   00C0 ldloc.3 
+   00C1 ldarg.1 
+   00C2 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C7 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   00CC blt IL_009d: ldarg.1
+   00D1 ret 
+== System.Void AddNode(UnityEngine.GameObject go) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0006 brfalse IL_0024: ret
+   000B ldarg.0 
+   000C ldarg.1 
+   000D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   0012 ldarg.0 
+   0013 ldftn System.Void UTJ.FbxExporter.FbxExporter::ProcessNode(UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node)
+   0019 newobj System.Void System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::.ctor(System.Object,System.IntPtr)
+   001E call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::FindOrCreateNodeTree(UnityEngine.Transform,System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>)
+   0023 pop 
+   0024 ret 
+== System.Boolean WriteAsync(System.String path, UTJ.FbxExporter.FbxExporter/Format format) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 call System.Boolean UTJ.FbxExporter.FbxExporter::fbxeWriteAsync(UTJ.FbxExporter.FbxExporter/Context,System.String,UTJ.FbxExporter.FbxExporter/Format)
+   000D ret 
+== System.Boolean IsFinished() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0006 call System.Boolean UTJ.FbxExporter.FbxExporter::fbxeIsFinished(UTJ.FbxExporter.FbxExporter/Context)
+   000B ret 
+== System.Void ProcessNode(UnityEngine.Transform trans, UTJ.FbxExporter.FbxExporter/Node node) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.MeshRenderer>()
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.SkinnedMeshRenderer>()
+   000D stloc.1 
+   000E ldarg.1 
+   000F callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.Terrain>()
+   0014 stloc.2 
+   0015 ldloc.2 
+   0016 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   001B brfalse IL_002e: ldloc.1
+   0020 ldarg.0 
+   0021 ldarg.2 
+   0022 ldloc.2 
+   0023 call System.Boolean UTJ.FbxExporter.FbxExporter::AddTerrain(UTJ.FbxExporter.FbxExporter/Node,UnityEngine.Terrain)
+   0028 pop 
+   0029 br IL_005b: ret
+   002E ldloc.1 
+   002F call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0034 brfalse IL_0047: ldloc.0
+   0039 ldarg.0 
+   003A ldarg.2 
+   003B ldloc.1 
+   003C call System.Boolean UTJ.FbxExporter.FbxExporter::AddSkinnedMesh(UTJ.FbxExporter.FbxExporter/Node,UnityEngine.SkinnedMeshRenderer)
+   0041 pop 
+   0042 br IL_005b: ret
+   0047 ldloc.0 
+   0048 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004D brfalse IL_005b: ret
+   0052 ldarg.0 
+   0053 ldarg.2 
+   0054 ldloc.0 
+   0055 call System.Boolean UTJ.FbxExporter.FbxExporter::AddMesh(UTJ.FbxExporter.FbxExporter/Node,UnityEngine.MeshRenderer)
+   005A pop 
+   005B ret 
+== UTJ.FbxExporter.FbxExporter/Node FindOrCreateNodeTree(UnityEngine.Transform trans, System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node> act) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0006 brtrue IL_0011: ldarg.0
+   000B call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter/Node::get_Null()
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldfld UTJ.FbxExporter.FbxExporter::m_nodes
+   0017 ldarg.1 
+   0018 callvirt System.Boolean System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::ContainsKey(!0)
+   001D brfalse IL_002f: ldarg.1
+   0022 ldarg.0 
+   0023 ldfld UTJ.FbxExporter.FbxExporter::m_nodes
+   0028 ldarg.1 
+   0029 callvirt !1 System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::get_Item(!0)
+   002E ret 
+   002F ldarg.1 
+   0030 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0035 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   003A brtrue IL_004f: ldarg.0
+   003F ldarg.0 
+   0040 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0045 call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::fbxeGetRootNode(UTJ.FbxExporter.FbxExporter/Context)
+   004A br IL_005c: stloc.0
+   004F ldarg.0 
+   0050 ldarg.1 
+   0051 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0056 ldarg.2 
+   0057 call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::FindOrCreateNodeTree(UnityEngine.Transform,System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>)
+   005C stloc.0 
+   005D ldarg.0 
+   005E ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0063 ldloc.0 
+   0064 ldarg.1 
+   0065 callvirt System.String UnityEngine.Object::get_name()
+   006A call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::fbxeCreateNode(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.String)
+   006F stloc.1 
+   0070 ldarg.0 
+   0071 ldflda UTJ.FbxExporter.FbxExporter::m_opt
+   0076 ldfld UTJ.FbxExporter.FbxExporter/ExportOptions::transform
+   007B brfalse IL_009e: ldarg.0
+   0080 ldarg.0 
+   0081 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0086 ldloc.1 
+   0087 ldarg.1 
+   0088 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localPosition()
+   008D ldarg.1 
+   008E callvirt UnityEngine.Quaternion UnityEngine.Transform::get_localRotation()
+   0093 ldarg.1 
+   0094 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0099 call System.Void UTJ.FbxExporter.FbxExporter::fbxeSetTRS(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Vector3)
+   009E ldarg.0 
+   009F ldfld UTJ.FbxExporter.FbxExporter::m_nodes
+   00A4 ldarg.1 
+   00A5 ldloc.1 
+   00A6 callvirt System.Void System.Collections.Generic.Dictionary`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::Add(!0,!1)
+   00AB ldarg.2 
+   00AC brfalse IL_00b9: ldloc.1
+   00B1 ldarg.2 
+   00B2 ldarg.1 
+   00B3 ldloc.1 
+   00B4 callvirt System.Void System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::Invoke(!0,!1)
+   00B9 ldloc.1 
+   00BA ret 
+== System.Boolean AddMesh(UTJ.FbxExporter.FbxExporter/Node node, UnityEngine.Mesh mesh, UnityEngine.Material[] materials) attrs=Private, HideBySig maxstack=11
+   0000 ldarg.2 
+   0001 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0006 brfalse IL_0016: ldc.i4.0
+   000B ldarg.2 
+   000C callvirt System.Int32 UnityEngine.Mesh::get_vertexCount()
+   0011 brtrue IL_0018: ldarg.2
+   0016 ldc.i4.0 
+   0017 ret 
+   0018 ldarg.2 
+   0019 callvirt System.Boolean UnityEngine.Mesh::get_isReadable()
+   001E brtrue IL_003f: ldc.i4.2
+   0023 ldstr Mesh 
+   0028 ldarg.2 
+   0029 callvirt System.String UnityEngine.Object::get_name()
+   002E ldstr  is not readable and be ignored.
+   0033 call System.String System.String::Concat(System.String,System.String,System.String)
+   0038 call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   003D ldc.i4.0 
+   003E ret 
+   003F ldc.i4.2 
+   0040 stloc.0 
+   0041 ldarg.2 
+   0042 callvirt System.Int32[] UnityEngine.Mesh::get_triangles()
+   0047 ldc.i4.0 
+   0048 newobj System.Void UTJ.FbxExporter.PinnedArray`1<System.Int32>::.ctor(T[],System.Boolean)
+   004D stloc.1 
+   004E ldarg.2 
+   004F callvirt UnityEngine.Vector3[] UnityEngine.Mesh::get_vertices()
+   0054 ldc.i4.0 
+   0055 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(T[],System.Boolean)
+   005A stloc.2 
+   005B ldarg.2 
+   005C callvirt UnityEngine.Vector3[] UnityEngine.Mesh::get_normals()
+   0061 ldc.i4.0 
+   0062 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(T[],System.Boolean)
+   0067 stloc.3 
+   0068 ldloc.3 
+   0069 callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::get_Length()
+   006E brtrue IL_0075: ldarg.2
+   0073 ldnull 
+   0074 stloc.3 
+   0075 ldarg.2 
+   0076 callvirt UnityEngine.Vector4[] UnityEngine.Mesh::get_tangents()
+   007B ldc.i4.0 
+   007C newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector4>::.ctor(T[],System.Boolean)
+   0081 stloc.s V_4
+   0083 ldloc.s V_4
+   0085 callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector4>::get_Length()
+   008A brtrue IL_0092: ldarg.2
+   008F ldnull 
+   0090 stloc.s V_4
+   0092 ldarg.2 
+   0093 callvirt UnityEngine.Vector2[] UnityEngine.Mesh::get_uv()
+   0098 ldc.i4.0 
+   0099 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::.ctor(T[],System.Boolean)
+   009E stloc.s V_5
+   00A0 ldloc.s V_5
+   00A2 callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::get_Length()
+   00A7 brtrue IL_00af: ldarg.2
+   00AC ldnull 
+   00AD stloc.s V_5
+   00AF ldarg.2 
+   00B0 callvirt UnityEngine.Vector2[] UnityEngine.Mesh::get_uv2()
+   00B5 ldc.i4.0 
+   00B6 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::.ctor(T[],System.Boolean)
+   00BB stloc.s V_6
+   00BD ldloc.s V_6
+   00BF callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::get_Length()
+   00C4 brtrue IL_00cc: ldarg.2
+   00C9 ldnull 
+   00CA stloc.s V_6
+   00CC ldarg.2 
+   00CD callvirt UnityEngine.Vector2[] UnityEngine.Mesh::get_uv3()
+   00D2 ldc.i4.0 
+   00D3 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::.ctor(T[],System.Boolean)
+   00D8 stloc.s V_7
+   00DA ldloc.s V_7
+   00DC callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::get_Length()
+   00E1 brtrue IL_00e9: ldarg.2
+   00E6 ldnull 
+   00E7 stloc.s V_7
+   00E9 ldarg.2 
+   00EA callvirt UnityEngine.Color[] UnityEngine.Mesh::get_colors()
+   00EF ldc.i4.0 
+   00F0 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Color>::.ctor(T[],System.Boolean)
+   00F5 stloc.s V_8
+   00F7 ldloc.s V_8
+   00F9 callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Color>::get_Length()
+   00FE brtrue IL_0106: ldarg.0
+   0103 ldnull 
+   0104 stloc.s V_8
+   0106 ldarg.0 
+   0107 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   010C ldarg.1 
+   010D ldloc.2 
+   010E callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::get_Length()
+   0113 ldloc.2 
+   0114 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0119 ldloc.3 
+   011A call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   011F ldloc.s V_4
+   0121 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector4>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0126 ldloc.s V_5
+   0128 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   012D ldloc.s V_6
+   012F call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0134 ldloc.s V_7
+   0136 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   013B ldloc.s V_8
+   013D call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Color>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0142 ldarg.3 
+   0143 ldlen 
+   0144 conv.i4 
+   0145 call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMesh(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.Int32,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.Int32)
+   014A ldc.i4.0 
+   014B stloc.s V_9
+   014D br IL_0185: ldloc.s V_9
+   0152 ldarg.2 
+   0153 ldloc.s V_9
+   0155 callvirt System.Int32[] UnityEngine.Mesh::GetTriangles(System.Int32)
+   015A ldc.i4.0 
+   015B newobj System.Void UTJ.FbxExporter.PinnedArray`1<System.Int32>::.ctor(T[],System.Boolean)
+   0160 stloc.s V_10
+   0162 ldarg.0 
+   0163 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0168 ldarg.1 
+   0169 ldloc.0 
+   016A ldloc.s V_10
+   016C callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<System.Int32>::get_Length()
+   0171 ldloc.s V_10
+   0173 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<System.Int32>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0178 ldloc.s V_9
+   017A call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMeshSubmesh(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,UTJ.FbxExporter.FbxExporter/Topology,System.Int32,System.IntPtr,System.Int32)
+   017F ldloc.s V_9
+   0181 ldc.i4.1 
+   0182 add 
+   0183 stloc.s V_9
+   0185 ldloc.s V_9
+   0187 ldarg.2 
+   0188 callvirt System.Int32 UnityEngine.Mesh::get_subMeshCount()
+   018D blt IL_0152: ldarg.2
+   0192 ldarg.2 
+   0193 callvirt System.Int32 UnityEngine.Mesh::get_blendShapeCount()
+   0198 stloc.s V_11
+   019A ldloc.s V_11
+   019C ldc.i4.0 
+   019D ble IL_025b: ldc.i4.1
+   01A2 ldarg.2 
+   01A3 callvirt System.Int32 UnityEngine.Mesh::get_vertexCount()
+   01A8 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(System.Int32)
+   01AD stloc.s V_12
+   01AF ldarg.2 
+   01B0 callvirt System.Int32 UnityEngine.Mesh::get_vertexCount()
+   01B5 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(System.Int32)
+   01BA stloc.s V_13
+   01BC ldarg.2 
+   01BD callvirt System.Int32 UnityEngine.Mesh::get_vertexCount()
+   01C2 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(System.Int32)
+   01C7 stloc.s V_14
+   01C9 ldc.i4.0 
+   01CA stloc.s V_15
+   01CC br IL_0252: ldloc.s V_15
+   01D1 ldarg.2 
+   01D2 ldloc.s V_15
+   01D4 callvirt System.String UnityEngine.Mesh::GetBlendShapeName(System.Int32)
+   01D9 stloc.s V_16
+   01DB ldarg.2 
+   01DC ldloc.s V_15
+   01DE callvirt System.Int32 UnityEngine.Mesh::GetBlendShapeFrameCount(System.Int32)
+   01E3 stloc.s V_17
+   01E5 ldc.i4.0 
+   01E6 stloc.s V_18
+   01E8 br IL_0243: ldloc.s V_18
+   01ED ldarg.2 
+   01EE ldloc.s V_15
+   01F0 ldloc.s V_18
+   01F2 callvirt System.Single UnityEngine.Mesh::GetBlendShapeFrameWeight(System.Int32,System.Int32)
+   01F7 stloc.s V_19
+   01F9 ldarg.2 
+   01FA ldloc.s V_15
+   01FC ldloc.s V_18
+   01FE ldloc.s V_12
+   0200 call T[] UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0205 ldloc.s V_13
+   0207 call T[] UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   020C ldloc.s V_14
+   020E call T[] UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0213 callvirt System.Void UnityEngine.Mesh::GetBlendShapeFrameVertices(System.Int32,System.Int32,UnityEngine.Vector3[],UnityEngine.Vector3[],UnityEngine.Vector3[])
+   0218 ldarg.0 
+   0219 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   021E ldarg.1 
+   021F ldloc.s V_16
+   0221 ldloc.s V_19
+   0223 ldloc.s V_12
+   0225 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   022A ldloc.s V_13
+   022C call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0231 ldloc.s V_14
+   0233 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0238 call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMeshBlendShape(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.String,System.Single,System.IntPtr,System.IntPtr,System.IntPtr)
+   023D ldloc.s V_18
+   023F ldc.i4.1 
+   0240 add 
+   0241 stloc.s V_18
+   0243 ldloc.s V_18
+   0245 ldloc.s V_17
+   0247 blt IL_01ed: ldarg.2
+   024C ldloc.s V_15
+   024E ldc.i4.1 
+   024F add 
+   0250 stloc.s V_15
+   0252 ldloc.s V_15
+   0254 ldloc.s V_11
+   0256 blt IL_01d1: ldarg.2
+   025B ldc.i4.1 
+   025C ret 
+== System.Boolean AddMesh(UTJ.FbxExporter.FbxExporter/Node node, UnityEngine.MeshRenderer mr) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.MeshFilter>()
+   000B stloc.0 
+   000C ldloc.0 
+   000D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0012 brtrue IL_0019: ldarg.0
+   0017 ldc.i4.0 
+   0018 ret 
+   0019 ldarg.0 
+   001A ldarg.1 
+   001B ldloc.0 
+   001C callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_sharedMesh()
+   0021 ldarg.2 
+   0022 callvirt UnityEngine.Material[] UnityEngine.Renderer::get_sharedMaterials()
+   0027 call System.Boolean UTJ.FbxExporter.FbxExporter::AddMesh(UTJ.FbxExporter.FbxExporter/Node,UnityEngine.Mesh,UnityEngine.Material[])
+   002C ret 
+== System.Boolean AddSkinnedMesh(UTJ.FbxExporter.FbxExporter/Node node, UnityEngine.SkinnedMeshRenderer smr) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.2 
+   0001 callvirt UnityEngine.Mesh UnityEngine.SkinnedMeshRenderer::get_sharedMesh()
+   0006 stloc.0 
+   0007 ldarg.2 
+   0008 callvirt UnityEngine.Material[] UnityEngine.Renderer::get_sharedMaterials()
+   000D stloc.1 
+   000E ldarg.0 
+   000F ldarg.1 
+   0010 ldloc.0 
+   0011 ldloc.1 
+   0012 call System.Boolean UTJ.FbxExporter.FbxExporter::AddMesh(UTJ.FbxExporter.FbxExporter/Node,UnityEngine.Mesh,UnityEngine.Material[])
+   0017 brtrue IL_001e: ldarg.2
+   001C ldc.i4.0 
+   001D ret 
+   001E ldarg.2 
+   001F callvirt UnityEngine.Transform[] UnityEngine.SkinnedMeshRenderer::get_bones()
+   0024 stloc.2 
+   0025 ldloc.2 
+   0026 ldlen 
+   0027 conv.i4 
+   0028 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UTJ.FbxExporter.FbxExporter/Node>::.ctor(System.Int32)
+   002D stloc.3 
+   002E ldc.i4.0 
+   002F stloc.s V_4
+   0031 br IL_005a: ldloc.s V_4
+   0036 ldloc.3 
+   0037 ldloc.s V_4
+   0039 ldarg.0 
+   003A ldloc.2 
+   003B ldloc.s V_4
+   003D ldelem.ref 
+   003E ldarg.0 
+   003F ldftn System.Void UTJ.FbxExporter.FbxExporter::ProcessNode(UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node)
+   0045 newobj System.Void System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>::.ctor(System.Object,System.IntPtr)
+   004A call UTJ.FbxExporter.FbxExporter/Node UTJ.FbxExporter.FbxExporter::FindOrCreateNodeTree(UnityEngine.Transform,System.Action`2<UnityEngine.Transform,UTJ.FbxExporter.FbxExporter/Node>)
+   004F callvirt System.Void UTJ.FbxExporter.PinnedArray`1<UTJ.FbxExporter.FbxExporter/Node>::set_Item(System.Int32,T)
+   0054 ldloc.s V_4
+   0056 ldc.i4.1 
+   0057 add 
+   0058 stloc.s V_4
+   005A ldloc.s V_4
+   005C ldloc.2 
+   005D ldlen 
+   005E conv.i4 
+   005F blt IL_0036: ldloc.3
+   0064 ldloc.0 
+   0065 callvirt UnityEngine.BoneWeight[] UnityEngine.Mesh::get_boneWeights()
+   006A ldc.i4.0 
+   006B newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.BoneWeight>::.ctor(T[],System.Boolean)
+   0070 stloc.s V_5
+   0072 ldloc.0 
+   0073 callvirt UnityEngine.Matrix4x4[] UnityEngine.Mesh::get_bindposes()
+   0078 ldc.i4.0 
+   0079 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Matrix4x4>::.ctor(T[],System.Boolean)
+   007E stloc.s V_6
+   0080 ldarg.0 
+   0081 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0086 ldarg.1 
+   0087 ldloc.s V_5
+   0089 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.BoneWeight>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   008E ldloc.3 
+   008F callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UTJ.FbxExporter.FbxExporter/Node>::get_Length()
+   0094 ldloc.3 
+   0095 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UTJ.FbxExporter.FbxExporter/Node>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   009A ldloc.s V_6
+   009C call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Matrix4x4>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   00A1 call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMeshSkin(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.IntPtr,System.Int32,System.IntPtr,System.IntPtr)
+   00A6 ldc.i4.1 
+   00A7 ret 
+== System.Boolean AddTerrain(UTJ.FbxExporter.FbxExporter/Node node, UnityEngine.Terrain terrain) attrs=Private, HideBySig maxstack=11
+   0000 ldarg.2 
+   0001 callvirt UnityEngine.TerrainData UnityEngine.Terrain::get_terrainData()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 callvirt System.Int32 UnityEngine.TerrainData::get_heightmapWidth()
+   000D stloc.1 
+   000E ldloc.0 
+   000F callvirt System.Int32 UnityEngine.TerrainData::get_heightmapHeight()
+   0014 stloc.2 
+   0015 ldloc.0 
+   0016 ldc.i4.0 
+   0017 ldc.i4.0 
+   0018 ldloc.1 
+   0019 ldloc.2 
+   001A callvirt System.Single[0...,0...] UnityEngine.TerrainData::GetHeights(System.Int32,System.Int32,System.Int32,System.Int32)
+   001F stloc.3 
+   0020 ldloc.1 
+   0021 ldloc.2 
+   0022 mul 
+   0023 stloc.s V_4
+   0025 ldloc.1 
+   0026 ldc.i4.1 
+   0027 sub 
+   0028 ldloc.2 
+   0029 ldc.i4.1 
+   002A sub 
+   002B mul 
+   002C ldc.i4.2 
+   002D mul 
+   002E ldc.i4.3 
+   002F mul 
+   0030 stloc.s V_5
+   0032 ldloc.s V_4
+   0034 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(System.Int32)
+   0039 stloc.s V_6
+   003B ldloc.s V_4
+   003D newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::.ctor(System.Int32)
+   0042 stloc.s V_7
+   0044 ldloc.s V_4
+   0046 newobj System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::.ctor(System.Int32)
+   004B stloc.s V_8
+   004D ldloc.s V_5
+   004F newobj System.Void UTJ.FbxExporter.PinnedArray`1<System.Int32>::.ctor(System.Int32)
+   0054 stloc.s V_9
+   0056 ldloc.3 
+   0057 ldloc.1 
+   0058 ldloc.2 
+   0059 ldloc.0 
+   005A callvirt UnityEngine.Vector3 UnityEngine.TerrainData::get_size()
+   005F ldloc.s V_6
+   0061 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0066 ldloc.s V_7
+   0068 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   006D ldloc.s V_8
+   006F call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0074 ldloc.s V_9
+   0076 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<System.Int32>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   007B call System.Void UTJ.FbxExporter.FbxExporter::fbxeGenerateTerrainMesh(System.Single[0...,0...],System.Int32,System.Int32,UnityEngine.Vector3,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr)
+   0080 ldc.i4.2 
+   0081 stloc.s V_10
+   0083 ldarg.0 
+   0084 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   0089 ldarg.1 
+   008A ldloc.s V_6
+   008C callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::get_Length()
+   0091 ldloc.s V_6
+   0093 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   0098 ldloc.s V_7
+   009A call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   009F ldsfld System.IntPtr::Zero
+   00A4 ldloc.s V_8
+   00A6 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   00AB ldsfld System.IntPtr::Zero
+   00B0 ldsfld System.IntPtr::Zero
+   00B5 ldsfld System.IntPtr::Zero
+   00BA ldc.i4.m1 
+   00BB call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMesh(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,System.Int32,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.Int32)
+   00C0 ldarg.0 
+   00C1 ldfld UTJ.FbxExporter.FbxExporter::m_ctx
+   00C6 ldarg.1 
+   00C7 ldloc.s V_10
+   00C9 ldloc.s V_9
+   00CB callvirt System.Int32 UTJ.FbxExporter.PinnedArray`1<System.Int32>::get_Length()
+   00D0 ldloc.s V_9
+   00D2 call System.IntPtr UTJ.FbxExporter.PinnedArray`1<System.Int32>::op_Implicit(UTJ.FbxExporter.PinnedArray`1<T>)
+   00D7 ldc.i4.m1 
+   00D8 call System.Void UTJ.FbxExporter.FbxExporter::fbxeAddMeshSubmesh(UTJ.FbxExporter.FbxExporter/Context,UTJ.FbxExporter.FbxExporter/Node,UTJ.FbxExporter.FbxExporter/Topology,System.Int32,System.IntPtr,System.Int32)
+   00DD ldloc.s V_6
+   00DF callvirt System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::Dispose()
+   00E4 ldloc.s V_7
+   00E6 callvirt System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector3>::Dispose()
+   00EB ldloc.s V_8
+   00ED callvirt System.Void UTJ.FbxExporter.PinnedArray`1<UnityEngine.Vector2>::Dispose()
+   00F2 ldloc.s V_9
+   00F4 callvirt System.Void UTJ.FbxExporter.PinnedArray`1<System.Int32>::Dispose()
+   00F9 ldnull 
+   00FA stloc.s V_6
+   00FC ldnull 
+   00FD stloc.s V_7
+   00FF ldnull 
+   0100 stloc.s V_8
+   0102 ldnull 
+   0103 stloc.s V_9
+   0105 ldc.i4.1 
+   0106 ret 
+== UTJ.FbxExporter.FbxExporter/Context fbxeCreateContext(UTJ.FbxExporter.FbxExporter/ExportOptions& opt) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeReleaseContext(UTJ.FbxExporter.FbxExporter/Context ctx) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Boolean fbxeCreateScene(UTJ.FbxExporter.FbxExporter/Context ctx, System.String name) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Boolean fbxeWriteAsync(UTJ.FbxExporter.FbxExporter/Context ctx, System.String path, UTJ.FbxExporter.FbxExporter/Format format) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Boolean fbxeIsFinished(UTJ.FbxExporter.FbxExporter/Context ctx) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== UTJ.FbxExporter.FbxExporter/Node fbxeGetRootNode(UTJ.FbxExporter.FbxExporter/Context ctx) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== UTJ.FbxExporter.FbxExporter/Node fbxeFindNodeByName(UTJ.FbxExporter.FbxExporter/Context ctx, System.String name) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== UTJ.FbxExporter.FbxExporter/Node fbxeCreateNode(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node parent, System.String name) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeSetTRS(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node node, UnityEngine.Vector3 t, UnityEngine.Quaternion r, UnityEngine.Vector3 s) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeAddMesh(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node node, System.Int32 num_vertices, System.IntPtr points, System.IntPtr normals, System.IntPtr tangents, System.IntPtr uv, System.IntPtr uv1, System.IntPtr uv2, System.IntPtr colors, System.Int32 materialCount) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeAddMeshSubmesh(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node node, UTJ.FbxExporter.FbxExporter/Topology topology, System.Int32 num_indices, System.IntPtr indices, System.Int32 material) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeAddMeshSkin(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node node, System.IntPtr weights, System.Int32 num_bones, System.IntPtr bones, System.IntPtr bindposes) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeAddMeshBlendShape(UTJ.FbxExporter.FbxExporter/Context ctx, UTJ.FbxExporter.FbxExporter/Node node, System.String name, System.Single weight, System.IntPtr deltaPoints, System.IntPtr deltaNormals, System.IntPtr deltaTangents) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+== System.Void fbxeGenerateTerrainMesh(System.Single[0...,0...] heightmap, System.Int32 width, System.Int32 height, UnityEngine.Vector3 size, System.IntPtr dst_vertices, System.IntPtr dst_normals, System.IntPtr dst_uv, System.IntPtr dst_indices) attrs=Private, Static, HideBySig, PInvokeImpl maxstack=-1
+   <no body>
+  NESTED UTJ.FbxExporter.FbxExporter/Context
+  NESTED UTJ.FbxExporter.FbxExporter/Node
+  NESTED UTJ.FbxExporter.FbxExporter/Format
+  NESTED UTJ.FbxExporter.FbxExporter/SystemUnit
+  NESTED UTJ.FbxExporter.FbxExporter/Topology
+  NESTED UTJ.FbxExporter.FbxExporter/ExportOptions

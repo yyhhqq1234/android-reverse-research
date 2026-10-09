@@ -1,0 +1,567 @@
+// TYPE Assets.Scripts.UI.CUIParticleScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD System.String m_resPath
+  FIELD System.String m_resPathNew
+  FIELD System.Boolean m_isFixScaleToForm
+  FIELD System.Boolean m_isFixScaleToParticleSystem
+  FIELD System.Boolean m_isEndlessPlay
+  FIELD UnityEngine.Renderer[] m_renderers
+  FIELD System.Int32 m_rendererCount
+  FIELD Assets.Scripts.UI.enOrderFixType m_orderFixType
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldsfld System.String::Empty
+   0006 stfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   000B ldarg.0 
+   000C ldsfld System.String::Empty
+   0011 stfld Assets.Scripts.UI.CUIParticleScript::m_resPathNew
+   0016 ldarg.0 
+   0017 ldc.i4.1 
+   0018 stfld Assets.Scripts.UI.CUIParticleScript::m_isEndlessPlay
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0023 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_005d: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.UI.CUIParticleScript::LoadRes()
+   0011 ldarg.0 
+   0012 call System.Void Assets.Scripts.UI.CUIParticleScript::InitializeRenderers()
+   0017 ldarg.0 
+   0018 ldarg.1 
+   0019 call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.UI.CUIParticleScript::m_isFixScaleToForm
+   0024 brfalse IL_002f: ldarg.0
+   0029 ldarg.0 
+   002A call System.Void Assets.Scripts.UI.CUIParticleScript::ResetScale()
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIParticleScript::m_isFixScaleToParticleSystem
+   0035 brfalse IL_0040: ldarg.0
+   003A ldarg.0 
+   003B call System.Void Assets.Scripts.UI.CUIParticleScript::ResetParticleScale()
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0046 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   004B brfalse IL_0056: ldarg.0
+   0050 ldarg.0 
+   0051 callvirt System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0056 ldarg.0 
+   0057 ldc.i4.1 
+   0058 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   005D ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0026: ret
+   000B ldarg.0 
+   000C ldnull 
+   000D stfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0012 ldarg.0 
+   0013 ldnull 
+   0014 stfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   0019 ldarg.0 
+   001A call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   001F ldarg.0 
+   0020 ldc.i4.0 
+   0021 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0026 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIParticleScript::m_isEndlessPlay
+   000C brfalse IL_0023: ldarg.0
+   0011 ldarg.0 
+   0012 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0017 ldc.i4.s 31
+   0019 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   001E br IL_002f: ret
+   0023 ldarg.0 
+   0024 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0029 ldc.i4.0 
+   002A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002F ret 
+== System.Void Appear() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Appear()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIParticleScript::m_isEndlessPlay
+   000C brfalse IL_0022: ldarg.0
+   0011 ldarg.0 
+   0012 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0017 ldc.i4.5 
+   0018 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   001D br IL_002e: ret
+   0022 ldarg.0 
+   0023 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0028 ldc.i4.1 
+   0029 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   002E ret 
+== System.Void SetSortingOrder(System.Int32 sortingOrder) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.UI.CUIComponent::SetSortingOrder(System.Int32)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   000D brtrue IL_0013: ldc.i4.0
+   0012 ret 
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 br IL_0033: ldloc.0
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   0020 ldloc.0 
+   0021 ldelem.ref 
+   0022 ldarg.1 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUIParticleScript::m_orderFixType
+   0029 add 
+   002A callvirt System.Void UnityEngine.Renderer::set_sortingOrder(System.Int32)
+   002F ldloc.0 
+   0030 ldc.i4.1 
+   0031 add 
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIParticleScript::m_rendererCount
+   003A blt IL_001a: ldarg.0
+   003F ret 
+== System.Void InitializeRenderers() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 100
+   0003 newarr UnityEngine.Renderer
+   0008 stfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   000D ldarg.0 
+   000E ldc.i4.0 
+   000F stfld Assets.Scripts.UI.CUIParticleScript::m_rendererCount
+   0014 ldarg.0 
+   0015 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   0020 ldarg.0 
+   0021 ldflda Assets.Scripts.UI.CUIParticleScript::m_rendererCount
+   0026 call System.Void Assets.Scripts.UI.CUIUtility::GetComponentsInChildren<UnityEngine.Renderer>(UnityEngine.GameObject,T[],System.Int32&)
+   002B ret 
+== System.Void ResetScale() attrs=Private, HideBySig maxstack=4
+   0000 ldc.r4 1
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   000B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0010 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0015 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   001A stloc.1 
+   001B ldloca.s V_1
+   001D ldfld UnityEngine.Vector3::x
+   0022 div 
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002F ldloc.0 
+   0030 ldloc.0 
+   0031 ldc.r4 0
+   0036 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   003B callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0040 ret 
+== System.Void ResetParticleScale() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldc.r4 1
+   0011 ret 
+   0012 ldc.r4 1
+   0017 stloc.0 
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   001E callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.RectTransform>()
+   0023 stloc.1 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   002A ldfld Assets.Scripts.UI.CUIFormScript::m_canvasScaler
+   002F callvirt System.Single UnityEngine.UI.CanvasScaler::get_matchWidthOrHeight()
+   0034 ldc.r4 0
+   0039 bne.un IL_0095: ldarg.0
+   003E ldloc.1 
+   003F callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0044 stloc.2 
+   0045 ldloca.s V_2
+   0047 call System.Single UnityEngine.Rect::get_width()
+   004C ldloc.1 
+   004D callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0052 stloc.3 
+   0053 ldloca.s V_3
+   0055 call System.Single UnityEngine.Rect::get_height()
+   005A div 
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0061 ldfld Assets.Scripts.UI.CUIFormScript::m_canvasScaler
+   0066 callvirt UnityEngine.Vector2 UnityEngine.UI.CanvasScaler::get_referenceResolution()
+   006B stloc.s V_4
+   006D ldloca.s V_4
+   006F ldfld UnityEngine.Vector2::x
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   007A ldfld Assets.Scripts.UI.CUIFormScript::m_canvasScaler
+   007F callvirt UnityEngine.Vector2 UnityEngine.UI.CanvasScaler::get_referenceResolution()
+   0084 stloc.s V_5
+   0086 ldloca.s V_5
+   0088 ldfld UnityEngine.Vector2::y
+   008D div 
+   008E div 
+   008F stloc.0 
+   0090 br IL_00af: ldarg.0
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   009B ldfld Assets.Scripts.UI.CUIFormScript::m_canvasScaler
+   00A0 callvirt System.Single UnityEngine.UI.CanvasScaler::get_matchWidthOrHeight()
+   00A5 ldc.r4 1
+   00AA bne.un IL_00af: ldarg.0
+   00AF ldarg.0 
+   00B0 ldarg.0 
+   00B1 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00B6 ldloc.0 
+   00B7 call System.Void Assets.Scripts.UI.CUIParticleScript::InitializeParticleScaler(UnityEngine.GameObject,System.Single)
+   00BC ret 
+== System.Void InitializeParticleScaler(UnityEngine.GameObject gameObject, System.Single scale) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.GameObject::GetComponent<ParticleScaler>()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldnull 
+   0009 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000E brfalse IL_001a: ldloc.0
+   0013 ldarg.1 
+   0014 callvirt !!0 UnityEngine.GameObject::AddComponent<ParticleScaler>()
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldfld ParticleScaler::particleScale
+   0020 ldarg.2 
+   0021 beq IL_003b: ret
+   0026 ldloc.0 
+   0027 ldarg.2 
+   0028 stfld ParticleScaler::particleScale
+   002D ldloc.0 
+   002E ldc.i4.0 
+   002F stfld ParticleScaler::alsoScaleGameobject
+   0034 ldloc.0 
+   0035 ldc.i4.0 
+   0036 callvirt System.Void ParticleScaler::CheckAndApplyScale(System.Boolean)
+   003B ret 
+== System.Void ClearRes() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld Assets.Scripts.UI.CUIParticleScript::m_renderers
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.UI.CUIParticleScript::m_rendererCount
+   000E ldarg.0 
+   000F call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0014 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0019 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   001E ldc.i4.0 
+   001F ble IL_0054: ret
+   0024 ldarg.0 
+   0025 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002F ldc.i4.0 
+   0030 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0035 stloc.0 
+   0036 ldloc.0 
+   0037 ldnull 
+   0038 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003D brfalse IL_0054: ret
+   0042 ldloc.0 
+   0043 ldnull 
+   0044 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0049 ldloc.0 
+   004A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   004F call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   0054 ret 
+== System.Void LoadRes() attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPathNew
+   000D stloc.1 
+   000E ldloc.0 
+   000F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0014 brtrue IL_01c9: ldloc.1
+   0019 ldsfld Assets.Scripts.Framework.GameSettings::ParticleQuality
+   001E ldc.i4.3 
+   001F bne.un IL_005f: ldsfld Assets.Scripts.Framework.SGameRenderQuality Assets.Scripts.Framework.GameSettings::ParticleQuality
+   0024 ldc.i4.5 
+   0025 newarr System.String
+   002A dup 
+   002B ldc.i4.0 
+   002C ldsfld Assets.Scripts.UI.CUIUtility::s_Particle_Dir
+   0031 stelem.ref 
+   0032 dup 
+   0033 ldc.i4.1 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   003A stelem.ref 
+   003B dup 
+   003C ldc.i4.2 
+   003D ldstr /
+   0042 stelem.ref 
+   0043 dup 
+   0044 ldc.i4.3 
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   004B stelem.ref 
+   004C dup 
+   004D ldc.i4.4 
+   004E ldstr _low.prefab
+   0053 stelem.ref 
+   0054 call System.String System.String::Concat(System.String[])
+   0059 stloc.0 
+   005A br IL_0121: call !0 Singleton`1<CResourceManager>::GetInstance()
+   005F ldsfld Assets.Scripts.Framework.GameSettings::ParticleQuality
+   0064 ldc.i4.2 
+   0065 bne.un IL_00a5: ldsfld Assets.Scripts.Framework.SGameRenderQuality Assets.Scripts.Framework.GameSettings::ParticleQuality
+   006A ldc.i4.5 
+   006B newarr System.String
+   0070 dup 
+   0071 ldc.i4.0 
+   0072 ldsfld Assets.Scripts.UI.CUIUtility::s_Particle_Dir
+   0077 stelem.ref 
+   0078 dup 
+   0079 ldc.i4.1 
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0080 stelem.ref 
+   0081 dup 
+   0082 ldc.i4.2 
+   0083 ldstr /
+   0088 stelem.ref 
+   0089 dup 
+   008A ldc.i4.3 
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0091 stelem.ref 
+   0092 dup 
+   0093 ldc.i4.4 
+   0094 ldstr _mid.prefab
+   0099 stelem.ref 
+   009A call System.String System.String::Concat(System.String[])
+   009F stloc.0 
+   00A0 br IL_0121: call !0 Singleton`1<CResourceManager>::GetInstance()
+   00A5 ldsfld Assets.Scripts.Framework.GameSettings::ParticleQuality
+   00AA ldc.i4.1 
+   00AB bne.un IL_00eb: ldc.i4.5
+   00B0 ldc.i4.5 
+   00B1 newarr System.String
+   00B6 dup 
+   00B7 ldc.i4.0 
+   00B8 ldsfld Assets.Scripts.UI.CUIUtility::s_Particle_Dir
+   00BD stelem.ref 
+   00BE dup 
+   00BF ldc.i4.1 
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   00C6 stelem.ref 
+   00C7 dup 
+   00C8 ldc.i4.2 
+   00C9 ldstr /
+   00CE stelem.ref 
+   00CF dup 
+   00D0 ldc.i4.3 
+   00D1 ldarg.0 
+   00D2 ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   00D7 stelem.ref 
+   00D8 dup 
+   00D9 ldc.i4.4 
+   00DA ldstr .prefab
+   00DF stelem.ref 
+   00E0 call System.String System.String::Concat(System.String[])
+   00E5 stloc.0 
+   00E6 br IL_0121: call !0 Singleton`1<CResourceManager>::GetInstance()
+   00EB ldc.i4.5 
+   00EC newarr System.String
+   00F1 dup 
+   00F2 ldc.i4.0 
+   00F3 ldsfld Assets.Scripts.UI.CUIUtility::s_Particle_Dir
+   00F8 stelem.ref 
+   00F9 dup 
+   00FA ldc.i4.1 
+   00FB ldarg.0 
+   00FC ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0101 stelem.ref 
+   0102 dup 
+   0103 ldc.i4.2 
+   0104 ldstr /
+   0109 stelem.ref 
+   010A dup 
+   010B ldc.i4.3 
+   010C ldarg.0 
+   010D ldfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0112 stelem.ref 
+   0113 dup 
+   0114 ldc.i4.4 
+   0115 ldstr _hd.prefab
+   011A stelem.ref 
+   011B call System.String System.String::Concat(System.String[])
+   0120 stloc.0 
+   0121 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0126 ldloc.0 
+   0127 ldtoken UnityEngine.GameObject
+   012C call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0131 ldc.i4.4 
+   0132 ldc.i4.0 
+   0133 ldc.i4.0 
+   0134 ldc.i4.0 
+   0135 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   013A ldfld CResource::m_content
+   013F isinst UnityEngine.GameObject
+   0144 stloc.2 
+   0145 ldloc.2 
+   0146 ldnull 
+   0147 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   014C brfalse IL_01c4: br IL_0296
+   0151 ldarg.0 
+   0152 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0157 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   015C callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   0161 brtrue IL_01c4: br IL_0296
+   0166 ldloc.2 
+   0167 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0)
+   016C stloc.3 
+   016D ldloc.3 
+   016E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0173 ldarg.0 
+   0174 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0179 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   017E callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0183 ldloc.3 
+   0184 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0189 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   018E callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0193 ldloc.3 
+   0194 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0199 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   019E callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   01A3 ldloc.3 
+   01A4 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01A9 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   01AE callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   01B3 ldloc.3 
+   01B4 ldarg.0 
+   01B5 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01BA callvirt System.Int32 UnityEngine.GameObject::get_layer()
+   01BF call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   01C4 br IL_0296: ret
+   01C9 ldloc.1 
+   01CA call System.Boolean System.String::IsNullOrEmpty(System.String)
+   01CF brtrue IL_0296: ret
+   01D4 ldsfld Assets.Scripts.UI.CUIUtility::s_ParticleNew_Dir
+   01D9 ldarg.0 
+   01DA ldfld Assets.Scripts.UI.CUIParticleScript::m_resPathNew
+   01DF ldstr .prefab
+   01E4 call System.String System.String::Concat(System.String,System.String,System.String)
+   01E9 stloc.1 
+   01EA call !0 Singleton`1<CResourceManager>::GetInstance()
+   01EF ldloc.1 
+   01F0 ldtoken UnityEngine.GameObject
+   01F5 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   01FA ldc.i4.4 
+   01FB ldc.i4.0 
+   01FC ldc.i4.0 
+   01FD ldc.i4.0 
+   01FE callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0203 ldfld CResource::m_content
+   0208 isinst UnityEngine.GameObject
+   020D stloc.s V_4
+   020F ldloc.s V_4
+   0211 ldnull 
+   0212 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0217 brfalse IL_0296: ret
+   021C ldarg.0 
+   021D call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0222 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0227 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   022C brtrue IL_0296: ret
+   0231 ldloc.s V_4
+   0233 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0)
+   0238 stloc.s V_5
+   023A ldloc.s V_5
+   023C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0241 ldarg.0 
+   0242 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0247 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   024C callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   0251 ldloc.s V_5
+   0253 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0258 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   025D callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   0262 ldloc.s V_5
+   0264 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0269 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   026E callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   0273 ldloc.s V_5
+   0275 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   027A call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   027F callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   0284 ldloc.s V_5
+   0286 ldarg.0 
+   0287 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   028C callvirt System.Int32 UnityEngine.GameObject::get_layer()
+   0291 call System.Void Assets.Scripts.UI.CUIUtility::SetGameObjectLayer(UnityEngine.GameObject,System.Int32)
+   0296 ret 
+== System.Void LoadRes(System.String resName, System.Boolean isUseNewPath) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldsfld System.String::Empty
+   0012 stfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   0017 ldarg.0 
+   0018 ldsfld System.String::Empty
+   001D stfld Assets.Scripts.UI.CUIParticleScript::m_resPathNew
+   0022 ldarg.2 
+   0023 brfalse IL_0034: ldarg.0
+   0028 ldarg.0 
+   0029 ldarg.1 
+   002A stfld Assets.Scripts.UI.CUIParticleScript::m_resPathNew
+   002F br IL_003b: ldarg.0
+   0034 ldarg.0 
+   0035 ldarg.1 
+   0036 stfld Assets.Scripts.UI.CUIParticleScript::m_resPath
+   003B ldarg.0 
+   003C call System.Void Assets.Scripts.UI.CUIParticleScript::ClearRes()
+   0041 ldarg.0 
+   0042 call System.Void Assets.Scripts.UI.CUIParticleScript::LoadRes()
+   0047 ldarg.0 
+   0048 call System.Void Assets.Scripts.UI.CUIParticleScript::InitializeRenderers()
+   004D ldarg.0 
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0054 callvirt System.Int32 Assets.Scripts.UI.CUIFormScript::GetSortingOrder()
+   0059 callvirt System.Void Assets.Scripts.UI.CUIComponent::SetSortingOrder(System.Int32)
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.UI.CUIParticleScript::m_isFixScaleToForm
+   0064 brfalse IL_006f: ldarg.0
+   0069 ldarg.0 
+   006A call System.Void Assets.Scripts.UI.CUIParticleScript::ResetScale()
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.UI.CUIParticleScript::m_isFixScaleToParticleSystem
+   0075 brfalse IL_0080: ldarg.0
+   007A ldarg.0 
+   007B call System.Void Assets.Scripts.UI.CUIParticleScript::ResetParticleScale()
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0086 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   008B brfalse IL_0096: ret
+   0090 ldarg.0 
+   0091 callvirt System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0096 ret 

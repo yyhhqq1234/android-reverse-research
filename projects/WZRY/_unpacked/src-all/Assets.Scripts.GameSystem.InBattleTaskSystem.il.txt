@@ -1,0 +1,553 @@
+// TYPE Assets.Scripts.GameSystem.InBattleTaskSystem  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String TASK_PREFAB_PATH = UGUI/Form/Battle/Part/Form_Battle_Part_InBattleTask.prefab
+  FIELD System.Int32 taskPanelListNum = 3
+  FIELD System.UInt32 updateDertaThreshold = 300
+  FIELD UnityEngine.GameObject m_inBattleTaskRootObj
+  FIELD Assets.Scripts.UI.CUIFormScript m_Battle_form
+  FIELD Assets.Scripts.GameSystem.InBattleTaskSystem Inst
+  FIELD Assets.Scripts.UI.CUIListScript m_taskListScript
+  FIELD UnityEngine.GameObject m_btnRoot
+  FIELD System.Int32[] m_validTaskListIndex
+  FIELD System.UInt32 m_SumDerteTime
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo> m_TaskDataArr
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.3 
+   0002 newarr System.Int32
+   0007 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   000C ldarg.0 
+   000D newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::.ctor()
+   0012 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0017 ldarg.0 
+   0018 call System.Void System.Object::.ctor()
+   001D ret 
+== System.Void Init(Assets.Scripts.UI.CUIFormScript _battle_form) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   000D ldnull 
+   000E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0013 call System.Void DebugHelper::Assert(System.Boolean)
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   001E ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0023 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0028 ldstr PVPTopRightPanel/PVECooperation
+   002D callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A call System.Void DebugHelper::Assert(System.Boolean)
+   003F ldarg.0 
+   0040 ldstr UGUI/Form/Battle/Part/Form_Battle_Part_InBattleTask.prefab
+   0045 ldstr InBattleTask
+   004A ldloc.0 
+   004B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   0056 ldc.i4.0 
+   0057 call UnityEngine.GameObject Assets.Scripts.GameSystem.CUICommonSystem::LoadUIPrefab(System.String,System.String,UnityEngine.GameObject,Assets.Scripts.UI.CUIFormScript,System.Boolean)
+   005C stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   0061 ldarg.0 
+   0062 stsfld Assets.Scripts.GameSystem.InBattleTaskSystem::Inst
+   0067 ldarg.0 
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   006E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0073 ldstr TaskInfo
+   0078 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   007D callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   0082 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0087 ldarg.0 
+   0088 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   008D ldc.i4.3 
+   008E callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0093 ldarg.0 
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   009A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   009F ldstr ShowHideBtn
+   00A4 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00A9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AE stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   00B3 ldarg.0 
+   00B4 ldc.i4.1 
+   00B5 ldc.i4.0 
+   00B6 call System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::ElementDisplayControl(Assets.Scripts.GameSystem.InBattleTaskSystem/DisplayType,System.Int32)
+   00BB ldarg.0 
+   00BC ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   00C1 ldfld Assets.Scripts.UI.CUIFormScript::m_sgameGraphicRaycaster
+   00C6 ldarg.0 
+   00C7 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   00CC callvirt System.Void SGameGraphicRaycaster::RefreshGameObject(UnityEngine.GameObject)
+   00D1 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00D6 ldc.i4 15920
+   00DB ldarg.0 
+   00DC ldftn System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::OnClickSwitcher(Assets.Scripts.UI.CUIEvent)
+   00E2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00E7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00EC ldc.i4.0 
+   00ED stloc.1 
+   00EE br IL_0100: ldloc.1
+   00F3 ldarg.0 
+   00F4 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   00F9 ldloc.1 
+   00FA ldc.i4.0 
+   00FB stelem.i4 
+   00FC ldloc.1 
+   00FD ldc.i4.1 
+   00FE add 
+   00FF stloc.1 
+   0100 ldloc.1 
+   0101 ldarg.0 
+   0102 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0107 ldlen 
+   0108 conv.i4 
+   0109 blt IL_00f3: ldarg.0
+   010E ldarg.0 
+   010F ldc.i4.0 
+   0110 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   0115 ret 
+== System.Void OnClickSwitcher(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0006 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0011 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0016 callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   001B ldc.i4.0 
+   001C ceq 
+   001E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0023 ret 
+== System.Int32 ReqValidListIndex() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001a: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   000D ldloc.0 
+   000E ldelem.i4 
+   000F brtrue IL_0016: ldloc.0
+   0014 ldloc.0 
+   0015 ret 
+   0016 ldloc.0 
+   0017 ldc.i4.1 
+   0018 add 
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0021 ldlen 
+   0022 conv.i4 
+   0023 blt IL_0007: ldarg.0
+   0028 ldc.i4.3 
+   0029 ret 
+== System.Void SetListIndexFlg(System.Int32 idx, Assets.Scripts.GameSystem.InBattleTaskSystem/ListIdxFlag flg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0007 ldlen 
+   0008 conv.i4 
+   0009 bge IL_0017: ret
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0014 ldarg.1 
+   0015 ldarg.2 
+   0016 stelem.i4 
+   0017 ret 
+== System.Boolean AddOrSetTask(System.UInt32 taskID, System.UInt32 cfgID, System.UInt32 param) attrs=Public, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::TryGetValue(!0,!1&)
+   0010 brfalse IL_0032: ldarg.0
+   0015 ldloc.0 
+   0016 ldc.i4.1 
+   0017 stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::hasChange
+   001C ldloc.0 
+   001D ldarg.3 
+   001E stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::param1
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0029 ldarg.1 
+   002A ldloc.0 
+   002B callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::set_Item(!0,!1)
+   0030 ldc.i4.1 
+   0031 ret 
+   0032 ldarg.0 
+   0033 call System.Int32 Assets.Scripts.GameSystem.InBattleTaskSystem::ReqValidListIndex()
+   0038 ldc.i4.3 
+   0039 beq IL_00c0: ldc.i4.0
+   003E newobj System.Void Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::.ctor()
+   0043 stloc.0 
+   0044 ldloc.0 
+   0045 ldc.i4.1 
+   0046 stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::hasChange
+   004B ldloc.0 
+   004C ldarg.3 
+   004D stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::param1
+   0052 ldloca.s V_1
+   0054 ldarg.2 
+   0055 call System.Boolean ResData.GameDataMgr/BattleTaskDatabin::FindByKey(ResData.ResBattleTaskInfo&,System.UInt32)
+   005A brfalse IL_0077: ldloc.0
+   005F ldloc.0 
+   0060 ldloca.s V_1
+   0062 ldflda ResData.ResBattleTaskInfo::strIdUIShowContent
+   0067 constrained. StringId2
+   006D callvirt System.String System.Object::ToString()
+   0072 stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::content
+   0077 ldloc.0 
+   0078 ldarg.0 
+   0079 call System.Int32 Assets.Scripts.GameSystem.InBattleTaskSystem::ReqValidListIndex()
+   007E stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   0083 ldloc.0 
+   0084 ldarg.0 
+   0085 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   008A ldloc.0 
+   008B ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   0090 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0095 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009A callvirt !!0 UnityEngine.GameObject::GetComponentInChildren<UnityEngine.UI.Text>()
+   009F stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::txtCache
+   00A4 ldarg.0 
+   00A5 ldloc.0 
+   00A6 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   00AB ldc.i4.1 
+   00AC call System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::SetListIndexFlg(System.Int32,Assets.Scripts.GameSystem.InBattleTaskSystem/ListIdxFlag)
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   00B7 ldarg.1 
+   00B8 ldloc.0 
+   00B9 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::Add(!0,!1)
+   00BE ldc.i4.1 
+   00BF ret 
+   00C0 ldc.i4.0 
+   00C1 ret 
+== System.Void RemoveTask(System.UInt32 taskID) attrs=Public, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::TryGetValue(!0,!1&)
+   0010 brfalse IL_002f: ret
+   0015 ldarg.0 
+   0016 ldloc.0 
+   0017 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   001C ldc.i4.0 
+   001D call System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::SetListIndexFlg(System.Int32,Assets.Scripts.GameSystem.InBattleTaskSystem/ListIdxFlag)
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0028 ldarg.1 
+   0029 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::Remove(!0)
+   002E pop 
+   002F ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   000A brfalse IL_0189: ret
+   000F ldarg.0 
+   0010 dup 
+   0011 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   0016 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   001B callvirt System.UInt32 Assets.Scripts.Framework.FrameSynchr::get_FrameDelta()
+   0020 add 
+   0021 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   002C ldc.i4 300
+   0031 blt.un IL_0189: ret
+   0036 ldarg.0 
+   0037 dup 
+   0038 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   003D ldc.i4 300
+   0042 sub 
+   0043 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   004E callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::GetEnumerator()
+   0053 stloc.1 
+   0054 br IL_00ee: ldloca.s V_1
+   0059 ldloca.s V_1
+   005B call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Current()
+   0060 stloc.0 
+   0061 ldloca.s V_0
+   0063 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   0068 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::hasChange
+   006D brfalse IL_00ee: ldloca.s V_1
+   0072 ldloca.s V_0
+   0074 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   0079 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::isHide
+   007E brfalse IL_009b: ldarg.0
+   0083 ldarg.0 
+   0084 ldc.i4.5 
+   0085 ldloca.s V_0
+   0087 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   008C ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   0091 call System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::ElementDisplayControl(Assets.Scripts.GameSystem.InBattleTaskSystem/DisplayType,System.Int32)
+   0096 br IL_00ae: ldloca.s V_0
+   009B ldarg.0 
+   009C ldc.i4.4 
+   009D ldloca.s V_0
+   009F call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   00A4 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::taskInListIndex
+   00A9 call System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::ElementDisplayControl(Assets.Scripts.GameSystem.InBattleTaskSystem/DisplayType,System.Int32)
+   00AE ldloca.s V_0
+   00B0 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   00B5 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::txtCache
+   00BA ldloca.s V_0
+   00BC call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   00C1 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::content
+   00C6 ldloca.s V_0
+   00C8 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   00CD ldfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::param1
+   00D2 box System.UInt32
+   00D7 call System.String System.String::Format(System.String,System.Object)
+   00DC callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00E1 ldloca.s V_0
+   00E3 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Value()
+   00E8 ldc.i4.0 
+   00E9 stfld Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo::hasChange
+   00EE ldloca.s V_1
+   00F0 call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::MoveNext()
+   00F5 brtrue IL_0059: ldloca.s V_1
+   00FA leave IL_010d: ldc.i4.0
+   00FF ldloca.s V_1
+   0101 constrained. System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>
+   0107 callvirt System.Void System.IDisposable::Dispose()
+   010C endfinally 
+   010D ldc.i4.0 
+   010E stloc.2 
+   010F br IL_0152: ldloc.2
+   0114 ldarg.0 
+   0115 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   011A ldloc.2 
+   011B ldelem.i4 
+   011C brtrue IL_014e: ldloc.2
+   0121 ldarg.0 
+   0122 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0127 ldloc.2 
+   0128 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   012D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0132 brfalse IL_014e: ldloc.2
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   013D ldloc.2 
+   013E callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0143 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0148 ldc.i4.0 
+   0149 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   014E ldloc.2 
+   014F ldc.i4.1 
+   0150 add 
+   0151 stloc.2 
+   0152 ldloc.2 
+   0153 ldarg.0 
+   0154 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0159 ldlen 
+   015A conv.i4 
+   015B blt IL_0114: ldarg.0
+   0160 ldarg.0 
+   0161 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   0166 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   016B brfalse IL_0189: ret
+   0170 ldarg.0 
+   0171 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   0176 ldarg.0 
+   0177 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   017C callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::get_Count()
+   0181 ldc.i4.0 
+   0182 cgt 
+   0184 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0189 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 15920
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.InBattleTaskSystem::OnClickSwitcher(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B ldnull 
+   001C stsfld Assets.Scripts.GameSystem.InBattleTaskSystem::Inst
+   0021 ldarg.0 
+   0022 ldnull 
+   0023 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_Battle_form
+   0028 ldarg.0 
+   0029 ldnull 
+   002A stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   002F ldarg.0 
+   0030 ldnull 
+   0031 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0036 ldarg.0 
+   0037 ldnull 
+   0038 stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_TaskDataArr
+   0043 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo>::Clear()
+   0048 ldc.i4.0 
+   0049 stloc.0 
+   004A br IL_005c: ldloc.0
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0055 ldloc.0 
+   0056 ldc.i4.0 
+   0057 stelem.i4 
+   0058 ldloc.0 
+   0059 ldc.i4.1 
+   005A add 
+   005B stloc.0 
+   005C ldloc.0 
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_validTaskListIndex
+   0063 ldlen 
+   0064 conv.i4 
+   0065 blt IL_004f: ldarg.0
+   006A ldarg.0 
+   006B ldc.i4.0 
+   006C stfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_SumDerteTime
+   0071 ret 
+== System.Void ElementDisplayControl(Assets.Scripts.GameSystem.InBattleTaskSystem/DisplayType type, System.Int32 param) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brtrue IL_0033: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_inBattleTaskRootObj
+   0017 ldnull 
+   0018 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001D brtrue IL_0033: ret
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0034: ldarg.0
+   0033 ret 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   003A callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   003F stloc.0 
+   0040 ldarg.1 
+   0041 ldc.i4.1 
+   0042 bne.un IL_0097: ldarg.1
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   004D ldc.i4.0 
+   004E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0053 ldc.i4.0 
+   0054 stloc.1 
+   0055 br IL_008b: ldloc.1
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0060 ldloc.1 
+   0061 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0066 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   006B brfalse IL_0087: ldloc.1
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0076 ldloc.1 
+   0077 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   007C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0081 ldc.i4.0 
+   0082 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0087 ldloc.1 
+   0088 ldc.i4.1 
+   0089 add 
+   008A stloc.1 
+   008B ldloc.1 
+   008C ldloc.0 
+   008D blt IL_005a: ldarg.0
+   0092 br IL_018a: ret
+   0097 ldarg.1 
+   0098 brtrue IL_00ed: ldarg.1
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   00A3 ldc.i4.1 
+   00A4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00A9 ldc.i4.0 
+   00AA stloc.2 
+   00AB br IL_00e1: ldloc.2
+   00B0 ldarg.0 
+   00B1 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   00B6 ldloc.2 
+   00B7 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   00BC call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00C1 brfalse IL_00dd: ldloc.2
+   00C6 ldarg.0 
+   00C7 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   00CC ldloc.2 
+   00CD callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   00D2 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00D7 ldc.i4.1 
+   00D8 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00DD ldloc.2 
+   00DE ldc.i4.1 
+   00DF add 
+   00E0 stloc.2 
+   00E1 ldloc.2 
+   00E2 ldloc.0 
+   00E3 blt IL_00b0: ldarg.0
+   00E8 br IL_018a: ret
+   00ED ldarg.1 
+   00EE ldc.i4.3 
+   00EF bne.un IL_0105: ldarg.1
+   00F4 ldarg.0 
+   00F5 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   00FA ldc.i4.0 
+   00FB call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0100 br IL_018a: ret
+   0105 ldarg.1 
+   0106 ldc.i4.2 
+   0107 bne.un IL_011d: ldarg.1
+   010C ldarg.0 
+   010D ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_btnRoot
+   0112 ldc.i4.1 
+   0113 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0118 br IL_018a: ret
+   011D ldarg.1 
+   011E ldc.i4.4 
+   011F bne.un IL_0156: ldarg.1
+   0124 ldarg.0 
+   0125 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   012A ldarg.2 
+   012B callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0130 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0135 brfalse IL_0151: br IL_018a
+   013A ldarg.0 
+   013B ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0140 ldarg.2 
+   0141 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0146 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   014B ldc.i4.1 
+   014C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0151 br IL_018a: ret
+   0156 ldarg.1 
+   0157 ldc.i4.5 
+   0158 bne.un IL_018a: ret
+   015D ldarg.0 
+   015E ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0163 ldarg.2 
+   0164 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0169 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   016E brfalse IL_018a: ret
+   0173 ldarg.0 
+   0174 ldfld Assets.Scripts.GameSystem.InBattleTaskSystem::m_taskListScript
+   0179 ldarg.2 
+   017A callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   017F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0184 ldc.i4.0 
+   0185 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   018A ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 
+  NESTED Assets.Scripts.GameSystem.InBattleTaskSystem/DisplayType
+  NESTED Assets.Scripts.GameSystem.InBattleTaskSystem/ListIdxFlag
+  NESTED Assets.Scripts.GameSystem.InBattleTaskSystem/TaskDataInfo

@@ -1,0 +1,4331 @@
+// TYPE Utility  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.UInt32 CODE_VERSION_LEN = 20
+  FIELD System.UInt32 RES_VERSION_LEN = 10
+  FIELD System.Int32 MIN_EN_NAME_LEN
+  FIELD System.Int32 MAX_EN_NAME_LEN
+  FIELD System.String md5Salt = j9cWiS6lPjw4g
+  FIELD System.UInt32 s_daySecond
+  FIELD System.Int32 ONE_DAY_SEC = 86400
+  FIELD System.Int64 UTC_OFFSET_LOCAL = 28800
+  FIELD System.Int64 UTCTICK_PER_SECONDS = 10000000
+  FIELD System.UInt64[] _DW
+  FIELD System.Int32 CHINESE_CHAR_START
+  FIELD System.Int32 CHINESE_CHAR_END
+  FIELD System.Char[] s_ban_chars
+  FIELD System.Int32[] arabic
+  FIELD System.String[] roman
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Int32 TimeToFrame(System.Single time) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Single UnityEngine.Time::get_fixedDeltaTime()
+   0006 div 
+   0007 conv.r8 
+   0008 call System.Double System.Math::Ceiling(System.Double)
+   000D conv.i4 
+   000E ret 
+== System.Single FrameToTime(System.Int32 frame) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 conv.r4 
+   0002 call System.Single UnityEngine.Time::get_fixedDeltaTime()
+   0007 mul 
+   0008 ret 
+== UnityEngine.Vector3 GetGameObjectSize(UnityEngine.GameObject obj) attrs=Public, Static, HideBySig maxstack=3
+   0000 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Renderer>()
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_002b: ldarg.0
+   0017 ldarg.0 
+   0018 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Renderer>()
+   001D callvirt UnityEngine.Bounds UnityEngine.Renderer::get_bounds()
+   0022 stloc.1 
+   0023 ldloca.s V_1
+   0025 call UnityEngine.Vector3 UnityEngine.Bounds::get_size()
+   002A stloc.0 
+   002B ldarg.0 
+   002C callvirt !!0[] UnityEngine.GameObject::GetComponentsInChildren<UnityEngine.Renderer>()
+   0031 stloc.3 
+   0032 ldc.i4.0 
+   0033 stloc.s V_4
+   0035 br IL_00a4: ldloc.s V_4
+   003A ldloc.3 
+   003B ldloc.s V_4
+   003D ldelem.ref 
+   003E stloc.2 
+   003F ldloc.2 
+   0040 callvirt UnityEngine.Bounds UnityEngine.Renderer::get_bounds()
+   0045 stloc.s V_6
+   0047 ldloca.s V_6
+   0049 call UnityEngine.Vector3 UnityEngine.Bounds::get_size()
+   004E stloc.s V_5
+   0050 ldloca.s V_0
+   0052 ldloca.s V_0
+   0054 ldfld UnityEngine.Vector3::x
+   0059 ldloca.s V_5
+   005B ldfld UnityEngine.Vector3::x
+   0060 call System.Single System.Math::Max(System.Single,System.Single)
+   0065 stfld UnityEngine.Vector3::x
+   006A ldloca.s V_0
+   006C ldloca.s V_0
+   006E ldfld UnityEngine.Vector3::y
+   0073 ldloca.s V_5
+   0075 ldfld UnityEngine.Vector3::y
+   007A call System.Single System.Math::Max(System.Single,System.Single)
+   007F stfld UnityEngine.Vector3::y
+   0084 ldloca.s V_0
+   0086 ldloca.s V_0
+   0088 ldfld UnityEngine.Vector3::z
+   008D ldloca.s V_5
+   008F ldfld UnityEngine.Vector3::z
+   0094 call System.Single System.Math::Max(System.Single,System.Single)
+   0099 stfld UnityEngine.Vector3::z
+   009E ldloc.s V_4
+   00A0 ldc.i4.1 
+   00A1 add 
+   00A2 stloc.s V_4
+   00A4 ldloc.s V_4
+   00A6 ldloc.3 
+   00A7 ldlen 
+   00A8 conv.i4 
+   00A9 blt IL_003a: ldloc.3
+   00AE ldloc.0 
+   00AF ret 
+== UnityEngine.GameObject FindChild(UnityEngine.GameObject p, System.String path) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0032: ldnull
+   000C ldarg.0 
+   000D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0012 ldarg.1 
+   0013 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A ldnull 
+   001B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0020 brfalse IL_0030: ldnull
+   0025 ldloc.0 
+   0026 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002B br IL_0031: ret
+   0030 ldnull 
+   0031 ret 
+   0032 ldnull 
+   0033 ret 
+== UnityEngine.GameObject FindChildSafe(UnityEngine.GameObject p, System.String path) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0006 brfalse IL_002a: ldnull
+   000B ldarg.0 
+   000C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0011 ldarg.1 
+   0012 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   001E brfalse IL_002a: ldnull
+   0023 ldloc.0 
+   0024 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0029 ret 
+   002A ldnull 
+   002B ret 
+== T GetComponetInChild(UnityEngine.GameObject p, System.String path) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_001d: ldnull
+   000C ldarg.0 
+   000D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_0024: ldarg.0
+   001D ldnull 
+   001E unbox.any T
+   0023 ret 
+   0024 ldarg.0 
+   0025 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002A ldarg.1 
+   002B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0030 stloc.0 
+   0031 ldloc.0 
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_0044: ldloc.0
+   003D ldnull 
+   003E unbox.any T
+   0043 ret 
+   0044 ldloc.0 
+   0045 callvirt !!0 UnityEngine.Component::GetComponent<T>()
+   004A ret 
+== UnityEngine.GameObject FindChildByName(UnityEngine.Component component, System.String childpath) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0006 ldarg.1 
+   0007 call UnityEngine.GameObject Utility::FindChildByName(UnityEngine.GameObject,System.String)
+   000C ret 
+== UnityEngine.GameObject FindChildByName(UnityEngine.GameObject root, System.String childpath) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldc.i4.1 
+   0004 newarr System.Char
+   0009 dup 
+   000A ldc.i4.0 
+   000B ldc.i4.s 47
+   000D stelem.i2 
+   000E callvirt System.String[] System.String::Split(System.Char[])
+   0013 stloc.1 
+   0014 ldarg.0 
+   0015 stloc.2 
+   0016 ldloc.1 
+   0017 stloc.s V_4
+   0019 ldc.i4.0 
+   001A stloc.s V_5
+   001C br IL_00ab: ldloc.s V_5
+   0021 ldloc.s V_4
+   0023 ldloc.s V_5
+   0025 ldelem.ref 
+   0026 stloc.3 
+   0027 ldc.i4.0 
+   0028 stloc.s V_6
+   002A ldloc.2 
+   002B callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0030 callvirt System.Collections.IEnumerator UnityEngine.Transform::GetEnumerator()
+   0035 stloc.s V_8
+   0037 br IL_0071: ldloc.s V_8
+   003C ldloc.s V_8
+   003E callvirt System.Object System.Collections.IEnumerator::get_Current()
+   0043 castclass UnityEngine.Transform
+   0048 stloc.s V_7
+   004A ldloc.s V_7
+   004C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0051 callvirt System.String UnityEngine.Object::get_name()
+   0056 ldloc.3 
+   0057 call System.Boolean System.String::op_Equality(System.String,System.String)
+   005C brfalse IL_0071: ldloc.s V_8
+   0061 ldloc.s V_7
+   0063 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0068 stloc.2 
+   0069 ldc.i4.1 
+   006A stloc.s V_6
+   006C leave IL_007d: leave IL_0099
+   0071 ldloc.s V_8
+   0073 callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   0078 brtrue IL_003c: ldloc.s V_8
+   007D leave IL_0099: ldloc.s V_6
+   0082 ldloc.s V_8
+   0084 isinst System.IDisposable
+   0089 dup 
+   008A stloc.s V_9
+   008C brfalse IL_0098: endfinally
+   0091 ldloc.s V_9
+   0093 callvirt System.Void System.IDisposable::Dispose()
+   0098 endfinally 
+   0099 ldloc.s V_6
+   009B brtrue IL_00a5: ldloc.s V_5
+   00A0 br IL_00b6: ldloc.2
+   00A5 ldloc.s V_5
+   00A7 ldc.i4.1 
+   00A8 add 
+   00A9 stloc.s V_5
+   00AB ldloc.s V_5
+   00AD ldloc.s V_4
+   00AF ldlen 
+   00B0 conv.i4 
+   00B1 blt IL_0021: ldloc.s V_4
+   00B6 ldloc.2 
+   00B7 ldarg.0 
+   00B8 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00BD brfalse IL_00c4: ldloc.0
+   00C2 ldloc.2 
+   00C3 stloc.0 
+   00C4 ldloc.0 
+   00C5 ret 
+== System.Void SetSpiriteCamp(CPooledGameObjectScript obj, System.Boolean IsHostView, System.String name, System.String friend, System.String enemy) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 brtrue IL_0007: ldarg.0
+   0006 ret 
+   0007 ldarg.0 
+   0008 ldfld CPooledGameObjectScript::Go
+   000D ldarg.2 
+   000E call T Utility::GetComponetInChild<Sprite3D>(UnityEngine.GameObject,System.String)
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 ldnull 
+   0016 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001B brfalse IL_0062: ret
+   0020 ldarg.1 
+   0021 brfalse IL_002c: ldarg.s enemy
+   0026 ldarg.3 
+   0027 br IL_002e: stloc.1
+   002C ldarg.s enemy
+   002E stloc.1 
+   002F ldloc.0 
+   0030 callvirt System.String Sprite3D::get_spriteName()
+   0035 ldloc.1 
+   0036 callvirt System.Boolean System.String::Contains(System.String)
+   003B brtrue IL_0062: ret
+   0040 ldarg.1 
+   0041 brtrue IL_004c: ldarg.s enemy
+   0046 ldarg.3 
+   0047 br IL_004e: stloc.2
+   004C ldarg.s enemy
+   004E stloc.2 
+   004F ldloc.0 
+   0050 ldloc.0 
+   0051 callvirt System.String Sprite3D::get_spriteName()
+   0056 ldloc.2 
+   0057 ldloc.1 
+   0058 callvirt System.String System.String::Replace(System.String,System.String)
+   005D callvirt System.Void Sprite3D::set_spriteName(System.String)
+   0062 ret 
+== System.Void SetChildrenActive(UnityEngine.GameObject root, System.Boolean active) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0006 callvirt System.Collections.IEnumerator UnityEngine.Transform::GetEnumerator()
+   000B stloc.1 
+   000C br IL_003a: ldloc.1
+   0011 ldloc.1 
+   0012 callvirt System.Object System.Collections.IEnumerator::get_Current()
+   0017 castclass UnityEngine.Transform
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldarg.0 
+   001F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0024 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0029 brfalse IL_003a: ldloc.1
+   002E ldloc.0 
+   002F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0034 ldarg.1 
+   0035 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003A ldloc.1 
+   003B callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   0040 brtrue IL_0011: ldloc.1
+   0045 leave IL_005e: ret
+   004A ldloc.1 
+   004B isinst System.IDisposable
+   0050 dup 
+   0051 stloc.2 
+   0052 brfalse IL_005d: endfinally
+   0057 ldloc.2 
+   0058 callvirt System.Void System.IDisposable::Dispose()
+   005D endfinally 
+   005E ret 
+== System.Void StringToByteArray(System.String str, System.Byte[]& buffer) attrs=Public, Static, HideBySig maxstack=4
+   0000 call System.Text.Encoding System.Text.Encoding::get_Default()
+   0005 ldarg.0 
+   0006 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldarg.1 
+   000E ldind.ref 
+   000F ldloc.0 
+   0010 ldlen 
+   0011 conv.i4 
+   0012 ldarg.1 
+   0013 ldind.ref 
+   0014 ldlen 
+   0015 conv.i4 
+   0016 call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   001B call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+   0020 ldarg.1 
+   0021 ldind.ref 
+   0022 ldarg.1 
+   0023 ldind.ref 
+   0024 ldlen 
+   0025 conv.i4 
+   0026 ldc.i4.1 
+   0027 sub 
+   0028 ldc.i4.0 
+   0029 stelem.i1 
+   002A ret 
+== System.Void StringToSByteArray(System.String str, System.SByte[]& buffer) attrs=Public, Static, HideBySig maxstack=4
+   0000 call System.Text.Encoding System.Text.Encoding::get_Default()
+   0005 ldarg.0 
+   0006 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   000B stloc.0 
+   000C ldloc.0 
+   000D call System.SByte[] Utility::ByteArrToSByte(System.Byte[])
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 ldarg.1 
+   0015 ldind.ref 
+   0016 ldloc.1 
+   0017 ldlen 
+   0018 conv.i4 
+   0019 ldarg.1 
+   001A ldind.ref 
+   001B ldlen 
+   001C conv.i4 
+   001D call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   0022 call System.Void System.Array::Copy(System.Array,System.Array,System.Int32)
+   0027 ldarg.1 
+   0028 ldind.ref 
+   0029 ldarg.1 
+   002A ldind.ref 
+   002B ldlen 
+   002C conv.i4 
+   002D ldc.i4.1 
+   002E sub 
+   002F ldc.i4.0 
+   0030 stelem.i1 
+   0031 ret 
+== System.String UTF8Convert(System.String str) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ret 
+== System.String UTF8Convert(System.Byte[] p) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarga.s p
+   0002 call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   0007 ret 
+== System.Byte[] BytesConvert(System.String s) attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Text.Encoding System.Text.Encoding::get_UTF8()
+   0005 ldarg.0 
+   0006 ldc.i4.1 
+   0007 newarr System.Char
+   000C callvirt System.String System.String::TrimEnd(System.Char[])
+   0011 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   0016 ret 
+== System.SByte[] ByteArrToSByte(System.Byte[] p) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldlen 
+   0002 conv.i4 
+   0003 newarr System.SByte
+   0008 stloc.0 
+   0009 ldc.i4.0 
+   000A stloc.1 
+   000B br IL_001b: ldloc.1
+   0010 ldloc.0 
+   0011 ldloc.1 
+   0012 ldarg.0 
+   0013 ldloc.1 
+   0014 ldelem.u1 
+   0015 conv.i1 
+   0016 stelem.i1 
+   0017 ldloc.1 
+   0018 ldc.i4.1 
+   0019 add 
+   001A stloc.1 
+   001B ldloc.1 
+   001C ldarg.0 
+   001D ldlen 
+   001E conv.i4 
+   001F blt IL_0010: ldloc.0
+   0024 ldloc.0 
+   0025 ret 
+== System.Byte[] SByteArrToByte(System.SByte[] p) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldlen 
+   0002 conv.i4 
+   0003 newarr System.Byte
+   0008 stloc.0 
+   0009 ldc.i4.0 
+   000A stloc.1 
+   000B br IL_001b: ldloc.1
+   0010 ldloc.0 
+   0011 ldloc.1 
+   0012 ldarg.0 
+   0013 ldloc.1 
+   0014 ldelem.i1 
+   0015 conv.u1 
+   0016 stelem.i1 
+   0017 ldloc.1 
+   0018 ldc.i4.1 
+   0019 add 
+   001A stloc.1 
+   001B ldloc.1 
+   001C ldarg.0 
+   001D ldlen 
+   001E conv.i4 
+   001F blt IL_0010: ldloc.0
+   0024 ldloc.0 
+   0025 ret 
+== System.String UTF8Convert(System.SByte[] p, System.Int32 len) attrs=Public, Static, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 call System.Byte[] Utility::SByteArrToByte(System.SByte[])
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 call System.String Utility::UTF8Convert(System.Byte[])
+   000D ret 
+== System.DateTime ToUtcTime(System.Int64 secondsFromUtcStart) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 10000000
+   0016 conv.i8 
+   0017 mul 
+   0018 call System.DateTime System.DateTime::AddTicks(System.Int64)
+   001D ret 
+== System.DateTime ToUtcTime2Local(System.Int64 secondsFromUtcStart) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 28800
+   0016 conv.i8 
+   0017 add 
+   0018 ldc.i4 10000000
+   001D conv.i8 
+   001E mul 
+   001F call System.DateTime System.DateTime::AddTicks(System.Int64)
+   0024 ret 
+== System.DateTime ToUtcTime2Local(System.Int64 secondsFromUtcStart, System.Double ms) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0006 stloc.0 
+   0007 ldloca.s V_0
+   0009 ldarg.1 
+   000A call System.DateTime System.DateTime::AddMilliseconds(System.Double)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ret 
+== System.UInt32 ToUtcSeconds(System.DateTime dateTime) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldarga.s dateTime
+   0010 ldloc.0 
+   0011 call System.Int32 System.DateTime::CompareTo(System.DateTime)
+   0016 ldc.i4.0 
+   0017 bge IL_001e: ldarg.0
+   001C ldc.i4.0 
+   001D ret 
+   001E ldarg.0 
+   001F ldloc.0 
+   0020 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   0025 stloc.1 
+   0026 ldloca.s V_1
+   0028 call System.Double System.TimeSpan::get_TotalSeconds()
+   002D ldc.r8 28800
+   0036 ble.un IL_0052: ldc.i4.0
+   003B ldarg.0 
+   003C ldloc.0 
+   003D call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   0042 stloc.2 
+   0043 ldloca.s V_2
+   0045 call System.Double System.TimeSpan::get_TotalSeconds()
+   004A conv.u4 
+   004B ldc.i4 28800
+   0050 sub 
+   0051 ret 
+   0052 ldc.i4.0 
+   0053 ret 
+== System.String GetUtcToLocalTimeStringFormat(System.UInt64 secondsFromUtcStart, System.String format) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0006 stloc.0 
+   0007 ldloca.s V_0
+   0009 ldarg.1 
+   000A call System.String System.DateTime::ToString(System.String)
+   000F ret 
+== System.UInt32 GetLocalTimeFormattedStrToUtc(System.String localTimeFormattedStr) attrs=Public, Static, HideBySig maxstack=9
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldc.i4.0 
+   0004 ldc.i4.4 
+   0005 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   000A call System.Int32 System.Convert::ToInt32(System.String)
+   000F ldarg.0 
+   0010 ldc.i4.4 
+   0011 ldc.i4.2 
+   0012 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0017 call System.Int32 System.Convert::ToInt32(System.String)
+   001C ldarg.0 
+   001D ldc.i4.6 
+   001E ldc.i4.2 
+   001F callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0024 call System.Int32 System.Convert::ToInt32(System.String)
+   0029 ldarg.0 
+   002A ldc.i4.8 
+   002B ldc.i4.2 
+   002C callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0031 call System.Int32 System.Convert::ToInt32(System.String)
+   0036 ldarg.0 
+   0037 ldc.i4.s 10
+   0039 ldc.i4.2 
+   003A callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   003F call System.Int32 System.Convert::ToInt32(System.String)
+   0044 ldarg.0 
+   0045 ldc.i4.s 12
+   0047 ldc.i4.2 
+   0048 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   004D call System.Int32 System.Convert::ToInt32(System.String)
+   0052 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   0057 ldloc.0 
+   0058 call System.UInt32 Utility::ToUtcSeconds(System.DateTime)
+   005D ret 
+== System.UInt32 GetGlobalRefreshTimeSeconds() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldloca.s V_0
+   0002 ldc.i4.s 10
+   0004 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   0009 pop 
+   000A ldloca.s V_0
+   000C ldfld ResData.ResGlobalInfo::dwConfValue
+   0011 stloc.1 
+   0012 ldloc.1 
+   0013 ldc.i4.s 100
+   0015 div 
+   0016 call System.Int32 Utility::Hours2Second(System.Int32)
+   001B ldloc.1 
+   001C ldc.i4.s 100
+   001E rem 
+   001F call System.Int32 Utility::Minutes2Seconds(System.Int32)
+   0024 add 
+   0025 stloc.2 
+   0026 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002B conv.i8 
+   002C call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0031 stloc.3 
+   0032 ldloca.s V_4
+   0034 ldloca.s V_3
+   0036 call System.Int32 System.DateTime::get_Year()
+   003B ldloca.s V_3
+   003D call System.Int32 System.DateTime::get_Month()
+   0042 ldloca.s V_3
+   0044 call System.Int32 System.DateTime::get_Day()
+   0049 ldc.i4.0 
+   004A ldc.i4.0 
+   004B ldc.i4.0 
+   004C ldc.i4.1 
+   004D call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)
+   0052 ldloca.s V_4
+   0054 ldloc.2 
+   0055 conv.r8 
+   0056 call System.DateTime System.DateTime::AddSeconds(System.Double)
+   005B stloc.s V_5
+   005D ldloc.s V_5
+   005F call System.UInt32 Utility::ToUtcSeconds(System.DateTime)
+   0064 ret 
+== System.UInt32 GetWeekStartTimeSeconds() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 conv.i8 
+   0006 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   000B stloc.0 
+   000C ldloc.0 
+   000D call enSgameDayOfWeek DateTimeExtension::GetDayOfWeek(System.DateTime)
+   0012 stloc.1 
+   0013 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0018 call System.UInt32 Utility::GetDayStartTimeSeconds(System.UInt32)
+   001D stloc.2 
+   001E ldloc.2 
+   001F ldloc.1 
+   0020 ldc.i4.1 
+   0021 sub 
+   0022 ldc.i4 86400
+   0027 mul 
+   0028 sub 
+   0029 ret 
+== System.Int32 GetNextGlobalRefreshTimeSeconds() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldc.i4.s 10
+   0004 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   0009 pop 
+   000A ldloca.s V_0
+   000C ldfld ResData.ResGlobalInfo::dwConfValue
+   0011 stloc.1 
+   0012 ldloc.1 
+   0013 ldc.i4.s 100
+   0015 div 
+   0016 call System.Int32 Utility::Hours2Second(System.Int32)
+   001B ldloc.1 
+   001C ldc.i4.s 100
+   001E rem 
+   001F call System.Int32 Utility::Minutes2Seconds(System.Int32)
+   0024 add 
+   0025 stloc.2 
+   0026 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002B stloc.3 
+   002C ldloc.3 
+   002D conv.i8 
+   002E call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0033 stloc.s V_4
+   0035 ldloca.s V_4
+   0037 call System.TimeSpan System.DateTime::get_TimeOfDay()
+   003C stloc.s V_6
+   003E ldloca.s V_6
+   0040 call System.Double System.TimeSpan::get_TotalSeconds()
+   0045 call System.Int32 System.Convert::ToInt32(System.Double)
+   004A stloc.s V_5
+   004C ldloc.2 
+   004D ldloc.s V_5
+   004F sub 
+   0050 ldc.i4.0 
+   0051 ble IL_005d: ldloc.3
+   0056 ldloc.3 
+   0057 ldloc.2 
+   0058 ldloc.s V_5
+   005A sub 
+   005B add 
+   005C ret 
+   005D ldloc.3 
+   005E ldloc.2 
+   005F ldloc.s V_5
+   0061 sub 
+   0062 ldc.i4 86400
+   0067 add 
+   0068 add 
+   0069 ret 
+== System.DateTime StrToDateTime(System.String dateString, System.String format) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldstr zh-CN
+   0005 newobj System.Void System.Globalization.CultureInfo::.ctor(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C callvirt System.Globalization.DateTimeFormatInfo System.Globalization.CultureInfo::get_DateTimeFormat()
+   0011 stloc.1 
+   0012 ldarg.0 
+   0013 ldarg.1 
+   0014 ldloc.1 
+   0015 ldc.i4.0 
+   0016 ldloca.s V_2
+   0018 call System.Boolean System.DateTime::TryParseExact(System.String,System.String,System.IFormatProvider,System.Globalization.DateTimeStyles,System.DateTime&)
+   001D brfalse IL_0024: ldc.i4 1970
+   0022 ldloc.2 
+   0023 ret 
+   0024 ldc.i4 1970
+   0029 ldc.i4.1 
+   002A ldc.i4.1 
+   002B ldc.i4.0 
+   002C ldc.i4.0 
+   002D ldc.i4.0 
+   002E ldc.i4.1 
+   002F newobj System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)
+   0034 ret 
+== System.UInt32 GetLatestGlobalRefreshTimeSeconds() attrs=Public, Static, HideBySig maxstack=2
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 stloc.0 
+   0006 call System.UInt32 Utility::GetGlobalRefreshTimeSeconds()
+   000B stloc.1 
+   000C ldloc.0 
+   000D conv.i8 
+   000E ldloc.1 
+   000F conv.u8 
+   0010 blt IL_0017: ldloc.1
+   0015 ldloc.1 
+   0016 ret 
+   0017 ldloc.1 
+   0018 ldc.i4 86400
+   001D sub 
+   001E ret 
+== System.UInt32 GetTodayStartTimeSeconds() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0005 conv.i8 
+   0006 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   000B stloc.0 
+   000C ldloca.s V_1
+   000E ldloca.s V_0
+   0010 call System.Int32 System.DateTime::get_Year()
+   0015 ldloca.s V_0
+   0017 call System.Int32 System.DateTime::get_Month()
+   001C ldloca.s V_0
+   001E call System.Int32 System.DateTime::get_Day()
+   0023 ldc.i4.0 
+   0024 ldc.i4.0 
+   0025 ldc.i4.0 
+   0026 ldc.i4.1 
+   0027 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)
+   002C ldloc.1 
+   002D call System.UInt32 Utility::ToUtcSeconds(System.DateTime)
+   0032 ret 
+== System.UInt32 GetDayStartTimeSeconds(System.UInt32 utcTimeSec) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 conv.u8 
+   0002 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloca.s V_0
+   000C call System.Int32 System.DateTime::get_Year()
+   0011 ldloca.s V_0
+   0013 call System.Int32 System.DateTime::get_Month()
+   0018 ldloca.s V_0
+   001A call System.Int32 System.DateTime::get_Day()
+   001F ldc.i4.0 
+   0020 ldc.i4.0 
+   0021 ldc.i4.0 
+   0022 ldc.i4.1 
+   0023 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)
+   0028 ldloc.1 
+   0029 call System.UInt32 Utility::ToUtcSeconds(System.DateTime)
+   002E ret 
+== System.UInt32 GetNewDayDeltaSec(System.Int32 nowSec) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 conv.i8 
+   0002 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloca.s V_0
+   000C call System.Int32 System.DateTime::get_Year()
+   0011 ldloca.s V_0
+   0013 call System.Int32 System.DateTime::get_Month()
+   0018 ldloca.s V_0
+   001A call System.Int32 System.DateTime::get_Day()
+   001F ldc.i4.0 
+   0020 ldc.i4.0 
+   0021 ldc.i4.0 
+   0022 ldc.i4.1 
+   0023 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)
+   0028 ldloca.s V_1
+   002A ldc.r8 86400
+   0033 call System.DateTime System.DateTime::AddSeconds(System.Double)
+   0038 stloc.2 
+   0039 ldloc.2 
+   003A ldloc.0 
+   003B call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   0040 stloc.3 
+   0041 ldloca.s V_3
+   0043 call System.Double System.TimeSpan::get_TotalSeconds()
+   0048 conv.u4 
+   0049 ret 
+== System.Boolean IsSameDay(System.Int64 secondsFromUtcStart1, System.Int64 secondsFromUtcStart2) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 28800
+   0016 conv.i8 
+   0017 add 
+   0018 ldc.i4 10000000
+   001D conv.i8 
+   001E mul 
+   001F call System.DateTime System.DateTime::AddTicks(System.Int64)
+   0024 stloc.1 
+   0025 ldloca.s V_0
+   0027 ldarg.1 
+   0028 ldc.i4 28800
+   002D conv.i8 
+   002E add 
+   002F ldc.i4 10000000
+   0034 conv.i8 
+   0035 mul 
+   0036 call System.DateTime System.DateTime::AddTicks(System.Int64)
+   003B stloc.2 
+   003C ldloca.s V_1
+   003E call System.Int32 System.DateTime::get_Year()
+   0043 ldloca.s V_2
+   0045 call System.Int32 System.DateTime::get_Year()
+   004A bne.un IL_0074: ldc.i4.0
+   004F ldloca.s V_1
+   0051 call System.Int32 System.DateTime::get_Month()
+   0056 ldloca.s V_2
+   0058 call System.Int32 System.DateTime::get_Month()
+   005D bne.un IL_0074: ldc.i4.0
+   0062 ldloca.s V_1
+   0064 call System.Int32 System.DateTime::get_Day()
+   0069 ldloca.s V_2
+   006B call System.Int32 System.DateTime::get_Day()
+   0070 ceq 
+   0072 br.s IL_0075: ret
+   0074 ldc.i4.0 
+   0075 ret 
+== System.Boolean IsSameMonth(System.Int64 secondsFromUtcStart1, System.Int64 secondsFromUtcStart2) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 28800
+   0016 conv.i8 
+   0017 add 
+   0018 ldc.i4 10000000
+   001D conv.i8 
+   001E mul 
+   001F call System.DateTime System.DateTime::AddTicks(System.Int64)
+   0024 stloc.1 
+   0025 ldloca.s V_0
+   0027 ldarg.1 
+   0028 ldc.i4 28800
+   002D conv.i8 
+   002E add 
+   002F ldc.i4 10000000
+   0034 conv.i8 
+   0035 mul 
+   0036 call System.DateTime System.DateTime::AddTicks(System.Int64)
+   003B stloc.2 
+   003C ldloca.s V_1
+   003E call System.Int32 System.DateTime::get_Month()
+   0043 ldloca.s V_2
+   0045 call System.Int32 System.DateTime::get_Month()
+   004A ceq 
+   004C ret 
+== System.Boolean IsSameWeek(System.DateTime dtmS, System.DateTime dtmE) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   0007 stloc.0 
+   0008 ldloca.s V_0
+   000A call System.Double System.TimeSpan::get_TotalDays()
+   000F stloc.1 
+   0010 ldarg.1 
+   0011 call enSgameDayOfWeek DateTimeExtension::GetDayOfWeek(System.DateTime)
+   0016 box enSgameDayOfWeek
+   001B call System.Int32 System.Convert::ToInt32(System.Object)
+   0020 stloc.2 
+   0021 ldloc.1 
+   0022 ldc.r8 7
+   002B bge IL_0038: ldc.i4.0
+   0030 ldloc.1 
+   0031 ldloc.2 
+   0032 conv.r8 
+   0033 blt.un IL_003a: ldc.i4.1
+   0038 ldc.i4.0 
+   0039 ret 
+   003A ldc.i4.1 
+   003B ret 
+== System.Boolean IsSameWeek(System.Int64 secondsFromUtcStart1, System.Int64 secondsFromUtcStart2) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 28800
+   0016 conv.i8 
+   0017 add 
+   0018 ldc.i4 10000000
+   001D conv.i8 
+   001E mul 
+   001F call System.DateTime System.DateTime::AddTicks(System.Int64)
+   0024 stloc.1 
+   0025 ldloca.s V_0
+   0027 ldarg.1 
+   0028 ldc.i4 28800
+   002D conv.i8 
+   002E add 
+   002F ldc.i4 10000000
+   0034 conv.i8 
+   0035 mul 
+   0036 call System.DateTime System.DateTime::AddTicks(System.Int64)
+   003B stloc.2 
+   003C ldloc.1 
+   003D ldloc.2 
+   003E call System.Boolean Utility::IsSameWeek(System.DateTime,System.DateTime)
+   0043 ret 
+== System.Int64 GetZeroBaseSecond(System.Int64 utcSec) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldloca.s V_0
+   0002 ldc.i4 1970
+   0007 ldc.i4.1 
+   0008 ldc.i4.1 
+   0009 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32)
+   000E ldloca.s V_0
+   0010 ldarg.0 
+   0011 ldc.i4 28800
+   0016 conv.i8 
+   0017 add 
+   0018 ldc.i4 10000000
+   001D conv.i8 
+   001E mul 
+   001F call System.DateTime System.DateTime::AddTicks(System.Int64)
+   0024 stloc.1 
+   0025 ldloca.s V_2
+   0027 ldloca.s V_1
+   0029 call System.Int32 System.DateTime::get_Year()
+   002E ldloca.s V_1
+   0030 call System.Int32 System.DateTime::get_Month()
+   0035 ldloca.s V_1
+   0037 call System.Int32 System.DateTime::get_Day()
+   003C ldc.i4.0 
+   003D ldc.i4.0 
+   003E ldc.i4.0 
+   003F call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   0044 ldloc.2 
+   0045 ldloc.0 
+   0046 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   004B stloc.3 
+   004C ldloca.s V_3
+   004E call System.Double System.TimeSpan::get_TotalSeconds()
+   0053 conv.i8 
+   0054 ldc.i4 28800
+   0059 conv.i8 
+   005A sub 
+   005B ret 
+== System.Int32 Hours2Second(System.Int32 hour) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 60
+   0003 mul 
+   0004 ldc.i4.s 60
+   0006 mul 
+   0007 ret 
+== System.Int32 Minutes2Seconds(System.Int32 min) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.s 60
+   0003 mul 
+   0004 ret 
+== System.DateTime CfgTime2DateTime(System.Int32 cfgTime) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 ldc.i4 1000000
+   0008 div 
+   0009 stloc.1 
+   000A ldloc.0 
+   000B ldc.i4 1000000
+   0010 rem 
+   0011 ldc.i4 10000
+   0016 div 
+   0017 stloc.2 
+   0018 ldloc.0 
+   0019 ldc.i4 10000
+   001E rem 
+   001F ldc.i4.s 100
+   0021 div 
+   0022 stloc.3 
+   0023 ldloc.0 
+   0024 ldc.i4.s 100
+   0026 rem 
+   0027 stloc.s V_4
+   0029 ldloca.s V_5
+   002B ldloc.1 
+   002C ldloc.2 
+   002D ldloc.3 
+   002E ldloc.s V_4
+   0030 ldc.i4.0 
+   0031 ldc.i4.0 
+   0032 call System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   0037 ldloc.s V_5
+   0039 ret 
+== System.Boolean IsBetweenBeginAndEndCfgTime(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE resBegin, ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE resEnd) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   0006 conv.u8 
+   0007 stloc.0 
+   0008 ldarg.1 
+   0009 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   000E conv.u8 
+   000F stloc.1 
+   0010 ldloc.0 
+   0011 ldc.i4.0 
+   0012 conv.i8 
+   0013 ble.un IL_0020: ldc.i4.0
+   0018 ldloc.1 
+   0019 ldc.i4.0 
+   001A conv.i8 
+   001B bgt.un IL_0022: ldloc.0
+   0020 ldc.i4.0 
+   0021 ret 
+   0022 ldloc.0 
+   0023 ldc.i4 10000
+   0028 conv.i8 
+   0029 mul 
+   002A call System.DateTime Utility::ULongToDateTime(System.UInt64)
+   002F stloc.2 
+   0030 ldloc.1 
+   0031 ldc.i4 10000
+   0036 conv.i8 
+   0037 mul 
+   0038 call System.DateTime Utility::ULongToDateTime(System.UInt64)
+   003D stloc.3 
+   003E call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0043 conv.i8 
+   0044 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0049 stloc.s V_4
+   004B ldloc.s V_4
+   004D ldloc.2 
+   004E call System.Boolean System.DateTime::op_GreaterThan(System.DateTime,System.DateTime)
+   0053 brfalse IL_0062: ldc.i4.0
+   0058 ldloc.s V_4
+   005A ldloc.3 
+   005B call System.Boolean System.DateTime::op_LessThan(System.DateTime,System.DateTime)
+   0060 br.s IL_0063: ret
+   0062 ldc.i4.0 
+   0063 ret 
+== System.String GetTimeBeforString(System.Int64 beforSecondsFromUtc, System.Int64 nowSecondsFromUtc) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldloca.s V_1
+   0008 ldarg.0 
+   0009 ldc.i4 28800
+   000E conv.i8 
+   000F add 
+   0010 ldc.i4 10000000
+   0015 conv.i8 
+   0016 mul 
+   0017 call System.Void System.TimeSpan::.ctor(System.Int64)
+   001C ldloca.s V_2
+   001E ldarg.1 
+   001F ldc.i4 28800
+   0024 conv.i8 
+   0025 add 
+   0026 ldc.i4 10000000
+   002B conv.i8 
+   002C mul 
+   002D call System.Void System.TimeSpan::.ctor(System.Int64)
+   0032 ldloca.s V_2
+   0034 call System.Double System.TimeSpan::get_TotalDays()
+   0039 conv.i4 
+   003A ldloca.s V_1
+   003C call System.Double System.TimeSpan::get_TotalDays()
+   0041 conv.i4 
+   0042 sub 
+   0043 stloc.3 
+   0044 ldloc.3 
+   0045 ldc.i4.1 
+   0046 blt IL_0079: call !0 Singleton`1<CTextManager>::GetInstance()
+   004B call !0 Singleton`1<CTextManager>::GetInstance()
+   0050 ldstr Time_DayBefore
+   0055 ldc.i4.1 
+   0056 newarr System.String
+   005B dup 
+   005C ldc.i4.0 
+   005D ldloc.3 
+   005E stloc.s V_4
+   0060 ldloca.s V_4
+   0062 constrained. System.Int32
+   0068 callvirt System.String System.Object::ToString()
+   006D stelem.ref 
+   006E callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0073 stloc.0 
+   0074 br IL_008a: ldloc.0
+   0079 call !0 Singleton`1<CTextManager>::GetInstance()
+   007E ldstr Time_Today
+   0083 ldc.i4.1 
+   0084 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0089 stloc.0 
+   008A ldloc.0 
+   008B ret 
+== System.String GetLastTimeString(System.UInt32 time) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 conv.u8 
+   0008 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   000D stloc.1 
+   000E call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0013 conv.i8 
+   0014 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0019 stloc.2 
+   001A ldloc.2 
+   001B ldloc.1 
+   001C call System.Int32 System.DateTime::Compare(System.DateTime,System.DateTime)
+   0021 ldc.i4.0 
+   0022 ble IL_00f5: ldloc.0
+   0027 ldloc.2 
+   0028 ldloc.1 
+   0029 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   002E stloc.3 
+   002F ldloca.s V_3
+   0031 call System.Int32 System.TimeSpan::get_Days()
+   0036 brtrue IL_00c4: ldloca.s V_3
+   003B ldloca.s V_3
+   003D call System.Int32 System.TimeSpan::get_Hours()
+   0042 brtrue IL_0091: call !0 Singleton`1<CTextManager>::GetInstance()
+   0047 ldloca.s V_3
+   0049 call System.Int32 System.TimeSpan::get_Minutes()
+   004E ldc.i4.1 
+   004F blt IL_007b: call !0 Singleton`1<CTextManager>::GetInstance()
+   0054 call !0 Singleton`1<CTextManager>::GetInstance()
+   0059 ldstr PlayerLikeVisitTime_1
+   005E ldc.i4.1 
+   005F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0064 ldloca.s V_3
+   0066 call System.Int32 System.TimeSpan::get_Minutes()
+   006B box System.Int32
+   0070 call System.String System.String::Format(System.String,System.Object)
+   0075 stloc.0 
+   0076 br IL_008c: br IL_00bf
+   007B call !0 Singleton`1<CTextManager>::GetInstance()
+   0080 ldstr PlayerLikeTimeRecent
+   0085 ldc.i4.1 
+   0086 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   008B stloc.0 
+   008C br IL_00bf: br IL_00f5
+   0091 call !0 Singleton`1<CTextManager>::GetInstance()
+   0096 ldstr PlayerLikeVisitTime_2
+   009B ldc.i4.1 
+   009C callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00A1 ldloca.s V_3
+   00A3 call System.Int32 System.TimeSpan::get_Hours()
+   00A8 box System.Int32
+   00AD ldloca.s V_3
+   00AF call System.Int32 System.TimeSpan::get_Minutes()
+   00B4 box System.Int32
+   00B9 call System.String System.String::Format(System.String,System.Object,System.Object)
+   00BE stloc.0 
+   00BF br IL_00f5: ldloc.0
+   00C4 ldloca.s V_3
+   00C6 call System.Int32 System.TimeSpan::get_Days()
+   00CB stloc.s V_4
+   00CD ldloc.s V_4
+   00CF ldc.i4.7 
+   00D0 ble IL_00d8: call !0 Singleton`1<CTextManager>::GetInstance()
+   00D5 ldc.i4.7 
+   00D6 stloc.s V_4
+   00D8 call !0 Singleton`1<CTextManager>::GetInstance()
+   00DD ldstr PlayerLikeVisitTime_3
+   00E2 ldc.i4.1 
+   00E3 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00E8 ldloc.s V_4
+   00EA box System.Int32
+   00EF call System.String System.String::Format(System.String,System.Object)
+   00F4 stloc.0 
+   00F5 ldloc.0 
+   00F6 ret 
+== System.String GetRecentOnlineTimeString(System.Int32 recentOnlineTime) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 brtrue IL_000e: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   000C ldloc.0 
+   000D ret 
+   000E call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldarg.0 
+   0016 ble IL_0110: ldloc.0
+   001B ldloca.s V_2
+   001D ldc.i4.0 
+   001E ldc.i4.0 
+   001F ldloc.1 
+   0020 ldarg.0 
+   0021 sub 
+   0022 call System.Void System.TimeSpan::.ctor(System.Int32,System.Int32,System.Int32)
+   0027 ldloca.s V_2
+   0029 call System.Int32 System.TimeSpan::get_Days()
+   002E brtrue IL_00e1: call !0 Singleton`1<CTextManager>::GetInstance()
+   0033 ldloca.s V_2
+   0035 call System.Int32 System.TimeSpan::get_Hours()
+   003A brtrue IL_0094: call !0 Singleton`1<CTextManager>::GetInstance()
+   003F ldloca.s V_2
+   0041 call System.Int32 System.TimeSpan::get_Minutes()
+   0046 brtrue IL_0061: call !0 Singleton`1<CTextManager>::GetInstance()
+   004B call !0 Singleton`1<CTextManager>::GetInstance()
+   0050 ldstr Guild_Tips_lastTime_default
+   0055 ldc.i4.1 
+   0056 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   005B stloc.0 
+   005C br IL_008f: br IL_00dc
+   0061 call !0 Singleton`1<CTextManager>::GetInstance()
+   0066 ldstr Guild_Tips_lastTime_min
+   006B ldc.i4.1 
+   006C newarr System.String
+   0071 dup 
+   0072 ldc.i4.0 
+   0073 ldloca.s V_2
+   0075 call System.Int32 System.TimeSpan::get_Minutes()
+   007A stloc.3 
+   007B ldloca.s V_3
+   007D constrained. System.Int32
+   0083 callvirt System.String System.Object::ToString()
+   0088 stelem.ref 
+   0089 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   008E stloc.0 
+   008F br IL_00dc: br IL_0110
+   0094 call !0 Singleton`1<CTextManager>::GetInstance()
+   0099 ldstr Guild_Tips_lastTime_hour_min
+   009E ldc.i4.2 
+   009F newarr System.String
+   00A4 dup 
+   00A5 ldc.i4.0 
+   00A6 ldloca.s V_2
+   00A8 call System.Int32 System.TimeSpan::get_Hours()
+   00AD stloc.s V_4
+   00AF ldloca.s V_4
+   00B1 constrained. System.Int32
+   00B7 callvirt System.String System.Object::ToString()
+   00BC stelem.ref 
+   00BD dup 
+   00BE ldc.i4.1 
+   00BF ldloca.s V_2
+   00C1 call System.Int32 System.TimeSpan::get_Minutes()
+   00C6 stloc.s V_5
+   00C8 ldloca.s V_5
+   00CA constrained. System.Int32
+   00D0 callvirt System.String System.Object::ToString()
+   00D5 stelem.ref 
+   00D6 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00DB stloc.0 
+   00DC br IL_0110: ldloc.0
+   00E1 call !0 Singleton`1<CTextManager>::GetInstance()
+   00E6 ldstr Guild_Tips_lastTime_day
+   00EB ldc.i4.1 
+   00EC newarr System.String
+   00F1 dup 
+   00F2 ldc.i4.0 
+   00F3 ldloca.s V_2
+   00F5 call System.Int32 System.TimeSpan::get_Days()
+   00FA stloc.s V_6
+   00FC ldloca.s V_6
+   00FE constrained. System.Int32
+   0104 callvirt System.String System.Object::ToString()
+   0109 stelem.ref 
+   010A callvirt System.String CTextManager::GetText(System.String,System.String[])
+   010F stloc.0 
+   0110 ldloc.0 
+   0111 ret 
+== System.String ProtErrCodeToStr(System.Int32 ProtId, System.Int32 ErrCode) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldc.i4 1337
+   000C sub 
+   000D switch Mono.Cecil.Cil.Instruction[]
+   003E ldarg.0 
+   003F ldc.i4 1380
+   0044 sub 
+   0045 switch Mono.Cecil.Cil.Instruction[]
+   007A ldarg.0 
+   007B ldc.i4 1902
+   0080 sub 
+   0081 switch Mono.Cecil.Cil.Instruction[]
+   00AA ldarg.0 
+   00AB ldc.i4 2297
+   00B0 sub 
+   00B1 switch Mono.Cecil.Cil.Instruction[]
+   00D6 ldarg.0 
+   00D7 ldc.i4 1022
+   00DC sub 
+   00DD switch Mono.Cecil.Cil.Instruction[]
+   00F2 ldarg.0 
+   00F3 ldc.i4 1174
+   00F8 sub 
+   00F9 switch Mono.Cecil.Cil.Instruction[]
+   0112 ldarg.0 
+   0113 ldc.i4 5403
+   0118 sub 
+   0119 switch Mono.Cecil.Cil.Instruction[]
+   0132 ldarg.0 
+   0133 ldc.i4 1831
+   0138 sub 
+   0139 switch Mono.Cecil.Cil.Instruction[]
+   014A ldarg.0 
+   014B ldc.i4 2011
+   0150 sub 
+   0151 switch Mono.Cecil.Cil.Instruction[]
+   0166 ldarg.0 
+   0167 ldc.i4 2901
+   016C sub 
+   016D switch Mono.Cecil.Cil.Instruction[]
+   0182 ldarg.0 
+   0183 ldc.i4 4802
+   0188 sub 
+   0189 switch Mono.Cecil.Cil.Instruction[]
+   019A ldarg.0 
+   019B ldc.i4 6809
+   01A0 sub 
+   01A1 switch Mono.Cecil.Cil.Instruction[]
+   01B2 ldarg.0 
+   01B3 ldc.i4 1051
+   01B8 beq IL_0a4e: ldarg.1
+   01BD ldarg.0 
+   01BE ldc.i4 1055
+   01C3 beq IL_08ec: ldarg.1
+   01C8 ldarg.0 
+   01C9 ldc.i4 1059
+   01CE beq IL_095c: ldarg.1
+   01D3 ldarg.0 
+   01D4 ldc.i4 1079
+   01D9 beq IL_04e6: ldarg.1
+   01DE ldarg.0 
+   01DF ldc.i4 1185
+   01E4 beq IL_0f12: ldarg.1
+   01E9 ldarg.0 
+   01EA ldc.i4 1194
+   01EF beq IL_14be: ldarg.1
+   01F4 ldarg.0 
+   01F5 ldc.i4 1226
+   01FA beq IL_11e8: ldarg.1
+   01FF ldarg.0 
+   0200 ldc.i4 1408
+   0205 beq IL_0ca1: ldarg.1
+   020A ldarg.0 
+   020B ldc.i4 1417
+   0210 beq IL_1430: ldarg.1
+   0215 ldarg.0 
+   0216 ldc.i4 1431
+   021B beq IL_144c: ldarg.1
+   0220 ldarg.0 
+   0221 ldc.i4 1818
+   0226 beq IL_0979: ldarg.1
+   022B ldarg.0 
+   022C ldc.i4 1856
+   0231 beq IL_1961: ldarg.1
+   0236 ldarg.0 
+   0237 ldc.i4 2023
+   023C beq IL_0740: ldarg.1
+   0241 ldarg.0 
+   0242 ldc.i4 2030
+   0247 beq IL_0740: ldarg.1
+   024C ldarg.0 
+   024D ldc.i4 2310
+   0252 beq IL_18dd: ldarg.1
+   0257 ldarg.0 
+   0258 ldc.i4 2607
+   025D beq IL_149e: ldarg.1
+   0262 ldarg.0 
+   0263 ldc.i4 5328
+   0268 beq IL_04db: ldstr "Err_JudgeFail"
+   026D ldarg.0 
+   026E ldc.i4 5342
+   0273 beq IL_15e3: ldarg.1
+   0278 ldarg.0 
+   0279 ldc.i4 5346
+   027E beq IL_1abe: ldarg.1
+   0283 ldarg.0 
+   0284 ldc.i4 5350
+   0289 beq IL_1af4: ldarg.1
+   028E ldarg.0 
+   028F ldc.i4 5610
+   0294 beq IL_02a9: ldarg.1
+   0299 ldarg.0 
+   029A ldc.i4 6804
+   029F beq IL_1b56: ldarg.1
+   02A4 br IL_1bf3: ldloc.0
+   02A9 ldarg.1 
+   02AA ldc.i4 199
+   02AF sub 
+   02B0 switch Mono.Cecil.Cil.Instruction[]
+   0341 br IL_049b: ldc.i4.5
+   0346 ldstr Mentor_Err_DataErr
+   034B stloc.0 
+   034C br IL_04d6: br IL_1bf3
+   0351 ldstr Mentor_Err_CannotCrossPlat
+   0356 stloc.0 
+   0357 br IL_04d6: br IL_1bf3
+   035C ldstr Mentor_Err_HasMentor
+   0361 stloc.0 
+   0362 br IL_04d6: br IL_1bf3
+   0367 ldstr Mentor_Err_RefusedRequest
+   036C stloc.0 
+   036D br IL_04d6: br IL_1bf3
+   0372 ldstr Mentor_Err_BeyondRequestLimit
+   0377 stloc.0 
+   0378 br IL_04d6: br IL_1bf3
+   037D ldstr Mentor_Err_RequestDuplicated
+   0382 stloc.0 
+   0383 br IL_04d6: br IL_1bf3
+   0388 ldstr Mentor_Err_ApprenticeCountTooMuch
+   038D stloc.0 
+   038E br IL_04d6: br IL_1bf3
+   0393 ldstr Mentor_Err_AlreadyMentor
+   0398 stloc.0 
+   0399 br IL_04d6: br IL_1bf3
+   039E ldstr Mentor_Err_HasMentorOrNotGraduated
+   03A3 stloc.0 
+   03A4 br IL_04d6: br IL_1bf3
+   03A9 ldstr Mentor_Err_NoRequest
+   03AE stloc.0 
+   03AF br IL_04d6: br IL_1bf3
+   03B4 ldstr Mentor_Err_NotMentor
+   03B9 stloc.0 
+   03BA br IL_04d6: br IL_1bf3
+   03BF ldstr Mentor_Err_CannotDismissInAday
+   03C4 stloc.0 
+   03C5 br IL_04d6: br IL_1bf3
+   03CA ldstr Mentor_Err_Level2LowAsMentor
+   03CF stloc.0 
+   03D0 br IL_04d6: br IL_1bf3
+   03D5 ldstr Mentor_Err_Level2HighAsApprentice
+   03DA stloc.0 
+   03DB br IL_04d6: br IL_1bf3
+   03E0 ldstr Mentor_Err_Grade2LowAsMentor
+   03E5 stloc.0 
+   03E6 br IL_04d6: br IL_1bf3
+   03EB ldstr CS_ERR_STUDENT_GRADE_HIGH
+   03F0 stloc.0 
+   03F1 br IL_04d6: br IL_1bf3
+   03F6 ldstr CS_ERR_STUDENT_GRADE_LOW
+   03FB stloc.0 
+   03FC br IL_04d6: br IL_1bf3
+   0401 ldstr Mentor_Err_Transaction
+   0406 stloc.0 
+   0407 br IL_04d6: br IL_1bf3
+   040C ldstr Mentor_Err_NotStudent
+   0411 stloc.0 
+   0412 br IL_04d6: br IL_1bf3
+   0417 ldstr Mentor_Err_MasterApplySelf
+   041C stloc.0 
+   041D br IL_04d6: br IL_1bf3
+   0422 ldstr Mentor_Err_MasterBantime
+   0427 stloc.0 
+   0428 br IL_04d6: br IL_1bf3
+   042D ldstr Mentor_Err_OTHER_LVL_LOW
+   0432 stloc.0 
+   0433 br IL_04d6: br IL_1bf3
+   0438 ldstr Mentor_Err_OTHER_LVL_HIGH
+   043D stloc.0 
+   043E br IL_04d6: br IL_1bf3
+   0443 ldstr Mentor_Err_OTHER_GRADE_LOW
+   0448 stloc.0 
+   0449 br IL_04d6: br IL_1bf3
+   044E ldstr Mentor_Err_REQ_NOTVALID
+   0453 stloc.0 
+   0454 br IL_04d6: br IL_1bf3
+   0459 ldstr Mentor_Err_Other_IsStudent
+   045E stloc.0 
+   045F br IL_04d6: br IL_1bf3
+   0464 ldstr CS_ERR_DATINGDECLARATION_ILLEGAL
+   0469 stloc.0 
+   046A br IL_04d6: br IL_1bf3
+   046F ldstr CS_ERR_FRIENDCARD_TAG
+   0474 stloc.0 
+   0475 br IL_04d6: br IL_1bf3
+   047A ldstr CS_ERR_FRIENDCARD_OTHER
+   047F stloc.0 
+   0480 br IL_04d6: br IL_1bf3
+   0485 ldstr CS_ERR_CHG_ANTIDISTURB_BIT
+   048A stloc.0 
+   048B br IL_04d6: br IL_1bf3
+   0490 ldstr CS_ERR_APPLYMASTERSTUDENT_INBANTIME
+   0495 stloc.0 
+   0496 br IL_04d6: br IL_1bf3
+   049B ldc.i4.5 
+   049C newarr System.Object
+   04A1 dup 
+   04A2 ldc.i4.0 
+   04A3 ldstr ProtocolId 
+   04A8 stelem.ref 
+   04A9 dup 
+   04AA ldc.i4.1 
+   04AB ldarg.0 
+   04AC box System.Int32
+   04B1 stelem.ref 
+   04B2 dup 
+   04B3 ldc.i4.2 
+   04B4 ldstr  ErrId 
+   04B9 stelem.ref 
+   04BA dup 
+   04BB ldc.i4.3 
+   04BC ldarg.1 
+   04BD box System.Int32
+   04C2 stelem.ref 
+   04C3 dup 
+   04C4 ldc.i4.4 
+   04C5 ldstr  unhandled
+   04CA stelem.ref 
+   04CB call System.String System.String::Concat(System.Object[])
+   04D0 stloc.0 
+   04D1 br IL_04d6: br IL_1bf3
+   04D6 br IL_1bf3: ldloc.0
+   04DB ldstr Err_JudgeFail
+   04E0 stloc.0 
+   04E1 br IL_1bf3: ldloc.0
+   04E6 ldarg.1 
+   04E7 ldc.i4.1 
+   04E8 sub 
+   04E9 switch Mono.Cecil.Cil.Instruction[]
+   0592 br IL_06c0: br IL_1bf3
+   0597 ldstr Err_Resource_Limit
+   059C stloc.0 
+   059D br IL_06c0: br IL_1bf3
+   05A2 ldstr Err_Game_Abort
+   05A7 stloc.0 
+   05A8 br IL_06c0: br IL_1bf3
+   05AD ldstr Err_Room_Timeout
+   05B2 stloc.0 
+   05B3 br IL_06c0: br IL_1bf3
+   05B8 ldstr Err_Account_Leave
+   05BD stloc.0 
+   05BE br IL_06c0: br IL_1bf3
+   05C3 ldstr Err_Room_Not_Found
+   05C8 stloc.0 
+   05C9 br IL_06c0: br IL_1bf3
+   05CE ldstr Err_Game_Already_Start
+   05D3 stloc.0 
+   05D4 br IL_06c0: br IL_1bf3
+   05D9 ldstr Err_Room_Member_Full
+   05DE stloc.0 
+   05DF br IL_06c0: br IL_1bf3
+   05E4 ldstr Err_Oper_Failed
+   05E9 stloc.0 
+   05EA br IL_06c0: br IL_1bf3
+   05EF ldstr Err_No_Privilege
+   05F4 stloc.0 
+   05F5 br IL_06c0: br IL_1bf3
+   05FA ldstr Err_Invalid_Param
+   05FF stloc.0 
+   0600 br IL_06c0: br IL_1bf3
+   0605 ldstr Err_NM_Cancel
+   060A stloc.0 
+   060B br IL_06c0: br IL_1bf3
+   0610 ldstr Err_NM_Teamcancel
+   0615 stloc.0 
+   0616 br IL_06c0: br IL_1bf3
+   061B ldstr Err_NM_Teamexit
+   0620 stloc.0 
+   0621 br IL_06c0: br IL_1bf3
+   0626 ldstr Err_NM_Othercancel
+   062B stloc.0 
+   062C br IL_06c0: br IL_1bf3
+   0631 ldstr Err_NM_Otherexit
+   0636 stloc.0 
+   0637 br IL_06c0: br IL_1bf3
+   063C ldstr Err_Version_Different
+   0641 stloc.0 
+   0642 br IL_06c0: br IL_1bf3
+   0647 ldstr Err_Version_Higher
+   064C stloc.0 
+   064D br IL_06c0: br IL_1bf3
+   0652 ldstr Err_Version_Lower
+   0657 stloc.0 
+   0658 br IL_06c0: br IL_1bf3
+   065D ldstr Err_ENTERTAINMENT_Lock
+   0662 stloc.0 
+   0663 br IL_06c0: br IL_1bf3
+   0668 ldstr Err_Room_Inbantime_Lock
+   066D stloc.0 
+   066E br IL_06c0: br IL_1bf3
+   0673 ldstr Err_Room_Limit_Lock
+   0678 stloc.0 
+   0679 br IL_06c0: br IL_1bf3
+   067E ldstr CS_ROOMERR_PLAT_CHANNEL_CLOSE
+   0683 stloc.0 
+   0684 br IL_06c0: br IL_1bf3
+   0689 ldstr Err_Room_Ban_Pick_Limit
+   068E stloc.0 
+   068F br IL_06c0: br IL_1bf3
+   0694 ldstr Err_Room_Ban_Pick_Hero_Limit
+   0699 stloc.0 
+   069A br IL_06c0: br IL_1bf3
+   069F ldstr Err_Game_Abort
+   06A4 stloc.0 
+   06A5 br IL_06c0: br IL_1bf3
+   06AA ldstr COM_MATCHTEAMEERR_PREPARE_GAME
+   06AF stloc.0 
+   06B0 br IL_06c0: br IL_1bf3
+   06B5 ldstr COM_ROOMERR_ROOM_PVE_TALENT_NOTINIT
+   06BA stloc.0 
+   06BB br IL_06c0: br IL_1bf3
+   06C0 br IL_1bf3: ldloc.0
+   06C5 ldarg.1 
+   06C6 ldc.i4.s 14
+   06C8 beq IL_070f: ldstr "COM_MATCH_ERRCODE_PREPARE_GAME"
+   06CD ldarg.1 
+   06CE ldc.i4.s 15
+   06D0 beq IL_06f9: ldstr "FiveArmyMust2PlayersTips"
+   06D5 ldarg.1 
+   06D6 ldc.i4.s 53
+   06D8 beq IL_071a: ldstr "PVECoop_MATCHTEAMEERR_PVE_PRECONDITION_LIMIT_SELF"
+   06DD ldarg.1 
+   06DE ldc.i4.s 54
+   06E0 beq IL_0725: ldstr "PVECoop_MATCHTEAMEERR_PVE_MMR_LIMIT_NONAME"
+   06E5 ldarg.1 
+   06E6 ldc.i4.6 
+   06E7 beq IL_0704: ldstr "COM_MATCH_ERRCODE_OTHERS"
+   06EC ldarg.1 
+   06ED ldc.i4.s 61
+   06EF beq IL_0730: ldstr "COM_MATCHTEAMEERR_PVE_TALENT_NOTINIT"
+   06F4 br IL_073b: br IL_1bf3
+   06F9 ldstr FiveArmyMust2PlayersTips
+   06FE stloc.0 
+   06FF br IL_073b: br IL_1bf3
+   0704 ldstr COM_MATCH_ERRCODE_OTHERS
+   0709 stloc.0 
+   070A br IL_073b: br IL_1bf3
+   070F ldstr COM_MATCH_ERRCODE_PREPARE_GAME
+   0714 stloc.0 
+   0715 br IL_073b: br IL_1bf3
+   071A ldstr PVECoop_MATCHTEAMEERR_PVE_PRECONDITION_LIMIT_SELF
+   071F stloc.0 
+   0720 br IL_073b: br IL_1bf3
+   0725 ldstr PVECoop_MATCHTEAMEERR_PVE_MMR_LIMIT_NONAME
+   072A stloc.0 
+   072B br IL_073b: br IL_1bf3
+   0730 ldstr COM_MATCHTEAMEERR_PVE_TALENT_NOTINIT
+   0735 stloc.0 
+   0736 br IL_073b: br IL_1bf3
+   073B br IL_1bf3: ldloc.0
+   0740 ldarg.1 
+   0741 ldc.i4.7 
+   0742 sub 
+   0743 switch Mono.Cecil.Cil.Instruction[]
+   079C ldarg.1 
+   079D ldc.i4.s 35
+   079F sub 
+   07A0 switch Mono.Cecil.Cil.Instruction[]
+   07BD ldarg.1 
+   07BE ldc.i4.s 52
+   07C0 sub 
+   07C1 switch Mono.Cecil.Cil.Instruction[]
+   07D2 ldarg.1 
+   07D3 ldc.i4.1 
+   07D4 beq IL_080b: ldstr "Err_No_Privilege"
+   07D9 ldarg.1 
+   07DA ldc.i4.2 
+   07DB beq IL_0816: ldstr "Err_Invalid_Param"
+   07E0 ldarg.1 
+   07E1 ldc.i4.s 47
+   07E3 beq IL_08d1: ldstr "COM_MATCHTEAMEERR_QQORWX_NOT_IDLE"
+   07E8 ldarg.1 
+   07E9 ldc.i4.s 61
+   07EB beq IL_08dc: ldstr "COM_MATCHTEAMEERR_PVE_TALENT_NOTINIT"
+   07F0 br IL_08e7: br IL_1bf3
+   07F5 ldstr PVECoop_MATCHTEAMEERR_PVE_MMR_LIMIT_NONAME
+   07FA stloc.0 
+   07FB br IL_08e7: br IL_1bf3
+   0800 ldstr PVECoop_MATCHTEAMEERR_PVE_PRECONDITION_LIMIT_SELF
+   0805 stloc.0 
+   0806 br IL_08e7: br IL_1bf3
+   080B ldstr Err_No_Privilege
+   0810 stloc.0 
+   0811 br IL_08e7: br IL_1bf3
+   0816 ldstr Err_Invalid_Param
+   081B stloc.0 
+   081C br IL_08e7: br IL_1bf3
+   0821 ldstr Err_Team_Destory
+   0826 stloc.0 
+   0827 br IL_08e7: br IL_1bf3
+   082C ldstr Err_Game_Already_Start
+   0831 stloc.0 
+   0832 br IL_08e7: br IL_1bf3
+   0837 ldstr Err_Team_Member_Full
+   083C stloc.0 
+   083D br IL_08e7: br IL_1bf3
+   0842 ldstr Err_Game_Ready_Error
+   0847 stloc.0 
+   0848 br IL_08e7: br IL_1bf3
+   084D ldstr Err_Leave_Team_Failed
+   0852 stloc.0 
+   0853 br IL_08e7: br IL_1bf3
+   0858 ldstr Err_Join_litmi_Rank_Failed
+   085D stloc.0 
+   085E br IL_08e7: br IL_1bf3
+   0863 ldstr Err_Version_Higher
+   0868 stloc.0 
+   0869 br IL_08e7: br IL_1bf3
+   086E ldstr Err_ENTERTAINMENT_Lock
+   0873 stloc.0 
+   0874 br IL_08e7: br IL_1bf3
+   0879 ldstr COM_MATCHTEAMEERR_PLAT_CHANNEL_CLOSE
+   087E stloc.0 
+   087F br IL_08e7: br IL_1bf3
+   0884 ldstr COM_MATCHTEAMEERR_OBING
+   0889 stloc.0 
+   088A br IL_08e7: br IL_1bf3
+   088F ldstr COM_MATCHTEAMEERR_OTHERS
+   0894 stloc.0 
+   0895 br IL_08e7: br IL_1bf3
+   089A ldstr COM_MATCHTEAMEERR_PREPARE_GAME
+   089F stloc.0 
+   08A0 br IL_08e7: br IL_1bf3
+   08A5 ldstr COM_MATCHTEAMEERR_RANKGRADERANGE
+   08AA stloc.0 
+   08AB br IL_08e7: br IL_1bf3
+   08B0 ldstr COM_MATCHTEAMEERR_TEAMPARAM
+   08B5 stloc.0 
+   08B6 br IL_08e7: br IL_1bf3
+   08BB ldstr COM_MATCHTEAMEERR_SETTLE_CREATE_TEAMPARAM
+   08C0 stloc.0 
+   08C1 br IL_08e7: br IL_1bf3
+   08C6 ldstr COM_MATCHTEAMEERR_INVALID_RANKSTATE_OF_REWARD
+   08CB stloc.0 
+   08CC br IL_08e7: br IL_1bf3
+   08D1 ldstr COM_MATCHTEAMEERR_QQORWX_NOT_IDLE
+   08D6 stloc.0 
+   08D7 br IL_08e7: br IL_1bf3
+   08DC ldstr COM_MATCHTEAMEERR_PVE_TALENT_NOTINIT
+   08E1 stloc.0 
+   08E2 br IL_08e7: br IL_1bf3
+   08E7 br IL_1bf3: ldloc.0
+   08EC ldarg.1 
+   08ED ldc.i4.1 
+   08EE sub 
+   08EF switch Mono.Cecil.Cil.Instruction[]
+   0910 br IL_0957: br IL_1bf3
+   0915 ldstr Err_Sweep_Star
+   091A stloc.0 
+   091B br IL_0957: br IL_1bf3
+   0920 ldstr Err_Sweep_VIP
+   0925 stloc.0 
+   0926 br IL_0957: br IL_1bf3
+   092B ldstr Err_Sweep_AP
+   0930 stloc.0 
+   0931 br IL_0957: br IL_1bf3
+   0936 ldstr Err_Sweep_Ticket
+   093B stloc.0 
+   093C br IL_0957: br IL_1bf3
+   0941 ldstr Err_Sweep_DianQuan
+   0946 stloc.0 
+   0947 br IL_0957: br IL_1bf3
+   094C ldstr Err_Sweep_Other
+   0951 stloc.0 
+   0952 br IL_0957: br IL_1bf3
+   0957 br IL_1bf3: ldloc.0
+   095C ldarg.1 
+   095D ldc.i4.s 10
+   095F beq IL_0969: ldstr "Err_Quit_Single_Game"
+   0964 br IL_0974: br IL_1bf3
+   0969 ldstr Err_Quit_Single_Game
+   096E stloc.0 
+   096F br IL_0974: br IL_1bf3
+   0974 br IL_1bf3: ldloc.0
+   0979 ldarg.1 
+   097A ldc.i4.1 
+   097B sub 
+   097C switch Mono.Cecil.Cil.Instruction[]
+   09B5 br IL_0a49: br IL_1bf3
+   09BA ldstr BuyHero_Error_WrongMethod
+   09BF stloc.0 
+   09C0 br IL_0a49: br IL_1bf3
+   09C5 ldstr BuyHero_Error_AlreadyHave
+   09CA stloc.0 
+   09CB br IL_0a49: br IL_1bf3
+   09D0 ldstr BuyHero_Error_Invalid
+   09D5 stloc.0 
+   09D6 br IL_0a49: br IL_1bf3
+   09DB ldstr BuyHero_Error_WrongSale
+   09E0 stloc.0 
+   09E1 br IL_0a49: br IL_1bf3
+   09E6 ldstr BuyHero_Error_Money
+   09EB stloc.0 
+   09EC br IL_0a49: br IL_1bf3
+   09F1 ldstr BuyHero_Error_Full
+   09F6 stloc.0 
+   09F7 br IL_0a49: br IL_1bf3
+   09FC ldstr BuyHero_Error_InitFail
+   0A01 stloc.0 
+   0A02 br IL_0a49: br IL_1bf3
+   0A07 ldstr BuyHero_Error_Other
+   0A0C stloc.0 
+   0A0D br IL_0a49: br IL_1bf3
+   0A12 ldstr BuyHero_Error_WrongTime
+   0A17 stloc.0 
+   0A18 br IL_0a49: br IL_1bf3
+   0A1D ldstr CS_ADDHERO_REBATEID
+   0A22 stloc.0 
+   0A23 br IL_0a49: br IL_1bf3
+   0A28 ldstr CS_ADDHERO_REBATEUSE
+   0A2D stloc.0 
+   0A2E br IL_0a49: br IL_1bf3
+   0A33 ldstr CS_ADDHERO_REBATEVALID
+   0A38 stloc.0 
+   0A39 br IL_0a49: br IL_1bf3
+   0A3E ldstr CS_ADDHERO_REBATENOITEM
+   0A43 stloc.0 
+   0A44 br IL_0a49: br IL_1bf3
+   0A49 br IL_1bf3: ldloc.0
+   0A4E ldarg.1 
+   0A4F ldc.i4.1 
+   0A50 sub 
+   0A51 switch Mono.Cecil.Cil.Instruction[]
+   0A8E br IL_0b3b: br IL_1bf3
+   0A93 ldstr Arena_SINGLEGAME_ERR_FAIL
+   0A98 stloc.0 
+   0A99 br IL_0b3b: br IL_1bf3
+   0A9E ldstr Arena_SINGLEGAMEOFARENA_ERR_SELFLOCK
+   0AA3 stloc.0 
+   0AA4 br IL_0b3b: br IL_1bf3
+   0AA9 ldstr Arena_SINGLEGAMEOFARENA_ERR_TARGETLOCK
+   0AAE stloc.0 
+   0AAF br IL_0b3b: br IL_1bf3
+   0AB4 ldstr Arena_SINGLEGAMEOFARENA_ERR_TARGETCHG
+   0AB9 stloc.0 
+   0ABA call !0 Singleton`1<Assets.Scripts.GameSystem.CArenaSystem>::get_instance()
+   0ABF callvirt System.Void Assets.Scripts.GameSystem.CArenaSystem::ReOpen()
+   0AC4 br IL_0b3b: br IL_1bf3
+   0AC9 ldstr Arena_SINGLEGAMEOFARENA_ERR_NOTFINDTARGET
+   0ACE stloc.0 
+   0ACF br IL_0b3b: br IL_1bf3
+   0AD4 ldstr Arena_SINGLEGAMEOFARENA_ERR_OTHERS
+   0AD9 stloc.0 
+   0ADA br IL_0b3b: br IL_1bf3
+   0ADF ldstr Arena_ERR_LIMIT_CNT
+   0AE4 stloc.0 
+   0AE5 br IL_0b3b: br IL_1bf3
+   0AEA ldstr Arena_ERR_LIMIT_CD
+   0AEF stloc.0 
+   0AF0 br IL_0b3b: br IL_1bf3
+   0AF5 ldstr Arena_ERR_REWARD
+   0AFA stloc.0 
+   0AFB br IL_0b3b: br IL_1bf3
+   0B00 ldstr Arena_Be_Chanllenge_Time_Protect
+   0B05 stloc.0 
+   0B06 br IL_0b3b: br IL_1bf3
+   0B0B ldstr ERR_Freehero_Expire
+   0B10 stloc.0 
+   0B11 call !0 Singleton`1<EventRouter>::get_instance()
+   0B16 ldsfld EventID::SINGLEGAME_ERR_FREEHERO
+   0B1B callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0B20 br IL_0b3b: br IL_1bf3
+   0B25 ldstr CS_SINGLEGAME_ERR_EXPSKIN
+   0B2A stloc.0 
+   0B2B br IL_0b3b: br IL_1bf3
+   0B30 ldstr PveNotUseThisHero
+   0B35 stloc.0 
+   0B36 br IL_0b3b: br IL_1bf3
+   0B3B br IL_1bf3: ldloc.0
+   0B40 ldarg.1 
+   0B41 ldc.i4.3 
+   0B42 beq IL_0b53: ldstr "Arena_ARENASETBATTLELIST_ERR_FAILED"
+   0B47 ldarg.1 
+   0B48 ldc.i4.4 
+   0B49 beq IL_0b5e: ldstr "PveNotUseThisHero"
+   0B4E br IL_0b69: br IL_1bf3
+   0B53 ldstr Arena_ARENASETBATTLELIST_ERR_FAILED
+   0B58 stloc.0 
+   0B59 br IL_0b69: br IL_1bf3
+   0B5E ldstr PveNotUseThisHero
+   0B63 stloc.0 
+   0B64 br IL_0b69: br IL_1bf3
+   0B69 br IL_1bf3: ldloc.0
+   0B6E ldarg.1 
+   0B6F ldc.i4.1 
+   0B70 beq IL_0b81: ldstr "Arena_ARENAADDMEM_ERR_ALREADYIN"
+   0B75 ldarg.1 
+   0B76 ldc.i4.2 
+   0B77 beq IL_0b8c: ldstr "Arena_ARENAADDMEM_ERR_BATTLELISTISNULL"
+   0B7C br IL_0b97: br IL_1bf3
+   0B81 ldstr Arena_ARENAADDMEM_ERR_ALREADYIN
+   0B86 stloc.0 
+   0B87 br IL_0b97: br IL_1bf3
+   0B8C ldstr Arena_ARENAADDMEM_ERR_BATTLELISTISNULL
+   0B91 stloc.0 
+   0B92 br IL_0b97: br IL_1bf3
+   0B97 br IL_1bf3: ldloc.0
+   0B9C ldarg.1 
+   0B9D ldc.i4.1 
+   0B9E sub 
+   0B9F switch Mono.Cecil.Cil.Instruction[]
+   0BC8 br IL_0c30: br IL_1bf3
+   0BCD ldstr Err_Roulette_Money_Not_Enough
+   0BD2 stloc.0 
+   0BD3 br IL_0c30: br IL_1bf3
+   0BD8 ldstr Err_Roulette_Money_Type_Invalid
+   0BDD stloc.0 
+   0BDE br IL_0c30: br IL_1bf3
+   0BE3 ldstr Err_Roulette_Lottery_Cnt_Invalid
+   0BE8 stloc.0 
+   0BE9 br IL_0c30: br IL_1bf3
+   0BEE ldstr Err_Roulette_Pay_Failed
+   0BF3 stloc.0 
+   0BF4 br IL_0c30: br IL_1bf3
+   0BF9 ldstr Err_Roulette_Pay_Time_Out
+   0BFE stloc.0 
+   0BFF br IL_0c30: br IL_1bf3
+   0C04 ldstr Err_Roulette_Comsume
+   0C09 stloc.0 
+   0C0A br IL_0c30: br IL_1bf3
+   0C0F ldstr Err_Roulette_Reward_Limit
+   0C14 stloc.0 
+   0C15 br IL_0c30: br IL_1bf3
+   0C1A ldstr Err_Roulette_Draw_Limit
+   0C1F stloc.0 
+   0C20 br IL_0c30: br IL_1bf3
+   0C25 ldstr Err_Roulette_Other_Err
+   0C2A stloc.0 
+   0C2B br IL_0c30: br IL_1bf3
+   0C30 br IL_1bf3: ldloc.0
+   0C35 ldarg.1 
+   0C36 ldc.i4.1 
+   0C37 sub 
+   0C38 switch Mono.Cecil.Cil.Instruction[]
+   0C55 br IL_0c9c: br IL_1bf3
+   0C5A ldstr Err_Roulette_Money_Not_Enough
+   0C5F stloc.0 
+   0C60 br IL_0c9c: br IL_1bf3
+   0C65 ldstr Err_Roulette_Extern_Period_Index_Invalid
+   0C6A stloc.0 
+   0C6B br IL_0c9c: br IL_1bf3
+   0C70 ldstr Err_Roulette_Extern_No_Reach
+   0C75 stloc.0 
+   0C76 br IL_0c9c: br IL_1bf3
+   0C7B ldstr Err_Roulette_Extern_Drawed
+   0C80 stloc.0 
+   0C81 br IL_0c9c: br IL_1bf3
+   0C86 ldstr Err_Roulette_Extern_Reward_Id
+   0C8B stloc.0 
+   0C8C br IL_0c9c: br IL_1bf3
+   0C91 ldstr Err_Roulette_Other_Err
+   0C96 stloc.0 
+   0C97 br IL_0c9c: br IL_1bf3
+   0C9C br IL_1bf3: ldloc.0
+   0CA1 ldarg.1 
+   0CA2 ldc.i4.1 
+   0CA3 sub 
+   0CA4 switch Mono.Cecil.Cil.Instruction[]
+   0CE1 br IL_0d80: br IL_1bf3
+   0CE6 ldstr Err_Mystery_Shop_Not_Open
+   0CEB stloc.0 
+   0CEC br IL_0d80: br IL_1bf3
+   0CF1 ldstr Err_Mystery_Shop_Not_Close
+   0CF6 stloc.0 
+   0CF7 br IL_0d80: br IL_1bf3
+   0CFC ldstr Err_Mystery_Shop_Buy_Limit
+   0D01 stloc.0 
+   0D02 br IL_0d80: br IL_1bf3
+   0D07 ldstr Err_Mystery_Shop_Product_Not_Found
+   0D0C stloc.0 
+   0D0D br IL_0d80: br IL_1bf3
+   0D12 ldstr Err_Mystery_Shop_GOODSALREADYBUY
+   0D17 stloc.0 
+   0D18 br IL_0d80: br IL_1bf3
+   0D1D ldstr Err_Mystery_Shop_Product_BuyFail
+   0D22 stloc.0 
+   0D23 br IL_0d80: br IL_1bf3
+   0D28 ldstr Err_Mystery_Shop_Error_Invalid
+   0D2D stloc.0 
+   0D2E br IL_0d80: br IL_1bf3
+   0D33 ldstr Err_Mystery_Shop_ERROR_COINLIMIT
+   0D38 stloc.0 
+   0D39 br IL_0d80: br IL_1bf3
+   0D3E ldstr Err_Mystery_Shop_ERROR_STATEERR
+   0D43 stloc.0 
+   0D44 br IL_0d80: br IL_1bf3
+   0D49 ldstr CS_AKALISHOP_ERROR_REBATEID
+   0D4E stloc.0 
+   0D4F br IL_0d80: br IL_1bf3
+   0D54 ldstr CS_AKALISHOP_ERROR_REBATEUSE
+   0D59 stloc.0 
+   0D5A br IL_0d80: br IL_1bf3
+   0D5F ldstr CS_AKALISHOP_ERROR_REBATEVALID
+   0D64 stloc.0 
+   0D65 br IL_0d80: br IL_1bf3
+   0D6A ldstr CS_AKALISHOP_ERROR_REBATENOITEM
+   0D6F stloc.0 
+   0D70 br IL_0d80: br IL_1bf3
+   0D75 ldstr CS_AKALISHOP_ERROR_SYSTEM
+   0D7A stloc.0 
+   0D7B br IL_0d80: br IL_1bf3
+   0D80 br IL_1bf3: ldloc.0
+   0D85 ldarg.1 
+   0D86 ldc.i4.1 
+   0D87 sub 
+   0D88 switch Mono.Cecil.Cil.Instruction[]
+   0DA1 br IL_0ddd: br IL_1bf3
+   0DA6 ldstr Err_Recommend_Roulette_Server
+   0DAB stloc.0 
+   0DAC br IL_0ddd: br IL_1bf3
+   0DB1 ldstr Err_Recommend_Roulette_ID
+   0DB6 stloc.0 
+   0DB7 br IL_0ddd: br IL_1bf3
+   0DBC ldstr Err_Recommend_Roulette_Out_Date
+   0DC1 stloc.0 
+   0DC2 br IL_0ddd: br IL_1bf3
+   0DC7 ldstr Err_Recommend_Roulette_Money
+   0DCC stloc.0 
+   0DCD br IL_0ddd: br IL_1bf3
+   0DD2 ldstr Err_Recommend_Roulette_No_Data
+   0DD7 stloc.0 
+   0DD8 br IL_0ddd: br IL_1bf3
+   0DDD br IL_1bf3: ldloc.0
+   0DE2 ldarg.1 
+   0DE3 ldc.i4.1 
+   0DE4 sub 
+   0DE5 switch Mono.Cecil.Cil.Instruction[]
+   0E42 br IL_0f0d: br IL_1bf3
+   0E47 ldstr Err_Recommend_Recommend_Sys
+   0E4C stloc.0 
+   0E4D br IL_0f0d: br IL_1bf3
+   0E52 ldstr Err_Recommend_Recommend_ID
+   0E57 stloc.0 
+   0E58 br IL_0f0d: br IL_1bf3
+   0E5D ldstr Err_Recommend_Recommend_Out_Date
+   0E62 stloc.0 
+   0E63 br IL_0f0d: br IL_1bf3
+   0E68 ldstr Err_Recommend_Recommend_Dup
+   0E6D stloc.0 
+   0E6E br IL_0f0d: br IL_1bf3
+   0E73 ldstr Err_Recommend_Recommend_Pay
+   0E78 stloc.0 
+   0E79 br IL_0f0d: br IL_1bf3
+   0E7E ldstr Err_Recommend_Recommend_Money
+   0E83 stloc.0 
+   0E84 br IL_0f0d: br IL_1bf3
+   0E89 ldstr Err_Recommend_Recommend_Exchange_Coupons_Err
+   0E8E stloc.0 
+   0E8F br IL_0f0d: br IL_1bf3
+   0E94 ldstr Err_Recommend_Recommend_Exchange_Coupons_Invalid
+   0E99 stloc.0 
+   0E9A br IL_0f0d: br IL_1bf3
+   0E9F ldstr Err_Recommend_Recommend_Failed
+   0EA4 stloc.0 
+   0EA5 br IL_0f0d: br IL_1bf3
+   0EAA ldstr CS_SALERECOMMEND_ERR_INVALDITEM
+   0EAF stloc.0 
+   0EB0 br IL_0f0d: br IL_1bf3
+   0EB5 ldstr CS_SALERECOMMEND_ERR_ITEMDATA
+   0EBA stloc.0 
+   0EBB br IL_0f0d: br IL_1bf3
+   0EC0 ldstr CS_SALERECOMMEND_ERR_REBATEID
+   0EC5 stloc.0 
+   0EC6 br IL_0f0d: br IL_1bf3
+   0ECB ldstr CS_SALERECOMMEND_ERR_REBATEUSE
+   0ED0 stloc.0 
+   0ED1 br IL_0f0d: br IL_1bf3
+   0ED6 ldstr CS_SALERECOMMEND_ERR_REBATEVALID
+   0EDB stloc.0 
+   0EDC br IL_0f0d: br IL_1bf3
+   0EE1 ldstr CS_SALERECOMMEND_ERR_REBATENOITEM
+   0EE6 stloc.0 
+   0EE7 br IL_0f0d: br IL_1bf3
+   0EEC ldstr CS_SALERECOMMEND_ERR_HEROFULL
+   0EF1 stloc.0 
+   0EF2 br IL_0f0d: br IL_1bf3
+   0EF7 ldstr CS_SALERECOMMEND_ERR_HERONOHAVE
+   0EFC stloc.0 
+   0EFD br IL_0f0d: br IL_1bf3
+   0F02 ldstr CS_SALERECOMMEND_ERR_SKIN_RANKGRADE
+   0F07 stloc.0 
+   0F08 br IL_0f0d: br IL_1bf3
+   0F0D br IL_1bf3: ldloc.0
+   0F12 ldarg.1 
+   0F13 ldc.i4.1 
+   0F14 sub 
+   0F15 switch Mono.Cecil.Cil.Instruction[]
+   0F3A br IL_0f97: br IL_1bf3
+   0F3F ldstr Err_CS_RAREEXCHANGE_ERR_SYS
+   0F44 stloc.0 
+   0F45 br IL_0f97: br IL_1bf3
+   0F4A ldstr Err_CS_RAREEXCHANGE_ERR_ID
+   0F4F stloc.0 
+   0F50 br IL_0f97: br IL_1bf3
+   0F55 ldstr Err_CS_RAREEXCHANGE_ERR_OUTDATE
+   0F5A stloc.0 
+   0F5B br IL_0f97: br IL_1bf3
+   0F60 ldstr Err_CS_RAREEXCHANGE_ERR_DUP
+   0F65 stloc.0 
+   0F66 br IL_0f97: br IL_1bf3
+   0F6B ldstr Err_CS_RAREEXCHANGE_ERR_LIMIT
+   0F70 stloc.0 
+   0F71 br IL_0f97: br IL_1bf3
+   0F76 ldstr Err_CS_RAREEXCHANGE_ERR_EXCHANGE
+   0F7B stloc.0 
+   0F7C br IL_0f97: br IL_1bf3
+   0F81 ldstr Err_CS_RAREEXCHANGE_ERR_STATE
+   0F86 stloc.0 
+   0F87 br IL_0f97: br IL_1bf3
+   0F8C ldstr CS_RAREEXCHANGE_ERR_ITEMDATA
+   0F91 stloc.0 
+   0F92 br IL_0f97: br IL_1bf3
+   0F97 br IL_1bf3: ldloc.0
+   0F9C ldarg.1 
+   0F9D ldc.i4.1 
+   0F9E sub 
+   0F9F switch Mono.Cecil.Cil.Instruction[]
+   1068 br IL_11e3: br IL_1bf3
+   106D ldstr CS_PRESENTHEROSKIN_SYS
+   1072 stloc.0 
+   1073 br IL_11e3: br IL_1bf3
+   1078 ldstr CS_PRESENTHEROSKIN_LOCK
+   107D stloc.0 
+   107E br IL_11e3: br IL_1bf3
+   1083 ldstr CS_PRESENTHEROSKIN_NOALLOW
+   1088 stloc.0 
+   1089 br IL_11e3: br IL_1bf3
+   108E ldstr CS_PRESENTHEROSKIN_UNFRIEND
+   1093 stloc.0 
+   1094 br IL_11e3: br IL_1bf3
+   1099 ldstr CS_PRESENTHEROSKIN_COINLIMIT
+   109E stloc.0 
+   109F br IL_11e3: br IL_1bf3
+   10A4 ldstr CS_PRESENTHEROSKIN_MSGCONTENT
+   10A9 stloc.0 
+   10AA br IL_11e3: br IL_1bf3
+   10AF ldstr CS_PRESENTHEROSKIN_INVALID_PLAT
+   10B4 stloc.0 
+   10B5 br IL_11e3: br IL_1bf3
+   10BA ldstr Gift_Gift_DayMax
+   10BF stloc.0 
+   10C0 br IL_11e3: br IL_1bf3
+   10C5 ldstr Gift_Gift_WeekMax
+   10CA stloc.0 
+   10CB br IL_11e3: br IL_1bf3
+   10D0 ldstr Gift_GiftNoXin
+   10D5 stloc.0 
+   10D6 br IL_11e3: br IL_1bf3
+   10DB ldstr Gift_GiftNotToSelf
+   10E0 stloc.0 
+   10E1 br IL_11e3: br IL_1bf3
+   10E6 ldstr SecurePwd_Invalid_Pwd
+   10EB stloc.0 
+   10EC br IL_11e3: br IL_1bf3
+   10F1 ldstr CS_PRESENTHEROSKIN_HAVE
+   10F6 stloc.0 
+   10F7 br IL_11e3: br IL_1bf3
+   10FC ldstr CS_PRESENTHEROSKIN_RELA_FRIEND
+   1101 stloc.0 
+   1102 br IL_11e3: br IL_1bf3
+   1107 ldstr CS_PRESENTHEROSKIN_RELA_SNSFRIEND
+   110C stloc.0 
+   110D br IL_11e3: br IL_1bf3
+   1112 ldstr CS_PRESENTHEROSKIN_RELA_MASTER
+   1117 stloc.0 
+   1118 br IL_11e3: br IL_1bf3
+   111D ldstr CS_PRESENTHEROSKIN_MSGID
+   1122 stloc.0 
+   1123 br IL_11e3: br IL_1bf3
+   1128 ldstr CS_PRESENTHEROSKIN_MSGTYPE
+   112D stloc.0 
+   112E br IL_11e3: br IL_1bf3
+   1133 ldstr CS_PRESENTHEROSKIN_SPECINVALID
+   1138 stloc.0 
+   1139 br IL_11e3: br IL_1bf3
+   113E ldstr CS_PRESENTHEROSKIN_ACNTSTATE
+   1143 stloc.0 
+   1144 br IL_11e3: br IL_1bf3
+   1149 ldstr CS_PRESENTHEROSKIN_VIPLEVEL
+   114E stloc.0 
+   114F br IL_11e3: br IL_1bf3
+   1154 ldstr CS_PRESENTHEROSKIN_OUTDATE
+   1159 stloc.0 
+   115A br IL_11e3: br IL_1bf3
+   115F ldstr CS_PRESENTHEROSKIN_COSTTYPE
+   1164 stloc.0 
+   1165 br IL_11e3: br IL_1bf3
+   116A ldstr CS_PRESENTHEROSKIN_GIFTHAVE
+   116F stloc.0 
+   1170 br IL_11e3: br IL_1bf3
+   1175 ldstr CS_PRESENTHEROSKIN_MSGDIRTY
+   117A stloc.0 
+   117B br IL_11e3: br IL_1bf3
+   1180 ldstr CS_PRESENTHEROSKIN_INTIMACY
+   1185 stloc.0 
+   1186 br IL_11e3: br IL_1bf3
+   118B ldstr CS_PRESENTHEROSKIN_PLATCLOSE
+   1190 stloc.0 
+   1191 br IL_11e3: br IL_1bf3
+   1196 ldstr CS_PRESENTHEROSKIN_SENDNODATA
+   119B stloc.0 
+   119C br IL_11e3: br IL_1bf3
+   11A1 ldstr CS_PRESENTHEROSKIN_PKGFULL
+   11A6 stloc.0 
+   11A7 br IL_11e3: br IL_1bf3
+   11AC ldstr CS_PRESENTHEROSKIN_NOPKGITEM
+   11B1 stloc.0 
+   11B2 br IL_11e3: br IL_1bf3
+   11B7 ldstr CS_PRESENTHEROSKIN_MAILFULL
+   11BC stloc.0 
+   11BD br IL_11e3: br IL_1bf3
+   11C2 ldstr CS_PRESENTHEROSKIN_LIMIT
+   11C7 stloc.0 
+   11C8 br IL_11e3: br IL_1bf3
+   11CD ldstr CS_PRESENTHEROSKIN_PICKLIMIT
+   11D2 stloc.0 
+   11D3 br IL_11e3: br IL_1bf3
+   11D8 ldstr CS_PRESENTHEROSKIN_ITEM_HAVE
+   11DD stloc.0 
+   11DE br IL_11e3: br IL_1bf3
+   11E3 br IL_1bf3: ldloc.0
+   11E8 ldarg.1 
+   11E9 ldc.i4.1 
+   11EA sub 
+   11EB switch Mono.Cecil.Cil.Instruction[]
+   1284 br IL_142b: br IL_1bf3
+   1289 ldstr CS_ACNT_ASKFORREQ_ERR_SYS
+   128E stloc.0 
+   128F br IL_142b: br IL_1bf3
+   1294 ldstr CS_ACNT_ASKFORREQ_ERR_INDEX
+   1299 stloc.0 
+   129A br IL_142b: br IL_1bf3
+   129F ldstr CS_ACNT_ASKFORREQ_ERR_UNDEL
+   12A4 stloc.0 
+   12A5 br IL_142b: br IL_1bf3
+   12AA ldstr CS_ACNT_ASKFORREQ_ERR_VERSION
+   12AF stloc.0 
+   12B0 br IL_142b: br IL_1bf3
+   12B5 ldstr CS_ACNT_ASKFORREQ_ERR_NODATA
+   12BA stloc.0 
+   12BB br IL_142b: br IL_1bf3
+   12C0 ldstr CS_ACNT_ASKFORREQ_ERR_STATE
+   12C5 stloc.0 
+   12C6 br IL_142b: br IL_1bf3
+   12CB ldstr CS_ACNT_ASKFORREQ_ERR_MSGDIRTY
+   12D0 stloc.0 
+   12D1 br IL_142b: br IL_1bf3
+   12D6 ldarg.0 
+   12D7 ldc.i4 1385
+   12DC bne.un IL_12ec: ldarg.0
+   12E1 ldstr CS_ACNT_ASKFORREQ_ERR_LOCK
+   12E6 stloc.0 
+   12E7 br IL_1308: br IL_142b
+   12EC ldarg.0 
+   12ED ldc.i4 1391
+   12F2 bne.un IL_1302: ldstr "CS_ACNT_ASKFORREQ_ERR_LOCK"
+   12F7 ldstr CS_PRESENTHEROSKIN_LOCK
+   12FC stloc.0 
+   12FD br IL_1308: br IL_142b
+   1302 ldstr CS_ACNT_ASKFORREQ_ERR_LOCK
+   1307 stloc.0 
+   1308 br IL_142b: br IL_1bf3
+   130D ldstr CS_ACNT_ASKFORREQ_ERR_SELF
+   1312 stloc.0 
+   1313 br IL_142b: br IL_1bf3
+   1318 ldstr CS_ACNT_ASKFORREQ_ERR_DAYMAX
+   131D stloc.0 
+   131E br IL_142b: br IL_1bf3
+   1323 ldstr CS_ACNT_ASKFORREQ_ERR_WEEKMAX
+   1328 stloc.0 
+   1329 br IL_142b: br IL_1bf3
+   132E ldstr CS_ACNT_ASKFORREQ_ERR_PLAT
+   1333 stloc.0 
+   1334 br IL_142b: br IL_1bf3
+   1339 ldstr CS_ACNT_ASKFORREQ_ERR_ITEM
+   133E stloc.0 
+   133F br IL_142b: br IL_1bf3
+   1344 ldstr CS_ACNT_ASKFORREQ_ERR_NOFRIEND
+   1349 stloc.0 
+   134A br IL_142b: br IL_1bf3
+   134F ldstr CS_ACNT_ASKFORREQ_ERR_NOALLOW
+   1354 stloc.0 
+   1355 br IL_142b: br IL_1bf3
+   135A ldstr CS_ACNT_ASKFORREQ_ERR_READWAIT
+   135F stloc.0 
+   1360 br IL_142b: br IL_1bf3
+   1365 ldstr CS_ACNT_ASKFORREQ_ERR_MSGTYPE
+   136A stloc.0 
+   136B br IL_142b: br IL_1bf3
+   1370 ldstr CS_ACNT_ASKFORREQ_ERR_MSGID
+   1375 stloc.0 
+   1376 br IL_142b: br IL_1bf3
+   137B ldstr CS_ACNT_ASKFORREQ_ERR_PSWDCHK
+   1380 stloc.0 
+   1381 br IL_142b: br IL_1bf3
+   1386 ldstr CS_ACNT_ASKFORREQ_ERR_OFFSHELF
+   138B stloc.0 
+   138C br IL_142b: br IL_1bf3
+   1391 ldstr CS_ACNT_ASKFORREQ_ERR_PAY
+   1396 stloc.0 
+   1397 br IL_142b: br IL_1bf3
+   139C ldstr CS_ACNT_ASKFORREQ_ERR_COINLIMIT
+   13A1 stloc.0 
+   13A2 br IL_142b: br IL_1bf3
+   13A7 ldstr CS_ACNT_ASKFORREQ_ERR_MAILFAIL
+   13AC stloc.0 
+   13AD br IL_142b: br IL_1bf3
+   13B2 ldstr CS_ACNT_ASKFORREQ_ERR_NOOPEN
+   13B7 stloc.0 
+   13B8 br IL_142b: br IL_1bf3
+   13BD ldstr CS_ACNT_ASKFORREQ_ERR_FRIENDTIME
+   13C2 stloc.0 
+   13C3 br IL_142b: br IL_1bf3
+   13C8 ldstr CS_ACNT_ASKFORREQ_ERR_ITEMHAVE
+   13CD stloc.0 
+   13CE br IL_142b: br IL_1bf3
+   13D3 ldstr CS_ACNT_ASKFORREQ_ERR_ITEMHAVE_SELFPKG
+   13D8 stloc.0 
+   13D9 br IL_142b: br IL_1bf3
+   13DE ldstr CS_ACNT_ASKFORREQ_ERR_INTIMACY
+   13E3 stloc.0 
+   13E4 br IL_142b: br IL_1bf3
+   13E9 ldstr CS_ACNT_ASKFORREQ_ERR_PLATCLOSE
+   13EE stloc.0 
+   13EF br IL_142b: br IL_1bf3
+   13F4 ldstr CS_ACNT_ASKFORREQ_ERR_ITEMNOCNT
+   13F9 stloc.0 
+   13FA br IL_142b: br IL_1bf3
+   13FF ldstr CS_ACNT_ASKFORREQ_ERR_ITEMOVERLIMIT
+   1404 stloc.0 
+   1405 br IL_142b: br IL_1bf3
+   140A ldstr CS_ACNT_ASKFORREQ_ERR_SPECEXCEED
+   140F stloc.0 
+   1410 br IL_142b: br IL_1bf3
+   1415 ldstr CS_ACNT_ASKFORREQ_ERR_ITEMHAVE_SELFLIST
+   141A stloc.0 
+   141B br IL_142b: br IL_1bf3
+   1420 ldstr CS_ACNT_ASKFORREQ_ERR_PKGFULL
+   1425 stloc.0 
+   1426 br IL_142b: br IL_1bf3
+   142B br IL_1bf3: ldloc.0
+   1430 ldarg.1 
+   1431 ldc.i4.1 
+   1432 beq IL_143c: ldstr "Err_Player_Info_Honor_Use_Not_Have"
+   1437 br IL_1447: br IL_1bf3
+   143C ldstr Err_Player_Info_Honor_Use_Not_Have
+   1441 stloc.0 
+   1442 br IL_1447: br IL_1bf3
+   1447 br IL_1bf3: ldloc.0
+   144C ldarg.1 
+   144D ldc.i4 165
+   1452 sub 
+   1453 switch Mono.Cecil.Cil.Instruction[]
+   1468 br IL_1499: br IL_1bf3
+   146D ldstr CS_ERR_SEND_GUILD_MAIL_AUTH
+   1472 stloc.0 
+   1473 br IL_1499: br IL_1bf3
+   1478 ldstr CS_ERR_SEND_GUILD_MAIL_LIMIT
+   147D stloc.0 
+   147E br IL_1499: br IL_1bf3
+   1483 ldstr CS_ERR_SEND_GUILD_MAIL_SUBJECT
+   1488 stloc.0 
+   1489 br IL_1499: br IL_1bf3
+   148E ldstr CS_ERR_SEND_GUILD_MAIL_CONTENT
+   1493 stloc.0 
+   1494 br IL_1499: br IL_1bf3
+   1499 br IL_1bf3: ldloc.0
+   149E ldarg.1 
+   149F ldc.i4 163
+   14A4 beq IL_14ae: ldstr "CS_ERR_FRIEND_INVALID_PLAT"
+   14A9 br IL_14b9: br IL_1bf3
+   14AE ldstr CS_ERR_FRIEND_INVALID_PLAT
+   14B3 stloc.0 
+   14B4 br IL_14b9: br IL_1bf3
+   14B9 br IL_1bf3: ldloc.0
+   14BE ldarg.1 
+   14BF ldc.i4 172
+   14C4 beq IL_14ce: ldstr "CS_ERR_SIGNATURE_ILLEGAL"
+   14C9 br IL_14d9: br IL_1bf3
+   14CE ldstr CS_ERR_SIGNATURE_ILLEGAL
+   14D3 stloc.0 
+   14D4 br IL_14d9: br IL_1bf3
+   14D9 br IL_1bf3: ldloc.0
+   14DE ldarg.1 
+   14DF ldc.i4.1 
+   14E0 sub 
+   14E1 switch Mono.Cecil.Cil.Instruction[]
+   14F6 br IL_1527: br IL_1bf3
+   14FB ldstr SecurePwd_State_Error
+   1500 stloc.0 
+   1501 br IL_1527: br IL_1bf3
+   1506 ldstr SecurePwd_Invalid_Operation
+   150B stloc.0 
+   150C br IL_1527: br IL_1bf3
+   1511 ldstr SecurePwd_Invalid_Pwd
+   1516 stloc.0 
+   1517 br IL_1527: br IL_1bf3
+   151C ldstr SecurePwd_Invalid_Force_Close_Req
+   1521 stloc.0 
+   1522 br IL_1527: br IL_1bf3
+   1527 br IL_1bf3: ldloc.0
+   152C ldarg.1 
+   152D ldc.i4.1 
+   152E sub 
+   152F switch Mono.Cecil.Cil.Instruction[]
+   1560 br IL_15de: br IL_1bf3
+   1565 ldstr CS_SYMBOLOPT_STATEERR
+   156A stloc.0 
+   156B br IL_15de: br IL_1bf3
+   1570 ldstr CustomCompetition_QRError_11
+   1575 stloc.0 
+   1576 br IL_15de: br IL_1bf3
+   157B ldstr Symbol_Coin_Not_Enough_Tip_TiShen
+   1580 stloc.0 
+   1581 br IL_15de: br IL_1bf3
+   1586 ldstr Symbol_Cannot_Break
+   158B stloc.0 
+   158C br IL_15de: br IL_1bf3
+   1591 ldstr CS_ACTION_OPT_ERRCODE8
+   1596 stloc.0 
+   1597 br IL_15de: br IL_1bf3
+   159C ldstr Symbol_Cannot_Upgrade
+   15A1 stloc.0 
+   15A2 br IL_15de: br IL_1bf3
+   15A7 ldstr Symbol_MaxLevel
+   15AC stloc.0 
+   15AD br IL_15de: br IL_1bf3
+   15B2 ldstr Symbol_Package_Full
+   15B7 stloc.0 
+   15B8 br IL_15de: br IL_1bf3
+   15BD ldstr Symbol_DownLevel_Fail
+   15C2 stloc.0 
+   15C3 br IL_15de: br IL_1bf3
+   15C8 ldstr Symbol_DownLevel_MinLv
+   15CD stloc.0 
+   15CE br IL_15de: br IL_1bf3
+   15D3 ldstr SecurePwd_Invalid_Pwd
+   15D8 stloc.0 
+   15D9 br IL_15de: br IL_1bf3
+   15DE br IL_1bf3: ldloc.0
+   15E3 ldarg.1 
+   15E4 ldc.i4 412
+   15E9 beq IL_1605: ldstr "Symbol_Recommend_Limit"
+   15EE ldarg.1 
+   15EF ldc.i4 413
+   15F4 beq IL_1610: ldstr "Symbol_Recommend_Dup"
+   15F9 ldarg.1 
+   15FA ldc.i4.1 
+   15FB beq IL_161b: ldstr "Symbol_Recommend_Fail"
+   1600 br IL_1626: br IL_1bf3
+   1605 ldstr Symbol_Recommend_Limit
+   160A stloc.0 
+   160B br IL_1626: br IL_1bf3
+   1610 ldstr Symbol_Recommend_Dup
+   1615 stloc.0 
+   1616 br IL_1626: br IL_1bf3
+   161B ldstr Symbol_Recommend_Fail
+   1620 stloc.0 
+   1621 br IL_1626: br IL_1bf3
+   1626 br IL_1bf3: ldloc.0
+   162B ldarg.1 
+   162C ldc.i4.s 52
+   162E beq IL_1640: ldstr "Guild_Err_RedEnvelope_List_Not_Exists"
+   1633 ldarg.1 
+   1634 ldc.i4.s 79
+   1636 beq IL_164b: ldstr "Guild_Err_RedEnvelope_Function_Closed"
+   163B br IL_1656: br IL_1bf3
+   1640 ldstr Guild_Err_RedEnvelope_List_Not_Exists
+   1645 stloc.0 
+   1646 br IL_1656: br IL_1bf3
+   164B ldstr Guild_Err_RedEnvelope_Function_Closed
+   1650 stloc.0 
+   1651 br IL_1656: br IL_1bf3
+   1656 br IL_1bf3: ldloc.0
+   165B ldarg.1 
+   165C ldc.i4.s 53
+   165E beq IL_1678: ldstr "Guild_Err_RedEnvelope_Record_Not_Exists"
+   1663 ldarg.1 
+   1664 ldc.i4.s 54
+   1666 beq IL_1683: ldstr "Guild_Err_RedEnvelope_Not_Exists"
+   166B ldarg.1 
+   166C ldc.i4.s 79
+   166E beq IL_168e: ldstr "Guild_Err_RedEnvelope_Function_Closed"
+   1673 br IL_1699: br IL_1bf3
+   1678 ldstr Guild_Err_RedEnvelope_Record_Not_Exists
+   167D stloc.0 
+   167E br IL_1699: br IL_1bf3
+   1683 ldstr Guild_Err_RedEnvelope_Not_Exists
+   1688 stloc.0 
+   1689 br IL_1699: br IL_1bf3
+   168E ldstr Guild_Err_RedEnvelope_Function_Closed
+   1693 stloc.0 
+   1694 br IL_1699: br IL_1bf3
+   1699 br IL_1bf3: ldloc.0
+   169E ldarg.1 
+   169F ldc.i4.s 62
+   16A1 sub 
+   16A2 switch Mono.Cecil.Cil.Instruction[]
+   170B ldarg.1 
+   170C ldc.i4.s 34
+   170E beq IL_17db: ldstr "Guild_Err_RedEnvelope_Create_JOIN_TIME_LIMIT"
+   1713 ldarg.1 
+   1714 ldc.i4.s 98
+   1716 beq IL_17a4: ldstr "Guild_Err_RedEnvelope_CD"
+   171B br IL_17e6: br IL_1bf3
+   1720 ldstr Guild_Err_RedEnvelope_Too_Many_Not_Ran_Out
+   1725 stloc.0 
+   1726 br IL_17e6: br IL_1bf3
+   172B ldstr Guild_Err_RedEnvelope_Exceed_Create_Count_Limit
+   1730 stloc.0 
+   1731 br IL_17e6: br IL_1bf3
+   1736 ldstr Guild_Err_RedEnvelope_Not_Meet_Member_Num_Limit
+   173B stloc.0 
+   173C br IL_17e6: br IL_1bf3
+   1741 ldstr Guild_Err_RedEnvelope_Fill_Create_Info_Failed
+   1746 stloc.0 
+   1747 br IL_17e6: br IL_1bf3
+   174C ldstr Guild_Err_RedEnvelope_Blessing_Msg_Illegal
+   1751 stloc.0 
+   1752 br IL_17e6: br IL_1bf3
+   1757 ldstr Guild_Err_RedEnvelope_Creator_Level_Limit
+   175C stloc.0 
+   175D br IL_17e6: br IL_1bf3
+   1762 ldstr Guild_Err_RedEnvelope_Creator_HuoYueDu_Limit
+   1767 stloc.0 
+   1768 br IL_17e6: br IL_1bf3
+   176D ldstr Guild_Err_RedEnvelope_Res_Not_Exists
+   1772 stloc.0 
+   1773 br IL_17e6: br IL_1bf3
+   1778 ldstr Guild_Err_RedEnvelope_Not_Have_Quota
+   177D stloc.0 
+   177E br IL_17e6: br IL_1bf3
+   1783 ldstr Guild_Err_RedEnvelope_Not_Support_Type
+   1788 stloc.0 
+   1789 br IL_17e6: br IL_1bf3
+   178E ldstr Guild_Err_RedEnvelope_Mony_Limit
+   1793 stloc.0 
+   1794 br IL_17e6: br IL_1bf3
+   1799 ldstr Guild_Err_RedEnvelope_Para_Illegal
+   179E stloc.0 
+   179F br IL_17e6: br IL_1bf3
+   17A4 ldstr Guild_Err_RedEnvelope_CD
+   17A9 stloc.0 
+   17AA br IL_17e6: br IL_1bf3
+   17AF ldstr Guild_Err_RedEnvelope_Res_Disabled
+   17B4 stloc.0 
+   17B5 br IL_17e6: br IL_1bf3
+   17BA ldstr Guild_Err_RedEnvelope_Function_Closed
+   17BF stloc.0 
+   17C0 br IL_17e6: br IL_1bf3
+   17C5 ldstr Guild_Err_RedEnvelope_Pay_Fail
+   17CA stloc.0 
+   17CB br IL_17e6: br IL_1bf3
+   17D0 ldstr Guild_Err_RedEnvelope_Invalid_Pwd
+   17D5 stloc.0 
+   17D6 br IL_17e6: br IL_1bf3
+   17DB ldstr Guild_Err_RedEnvelope_Create_JOIN_TIME_LIMIT
+   17E0 stloc.0 
+   17E1 br IL_17e6: br IL_1bf3
+   17E6 br IL_1bf3: ldloc.0
+   17EB ldarg.1 
+   17EC ldc.i4.s 55
+   17EE sub 
+   17EF switch Mono.Cecil.Cil.Instruction[]
+   1810 ldarg.1 
+   1811 ldc.i4.s 74
+   1813 sub 
+   1814 switch Mono.Cecil.Cil.Instruction[]
+   1831 ldarg.1 
+   1832 ldc.i4.s 34
+   1834 beq IL_18cd: ldstr "Guild_Err_RedEnvelope_Capture_JOIN_TIME_LIMIT"
+   1839 br IL_18d8: br IL_1bf3
+   183E ldstr Guild_Err_RedEnvelope_Taken_Num_Exceed_Day_Limit
+   1843 stloc.0 
+   1844 br IL_18d8: br IL_1bf3
+   1849 ldstr Guild_Err_RedEnvelope_Taken_Exceed_Day_Coin_Limit
+   184E stloc.0 
+   184F br IL_18d8: br IL_1bf3
+   1854 ldstr Guild_Err_RedEnvelope_Taken_Exceed_Day_Diamond_Limit
+   1859 stloc.0 
+   185A br IL_18d8: br IL_1bf3
+   185F ldstr Guild_Err_RedEnvelope_Taken_Exceed_Day_Coupons_Limit
+   1864 stloc.0 
+   1865 br IL_18d8: br IL_1bf3
+   186A ldstr Guild_Err_RedEnvelope_Taken_Exceed_Day_SymbolCoin_Limit
+   186F stloc.0 
+   1870 br IL_18d8: br IL_1bf3
+   1875 ldstr Guild_Err_RedEnvelope_Taken_Condition_Arg
+   187A stloc.0 
+   187B br IL_18d8: br IL_1bf3
+   1880 ldstr Guild_Err_RedEnvelope_Already_Taken
+   1885 stloc.0 
+   1886 br IL_18d8: br IL_1bf3
+   188B ldstr Guild_Err_RedEnvelope_Not_Meed_Taken_Condition
+   1890 stloc.0 
+   1891 br IL_18d8: br IL_1bf3
+   1896 ldstr Guild_Err_RedEnvelope_Terminate
+   189B stloc.0 
+   189C br IL_18d8: br IL_1bf3
+   18A1 ldstr Guild_Err_RedEnvelope_Ran_Out
+   18A6 stloc.0 
+   18A7 br IL_18d8: br IL_1bf3
+   18AC ldstr Guild_Err_RedEnvelope_Time_Out
+   18B1 stloc.0 
+   18B2 br IL_18d8: br IL_1bf3
+   18B7 ldstr Guild_Err_RedEnvelope_Prepare
+   18BC stloc.0 
+   18BD br IL_18d8: br IL_1bf3
+   18C2 ldstr Guild_Err_RedEnvelope_Function_Closed
+   18C7 stloc.0 
+   18C8 br IL_18d8: br IL_1bf3
+   18CD ldstr Guild_Err_RedEnvelope_Capture_JOIN_TIME_LIMIT
+   18D2 stloc.0 
+   18D3 br IL_18d8: br IL_1bf3
+   18D8 br IL_1bf3: ldloc.0
+   18DD ldarg.1 
+   18DE ldc.i4.s 84
+   18E0 beq IL_18fa: ldstr "Guild_Err_RedEnvelope_Thankness_Msg_Illegal"
+   18E5 ldarg.1 
+   18E6 ldc.i4.s 85
+   18E8 beq IL_1905: ldstr "Guild_Err_RedEnvelope_ID_Illegal"
+   18ED ldarg.1 
+   18EE ldc.i4.s 73
+   18F0 beq IL_1910: ldstr "Guild_Err_RedEnvelope_Para_Illegal"
+   18F5 br IL_191b: br IL_1bf3
+   18FA ldstr Guild_Err_RedEnvelope_Thankness_Msg_Illegal
+   18FF stloc.0 
+   1900 br IL_191b: br IL_1bf3
+   1905 ldstr Guild_Err_RedEnvelope_ID_Illegal
+   190A stloc.0 
+   190B br IL_191b: br IL_1bf3
+   1910 ldstr Guild_Err_RedEnvelope_Para_Illegal
+   1915 stloc.0 
+   1916 br IL_191b: br IL_1bf3
+   191B br IL_1bf3: ldloc.0
+   1920 ldarg.1 
+   1921 ldc.i4.7 
+   1922 beq IL_193b: ldstr "CS_RANDDRAW_ERR_FREESTATE"
+   1927 ldarg.1 
+   1928 ldc.i4.8 
+   1929 beq IL_1946: ldstr "CS_RANDDRAW_ERR_FREECLOSE"
+   192E ldarg.1 
+   192F ldc.i4.s 9
+   1931 beq IL_1951: ldstr "CS_RANDDRAW_ERR_FREEGET"
+   1936 br IL_195c: br IL_1bf3
+   193B ldstr CS_RANDDRAW_ERR_FREESTATE
+   1940 stloc.0 
+   1941 br IL_195c: br IL_1bf3
+   1946 ldstr CS_RANDDRAW_ERR_FREECLOSE
+   194B stloc.0 
+   194C br IL_195c: br IL_1bf3
+   1951 ldstr CS_RANDDRAW_ERR_FREEGET
+   1956 stloc.0 
+   1957 br IL_195c: br IL_1bf3
+   195C br IL_1bf3: ldloc.0
+   1961 ldarg.1 
+   1962 ldc.i4.1 
+   1963 sub 
+   1964 switch Mono.Cecil.Cil.Instruction[]
+   19CD br IL_1ab9: br IL_1bf3
+   19D2 ldstr CS_PACKBUYHEROSKIN_OTHER
+   19D7 stloc.0 
+   19D8 br IL_1ab9: br IL_1bf3
+   19DD ldstr CS_PACKBUYHEROSKIN_SKININVALID
+   19E2 stloc.0 
+   19E3 br IL_1ab9: br IL_1bf3
+   19E8 ldstr CS_PACKBUYHEROSKIN_HEROINVALID
+   19ED stloc.0 
+   19EE br IL_1ab9: br IL_1bf3
+   19F3 ldstr CS_PACKBUYHEROSKIN_HEROOVERTIME
+   19F8 stloc.0 
+   19F9 br IL_1ab9: br IL_1bf3
+   19FE ldstr CS_PACKBUYHEROSKIN_HEROPKGFULL
+   1A03 stloc.0 
+   1A04 br IL_1ab9: br IL_1bf3
+   1A09 ldstr CS_PACKBUYHEROSKIN_HEROOWNED
+   1A0E stloc.0 
+   1A0F br IL_1ab9: br IL_1bf3
+   1A14 ldstr CS_PACKBUYHEROSKIN_SKINOWNED
+   1A19 stloc.0 
+   1A1A br IL_1ab9: br IL_1bf3
+   1A1F ldstr CS_PACKBUYHEROSKIN_RANKGRADE
+   1A24 stloc.0 
+   1A25 br IL_1ab9: br IL_1bf3
+   1A2A ldstr CS_PACKBUYHEROSKIN_BUYTYPE
+   1A2F stloc.0 
+   1A30 br IL_1ab9: br IL_1bf3
+   1A35 ldstr CS_PACKBUYHEROSKIN_BUYFAIL
+   1A3A stloc.0 
+   1A3B br IL_1ab9: br IL_1bf3
+   1A40 ldstr CS_PACKBUYHEROSKIN_COINLIMIT
+   1A45 stloc.0 
+   1A46 br IL_1ab9: br IL_1bf3
+   1A4B ldstr CS_PACKBUYHEROSKIN_COUPONSLIMIT
+   1A50 stloc.0 
+   1A51 br IL_1ab9: br IL_1bf3
+   1A56 ldstr CS_PACKBUYHEROSKIN_DIAMONDLIMIT
+   1A5B stloc.0 
+   1A5C br IL_1ab9: br IL_1bf3
+   1A61 ldstr CS_PACKBUYHEROSKIN_COUPONSPAY
+   1A66 stloc.0 
+   1A67 br IL_1ab9: br IL_1bf3
+   1A6C ldstr CS_PACKBUYHEROSKIN_REBATEID
+   1A71 stloc.0 
+   1A72 br IL_1ab9: br IL_1bf3
+   1A77 ldstr CS_PACKBUYHEROSKIN_REBATEUSE
+   1A7C stloc.0 
+   1A7D br IL_1ab9: br IL_1bf3
+   1A82 ldstr CS_PACKBUYHEROSKIN_REBATEVALID
+   1A87 stloc.0 
+   1A88 br IL_1ab9: br IL_1bf3
+   1A8D ldstr CS_PACKBUYHEROSKIN_REBATENOITEM
+   1A92 stloc.0 
+   1A93 br IL_1ab9: br IL_1bf3
+   1A98 ldstr CS_PACKBUYHEROSKIN_NOT_SAME_HEROSKIN
+   1A9D stloc.0 
+   1A9E br IL_1ab9: br IL_1bf3
+   1AA3 ldstr CS_PACKBUYHEROSKIN_SYS_CLOSED
+   1AA8 stloc.0 
+   1AA9 br IL_1ab9: br IL_1bf3
+   1AAE ldstr CS_PACKBUYHEROSKIN_NO_SKIN
+   1AB3 stloc.0 
+   1AB4 br IL_1ab9: br IL_1bf3
+   1AB9 br IL_1bf3: ldloc.0
+   1ABE ldarg.1 
+   1ABF ldc.i4 416
+   1AC4 beq IL_1ad9: ldstr "CS_ERR_SELFDEFINE_HEROGUIDE_CONTENT_ILLEGAL"
+   1AC9 ldarg.1 
+   1ACA ldc.i4 421
+   1ACF beq IL_1ae4: ldstr "CS_ERR_BANTIME_HEROGUIDE_UPD_LIMIT"
+   1AD4 br IL_1aef: br IL_1bf3
+   1AD9 ldstr CS_ERR_SELFDEFINE_HEROGUIDE_CONTENT_ILLEGAL
+   1ADE stloc.0 
+   1ADF br IL_1aef: br IL_1bf3
+   1AE4 ldstr CS_ERR_BANTIME_HEROGUIDE_UPD_LIMIT
+   1AE9 stloc.0 
+   1AEA br IL_1aef: br IL_1bf3
+   1AEF br IL_1bf3: ldloc.0
+   1AF4 ldarg.1 
+   1AF5 ldc.i4 414
+   1AFA beq IL_1b30: ldstr "CS_ERR_HEROGUIDE_JUDGE_TIMES_LIMIT"
+   1AFF ldarg.1 
+   1B00 ldc.i4 415
+   1B05 beq IL_1b25: ldstr "CS_ERR_HEROGUIDE_JUDGE_DUP"
+   1B0A ldarg.1 
+   1B0B ldc.i4 422
+   1B10 beq IL_1b3b: ldstr "CS_ERR_HEROGUIDE_JUDGE_ACNTLVL_LIMIT"
+   1B15 ldarg.1 
+   1B16 ldc.i4 423
+   1B1B beq IL_1b46: ldstr "CS_ERR_GENERAL_JUDGE_SAMEACNT_LIMIT"
+   1B20 br IL_1b51: br IL_1bf3
+   1B25 ldstr CS_ERR_HEROGUIDE_JUDGE_DUP
+   1B2A stloc.0 
+   1B2B br IL_1b51: br IL_1bf3
+   1B30 ldstr CS_ERR_HEROGUIDE_JUDGE_TIMES_LIMIT
+   1B35 stloc.0 
+   1B36 br IL_1b51: br IL_1bf3
+   1B3B ldstr CS_ERR_HEROGUIDE_JUDGE_ACNTLVL_LIMIT
+   1B40 stloc.0 
+   1B41 br IL_1b51: br IL_1bf3
+   1B46 ldstr CS_ERR_GENERAL_JUDGE_SAMEACNT_LIMIT
+   1B4B stloc.0 
+   1B4C br IL_1b51: br IL_1bf3
+   1B51 br IL_1bf3: ldloc.0
+   1B56 ldarg.1 
+   1B57 ldc.i4 431
+   1B5C sub 
+   1B5D switch Mono.Cecil.Cil.Instruction[]
+   1B86 br IL_1bee: br IL_1bf3
+   1B8B ldstr CS_ERR_BATTLEPASS_SYS_CLOSED
+   1B90 stloc.0 
+   1B91 br IL_1bee: br IL_1bf3
+   1B96 ldstr CS_ERR_BATTLEPASS_NOT_VALID_TIME
+   1B9B stloc.0 
+   1B9C br IL_1bee: br IL_1bf3
+   1BA1 ldstr CS_ERR_BATTLEPASS_INVALID_ARG
+   1BA6 stloc.0 
+   1BA7 br IL_1bee: br IL_1bf3
+   1BAC ldstr CS_ERR_BATTLEPASS_INVALID_RES
+   1BB1 stloc.0 
+   1BB2 br IL_1bee: br IL_1bf3
+   1BB7 ldstr CS_ERR_BATTLEPASS_ALREADY_TAKEN
+   1BBC stloc.0 
+   1BBD br IL_1bee: br IL_1bf3
+   1BC2 ldstr CS_ERR_BATTLEPASS_NO_MONEY
+   1BC7 stloc.0 
+   1BC8 br IL_1bee: br IL_1bf3
+   1BCD ldstr CS_ERR_BATTLEPASS_EXCEED_MAX_LV
+   1BD2 stloc.0 
+   1BD3 br IL_1bee: br IL_1bf3
+   1BD8 ldstr CS_ERR_BATTLEPASS_PAY_COUPONS
+   1BDD stloc.0 
+   1BDE br IL_1bee: br IL_1bf3
+   1BE3 ldstr CS_ERR_SPECSALE_BATTLEPASS_ACTIVE
+   1BE8 stloc.0 
+   1BE9 br IL_1bee: br IL_1bf3
+   1BEE br IL_1bf3: ldloc.0
+   1BF3 ldloc.0 
+   1BF4 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   1BF9 brfalse IL_1c08: call !0 Singleton`1<CTextManager>::get_instance()
+   1BFE ldsfld System.String::Empty
+   1C03 br IL_1c14: ret
+   1C08 call !0 Singleton`1<CTextManager>::get_instance()
+   1C0D ldloc.0 
+   1C0E ldc.i4.1 
+   1C0F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   1C14 ret 
+== System.String GetBubbleText(System.UInt32 tag) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldstr BubbleText with tag [
+   0005 ldarg.0 
+   0006 box System.UInt32
+   000B ldstr ] was not found!
+   0010 call System.String System.String::Concat(System.Object,System.Object,System.Object)
+   0015 stloc.0 
+   0016 ldloca.s V_1
+   0018 ldarg.0 
+   0019 call System.Boolean ResData.GameDataMgr/textBubbleDatabin::FindByKey(ResData.ResTextData&,System.UInt32)
+   001E brfalse IL_002b: ldloc.0
+   0023 ldloca.s V_1
+   0025 call System.String ResData.ResTextData::get_szContent()
+   002A stloc.0 
+   002B ldloc.0 
+   002C ret 
+== System.DateTime ULongToDateTime(System.UInt64 dtVal) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldc.i4.6 
+   0001 newarr System.UInt64
+   0006 stloc.0 
+   0007 ldc.i4.0 
+   0008 stloc.1 
+   0009 br IL_002d: ldloc.1
+   000E ldloc.0 
+   000F ldloc.1 
+   0010 ldarg.0 
+   0011 ldsfld Utility::_DW
+   0016 ldloc.1 
+   0017 ldelem.i8 
+   0018 div.un 
+   0019 stelem.i8 
+   001A ldarg.0 
+   001B ldloc.0 
+   001C ldloc.1 
+   001D ldelem.i8 
+   001E ldsfld Utility::_DW
+   0023 ldloc.1 
+   0024 ldelem.i8 
+   0025 mul 
+   0026 sub 
+   0027 starg.s dtVal
+   0029 ldloc.1 
+   002A ldc.i4.1 
+   002B add 
+   002C stloc.1 
+   002D ldloc.1 
+   002E ldsfld Utility::_DW
+   0033 ldlen 
+   0034 conv.i4 
+   0035 blt IL_000e: ldloc.0
+   003A ldloc.0 
+   003B ldsfld Utility::_DW
+   0040 ldlen 
+   0041 conv.i4 
+   0042 ldarg.0 
+   0043 stelem.i8 
+   0044 ldloc.0 
+   0045 ldc.i4.0 
+   0046 ldelem.i8 
+   0047 conv.i4 
+   0048 ldloc.0 
+   0049 ldc.i4.1 
+   004A ldelem.i8 
+   004B conv.i4 
+   004C ldloc.0 
+   004D ldc.i4.2 
+   004E ldelem.i8 
+   004F conv.i4 
+   0050 ldloc.0 
+   0051 ldc.i4.3 
+   0052 ldelem.i8 
+   0053 conv.i4 
+   0054 ldloc.0 
+   0055 ldc.i4.4 
+   0056 ldelem.i8 
+   0057 conv.i4 
+   0058 ldloc.0 
+   0059 ldc.i4.5 
+   005A ldelem.i8 
+   005B conv.i4 
+   005C newobj System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   0061 ret 
+== System.UInt32 GetSecondsFromHourMinuteSecond(System.UInt32 formattedTime) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4 10000
+   0006 div.un 
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldc.i4 10000
+   000E rem.un 
+   000F ldc.i4.s 100
+   0011 div.un 
+   0012 stloc.1 
+   0013 ldarg.0 
+   0014 ldc.i4.s 100
+   0016 rem.un 
+   0017 stloc.2 
+   0018 ldloc.0 
+   0019 ldc.i4 3600
+   001E mul 
+   001F ldloc.1 
+   0020 ldc.i4.s 60
+   0022 mul 
+   0023 add 
+   0024 ldloc.2 
+   0025 add 
+   0026 ret 
+== System.String SecondsToTimeTextAuto(System.Int32 seconds) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldc.i4 86400
+   0008 div 
+   0009 stloc.1 
+   000A ldarg.0 
+   000B ldloc.1 
+   000C ldc.i4 86400
+   0011 mul 
+   0012 sub 
+   0013 starg.s seconds
+   0015 ldarg.0 
+   0016 ldc.i4 3600
+   001B div 
+   001C stloc.2 
+   001D ldarg.0 
+   001E ldloc.2 
+   001F ldc.i4 3600
+   0024 mul 
+   0025 sub 
+   0026 starg.s seconds
+   0028 ldarg.0 
+   0029 ldc.i4.s 60
+   002B div 
+   002C stloc.3 
+   002D ldarg.0 
+   002E ldloc.3 
+   002F ldc.i4.s 60
+   0031 mul 
+   0032 sub 
+   0033 stloc.s V_4
+   0035 ldloc.1 
+   0036 ldc.i4.0 
+   0037 ble IL_0058: ldstr "{0:D2}:{1:D2}:{2:D2}"
+   003C ldstr {0}天{1}小时
+   0041 ldloc.1 
+   0042 box System.Int32
+   0047 ldloc.2 
+   0048 box System.Int32
+   004D call System.String System.String::Format(System.String,System.Object,System.Object)
+   0052 stloc.0 
+   0053 br IL_0076: ldloc.0
+   0058 ldstr {0:D2}:{1:D2}:{2:D2}
+   005D ldloc.2 
+   005E box System.Int32
+   0063 ldloc.3 
+   0064 box System.Int32
+   0069 ldloc.s V_4
+   006B box System.Int32
+   0070 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0075 stloc.0 
+   0076 ldloc.0 
+   0077 ret 
+== System.DateTime SecondsToDateTime(System.Int32 y, System.Int32 m, System.Int32 d, System.Int32 secondsInDay) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.3 
+   0001 ldc.i4 3600
+   0006 div 
+   0007 stloc.0 
+   0008 ldarg.3 
+   0009 ldc.i4 3600
+   000E rem 
+   000F starg.s secondsInDay
+   0011 ldarg.0 
+   0012 ldarg.1 
+   0013 ldarg.2 
+   0014 ldloc.0 
+   0015 ldarg.3 
+   0016 ldc.i4.s 60
+   0018 div 
+   0019 ldarg.3 
+   001A ldc.i4.s 60
+   001C rem 
+   001D newobj System.Void System.DateTime::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   0022 ret 
+== System.DateTime StringToDateTime(System.String dtStr, System.DateTime defaultIfNone) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldloca.s V_0
+   0003 call System.Boolean System.UInt64::TryParse(System.String,System.UInt64&)
+   0008 brfalse IL_0014: ldarg.1
+   000D ldloc.0 
+   000E call System.DateTime Utility::ULongToDateTime(System.UInt64)
+   0013 ret 
+   0014 ldarg.1 
+   0015 ret 
+== System.String DateTimeFormatString(System.DateTime dt, Utility/enDTFormate fm) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 bne.un IL_0036: ldarg.1
+   0007 ldstr {0:D4}-{1:D2}-{2:D2}
+   000C ldarga.s dt
+   000E call System.Int32 System.DateTime::get_Year()
+   0013 box System.Int32
+   0018 ldarga.s dt
+   001A call System.Int32 System.DateTime::get_Month()
+   001F box System.Int32
+   0024 ldarga.s dt
+   0026 call System.Int32 System.DateTime::get_Day()
+   002B box System.Int32
+   0030 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0035 ret 
+   0036 ldarg.1 
+   0037 ldc.i4.2 
+   0038 bne.un IL_006c: ldstr "{0:D4}-{1:D2}-{2:D2}"
+   003D ldstr {0:D2}:{1:D2}:{2:D2}
+   0042 ldarga.s dt
+   0044 call System.Int32 System.DateTime::get_Hour()
+   0049 box System.Int32
+   004E ldarga.s dt
+   0050 call System.Int32 System.DateTime::get_Minute()
+   0055 box System.Int32
+   005A ldarga.s dt
+   005C call System.Int32 System.DateTime::get_Second()
+   0061 box System.Int32
+   0066 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   006B ret 
+   006C ldstr {0:D4}-{1:D2}-{2:D2}
+   0071 ldarga.s dt
+   0073 call System.Int32 System.DateTime::get_Year()
+   0078 box System.Int32
+   007D ldarga.s dt
+   007F call System.Int32 System.DateTime::get_Month()
+   0084 box System.Int32
+   0089 ldarga.s dt
+   008B call System.Int32 System.DateTime::get_Day()
+   0090 box System.Int32
+   0095 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   009A ldstr  
+   009F ldstr {0:D2}:{1:D2}:{2:D2}
+   00A4 ldarga.s dt
+   00A6 call System.Int32 System.DateTime::get_Hour()
+   00AB box System.Int32
+   00B0 ldarga.s dt
+   00B2 call System.Int32 System.DateTime::get_Minute()
+   00B7 box System.Int32
+   00BC ldarga.s dt
+   00BE call System.Int32 System.DateTime::get_Second()
+   00C3 box System.Int32
+   00C8 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00CD call System.String System.String::Concat(System.String,System.String,System.String)
+   00D2 ret 
+== System.String SecondsToTimeText(System.UInt32 secs) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4 3600
+   0006 div.un 
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldloc.0 
+   000A ldc.i4 3600
+   000F mul 
+   0010 sub 
+   0011 starg.s secs
+   0013 ldarg.0 
+   0014 ldc.i4.s 60
+   0016 div.un 
+   0017 stloc.1 
+   0018 ldarg.0 
+   0019 ldloc.1 
+   001A ldc.i4.s 60
+   001C mul 
+   001D sub 
+   001E starg.s secs
+   0020 ldstr {0:D2}:{1:D2}:{2:D2}
+   0025 ldloc.0 
+   0026 box System.UInt32
+   002B ldloc.1 
+   002C box System.UInt32
+   0031 ldarg.0 
+   0032 box System.UInt32
+   0037 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   003C ret 
+== System.String GetTimeSpanFormatString(System.Int32 timeSpanSeconds) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 conv.i8 
+   0004 ldc.i4 10000000
+   0009 conv.i8 
+   000A mul 
+   000B call System.Void System.TimeSpan::.ctor(System.Int64)
+   0010 ldloca.s V_0
+   0012 call System.Int32 System.TimeSpan::get_Days()
+   0017 ldc.i4.0 
+   0018 ble IL_006d: ldloca.s V_0
+   001D ldloca.s V_0
+   001F call System.Int32 System.TimeSpan::get_Days()
+   0024 stloc.1 
+   0025 ldloca.s V_1
+   0027 constrained. System.Int32
+   002D callvirt System.String System.Object::ToString()
+   0032 call !0 Singleton`1<CTextManager>::GetInstance()
+   0037 ldstr Common_Day
+   003C ldc.i4.1 
+   003D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0042 ldloca.s V_0
+   0044 call System.Int32 System.TimeSpan::get_Hours()
+   0049 stloc.2 
+   004A ldloca.s V_2
+   004C constrained. System.Int32
+   0052 callvirt System.String System.Object::ToString()
+   0057 call !0 Singleton`1<CTextManager>::GetInstance()
+   005C ldstr Common_Hour
+   0061 ldc.i4.1 
+   0062 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0067 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   006C ret 
+   006D ldloca.s V_0
+   006F call System.Int32 System.TimeSpan::get_Hours()
+   0074 ldc.i4.s 10
+   0076 bge IL_0096: ldloca.s V_0
+   007B ldstr 0
+   0080 ldloca.s V_0
+   0082 call System.Int32 System.TimeSpan::get_Hours()
+   0087 box System.Int32
+   008C call System.String System.String::Concat(System.Object,System.Object)
+   0091 br IL_00ac: stloc.3
+   0096 ldloca.s V_0
+   0098 call System.Int32 System.TimeSpan::get_Hours()
+   009D stloc.s V_4
+   009F ldloca.s V_4
+   00A1 constrained. System.Int32
+   00A7 callvirt System.String System.Object::ToString()
+   00AC stloc.3 
+   00AD ldloca.s V_0
+   00AF call System.Int32 System.TimeSpan::get_Minutes()
+   00B4 ldc.i4.s 10
+   00B6 bge IL_00d6: ldloca.s V_0
+   00BB ldstr 0
+   00C0 ldloca.s V_0
+   00C2 call System.Int32 System.TimeSpan::get_Minutes()
+   00C7 box System.Int32
+   00CC call System.String System.String::Concat(System.Object,System.Object)
+   00D1 br IL_00ec: stloc.s V_5
+   00D6 ldloca.s V_0
+   00D8 call System.Int32 System.TimeSpan::get_Minutes()
+   00DD stloc.s V_6
+   00DF ldloca.s V_6
+   00E1 constrained. System.Int32
+   00E7 callvirt System.String System.Object::ToString()
+   00EC stloc.s V_5
+   00EE ldloca.s V_0
+   00F0 call System.Int32 System.TimeSpan::get_Seconds()
+   00F5 ldc.i4.s 10
+   00F7 bge IL_0117: ldloca.s V_0
+   00FC ldstr 0
+   0101 ldloca.s V_0
+   0103 call System.Int32 System.TimeSpan::get_Seconds()
+   0108 box System.Int32
+   010D call System.String System.String::Concat(System.Object,System.Object)
+   0112 br IL_012d: stloc.s V_7
+   0117 ldloca.s V_0
+   0119 call System.Int32 System.TimeSpan::get_Seconds()
+   011E stloc.s V_8
+   0120 ldloca.s V_8
+   0122 constrained. System.Int32
+   0128 callvirt System.String System.Object::ToString()
+   012D stloc.s V_7
+   012F ldstr {0}:{1}:{2}
+   0134 ldloc.3 
+   0135 ldloc.s V_5
+   0137 ldloc.s V_7
+   0139 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   013E ret 
+== System.Boolean IsOverOneDay(System.Int32 timeSpanSeconds) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 conv.i8 
+   0004 ldc.i4 10000000
+   0009 conv.i8 
+   000A mul 
+   000B call System.Void System.TimeSpan::.ctor(System.Int64)
+   0010 ldloca.s V_0
+   0012 call System.Int32 System.TimeSpan::get_Days()
+   0017 ldc.i4.0 
+   0018 ble IL_001f: ldc.i4.0
+   001D ldc.i4.1 
+   001E ret 
+   001F ldc.i4.0 
+   0020 ret 
+== System.Boolean IsBanChar(System.Char key) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001a: ldloc.0
+   0007 ldsfld Utility::s_ban_chars
+   000C ldloc.0 
+   000D ldelem.u2 
+   000E ldarg.0 
+   000F bne.un IL_0016: ldloc.0
+   0014 ldc.i4.1 
+   0015 ret 
+   0016 ldloc.0 
+   0017 ldc.i4.1 
+   0018 add 
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ldsfld Utility::s_ban_chars
+   0020 ldlen 
+   0021 conv.i4 
+   0022 blt IL_0007: ldsfld System.Char[] Utility::s_ban_chars
+   0027 ldc.i4.0 
+   0028 ret 
+== System.Boolean HasBanCharInString(System.String str) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brtrue IL_0035: ldc.i4.0
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0029: ldloc.0
+   0012 ldarg.0 
+   0013 ldloc.0 
+   0014 callvirt System.Char System.String::get_Chars(System.Int32)
+   0019 call System.Boolean Utility::IsBanChar(System.Char)
+   001E brfalse IL_0025: ldloc.0
+   0023 ldc.i4.1 
+   0024 ret 
+   0025 ldloc.0 
+   0026 ldc.i4.1 
+   0027 add 
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ldarg.0 
+   002B callvirt System.Int32 System.String::get_Length()
+   0030 blt IL_0012: ldarg.0
+   0035 ldc.i4.0 
+   0036 ret 
+== System.Boolean IsChineseChar(System.Char key) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Int32 System.Convert::ToInt32(System.Char)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldsfld Utility::CHINESE_CHAR_START
+   000D blt IL_001f: ldc.i4.0
+   0012 ldloc.0 
+   0013 ldsfld Utility::CHINESE_CHAR_END
+   0018 bgt IL_001f: ldc.i4.0
+   001D ldc.i4.1 
+   001E ret 
+   001F ldc.i4.0 
+   0020 ret 
+== System.Boolean IsSpecialChar(System.Char key) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Utility::IsChineseChar(System.Char)
+   0006 brtrue IL_0023: ldc.i4.0
+   000B ldarg.0 
+   000C call System.Boolean System.Char::IsLetter(System.Char)
+   0011 brtrue IL_0023: ldc.i4.0
+   0016 ldarg.0 
+   0017 call System.Boolean System.Char::IsNumber(System.Char)
+   001C brtrue IL_0023: ldc.i4.0
+   0021 ldc.i4.1 
+   0022 ret 
+   0023 ldc.i4.0 
+   0024 ret 
+== System.Boolean IsValidText(System.String text) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001e: ldloc.0
+   0007 ldarg.0 
+   0008 ldloc.0 
+   0009 callvirt System.Char System.String::get_Chars(System.Int32)
+   000E call System.Boolean Utility::IsSpecialChar(System.Char)
+   0013 brfalse IL_001a: ldloc.0
+   0018 ldc.i4.0 
+   0019 ret 
+   001A ldloc.0 
+   001B ldc.i4.1 
+   001C add 
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 callvirt System.Int32 System.String::get_Length()
+   0025 blt IL_0007: ldarg.0
+   002A ldc.i4.1 
+   002B ret 
+== System.Int32 GetByteCount(System.String inputStr) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_002c: ldloc.1
+   0009 ldarg.0 
+   000A ldloc.1 
+   000B ldc.i4.1 
+   000C callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0011 call System.Boolean Utility::IsQuanjiaoChar(System.String)
+   0016 brfalse IL_0024: ldloc.0
+   001B ldloc.0 
+   001C ldc.i4.2 
+   001D add 
+   001E stloc.0 
+   001F br IL_0028: ldloc.1
+   0024 ldloc.0 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.0 
+   0028 ldloc.1 
+   0029 ldc.i4.1 
+   002A add 
+   002B stloc.1 
+   002C ldloc.1 
+   002D ldarg.0 
+   002E callvirt System.Int32 System.String::get_Length()
+   0033 blt IL_0009: ldarg.0
+   0038 ldloc.0 
+   0039 ret 
+== System.Boolean IsQuanjiaoChar(System.String inputStr) attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Text.Encoding System.Text.Encoding::get_Default()
+   0005 ldarg.0 
+   0006 callvirt System.Int32 System.Text.Encoding::GetByteCount(System.String)
+   000B ldc.i4.1 
+   000C cgt 
+   000E ret 
+== System.Boolean IsNullOrEmpty(System.String str) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000d: ldc.i4.0
+   000B ldc.i4.1 
+   000C ret 
+   000D ldc.i4.0 
+   000E stloc.0 
+   000F br IL_002a: ldloc.0
+   0014 ldarg.0 
+   0015 ldloc.0 
+   0016 callvirt System.Char System.String::get_Chars(System.Int32)
+   001B stloc.1 
+   001C ldloc.1 
+   001D ldc.i4.s 32
+   001F beq IL_0026: ldloc.0
+   0024 ldc.i4.0 
+   0025 ret 
+   0026 ldloc.0 
+   0027 ldc.i4.1 
+   0028 add 
+   0029 stloc.0 
+   002A ldloc.0 
+   002B ldarg.0 
+   002C callvirt System.Int32 System.String::get_Length()
+   0031 blt IL_0014: ldarg.0
+   0036 ldc.i4.1 
+   0037 ret 
+== Utility/NameResult CheckRoleName(System.String inputName) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 call System.Int32 Utility::GetByteCount(System.String)
+   0008 stloc.0 
+   0009 ldarg.0 
+   000A call System.Boolean Utility::IsNullOrEmpty(System.String)
+   000F brfalse IL_0016: ldarg.0
+   0014 ldc.i4.1 
+   0015 ret 
+   0016 ldarg.0 
+   0017 call System.Boolean Utility::HasBanCharInString(System.String)
+   001C brfalse IL_0023: ldloc.0
+   0021 ldc.i4.3 
+   0022 ret 
+   0023 ldloc.0 
+   0024 ldsfld Utility::MAX_EN_NAME_LEN
+   0029 bgt IL_0039: ldc.i4.2
+   002E ldloc.0 
+   002F ldsfld Utility::MIN_EN_NAME_LEN
+   0034 bge IL_003b: ldc.i4.0
+   0039 ldc.i4.2 
+   003A ret 
+   003B ldc.i4.0 
+   003C ret 
+== System.Type GetType(System.String typeName) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000d: ldarg.0
+   000B ldnull 
+   000C ret 
+   000D ldarg.0 
+   000E call System.Type System.Type::GetType(System.String)
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 brfalse IL_001c: call System.AppDomain System.AppDomain::get_CurrentDomain()
+   001A ldloc.0 
+   001B ret 
+   001C call System.AppDomain System.AppDomain::get_CurrentDomain()
+   0021 callvirt System.Reflection.Assembly[] System.AppDomain::GetAssemblies()
+   0026 stloc.2 
+   0027 ldc.i4.0 
+   0028 stloc.3 
+   0029 br IL_0046: ldloc.3
+   002E ldloc.2 
+   002F ldloc.3 
+   0030 ldelem.ref 
+   0031 stloc.1 
+   0032 ldloc.1 
+   0033 ldarg.0 
+   0034 callvirt System.Type System.Reflection.Assembly::GetType(System.String)
+   0039 stloc.0 
+   003A ldloc.0 
+   003B brfalse IL_0042: ldloc.3
+   0040 ldloc.0 
+   0041 ret 
+   0042 ldloc.3 
+   0043 ldc.i4.1 
+   0044 add 
+   0045 stloc.3 
+   0046 ldloc.3 
+   0047 ldloc.2 
+   0048 ldlen 
+   0049 conv.i4 
+   004A blt IL_002e: ldloc.2
+   004F ldnull 
+   0050 ret 
+== System.Byte[] ObjectToBytes(System.Object obj) attrs=Public, Static, HideBySig maxstack=3
+   0000 newobj System.Void System.IO.MemoryStream::.ctor()
+   0005 stloc.0 
+   0006 newobj System.Void System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::.ctor()
+   000B stloc.1 
+   000C ldloc.1 
+   000D ldloc.0 
+   000E ldarg.0 
+   000F callvirt System.Void System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::Serialize(System.IO.Stream,System.Object)
+   0014 ldloc.0 
+   0015 callvirt System.Byte[] System.IO.MemoryStream::GetBuffer()
+   001A stloc.2 
+   001B leave IL_002d: ldloc.2
+   0020 ldloc.0 
+   0021 brfalse IL_002c: endfinally
+   0026 ldloc.0 
+   0027 callvirt System.Void System.IDisposable::Dispose()
+   002C endfinally 
+   002D ldloc.2 
+   002E ret 
+== System.Object BytesToObject(System.Byte[] Bytes) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.IO.MemoryStream::.ctor(System.Byte[])
+   0006 stloc.0 
+   0007 newobj System.Void System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::.ctor()
+   000C stloc.1 
+   000D ldloc.1 
+   000E ldloc.0 
+   000F callvirt System.Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::Deserialize(System.IO.Stream)
+   0014 stloc.2 
+   0015 leave IL_0027: ldloc.2
+   001A ldloc.0 
+   001B brfalse IL_0026: endfinally
+   0020 ldloc.0 
+   0021 callvirt System.Void System.IDisposable::Dispose()
+   0026 endfinally 
+   0027 ldloc.2 
+   0028 ret 
+== System.Byte[] ReadFile(System.String path) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean CFileManager::IsFileExist(System.String)
+   0006 brtrue IL_000d: ldarg.0
+   000B ldnull 
+   000C ret 
+   000D ldarg.0 
+   000E ldc.i4.3 
+   000F ldc.i4.1 
+   0010 ldc.i4.0 
+   0011 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)
+   0016 stloc.0 
+   0017 ldloc.0 
+   0018 callvirt System.Int64 System.IO.Stream::get_Length()
+   001D conv.i4 
+   001E stloc.1 
+   001F ldloc.1 
+   0020 newarr System.Byte
+   0025 stloc.2 
+   0026 ldloc.0 
+   0027 ldloc.2 
+   0028 ldc.i4.0 
+   0029 ldloc.1 
+   002A callvirt System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)
+   002F pop 
+   0030 ldloc.0 
+   0031 callvirt System.Void System.IO.Stream::Close()
+   0036 ldloc.2 
+   0037 stloc.3 
+   0038 leave IL_004a: ldloc.3
+   003D ldloc.0 
+   003E brfalse IL_0049: endfinally
+   0043 ldloc.0 
+   0044 callvirt System.Void System.IDisposable::Dispose()
+   0049 endfinally 
+   004A ldloc.3 
+   004B ret 
+== System.Void ClearDirectory(System.String path, System.Boolean deleteDirSelf) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.String[] System.IO.Directory::GetFileSystemEntries(System.String)
+   0006 stloc.1 
+   0007 ldc.i4.0 
+   0008 stloc.2 
+   0009 br IL_0092: ldloc.2
+   000E ldloc.1 
+   000F ldloc.2 
+   0010 ldelem.ref 
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 call System.Boolean System.IO.File::Exists(System.String)
+   0018 brfalse IL_005f: ldloc.0
+   001D ldloc.0 
+   001E newobj System.Void System.IO.FileInfo::.ctor(System.String)
+   0023 stloc.3 
+   0024 ldloc.3 
+   0025 callvirt System.IO.FileAttributes System.IO.FileSystemInfo::get_Attributes()
+   002A stloc.s V_4
+   002C ldloca.s V_4
+   002E constrained. System.IO.FileAttributes
+   0034 callvirt System.String System.Object::ToString()
+   0039 ldstr ReadOnly
+   003E callvirt System.Int32 System.String::IndexOf(System.String)
+   0043 ldc.i4.m1 
+   0044 beq IL_0054: ldloc.0
+   0049 ldloc.3 
+   004A ldc.i4 128
+   004F callvirt System.Void System.IO.FileSystemInfo::set_Attributes(System.IO.FileAttributes)
+   0054 ldloc.0 
+   0055 call System.Void System.IO.File::Delete(System.String)
+   005A br IL_0082: ldarg.1
+   005F ldloc.0 
+   0060 newobj System.Void System.IO.DirectoryInfo::.ctor(System.String)
+   0065 stloc.s V_5
+   0067 ldloc.s V_5
+   0069 callvirt System.IO.FileInfo[] System.IO.DirectoryInfo::GetFiles()
+   006E ldlen 
+   006F conv.i4 
+   0070 brfalse IL_0082: ldarg.1
+   0075 ldloc.s V_5
+   0077 callvirt System.String System.IO.FileSystemInfo::get_FullName()
+   007C ldc.i4.1 
+   007D call System.Void Utility::ClearDirectory(System.String,System.Boolean)
+   0082 ldarg.1 
+   0083 brfalse IL_008e: ldloc.2
+   0088 ldarg.0 
+   0089 call System.Void System.IO.Directory::Delete(System.String)
+   008E ldloc.2 
+   008F ldc.i4.1 
+   0090 add 
+   0091 stloc.2 
+   0092 ldloc.2 
+   0093 ldloc.1 
+   0094 ldlen 
+   0095 conv.i4 
+   0096 blt IL_000e: ldloc.1
+   009B ret 
+== System.Boolean WriteFile(System.String path, System.Byte[] bytes) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 call System.Boolean CFileManager::IsFileExist(System.String)
+   0008 brtrue IL_001c: ldarg.0
+   000D ldarg.0 
+   000E ldc.i4.2 
+   000F ldc.i4.2 
+   0010 ldc.i4.3 
+   0011 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)
+   0016 stloc.0 
+   0017 br IL_0026: ldloc.0
+   001C ldarg.0 
+   001D ldc.i4.5 
+   001E ldc.i4.2 
+   001F ldc.i4.3 
+   0020 newobj System.Void System.IO.FileStream::.ctor(System.String,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)
+   0025 stloc.0 
+   0026 ldloc.0 
+   0027 ldarg.1 
+   0028 ldc.i4.0 
+   0029 ldarg.1 
+   002A ldlen 
+   002B conv.i4 
+   002C callvirt System.Void System.IO.Stream::Write(System.Byte[],System.Int32,System.Int32)
+   0031 ldloc.0 
+   0032 callvirt System.Void System.IO.Stream::Flush()
+   0037 ldloc.0 
+   0038 callvirt System.Void System.IO.Stream::Close()
+   003D ldloc.0 
+   003E callvirt System.Void System.IO.Stream::Dispose()
+   0043 ldc.i4.1 
+   0044 stloc.1 
+   0045 leave IL_0064: ldloc.1
+   004A stloc.2 
+   004B ldloc.0 
+   004C brfalse IL_005d: ldc.i4.0
+   0051 ldloc.0 
+   0052 callvirt System.Void System.IO.Stream::Close()
+   0057 ldloc.0 
+   0058 callvirt System.Void System.IO.Stream::Dispose()
+   005D ldc.i4.0 
+   005E stloc.1 
+   005F leave IL_0064: ldloc.1
+   0064 ldloc.1 
+   0065 ret 
+== System.String CreateMD5Hash(System.String input, Utility/MD5_STRING_CASE stringCase) attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.Security.Cryptography.MD5 System.Security.Cryptography.MD5::Create()
+   0005 stloc.0 
+   0006 call System.Text.Encoding System.Text.Encoding::get_ASCII()
+   000B ldarg.0 
+   000C callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   0011 stloc.1 
+   0012 ldloc.0 
+   0013 ldloc.1 
+   0014 callvirt System.Byte[] System.Security.Cryptography.HashAlgorithm::ComputeHash(System.Byte[])
+   0019 stloc.2 
+   001A newobj System.Void System.Text.StringBuilder::.ctor()
+   001F stloc.3 
+   0020 ldc.i4.0 
+   0021 stloc.s V_4
+   0023 br IL_006b: ldloc.s V_4
+   0028 ldarg.1 
+   0029 brtrue IL_004c: ldloc.3
+   002E ldloc.3 
+   002F ldloc.2 
+   0030 ldloc.s V_4
+   0032 ldelema System.Byte
+   0037 ldstr X2
+   003C call System.String System.Byte::ToString(System.String)
+   0041 callvirt System.Text.StringBuilder System.Text.StringBuilder::Append(System.String)
+   0046 pop 
+   0047 br IL_0065: ldloc.s V_4
+   004C ldloc.3 
+   004D ldloc.2 
+   004E ldloc.s V_4
+   0050 ldelema System.Byte
+   0055 ldstr x2
+   005A call System.String System.Byte::ToString(System.String)
+   005F callvirt System.Text.StringBuilder System.Text.StringBuilder::Append(System.String)
+   0064 pop 
+   0065 ldloc.s V_4
+   0067 ldc.i4.1 
+   0068 add 
+   0069 stloc.s V_4
+   006B ldloc.s V_4
+   006D ldloc.2 
+   006E ldlen 
+   006F conv.i4 
+   0070 blt IL_0028: ldarg.1
+   0075 ldloc.3 
+   0076 callvirt System.String System.Object::ToString()
+   007B ret 
+== Apollo.IApolloSnsService GetIApolloSnsService() attrs=Public, Static, HideBySig maxstack=8
+   0000 call Apollo.IApollo Apollo.IApollo::get_Instance()
+   0005 ldc.i4.1 
+   0006 callvirt Apollo.IApolloServiceBase Apollo.IApollo::GetService(System.Int32)
+   000B isinst Apollo.IApolloSnsService
+   0010 ret 
+== System.Single Divide(System.UInt32 a, System.UInt32 b) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_000c: ldarg.0
+   0006 ldc.r4 0
+   000B ret 
+   000C ldarg.0 
+   000D conv.r.un 
+   000E conv.r4 
+   000F ldarg.1 
+   0010 conv.r.un 
+   0011 conv.r4 
+   0012 div 
+   0013 ret 
+== System.Single Divide(System.Int32 a, System.UInt32 b) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_000c: ldarg.0
+   0006 ldc.r4 0
+   000B ret 
+   000C ldarg.0 
+   000D conv.r4 
+   000E ldarg.1 
+   000F conv.r.un 
+   0010 conv.r4 
+   0011 div 
+   0012 ret 
+== System.Void VibrateHelper() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableVibrate()
+   0005 brfalse IL_000f: ret
+   000A call System.Void UnityEngine.Handheld::Vibrate()
+   000F ret 
+== System.Int32 GetCpuCurrentClock() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldstr /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+   0005 call System.Int32 Utility::GetCpuClock(System.String)
+   000A ret 
+== System.Int32 GetCpuMaxClock() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldstr /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+   0005 call System.Int32 Utility::GetCpuClock(System.String)
+   000A ret 
+== System.Int32 GetCpuMinClock() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldstr /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
+   0005 call System.Int32 Utility::GetCpuClock(System.String)
+   000A ret 
+== System.Int32 GetCpuClock(System.String cpuFile) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.String Utility::getFileContent(System.String)
+   0006 stloc.0 
+   0007 ldc.i4.0 
+   0008 stloc.1 
+   0009 ldloc.0 
+   000A ldloca.s V_1
+   000C call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0011 brtrue IL_0018: ldloc.1
+   0016 ldc.i4.0 
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 ldc.i4 1000
+   001E div 
+   001F conv.r4 
+   0020 call System.Int32 UnityEngine.Mathf::FloorToInt(System.Single)
+   0025 ret 
+== System.String getFileContent(System.String path) attrs=Private, Static, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 call System.String System.IO.File::ReadAllText(System.String)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 stloc.1 
+   0009 leave IL_0021: ldloc.1
+   000E stloc.2 
+   000F ldloc.2 
+   0010 callvirt System.String System.Exception::get_Message()
+   0015 call System.Void UnityEngine.Debug::LogError(System.Object)
+   001A ldnull 
+   001B stloc.1 
+   001C leave IL_0021: ldloc.1
+   0021 ldloc.1 
+   0022 ret 
+== System.Boolean IsSelf(System.UInt64 uid, System.Int32 logicWorldId) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0006 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000B callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0010 bne.un IL_001d: ldc.i4.0
+   0015 ldarg.1 
+   0016 call System.Boolean Utility::IsSameLogicWorldWithSelf(System.Int32)
+   001B br.s IL_001e: ret
+   001D ldc.i4.0 
+   001E ret 
+== System.Boolean IsValidPlayer(System.UInt64 uid, System.Int32 logicWorldId) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 conv.i8 
+   0003 ble.un IL_000e: ldc.i4.0
+   0008 ldarg.1 
+   0009 ldc.i4.0 
+   000A cgt 
+   000C br.s IL_000f: ret
+   000E ldc.i4.0 
+   000F ret 
+== System.Boolean IsSameLogicWorldWithSelf(System.Int32 logicWorldId) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0005 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   000A stloc.0 
+   000B ldloca.s V_0
+   000D ldfld TdirUrl::logicWorldID
+   0012 ldarg.0 
+   0013 ceq 
+   0015 ret 
+== System.Boolean IsSamePlatformWithSelf(System.UInt32 logicWorldId) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0005 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   000A stloc.0 
+   000B ldloca.s V_0
+   000D ldfld TdirUrl::logicWorldID
+   0012 ldarg.0 
+   0013 call System.Boolean Utility::IsSamePlatform(System.UInt32,System.UInt32)
+   0018 ret 
+== System.Boolean IsSamePlatform(System.UInt32 logicWorldId1, System.UInt32 logicWorldId2) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 1000
+   0006 div.un 
+   0007 ldarg.1 
+   0008 ldc.i4 1000
+   000D div.un 
+   000E ceq 
+   0010 ret 
+== System.Boolean IsCanShowPrompt() attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_001e: ldc.i4.0
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brfalse IL_0020: call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   001E ldc.i4.0 
+   001F ret 
+   0020 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   0025 callvirt System.Boolean Assets.Scripts.GameSystem.SettlementSystem::IsExistSettleForm()
+   002A brfalse IL_0031: ldc.i4.1
+   002F ldc.i4.0 
+   0030 ret 
+   0031 ldc.i4.1 
+   0032 ret 
+== System.Boolean IsGameStateInGame(CSProtocol.COM_ACNT_GAME_STATE gameState, System.Int32 iSubState) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 beq IL_000e: ldc.i4.1
+   0007 ldarg.0 
+   0008 ldc.i4.4 
+   0009 bne.un IL_0010: ldarg.0
+   000E ldc.i4.1 
+   000F ret 
+   0010 ldarg.0 
+   0011 ldc.i4.2 
+   0012 beq IL_001e: ldarg.1
+   0017 ldarg.0 
+   0018 ldc.i4.3 
+   0019 bne.un IL_002e: ldc.i4.0
+   001E ldarg.1 
+   001F ldc.i4.3 
+   0020 beq IL_002c: ldc.i4.1
+   0025 ldarg.1 
+   0026 ldc.i4.2 
+   0027 bne.un IL_002e: ldc.i4.0
+   002C ldc.i4.1 
+   002D ret 
+   002E ldc.i4.0 
+   002F ret 
+== T DeepCopyByReflection(T obj) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 box T
+   0006 brtrue IL_0015: ldarga.s obj
+   000B ldloca.s V_0
+   000D initobj T
+   0013 ldloc.0 
+   0014 ret 
+   0015 ldarga.s obj
+   0017 constrained. T
+   001D callvirt System.Type System.Object::GetType()
+   0022 stloc.1 
+   0023 ldarg.0 
+   0024 box T
+   0029 isinst System.String
+   002E brtrue IL_003e: ldarg.0
+   0033 ldloc.1 
+   0034 callvirt System.Boolean System.Type::get_IsValueType()
+   0039 brfalse IL_0040: ldloc.1
+   003E ldarg.0 
+   003F ret 
+   0040 ldloc.1 
+   0041 callvirt System.Boolean System.Type::get_IsArray()
+   0046 brfalse IL_00cb: ldarga.s obj
+   004B ldloc.1 
+   004C callvirt System.String System.Type::get_FullName()
+   0051 ldstr []
+   0056 ldsfld System.String::Empty
+   005B callvirt System.String System.String::Replace(System.String,System.String)
+   0060 call System.Type System.Type::GetType(System.String)
+   0065 stloc.2 
+   0066 ldarg.0 
+   0067 box T
+   006C isinst System.Array
+   0071 stloc.3 
+   0072 ldloc.2 
+   0073 ldloc.3 
+   0074 callvirt System.Int32 System.Array::get_Length()
+   0079 call System.Array System.Array::CreateInstance(System.Type,System.Int32)
+   007E stloc.s V_4
+   0080 ldc.i4.0 
+   0081 stloc.s V_5
+   0083 br IL_00a4: ldloc.s V_5
+   0088 ldloc.s V_4
+   008A ldloc.3 
+   008B ldloc.s V_5
+   008D callvirt System.Object System.Array::GetValue(System.Int32)
+   0092 call T Utility::DeepCopyByReflection<System.Object>(T)
+   0097 ldloc.s V_5
+   0099 callvirt System.Void System.Array::SetValue(System.Object,System.Int32)
+   009E ldloc.s V_5
+   00A0 ldc.i4.1 
+   00A1 add 
+   00A2 stloc.s V_5
+   00A4 ldloc.s V_5
+   00A6 ldloc.3 
+   00A7 callvirt System.Int32 System.Array::get_Length()
+   00AC blt IL_0088: ldloc.s V_4
+   00B1 ldloc.s V_4
+   00B3 ldarga.s obj
+   00B5 constrained. T
+   00BB callvirt System.Type System.Object::GetType()
+   00C0 call System.Object System.Convert::ChangeType(System.Object,System.Type)
+   00C5 unbox.any T
+   00CA ret 
+   00CB ldarga.s obj
+   00CD constrained. T
+   00D3 callvirt System.Type System.Object::GetType()
+   00D8 call System.Object System.Activator::CreateInstance(System.Type)
+   00DD stloc.s V_6
+   00DF ldarga.s obj
+   00E1 constrained. T
+   00E7 callvirt System.Type System.Object::GetType()
+   00EC ldc.i4.s 60
+   00EE callvirt System.Reflection.PropertyInfo[] System.Type::GetProperties(System.Reflection.BindingFlags)
+   00F3 stloc.s V_7
+   00F5 ldloc.s V_7
+   00F7 stloc.s V_9
+   00F9 ldc.i4.0 
+   00FA stloc.s V_10
+   00FC br IL_013b: ldloc.s V_10
+   0101 ldloc.s V_9
+   0103 ldloc.s V_10
+   0105 ldelem.ref 
+   0106 stloc.s V_8
+   0108 ldloc.s V_8
+   010A ldarg.0 
+   010B box T
+   0110 ldnull 
+   0111 callvirt System.Object System.Reflection.PropertyInfo::GetValue(System.Object,System.Object[])
+   0116 stloc.s V_11
+   0118 ldloc.s V_11
+   011A brtrue IL_0124: ldloc.s V_8
+   011F br IL_0135: ldloc.s V_10
+   0124 ldloc.s V_8
+   0126 ldloc.s V_6
+   0128 ldloc.s V_11
+   012A call T Utility::DeepCopyByReflection<System.Object>(T)
+   012F ldnull 
+   0130 callvirt System.Void System.Reflection.PropertyInfo::SetValue(System.Object,System.Object,System.Object[])
+   0135 ldloc.s V_10
+   0137 ldc.i4.1 
+   0138 add 
+   0139 stloc.s V_10
+   013B ldloc.s V_10
+   013D ldloc.s V_9
+   013F ldlen 
+   0140 conv.i4 
+   0141 blt IL_0101: ldloc.s V_9
+   0146 ldarga.s obj
+   0148 constrained. T
+   014E callvirt System.Type System.Object::GetType()
+   0153 ldc.i4.s 60
+   0155 callvirt System.Reflection.FieldInfo[] System.Type::GetFields(System.Reflection.BindingFlags)
+   015A stloc.s V_12
+   015C ldloc.s V_12
+   015E stloc.s V_14
+   0160 ldc.i4.0 
+   0161 stloc.s V_15
+   0163 br IL_019b: ldloc.s V_15
+   0168 ldloc.s V_14
+   016A ldloc.s V_15
+   016C ldelem.ref 
+   016D stloc.s V_13
+   016F ldloc.s V_13
+   0171 ldloc.s V_6
+   0173 ldloc.s V_13
+   0175 ldarg.0 
+   0176 box T
+   017B callvirt System.Object System.Reflection.FieldInfo::GetValue(System.Object)
+   0180 call T Utility::DeepCopyByReflection<System.Object>(T)
+   0185 callvirt System.Void System.Reflection.FieldInfo::SetValue(System.Object,System.Object)
+   018A leave IL_0195: ldloc.s V_15
+   018F pop 
+   0190 leave IL_0195: ldloc.s V_15
+   0195 ldloc.s V_15
+   0197 ldc.i4.1 
+   0198 add 
+   0199 stloc.s V_15
+   019B ldloc.s V_15
+   019D ldloc.s V_14
+   019F ldlen 
+   01A0 conv.i4 
+   01A1 blt IL_0168: ldloc.s V_14
+   01A6 ldloc.s V_6
+   01A8 unbox.any T
+   01AD ret 
+== T DeepCopyBySerialization(T obj) attrs=Public, Static, HideBySig maxstack=3
+   0000 newobj System.Void System.IO.MemoryStream::.ctor()
+   0005 stloc.1 
+   0006 newobj System.Void System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::.ctor()
+   000B stloc.2 
+   000C ldloc.2 
+   000D ldloc.1 
+   000E ldarg.0 
+   000F box T
+   0014 callvirt System.Void System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::Serialize(System.IO.Stream,System.Object)
+   0019 ldloc.1 
+   001A ldc.i4.0 
+   001B conv.i8 
+   001C ldc.i4.0 
+   001D callvirt System.Int64 System.IO.Stream::Seek(System.Int64,System.IO.SeekOrigin)
+   0022 pop 
+   0023 ldloc.2 
+   0024 ldloc.1 
+   0025 callvirt System.Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter::Deserialize(System.IO.Stream)
+   002A stloc.0 
+   002B ldloc.1 
+   002C callvirt System.Void System.IO.Stream::Close()
+   0031 leave IL_0043: ldloc.0
+   0036 ldloc.1 
+   0037 brfalse IL_0042: endfinally
+   003C ldloc.1 
+   003D callvirt System.Void System.IDisposable::Dispose()
+   0042 endfinally 
+   0043 ldloc.0 
+   0044 unbox.any T
+   0049 ret 
+== System.String NumToRomamNum(System.Int32 n) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldsfld System.String::Empty
+   0007 stloc.1 
+   0008 ldarg.0 
+   0009 ldc.i4.0 
+   000A ble IL_0017: ldloc.1
+   000F ldarg.0 
+   0010 ldc.i4.s 99
+   0012 ble IL_0019: br IL_004d
+   0017 ldloc.1 
+   0018 ret 
+   0019 br IL_004d: ldarg.0
+   001E br IL_003c: ldarg.0
+   0023 ldarg.0 
+   0024 ldsfld Utility::arabic
+   0029 ldloc.0 
+   002A ldelem.i4 
+   002B sub 
+   002C starg.s n
+   002E ldloc.1 
+   002F ldsfld Utility::roman
+   0034 ldloc.0 
+   0035 ldelem.ref 
+   0036 call System.String System.String::Concat(System.String,System.String)
+   003B stloc.1 
+   003C ldarg.0 
+   003D ldsfld Utility::arabic
+   0042 ldloc.0 
+   0043 ldelem.i4 
+   0044 bge IL_0023: ldarg.0
+   0049 ldloc.0 
+   004A ldc.i4.1 
+   004B add 
+   004C stloc.0 
+   004D ldarg.0 
+   004E ldc.i4.0 
+   004F bgt IL_001e: br IL_003c
+   0054 ldloc.1 
+   0055 ret 
+== System.Boolean IsFuncOpen(System.UInt64 FuncSwitchBits, CSProtocol.COM_FUNCSWITCH_TYPE funcSwtichType) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 conv.i8 
+   0003 ldarg.1 
+   0004 ldc.i4.s 63
+   0006 and 
+   0007 shl 
+   0008 and 
+   0009 ldc.i4.0 
+   000A conv.i8 
+   000B cgt.un 
+   000D ret 
+== System.Boolean IsBinaryOn(System.UInt64 inValue, System.Int32 binaryPos) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 conv.i8 
+   0003 ldarg.1 
+   0004 ldc.i4.s 63
+   0006 and 
+   0007 shl 
+   0008 and 
+   0009 ldc.i4.0 
+   000A conv.i8 
+   000B ble.un IL_0012: ldc.i4.0
+   0010 ldc.i4.1 
+   0011 ret 
+   0012 ldc.i4.0 
+   0013 ret 
+== System.Int32 ConvertOldMvpScoreToNew(System.Int32 oldMvpScore) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 bge IL_0009: ldc.i4.0
+   0007 ldc.i4.0 
+   0008 ret 
+   0009 ldc.i4.0 
+   000A stloc.0 
+   000B br IL_0099: ldloc.0
+   0010 ldloc.0 
+   0011 call System.Int32 ResData.GameDataMgr/ConvertMvpScoreDatabin::Count()
+   0016 ldc.i4.1 
+   0017 sub 
+   0018 bne.un IL_002c: ldloc.0
+   001D ldloc.0 
+   001E call ResData.ResConvertMvpScore ResData.GameDataMgr/ConvertMvpScoreDatabin::GetByIndex(System.Int32)
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 ldfld ResData.ResConvertMvpScore::iNewScore
+   002B ret 
+   002C ldloc.0 
+   002D ldc.i4.1 
+   002E add 
+   002F call ResData.ResConvertMvpScore ResData.GameDataMgr/ConvertMvpScoreDatabin::GetByIndex(System.Int32)
+   0034 stloc.3 
+   0035 ldloca.s V_3
+   0037 ldfld ResData.ResConvertMvpScore::iOldScore
+   003C stloc.2 
+   003D ldloc.0 
+   003E call ResData.ResConvertMvpScore ResData.GameDataMgr/ConvertMvpScoreDatabin::GetByIndex(System.Int32)
+   0043 stloc.s V_5
+   0045 ldloca.s V_5
+   0047 ldfld ResData.ResConvertMvpScore::iOldScore
+   004C stloc.s V_4
+   004E ldarg.0 
+   004F ldloc.s V_4
+   0051 blt IL_0095: ldloc.0
+   0056 ldarg.0 
+   0057 ldloc.2 
+   0058 bge IL_0095: ldloc.0
+   005D ldarg.0 
+   005E ldloc.s V_4
+   0060 sub 
+   0061 call System.Int32 UnityEngine.Mathf::Abs(System.Int32)
+   0066 ldarg.0 
+   0067 ldloc.2 
+   0068 sub 
+   0069 call System.Int32 UnityEngine.Mathf::Abs(System.Int32)
+   006E ble IL_0085: ldloc.0
+   0073 ldloc.0 
+   0074 ldc.i4.1 
+   0075 add 
+   0076 call ResData.ResConvertMvpScore ResData.GameDataMgr/ConvertMvpScoreDatabin::GetByIndex(System.Int32)
+   007B stloc.s V_6
+   007D ldloca.s V_6
+   007F ldfld ResData.ResConvertMvpScore::iNewScore
+   0084 ret 
+   0085 ldloc.0 
+   0086 call ResData.ResConvertMvpScore ResData.GameDataMgr/ConvertMvpScoreDatabin::GetByIndex(System.Int32)
+   008B stloc.s V_7
+   008D ldloca.s V_7
+   008F ldfld ResData.ResConvertMvpScore::iNewScore
+   0094 ret 
+   0095 ldloc.0 
+   0096 ldc.i4.1 
+   0097 add 
+   0098 stloc.0 
+   0099 ldloc.0 
+   009A call System.Int32 ResData.GameDataMgr/ConvertMvpScoreDatabin::Count()
+   009F blt IL_0010: ldloc.0
+   00A4 ldc.i4.0 
+   00A5 ret 
+== System.Boolean VerifyBigFile(System.String path) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.String CFileManager::GetFullName(System.String)
+   0006 call System.Int32 StringExtension::JavaHashCode(System.String)
+   000B stloc.1 
+   000C ldloca.s V_1
+   000E constrained. System.Int32
+   0014 callvirt System.String System.Object::ToString()
+   0019 ldstr .vrf
+   001E call System.String System.String::Concat(System.String,System.String)
+   0023 stloc.0 
+   0024 ldarg.0 
+   0025 call System.String CFileManager::GetFullDirectory(System.String)
+   002A ldloc.0 
+   002B call System.String CFileManager::CombinePath(System.String,System.String)
+   0030 call System.Byte[] CFileManager::ReadFile(System.String)
+   0035 stloc.2 
+   0036 ldloc.2 
+   0037 brfalse IL_0064: ldc.i4.0
+   003C ldloc.2 
+   003D call System.String Utility::UTF8Convert(System.Byte[])
+   0042 stloc.3 
+   0043 ldarg.0 
+   0044 ldloca.s V_4
+   0046 call System.Boolean Utility::GetBigFileVerifyMd5(System.String,System.String&)
+   004B brfalse IL_005f: br IL_0064
+   0050 ldloc.3 
+   0051 ldloc.s V_4
+   0053 callvirt System.Boolean System.String::Equals(System.String)
+   0058 brfalse IL_005f: br IL_0064
+   005D ldc.i4.1 
+   005E ret 
+   005F br IL_0064: ldc.i4.0
+   0064 ldc.i4.0 
+   0065 ret 
+== System.Boolean GetBigFileVerifyMd5(System.String path, System.String& md5Str) attrs=Public, Static, HideBySig maxstack=5
+   0000 call System.Byte[] CFileManager::LockFileBuffer()
+   0005 stloc.0 
+   0006 ldnull 
+   0007 stloc.1 
+   0008 ldarg.1 
+   0009 ldsfld System.String::Empty
+   000E stind.ref 
+   000F ldc.i4.0 
+   0010 stloc.2 
+   0011 ldarg.0 
+   0012 call System.IO.FileStream System.IO.File::OpenRead(System.String)
+   0017 stloc.1 
+   0018 ldloc.1 
+   0019 callvirt System.Int64 System.IO.Stream::get_Length()
+   001E stloc.3 
+   001F ldloc.3 
+   0020 ldc.i4.s 16
+   0022 conv.i8 
+   0023 rem 
+   0024 ldc.i4.8 
+   0025 conv.i8 
+   0026 add 
+   0027 conv.i4 
+   0028 stloc.s V_4
+   002A ldstr Verify Len  
+   002F ldloc.s V_4
+   0031 box System.Int32
+   0036 call System.String System.String::Concat(System.Object,System.Object)
+   003B call System.Void UnityEngine.Debug::Log(System.Object)
+   0040 ldc.i4 4194304
+   0045 ldloc.s V_4
+   0047 cgt.un 
+   0049 ldstr FileLength is larger than buffer!!! FilePath = {0}, FileLength = {1}, BufferSize = {2}
+   004E ldarg.0 
+   004F ldloc.s V_4
+   0051 box System.Int32
+   0056 ldc.i4 4194304
+   005B box System.UInt32
+   0060 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0065 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   006A ldloc.s V_4
+   006C conv.i8 
+   006D ldloc.1 
+   006E callvirt System.Int64 System.IO.Stream::get_Length()
+   0073 ble IL_007f: ldloc.s V_4
+   0078 ldloc.3 
+   0079 conv.i4 
+   007A br IL_0081: stloc.s V_5
+   007F ldloc.s V_4
+   0081 stloc.s V_5
+   0083 ldloc.1 
+   0084 ldloc.0 
+   0085 ldc.i4.0 
+   0086 ldloc.s V_5
+   0088 callvirt System.Int32 System.IO.Stream::Read(System.Byte[],System.Int32,System.Int32)
+   008D pop 
+   008E ldarg.1 
+   008F ldloc.0 
+   0090 ldc.i4.0 
+   0091 ldloc.s V_5
+   0093 call System.String CFileManager::GetMd5(System.Byte[],System.Int32,System.Int32)
+   0098 stind.ref 
+   0099 ldc.i4.1 
+   009A stloc.2 
+   009B leave IL_00bf: ldloc.2
+   00A0 stloc.s V_6
+   00A2 leave IL_00bf: ldloc.2
+   00A7 call System.Void CFileManager::UnLockFileBuffer()
+   00AC ldloc.1 
+   00AD brfalse IL_00be: endfinally
+   00B2 ldloc.1 
+   00B3 callvirt System.Void System.IO.Stream::Close()
+   00B8 ldloc.1 
+   00B9 callvirt System.Void System.IO.Stream::Dispose()
+   00BE endfinally 
+   00BF ldloc.2 
+   00C0 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.1 
+   0001 stsfld Utility::MIN_EN_NAME_LEN
+   0006 ldc.i4.s 12
+   0008 stsfld Utility::MAX_EN_NAME_LEN
+   000D ldc.i4 86400
+   0012 stsfld Utility::s_daySecond
+   0017 ldc.i4.5 
+   0018 newarr System.UInt64
+   001D dup 
+   001E ldtoken <PrivateImplementationDetails>::$field-07C87089D7E8A983040C96B790EC6F7180031910
+   0023 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0028 stsfld Utility::_DW
+   002D ldstr 4e00
+   0032 ldc.i4.s 16
+   0034 call System.Int32 System.Convert::ToInt32(System.String,System.Int32)
+   0039 stsfld Utility::CHINESE_CHAR_START
+   003E ldstr 9fff
+   0043 ldc.i4.s 16
+   0045 call System.Int32 System.Convert::ToInt32(System.String,System.Int32)
+   004A stsfld Utility::CHINESE_CHAR_END
+   004F ldc.i4.3 
+   0050 newarr System.Char
+   0055 dup 
+   0056 ldc.i4.0 
+   0057 ldc.i4.s 10
+   0059 call System.Char System.Convert::ToChar(System.Int32)
+   005E stelem.i2 
+   005F dup 
+   0060 ldc.i4.1 
+   0061 ldc.i4.s 13
+   0063 call System.Char System.Convert::ToChar(System.Int32)
+   0068 stelem.i2 
+   0069 dup 
+   006A ldc.i4.2 
+   006B ldc.i4.s 32
+   006D call System.Char System.Convert::ToChar(System.Int32)
+   0072 stelem.i2 
+   0073 stsfld Utility::s_ban_chars
+   0078 ldc.i4.8 
+   0079 newarr System.Int32
+   007E dup 
+   007F ldtoken <PrivateImplementationDetails>::$field-CA420A08C9761F7D261523DBD932A98305260B62
+   0084 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0089 stsfld Utility::arabic
+   008E ldc.i4.8 
+   008F newarr System.String
+   0094 dup 
+   0095 ldc.i4.0 
+   0096 ldstr XC
+   009B stelem.ref 
+   009C dup 
+   009D ldc.i4.1 
+   009E ldstr L
+   00A3 stelem.ref 
+   00A4 dup 
+   00A5 ldc.i4.2 
+   00A6 ldstr XL
+   00AB stelem.ref 
+   00AC dup 
+   00AD ldc.i4.3 
+   00AE ldstr X
+   00B3 stelem.ref 
+   00B4 dup 
+   00B5 ldc.i4.4 
+   00B6 ldstr IX
+   00BB stelem.ref 
+   00BC dup 
+   00BD ldc.i4.5 
+   00BE ldstr V
+   00C3 stelem.ref 
+   00C4 dup 
+   00C5 ldc.i4.6 
+   00C6 ldstr IV
+   00CB stelem.ref 
+   00CC dup 
+   00CD ldc.i4.7 
+   00CE ldstr I
+   00D3 stelem.ref 
+   00D4 stsfld Utility::roman
+   00D9 ret 
+  NESTED Utility/NameResult
+  NESTED Utility/MD5_STRING_CASE
+  NESTED Utility/enDTFormate

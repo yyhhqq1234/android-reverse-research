@@ -1,0 +1,2340 @@
+// TYPE Assets.Scripts.GameSystem.SignalPanel  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String[] MarkUISpriteNameList
+  FIELD UnityEngine.Color[] MarkUISpriteColorList
+  FIELD System.Int32[][] s_signalButtonInfos
+  FIELD Assets.Scripts.UI.CUIFormScript m_formScript
+  FIELD System.String s_signalTipsFormPath
+  FIELD System.Boolean m_useSignalButton
+  FIELD UnityEngine.GameObject m_miniMap
+  FIELD Assets.Scripts.UI.CUIContainerScript m_signalSrcHeroNameContainer
+  FIELD Assets.Scripts.UI.CUIListScript m_signalTipsList
+  FIELD UnityEngine.CanvasGroup m_signalTipsListCanvasGroup
+  FIELD Assets.Scripts.GameSystem.CSignalButton[] m_signalButtons
+  FIELD System.Int32 m_selectedSignalID
+  FIELD UnityEngine.Plane m_battleSceneGroundPlane
+  FIELD ListView`1<Assets.Scripts.GameSystem.CSignal> m_signals
+  FIELD DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CSignal> m_markSignals
+  FIELD ListView`1<Assets.Scripts.GameSystem.CSignalTipsElement> m_signalTipses
+  FIELD System.Single c_latestSignalTipsMaxDuringTime = 5
+  FIELD System.Single m_latestSignalTipsDuringTime
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32> m_PlayerToIndexDic
+  FIELD DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown> m_playerSignalCooldowns
+  FIELD System.Single speed = 0.15
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.m1 
+   0002 stfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0007 ldarg.0 
+   0008 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::.ctor()
+   000D stfld Assets.Scripts.GameSystem.SignalPanel::m_PlayerToIndexDic
+   0012 ldarg.0 
+   0013 call System.Void System.Object::.ctor()
+   0018 ret 
+== System.Void Init(Assets.Scripts.UI.CUIFormScript formScript, UnityEngine.GameObject minimapGameObject, UnityEngine.GameObject signalSrcHeroNameContainer, System.Boolean useSignalButton) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.0
+   000C ret 
+   000D ldarg.0 
+   000E ldarg.1 
+   000F stfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0014 ldarg.0 
+   0015 ldarg.2 
+   0016 stfld Assets.Scripts.GameSystem.SignalPanel::m_miniMap
+   001B ldarg.0 
+   001C ldarg.3 
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_002e: ldarg.3
+   0028 ldnull 
+   0029 br IL_0034: stfld Assets.Scripts.UI.CUIContainerScript Assets.Scripts.GameSystem.SignalPanel::m_signalSrcHeroNameContainer
+   002E ldarg.3 
+   002F callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIContainerScript>()
+   0034 stfld Assets.Scripts.GameSystem.SignalPanel::m_signalSrcHeroNameContainer
+   0039 ldarg.0 
+   003A call Assets.Scripts.UI.CUIListScript Assets.Scripts.GameSystem.SignalPanel::GetSignalTipsListScript()
+   003F stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   004A ldnull 
+   004B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0050 brfalse IL_00aa: ldarg.0
+   0055 ldarg.0 
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   005C callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0061 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.CanvasGroup>()
+   0066 stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsListCanvasGroup
+   006B ldarg.0 
+   006C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsListCanvasGroup
+   0071 ldnull 
+   0072 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0077 brfalse IL_0092: ldarg.0
+   007C ldarg.0 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0083 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0088 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.CanvasGroup>()
+   008D stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsListCanvasGroup
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsListCanvasGroup
+   0098 ldc.i4.0 
+   0099 callvirt System.Void UnityEngine.CanvasGroup::set_blocksRaycasts(System.Boolean)
+   009E ldarg.0 
+   009F ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   00A4 ldc.i4.0 
+   00A5 callvirt System.Void Assets.Scripts.UI.CUIListScript::EnableScorllRectMaskAndImage(System.Boolean)
+   00AA ldarg.0 
+   00AB ldarg.s useSignalButton
+   00AD stfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   00B2 ldarg.0 
+   00B3 ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalButtonInfos
+   00B8 ldlen 
+   00B9 conv.i4 
+   00BA newarr Assets.Scripts.GameSystem.CSignalButton
+   00BF stfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00C4 ldc.i4.0 
+   00C5 stloc.0 
+   00C6 br IL_0120: ldloc.0
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00D1 ldloc.0 
+   00D2 ldarg.0 
+   00D3 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   00D8 ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalButtonInfos
+   00DD ldloc.0 
+   00DE ldelem.ref 
+   00DF ldc.i4.1 
+   00E0 ldelem.i4 
+   00E1 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00E6 ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalButtonInfos
+   00EB ldloc.0 
+   00EC ldelem.ref 
+   00ED ldc.i4.0 
+   00EE ldelem.i4 
+   00EF newobj System.Void Assets.Scripts.GameSystem.CSignalButton::.ctor(UnityEngine.GameObject,System.Int32)
+   00F4 stelem.ref 
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00FB ldloc.0 
+   00FC ldelem.ref 
+   00FD ldarg.0 
+   00FE ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0103 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0108 ldarg.s useSignalButton
+   010A brtrue IL_011c: ldloc.0
+   010F ldarg.0 
+   0110 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0115 ldloc.0 
+   0116 ldelem.ref 
+   0117 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::Disable()
+   011C ldloc.0 
+   011D ldc.i4.1 
+   011E add 
+   011F stloc.0 
+   0120 ldloc.0 
+   0121 ldarg.0 
+   0122 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0127 ldlen 
+   0128 conv.i4 
+   0129 blt IL_00cb: ldarg.0
+   012E call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0133 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0138 stloc.1 
+   0139 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   013E ldloc.1 
+   013F ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0144 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllCampPlayers(CSProtocol.COM_PLAYERCAMP)
+   0149 stloc.2 
+   014A ldc.i4.0 
+   014B stloc.3 
+   014C ldc.i4.0 
+   014D stloc.s V_4
+   014F br IL_0172: ldloc.s V_4
+   0154 ldarg.0 
+   0155 ldloc.2 
+   0156 ldloc.s V_4
+   0158 callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   015D ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   0162 ldloc.3 
+   0163 call System.Void Assets.Scripts.GameSystem.SignalPanel::RegisterPlayerIndex(System.UInt32,System.Int32)
+   0168 ldloc.3 
+   0169 ldc.i4.1 
+   016A add 
+   016B stloc.3 
+   016C ldloc.s V_4
+   016E ldc.i4.1 
+   016F add 
+   0170 stloc.s V_4
+   0172 ldloc.s V_4
+   0174 ldloc.2 
+   0175 callvirt System.Int32 ListViewBase::get_Count()
+   017A blt IL_0154: ldarg.0
+   017F ldarg.0 
+   0180 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0185 brfalse IL_0255: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   018A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   018F ldc.i4 1116
+   0194 ldarg.0 
+   0195 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnClickMiniMap(Assets.Scripts.UI.CUIEvent)
+   019B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01A0 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01A5 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01AA ldc.i4 1171
+   01AF ldarg.0 
+   01B0 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnClickBattleScene(Assets.Scripts.UI.CUIEvent)
+   01B6 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01BB callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01C0 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01C5 ldc.i4 1165
+   01CA ldarg.0 
+   01CB ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSignalButtonClicked(Assets.Scripts.UI.CUIEvent)
+   01D1 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01D6 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01DB call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01E0 ldc.i4 1166
+   01E5 ldarg.0 
+   01E6 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSignalListElementEnabled(Assets.Scripts.UI.CUIEvent)
+   01EC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01F1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01F6 ldarg.0 
+   01F7 ldc.r4 0
+   01FC ldc.r4 1
+   0201 ldc.r4 0
+   0206 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   020B ldc.r4 0.15
+   0210 newobj System.Void UnityEngine.Plane::.ctor(UnityEngine.Vector3,System.Single)
+   0215 stfld Assets.Scripts.GameSystem.SignalPanel::m_battleSceneGroundPlane
+   021A ldarg.0 
+   021B newobj System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::.ctor()
+   0220 stfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0225 ldarg.0 
+   0226 newobj System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::.ctor()
+   022B stfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   0230 ldarg.0 
+   0231 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CSignalTipsElement>::.ctor()
+   0236 stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   023B call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0240 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0245 brfalse IL_0255: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   024A ldarg.0 
+   024B newobj System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CSignal>::.ctor()
+   0250 stfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   0255 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   025A ldc.i4.s 95
+   025C ldarg.0 
+   025D ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSpawnSoldier(Assets.Scripts.GameLogic.GameCommonBoolEventParam&)
+   0263 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonBoolEventParam>::.ctor(System.Object,System.IntPtr)
+   0268 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonBoolEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   026D ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0010 ldc.i4 1116
+   0015 ldarg.0 
+   0016 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnClickMiniMap(Assets.Scripts.UI.CUIEvent)
+   001C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0021 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0026 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   002B ldc.i4 1171
+   0030 ldarg.0 
+   0031 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnClickBattleScene(Assets.Scripts.UI.CUIEvent)
+   0037 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   003C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0041 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0046 ldc.i4 1165
+   004B ldarg.0 
+   004C ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSignalButtonClicked(Assets.Scripts.UI.CUIEvent)
+   0052 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0057 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   005C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0061 ldc.i4 1166
+   0066 ldarg.0 
+   0067 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSignalListElementEnabled(Assets.Scripts.UI.CUIEvent)
+   006D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0072 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   007D brfalse IL_00b6: ldarg.0
+   0082 ldc.i4.0 
+   0083 stloc.0 
+   0084 br IL_009e: ldloc.0
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   008F ldloc.0 
+   0090 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   0095 callvirt System.Void Assets.Scripts.GameSystem.CSignal::Dispose()
+   009A ldloc.0 
+   009B ldc.i4.1 
+   009C add 
+   009D stloc.0 
+   009E ldloc.0 
+   009F ldarg.0 
+   00A0 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00A5 callvirt System.Int32 ListViewBase::get_Count()
+   00AA blt IL_0089: ldarg.0
+   00AF ldarg.0 
+   00B0 ldnull 
+   00B1 stfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00B6 ldarg.0 
+   00B7 ldnull 
+   00B8 stfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   00BD ldarg.0 
+   00BE ldnull 
+   00BF stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   00C4 ldarg.0 
+   00C5 ldnull 
+   00C6 stfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   00CB call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   00D0 ldc.i4.s 95
+   00D2 ldarg.0 
+   00D3 ldftn System.Void Assets.Scripts.GameSystem.SignalPanel::OnSpawnSoldier(Assets.Scripts.GameLogic.GameCommonBoolEventParam&)
+   00D9 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonBoolEventParam>::.ctor(System.Object,System.IntPtr)
+   00DE callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonBoolEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   00E3 ldarg.0 
+   00E4 ldnull 
+   00E5 stfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00EA ldarg.0 
+   00EB ldnull 
+   00EC stfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   00F1 ldarg.0 
+   00F2 ldnull 
+   00F3 stfld Assets.Scripts.GameSystem.SignalPanel::m_miniMap
+   00F8 ldarg.0 
+   00F9 ldnull 
+   00FA stfld Assets.Scripts.GameSystem.SignalPanel::m_signalSrcHeroNameContainer
+   00FF ldarg.0 
+   0100 ldnull 
+   0101 stfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0106 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   010B ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalTipsFormPath
+   0110 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   0115 ret 
+== System.Void OnSpawnSoldier(Assets.Scripts.GameLogic.GameCommonBoolEventParam& param) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0005 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0012: ldloca.s V_1
+   0011 ret 
+   0012 ldloca.s V_1
+   0014 ldc.r4 0
+   0019 ldc.r4 0
+   001E call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0023 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0028 stloc.2 
+   0029 ldloc.0 
+   002A ldc.i4.0 
+   002B callvirt Assets.Scripts.GameSystem.CMiniMapInstance Assets.Scripts.GameSystem.MinimapSys::GetMiniMapInstance(Assets.Scripts.GameSystem.enMiniMapType)
+   0030 stloc.3 
+   0031 ldc.r4 13
+   0036 stloc.s V_4
+   0038 ldarg.1 
+   0039 ldfld Assets.Scripts.GameLogic.GameCommonBoolEventParam::value
+   003E brfalse IL_0075: ldloca.s V_1
+   0043 ldloca.s V_1
+   0045 ldloc.3 
+   0046 ldflda Assets.Scripts.GameSystem.CMiniMapInstance::m_mapVertexInScreen
+   004B ldflda Assets.Scripts.GameSystem.stRectVertex::m_bottomLeft
+   0050 ldfld UnityEngine.Vector3::x
+   0055 ldloc.s V_4
+   0057 add 
+   0058 ldloc.3 
+   0059 ldflda Assets.Scripts.GameSystem.CMiniMapInstance::m_mapVertexInScreen
+   005E ldflda Assets.Scripts.GameSystem.stRectVertex::m_bottomLeft
+   0063 ldfld UnityEngine.Vector3::y
+   0068 ldloc.s V_4
+   006A add 
+   006B call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0070 br IL_00b7: ldarg.0
+   0075 ldloca.s V_1
+   0077 ldloc.3 
+   0078 ldflda Assets.Scripts.GameSystem.CMiniMapInstance::m_mapVertexInScreen
+   007D ldflda Assets.Scripts.GameSystem.stRectVertex::m_topRight
+   0082 ldfld UnityEngine.Vector3::x
+   0087 ldloc.s V_4
+   0089 sub 
+   008A ldloc.3 
+   008B ldflda Assets.Scripts.GameSystem.CMiniMapInstance::m_mapVertexInScreen
+   0090 ldflda Assets.Scripts.GameSystem.stRectVertex::m_topRight
+   0095 ldfld UnityEngine.Vector3::y
+   009A ldloc.s V_4
+   009C sub 
+   009D call System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00A2 ldc.r4 0
+   00A7 ldc.r4 0
+   00AC ldc.r4 180
+   00B1 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   00B6 stloc.2 
+   00B7 ldarg.0 
+   00B8 ldc.i4.6 
+   00B9 ldloc.1 
+   00BA ldloc.2 
+   00BB call System.Void Assets.Scripts.GameSystem.SignalPanel::ExecCommand(System.Int32,UnityEngine.Vector2,UnityEngine.Quaternion)
+   00C0 ret 
+== Assets.Scripts.UI.CUIListScript GetSignalTipsListScript() attrs=Public, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalTipsFormPath
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0036: ldloc.0
+   001C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0021 ldsfld Assets.Scripts.GameSystem.SignalPanel::s_signalTipsFormPath
+   0026 ldc.i4.1 
+   0027 ldc.i4.1 
+   0028 ldnull 
+   0029 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   002E stloc.0 
+   002F ldloc.0 
+   0030 ldc.i4.0 
+   0031 callvirt System.Void Assets.Scripts.UI.CUIFormScript::SetPixelPerfect(System.Boolean)
+   0036 ldloc.0 
+   0037 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   003C ldstr List_SignalTips
+   0041 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   0046 stloc.1 
+   0047 ldloc.1 
+   0048 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0012 brfalse IL_004a: ldarg.0
+   0017 ldc.i4.0 
+   0018 stloc.0 
+   0019 br IL_003c: ldloc.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0024 ldloc.0 
+   0025 ldelem.ref 
+   0026 brfalse IL_0038: ldloc.0
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0031 ldloc.0 
+   0032 ldelem.ref 
+   0033 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::UpdateCooldown()
+   0038 ldloc.0 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0043 ldlen 
+   0044 conv.i4 
+   0045 blt IL_001e: ldarg.0
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0050 brfalse IL_0105: ldarg.0
+   0055 ldc.i4.0 
+   0056 stloc.1 
+   0057 br IL_00f4: ldloc.1
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0062 ldloc.1 
+   0063 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   0068 callvirt System.Boolean Assets.Scripts.GameSystem.CSignal::IsNeedDisposed()
+   006D brfalse IL_00d4: ldarg.0
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   0078 brfalse IL_00b2: ldarg.0
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0083 ldloc.1 
+   0084 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   0089 ldfld Assets.Scripts.GameSystem.CSignal::m_signalID
+   008E ldc.i4.s 101
+   0090 bne.un IL_00b2: ldarg.0
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   009B ldarg.0 
+   009C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00A1 ldloc.1 
+   00A2 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   00A7 ldfld Assets.Scripts.GameSystem.CSignal::m_playerID
+   00AC callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CSignal>::Remove(!0)
+   00B1 pop 
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00B8 ldloc.1 
+   00B9 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   00BE callvirt System.Void Assets.Scripts.GameSystem.CSignal::Dispose()
+   00C3 ldarg.0 
+   00C4 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00C9 ldloc.1 
+   00CA callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   00CF br IL_00f4: ldloc.1
+   00D4 ldarg.0 
+   00D5 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00DA ldloc.1 
+   00DB callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   00E0 ldarg.0 
+   00E1 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   00E6 call System.Single UnityEngine.Time::get_deltaTime()
+   00EB callvirt System.Void Assets.Scripts.GameSystem.CSignal::Update(Assets.Scripts.UI.CUIFormScript,System.Single)
+   00F0 ldloc.1 
+   00F1 ldc.i4.1 
+   00F2 add 
+   00F3 stloc.1 
+   00F4 ldloc.1 
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   00FB callvirt System.Int32 ListViewBase::get_Count()
+   0100 blt IL_005c: ldarg.0
+   0105 ldarg.0 
+   0106 call System.Void Assets.Scripts.GameSystem.SignalPanel::UpdateSignalTipses()
+   010B ret 
+== System.Void OnSignalButtonClicked(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameLogic.BattleLogic::get_bPauseGameLogic()
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0016 brtrue IL_001c: ldarg.1
+   001B ret 
+   001C ldarg.1 
+   001D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0022 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldc.i4.2 
+   002A bne.un IL_0041: ldloc.0
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleStatistic>::GetInstance()
+   0034 ldc.i4.1 
+   0035 ldc.i4.s 19
+   0037 callvirt System.Void Assets.Scripts.GameLogic.BattleStatistic::ReqPlayerBehavior(System.Byte,Assets.Scripts.GameLogic.BehaviorType)
+   003C br IL_0085: ldarg.0
+   0041 ldloc.0 
+   0042 ldc.i4.3 
+   0043 bne.un IL_005a: ldloc.0
+   0048 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleStatistic>::GetInstance()
+   004D ldc.i4.1 
+   004E ldc.i4.s 20
+   0050 callvirt System.Void Assets.Scripts.GameLogic.BattleStatistic::ReqPlayerBehavior(System.Byte,Assets.Scripts.GameLogic.BehaviorType)
+   0055 br IL_0085: ldarg.0
+   005A ldloc.0 
+   005B ldc.i4.4 
+   005C bne.un IL_0073: ldloc.0
+   0061 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleStatistic>::GetInstance()
+   0066 ldc.i4.1 
+   0067 ldc.i4.s 21
+   0069 callvirt System.Void Assets.Scripts.GameLogic.BattleStatistic::ReqPlayerBehavior(System.Byte,Assets.Scripts.GameLogic.BehaviorType)
+   006E br IL_0085: ldarg.0
+   0073 ldloc.0 
+   0074 ldc.i4.s 100
+   0076 bne.un IL_0085: ldarg.0
+   007B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleStatistic>::GetInstance()
+   0080 callvirt System.Void Assets.Scripts.GameLogic.BattleStatistic::OnClickAttackFirst()
+   0085 ldarg.0 
+   0086 ldloc.0 
+   0087 call Assets.Scripts.GameSystem.CSignalButton Assets.Scripts.GameSystem.SignalPanel::GetSingleButton(System.Int32)
+   008C stloc.1 
+   008D ldloc.1 
+   008E brfalse IL_0100: ret
+   0093 ldloc.1 
+   0094 callvirt System.Boolean Assets.Scripts.GameSystem.CSignalButton::IsInCooldown()
+   0099 brtrue IL_0100: ret
+   009E ldloc.1 
+   009F ldflda Assets.Scripts.GameSystem.CSignalButton::m_signalInfo
+   00A4 ldfld ResData.ResSignalInfo::bSignalType
+   00A9 brtrue IL_00f3: ldarg.0
+   00AE ldarg.0 
+   00AF ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   00B4 ldloc.0 
+   00B5 beq IL_00ee: br IL_0100
+   00BA ldarg.0 
+   00BB ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   00C0 ldc.i4.0 
+   00C1 blt IL_00e0: ldarg.0
+   00C6 ldarg.0 
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   00CD call Assets.Scripts.GameSystem.CSignalButton Assets.Scripts.GameSystem.SignalPanel::GetSingleButton(System.Int32)
+   00D2 stloc.2 
+   00D3 ldloc.2 
+   00D4 brfalse IL_00e0: ldarg.0
+   00D9 ldloc.2 
+   00DA ldc.i4.0 
+   00DB callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::SetHighLight(System.Boolean)
+   00E0 ldarg.0 
+   00E1 ldloc.0 
+   00E2 stfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   00E7 ldloc.1 
+   00E8 ldc.i4.1 
+   00E9 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::SetHighLight(System.Boolean)
+   00EE br IL_0100: ret
+   00F3 ldarg.0 
+   00F4 ldloc.0 
+   00F5 conv.u1 
+   00F6 ldsfld VInt3::zero
+   00FB call System.Void Assets.Scripts.GameSystem.SignalPanel::SendCommand_SignalBtn_Position(System.Byte,VInt3)
+   0100 ret 
+== System.Void OnClickBattleScene(Assets.Scripts.UI.CUIEvent uievent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_0017: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0011 ldc.i4.0 
+   0012 bge IL_003a: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0017 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   001C callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 brfalse IL_002f: call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0028 ldloc.0 
+   0029 ldc.i4.0 
+   002A callvirt System.Void Assets.Scripts.GameSystem.MinimapSys::Switch(Assets.Scripts.GameSystem.MinimapSys/EMapType)
+   002F call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   0034 callvirt System.Void Assets.Scripts.GameSystem.InBattleMsgMgr::HideView()
+   0039 ret 
+   003A call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   003F ldfld CameraSystem::m_mainCamera
+   0044 ldarg.1 
+   0045 ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   004A callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   004F call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0054 callvirt UnityEngine.Ray UnityEngine.Camera::ScreenPointToRay(UnityEngine.Vector3)
+   0059 stloc.1 
+   005A ldarg.0 
+   005B ldflda Assets.Scripts.GameSystem.SignalPanel::m_battleSceneGroundPlane
+   0060 ldloc.1 
+   0061 ldloca.s V_2
+   0063 call System.Boolean UnityEngine.Plane::Raycast(UnityEngine.Ray,System.Single&)
+   0068 brfalse IL_0089: ret
+   006D ldloca.s V_1
+   006F ldloc.2 
+   0070 call UnityEngine.Vector3 UnityEngine.Ray::GetPoint(System.Single)
+   0075 call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   007A stloc.3 
+   007B ldarg.0 
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0082 conv.u1 
+   0083 ldloc.3 
+   0084 call System.Void Assets.Scripts.GameSystem.SignalPanel::SendCommand_SignalBtn_Position(System.Byte,VInt3)
+   0089 ret 
+== System.Boolean IsUseSingalButton() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_miniMap
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0013: ldarg.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0019 brfalse IL_002c: ldc.i4.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0024 ldc.i4.0 
+   0025 clt 
+   0027 ldc.i4.0 
+   0028 ceq 
+   002A br.s IL_002d: ret
+   002C ldc.i4.0 
+   002D ret 
+== System.Void OnClickMiniMap(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_0028: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0011 ldc.i4.0 
+   0012 blt IL_0028: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.SignalPanel::m_miniMap
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_0029: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0028 ret 
+   0029 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   002E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 brtrue IL_0040: ldloc.0
+   003A ldnull 
+   003B br IL_004b: stloc.1
+   0040 ldloc.0 
+   0041 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0046 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004B stloc.1 
+   004C ldarg.1 
+   004D ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   0052 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0057 stloc.2 
+   0058 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   005D callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0062 ldloca.s V_2
+   0064 ldc.i4.0 
+   0065 callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInScene(UnityEngine.Vector2&,Assets.Scripts.GameSystem.enMiniMapType)
+   006A stloc.3 
+   006B ldloca.s V_3
+   006D ldloc.1 
+   006E brfalse IL_0087: ldc.r4 0.15
+   0073 ldloc.1 
+   0074 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0079 stloc.s V_4
+   007B ldloca.s V_4
+   007D ldfld UnityEngine.Vector3::y
+   0082 br IL_008c: stfld System.Single UnityEngine.Vector3::y
+   0087 ldc.r4 0.15
+   008C stfld UnityEngine.Vector3::y
+   0091 ldarg.0 
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0098 conv.u1 
+   0099 ldloc.3 
+   009A call VInt3 VInt3::op_Explicit(UnityEngine.Vector3)
+   009F ldc.i4.0 
+   00A0 call System.Void Assets.Scripts.GameSystem.SignalPanel::SendCommand_SignalMiniMap_Position(System.Byte,VInt3,Assets.Scripts.GameSystem.MinimapSys/ElementType)
+   00A5 ret 
+== Assets.Scripts.GameSystem.CSignalButton GetSingleButton(System.Int32 signalID) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0006 brtrue IL_000d: ldc.i4.0
+   000B ldnull 
+   000C ret 
+   000D ldc.i4.0 
+   000E stloc.0 
+   000F br IL_0041: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   001A ldloc.0 
+   001B ldelem.ref 
+   001C brfalse IL_003d: ldloc.0
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0027 ldloc.0 
+   0028 ldelem.ref 
+   0029 ldfld Assets.Scripts.GameSystem.CSignalButton::m_signalID
+   002E ldarg.1 
+   002F bne.un IL_003d: ldloc.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   003A ldloc.0 
+   003B ldelem.ref 
+   003C ret 
+   003D ldloc.0 
+   003E ldc.i4.1 
+   003F add 
+   0040 stloc.0 
+   0041 ldloc.0 
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0048 ldlen 
+   0049 conv.i4 
+   004A blt IL_0014: ldarg.0
+   004F ldnull 
+   0050 ret 
+== System.Void CancelSelectedSignalButton() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0011 ldc.i4.0 
+   0012 bge IL_0018: ldarg.0
+   0017 ret 
+   0018 ldarg.0 
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   001F call Assets.Scripts.GameSystem.CSignalButton Assets.Scripts.GameSystem.SignalPanel::GetSingleButton(System.Int32)
+   0024 stloc.0 
+   0025 ldloc.0 
+   0026 brfalse IL_0032: ldarg.0
+   002B ldloc.0 
+   002C ldc.i4.0 
+   002D callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::SetHighLight(System.Boolean)
+   0032 ldarg.0 
+   0033 ldc.i4.m1 
+   0034 stfld Assets.Scripts.GameSystem.SignalPanel::m_selectedSignalID
+   0039 ret 
+== System.Void ExecCommand_SignalBtn_Position(System.UInt32 senderPlayerID, System.Byte signalID, VInt3& worldPos) attrs=Public, HideBySig maxstack=10
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0031 ret 
+   0032 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0037 ldarg.1 
+   0038 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   003D stloc.1 
+   003E ldloc.1 
+   003F brfalse IL_0073: ret
+   0044 ldloc.1 
+   0045 ldflda Assets.Scripts.GameLogic.Player::Captain
+   004A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0054 stloc.2 
+   0055 ldarg.0 
+   0056 ldarg.1 
+   0057 ldloc.2 
+   0058 ldarg.2 
+   0059 ldarg.3 
+   005A ldfld VInt3::x
+   005F ldarg.3 
+   0060 ldfld VInt3::y
+   0065 ldarg.3 
+   0066 ldfld VInt3::z
+   006B ldc.i4.0 
+   006C ldc.i4.0 
+   006D ldc.i4.0 
+   006E call System.Void Assets.Scripts.GameSystem.SignalPanel::ExecCommand(System.UInt32,System.UInt32,System.Int32,System.Int32,System.Int32,System.Int32,System.Byte,System.Byte,System.UInt32)
+   0073 ret 
+== System.Void ExecCommand_SignalMiniMap_Position(System.UInt32 senderPlayerID, System.Byte signalID, VInt3& worldPos, System.Byte elementType) attrs=Public, HideBySig maxstack=10
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0031 ret 
+   0032 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0037 ldarg.1 
+   0038 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   003D stloc.1 
+   003E ldloc.1 
+   003F brtrue IL_0045: ldloc.0
+   0044 ret 
+   0045 ldloc.0 
+   0046 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   004B ldloc.1 
+   004C ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0051 ceq 
+   0053 stloc.2 
+   0054 ldloc.1 
+   0055 ldflda Assets.Scripts.GameLogic.Player::Captain
+   005A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   005F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   0064 stloc.3 
+   0065 ldarg.2 
+   0066 ldc.i4 200
+   006B bge IL_00a1: ldarg.0
+   0070 ldarg.0 
+   0071 ldarg.1 
+   0072 ldloc.3 
+   0073 ldarg.2 
+   0074 ldarg.3 
+   0075 ldfld VInt3::x
+   007A ldarg.3 
+   007B ldfld VInt3::y
+   0080 ldarg.3 
+   0081 ldfld VInt3::z
+   0086 ldloc.2 
+   0087 brfalse IL_0092: ldc.i4.0
+   008C ldc.i4.1 
+   008D br IL_0093: conv.u1
+   0092 ldc.i4.0 
+   0093 conv.u1 
+   0094 ldarg.s elementType
+   0096 ldc.i4.0 
+   0097 call System.Void Assets.Scripts.GameSystem.SignalPanel::ExecCommand(System.UInt32,System.UInt32,System.Int32,System.Int32,System.Int32,System.Int32,System.Byte,System.Byte,System.UInt32)
+   009C br IL_00c2: ret
+   00A1 ldarg.0 
+   00A2 ldloc.1 
+   00A3 ldfld Assets.Scripts.GameLogic.Player::Captain
+   00A8 ldarg.1 
+   00A9 ldloc.3 
+   00AA ldarg.2 
+   00AB ldarg.3 
+   00AC ldfld VInt3::x
+   00B1 ldarg.3 
+   00B2 ldfld VInt3::y
+   00B7 ldarg.3 
+   00B8 ldfld VInt3::z
+   00BD call System.Void Assets.Scripts.GameSystem.SignalPanel::ExecCommand_4_SignalPanel_Sign(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.UInt32,System.UInt32,System.Int32,System.Int32,System.Int32,System.Int32)
+   00C2 ret 
+== System.Void ExecCommand_SignalMiniMap_Target(System.UInt32 senderPlayerID, System.Byte signalID, System.Byte type, System.UInt32 targetObjID) attrs=Public, HideBySig maxstack=9
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: ldarg.0
+   0031 ret 
+   0032 ldarg.0 
+   0033 ldarg.3 
+   0034 ldarg.s targetObjID
+   0036 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameSystem.SignalPanel::GetActor(System.Byte,System.UInt32)
+   003B stloc.1 
+   003C ldloc.1 
+   003D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0042 brfalse IL_0058: ret
+   0047 ldloca.s V_1
+   0049 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0053 brtrue IL_0059: ldloca.s V_1
+   0058 ret 
+   0059 ldloca.s V_1
+   005B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0060 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0065 brtrue IL_006b: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   006A ret 
+   006B call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0070 ldarg.1 
+   0071 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0076 stloc.2 
+   0077 ldloc.2 
+   0078 brfalse IL_00cf: ret
+   007D ldloc.0 
+   007E ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0083 ldloca.s V_1
+   0085 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008A callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.ActorLinker::get_objCamp()
+   008F ceq 
+   0091 stloc.3 
+   0092 ldloca.s V_1
+   0094 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0099 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   009E stloc.s V_4
+   00A0 ldloc.2 
+   00A1 ldflda Assets.Scripts.GameLogic.Player::Captain
+   00A6 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00AB callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   00B0 stloc.s V_5
+   00B2 ldarg.0 
+   00B3 ldloc.1 
+   00B4 ldarg.1 
+   00B5 ldloc.s V_5
+   00B7 ldarg.2 
+   00B8 ldloc.3 
+   00B9 brfalse IL_00c4: ldc.i4.0
+   00BE ldc.i4.1 
+   00BF br IL_00c5: conv.u1
+   00C4 ldc.i4.0 
+   00C5 conv.u1 
+   00C6 ldarg.3 
+   00C7 ldc.i4.0 
+   00C8 ldloc.s V_4
+   00CA call System.Void Assets.Scripts.GameSystem.SignalPanel::ExecCommand(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.UInt32,System.UInt32,System.Int32,System.Byte,System.Byte,System.UInt32,System.UInt32)
+   00CF ret 
+== Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> GetActor(System.Byte type, System.UInt32 targetObjID) attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldc.i4.6 
+   0004 beq IL_0017: call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0009 ldarg.1 
+   000A ldc.i4.4 
+   000B beq IL_0017: call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0010 ldarg.1 
+   0011 ldc.i4.5 
+   0012 bne.un IL_0027: ldarg.1
+   0017 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   001C ldfld Assets.Scripts.GameLogic.ActorManager::DragonActors
+   0021 stloc.0 
+   0022 br IL_0067: ldloc.0
+   0027 ldarg.1 
+   0028 ldc.i4.3 
+   0029 bne.un IL_003e: ldarg.1
+   002E call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0033 ldfld Assets.Scripts.GameLogic.ActorManager::HeroActors
+   0038 stloc.0 
+   0039 br IL_0067: ldloc.0
+   003E ldarg.1 
+   003F ldc.i4.1 
+   0040 bne.un IL_0055: ldarg.1
+   0045 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   004A ldfld Assets.Scripts.GameLogic.ActorManager::TowerActors
+   004F stloc.0 
+   0050 br IL_0067: ldloc.0
+   0055 ldarg.1 
+   0056 ldc.i4.2 
+   0057 bne.un IL_0067: ldloc.0
+   005C call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::get_instance()
+   0061 ldfld Assets.Scripts.GameLogic.ActorManager::OrganActors
+   0066 stloc.0 
+   0067 ldloc.0 
+   0068 brfalse IL_00ab: ldloca.s V_3
+   006D ldc.i4.0 
+   006E stloc.1 
+   006F br IL_009f: ldloc.1
+   0074 ldloc.0 
+   0075 ldloc.1 
+   0076 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   007B stloc.2 
+   007C ldloc.2 
+   007D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0082 brfalse IL_009b: ldloc.1
+   0087 ldloca.s V_2
+   0089 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0093 ldarg.2 
+   0094 bne.un IL_009b: ldloc.1
+   0099 ldloc.2 
+   009A ret 
+   009B ldloc.1 
+   009C ldc.i4.1 
+   009D add 
+   009E stloc.1 
+   009F ldloc.1 
+   00A0 ldloc.0 
+   00A1 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   00A6 blt IL_0074: ldloc.0
+   00AB ldloca.s V_3
+   00AD initobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   00B3 ldloc.3 
+   00B4 ret 
+== System.UInt32 GetCDTime(ResData.ResSignalInfo signalInfo) attrs=Private, HideBySig maxstack=2
+   0000 ldarga.s signalInfo
+   0002 ldfld ResData.ResSignalInfo::bCooldownTime
+   0007 ldc.i4 1000
+   000C mul 
+   000D stloc.0 
+   000E call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0013 stloc.1 
+   0014 ldloc.1 
+   0015 ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   001A call System.Boolean Assets.Scripts.GameLogic.CBattleGuideManager::Is5v5GuideLevel(System.Int32)
+   001F brfalse IL_002a: ldloc.0
+   0024 ldc.i4 2000
+   0029 stloc.0 
+   002A ldloc.0 
+   002B ret 
+== System.Void ExecCommand(System.UInt32 senderPlayerID, System.UInt32 heroID, System.Int32 signalID, System.Int32 worldPositionX, System.Int32 worldPositionY, System.Int32 worldPositionZ, System.Byte bAlice, System.Byte elementType, System.UInt32 targetHeroID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   001C ret 
+   001D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0022 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0027 stloc.0 
+   0028 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   002D ldarg.1 
+   002E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0033 stloc.1 
+   0034 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0039 stloc.2 
+   003A ldloc.0 
+   003B brfalse IL_0046: ret
+   0040 ldloc.1 
+   0041 brtrue IL_0047: ldarg.3
+   0046 ret 
+   0047 ldarg.3 
+   0048 ldc.i4.s 100
+   004A bne.un IL_0061: ldarg.3
+   004F ldloc.2 
+   0050 callvirt ResData.RES_LEVELSWITCH_TYPE Assets.Scripts.GameLogic.CLevelContext::BoardCastCustom()
+   0055 ldc.i4.1 
+   0056 beq IL_005c: br IL_0098
+   005B ret 
+   005C br IL_0098: ldloc.0
+   0061 ldarg.3 
+   0062 ldc.i4.s 101
+   0064 bne.un IL_0086: ldloc.0
+   0069 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   006E callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0073 stloc.3 
+   0074 ldloc.3 
+   0075 brfalse IL_0085: ret
+   007A ldloc.3 
+   007B callvirt System.Boolean Assets.Scripts.GameSystem.MinimapSys::get_NeedSendTargetPosMark()
+   0080 brtrue IL_0086: ldloc.0
+   0085 ret 
+   0086 ldloc.0 
+   0087 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   008C ldloc.1 
+   008D ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0092 beq IL_0098: ldloc.0
+   0097 ret 
+   0098 ldloc.0 
+   0099 ldloc.1 
+   009A ceq 
+   009C stloc.s V_4
+   009E ldloca.s V_5
+   00A0 ldarg.3 
+   00A1 conv.u1 
+   00A2 call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   00A7 brtrue IL_00b8: ldarg.0
+   00AC ldc.i4.0 
+   00AD ldstr ExecCommand signalInfo is null, check out...
+   00B2 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   00B7 ret 
+   00B8 ldarg.0 
+   00B9 ldloc.s V_5
+   00BB call System.UInt32 Assets.Scripts.GameSystem.SignalPanel::GetCDTime(ResData.ResSignalInfo)
+   00C0 stloc.s V_6
+   00C2 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00C7 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   00CC conv.u8 
+   00CD stloc.s V_7
+   00CF ldnull 
+   00D0 stloc.s V_8
+   00D2 ldarg.0 
+   00D3 ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   00D8 ldarg.1 
+   00D9 ldloca.s V_8
+   00DB callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::TryGetValue(!0,!1&)
+   00E0 pop 
+   00E1 ldloc.s V_8
+   00E3 brfalse IL_012b: ldloc.s V_7
+   00E8 ldloc.s V_6
+   00EA brtrue IL_00f7: ldloc.s V_7
+   00EF ldarg.3 
+   00F0 ldc.i4.s 101
+   00F2 beq IL_010e: ldloc.s V_8
+   00F7 ldloc.s V_7
+   00F9 ldloc.s V_8
+   00FB ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   0100 sub 
+   0101 conv.u4 
+   0102 ldloc.s V_8
+   0104 ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   0109 blt.un IL_0125: ret
+   010E ldloc.s V_8
+   0110 ldloc.s V_7
+   0112 stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   0117 ldloc.s V_8
+   0119 ldloc.s V_6
+   011B stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   0120 br IL_0126: br IL_0144
+   0125 ret 
+   0126 br IL_0144: ldloc.s V_4
+   012B ldloc.s V_7
+   012D ldloc.s V_6
+   012F newobj System.Void Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::.ctor(System.UInt64,System.UInt32)
+   0134 stloc.s V_8
+   0136 ldarg.0 
+   0137 ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   013C ldarg.1 
+   013D ldloc.s V_8
+   013F callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::Add(!0,!1)
+   0144 ldloc.s V_4
+   0146 brfalse IL_0191: ldarg.0
+   014B ldarg.0 
+   014C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0151 brfalse IL_0191: ldarg.0
+   0156 ldc.i4.0 
+   0157 stloc.s V_9
+   0159 br IL_0182: ldloc.s V_9
+   015E ldarg.0 
+   015F ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0164 ldloc.s V_9
+   0166 ldelem.ref 
+   0167 brfalse IL_017c: ldloc.s V_9
+   016C ldarg.0 
+   016D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0172 ldloc.s V_9
+   0174 ldelem.ref 
+   0175 ldloc.s V_6
+   0177 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::StartCooldown(System.UInt32)
+   017C ldloc.s V_9
+   017E ldc.i4.1 
+   017F add 
+   0180 stloc.s V_9
+   0182 ldloc.s V_9
+   0184 ldarg.0 
+   0185 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   018A ldlen 
+   018B conv.i4 
+   018C blt IL_015e: ldarg.0
+   0191 ldarg.0 
+   0192 ldarg.s elementType
+   0194 ldarg.s bAlice
+   0196 ldarg.s targetHeroID
+   0198 call System.Void Assets.Scripts.GameSystem.SignalPanel::PlaySignalTipsSound(System.Byte,System.Byte,System.UInt32)
+   019D ldarg.s elementType
+   019F ldc.i4.0 
+   01A0 ceq 
+   01A2 stloc.s V_10
+   01A4 ldloc.2 
+   01A5 callvirt ResData.RES_LEVELSWITCH_TYPE Assets.Scripts.GameLogic.CLevelContext::BoardCastCustom()
+   01AA ldc.i4.1 
+   01AB bne.un IL_01e0: ldc.i4.0
+   01B0 ldarg.3 
+   01B1 ldc.i4.s 100
+   01B3 bne.un IL_01e0: ldc.i4.0
+   01B8 ldloca.s V_5
+   01BA call System.String ResData.ResSignalInfo::get_szSound()
+   01BF call System.Boolean System.String::IsNullOrEmpty(System.String)
+   01C4 brtrue IL_01db: br IL_0287
+   01C9 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   01CE ldloca.s V_5
+   01D0 call System.String ResData.ResSignalInfo::get_szSound()
+   01D5 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   01DA pop 
+   01DB br IL_0287: ldloc.2
+   01E0 ldc.i4.0 
+   01E1 stloc.s V_11
+   01E3 ldarg.3 
+   01E4 ldc.i4.s 101
+   01E6 bne.un IL_0212: ldarg.s elementType
+   01EB ldarg.0 
+   01EC ldarg.1 
+   01ED call Assets.Scripts.GameSystem.CSignal Assets.Scripts.GameSystem.SignalPanel::GetMarkSignal(System.UInt32)
+   01F2 stloc.s V_12
+   01F4 ldloc.s V_12
+   01F6 brfalse IL_020d: br IL_0222
+   01FB ldloc.s V_12
+   01FD ldarg.s elementType
+   01FF ldarg.s worldPositionX
+   0201 ldarg.s worldPositionY
+   0203 ldarg.s worldPositionZ
+   0205 callvirt System.Void Assets.Scripts.GameSystem.CSignal::ProcessMarkSignal(System.Byte,System.Int32,System.Int32,System.Int32)
+   020A ldc.i4.1 
+   020B stloc.s V_11
+   020D br IL_0222: ldarg.s elementType
+   0212 ldarg.s elementType
+   0214 brfalse IL_021f: ldarg.1
+   0219 ldc.i4.0 
+   021A br IL_0220: starg.s senderPlayerID
+   021F ldarg.1 
+   0220 starg.s senderPlayerID
+   0222 ldarg.s elementType
+   0224 ldc.i4.s 9
+   0226 bne.un IL_022c: ldloc.s V_11
+   022B ret 
+   022C ldloc.s V_11
+   022E brtrue IL_0287: ldloc.2
+   0233 ldc.i4.0 
+   0234 stloc.s V_13
+   0236 ldarg.3 
+   0237 ldc.i4.s 101
+   0239 bne.un IL_0241: ldarg.1
+   023E ldc.i4.1 
+   023F stloc.s V_13
+   0241 ldarg.1 
+   0242 ldarg.3 
+   0243 ldarg.s worldPositionX
+   0245 ldarg.s worldPositionY
+   0247 ldarg.s worldPositionZ
+   0249 ldc.i4.1 
+   024A ldloc.s V_13
+   024C ldloc.s V_10
+   024E newobj System.Void Assets.Scripts.GameSystem.CSignal::.ctor(System.UInt32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,Assets.Scripts.GameSystem.enSignalShowType,System.Boolean)
+   0253 stloc.s V_14
+   0255 ldloc.s V_14
+   0257 ldarg.0 
+   0258 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   025D ldloc.s V_5
+   025F callvirt System.Void Assets.Scripts.GameSystem.CSignal::Initialize(Assets.Scripts.UI.CUIFormScript,ResData.ResSignalInfo)
+   0264 ldarg.0 
+   0265 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   026A ldloc.s V_14
+   026C callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::Add(!0)
+   0271 ldarg.3 
+   0272 ldc.i4.s 101
+   0274 bne.un IL_0287: ldloc.2
+   0279 ldarg.0 
+   027A ldfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   027F ldarg.1 
+   0280 ldloc.s V_14
+   0282 callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CSignal>::set_Item(!0,!1)
+   0287 ldloc.2 
+   0288 callvirt ResData.RES_LEVELSWITCH_TYPE Assets.Scripts.GameLogic.CLevelContext::BoardCastCustom()
+   028D ldc.i4.1 
+   028E bne.un IL_02aa: ldarg.3
+   0293 ldarg.3 
+   0294 ldc.i4.s 100
+   0296 bne.un IL_02aa: ldarg.3
+   029B ldarg.3 
+   029C ldarg.1 
+   029D conv.u8 
+   029E newobj System.Void Assets.Scripts.GameSystem.CSignalTips_Custom::.ctor(System.Int32,System.UInt64)
+   02A3 stloc.s V_15
+   02A5 br IL_02bc: ldarg.0
+   02AA ldarg.3 
+   02AB ldarg.2 
+   02AC ldloc.s V_4
+   02AE ldarg.s bAlice
+   02B0 ldarg.s elementType
+   02B2 ldarg.s targetHeroID
+   02B4 ldarg.1 
+   02B5 newobj System.Void Assets.Scripts.GameSystem.CSignalTips::.ctor(System.Int32,System.UInt32,System.Boolean,System.Byte,System.Byte,System.UInt32,System.UInt32)
+   02BA stloc.s V_15
+   02BC ldarg.0 
+   02BD ldloc.s V_15
+   02BF call System.Void Assets.Scripts.GameSystem.SignalPanel::Add_SignalTip(Assets.Scripts.GameSystem.CSignalTipsElement)
+   02C4 ret 
+== System.Void ExecCommand_4_SignalPanel_Sign(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> sender, System.UInt32 senderPlayerID, System.UInt32 heroID, System.Int32 signalID, System.Int32 worldPositionX, System.Int32 worldPositionY, System.Int32 worldPositionZ) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   001C ret 
+   001D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0022 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0027 stloc.0 
+   0028 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   002D ldarg.2 
+   002E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0033 stloc.1 
+   0034 ldloc.0 
+   0035 brfalse IL_0040: ret
+   003A ldloc.1 
+   003B brtrue IL_0041: ldloc.0
+   0040 ret 
+   0041 ldloc.0 
+   0042 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0047 ldloc.1 
+   0048 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   004D beq IL_0053: ldloc.0
+   0052 ret 
+   0053 ldloc.0 
+   0054 ldloc.1 
+   0055 ceq 
+   0057 stloc.2 
+   0058 ldloca.s V_3
+   005A ldarg.s signalID
+   005C conv.u1 
+   005D call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   0062 pop 
+   0063 ldarg.0 
+   0064 ldloc.3 
+   0065 call System.UInt32 Assets.Scripts.GameSystem.SignalPanel::GetCDTime(ResData.ResSignalInfo)
+   006A stloc.s V_4
+   006C call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0071 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0076 conv.u8 
+   0077 stloc.s V_5
+   0079 ldnull 
+   007A stloc.s V_6
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   0082 ldarg.2 
+   0083 ldloca.s V_6
+   0085 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::TryGetValue(!0,!1&)
+   008A pop 
+   008B ldloc.s V_6
+   008D brfalse IL_00c6: ldloc.s V_5
+   0092 ldloc.s V_5
+   0094 ldloc.s V_6
+   0096 ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   009B sub 
+   009C conv.u4 
+   009D ldloc.s V_6
+   009F ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   00A4 blt.un IL_00c0: ret
+   00A9 ldloc.s V_6
+   00AB ldloc.s V_5
+   00AD stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   00B2 ldloc.s V_6
+   00B4 ldloc.s V_4
+   00B6 stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   00BB br IL_00c1: br IL_00df
+   00C0 ret 
+   00C1 br IL_00df: ldloc.2
+   00C6 ldloc.s V_5
+   00C8 ldloc.s V_4
+   00CA newobj System.Void Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::.ctor(System.UInt64,System.UInt32)
+   00CF stloc.s V_6
+   00D1 ldarg.0 
+   00D2 ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   00D7 ldarg.2 
+   00D8 ldloc.s V_6
+   00DA callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::Add(!0,!1)
+   00DF ldloc.2 
+   00E0 brfalse IL_012b: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00EB brfalse IL_012b: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   00F0 ldc.i4.0 
+   00F1 stloc.s V_7
+   00F3 br IL_011c: ldloc.s V_7
+   00F8 ldarg.0 
+   00F9 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00FE ldloc.s V_7
+   0100 ldelem.ref 
+   0101 brfalse IL_0116: ldloc.s V_7
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   010C ldloc.s V_7
+   010E ldelem.ref 
+   010F ldloc.s V_4
+   0111 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::StartCooldown(System.UInt32)
+   0116 ldloc.s V_7
+   0118 ldc.i4.1 
+   0119 add 
+   011A stloc.s V_7
+   011C ldloc.s V_7
+   011E ldarg.0 
+   011F ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0124 ldlen 
+   0125 conv.i4 
+   0126 blt IL_00f8: ldarg.0
+   012B call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0130 ldloca.s V_3
+   0132 call System.String ResData.ResSignalInfo::get_szSound()
+   0137 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   013C pop 
+   013D call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0142 callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   0147 ldfld Assets.Scripts.GameSystem.MinimapSys::miniMapEffectModule
+   014C stloc.s V_8
+   014E ldloc.s V_8
+   0150 brfalse IL_02f2: ret
+   0155 ldloca.s V_9
+   0157 ldarg.s worldPositionX
+   0159 conv.r4 
+   015A ldarg.s worldPositionY
+   015C conv.r4 
+   015D ldarg.s worldPositionZ
+   015F conv.r4 
+   0160 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0165 ldloc.s V_8
+   0167 ldloca.s V_3
+   0169 call System.String ResData.ResSignalInfo::get_szSceneEffect()
+   016E ldloca.s V_3
+   0170 ldfld ResData.ResSignalInfo::bTime
+   0175 ldc.i4 1000
+   017A mul 
+   017B ldloc.s V_9
+   017D callvirt UnityEngine.GameObject Assets.Scripts.GameSystem.MiniMapEffectModule::PlaySceneEffect(System.String,System.Int32,UnityEngine.Vector3)
+   0182 stloc.s V_10
+   0184 ldarg.s signalID
+   0186 ldc.i4 202
+   018B bne.un IL_0253: ldarg.s signalID
+   0190 ldloc.s V_10
+   0192 ldnull 
+   0193 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0198 brfalse IL_0253: ldarg.s signalID
+   019D ldloc.s V_10
+   019F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01A4 ldstr text
+   01A9 callvirt UnityEngine.Transform UnityEngine.Transform::FindChild(System.String)
+   01AE callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.TextMesh>()
+   01B3 stloc.s V_11
+   01B5 ldloc.s V_11
+   01B7 ldnull 
+   01B8 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01BD brfalse IL_01e6: ldloc.s V_10
+   01C2 ldloca.s V_12
+   01C4 ldarg.3 
+   01C5 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   01CA pop 
+   01CB ldloc.s V_11
+   01CD ldloca.s V_12
+   01CF call System.String ResData.ResHeroCfgInfo::get_szName()
+   01D4 callvirt System.Void UnityEngine.TextMesh::set_text(System.String)
+   01D9 ldloc.s V_11
+   01DB callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01E0 ldc.i4.1 
+   01E1 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01E6 ldloc.s V_10
+   01E8 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01ED ldstr JianTou
+   01F2 callvirt UnityEngine.Transform UnityEngine.Transform::FindChild(System.String)
+   01F7 stloc.s V_13
+   01F9 ldarga.s sender
+   01FB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0200 callvirt UnityEngine.GameObject Assets.Scripts.GameLogic.ActorLinker::get_gameObject()
+   0205 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   020A callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   020F ldloc.s V_9
+   0211 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0216 stloc.s V_14
+   0218 ldloca.s V_14
+   021A call System.Void UnityEngine.Vector3::Normalize()
+   021F ldloc.s V_13
+   0221 ldloc.s V_14
+   0223 callvirt System.Void UnityEngine.Transform::set_forward(UnityEngine.Vector3)
+   0228 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   022D callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0232 stloc.s V_15
+   0234 ldloc.s V_15
+   0236 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   023B brfalse IL_0253: ldarg.s signalID
+   0240 ldloc.s V_11
+   0242 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0247 ldloc.s V_15
+   0249 callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ3d()
+   024E callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0253 ldarg.s signalID
+   0255 ldc.i4 203
+   025A bne.un IL_0292: ldloca.s V_3
+   025F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0264 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0269 stloc.s V_16
+   026B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0270 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0275 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isCameraFlip
+   027A brfalse IL_0292: ldloca.s V_3
+   027F ldloc.s V_10
+   0281 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0286 ldloc.s V_16
+   0288 callvirt UnityEngine.Quaternion Assets.Scripts.GameLogic.CLevelContext::get_cameraRotQ3d()
+   028D callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0292 ldloca.s V_3
+   0294 call System.String ResData.ResSignalInfo::get_szRealEffect()
+   0299 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   029E brtrue IL_02f2: ret
+   02A3 ldc.i4.0 
+   02A4 stloc.s V_17
+   02A6 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   02AB callvirt Assets.Scripts.GameSystem.MinimapSys Assets.Scripts.GameSystem.CBattleSystem::get_TheMinimapSys()
+   02B0 stloc.s V_18
+   02B2 ldloc.s V_18
+   02B4 brfalse IL_02c2: ldloc.s V_18
+   02B9 ldloc.s V_18
+   02BB callvirt Assets.Scripts.GameSystem.enMiniMapType Assets.Scripts.GameSystem.MinimapSys::GetUsedMiniMapType()
+   02C0 stloc.s V_17
+   02C2 ldloc.s V_18
+   02C4 ldloc.s V_9
+   02C6 ldloc.s V_17
+   02C8 callvirt UnityEngine.Vector3 Assets.Scripts.GameSystem.MinimapSys::GetPositionInScreen(UnityEngine.Vector3,Assets.Scripts.GameSystem.enMiniMapType)
+   02CD call UnityEngine.Vector2 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector3)
+   02D2 stloc.s V_19
+   02D4 ldloc.s V_8
+   02D6 ldloca.s V_3
+   02D8 call System.String ResData.ResSignalInfo::get_szRealEffect()
+   02DD ldloca.s V_3
+   02DF ldfld ResData.ResSignalInfo::bTime
+   02E4 ldc.i4 1000
+   02E9 mul 
+   02EA conv.r4 
+   02EB ldloc.s V_19
+   02ED callvirt System.Void Assets.Scripts.GameSystem.MiniMapEffectModule::PlayScreenPosEffect(System.String,System.Single,UnityEngine.Vector2)
+   02F2 ret 
+== System.Void ExecCommand(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> followActor, System.UInt32 senderPlayerID, System.UInt32 heroID, System.Int32 signalID, System.Byte bAlice, System.Byte elementType, System.UInt32 targetObjID, System.UInt32 targetHeroID) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_useSignalButton
+   0006 brfalse IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   001C ret 
+   001D call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0022 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   0027 stloc.0 
+   0028 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   002D ldarg.2 
+   002E callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0033 stloc.1 
+   0034 ldloc.0 
+   0035 brfalse IL_0040: ret
+   003A ldloc.1 
+   003B brtrue IL_0041: ldloc.0
+   0040 ret 
+   0041 ldloc.0 
+   0042 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0047 ldloc.1 
+   0048 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   004D beq IL_0053: ldloc.0
+   0052 ret 
+   0053 ldloc.0 
+   0054 ldloc.1 
+   0055 ceq 
+   0057 stloc.2 
+   0058 ldloca.s V_3
+   005A ldarg.s signalID
+   005C conv.u1 
+   005D call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   0062 brtrue IL_0073: ldarg.0
+   0067 ldc.i4.0 
+   0068 ldstr ExecCommand signalInfo is null, check out...
+   006D call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0072 ret 
+   0073 ldarg.0 
+   0074 ldloc.3 
+   0075 call System.UInt32 Assets.Scripts.GameSystem.SignalPanel::GetCDTime(ResData.ResSignalInfo)
+   007A stloc.s V_4
+   007C call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0081 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0086 conv.u8 
+   0087 stloc.s V_5
+   0089 ldnull 
+   008A stloc.s V_6
+   008C ldarg.0 
+   008D ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   0092 ldarg.2 
+   0093 ldloca.s V_6
+   0095 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::TryGetValue(!0,!1&)
+   009A pop 
+   009B ldloc.s V_6
+   009D brfalse IL_00d6: ldloc.s V_5
+   00A2 ldloc.s V_5
+   00A4 ldloc.s V_6
+   00A6 ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   00AB sub 
+   00AC conv.u4 
+   00AD ldloc.s V_6
+   00AF ldfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   00B4 blt.un IL_00d0: ret
+   00B9 ldloc.s V_6
+   00BB ldloc.s V_5
+   00BD stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_lastSignalExecuteTimestamp
+   00C2 ldloc.s V_6
+   00C4 ldloc.s V_4
+   00C6 stfld Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::m_cooldownTime
+   00CB br IL_00d1: br IL_00ef
+   00D0 ret 
+   00D1 br IL_00ef: ldloc.2
+   00D6 ldloc.s V_5
+   00D8 ldloc.s V_4
+   00DA newobj System.Void Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown::.ctor(System.UInt64,System.UInt32)
+   00DF stloc.s V_6
+   00E1 ldarg.0 
+   00E2 ldfld Assets.Scripts.GameSystem.SignalPanel::m_playerSignalCooldowns
+   00E7 ldarg.2 
+   00E8 ldloc.s V_6
+   00EA callvirt System.Void DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown>::Add(!0,!1)
+   00EF ldloc.2 
+   00F0 brfalse IL_013b: ldarg.0
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   00FB brfalse IL_013b: ldarg.0
+   0100 ldc.i4.0 
+   0101 stloc.s V_7
+   0103 br IL_012c: ldloc.s V_7
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   010E ldloc.s V_7
+   0110 ldelem.ref 
+   0111 brfalse IL_0126: ldloc.s V_7
+   0116 ldarg.0 
+   0117 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   011C ldloc.s V_7
+   011E ldelem.ref 
+   011F ldloc.s V_4
+   0121 callvirt System.Void Assets.Scripts.GameSystem.CSignalButton::StartCooldown(System.UInt32)
+   0126 ldloc.s V_7
+   0128 ldc.i4.1 
+   0129 add 
+   012A stloc.s V_7
+   012C ldloc.s V_7
+   012E ldarg.0 
+   012F ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalButtons
+   0134 ldlen 
+   0135 conv.i4 
+   0136 blt IL_0108: ldarg.0
+   013B ldarg.0 
+   013C ldarg.s elementType
+   013E ldarg.s bAlice
+   0140 ldarg.s targetHeroID
+   0142 call System.Void Assets.Scripts.GameSystem.SignalPanel::PlaySignalTipsSound(System.Byte,System.Byte,System.UInt32)
+   0147 ldarg.s elementType
+   0149 ldc.i4.0 
+   014A ceq 
+   014C stloc.s V_8
+   014E ldarg.1 
+   014F call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0154 brfalse IL_0193: ldarg.s signalID
+   0159 ldarga.s followActor
+   015B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0160 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0165 brfalse IL_0193: ldarg.s signalID
+   016A ldarg.1 
+   016B ldarg.s signalID
+   016D ldc.i4.1 
+   016E ldc.i4.0 
+   016F ldloc.s V_8
+   0171 newobj System.Void Assets.Scripts.GameSystem.CSignal::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32,System.Boolean,Assets.Scripts.GameSystem.enSignalShowType,System.Boolean)
+   0176 stloc.s V_9
+   0178 ldloc.s V_9
+   017A ldarg.0 
+   017B ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0180 ldloc.3 
+   0181 callvirt System.Void Assets.Scripts.GameSystem.CSignal::Initialize(Assets.Scripts.UI.CUIFormScript,ResData.ResSignalInfo)
+   0186 ldarg.0 
+   0187 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   018C ldloc.s V_9
+   018E callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::Add(!0)
+   0193 ldarg.s signalID
+   0195 ldarg.3 
+   0196 ldloc.2 
+   0197 ldarg.s bAlice
+   0199 ldarg.s elementType
+   019B ldarg.s targetHeroID
+   019D ldc.i4.0 
+   019E newobj System.Void Assets.Scripts.GameSystem.CSignalTips::.ctor(System.Int32,System.UInt32,System.Boolean,System.Byte,System.Byte,System.UInt32,System.UInt32)
+   01A3 stloc.s V_10
+   01A5 ldarg.0 
+   01A6 ldloc.s V_10
+   01A8 call System.Void Assets.Scripts.GameSystem.SignalPanel::Add_SignalTip(Assets.Scripts.GameSystem.CSignalTipsElement)
+   01AD ret 
+== System.Void ExecCommand(System.Int32 signalID, UnityEngine.Vector2 localPosition, UnityEngine.Quaternion localRotation) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldloca.s V_0
+   0011 ret 
+   0012 ldloca.s V_0
+   0014 ldarg.1 
+   0015 conv.u1 
+   0016 call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   001B pop 
+   001C ldarg.1 
+   001D ldarg.2 
+   001E ldc.i4.1 
+   001F ldc.i4.0 
+   0020 ldc.i4.1 
+   0021 ldc.i4.1 
+   0022 ldarg.3 
+   0023 newobj System.Void Assets.Scripts.GameSystem.CSignal::.ctor(System.Int32,UnityEngine.Vector2,System.Boolean,Assets.Scripts.GameSystem.enSignalShowType,System.Boolean,System.Boolean,UnityEngine.Quaternion)
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0030 ldloc.0 
+   0031 callvirt System.Void Assets.Scripts.GameSystem.CSignal::Initialize(Assets.Scripts.UI.CUIFormScript,ResData.ResSignalInfo)
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   003C ldloc.1 
+   003D callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::Add(!0)
+   0042 ret 
+== System.Void ExecCommandOnPos(System.Int32 signalID, System.Int32 worldPositionX, System.Int32 worldPositionY, System.Int32 worldPositionZ, Assets.Scripts.GameSystem.enSignalShowType signalShowType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldloca.s V_0
+   0011 ret 
+   0012 ldloca.s V_0
+   0014 ldarg.1 
+   0015 conv.u1 
+   0016 call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   001B brtrue IL_002c: ldc.i4.0
+   0020 ldc.i4.0 
+   0021 ldstr ExecCommandOnPos signalInfo is null, check out...
+   0026 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   002B ret 
+   002C ldc.i4.0 
+   002D ldarg.1 
+   002E ldarg.2 
+   002F ldarg.3 
+   0030 ldarg.s worldPositionZ
+   0032 ldc.i4.1 
+   0033 ldarg.s signalShowType
+   0035 ldc.i4.1 
+   0036 newobj System.Void Assets.Scripts.GameSystem.CSignal::.ctor(System.UInt32,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,Assets.Scripts.GameSystem.enSignalShowType,System.Boolean)
+   003B stloc.1 
+   003C ldloc.1 
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0043 ldloc.0 
+   0044 callvirt System.Void Assets.Scripts.GameSystem.CSignal::Initialize(Assets.Scripts.UI.CUIFormScript,ResData.ResSignalInfo)
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   004F ldloc.1 
+   0050 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::Add(!0)
+   0055 ret 
+== System.Void ExecCommandOnActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> followActor, System.Int32 signalID, Assets.Scripts.GameSystem.enSignalShowType signalShowType) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldloca.s V_0
+   0011 ret 
+   0012 ldloca.s V_0
+   0014 ldarg.2 
+   0015 conv.u1 
+   0016 call System.Boolean ResData.GameDataMgr/signalDatabin::FindByKey(ResData.ResSignalInfo&,System.Byte)
+   001B brtrue IL_002c: ldarg.1
+   0020 ldc.i4.0 
+   0021 ldstr ExecCommandOnActor signalInfo is null, check out...
+   0026 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   002B ret 
+   002C ldarg.1 
+   002D call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0032 brfalse IL_006c: ret
+   0037 ldarga.s followActor
+   0039 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003E callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::get_Visible()
+   0043 brfalse IL_006c: ret
+   0048 ldarg.1 
+   0049 ldarg.2 
+   004A ldc.i4.1 
+   004B ldarg.3 
+   004C ldc.i4.1 
+   004D newobj System.Void Assets.Scripts.GameSystem.CSignal::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32,System.Boolean,Assets.Scripts.GameSystem.enSignalShowType,System.Boolean)
+   0052 stloc.1 
+   0053 ldloc.1 
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameSystem.SignalPanel::m_formScript
+   005A ldloc.0 
+   005B callvirt System.Void Assets.Scripts.GameSystem.CSignal::Initialize(Assets.Scripts.UI.CUIFormScript,ResData.ResSignalInfo)
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0066 ldloc.1 
+   0067 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignal>::Add(!0)
+   006C ret 
+== System.Void PlaySignalTipsSound(System.Byte elementType, System.Byte bAlice, System.UInt32 targetHeroID) attrs=Private, HideBySig maxstack=2
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 switch Mono.Cecil.Cil.Instruction[]
+   0026 br IL_00d0: br IL_00d5
+   002B ldarg.2 
+   002C ldc.i4.1 
+   002D bne.un IL_003c: ldstr "Play_notice_map_1"
+   0032 ldstr Play_notice_map_2
+   0037 br IL_0041: stloc.0
+   003C ldstr Play_notice_map_1
+   0041 stloc.0 
+   0042 br IL_00d5: ldloc.0
+   0047 ldarg.2 
+   0048 ldc.i4.1 
+   0049 bne.un IL_0058: ldstr "Play_sys_bobao_jihe_6"
+   004E ldstr Play_sys_bobao_jihe_7
+   0053 br IL_005d: stloc.0
+   0058 ldstr Play_sys_bobao_jihe_6
+   005D stloc.0 
+   005E br IL_00d5: ldloc.0
+   0063 ldloca.s V_1
+   0065 ldarg.3 
+   0066 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   006B brfalse IL_0093: ldarg.2
+   0070 ldloca.s V_1
+   0072 call System.String ResData.ResHeroCfgInfo::get_szHeroSound()
+   0077 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   007C brtrue IL_0093: ldarg.2
+   0081 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0086 ldloca.s V_1
+   0088 call System.String ResData.ResHeroCfgInfo::get_szHeroSound()
+   008D callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   0092 pop 
+   0093 ldarg.2 
+   0094 ldc.i4.1 
+   0095 bne.un IL_00a4: ldstr "Play_Call_Attack"
+   009A ldstr Play_Call_Guard
+   009F br IL_00a9: stloc.0
+   00A4 ldstr Play_Call_Attack
+   00A9 stloc.0 
+   00AA br IL_00d5: ldloc.0
+   00AF ldstr Play_sys_bobao_jihe_3
+   00B4 stloc.0 
+   00B5 br IL_00d5: ldloc.0
+   00BA ldstr Play_sys_bobao_jihe_4
+   00BF stloc.0 
+   00C0 br IL_00d5: ldloc.0
+   00C5 ldstr Play_sys_bobao_jihe_4
+   00CA stloc.0 
+   00CB br IL_00d5: ldloc.0
+   00D0 br IL_00d5: ldloc.0
+   00D5 ldloc.0 
+   00D6 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00DB brtrue IL_00ec: ret
+   00E0 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   00E5 ldloc.0 
+   00E6 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound2D(System.String)
+   00EB pop 
+   00EC ret 
+== System.Void Add_SignalTip(Assets.Scripts.GameSystem.CSignalTipsElement obj) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_0012: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   000C ldarg.1 
+   000D callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CSignalTipsElement>::Add(!0)
+   0012 ldarg.0 
+   0013 call System.Void Assets.Scripts.GameSystem.SignalPanel::RefreshSignalTipsList()
+   0018 ret 
+== System.Void SendCommand_SignalBtn_Position(System.Byte signalID, VInt3 worldPos) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalBtnPosition>()
+   0031 ret 
+   0032 call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalBtnPosition>()
+   0037 stloc.1 
+   0038 ldloc.1 
+   0039 ldarg.1 
+   003A stfld Assets.Scripts.GameLogic.SignalBtnPosition::m_signalID
+   003F ldloc.1 
+   0040 ldarg.2 
+   0041 stfld Assets.Scripts.GameLogic.SignalBtnPosition::m_worldPos
+   0046 ldloc.1 
+   0047 callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   004C ret 
+== System.Void SendCommand_SignalMiniMap_Position(System.Byte signalID, VInt3 worldPos, Assets.Scripts.GameSystem.MinimapSys/ElementType elementType) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalMiniMapPosition>()
+   0031 ret 
+   0032 call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalMiniMapPosition>()
+   0037 stloc.1 
+   0038 ldloc.1 
+   0039 ldarg.1 
+   003A stfld Assets.Scripts.GameLogic.SignalMiniMapPosition::m_signalID
+   003F ldloc.1 
+   0040 ldarg.2 
+   0041 stfld Assets.Scripts.GameLogic.SignalMiniMapPosition::m_worldPos
+   0046 ldloc.1 
+   0047 ldarg.3 
+   0048 conv.u1 
+   0049 stfld Assets.Scripts.GameLogic.SignalMiniMapPosition::m_elementType
+   004E ldloc.1 
+   004F callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   0054 ret 
+== System.Void SendCommand_SignalMiniMap_Target(System.Byte signalID, System.Byte type, System.UInt32 targetObjID) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0031: ret
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.GameLogic.Player::Captain
+   0017 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001C brfalse IL_0031: ret
+   0021 ldloc.0 
+   0022 ldflda Assets.Scripts.GameLogic.Player::Captain
+   0027 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002C brtrue IL_0032: call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalMiniMapTarget>()
+   0031 ret 
+   0032 call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SignalMiniMapTarget>()
+   0037 stloc.1 
+   0038 ldloc.1 
+   0039 ldarg.1 
+   003A stfld Assets.Scripts.GameLogic.SignalMiniMapTarget::m_signalID
+   003F ldloc.1 
+   0040 ldarg.2 
+   0041 stfld Assets.Scripts.GameLogic.SignalMiniMapTarget::m_type
+   0046 ldloc.1 
+   0047 ldarg.3 
+   0048 stfld Assets.Scripts.GameLogic.SignalMiniMapTarget::m_targetObjID
+   004D ldloc.1 
+   004E callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   0053 ret 
+== System.Void RefreshSignalTipsList() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.r4 5
+   0006 stfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0068: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0028 callvirt System.Int32 ListViewBase::get_Count()
+   002D callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   003E callvirt System.Int32 ListViewBase::get_Count()
+   0043 ldc.i4.1 
+   0044 sub 
+   0045 ldc.i4.0 
+   0046 callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0051 callvirt System.Int32 ListViewBase::get_Count()
+   0056 ldc.i4.0 
+   0057 ble IL_0068: ret
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0062 ldc.i4.1 
+   0063 callvirt System.Void Assets.Scripts.UI.CUIListScript::EnableScorllRectMaskAndImage(System.Boolean)
+   0068 ret 
+== System.Void UpdateSignalTipses() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsListCanvasGroup
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_002c: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   0017 ldc.r4 0
+   001C ble.un IL_0026: ldarg.0
+   0021 br IL_002c: ldarg.0
+   0026 ldarg.0 
+   0027 call System.Void Assets.Scripts.GameSystem.SignalPanel::ClearSignalTipses()
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   0032 ldc.r4 0
+   0037 ble.un IL_0097: ret
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0042 ldnull 
+   0043 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0048 brfalse IL_0097: ret
+   004D ldarg.0 
+   004E ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0059 callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetElementAmount()
+   005E ldc.i4.1 
+   005F sub 
+   0060 callvirt System.Boolean Assets.Scripts.UI.CUIListScript::IsElementInScrollArea(System.Int32)
+   0065 brfalse IL_0097: ret
+   006A ldarg.0 
+   006B dup 
+   006C ldfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   0071 call System.Single UnityEngine.Time::get_deltaTime()
+   0076 sub 
+   0077 stfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   0082 ldc.r4 0
+   0087 bge.un IL_0097: ret
+   008C ldarg.0 
+   008D ldc.r4 0
+   0092 stfld Assets.Scripts.GameSystem.SignalPanel::m_latestSignalTipsDuringTime
+   0097 ret 
+== System.Void ClearSignalTipses() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0006 brfalse IL_005b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0011 callvirt System.Int32 ListViewBase::get_Count()
+   0016 ldc.i4.0 
+   0017 ble IL_005b: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0022 callvirt System.Void ListViewBase::Clear()
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   002D ldnull 
+   002E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0033 brfalse IL_005b: ret
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   003E ldc.i4.0 
+   003F callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   004A callvirt System.Void Assets.Scripts.UI.CUIListScript::ResetContentPosition()
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipsList
+   0055 ldc.i4.0 
+   0056 callvirt System.Void Assets.Scripts.UI.CUIListScript::EnableScorllRectMaskAndImage(System.Boolean)
+   005B ret 
+== System.Void OnSignalListElementEnabled(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0006 castclass Assets.Scripts.UI.CUIListElementScript
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldfld Assets.Scripts.UI.CUIListElementScript::m_index
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 ldc.i4.0 
+   0015 bge IL_002c: ldloc.0
+   001A ldloc.1 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0021 callvirt System.Int32 ListViewBase::get_Count()
+   0026 blt IL_002c: ldloc.0
+   002B ret 
+   002C ldloc.0 
+   002D callvirt !!0 UnityEngine.Component::GetComponent<CSignalTipShower>()
+   0032 stloc.2 
+   0033 ldloc.2 
+   0034 ldnull 
+   0035 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003A brfalse IL_0057: ret
+   003F ldloc.2 
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signalTipses
+   0046 ldloc.1 
+   0047 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignalTipsElement>::get_Item(System.Int32)
+   004C ldarg.1 
+   004D ldfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   0052 callvirt System.Void CSignalTipShower::Set(Assets.Scripts.GameSystem.CSignalTipsElement,Assets.Scripts.UI.CUIFormScript)
+   0057 ret 
+== System.Void RefreshAllSignalsUIPosOnBigMap() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0006 brfalse IL_0038: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0027: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0018 ldloc.0 
+   0019 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   001E callvirt System.Void Assets.Scripts.GameSystem.CSignal::RefreshSignalUIPosOnBigMap()
+   0023 ldloc.0 
+   0024 ldc.i4.1 
+   0025 add 
+   0026 stloc.0 
+   0027 ldloc.0 
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   002E callvirt System.Int32 ListViewBase::get_Count()
+   0033 blt IL_0012: ldarg.0
+   0038 ret 
+== System.Void RegisterPlayerIndex(System.UInt32 playerID, System.Int32 index) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_PlayerToIndexDic
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::Add(!0,!1)
+   000D ret 
+== System.Int32 GetPlayerIndex(System.UInt32 playerID) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_PlayerToIndexDic
+   0006 ldarg.1 
+   0007 ldloca.s V_0
+   0009 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::TryGetValue(!0,!1&)
+   000E pop 
+   000F ldloc.0 
+   0010 ret 
+== System.Int32 GetPlayerCount() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_PlayerToIndexDic
+   0006 callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,System.Int32>::get_Count()
+   000B ret 
+== UnityEngine.Color GetPlayerMarkUIColor(System.UInt32 playerID) attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.SignalPanel::MarkUISpriteColorList
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 call System.Int32 Assets.Scripts.GameSystem.SignalPanel::GetPlayerIndex(System.UInt32)
+   000C ldelema UnityEngine.Color
+   0011 ldobj UnityEngine.Color
+   0016 ret 
+== System.String GetPlayerMarkUISpriteName(System.UInt32 playerID) attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.UI.CUIUtility::s_battleChiJiPrefabDir
+   0005 ldsfld Assets.Scripts.GameSystem.SignalPanel::MarkUISpriteNameList
+   000A ldarg.0 
+   000B ldarg.1 
+   000C call System.Int32 Assets.Scripts.GameSystem.SignalPanel::GetPlayerIndex(System.UInt32)
+   0011 ldelem.ref 
+   0012 call System.String System.String::Concat(System.String,System.String)
+   0017 ret 
+== Assets.Scripts.GameSystem.CSignal GetMarkSignal(System.UInt32 playerID) attrs=Public, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.SignalPanel::m_markSignals
+   0008 ldarg.1 
+   0009 ldloca.s V_0
+   000B callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CSignal>::TryGetValue(!0,!1&)
+   0010 pop 
+   0011 ldloc.0 
+   0012 brfalse IL_0024: ldloc.0
+   0017 ldloc.0 
+   0018 callvirt System.Boolean Assets.Scripts.GameSystem.CSignal::IsNeedDisposed()
+   001D brfalse IL_0024: ldloc.0
+   0022 ldnull 
+   0023 ret 
+   0024 ldloc.0 
+   0025 ret 
+== System.Void OnMiniMapSwitched(Assets.Scripts.GameSystem.MinimapSys/EMapType curMapType) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0006 brfalse IL_0039: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0028: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   0018 ldloc.0 
+   0019 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CSignal>::get_Item(System.Int32)
+   001E ldarg.1 
+   001F callvirt System.Void Assets.Scripts.GameSystem.CSignal::OnMiniMapSwitched(Assets.Scripts.GameSystem.MinimapSys/EMapType)
+   0024 ldloc.0 
+   0025 ldc.i4.1 
+   0026 add 
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.SignalPanel::m_signals
+   002F callvirt System.Int32 ListViewBase::get_Count()
+   0034 blt IL_0012: ldarg.0
+   0039 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=7
+   0000 ldc.i4.5 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr Map_Marked01_UI
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.1 
+   0010 ldstr Map_Marked02_UI
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.2 
+   0018 ldstr Map_Marked03_UI
+   001D stelem.ref 
+   001E dup 
+   001F ldc.i4.3 
+   0020 ldstr Map_Marked04_UI
+   0025 stelem.ref 
+   0026 dup 
+   0027 ldc.i4.4 
+   0028 ldstr Map_Marked05_UI
+   002D stelem.ref 
+   002E stsfld Assets.Scripts.GameSystem.SignalPanel::MarkUISpriteNameList
+   0033 ldc.i4.5 
+   0034 newarr UnityEngine.Color
+   0039 dup 
+   003A ldc.i4.0 
+   003B ldelema UnityEngine.Color
+   0040 ldc.r4 1
+   0045 ldc.r4 0.5568628
+   004A ldc.r4 0.25490198
+   004F ldc.r4 1
+   0054 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0059 stobj UnityEngine.Color
+   005E dup 
+   005F ldc.i4.1 
+   0060 ldelema UnityEngine.Color
+   0065 ldc.r4 1
+   006A ldc.r4 0.9607843
+   006F ldc.r4 0.21176471
+   0074 ldc.r4 1
+   0079 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   007E stobj UnityEngine.Color
+   0083 dup 
+   0084 ldc.i4.2 
+   0085 ldelema UnityEngine.Color
+   008A ldc.r4 0.34509805
+   008F ldc.r4 0.9372549
+   0094 ldc.r4 0.37254903
+   0099 ldc.r4 1
+   009E newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00A3 stobj UnityEngine.Color
+   00A8 dup 
+   00A9 ldc.i4.3 
+   00AA ldelema UnityEngine.Color
+   00AF ldc.r4 0.25490198
+   00B4 ldc.r4 0.93333334
+   00B9 ldc.r4 1
+   00BE ldc.r4 1
+   00C3 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00C8 stobj UnityEngine.Color
+   00CD dup 
+   00CE ldc.i4.4 
+   00CF ldelema UnityEngine.Color
+   00D4 ldc.r4 0.77254903
+   00D9 ldc.r4 0.3372549
+   00DE ldc.r4 1
+   00E3 ldc.r4 1
+   00E8 newobj System.Void UnityEngine.Color::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00ED stobj UnityEngine.Color
+   00F2 stsfld Assets.Scripts.GameSystem.SignalPanel::MarkUISpriteColorList
+   00F7 ldc.i4.5 
+   00F8 newarr System.Int32[]
+   00FD dup 
+   00FE ldc.i4.0 
+   00FF ldc.i4.2 
+   0100 newarr System.Int32
+   0105 dup 
+   0106 ldc.i4.0 
+   0107 ldc.i4.1 
+   0108 stelem.i4 
+   0109 dup 
+   010A ldc.i4.1 
+   010B ldc.i4.s 12
+   010D stelem.i4 
+   010E stelem.ref 
+   010F dup 
+   0110 ldc.i4.1 
+   0111 ldc.i4.2 
+   0112 newarr System.Int32
+   0117 dup 
+   0118 ldc.i4.0 
+   0119 ldc.i4.2 
+   011A stelem.i4 
+   011B dup 
+   011C ldc.i4.1 
+   011D ldc.i4.s 13
+   011F stelem.i4 
+   0120 stelem.ref 
+   0121 dup 
+   0122 ldc.i4.2 
+   0123 ldc.i4.2 
+   0124 newarr System.Int32
+   0129 dup 
+   012A ldc.i4.0 
+   012B ldc.i4.3 
+   012C stelem.i4 
+   012D dup 
+   012E ldc.i4.1 
+   012F ldc.i4.s 14
+   0131 stelem.i4 
+   0132 stelem.ref 
+   0133 dup 
+   0134 ldc.i4.3 
+   0135 ldc.i4.2 
+   0136 newarr System.Int32
+   013B dup 
+   013C ldc.i4.0 
+   013D ldc.i4.4 
+   013E stelem.i4 
+   013F dup 
+   0140 ldc.i4.1 
+   0141 ldc.i4.s 15
+   0143 stelem.i4 
+   0144 stelem.ref 
+   0145 dup 
+   0146 ldc.i4.4 
+   0147 ldc.i4.2 
+   0148 newarr System.Int32
+   014D dup 
+   014E ldc.i4.0 
+   014F ldc.i4.s 100
+   0151 stelem.i4 
+   0152 dup 
+   0153 ldc.i4.1 
+   0154 ldc.i4.s 89
+   0156 stelem.i4 
+   0157 stelem.ref 
+   0158 stsfld Assets.Scripts.GameSystem.SignalPanel::s_signalButtonInfos
+   015D ldstr UGUI/Form/Battle/Part/Form_Battle_Part_SignalTips.prefab
+   0162 stsfld Assets.Scripts.GameSystem.SignalPanel::s_signalTipsFormPath
+   0167 ret 
+  NESTED Assets.Scripts.GameSystem.SignalPanel/CPlayerSignalCooldown

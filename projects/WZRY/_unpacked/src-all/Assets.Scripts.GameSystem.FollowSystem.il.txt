@@ -1,0 +1,2047 @@
+// TYPE Assets.Scripts.GameSystem.FollowSystem  base=Singleton`1<Assets.Scripts.GameSystem.FollowSystem>  attrs=Public, BeforeFieldInit
+  FIELD System.String c_removeFollowingPlayer = PlayerInfo_RemoveFollowingTip
+  FIELD System.Int32 c_QueryRelationCountLimit = 25
+  FIELD Assets.Scripts.GameSystem.FollowDataCenter m_followDataCenter
+  FIELD System.Int32 m_lastFollowTime
+  FIELD System.Byte m_askState
+  FIELD System.Int32 m_lastRequestTime
+  FIELD System.UInt32 m_requestFansServerTime
+  FIELD System.Boolean m_getAllFollowingData
+  FIELD System.Boolean m_getAllFollowerData
+  FIELD System.Int32 m_curFollowingPageIndex
+  FIELD System.Int32 m_curFollowerPageIndex
+  FIELD System.Boolean m_needAskNewfollowing
+  FIELD System.Boolean m_needAskNewFollower
+  FIELD System.Int32 m_daysLimitOfNewPic
+  FIELD System.Int32 c_intervalFollowTime = 2
+  FIELD System.Int32 c_overTime = 10
+  FIELD System.Int32 c_followingMax = 1000
+  FIELD System.Int32 c_pullDataNum = 25
+  FIELD System.Int32 c_spaceOfNewRequest = 5
+  FIELD System.String c_playerKey = player
+  FIELD System.String c_playerRcvKey = rcv_player
+  FIELD System.String c_serverTimeOut = MiShuRobot_PostQuery_TimeOut
+  FIELD System.Action`1<Assets.Scripts.GameSystem.FollowRelation> _singleRelationDelegate
+  FIELD System.Action`1<Assets.Scripts.GameSystem.RankingFollowRelation> _relationListDelegate
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation> m_rankingMap
+  FIELD System.Collections.Generic.List`1<System.Int32> m_relationQueryKeyList
+  FIELD System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32> m_requestMap
+  FIELD System.Int32 m_followerCount
+  FIELD System.Int32 m_followingCount
+  FIELD System.Boolean m_hasNewAttention
+  PROP System.Int32 FollowerCount
+  PROP System.Int32 FollowingCount
+  PROP System.Boolean IgnoreFriend
+  PROP System.Boolean FansAttention
+  PROP System.Boolean HasNewAttention
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void Assets.Scripts.GameSystem.FollowDataCenter::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   0019 ldarg.0 
+   001A ldc.i4.7 
+   001B stfld Assets.Scripts.GameSystem.FollowSystem::m_daysLimitOfNewPic
+   0020 ldarg.0 
+   0021 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::.ctor()
+   0026 stfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   002B ldarg.0 
+   002C newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0031 stfld Assets.Scripts.GameSystem.FollowSystem::m_relationQueryKeyList
+   0036 ldarg.0 
+   0037 newobj System.Void System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::.ctor()
+   003C stfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0041 ldarg.0 
+   0042 call System.Void Singleton`1<Assets.Scripts.GameSystem.FollowSystem>::.ctor()
+   0047 ret 
+== System.Void set_FollowerCount(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::m_followerCount
+   0007 ret 
+== System.Int32 get_FollowerCount() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followerCount
+   0006 ret 
+== System.Void set_FollowingCount(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::m_followingCount
+   0007 ret 
+== System.Int32 get_FollowingCount() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followingCount
+   0006 ret 
+== System.Void set_IgnoreFriend(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldc.i4.s 20
+   0004 call System.Void Assets.Scripts.GameSystem.FollowSystem::SendUserPrivacyChange(System.Boolean,CSProtocol.COM_USER_PRIVACY_MASK)
+   0009 ret 
+== System.Boolean get_IgnoreFriend() attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_001a: ldc.i4.0
+   0011 ldloc.0 
+   0012 ldc.i4.s 20
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsPrivacyOn(CSProtocol.COM_USER_PRIVACY_MASK)
+   0019 ret 
+   001A ldc.i4.0 
+   001B ret 
+== System.Void set_FansAttention(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.GameSystem.FollowSystem::OpenFansAttention(System.Boolean)
+   0007 ret 
+== System.Boolean get_FansAttention() attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_001d: ldc.i4.1
+   0011 ldloc.0 
+   0012 ldc.i4.s 21
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsPrivacyOn(CSProtocol.COM_USER_PRIVACY_MASK)
+   0019 ldc.i4.0 
+   001A ceq 
+   001C ret 
+   001D ldc.i4.1 
+   001E ret 
+== System.Void set_HasNewAttention(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::m_hasNewAttention
+   0007 ldarg.1 
+   0008 brtrue IL_0014: ret
+   000D ldarg.0 
+   000E ldc.i4.0 
+   000F call System.Void Assets.Scripts.GameSystem.FollowSystem::SetNewFollowerCount(System.Int32)
+   0014 ret 
+== System.Boolean get_HasNewAttention() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_hasNewAttention
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 ldc.i4.2 
+   0003 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   000E callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::Init()
+   0013 ldarg.0 
+   0014 ldc.i4.0 
+   0015 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastFollowTime
+   001A ldarg.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0021 callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetFollowerMaxPageIndex()
+   0026 ldc.i4.1 
+   0027 add 
+   0028 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   002D call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0032 ldarg.0 
+   0033 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnPandoraSocialResponse(System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0039 newobj System.Void System.Action`3<System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>::.ctor(System.Object,System.IntPtr)
+   003E callvirt System.Void com.tencent.pandora.SocialInterface::SetSocialResponseDelegate(System.Action`3<System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>)
+   0043 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0048 ldarg.0 
+   0049 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnPandoraSocialPush(com.tencent.pandora.SocialInterface/SocialPushType,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   004F newobj System.Void System.Action`2<com.tencent.pandora.SocialInterface/SocialPushType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>::.ctor(System.Object,System.IntPtr)
+   0054 callvirt System.Void com.tencent.pandora.SocialInterface::SetSocialPushDelegate(System.Action`2<com.tencent.pandora.SocialInterface/SocialPushType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>)
+   0059 call !0 Singleton`1<EventRouter>::GetInstance()
+   005E ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_ADD_NTF
+   0063 ldarg.0 
+   0064 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendChange(CSProtocol.CSPkg)
+   006A newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   006F callvirt System.Void EventRouter::AddEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   0074 call !0 Singleton`1<EventRouter>::GetInstance()
+   0079 ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Delete_NTF
+   007E ldarg.0 
+   007F ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendDelete(CSProtocol.CSPkg)
+   0085 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   008A callvirt System.Void EventRouter::AddEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   008F call !0 Singleton`1<EventRouter>::GetInstance()
+   0094 ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Delete
+   0099 ldarg.0 
+   009A ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendDeleteInitiative(CSProtocol.CSPkg)
+   00A0 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   00A5 callvirt System.Void EventRouter::AddEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   00AA call !0 Singleton`1<EventRouter>::GetInstance()
+   00AF ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Confrim
+   00B4 ldarg.0 
+   00B5 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnAddFriendConfrim(CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType)
+   00BB newobj System.Void System.Action`2<CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType>::.ctor(System.Object,System.IntPtr)
+   00C0 callvirt System.Void EventRouter::AddEventHandler<CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType>(System.Int32,System.Action`2<!!0,!!1>)
+   00C5 ldloca.s V_0
+   00C7 ldc.i4 722
+   00CC call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   00D1 brfalse IL_00e3: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00D6 ldarg.0 
+   00D7 ldloca.s V_0
+   00D9 ldfld ResData.ResGlobalInfo::dwConfValue
+   00DE stfld Assets.Scripts.GameSystem.FollowSystem::m_daysLimitOfNewPic
+   00E3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E8 ldc.i4 42165
+   00ED ldarg.0 
+   00EE ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnCommonClickFollow(Assets.Scripts.UI.CUIEvent)
+   00F4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00FE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0103 ldc.i4 42166
+   0108 ldarg.0 
+   0109 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnCommonClickUnFollow(Assets.Scripts.UI.CUIEvent)
+   010F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0114 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0119 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   011E ldc.i4 42167
+   0123 ldarg.0 
+   0124 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnConfirmUnFollow(Assets.Scripts.UI.CUIEvent)
+   012A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0134 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastFollowTime
+   0007 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   000C ldnull 
+   000D callvirt System.Void com.tencent.pandora.SocialInterface::SetSocialPushDelegate(System.Action`2<com.tencent.pandora.SocialInterface/SocialPushType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>)
+   0012 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0017 ldnull 
+   0018 callvirt System.Void com.tencent.pandora.SocialInterface::SetSocialResponseDelegate(System.Action`3<System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>>)
+   001D call !0 Singleton`1<EventRouter>::GetInstance()
+   0022 ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_ADD_NTF
+   0027 ldarg.0 
+   0028 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendChange(CSProtocol.CSPkg)
+   002E newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   0033 callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   0038 call !0 Singleton`1<EventRouter>::GetInstance()
+   003D ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Delete_NTF
+   0042 ldarg.0 
+   0043 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendDelete(CSProtocol.CSPkg)
+   0049 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   004E callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   0053 call !0 Singleton`1<EventRouter>::GetInstance()
+   0058 ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Delete
+   005D ldarg.0 
+   005E ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnFriendDeleteInitiative(CSProtocol.CSPkg)
+   0064 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   0069 callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   006E call !0 Singleton`1<EventRouter>::GetInstance()
+   0073 ldsfld Assets.Scripts.GameSystem.FriendSys_Model_EventID::Friend_Confrim
+   0078 ldarg.0 
+   0079 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnAddFriendConfrim(CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType)
+   007F newobj System.Void System.Action`2<CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType>::.ctor(System.Object,System.IntPtr)
+   0084 callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.CSPkg,Assets.Scripts.GameSystem.CFriendModel/FriendType>(System.Int32,System.Action`2<!!0,!!1>)
+   0089 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   008E ldc.i4 42165
+   0093 ldarg.0 
+   0094 ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnCommonClickFollow(Assets.Scripts.UI.CUIEvent)
+   009A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009F callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A4 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A9 ldc.i4 42166
+   00AE ldarg.0 
+   00AF ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnCommonClickUnFollow(Assets.Scripts.UI.CUIEvent)
+   00B5 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BA callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BF call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C4 ldc.i4 42167
+   00C9 ldarg.0 
+   00CA ldftn System.Void Assets.Scripts.GameSystem.FollowSystem::OnConfirmUnFollow(Assets.Scripts.UI.CUIEvent)
+   00D0 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D5 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DA ret 
+== System.Void ClearData() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastFollowTime
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   000D callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::Clear()
+   0012 ldarg.0 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0019 callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetFollowerMaxPageIndex()
+   001E ldc.i4.1 
+   001F add 
+   0020 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   002B callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::Clear()
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.FollowSystem::m_relationQueryKeyList
+   0036 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0041 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::Clear()
+   0046 ldarg.0 
+   0047 ldc.i4.0 
+   0048 stfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   004D ldarg.0 
+   004E ldc.i4.0 
+   004F stfld Assets.Scripts.GameSystem.FollowSystem::m_lastRequestTime
+   0054 ldarg.0 
+   0055 ldc.i4.0 
+   0056 stfld Assets.Scripts.GameSystem.FollowSystem::m_requestFansServerTime
+   005B ldarg.0 
+   005C ldc.i4.0 
+   005D stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowingData
+   0062 ldarg.0 
+   0063 ldc.i4.0 
+   0064 stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowerData
+   0069 ldarg.0 
+   006A ldc.i4.1 
+   006B stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   0070 ldarg.0 
+   0071 ldc.i4.1 
+   0072 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   0077 ldarg.0 
+   0078 ldc.i4.0 
+   0079 stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   007E ldarg.0 
+   007F ldc.i4.0 
+   0080 stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0085 ret 
+== System.Void OnCloseForm() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::Clean()
+   000B ldarg.0 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0012 callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetFollowerMaxPageIndex()
+   0017 ldc.i4.1 
+   0018 add 
+   0019 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   001E ldarg.0 
+   001F ldc.i4.4 
+   0020 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   0025 brfalse IL_003b: ret
+   002A call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestFansServerTime
+   0035 callvirt System.Int32 com.tencent.pandora.SocialInterface::ReportReadFunsTime(System.UInt32)
+   003A pop 
+   003B ret 
+== Assets.Scripts.GameSystem.BasicFollowData GetFollowData(Assets.Scripts.GameSystem.FollowTabType fType, System.Int32 index) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 ldarg.0 
+   0009 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::get_IgnoreFriend()
+   000E callvirt Assets.Scripts.GameSystem.BasicFollowData Assets.Scripts.GameSystem.FollowDataCenter::GetData(Assets.Scripts.GameSystem.FollowTabType,System.Int32,System.Boolean)
+   0013 ret 
+== System.Int32 GetCountByTabType(Assets.Scripts.GameSystem.FollowTabType fType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_0011: ldarg.0
+   0006 ldarg.0 
+   0007 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::get_FollowingCount()
+   000C br IL_0017: ret
+   0011 ldarg.0 
+   0012 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::get_FollowerCount()
+   0017 ret 
+== System.Int32 GetRealCount(Assets.Scripts.GameSystem.FollowTabType fType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 ldarg.0 
+   0008 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::get_IgnoreFriend()
+   000D callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetCount(Assets.Scripts.GameSystem.FollowTabType,System.Boolean)
+   0012 ret 
+== System.Boolean CheckAndPullNewData(Assets.Scripts.GameSystem.FollowTabType curTab) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   0007 brtrue IL_0014: ldc.i4.1
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0012 br.s IL_0015: call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowerAndFollowingCount(System.Boolean)
+   0014 ldc.i4.1 
+   0015 call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowerAndFollowingCount(System.Boolean)
+   001A ldarg.1 
+   001B brtrue IL_004c: ldarg.1
+   0020 ldarg.0 
+   0021 ldc.i4.s 32
+   0023 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   0028 brfalse IL_0038: ldarg.0
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   0033 brfalse IL_0047: br IL_0080
+   0038 ldarg.0 
+   0039 call System.Void Assets.Scripts.GameSystem.FollowSystem::ResetFollowingData()
+   003E ldarg.0 
+   003F ldc.i4.1 
+   0040 call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowingPlayer(System.Boolean)
+   0045 ldc.i4.1 
+   0046 ret 
+   0047 br IL_0080: ldc.i4.0
+   004C ldarg.1 
+   004D ldc.i4.1 
+   004E bne.un IL_0080: ldc.i4.0
+   0053 ldarg.0 
+   0054 ldc.i4.8 
+   0055 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   005A brfalse IL_006a: ldarg.0
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0065 brfalse IL_0080: ldc.i4.0
+   006A ldarg.0 
+   006B ldc.i4.0 
+   006C call System.Void Assets.Scripts.GameSystem.FollowSystem::set_HasNewAttention(System.Boolean)
+   0071 ldarg.0 
+   0072 call System.Void Assets.Scripts.GameSystem.FollowSystem::ResetFollowerData()
+   0077 ldarg.0 
+   0078 ldc.i4.1 
+   0079 call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowerPlayer(System.Boolean)
+   007E ldc.i4.1 
+   007F ret 
+   0080 ldc.i4.0 
+   0081 ret 
+== System.Void RegisterSingleRelationDelegate(System.Action`1<Assets.Scripts.GameSystem.FollowRelation> relationDelegate) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::_singleRelationDelegate
+   0007 ret 
+== System.Void RegisteRelationListDelegate(System.Action`1<Assets.Scripts.GameSystem.RankingFollowRelation> relationDelegate) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.FollowSystem::_relationListDelegate
+   0007 ret 
+== System.Void CheckFollowRelation(System.UInt64 uid, System.UInt64 playerWorldId) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetPlayerRelation(System.UInt64,System.UInt64)
+   000D stloc.0 
+   000E ldloc.0 
+   000F ldc.i4.m1 
+   0010 beq IL_0036: ldarg.0
+   0015 newobj System.Void Assets.Scripts.GameSystem.FollowRelation::.ctor()
+   001A stloc.1 
+   001B ldloc.1 
+   001C ldloc.0 
+   001D ldarg.1 
+   001E ldarg.2 
+   001F conv.u4 
+   0020 callvirt System.Void Assets.Scripts.GameSystem.FollowRelation::SetValue(Assets.Scripts.GameSystem.FollowType,System.UInt64,System.UInt32)
+   0025 call !0 Singleton`1<EventRouter>::GetInstance()
+   002A ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Change
+   002F ldloc.1 
+   0030 callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowRelation>(System.Int32,!!0)
+   0035 ret 
+   0036 ldarg.0 
+   0037 ldarg.1 
+   0038 ldarg.2 
+   0039 call com.tencent.pandora.SocialUserData Assets.Scripts.GameSystem.FollowSystem::ConvertToUserData(System.UInt64,System.UInt64)
+   003E stloc.2 
+   003F newobj System.Void System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>::.ctor()
+   0044 stloc.3 
+   0045 ldloc.3 
+   0046 ldloc.2 
+   0047 callvirt System.Void System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>::Add(!0)
+   004C call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0051 ldloc.3 
+   0052 callvirt System.Int32 com.tencent.pandora.SocialInterface::QueryRelationships(System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>)
+   0057 stloc.s V_4
+   0059 ldloc.s V_4
+   005B ldc.i4.0 
+   005C blt IL_006e: ret
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameSystem.FollowSystem::m_relationQueryKeyList
+   0067 ldloc.s V_4
+   0069 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   006E ret 
+== System.Void CheckFollowRelationList(Assets.Scripts.GameSystem.RankingFollowRelation rankingRelation) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   0006 callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::GetEnumerator()
+   000B stloc.1 
+   000C br IL_0066: ldloca.s V_1
+   0011 ldloca.s V_1
+   0013 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::get_Current()
+   0018 stloc.0 
+   0019 ldarg.1 
+   001A ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_rankingKey
+   001F ldloca.s V_0
+   0021 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::get_Value()
+   0026 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_rankingKey
+   002B bne.un IL_0066: ldloca.s V_1
+   0030 ldarg.1 
+   0031 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_startIndex
+   0036 ldloca.s V_0
+   0038 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::get_Value()
+   003D ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_startIndex
+   0042 bne.un IL_0066: ldloca.s V_1
+   0047 ldarg.1 
+   0048 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_lastRequestTime
+   004D ldloca.s V_0
+   004F call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::get_Value()
+   0054 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_lastRequestTime
+   0059 sub 
+   005A ldc.i4.s 10
+   005C bge IL_0066: ldloca.s V_1
+   0061 leave IL_00f8: ret
+   0066 ldloca.s V_1
+   0068 call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::MoveNext()
+   006D brtrue IL_0011: ldloca.s V_1
+   0072 leave IL_0085: newobj System.Void System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>::.ctor()
+   0077 ldloca.s V_1
+   0079 constrained. System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>
+   007F callvirt System.Void System.IDisposable::Dispose()
+   0084 endfinally 
+   0085 newobj System.Void System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>::.ctor()
+   008A stloc.2 
+   008B ldc.i4.0 
+   008C stloc.3 
+   008D br IL_00c6: ldloc.3
+   0092 ldarg.1 
+   0093 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_playerList
+   0098 ldloc.3 
+   0099 ldelem.ref 
+   009A stloc.s V_4
+   009C ldloc.s V_4
+   009E brfalse IL_00c2: ldloc.3
+   00A3 ldarg.0 
+   00A4 ldloc.s V_4
+   00A6 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerUid
+   00AB ldloc.s V_4
+   00AD ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerWorldId
+   00B2 conv.u8 
+   00B3 call com.tencent.pandora.SocialUserData Assets.Scripts.GameSystem.FollowSystem::ConvertToUserData(System.UInt64,System.UInt64)
+   00B8 stloc.s V_5
+   00BA ldloc.2 
+   00BB ldloc.s V_5
+   00BD callvirt System.Void System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>::Add(!0)
+   00C2 ldloc.3 
+   00C3 ldc.i4.1 
+   00C4 add 
+   00C5 stloc.3 
+   00C6 ldloc.3 
+   00C7 ldarg.1 
+   00C8 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_playerList
+   00CD ldlen 
+   00CE conv.i4 
+   00CF blt IL_0092: ldarg.1
+   00D4 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   00D9 ldloc.2 
+   00DA callvirt System.Int32 com.tencent.pandora.SocialInterface::QueryRelationships(System.Collections.Generic.List`1<com.tencent.pandora.SocialUserData>)
+   00DF stloc.s V_6
+   00E1 ldloc.s V_6
+   00E3 ldc.i4.0 
+   00E4 bge IL_00ea: ldarg.0
+   00E9 ret 
+   00EA ldarg.0 
+   00EB ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   00F0 ldloc.s V_6
+   00F2 ldarg.1 
+   00F3 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::set_Item(!0,!1)
+   00F8 ret 
+== System.Void FollowingPlayer(System.UInt64 uid, System.UInt64 playerWorldId) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::get_FollowingCount()
+   0006 ldc.i4 1000
+   000B blt IL_002d: call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0010 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0015 ldstr Follow_Player_Max_Limit
+   001A ldc.i4.1 
+   001B ldc.r4 1.5
+   0020 ldnull 
+   0021 ldc.i4.0 
+   0022 newarr System.Object
+   0027 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002C ret 
+   002D call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0032 ldarg.0 
+   0033 ldarg.1 
+   0034 ldarg.2 
+   0035 call com.tencent.pandora.SocialUserData Assets.Scripts.GameSystem.FollowSystem::ConvertToUserData(System.UInt64,System.UInt64)
+   003A callvirt System.Int32 com.tencent.pandora.SocialInterface::Subscribe(com.tencent.pandora.SocialUserData)
+   003F stloc.0 
+   0040 ret 
+== System.Void RemoveFollowingPlayer(System.UInt64 uid, System.UInt64 playerWorldId) attrs=Public, HideBySig maxstack=4
+   0000 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 call com.tencent.pandora.SocialUserData Assets.Scripts.GameSystem.FollowSystem::ConvertToUserData(System.UInt64,System.UInt64)
+   000D callvirt System.Int32 com.tencent.pandora.SocialInterface::UnSubscribe(com.tencent.pandora.SocialUserData)
+   0012 stloc.0 
+   0013 ret 
+== System.Boolean GetState(Assets.Scripts.GameSystem.FollowAskType fType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   0006 ldarg.1 
+   0007 and 
+   0008 ldc.i4.0 
+   0009 cgt 
+   000B ret 
+== System.Boolean CheckGetNextPageData(Assets.Scripts.GameSystem.FollowTabType tType, System.Int32 curIndex) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 ldarg.0 
+   0008 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::get_IgnoreFriend()
+   000D callvirt System.Int32 Assets.Scripts.GameSystem.FollowDataCenter::GetCount(Assets.Scripts.GameSystem.FollowTabType,System.Boolean)
+   0012 ldarg.2 
+   0013 sub 
+   0014 ldc.i4.5 
+   0015 bge IL_003c: ldc.i4.0
+   001A ldarg.1 
+   001B brtrue IL_002c: ldarg.1
+   0020 ldarg.0 
+   0021 ldc.i4.1 
+   0022 call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowingPlayer(System.Boolean)
+   0027 br IL_003a: ldc.i4.1
+   002C ldarg.1 
+   002D ldc.i4.1 
+   002E bne.un IL_003a: ldc.i4.1
+   0033 ldarg.0 
+   0034 ldc.i4.1 
+   0035 call System.Void Assets.Scripts.GameSystem.FollowSystem::RequestFollowerPlayer(System.Boolean)
+   003A ldc.i4.1 
+   003B ret 
+   003C ldc.i4.0 
+   003D ret 
+== System.Int32 GetNewFollowerCount() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldfld Assets.Scripts.GameSystem.FollowDataCenter::m_newFollowerCount
+   000B ret 
+== System.Void SetNewFollowerCount(System.Int32 val) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 stfld Assets.Scripts.GameSystem.FollowDataCenter::m_newFollowerCount
+   000C ret 
+== System.Void RequestFollowingPlayer(System.Boolean canReqMultiple) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowingData
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.s 16
+   000F ldarg.1 
+   0010 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::CanRequest(Assets.Scripts.GameSystem.FollowAskType,System.Boolean)
+   0015 brtrue IL_001b: ldarg.0
+   001A ret 
+   001B ldarg.0 
+   001C call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0021 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastRequestTime
+   0026 ldarg.0 
+   0027 ldc.i4.1 
+   0028 ldc.i4.s 16
+   002A call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   002F ldarg.0 
+   0030 ldc.i4.0 
+   0031 ldc.i4.s 32
+   0033 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0038 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   0043 ldc.i4.s 25
+   0045 callvirt System.Int32 com.tencent.pandora.SocialInterface::PullSubscribeList(System.UInt32,System.UInt32)
+   004A stloc.0 
+   004B ldloc.0 
+   004C ldc.i4.0 
+   004D bge IL_0053: ldarg.0
+   0052 ret 
+   0053 ldarg.0 
+   0054 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0059 ldc.i4 8012
+   005E ldloc.0 
+   005F callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::set_Item(!0,!1)
+   0064 ret 
+== System.Void RequestFollowerPlayer(System.Boolean canReqMultiple) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowerData
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.4 
+   000E ldarg.1 
+   000F call System.Boolean Assets.Scripts.GameSystem.FollowSystem::CanRequest(Assets.Scripts.GameSystem.FollowAskType,System.Boolean)
+   0014 brtrue IL_001a: ldarg.0
+   0019 ret 
+   001A ldarg.0 
+   001B call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0020 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastRequestTime
+   0025 ldarg.0 
+   0026 ldc.i4.1 
+   0027 ldc.i4.4 
+   0028 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   002D ldarg.0 
+   002E ldc.i4.0 
+   002F ldc.i4.8 
+   0030 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0035 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   0040 ldc.i4.s 25
+   0042 callvirt System.Int32 com.tencent.pandora.SocialInterface::PullFansList(System.UInt32,System.UInt32)
+   0047 stloc.0 
+   0048 ldloc.0 
+   0049 ldc.i4.0 
+   004A bge IL_0050: ldarg.0
+   004F ret 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0056 ldc.i4 8013
+   005B ldloc.0 
+   005C callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::set_Item(!0,!1)
+   0061 ret 
+== System.Void RequestFollowerAndFollowingCount(System.Boolean reqNew) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 ldarg.1 
+   0003 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::CanRequest(Assets.Scripts.GameSystem.FollowAskType,System.Boolean)
+   0008 brtrue IL_000e: ldarg.0
+   000D ret 
+   000E ldarg.0 
+   000F call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0014 stfld Assets.Scripts.GameSystem.FollowSystem::m_lastRequestTime
+   0019 ldarg.0 
+   001A ldc.i4.1 
+   001B ldc.i4.1 
+   001C call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0021 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   0026 callvirt System.Int32 com.tencent.pandora.SocialInterface::PullRelationshipChainCount()
+   002B stloc.0 
+   002C ret 
+== System.Void OpenFansAttention(System.Boolean openAttention) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldc.i4.0 
+   0003 ceq 
+   0005 ldc.i4.s 21
+   0007 call System.Void Assets.Scripts.GameSystem.FollowSystem::SendUserPrivacyChange(System.Boolean,CSProtocol.COM_USER_PRIVACY_MASK)
+   000C ret 
+== System.Void OnPandoraSocialResponse(System.UInt32 key, com.tencent.pandora.SocialInterface/SocialRequestType reqType, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 ldc.i4 8012
+   0006 sub 
+   0007 switch Mono.Cecil.Cil.Instruction[]
+   0030 ldarg.2 
+   0031 ldc.i4 8000
+   0036 sub 
+   0037 switch Mono.Cecil.Cil.Instruction[]
+   0048 ldarg.2 
+   0049 ldc.i4 8611
+   004E beq IL_00f1: ldarg.0
+   0053 br IL_00fd: leave IL_011d
+   0058 ldarg.0 
+   0059 ldarg.1 
+   005A ldarg.3 
+   005B call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleQueryRelation(System.UInt32,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0060 leave IL_00fd: leave IL_011d
+   0065 ldarg.0 
+   0066 ldarg.3 
+   0067 ldc.i4 8001
+   006C call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleFollowing(System.Collections.Generic.Dictionary`2<System.String,System.Object>,com.tencent.pandora.SocialInterface/SocialRequestType)
+   0071 leave IL_00fd: leave IL_011d
+   0076 ldarg.0 
+   0077 ldarg.3 
+   0078 ldc.i4 8002
+   007D call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleFollowing(System.Collections.Generic.Dictionary`2<System.String,System.Object>,com.tencent.pandora.SocialInterface/SocialRequestType)
+   0082 leave IL_00fd: leave IL_011d
+   0087 ldarg.0 
+   0088 ldarg.1 
+   0089 ldarg.2 
+   008A ldarg.3 
+   008B call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandlePullFollowingList(System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0090 call !0 Singleton`1<EventRouter>::GetInstance()
+   0095 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_PlayerData_Change
+   009A ldc.i4.0 
+   009B callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowTabType>(System.Int32,!!0)
+   00A0 leave IL_00fd: leave IL_011d
+   00A5 ldarg.0 
+   00A6 ldarg.1 
+   00A7 ldarg.2 
+   00A8 ldarg.3 
+   00A9 call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandlePullFollowingList(System.UInt32,com.tencent.pandora.SocialInterface/SocialRequestType,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   00AE call !0 Singleton`1<EventRouter>::GetInstance()
+   00B3 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_PlayerData_Change
+   00B8 ldc.i4.1 
+   00B9 callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowTabType>(System.Int32,!!0)
+   00BE leave IL_00fd: leave IL_011d
+   00C3 ldarg.0 
+   00C4 ldarg.3 
+   00C5 ldc.i4 8014
+   00CA call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleResponseCount(System.Collections.Generic.Dictionary`2<System.String,System.Object>,com.tencent.pandora.SocialInterface/SocialRequestType)
+   00CF leave IL_00fd: leave IL_011d
+   00D4 ldarg.0 
+   00D5 ldarg.3 
+   00D6 ldc.i4 8015
+   00DB call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleResponseCount(System.Collections.Generic.Dictionary`2<System.String,System.Object>,com.tencent.pandora.SocialInterface/SocialRequestType)
+   00E0 leave IL_00fd: leave IL_011d
+   00E5 ldarg.0 
+   00E6 ldarg.3 
+   00E7 call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleRelationCount(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   00EC leave IL_00fd: leave IL_011d
+   00F1 ldarg.0 
+   00F2 ldarg.3 
+   00F3 call System.Void Assets.Scripts.GameSystem.FollowSystem::OnHandleSwitchFansAttention(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   00F8 leave IL_00fd: leave IL_011d
+   00FD leave IL_011d: ret
+   0102 stloc.0 
+   0103 ldstr Parse pandora social response error 
+   0108 ldloc.0 
+   0109 callvirt System.String System.Object::ToString()
+   010E call System.String System.String::Concat(System.String,System.String)
+   0113 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0118 leave IL_011d: ret
+   011D ret 
+== System.Void OnPandoraSocialPush(com.tencent.pandora.SocialInterface/SocialPushType pushType, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 bne.un IL_00c1: ldarg.1
+   0007 ldarg.2 
+   0008 ldstr red_point_list
+   000D callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0012 brfalse IL_00bc: br IL_0113
+   0017 ldarg.2 
+   0018 ldstr red_point_list
+   001D callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0022 isinst System.Collections.Generic.List`1<System.Object>
+   0027 stloc.0 
+   0028 ldc.i4.0 
+   0029 stloc.1 
+   002A br IL_00b0: ldloc.1
+   002F ldloc.0 
+   0030 ldloc.1 
+   0031 callvirt !0 System.Collections.Generic.List`1<System.Object>::get_Item(System.Int32)
+   0036 isinst System.Collections.Generic.Dictionary`2<System.String,System.Object>
+   003B stloc.2 
+   003C ldloc.2 
+   003D brfalse IL_00ac: ldloc.1
+   0042 ldloc.2 
+   0043 ldstr name
+   0048 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   004D brfalse IL_00ac: ldloc.1
+   0052 ldloc.2 
+   0053 ldstr name
+   0058 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   005D callvirt System.String System.Object::ToString()
+   0062 stloc.3 
+   0063 ldloc.3 
+   0064 ldstr notice
+   0069 call System.Boolean System.String::op_Inequality(System.String,System.String)
+   006E brfalse IL_0078: ldarg.0
+   0073 br IL_00ac: ldloc.1
+   0078 ldarg.0 
+   0079 ldc.i4.1 
+   007A call System.Void Assets.Scripts.GameSystem.FollowSystem::set_HasNewAttention(System.Boolean)
+   007F ldarg.0 
+   0080 ldc.i4.1 
+   0081 stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   0086 ldarg.0 
+   0087 ldc.i4.1 
+   0088 stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   008D ldarg.0 
+   008E call System.Boolean Assets.Scripts.GameSystem.FollowSystem::get_FansAttention()
+   0093 brfalse IL_00a7: br IL_00bc
+   0098 call !0 Singleton`1<EventRouter>::GetInstance()
+   009D ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_NewFans_Attention
+   00A2 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00A7 br IL_00bc: br IL_0113
+   00AC ldloc.1 
+   00AD ldc.i4.1 
+   00AE add 
+   00AF stloc.1 
+   00B0 ldloc.1 
+   00B1 ldloc.0 
+   00B2 callvirt System.Int32 System.Collections.Generic.List`1<System.Object>::get_Count()
+   00B7 blt IL_002f: ldloc.0
+   00BC br IL_0113: ret
+   00C1 ldarg.1 
+   00C2 ldc.i4.3 
+   00C3 bne.un IL_0113: ret
+   00C8 ldarg.0 
+   00C9 ldc.i4.1 
+   00CA stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   00CF ldarg.0 
+   00D0 ldarg.2 
+   00D1 ldstr from
+   00D6 ldloca.s V_4
+   00D8 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseRelation(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,Assets.Scripts.GameSystem.FollowRelation&)
+   00DD brfalse IL_0113: ret
+   00E2 ldarg.0 
+   00E3 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   00E8 ldloc.s V_4
+   00EA ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerUid
+   00EF ldloc.s V_4
+   00F1 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerWorldId
+   00F6 ldloc.s V_4
+   00F8 ldfld Assets.Scripts.GameSystem.FollowRelation::m_relationType
+   00FD callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::RefreshPlayerRelation(System.UInt64,System.UInt32,Assets.Scripts.GameSystem.FollowType)
+   0102 call !0 Singleton`1<EventRouter>::GetInstance()
+   0107 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Change
+   010C ldloc.s V_4
+   010E callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowRelation>(System.Int32,!!0)
+   0113 ret 
+== System.Void OnHandleQueryRelation(System.UInt32 key, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 brfalse IL_0015: ldarg.0
+   000E ldarg.0 
+   000F call System.Void Assets.Scripts.GameSystem.FollowSystem::ShowTimeOutTips()
+   0014 ret 
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameSystem.FollowSystem::m_relationQueryKeyList
+   001B ldarg.1 
+   001C callvirt System.Boolean System.Collections.Generic.List`1<System.Int32>::Contains(!0)
+   0021 brfalse IL_002e: ldarg.0
+   0026 ldarg.0 
+   0027 ldarg.1 
+   0028 ldarg.2 
+   0029 call System.Void Assets.Scripts.GameSystem.FollowSystem::HandleSingleRelation(System.Int32,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   0034 ldarg.1 
+   0035 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::ContainsKey(!0)
+   003A brfalse IL_0047: ret
+   003F ldarg.0 
+   0040 ldarg.1 
+   0041 ldarg.2 
+   0042 call System.Void Assets.Scripts.GameSystem.FollowSystem::HandleMultiRelation(System.UInt32,System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0047 ret 
+== System.Void HandleSingleRelation(System.Int32 key, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.2 
+   0001 ldstr attend_rsp_list
+   0006 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   000B brfalse IL_0075: ret
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.FollowSystem::m_relationQueryKeyList
+   0016 ldarg.1 
+   0017 callvirt System.Boolean System.Collections.Generic.List`1<System.Int32>::Remove(!0)
+   001C pop 
+   001D ldarg.2 
+   001E ldstr attend_rsp_list
+   0023 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0028 isinst System.Collections.Generic.List`1<System.Object>
+   002D stloc.0 
+   002E ldc.i4.0 
+   002F stloc.1 
+   0030 br IL_0069: ldloc.1
+   0035 ldloc.0 
+   0036 ldloc.1 
+   0037 callvirt !0 System.Collections.Generic.List`1<System.Object>::get_Item(System.Int32)
+   003C isinst System.Collections.Generic.Dictionary`2<System.String,System.Object>
+   0041 stloc.2 
+   0042 ldarg.0 
+   0043 ldloc.2 
+   0044 ldstr player
+   0049 ldloca.s V_3
+   004B call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseRelation(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,Assets.Scripts.GameSystem.FollowRelation&)
+   0050 brfalse IL_0065: ldloc.1
+   0055 call !0 Singleton`1<EventRouter>::GetInstance()
+   005A ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Change
+   005F ldloc.3 
+   0060 callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowRelation>(System.Int32,!!0)
+   0065 ldloc.1 
+   0066 ldc.i4.1 
+   0067 add 
+   0068 stloc.1 
+   0069 ldloc.1 
+   006A ldloc.0 
+   006B callvirt System.Int32 System.Collections.Generic.List`1<System.Object>::get_Count()
+   0070 blt IL_0035: ldloc.0
+   0075 ret 
+== System.Void HandleMultiRelation(System.UInt32 key, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   0006 ldarg.1 
+   0007 callvirt !1 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::get_Item(!0)
+   000C stloc.0 
+   000D ldloc.0 
+   000E brtrue IL_0014: ldarg.2
+   0013 ret 
+   0014 ldarg.2 
+   0015 ldstr attend_rsp_list
+   001A callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   001F brfalse IL_00ea: ret
+   0024 ldarg.2 
+   0025 ldstr attend_rsp_list
+   002A callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   002F isinst System.Collections.Generic.List`1<System.Object>
+   0034 stloc.1 
+   0035 ldc.i4.0 
+   0036 stloc.2 
+   0037 br IL_00c1: ldloc.2
+   003C ldloc.1 
+   003D ldloc.2 
+   003E callvirt !0 System.Collections.Generic.List`1<System.Object>::get_Item(System.Int32)
+   0043 isinst System.Collections.Generic.Dictionary`2<System.String,System.Object>
+   0048 stloc.3 
+   0049 ldarg.0 
+   004A ldloc.3 
+   004B ldstr player
+   0050 ldloca.s V_4
+   0052 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseRelation(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,Assets.Scripts.GameSystem.FollowRelation&)
+   0057 brfalse IL_00bd: ldloc.2
+   005C ldc.i4.0 
+   005D stloc.s V_5
+   005F br IL_00ae: ldloc.s V_5
+   0064 ldloc.0 
+   0065 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_playerList
+   006A ldloc.s V_5
+   006C ldelem.ref 
+   006D stloc.s V_6
+   006F ldloc.s V_6
+   0071 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerUid
+   0076 ldloc.s V_4
+   0078 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerUid
+   007D bne.un IL_00a8: ldloc.s V_5
+   0082 ldloc.s V_6
+   0084 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerWorldId
+   0089 ldloc.s V_4
+   008B ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerWorldId
+   0090 bne.un IL_00a8: ldloc.s V_5
+   0095 ldloc.s V_6
+   0097 ldloc.s V_4
+   0099 ldfld Assets.Scripts.GameSystem.FollowRelation::m_relationType
+   009E stfld Assets.Scripts.GameSystem.FollowRelation::m_relationType
+   00A3 br IL_00bd: ldloc.2
+   00A8 ldloc.s V_5
+   00AA ldc.i4.1 
+   00AB add 
+   00AC stloc.s V_5
+   00AE ldloc.s V_5
+   00B0 ldloc.0 
+   00B1 ldfld Assets.Scripts.GameSystem.RankingFollowRelation::m_playerList
+   00B6 ldlen 
+   00B7 conv.i4 
+   00B8 blt IL_0064: ldloc.0
+   00BD ldloc.2 
+   00BE ldc.i4.1 
+   00BF add 
+   00C0 stloc.2 
+   00C1 ldloc.2 
+   00C2 ldloc.1 
+   00C3 callvirt System.Int32 System.Collections.Generic.List`1<System.Object>::get_Count()
+   00C8 blt IL_003c: ldloc.1
+   00CD ldarg.0 
+   00CE ldfld Assets.Scripts.GameSystem.FollowSystem::m_rankingMap
+   00D3 ldarg.1 
+   00D4 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameSystem.RankingFollowRelation>::Remove(!0)
+   00D9 pop 
+   00DA call !0 Singleton`1<EventRouter>::GetInstance()
+   00DF ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Multi_Relation
+   00E4 ldloc.0 
+   00E5 callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.RankingFollowRelation>(System.Int32,!!0)
+   00EA ret 
+== System.Void OnHandleFollowing(System.Collections.Generic.Dictionary`2<System.String,System.Object> data, com.tencent.pandora.SocialInterface/SocialRequestType requestType) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 brfalse IL_0041: ldarg.0
+   000E ldloc.0 
+   000F ldc.i4 -206
+   0014 bne.un IL_003a: ldarg.0
+   0019 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001E ldstr Follow_Player_Max_Limit
+   0023 ldc.i4.1 
+   0024 ldc.r4 1.5
+   0029 ldnull 
+   002A ldc.i4.0 
+   002B newarr System.Object
+   0030 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0035 br IL_0040: ret
+   003A ldarg.0 
+   003B call System.Void Assets.Scripts.GameSystem.FollowSystem::ShowTimeOutTips()
+   0040 ret 
+   0041 ldarg.0 
+   0042 ldarg.1 
+   0043 ldstr rcv_player
+   0048 ldloca.s V_1
+   004A call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseRelation(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,Assets.Scripts.GameSystem.FollowRelation&)
+   004F brfalse IL_00a6: ret
+   0054 ldarg.0 
+   0055 ldc.i4.1 
+   0056 stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   005B ldarg.0 
+   005C ldc.i4.1 
+   005D stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0068 ldloc.1 
+   0069 ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerUid
+   006E ldloc.1 
+   006F ldfld Assets.Scripts.GameSystem.FollowRelation::m_playerWorldId
+   0074 ldloc.1 
+   0075 ldfld Assets.Scripts.GameSystem.FollowRelation::m_relationType
+   007A callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::RefreshPlayerRelation(System.UInt64,System.UInt32,Assets.Scripts.GameSystem.FollowType)
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.GameSystem.FollowSystem::_singleRelationDelegate
+   0085 brfalse IL_0096: call !0 Singleton`1<EventRouter>::GetInstance()
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameSystem.FollowSystem::_singleRelationDelegate
+   0090 ldloc.1 
+   0091 callvirt System.Void System.Action`1<Assets.Scripts.GameSystem.FollowRelation>::Invoke(!0)
+   0096 call !0 Singleton`1<EventRouter>::GetInstance()
+   009B ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Change
+   00A0 ldloc.1 
+   00A1 callvirt System.Void EventRouter::BroadCastEvent<Assets.Scripts.GameSystem.FollowRelation>(System.Int32,!!0)
+   00A6 ret 
+== System.Void OnHandlePullFollowingList(System.UInt32 key, com.tencent.pandora.SocialInterface/SocialRequestType reqType, System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0006 ldarg.2 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::ContainsKey(!0)
+   000C brfalse IL_0031: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   0017 ldarg.2 
+   0018 callvirt !1 System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::get_Item(!0)
+   001D ldarg.1 
+   001E beq IL_0024: ldarg.0
+   0023 ret 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestMap
+   002A ldarg.2 
+   002B callvirt System.Boolean System.Collections.Generic.Dictionary`2<com.tencent.pandora.SocialInterface/SocialRequestType,System.Int32>::Remove(!0)
+   0030 pop 
+   0031 ldarg.0 
+   0032 ldc.i4.1 
+   0033 ldarg.2 
+   0034 ldc.i4 8012
+   0039 bne.un IL_0045: ldc.i4.8
+   003E ldc.i4.s 32
+   0040 br IL_0046: call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0045 ldc.i4.8 
+   0046 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   004B ldarg.0 
+   004C ldarg.3 
+   004D call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0052 stloc.0 
+   0053 ldloc.0 
+   0054 brfalse IL_0060: ldc.i4.0
+   0059 ldarg.0 
+   005A call System.Void Assets.Scripts.GameSystem.FollowSystem::ShowTimeOutTips()
+   005F ret 
+   0060 ldc.i4.0 
+   0061 stloc.1 
+   0062 ldarg.3 
+   0063 ldstr page_no
+   0068 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   006D brfalse IL_008f: ldstr "page index is wrong"
+   0072 ldarg.3 
+   0073 ldstr page_no
+   0078 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   007D callvirt System.String System.Object::ToString()
+   0082 ldloca.s V_1
+   0084 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0089 pop 
+   008A br IL_0099: ldc.i4.0
+   008F ldstr page index is wrong
+   0094 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0099 ldc.i4.0 
+   009A stloc.2 
+   009B ldarg.3 
+   009C ldstr page_count
+   00A1 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   00A6 brfalse IL_00c8: ldstr "page count is wrong"
+   00AB ldarg.3 
+   00AC ldstr page_count
+   00B1 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   00B6 callvirt System.String System.Object::ToString()
+   00BB ldloca.s V_2
+   00BD call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   00C2 pop 
+   00C3 br IL_00d2: ldarg.3
+   00C8 ldstr page count is wrong
+   00CD call System.Void UnityEngine.Debug::LogError(System.Object)
+   00D2 ldarg.3 
+   00D3 ldstr rsp_list
+   00D8 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   00DD brtrue IL_00e3: ldarg.3
+   00E2 ret 
+   00E3 ldarg.3 
+   00E4 ldstr rsp_list
+   00E9 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   00EE isinst System.Collections.Generic.List`1<System.Object>
+   00F3 stloc.3 
+   00F4 ldloc.3 
+   00F5 brtrue IL_00fb: ldarg.3
+   00FA ret 
+   00FB ldarg.3 
+   00FC ldstr page_time
+   0101 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0106 brfalse IL_0127: newobj System.Void ListView`1<Assets.Scripts.GameSystem.BasicFollowData>::.ctor()
+   010B ldarg.3 
+   010C ldstr page_time
+   0111 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0116 callvirt System.String System.Object::ToString()
+   011B ldarg.0 
+   011C ldflda Assets.Scripts.GameSystem.FollowSystem::m_requestFansServerTime
+   0121 call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   0126 pop 
+   0127 newobj System.Void ListView`1<Assets.Scripts.GameSystem.BasicFollowData>::.ctor()
+   012C stloc.s V_4
+   012E ldc.i4.0 
+   012F stloc.s V_5
+   0131 br IL_016d: ldloc.s V_5
+   0136 ldloc.3 
+   0137 ldloc.s V_5
+   0139 callvirt !0 System.Collections.Generic.List`1<System.Object>::get_Item(System.Int32)
+   013E isinst System.Collections.Generic.Dictionary`2<System.String,System.Object>
+   0143 stloc.s V_6
+   0145 ldarg.0 
+   0146 ldloc.s V_6
+   0148 call Assets.Scripts.GameSystem.BasicFollowData Assets.Scripts.GameSystem.FollowSystem::ParsePlayerInfo(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   014D stloc.s V_7
+   014F ldloc.s V_7
+   0151 brfalse IL_0167: ldloc.s V_5
+   0156 ldloc.s V_7
+   0158 ldloc.1 
+   0159 stfld Assets.Scripts.GameSystem.BasicFollowData::m_pageIndex
+   015E ldloc.s V_4
+   0160 ldloc.s V_7
+   0162 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.BasicFollowData>::Add(!0)
+   0167 ldloc.s V_5
+   0169 ldc.i4.1 
+   016A add 
+   016B stloc.s V_5
+   016D ldloc.s V_5
+   016F ldloc.3 
+   0170 callvirt System.Int32 System.Collections.Generic.List`1<System.Object>::get_Count()
+   0175 blt IL_0136: ldloc.3
+   017A ldarg.2 
+   017B ldc.i4 8012
+   0180 bne.un IL_01a2: ldloc.1
+   0185 ldarg.0 
+   0186 ldloc.s V_4
+   0188 ldloc.1 
+   0189 ldloc.2 
+   018A call System.Void Assets.Scripts.GameSystem.FollowSystem::AddFollowingList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData>,System.Int32,System.Int32)
+   018F ldarg.0 
+   0190 dup 
+   0191 ldfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   0196 ldc.i4.1 
+   0197 add 
+   0198 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   019D br IL_01d2: ret
+   01A2 ldloc.1 
+   01A3 ldc.i4.1 
+   01A4 bne.un IL_01ba: ldarg.0
+   01A9 call com.tencent.pandora.SocialInterface com.tencent.pandora.SocialInterface::get_Instance()
+   01AE ldarg.0 
+   01AF ldfld Assets.Scripts.GameSystem.FollowSystem::m_requestFansServerTime
+   01B4 callvirt System.Int32 com.tencent.pandora.SocialInterface::RemoveRedPoint(System.UInt32)
+   01B9 pop 
+   01BA ldarg.0 
+   01BB ldloc.s V_4
+   01BD ldloc.1 
+   01BE ldloc.2 
+   01BF call System.Void Assets.Scripts.GameSystem.FollowSystem::AddFollowerList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData>,System.Int32,System.Int32)
+   01C4 ldarg.0 
+   01C5 dup 
+   01C6 ldfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   01CB ldc.i4.1 
+   01CC add 
+   01CD stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   01D2 ret 
+== System.Void OnHandleResponseCount(System.Collections.Generic.Dictionary`2<System.String,System.Object> data, com.tencent.pandora.SocialInterface/SocialRequestType requestType) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 ldc.i4.2 
+   0003 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0008 ldarg.0 
+   0009 ldarg.1 
+   000A call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 brfalse IL_001d: ldarg.1
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameSystem.FollowSystem::ShowTimeOutTips()
+   001C ret 
+   001D ldarg.1 
+   001E ldstr count
+   0023 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0028 brtrue IL_002e: ldc.i4.0
+   002D ret 
+   002E ldc.i4.0 
+   002F stloc.1 
+   0030 ldarg.1 
+   0031 ldstr count
+   0036 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   003B callvirt System.String System.Object::ToString()
+   0040 ldloca.s V_1
+   0042 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0047 pop 
+   0048 ldarg.2 
+   0049 ldc.i4 8015
+   004E bne.un IL_005f: ldarg.2
+   0053 ldarg.0 
+   0054 ldloc.1 
+   0055 call System.Void Assets.Scripts.GameSystem.FollowSystem::set_FollowerCount(System.Int32)
+   005A br IL_0071: call !0 Singleton`1<EventRouter>::GetInstance()
+   005F ldarg.2 
+   0060 ldc.i4 8014
+   0065 bne.un IL_0071: call !0 Singleton`1<EventRouter>::GetInstance()
+   006A ldarg.0 
+   006B ldloc.1 
+   006C call System.Void Assets.Scripts.GameSystem.FollowSystem::set_FollowingCount(System.Int32)
+   0071 call !0 Singleton`1<EventRouter>::GetInstance()
+   0076 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Count
+   007B callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0080 ret 
+== System.Void OnHandleRelationCount(System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 ldc.i4.2 
+   0003 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0008 ldarg.0 
+   0009 ldarg.1 
+   000A call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 brfalse IL_001d: ldarg.1
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameSystem.FollowSystem::ShowTimeOutTips()
+   001C ret 
+   001D ldarg.1 
+   001E ldstr attend_count
+   0023 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0028 brfalse IL_003d: ret
+   002D ldarg.1 
+   002E ldstr fans_count
+   0033 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0038 brtrue IL_003e: ldc.i4.0
+   003D ret 
+   003E ldc.i4.0 
+   003F stloc.1 
+   0040 ldarg.1 
+   0041 ldstr attend_count
+   0046 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   004B callvirt System.String System.Object::ToString()
+   0050 ldloca.s V_1
+   0052 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0057 pop 
+   0058 ldarg.0 
+   0059 ldloc.1 
+   005A call System.Void Assets.Scripts.GameSystem.FollowSystem::set_FollowingCount(System.Int32)
+   005F ldc.i4.0 
+   0060 stloc.1 
+   0061 ldarg.1 
+   0062 ldstr fans_count
+   0067 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   006C callvirt System.String System.Object::ToString()
+   0071 ldloca.s V_1
+   0073 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0078 pop 
+   0079 ldarg.0 
+   007A ldloc.1 
+   007B call System.Void Assets.Scripts.GameSystem.FollowSystem::set_FollowerCount(System.Int32)
+   0080 ldc.i4.0 
+   0081 stloc.1 
+   0082 ldarg.1 
+   0083 ldstr new_fans_count
+   0088 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   008D callvirt System.String System.Object::ToString()
+   0092 ldloca.s V_1
+   0094 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0099 pop 
+   009A ldarg.0 
+   009B ldloc.1 
+   009C call System.Void Assets.Scripts.GameSystem.FollowSystem::SetNewFollowerCount(System.Int32)
+   00A1 call !0 Singleton`1<EventRouter>::GetInstance()
+   00A6 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Relation_Count
+   00AB callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00B0 ret 
+== System.Void OnHandleSwitchFansAttention(System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Int32 Assets.Scripts.GameSystem.FollowSystem::ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object>)
+   0007 stloc.0 
+   0008 ldloc.0 
+   0009 brfalse IL_000f: ret
+   000E ret 
+   000F ret 
+== System.Int32 ParseRet(System.Collections.Generic.Dictionary`2<System.String,System.Object> data) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.m1 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldstr ret
+   0008 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   000D brfalse IL_0032: ldloc.0
+   0012 ldarg.1 
+   0013 ldstr ret
+   0018 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   001D callvirt System.String System.Object::ToString()
+   0022 ldloca.s V_0
+   0024 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0029 stloc.1 
+   002A ldloc.1 
+   002B brtrue IL_0032: ldloc.0
+   0030 ldc.i4.m1 
+   0031 stloc.0 
+   0032 ldloc.0 
+   0033 ret 
+== System.Boolean ParseRelation(System.Collections.Generic.Dictionary`2<System.String,System.Object> data, System.String key, Assets.Scripts.GameSystem.FollowRelation& relationData) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.3 
+   0001 newobj System.Void Assets.Scripts.GameSystem.FollowRelation::.ctor()
+   0006 stind.ref 
+   0007 ldc.i4.0 
+   0008 stloc.0 
+   0009 ldarg.1 
+   000A ldstr relation
+   000F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0014 brfalse IL_0036: ldc.i4.0
+   0019 ldarg.1 
+   001A ldstr relation
+   001F callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0024 callvirt System.String System.Object::ToString()
+   0029 ldloca.s V_0
+   002B call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0030 pop 
+   0031 br IL_0038: ldc.i4.0
+   0036 ldc.i4.0 
+   0037 ret 
+   0038 ldc.i4.0 
+   0039 conv.i8 
+   003A stloc.1 
+   003B ldc.i4.0 
+   003C conv.i8 
+   003D stloc.2 
+   003E ldarg.0 
+   003F ldarg.1 
+   0040 ldarg.2 
+   0041 ldloca.s V_1
+   0043 ldloca.s V_2
+   0045 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseUidAndWorldId(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,System.UInt64&,System.UInt64&)
+   004A brfalse IL_005f: ldc.i4.0
+   004F ldarg.3 
+   0050 ldind.ref 
+   0051 ldloc.0 
+   0052 ldloc.1 
+   0053 ldloc.2 
+   0054 conv.u4 
+   0055 callvirt System.Void Assets.Scripts.GameSystem.FollowRelation::SetValue(Assets.Scripts.GameSystem.FollowType,System.UInt64,System.UInt32)
+   005A br IL_0061: ldc.i4.1
+   005F ldc.i4.0 
+   0060 ret 
+   0061 ldc.i4.1 
+   0062 ret 
+== System.Boolean ParseUidAndWorldId(System.Collections.Generic.Dictionary`2<System.String,System.Object> rootInfo, System.String key, System.UInt64& uid, System.UInt64& worldId) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldarg.2 
+   0002 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0007 brtrue IL_000e: ldarg.1
+   000C ldc.i4.0 
+   000D ret 
+   000E ldarg.1 
+   000F ldarg.2 
+   0010 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0015 isinst System.Collections.Generic.Dictionary`2<System.String,System.Object>
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldstr uid
+   0021 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0026 brfalse IL_0047: ldc.i4.0
+   002B ldloc.0 
+   002C ldstr uid
+   0031 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0036 callvirt System.String System.Object::ToString()
+   003B ldarg.3 
+   003C call System.Boolean System.UInt64::TryParse(System.String,System.UInt64&)
+   0041 pop 
+   0042 br IL_0049: ldloc.0
+   0047 ldc.i4.0 
+   0048 ret 
+   0049 ldloc.0 
+   004A ldstr partition_id
+   004F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0054 brfalse IL_0076: ldc.i4.0
+   0059 ldloc.0 
+   005A ldstr partition_id
+   005F callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0064 callvirt System.String System.Object::ToString()
+   0069 ldarg.s worldId
+   006B call System.Boolean System.UInt64::TryParse(System.String,System.UInt64&)
+   0070 pop 
+   0071 br IL_0078: ldc.i4.1
+   0076 ldc.i4.0 
+   0077 ret 
+   0078 ldc.i4.1 
+   0079 ret 
+== Assets.Scripts.GameSystem.BasicFollowData ParsePlayerInfo(System.Collections.Generic.Dictionary`2<System.String,System.Object> rootInfo) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 brtrue IL_0008: ldc.i4.0
+   0006 ldnull 
+   0007 ret 
+   0008 ldc.i4.0 
+   0009 conv.i8 
+   000A stloc.0 
+   000B ldc.i4.0 
+   000C conv.i8 
+   000D stloc.1 
+   000E ldarg.0 
+   000F ldarg.1 
+   0010 ldstr player
+   0015 ldloca.s V_0
+   0017 ldloca.s V_1
+   0019 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::ParseUidAndWorldId(System.Collections.Generic.Dictionary`2<System.String,System.Object>,System.String,System.UInt64&,System.UInt64&)
+   001E brtrue IL_0025: newobj System.Void Assets.Scripts.GameSystem.BasicFollowData::.ctor()
+   0023 ldnull 
+   0024 ret 
+   0025 newobj System.Void Assets.Scripts.GameSystem.BasicFollowData::.ctor()
+   002A stloc.2 
+   002B ldloc.2 
+   002C ldloc.0 
+   002D stfld Assets.Scripts.GameSystem.BasicFollowData::m_playerUid
+   0032 ldloc.2 
+   0033 ldloc.1 
+   0034 stfld Assets.Scripts.GameSystem.BasicFollowData::m_playerWorldId
+   0039 ldarg.1 
+   003A ldstr nickname
+   003F callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0044 brfalse IL_006e: ldarg.1
+   0049 ldloc.2 
+   004A call System.Text.Encoding System.Text.Encoding::get_Default()
+   004F ldarg.1 
+   0050 ldstr nickname
+   0055 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   005A callvirt System.String System.Object::ToString()
+   005F callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   0064 call System.String StringHelper::GetBase64Str(System.Byte[])
+   0069 stfld Assets.Scripts.GameSystem.BasicFollowData::m_playerNickname
+   006E ldarg.1 
+   006F ldstr grade
+   0074 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0079 brfalse IL_009a: ldarg.1
+   007E ldarg.1 
+   007F ldstr grade
+   0084 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0089 callvirt System.String System.Object::ToString()
+   008E ldloc.2 
+   008F ldflda Assets.Scripts.GameSystem.BasicFollowData::m_playerRankLevel
+   0094 call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   0099 pop 
+   009A ldarg.1 
+   009B ldstr level
+   00A0 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   00A5 brfalse IL_00c6: ldarg.1
+   00AA ldarg.1 
+   00AB ldstr level
+   00B0 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   00B5 callvirt System.String System.Object::ToString()
+   00BA ldloc.2 
+   00BB ldflda Assets.Scripts.GameSystem.BasicFollowData::m_playerPvpLevel
+   00C0 call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   00C5 pop 
+   00C6 ldarg.1 
+   00C7 ldstr noblerank
+   00CC callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   00D1 brfalse IL_00f2: ldarg.1
+   00D6 ldarg.1 
+   00D7 ldstr noblerank
+   00DC callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   00E1 callvirt System.String System.Object::ToString()
+   00E6 ldloc.2 
+   00E7 ldflda Assets.Scripts.GameSystem.BasicFollowData::m_playerDwCurLevel
+   00EC call System.Boolean System.UInt32::TryParse(System.String,System.UInt32&)
+   00F1 pop 
+   00F2 ldarg.1 
+   00F3 ldstr relation
+   00F8 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   00FD brfalse IL_0123: ldarg.1
+   0102 ldc.i4.0 
+   0103 stloc.3 
+   0104 ldarg.1 
+   0105 ldstr relation
+   010A callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   010F callvirt System.String System.Object::ToString()
+   0114 ldloca.s V_3
+   0116 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   011B pop 
+   011C ldloc.2 
+   011D ldloc.3 
+   011E stfld Assets.Scripts.GameSystem.BasicFollowData::m_followType
+   0123 ldarg.1 
+   0124 ldstr sex
+   0129 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   012E brfalse IL_017a: ldarg.1
+   0133 ldarg.1 
+   0134 ldstr sex
+   0139 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   013E callvirt System.String System.Object::ToString()
+   0143 stloc.s V_4
+   0145 ldloc.s V_4
+   0147 ldstr female
+   014C call System.Boolean System.String::Equals(System.String,System.String)
+   0151 brfalse IL_0162: ldloc.s V_4
+   0156 ldloc.2 
+   0157 ldc.i4.1 
+   0158 stfld Assets.Scripts.GameSystem.BasicFollowData::m_playerGender
+   015D br IL_017a: ldarg.1
+   0162 ldloc.s V_4
+   0164 ldstr male
+   0169 call System.Boolean System.String::Equals(System.String,System.String)
+   016E brfalse IL_017a: ldarg.1
+   0173 ldloc.2 
+   0174 ldc.i4.2 
+   0175 stfld Assets.Scripts.GameSystem.BasicFollowData::m_playerGender
+   017A ldarg.1 
+   017B ldstr headicon
+   0180 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0185 brfalse IL_01a0: ldarg.1
+   018A ldloc.2 
+   018B ldarg.1 
+   018C ldstr headicon
+   0191 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   0196 callvirt System.String System.Object::ToString()
+   019B stfld Assets.Scripts.GameSystem.BasicFollowData::m_headIconUrl
+   01A0 ldarg.1 
+   01A1 ldstr published_time
+   01A6 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   01AB brfalse IL_0212: ldarg.1
+   01B0 ldc.i4.0 
+   01B1 conv.i8 
+   01B2 stloc.s V_5
+   01B4 ldarg.1 
+   01B5 ldstr published_time
+   01BA callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   01BF callvirt System.String System.Object::ToString()
+   01C4 ldloca.s V_5
+   01C6 call System.Boolean System.UInt64::TryParse(System.String,System.UInt64&)
+   01CB pop 
+   01CC ldloc.s V_5
+   01CE ldc.i4.0 
+   01CF conv.i8 
+   01D0 ble.un IL_01dc: ldloc.s V_5
+   01D5 ldloc.2 
+   01D6 ldc.i4.1 
+   01D7 stfld Assets.Scripts.GameSystem.BasicFollowData::m_isUploadedPic
+   01DC ldloc.s V_5
+   01DE call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   01E3 stloc.s V_6
+   01E5 call System.DateTime System.DateTime::get_Now()
+   01EA ldloc.s V_6
+   01EC call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   01F1 stloc.s V_7
+   01F3 ldloc.2 
+   01F4 ldloca.s V_7
+   01F6 call System.Int32 System.TimeSpan::get_Days()
+   01FB ldarg.0 
+   01FC ldfld Assets.Scripts.GameSystem.FollowSystem::m_daysLimitOfNewPic
+   0201 ble IL_020c: ldc.i4.1
+   0206 ldc.i4.0 
+   0207 br IL_020d: stfld System.Boolean Assets.Scripts.GameSystem.BasicFollowData::m_refreshPicRecently
+   020C ldc.i4.1 
+   020D stfld Assets.Scripts.GameSystem.BasicFollowData::m_refreshPicRecently
+   0212 ldarg.1 
+   0213 ldstr userprivacybits
+   0218 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   021D brfalse IL_023e: ldarg.1
+   0222 ldarg.1 
+   0223 ldstr userprivacybits
+   0228 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   022D callvirt System.String System.Object::ToString()
+   0232 ldloc.2 
+   0233 ldflda Assets.Scripts.GameSystem.BasicFollowData::m_userPrivacyBits
+   0238 call System.Boolean System.UInt64::TryParse(System.String,System.UInt64&)
+   023D pop 
+   023E ldarg.1 
+   023F ldstr isnewfan
+   0244 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Object>::ContainsKey(!0)
+   0249 brfalse IL_027e: call !0 Singleton`1<Assets.Scripts.GameSystem.NewFriendSystem>::get_instance()
+   024E ldc.i4.0 
+   024F stloc.s V_8
+   0251 ldarg.1 
+   0252 ldstr isnewfan
+   0257 callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Object>::get_Item(!0)
+   025C callvirt System.String System.Object::ToString()
+   0261 ldloca.s V_8
+   0263 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0268 pop 
+   0269 ldloc.2 
+   026A ldloc.s V_8
+   026C ldc.i4.1 
+   026D bne.un IL_0278: ldc.i4.0
+   0272 ldc.i4.1 
+   0273 br IL_0279: stfld System.Boolean Assets.Scripts.GameSystem.BasicFollowData::m_isNewFans
+   0278 ldc.i4.0 
+   0279 stfld Assets.Scripts.GameSystem.BasicFollowData::m_isNewFans
+   027E call !0 Singleton`1<Assets.Scripts.GameSystem.NewFriendSystem>::get_instance()
+   0283 ldc.i4.4 
+   0284 ldloc.0 
+   0285 ldloc.1 
+   0286 conv.u4 
+   0287 callvirt Assets.Scripts.GameSystem.BasicFriendData Assets.Scripts.GameSystem.NewFriendSystem::GetFriendData(Assets.Scripts.GameSystem.CFriendModel/FriendType,System.UInt64,System.UInt32)
+   028C stloc.s V_9
+   028E ldloc.s V_9
+   0290 brfalse IL_02df: ldloc.2
+   0295 ldloc.s V_9
+   0297 callvirt System.Boolean Assets.Scripts.GameSystem.BasicFriendData::IsGameFriend()
+   029C brfalse IL_02ad: ldloc.2
+   02A1 ldloc.2 
+   02A2 ldc.i4.1 
+   02A3 stfld Assets.Scripts.GameSystem.BasicFollowData::m_isFriend
+   02A8 br IL_02b4: ldloc.s V_9
+   02AD ldloc.2 
+   02AE ldc.i4.0 
+   02AF stfld Assets.Scripts.GameSystem.BasicFollowData::m_isFriend
+   02B4 ldloc.s V_9
+   02B6 callvirt System.Boolean Assets.Scripts.GameSystem.BasicFriendData::IsGameFriend()
+   02BB brtrue IL_02cc: ldloc.2
+   02C0 ldloc.s V_9
+   02C2 callvirt System.Boolean Assets.Scripts.GameSystem.BasicFriendData::IsSNSFriend()
+   02C7 brfalse IL_02d8: ldloc.2
+   02CC ldloc.2 
+   02CD ldc.i4.0 
+   02CE stfld Assets.Scripts.GameSystem.BasicFollowData::m_showSendCoin
+   02D3 br IL_02df: ldloc.2
+   02D8 ldloc.2 
+   02D9 ldc.i4.1 
+   02DA stfld Assets.Scripts.GameSystem.BasicFollowData::m_showSendCoin
+   02DF ldloc.2 
+   02E0 ret 
+== System.Void AddFollowingList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData> playerList, System.Int32 pageInex, System.Int32 pageCount) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.3 
+   0002 ldc.i4.s 25
+   0004 bge IL_000f: ldc.i4.0
+   0009 ldc.i4.1 
+   000A br IL_0010: stfld System.Boolean Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowingData
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowingData
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   001B ldarg.1 
+   001C callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::AddFollowingList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData>)
+   0021 ret 
+== System.Void AddFollowerList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData> playerList, System.Int32 pageInex, System.Int32 pageCount) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.3 
+   0002 ldc.i4.s 25
+   0004 bge IL_000f: ldc.i4.0
+   0009 ldc.i4.1 
+   000A br IL_0010: stfld System.Boolean Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowerData
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowerData
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   001B ldarg.1 
+   001C callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::AddFollowerList(ListView`1<Assets.Scripts.GameSystem.BasicFollowData>)
+   0021 ret 
+== System.Void MarkState(System.Boolean val, Assets.Scripts.GameSystem.FollowAskType fType) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_001a: ldarg.0
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   000D ldarg.2 
+   000E or 
+   000F conv.u1 
+   0010 stfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   0015 br IL_002a: ret
+   001A ldarg.0 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   0021 ldarg.2 
+   0022 not 
+   0023 and 
+   0024 conv.u1 
+   0025 stfld Assets.Scripts.GameSystem.FollowSystem::m_askState
+   002A ret 
+== System.Boolean CanRequest(Assets.Scripts.GameSystem.FollowAskType fType, System.Boolean canReqMultiple) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   0007 brtrue IL_000e: ldarg.1
+   000C ldc.i4.1 
+   000D ret 
+   000E ldarg.1 
+   000F ldc.i4.1 
+   0010 shl 
+   0011 conv.u1 
+   0012 stloc.0 
+   0013 ldarg.0 
+   0014 ldloc.0 
+   0015 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   001A brtrue IL_0034: ldarg.0
+   001F call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.FollowSystem::m_lastRequestTime
+   002A sub 
+   002B ldc.i4.s 10
+   002D ble IL_0034: ldarg.0
+   0032 ldc.i4.1 
+   0033 ret 
+   0034 ldarg.0 
+   0035 ldloc.0 
+   0036 call System.Boolean Assets.Scripts.GameSystem.FollowSystem::GetState(Assets.Scripts.GameSystem.FollowAskType)
+   003B brfalse IL_0042: ldc.i4.0
+   0040 ldarg.2 
+   0041 ret 
+   0042 ldc.i4.0 
+   0043 ret 
+== com.tencent.pandora.SocialUserData ConvertToUserData(Assets.Scripts.GameSystem.BasicFollowData fData) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void com.tencent.pandora.SocialUserData::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 ldflda Assets.Scripts.GameSystem.BasicFollowData::m_playerUid
+   000D constrained. System.UInt64
+   0013 callvirt System.String System.Object::ToString()
+   0018 callvirt System.Void com.tencent.pandora.SocialUserData::set_UID(System.String)
+   001D ldloc.0 
+   001E ldarg.1 
+   001F ldflda Assets.Scripts.GameSystem.BasicFollowData::m_playerWorldId
+   0024 constrained. System.UInt64
+   002A callvirt System.String System.Object::ToString()
+   002F callvirt System.Void com.tencent.pandora.SocialUserData::set_PartitionID(System.String)
+   0034 ldloc.0 
+   0035 ret 
+== com.tencent.pandora.SocialUserData ConvertToUserData(System.UInt64 uid, System.UInt64 playerWorldId) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void com.tencent.pandora.SocialUserData::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarga.s uid
+   0009 constrained. System.UInt64
+   000F callvirt System.String System.Object::ToString()
+   0014 callvirt System.Void com.tencent.pandora.SocialUserData::set_UID(System.String)
+   0019 ldloc.0 
+   001A ldarga.s playerWorldId
+   001C constrained. System.UInt64
+   0022 callvirt System.String System.Object::ToString()
+   0027 callvirt System.Void com.tencent.pandora.SocialUserData::set_PartitionID(System.String)
+   002C ldloc.0 
+   002D ret 
+== System.Void ResetFollowingData() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   0006 brfalse IL_003e: ret
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewfollowing
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowingPageIndex
+   0019 ldarg.0 
+   001A ldc.i4.0 
+   001B stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowingData
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0026 ldc.i4.0 
+   0027 callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::ResetData(Assets.Scripts.GameSystem.FollowTabType)
+   002C ldarg.0 
+   002D ldc.i4.0 
+   002E ldc.i4.s 16
+   0030 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0035 ldarg.0 
+   0036 ldc.i4.0 
+   0037 ldc.i4.s 32
+   0039 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   003E ret 
+== System.Void ResetFollowerData() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0006 brfalse IL_003c: ret
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld Assets.Scripts.GameSystem.FollowSystem::m_needAskNewFollower
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 stfld Assets.Scripts.GameSystem.FollowSystem::m_curFollowerPageIndex
+   0019 ldarg.0 
+   001A ldc.i4.0 
+   001B stfld Assets.Scripts.GameSystem.FollowSystem::m_getAllFollowerData
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0026 ldc.i4.1 
+   0027 callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::ResetData(Assets.Scripts.GameSystem.FollowTabType)
+   002C ldarg.0 
+   002D ldc.i4.0 
+   002E ldc.i4.4 
+   002F call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   0034 ldarg.0 
+   0035 ldc.i4.0 
+   0036 ldc.i4.8 
+   0037 call System.Void Assets.Scripts.GameSystem.FollowSystem::MarkState(System.Boolean,Assets.Scripts.GameSystem.FollowAskType)
+   003C ret 
+== System.Void ShowTimeOutTips() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldstr MiShuRobot_PostQuery_TimeOut
+   000A ldc.i4.1 
+   000B ldc.r4 1.5
+   0010 ldnull 
+   0011 ldc.i4.0 
+   0012 newarr System.Object
+   0017 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   001C ret 
+== System.Void SendUserPrivacyChange(System.Boolean va, CSProtocol.COM_USER_PRIVACY_MASK privacyId) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CSettingsSys>::GetInstance()
+   0005 ldarg.1 
+   0006 ldarg.2 
+   0007 callvirt System.Void Assets.Scripts.GameSystem.CSettingsSys::reqOperateUserPrivacyBit(System.Boolean,CSProtocol.COM_USER_PRIVACY_MASK)
+   000C ret 
+== System.Void OnFriendChange(CSProtocol.CSPkg msg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.CSPkg::stPkgData
+   0007 callvirt CSProtocol.SCPKG_CMD_NTF_FRIEND_ADD CSProtocol.CSPkgBody::get_stNtfFriendAdd()
+   000C ldfld CSProtocol.SCPKG_CMD_NTF_FRIEND_ADD::stUserInfo
+   0011 ldfld CSProtocol.COMDT_FRIEND_INFO::stUin
+   0016 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   001B ldarg.1 
+   001C ldfld CSProtocol.CSPkg::stPkgData
+   0021 callvirt CSProtocol.SCPKG_CMD_NTF_FRIEND_ADD CSProtocol.CSPkgBody::get_stNtfFriendAdd()
+   0026 ldfld CSProtocol.SCPKG_CMD_NTF_FRIEND_ADD::stUserInfo
+   002B ldfld CSProtocol.COMDT_FRIEND_INFO::stUin
+   0030 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0035 conv.u8 
+   0036 call System.Void Assets.Scripts.GameSystem.FollowSystem::RefreshPlayerFriendState(System.UInt64,System.UInt64)
+   003B ret 
+== System.Void OnFriendDelete(CSProtocol.CSPkg msg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.CSPkg::stPkgData
+   0007 callvirt CSProtocol.SCPKG_CMD_NTF_FRIEND_DEL CSProtocol.CSPkgBody::get_stNtfFriendDel()
+   000C ldfld CSProtocol.SCPKG_CMD_NTF_FRIEND_DEL::stUin
+   0011 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0016 ldarg.1 
+   0017 ldfld CSProtocol.CSPkg::stPkgData
+   001C callvirt CSProtocol.SCPKG_CMD_NTF_FRIEND_DEL CSProtocol.CSPkgBody::get_stNtfFriendDel()
+   0021 ldfld CSProtocol.SCPKG_CMD_NTF_FRIEND_DEL::stUin
+   0026 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   002B conv.u8 
+   002C call System.Void Assets.Scripts.GameSystem.FollowSystem::RefreshPlayerFriendState(System.UInt64,System.UInt64)
+   0031 ret 
+== System.Void OnFriendDeleteInitiative(CSProtocol.CSPkg msg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.CSPkg::stPkgData
+   0007 callvirt CSProtocol.SCPKG_CMD_DEL_FRIEND CSProtocol.CSPkgBody::get_stFriendDelRsp()
+   000C ldfld CSProtocol.SCPKG_CMD_DEL_FRIEND::stUin
+   0011 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0016 ldarg.1 
+   0017 ldfld CSProtocol.CSPkg::stPkgData
+   001C callvirt CSProtocol.SCPKG_CMD_DEL_FRIEND CSProtocol.CSPkgBody::get_stFriendDelRsp()
+   0021 ldfld CSProtocol.SCPKG_CMD_DEL_FRIEND::stUin
+   0026 ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   002B conv.u8 
+   002C call System.Void Assets.Scripts.GameSystem.FollowSystem::RefreshPlayerFriendState(System.UInt64,System.UInt64)
+   0031 ret 
+== System.Void OnAddFriendConfrim(CSProtocol.CSPkg msg, Assets.Scripts.GameSystem.CFriendModel/FriendType friendType) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.2 
+   0001 ldc.i4.2 
+   0002 bne.un IL_0059: ret
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.CSPkg::stPkgData
+   000D callvirt CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM CSProtocol.CSPkgBody::get_stFriendAddConfirmRsp()
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM::dwResult
+   0019 brtrue IL_0059: ret
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 ldfld CSProtocol.CSPkg::stPkgData
+   0025 callvirt CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM CSProtocol.CSPkgBody::get_stFriendAddConfirmRsp()
+   002A ldfld CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM::stUserInfo
+   002F ldfld CSProtocol.COMDT_FRIEND_INFO::stUin
+   0034 ldfld CSProtocol.COMDT_ACNT_UNIQ::ullUid
+   0039 ldarg.1 
+   003A ldfld CSProtocol.CSPkg::stPkgData
+   003F callvirt CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM CSProtocol.CSPkgBody::get_stFriendAddConfirmRsp()
+   0044 ldfld CSProtocol.SCPKG_CMD_ADD_FRIEND_CONFIRM::stUserInfo
+   0049 ldfld CSProtocol.COMDT_FRIEND_INFO::stUin
+   004E ldfld CSProtocol.COMDT_ACNT_UNIQ::dwLogicWorldId
+   0053 conv.u8 
+   0054 call System.Void Assets.Scripts.GameSystem.FollowSystem::RefreshPlayerFriendState(System.UInt64,System.UInt64)
+   0059 ret 
+== System.Void RefreshPlayerFriendState(System.UInt64 uid, System.UInt64 worldId) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.FollowSystem::m_followDataCenter
+   0006 ldarg.1 
+   0007 ldarg.2 
+   0008 conv.u4 
+   0009 callvirt System.Void Assets.Scripts.GameSystem.FollowDataCenter::RefreshPlayerFriend(System.UInt64,System.UInt32)
+   000E call !0 Singleton`1<EventRouter>::GetInstance()
+   0013 ldsfld Assets.Scripts.GameSystem.FollowSystemEvent::Follow_Friend_Change
+   0018 ldarg.1 
+   0019 ldarg.2 
+   001A callvirt System.Void EventRouter::BroadCastEvent<System.UInt64,System.UInt64>(System.Int32,!!0,!!1)
+   001F ret 
+== System.Void OnCommonClickFollow(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::PlayerUid
+   000B stloc.0 
+   000C ldarg.1 
+   000D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0012 ldfld Assets.Scripts.UI.stUIEventParams::PlayerWorldId
+   0017 stloc.1 
+   0018 call !0 Singleton`1<Assets.Scripts.GameSystem.FollowSystem>::GetInstance()
+   001D ldloc.0 
+   001E ldloc.1 
+   001F conv.u8 
+   0020 callvirt System.Void Assets.Scripts.GameSystem.FollowSystem::FollowingPlayer(System.UInt64,System.UInt64)
+   0025 ldarg.1 
+   0026 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   002B callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.GameSystem.CUIFollowBtnScript>()
+   0030 stloc.2 
+   0031 ldloc.2 
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_0043: ret
+   003D ldloc.2 
+   003E callvirt System.Void Assets.Scripts.GameSystem.CUIFollowBtnScript::SetBtnToQueryState()
+   0043 ret 
+== System.Void OnCommonClickUnFollow(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<CTextManager>::GetInstance()
+   0005 ldstr PlayerInfo_RemoveFollowingTip
+   000A ldc.i4.1 
+   000B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0010 stloc.0 
+   0011 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0016 ldloc.0 
+   0017 ldc.i4 42167
+   001C ldc.i4.0 
+   001D ldarg.1 
+   001E ldfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   0023 ldc.i4.0 
+   0024 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.Boolean)
+   0029 pop 
+   002A ret 
+== System.Void OnConfirmUnFollow(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::PlayerUid
+   000B stloc.0 
+   000C ldarg.1 
+   000D ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0012 ldfld Assets.Scripts.UI.stUIEventParams::PlayerWorldId
+   0017 stloc.1 
+   0018 call !0 Singleton`1<Assets.Scripts.GameSystem.FollowSystem>::GetInstance()
+   001D ldloc.0 
+   001E ldloc.1 
+   001F conv.u8 
+   0020 callvirt System.Void Assets.Scripts.GameSystem.FollowSystem::RemoveFollowingPlayer(System.UInt64,System.UInt64)
+   0025 ldarg.1 
+   0026 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   002B callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.GameSystem.CUIFollowBtnScript>()
+   0030 stloc.2 
+   0031 ldloc.2 
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_0043: ret
+   003D ldloc.2 
+   003E callvirt System.Void Assets.Scripts.GameSystem.CUIFollowBtnScript::SetBtnToQueryState()
+   0043 ret 

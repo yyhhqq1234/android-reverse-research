@@ -1,0 +1,234 @@
+// TYPE Assets.Scripts.Framework.LoginState  base=BaseState  attrs=Public, BeforeFieldInit
+  FIELD System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String> data
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.7 
+   0002 newobj System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::.ctor(System.Int32)
+   0007 stfld Assets.Scripts.Framework.LoginState::data
+   000C ldarg.0 
+   000D call System.Void BaseState::.ctor()
+   0012 ret 
+== System.Void OnStateEnter() attrs=Public, Virtual, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldc.i4.2 
+   0006 newarr System.String
+   000B dup 
+   000C ldc.i4.0 
+   000D call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   0012 callvirt System.String Assets.Scripts.GameSystem.SplashSystem::GetSplashFormPath()
+   0017 stelem.ref 
+   0018 dup 
+   0019 ldc.i4.1 
+   001A ldsfld Assets.Scripts.GameSystem.CUICommonSystem::FORM_VEDIO_FULL_SCREEN
+   001F stelem.ref 
+   0020 ldc.i4.1 
+   0021 ldc.i4.1 
+   0022 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseAllForm(System.String[],System.Boolean,System.Boolean)
+   0027 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   002C ldstr Music_Login
+   0031 ldc.i4.1 
+   0032 callvirt System.Void Assets.Scripts.Sound.CSoundManager::LoadBank(System.String,Assets.Scripts.Sound.enBankType)
+   0037 call !0 Singleton`1<Assets.Scripts.Framework.ResourceLoader>::GetInstance()
+   003C ldstr EmptySceneWithCamera
+   0041 ldarg.0 
+   0042 ldftn System.Void Assets.Scripts.Framework.LoginState::OnLoginSceneCompleted()
+   0048 newobj System.Void Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate::.ctor(System.Object,System.IntPtr)
+   004D callvirt System.Void Assets.Scripts.Framework.ResourceLoader::LoadScene(System.String,Assets.Scripts.Framework.ResourceLoader/LoadCompletedDelegate)
+   0052 ret 
+== System.Void OnLoginSceneCompleted() attrs=Private, HideBySig maxstack=4
+   0000 call !0 MonoSingleton`1<CLoginSystem2>::GetInstance()
+   0005 ldstr NormalLogin
+   000A callvirt System.Void CLoginSystem2::GotoState(System.String)
+   000F ldarg.0 
+   0010 ldstr Splash_In
+   0015 call System.Void Assets.Scripts.Framework.LoginState::PlaySplashAnimator(System.String)
+   001A call !0 Singleton`1<Assets.Scripts.GameSystem.OfflineGamePlayMgr>::get_instance()
+   001F callvirt System.Void Assets.Scripts.GameSystem.OfflineGamePlayMgr::Reset()
+   0024 ldc.i4.4 
+   0025 ldstr 3
+   002A call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   002F call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0034 ldstr Login_Play
+   0039 ldnull 
+   003A callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   003F pop 
+   0040 ldc.i4 244
+   0045 call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   004A ldc.i4.1 
+   004B bne.un IL_0085: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0050 call System.Boolean DeviceCheckSys::CheckAvailMemory()
+   0055 brtrue IL_0085: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   005A call System.Int32 DeviceCheckSys::GetRecordCurMemNotEnoughPopTimes()
+   005F ldc.i4.3 
+   0060 bge IL_0085: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0065 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   006A call !0 Singleton`1<CTextManager>::GetInstance()
+   006F ldstr CheckDevice_QuitGame_CurMemNotEnough
+   0074 ldc.i4.1 
+   0075 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   007A ldc.i4.0 
+   007B callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,System.Boolean)
+   0080 call System.Void DeviceCheckSys::RecordCurMemNotEnoughPopTimes()
+   0085 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   008A callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::PreLoadSomeThings()
+   008F ret 
+== System.Void OnStateLeave() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void BaseState::OnStateLeave()
+   0006 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   000B ldstr Login_Stop
+   0010 ldnull 
+   0011 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0016 pop 
+   0017 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   001C ldc.i4.1 
+   001D ldc.i4.0 
+   001E ldnull 
+   001F callvirt System.Void Assets.Scripts.Sound.CSoundManager::UnLoadBanks(Assets.Scripts.Sound.enBankType,System.Boolean,System.String[])
+   0024 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0029 ldc.i4.1 
+   002A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseAllFormExceptLobby(System.Boolean)
+   002F call !0 Singleton`1<CResourceManager>::GetInstance()
+   0034 ldc.i4.5 
+   0035 newarr enResourceType
+   003A dup 
+   003B ldtoken <PrivateImplementationDetails>::$field-D2EBB6A6D770A501F87474A4BD66C3D112AA635D
+   0040 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0045 callvirt System.Void CResourceManager::RemoveCachedResources(enResourceType[])
+   004A call !0 MonoSingleton`1<CLoginSystem2>::GetInstance()
+   004F ldstr LobbyLogin
+   0054 callvirt System.Void CLoginSystem2::GotoState(System.String)
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.Framework.LoginState::data
+   005F callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Clear()
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.Framework.LoginState::data
+   006A ldc.i4.1 
+   006B call System.String CVersion::GetCodeVersion()
+   0070 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.Framework.LoginState::data
+   007B ldc.i4.2 
+   007C call System.String CVersion::GetResourceVersion()
+   0081 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.Framework.LoginState::data
+   008C ldc.i4.4 
+   008D ldstr 4
+   0092 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.Framework.LoginState::data
+   009D ldc.i4.8 
+   009E call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   00A3 stloc.0 
+   00A4 ldloca.s V_0
+   00A6 constrained. System.Int32
+   00AC callvirt System.String System.Object::ToString()
+   00B1 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   00B6 ldarg.0 
+   00B7 ldfld Assets.Scripts.Framework.LoginState::data
+   00BC ldc.i4.s 9
+   00BE call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   00C3 stloc.1 
+   00C4 ldloca.s V_1
+   00C6 constrained. System.Int32
+   00CC callvirt System.String System.Object::ToString()
+   00D1 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.Framework.LoginState::data
+   00DC ldc.i4.s 10
+   00DE call System.Int32 Assets.Scripts.Framework.GameSettings::get_EnableHDMode()
+   00E3 stloc.2 
+   00E4 ldloca.s V_2
+   00E6 constrained. System.Int32
+   00EC callvirt System.String System.Object::ToString()
+   00F1 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   00F6 ldarg.0 
+   00F7 ldfld Assets.Scripts.Framework.LoginState::data
+   00FC ldc.i4.s 52
+   00FE call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableOutline()
+   0103 brfalse IL_0112: ldstr "0"
+   0108 ldstr 1
+   010D br IL_0117: callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0112 ldstr 0
+   0117 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   011C ldarg.0 
+   011D ldfld Assets.Scripts.Framework.LoginState::data
+   0122 ldc.i4.s 51
+   0124 call System.Int32 com.tencent.vmpsdk.VmpSdk::GetCurrentThreadTid()
+   0129 stloc.3 
+   012A ldloca.s V_3
+   012C constrained. System.Int32
+   0132 callvirt System.String System.Object::ToString()
+   0137 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   013C ldarg.0 
+   013D ldfld Assets.Scripts.Framework.LoginState::data
+   0142 ldc.i4.s 43
+   0144 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0149 ldfld Assets.Scripts.Framework.GameFramework::mtrOpen
+   014E brfalse IL_015d: ldstr "0"
+   0153 ldstr 1
+   0158 br IL_0162: callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   015D ldstr 0
+   0162 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0167 call System.Boolean Singleton`1<ApolloHelper>::HasInstance()
+   016C brfalse IL_0187: ldarg.0
+   0171 ldarg.0 
+   0172 ldfld Assets.Scripts.Framework.LoginState::data
+   0177 ldc.i4.0 
+   0178 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   017D ldfld ApolloHelper::LastOpenID
+   0182 callvirt System.Void System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>::Add(!0,!1)
+   0187 ldarg.0 
+   0188 ldfld Assets.Scripts.Framework.LoginState::data
+   018D call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(System.Collections.Generic.Dictionary`2<com.tencent.vmpsdk.GameDataKey,System.String>)
+   0192 ldc.i4.1 
+   0193 ldstr game_scn_int
+   0198 ldc.i4.3 
+   0199 call System.Int32 AndroidJavaUtility::DirectDeviceControl(System.Int32,System.String,System.Int32)
+   019E pop 
+   019F ldc.i4.2 
+   01A0 ldstr ll_network_int
+   01A5 ldc.i4.0 
+   01A6 call System.Int32 AndroidJavaUtility::DirectDeviceControl(System.Int32,System.String,System.Int32)
+   01AB pop 
+   01AC ldc.i4.2 
+   01AD ldstr ll_graphics_int
+   01B2 ldc.i4.0 
+   01B3 call System.Int32 AndroidJavaUtility::DirectDeviceControl(System.Int32,System.String,System.Int32)
+   01B8 pop 
+   01B9 ldc.i4.2 
+   01BA ldstr ll_touch_int
+   01BF ldc.i4.0 
+   01C0 call System.Int32 AndroidJavaUtility::DirectDeviceControl(System.Int32,System.String,System.Int32)
+   01C5 pop 
+   01C6 ret 
+== System.Void PlaySplashAnimator(System.String animatorStateName) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 call !0 Singleton`1<Assets.Scripts.GameSystem.SplashSystem>::GetInstance()
+   000A callvirt System.String Assets.Scripts.GameSystem.SplashSystem::GetSplashFormPath()
+   000F callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0014 stloc.0 
+   0015 ldloc.0 
+   0016 ldnull 
+   0017 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   001C brfalse IL_004f: ret
+   0021 ldloc.0 
+   0022 ldc.i4.1 
+   0023 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_004f: ret
+   0035 ldloc.1 
+   0036 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Animator>()
+   003B stloc.2 
+   003C ldloc.2 
+   003D ldnull 
+   003E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0043 brfalse IL_004f: ret
+   0048 ldloc.2 
+   0049 ldarg.1 
+   004A callvirt System.Void UnityEngine.Animator::Play(System.String)
+   004F ret 

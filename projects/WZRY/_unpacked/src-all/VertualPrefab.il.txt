@@ -1,0 +1,256 @@
+// TYPE VertualPrefab  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String[] VertualPrefabPathList
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,System.Int32> VertualPrefabPooledKeyMap
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void RecoveGameObjectName(UnityEngine.Transform tran, BinaryNode domNode) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldstr ON
+   0007 callvirt System.String BinaryNode::GetAttr(System.String)
+   000C callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0011 ldarg.0 
+   0012 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   0017 ldc.i4.0 
+   0018 ble IL_006f: ret
+   001D ldc.i4.m1 
+   001E stloc.0 
+   001F ldc.i4.0 
+   0020 stloc.1 
+   0021 br IL_0063: ldloc.1
+   0026 ldarg.1 
+   0027 ldloc.1 
+   0028 callvirt BinaryNode BinaryNode::GetChild(System.Int32)
+   002D stloc.2 
+   002E ldloc.2 
+   002F callvirt System.String BinaryNode::GetName()
+   0034 ldstr CHD
+   0039 call System.Boolean System.String::op_Equality(System.String,System.String)
+   003E brfalse IL_0059: ldloc.2
+   0043 ldloc.0 
+   0044 ldc.i4.1 
+   0045 add 
+   0046 stloc.0 
+   0047 ldarg.0 
+   0048 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   004D ldloc.0 
+   004E callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0053 ldloc.2 
+   0054 call System.Void VertualPrefab::RecoveGameObjectName(UnityEngine.Transform,BinaryNode)
+   0059 ldloc.2 
+   005A callvirt System.Void BinaryNode::PutBack()
+   005F ldloc.1 
+   0060 ldc.i4.1 
+   0061 add 
+   0062 stloc.1 
+   0063 ldloc.1 
+   0064 ldarg.1 
+   0065 callvirt System.Int32 BinaryNode::GetChildNum()
+   006A blt IL_0026: ldarg.1
+   006F ret 
+== UnityEngine.GameObject Create(System.Int32 type, BinaryNode domNode) attrs=Public, Static, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 brtrue IL_0008: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0006 ldnull 
+   0007 ret 
+   0008 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   000D ldsfld VertualPrefab::VertualPrefabPathList
+   0012 ldarg.0 
+   0013 ldelem.ref 
+   0014 ldc.i4.0 
+   0015 ldnull 
+   0016 ldc.i4.0 
+   0017 ldc.i4.0 
+   0018 callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   001D stloc.0 
+   001E ldsfld VertualPrefab::VertualPrefabPooledKeyMap
+   0023 ldloc.0 
+   0024 ldfld CPooledGameObjectScript::m_prefabKey
+   0029 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::ContainsKey(!0)
+   002E brtrue IL_0044: ldloc.0
+   0033 ldsfld VertualPrefab::VertualPrefabPooledKeyMap
+   0038 ldloc.0 
+   0039 ldfld CPooledGameObjectScript::m_prefabKey
+   003E ldarg.0 
+   003F callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Add(!0,!1)
+   0044 ldloc.0 
+   0045 ldfld CPooledGameObjectScript::Trans
+   004A callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   004F ldc.i4.0 
+   0050 ble IL_00c2: ldloc.0
+   0055 ldc.i4.m1 
+   0056 stloc.1 
+   0057 ldc.i4.0 
+   0058 stloc.2 
+   0059 br IL_00b6: ldloc.2
+   005E ldarg.1 
+   005F ldloc.2 
+   0060 callvirt BinaryNode BinaryNode::GetChild(System.Int32)
+   0065 stloc.3 
+   0066 ldloc.3 
+   0067 callvirt System.String BinaryNode::GetName()
+   006C ldstr CHD
+   0071 call System.Boolean System.String::op_Equality(System.String,System.String)
+   0076 brfalse IL_00ac: ldloc.3
+   007B ldloc.1 
+   007C ldc.i4.1 
+   007D add 
+   007E stloc.1 
+   007F ldloc.0 
+   0080 ldfld CPooledGameObjectScript::Trans
+   0085 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   008A ldloc.1 
+   008B ble IL_00a7: br IL_00c2
+   0090 ldloc.0 
+   0091 ldfld CPooledGameObjectScript::Trans
+   0096 ldloc.1 
+   0097 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   009C ldloc.3 
+   009D call System.Void VertualPrefab::RecoveGameObjectName(UnityEngine.Transform,BinaryNode)
+   00A2 br IL_00ac: ldloc.3
+   00A7 br IL_00c2: ldloc.0
+   00AC ldloc.3 
+   00AD callvirt System.Void BinaryNode::PutBack()
+   00B2 ldloc.2 
+   00B3 ldc.i4.1 
+   00B4 add 
+   00B5 stloc.2 
+   00B6 ldloc.2 
+   00B7 ldarg.1 
+   00B8 callvirt System.Int32 BinaryNode::GetChildNum()
+   00BD blt IL_005e: ldarg.1
+   00C2 ldloc.0 
+   00C3 ldfld CPooledGameObjectScript::Go
+   00C8 ret 
+== UnityEngine.GameObject CreateFromNormalPrefab(System.String prefabRef, BinaryNode domNode) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0005 ldarg.0 
+   0006 ldc.i4.0 
+   0007 ldnull 
+   0008 ldc.i4.0 
+   0009 ldc.i4.0 
+   000A callvirt CPooledGameObjectScript CGameObjectPool::GetGameObject(System.String,enResourceType,System.String,System.Boolean,System.Boolean)
+   000F ldfld CPooledGameObjectScript::Go
+   0014 ret 
+== System.Void DoRecycleVertualPrefab(UnityEngine.Transform trans) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   0006 ldc.i4.1 
+   0007 sub 
+   0008 stloc.0 
+   0009 br IL_001e: ldloc.0
+   000E ldarg.0 
+   000F ldloc.0 
+   0010 callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0015 call System.Void VertualPrefab::DoRecycleVertualPrefab(UnityEngine.Transform)
+   001A ldloc.0 
+   001B ldc.i4.1 
+   001C sub 
+   001D stloc.0 
+   001E ldloc.0 
+   001F ldc.i4.0 
+   0020 bge IL_000e: ldarg.0
+   0025 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   002A ldarg.0 
+   002B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0030 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0035 ldc.i4.0 
+   0036 callvirt CPooledGameObjectScript CGameObjectPool::GetPooledGameScript(System.Int32,System.Boolean)
+   003B stloc.1 
+   003C ldloc.1 
+   003D brfalse IL_0094: ret
+   0042 ldarg.0 
+   0043 callvirt !!0[] UnityEngine.Component::GetComponents<VirtualPrefabCompBase>()
+   0048 stloc.2 
+   0049 ldc.i4.0 
+   004A stloc.3 
+   004B br IL_005c: ldloc.3
+   0050 ldloc.2 
+   0051 ldloc.3 
+   0052 ldelem.ref 
+   0053 callvirt System.Void VirtualPrefabCompBase::OnRecycle()
+   0058 ldloc.3 
+   0059 ldc.i4.1 
+   005A add 
+   005B stloc.3 
+   005C ldloc.3 
+   005D ldloc.2 
+   005E ldlen 
+   005F conv.i4 
+   0060 blt IL_0050: ldloc.2
+   0065 ldsfld VertualPrefab::VertualPrefabPooledKeyMap
+   006A ldloc.1 
+   006B ldfld CPooledGameObjectScript::m_prefabKey
+   0070 ldloca.s V_4
+   0072 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::TryGetValue(!0,!1&)
+   0077 brfalse IL_0089: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   007C ldloc.s V_4
+   007E ldloc.1 
+   007F ldfld CPooledGameObjectScript::Go
+   0084 call System.Void VertualPrefab::OnRecycleVirtualPrefab(VirtualPrefab_Type,UnityEngine.GameObject)
+   0089 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   008E ldloc.1 
+   008F callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   0094 ret 
+== System.Void RecycleAllVertualPrefab(UnityEngine.Transform trans) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void VertualPrefab::DoRecycleVertualPrefab(UnityEngine.Transform)
+   0006 ret 
+== System.Void OnRecycleVirtualPrefab(VirtualPrefab_Type type, UnityEngine.GameObject go) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 sub 
+   0003 switch Mono.Cecil.Cil.Instruction[]
+   0020 br IL_0067: ret
+   0025 ldarg.1 
+   0026 call System.Void SimpleGameObjectVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   002B br IL_0067: ret
+   0030 ldarg.1 
+   0031 call System.Void SimpleMeshVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   0036 br IL_0067: ret
+   003B ldarg.1 
+   003C call System.Void MeshWithNcUvAnimVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   0041 br IL_0067: ret
+   0046 ldarg.1 
+   0047 call System.Void GameObjectWithRoofVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   004C br IL_0067: ret
+   0051 ldarg.1 
+   0052 call System.Void MeshWithRoofVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   0057 br IL_0067: ret
+   005C ldarg.1 
+   005D call System.Void MeshWithDoorAnimVirtualPrefab::OnRecycleVirtualPrefab(UnityEngine.GameObject)
+   0062 br IL_0067: ret
+   0067 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.7 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.1 
+   0008 ldstr PrefabAssets/VertualPrefab/SimpleGameObject.prefab
+   000D stelem.ref 
+   000E dup 
+   000F ldc.i4.2 
+   0010 ldstr PrefabAssets/VertualPrefab/SimpleMesh.prefab
+   0015 stelem.ref 
+   0016 dup 
+   0017 ldc.i4.3 
+   0018 ldstr PrefabAssets/VertualPrefab/MeshWithNcUvAnim.prefab
+   001D stelem.ref 
+   001E dup 
+   001F ldc.i4.4 
+   0020 ldstr PrefabAssets/VertualPrefab/GameObjectWithRoof.prefab
+   0025 stelem.ref 
+   0026 dup 
+   0027 ldc.i4.5 
+   0028 ldstr PrefabAssets/VertualPrefab/MeshWithRoof.prefab
+   002D stelem.ref 
+   002E dup 
+   002F ldc.i4.6 
+   0030 ldstr PrefabAssets/VertualPrefab/MeshWithDoorAnim.prefab
+   0035 stelem.ref 
+   0036 stsfld VertualPrefab::VertualPrefabPathList
+   003B newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::.ctor()
+   0040 stsfld VertualPrefab::VertualPrefabPooledKeyMap
+   0045 ret 

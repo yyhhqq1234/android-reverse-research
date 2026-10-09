@@ -1,0 +1,359 @@
+// TYPE ParticleCullManager  base=Singleton`1<ParticleCullManager>  attrs=BeforeFieldInit
+  FIELD System.Boolean enable
+  FIELD System.UInt32 defaultParticleMaxCnt
+  FIELD ListView`1<ParticleCullManager/ParticleInfo> particleInfoPool
+  FIELD DictionaryView`2<StringId,ParticleCullManager/ParticleInfo> particleDict
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,StringId> particleIdToPath
+  FIELD System.Collections.Generic.HashSet`1<StringId> whiteList
+  FIELD System.Collections.Generic.Dictionary`2<StringId,System.Boolean> hurtEffList
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.s 100
+   0003 newobj System.Void ListView`1<ParticleCullManager/ParticleInfo>::.ctor(System.Int32)
+   0008 stfld ParticleCullManager::particleInfoPool
+   000D ldarg.0 
+   000E newobj System.Void DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::.ctor()
+   0013 stfld ParticleCullManager::particleDict
+   0018 ldarg.0 
+   0019 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,StringId>::.ctor()
+   001E stfld ParticleCullManager::particleIdToPath
+   0023 ldarg.0 
+   0024 newobj System.Void System.Collections.Generic.HashSet`1<StringId>::.ctor()
+   0029 stfld ParticleCullManager::whiteList
+   002E ldarg.0 
+   002F newobj System.Void System.Collections.Generic.Dictionary`2<StringId,System.Boolean>::.ctor()
+   0034 stfld ParticleCullManager::hurtEffList
+   0039 ldarg.0 
+   003A call System.Void Singleton`1<ParticleCullManager>::.ctor()
+   003F ret 
+== ParticleCullManager/ParticleInfo GetParticleInfo() attrs=Private, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld ParticleCullManager::particleInfoPool
+   0008 callvirt System.Int32 ListViewBase::get_Count()
+   000D ldc.i4.0 
+   000E ble IL_0037: newobj System.Void ParticleCullManager/ParticleInfo::.ctor()
+   0013 ldarg.0 
+   0014 ldfld ParticleCullManager::particleInfoPool
+   0019 ldc.i4.0 
+   001A callvirt !0 ListView`1<ParticleCullManager/ParticleInfo>::get_Item(System.Int32)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld ParticleCullManager::particleInfoPool
+   0026 ldc.i4.0 
+   0027 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   002C ldloc.0 
+   002D callvirt System.Void ParticleCullManager/ParticleInfo::Clear()
+   0032 br IL_003d: ldloc.0
+   0037 newobj System.Void ParticleCullManager/ParticleInfo::.ctor()
+   003C stloc.0 
+   003D ldloc.0 
+   003E ret 
+== System.Void PutParticleInfo(ParticleCullManager/ParticleInfo info) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ParticleCullManager::particleInfoPool
+   0006 ldarg.1 
+   0007 callvirt System.Void ListView`1<ParticleCullManager/ParticleInfo>::Add(!0)
+   000C ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ret 
+== System.Void ClearData() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld ParticleCullManager::enable
+   0007 ldarg.0 
+   0008 ldfld ParticleCullManager::particleDict
+   000D callvirt System.Void DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::Clear()
+   0012 ldarg.0 
+   0013 ldc.i4.s 100
+   0015 newobj System.Void ListView`1<ParticleCullManager/ParticleInfo>::.ctor(System.Int32)
+   001A stfld ParticleCullManager::particleInfoPool
+   001F ldarg.0 
+   0020 ldfld ParticleCullManager::particleIdToPath
+   0025 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,StringId>::Clear()
+   002A ldarg.0 
+   002B ldfld ParticleCullManager::whiteList
+   0030 callvirt System.Void System.Collections.Generic.HashSet`1<StringId>::Clear()
+   0035 ldarg.0 
+   0036 ldfld ParticleCullManager::hurtEffList
+   003B callvirt System.Void System.Collections.Generic.Dictionary`2<StringId,System.Boolean>::Clear()
+   0040 ldc.i4.s 20
+   0042 stsfld ParticleCullManager::defaultParticleMaxCnt
+   0047 ret 
+== System.Void DoPrepareFight() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void ParticleCullManager::ClearData()
+   0006 ldarg.0 
+   0007 call System.Void ParticleCullManager::InitCullTable()
+   000C call !0 Singleton`1<Assets.Scripts.GameSystem.CCheatSystem>::GetInstance()
+   0011 callvirt System.Boolean Assets.Scripts.GameSystem.CCheatSystem::IsDisplayErrorLog()
+   0016 brfalse IL_0050: ret
+   001B ldstr ParticleCullManager: enable
+   0020 ldarg.0 
+   0021 ldflda ParticleCullManager::enable
+   0026 constrained. System.Boolean
+   002C callvirt System.String System.Object::ToString()
+   0031 ldstr ,
+   0036 ldsflda ParticleCullManager::defaultParticleMaxCnt
+   003B constrained. System.UInt32
+   0041 callvirt System.String System.Object::ToString()
+   0046 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   004B call System.Void UnityEngine.Debug::Log(System.Object)
+   0050 ret 
+== System.Void InitCullTable() attrs=Private, HideBySig maxstack=3
+   0000 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>>::.ctor()
+   0005 stloc.0 
+   0006 call System.Int32 ResData.GameDataMgr/ResSceneParticleCullParamsDatabin::Count()
+   000B stloc.1 
+   000C ldc.i4.0 
+   000D stloc.2 
+   000E br IL_0053: ldloc.2
+   0013 ldloc.2 
+   0014 call ResData.ResSceneParticleCullParams ResData.GameDataMgr/ResSceneParticleCullParamsDatabin::GetByIndex(System.Int32)
+   0019 stloc.3 
+   001A ldnull 
+   001B stloc.s V_4
+   001D ldloc.0 
+   001E ldloca.s V_3
+   0020 ldfld ResData.ResSceneParticleCullParams::dwMapKey
+   0025 ldloca.s V_4
+   0027 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>>::TryGetValue(!0,!1&)
+   002C brtrue IL_0047: ldloc.s V_4
+   0031 newobj System.Void System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>::.ctor()
+   0036 stloc.s V_4
+   0038 ldloc.0 
+   0039 ldloca.s V_3
+   003B ldfld ResData.ResSceneParticleCullParams::dwMapKey
+   0040 ldloc.s V_4
+   0042 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>>::Add(!0,!1)
+   0047 ldloc.s V_4
+   0049 ldloc.3 
+   004A callvirt System.Void System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>::Add(!0)
+   004F ldloc.2 
+   0050 ldc.i4.1 
+   0051 add 
+   0052 stloc.2 
+   0053 ldloc.2 
+   0054 ldloc.1 
+   0055 blt IL_0013: ldloc.2
+   005A call System.Int32 ResData.GameDataMgr/ResSceneParticleCullWhiteListDatabin::Count()
+   005F stloc.1 
+   0060 ldc.i4.0 
+   0061 stloc.s V_5
+   0063 br IL_008a: ldloc.s V_5
+   0068 ldloc.s V_5
+   006A call ResData.ResSceneParticleCullWhiteList ResData.GameDataMgr/ResSceneParticleCullWhiteListDatabin::GetByIndex(System.Int32)
+   006F stloc.s V_6
+   0071 ldarg.0 
+   0072 ldfld ParticleCullManager::whiteList
+   0077 ldloca.s V_6
+   0079 ldfld ResData.ResSceneParticleCullWhiteList::strIdPath
+   007E callvirt System.Boolean System.Collections.Generic.HashSet`1<StringId>::Add(!0)
+   0083 pop 
+   0084 ldloc.s V_5
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.s V_5
+   008A ldloc.s V_5
+   008C ldloc.1 
+   008D blt IL_0068: ldloc.s V_5
+   0092 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0097 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   009C ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapType
+   00A1 stloc.s V_7
+   00A3 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00A8 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   00AD ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   00B2 stloc.s V_8
+   00B4 ldloc.s V_7
+   00B6 ldc.i4 100000000
+   00BB mul 
+   00BC ldloc.s V_8
+   00BE add 
+   00BF stloc.s V_9
+   00C1 ldnull 
+   00C2 stloc.s V_10
+   00C4 ldloc.0 
+   00C5 ldloc.s V_9
+   00C7 ldloca.s V_10
+   00C9 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>>::TryGetValue(!0,!1&)
+   00CE brtrue IL_00db: ldarg.0
+   00D3 ldarg.0 
+   00D4 ldc.i4.0 
+   00D5 stfld ParticleCullManager::enable
+   00DA ret 
+   00DB ldarg.0 
+   00DC ldc.i4.1 
+   00DD stfld ParticleCullManager::enable
+   00E2 ldloc.s V_10
+   00E4 callvirt System.Int32 System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>::get_Count()
+   00E9 stloc.s V_11
+   00EB ldarg.0 
+   00EC call System.Int32 ParticleCullManager::getAndroidScore()
+   00F1 stloc.s V_12
+   00F3 ldc.i4.0 
+   00F4 stloc.s V_13
+   00F6 br IL_0138: ldloc.s V_13
+   00FB ldloc.s V_12
+   00FD conv.i8 
+   00FE ldloc.s V_10
+   0100 ldloc.s V_13
+   0102 callvirt !0 System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>::get_Item(System.Int32)
+   0107 stloc.s V_14
+   0109 ldloca.s V_14
+   010B ldfld ResData.ResSceneParticleCullParams::dwScore
+   0110 conv.u8 
+   0111 bgt IL_0132: ldloc.s V_13
+   0116 ldloc.s V_10
+   0118 ldloc.s V_13
+   011A callvirt !0 System.Collections.Generic.List`1<ResData.ResSceneParticleCullParams>::get_Item(System.Int32)
+   011F stloc.s V_15
+   0121 ldloca.s V_15
+   0123 ldfld ResData.ResSceneParticleCullParams::dwMaxParticleNum
+   0128 stsfld ParticleCullManager::defaultParticleMaxCnt
+   012D br IL_0141: ret
+   0132 ldloc.s V_13
+   0134 ldc.i4.1 
+   0135 add 
+   0136 stloc.s V_13
+   0138 ldloc.s V_13
+   013A ldloc.s V_11
+   013C blt IL_00fb: ldloc.s V_12
+   0141 ret 
+== System.Int32 getAndroidScore() attrs=Private, HideBySig maxstack=8
+   0000 call System.Int32 Assets.Scripts.Framework.DetectRenderQuality::getAndroidScore()
+   0005 ret 
+== System.Boolean IsIOSLowDevice() attrs=Private, HideBySig maxstack=1
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 ret 
+== System.Boolean CanAdd(StringId path) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld ParticleCullManager::enable
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.1 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld ParticleCullManager::whiteList
+   0013 ldarg.1 
+   0014 callvirt System.Boolean System.Collections.Generic.HashSet`1<StringId>::Contains(!0)
+   0019 brfalse IL_0020: ldc.i4.0
+   001E ldc.i4.1 
+   001F ret 
+   0020 ldc.i4.0 
+   0021 stloc.0 
+   0022 ldarg.0 
+   0023 ldfld ParticleCullManager::hurtEffList
+   0028 ldarg.1 
+   0029 ldloca.s V_0
+   002B callvirt System.Boolean System.Collections.Generic.Dictionary`2<StringId,System.Boolean>::TryGetValue(!0,!1&)
+   0030 brtrue IL_005a: ldloc.0
+   0035 ldarga.s path
+   0037 constrained. StringId
+   003D callvirt System.String System.Object::ToString()
+   0042 ldstr hurt
+   0047 callvirt System.Boolean System.String::Contains(System.String)
+   004C stloc.0 
+   004D ldarg.0 
+   004E ldfld ParticleCullManager::hurtEffList
+   0053 ldarg.1 
+   0054 ldloc.0 
+   0055 callvirt System.Void System.Collections.Generic.Dictionary`2<StringId,System.Boolean>::Add(!0,!1)
+   005A ldloc.0 
+   005B brtrue IL_0062: ldc.i4.0
+   0060 ldc.i4.1 
+   0061 ret 
+   0062 ldc.i4.0 
+   0063 stloc.1 
+   0064 ldnull 
+   0065 stloc.2 
+   0066 ldarg.0 
+   0067 ldfld ParticleCullManager::particleDict
+   006C ldarg.1 
+   006D ldloca.s V_2
+   006F callvirt System.Boolean DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::TryGetValue(!0,!1&)
+   0074 brfalse IL_0085: ldc.i4.1
+   0079 ldloc.2 
+   007A callvirt System.Boolean ParticleCullManager/ParticleInfo::CanAdd()
+   007F stloc.1 
+   0080 br IL_0087: ldloc.1
+   0085 ldc.i4.1 
+   0086 stloc.1 
+   0087 ldloc.1 
+   0088 ret 
+== System.Void AddParticleCnt(StringId path, System.UInt32 particleId) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld ParticleCullManager::enable
+   0006 brtrue IL_000c: ldnull
+   000B ret 
+   000C ldnull 
+   000D stloc.0 
+   000E ldarg.0 
+   000F ldfld ParticleCullManager::particleDict
+   0014 ldarg.1 
+   0015 ldloca.s V_0
+   0017 callvirt System.Boolean DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::TryGetValue(!0,!1&)
+   001C brtrue IL_0035: ldloc.0
+   0021 ldarg.0 
+   0022 call ParticleCullManager/ParticleInfo ParticleCullManager::GetParticleInfo()
+   0027 stloc.0 
+   0028 ldarg.0 
+   0029 ldfld ParticleCullManager::particleDict
+   002E ldarg.1 
+   002F ldloc.0 
+   0030 callvirt System.Void DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::Add(!0,!1)
+   0035 ldloc.0 
+   0036 ldarg.2 
+   0037 callvirt System.Void ParticleCullManager/ParticleInfo::Add(System.UInt32)
+   003C ldarg.0 
+   003D ldfld ParticleCullManager::particleIdToPath
+   0042 ldarg.2 
+   0043 ldarg.1 
+   0044 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,StringId>::Add(!0,!1)
+   0049 ret 
+== System.Void RemoveParticleCnt(System.UInt32 particleId) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld ParticleCullManager::enable
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld ParticleCullManager::particleIdToPath
+   0012 ldarg.1 
+   0013 ldloca.s V_0
+   0015 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,StringId>::TryGetValue(!0,!1&)
+   001A brfalse IL_0067: ret
+   001F ldnull 
+   0020 stloc.1 
+   0021 ldarg.0 
+   0022 ldfld ParticleCullManager::particleDict
+   0027 ldloc.0 
+   0028 ldloca.s V_1
+   002A callvirt System.Boolean DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::TryGetValue(!0,!1&)
+   002F brfalse IL_005a: ldarg.0
+   0034 ldloc.1 
+   0035 ldarg.1 
+   0036 callvirt System.Void ParticleCullManager/ParticleInfo::Remove(System.UInt32)
+   003B ldloc.1 
+   003C callvirt System.Boolean ParticleCullManager/ParticleInfo::IsEmpty()
+   0041 brfalse IL_005a: ldarg.0
+   0046 ldarg.0 
+   0047 ldloc.1 
+   0048 call System.Void ParticleCullManager::PutParticleInfo(ParticleCullManager/ParticleInfo)
+   004D ldarg.0 
+   004E ldfld ParticleCullManager::particleDict
+   0053 ldloc.0 
+   0054 callvirt System.Boolean DictionaryView`2<StringId,ParticleCullManager/ParticleInfo>::Remove(!0)
+   0059 pop 
+   005A ldarg.0 
+   005B ldfld ParticleCullManager::particleIdToPath
+   0060 ldarg.1 
+   0061 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,StringId>::Remove(!0)
+   0066 pop 
+   0067 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.s 20
+   0002 stsfld ParticleCullManager::defaultParticleMaxCnt
+   0007 ret 
+  NESTED ParticleCullManager/ParticleInfo

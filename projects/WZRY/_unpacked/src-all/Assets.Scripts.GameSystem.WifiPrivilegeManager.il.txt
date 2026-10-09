@@ -1,0 +1,1806 @@
+// TYPE Assets.Scripts.GameSystem.WifiPrivilegeManager  base=MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>  attrs=Public, BeforeFieldInit
+  FIELD System.String s_WifiPrivilegeUI
+  FIELD System.UInt32 m_ExpireEndTime
+  FIELD System.Byte m_isFirst
+  FIELD System.Int32 m_curWifiPrivilegeLevel
+  FIELD System.Boolean m_bDelayShowUI
+  FIELD System.Int32 m_CurTabID
+  FIELD System.Int32 DELTA_TIME
+  FIELD System.Boolean m_bUseWifi
+  FIELD System.Boolean m_bGetTokenSucc
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo> m_TimeWifiData
+  FIELD Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo m_wifiData
+  FIELD System.Int32 MAX_SKIN_COUNT = 9
+  FIELD System.Single m_lastRequstTime
+  FIELD System.String m_TitleName
+  FIELD WifiPrivilegeSDK/onGetPriTokenDelegate <>f__mg$cache0
+  FIELD WifiPrivilegeSDK/onGetPriErrorDelegate <>f__mg$cache1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4 2400000
+   0006 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::DELTA_TIME
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::.ctor()
+   0011 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0016 ldarg.0 
+   0017 ldloca.s V_0
+   0019 initobj Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo
+   001F ldloc.0 
+   0020 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0025 ldarg.0 
+   0026 call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::.ctor()
+   002B ret 
+== System.Boolean InitWifilData() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0006 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::Clear()
+   000B ldarg.0 
+   000C ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0011 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::ClearData()
+   0016 call System.Int32 ResData.GameDataMgr/resCltWifiPrivilegeDatabin::Count()
+   001B stloc.1 
+   001C ldc.i4.0 
+   001D stloc.2 
+   001E br IL_01cc: ldloc.2
+   0023 ldloc.2 
+   0024 call ResData.ResCltWifiPrivilege ResData.GameDataMgr/resCltWifiPrivilegeDatabin::GetByIndex(System.Int32)
+   0029 stloc.0 
+   002A ldloca.s V_0
+   002C ldfld ResData.ResCltWifiPrivilege::bPrivilegeLvl
+   0031 stloc.3 
+   0032 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_curWifiPrivilegeLevel
+   0037 ldloc.3 
+   0038 bne.un IL_01c8: ldloc.2
+   003D ldarg.0 
+   003E ldloca.s V_4
+   0040 initobj Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo
+   0046 ldloc.s V_4
+   0048 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   004D ldarg.0 
+   004E ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0053 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0058 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   005D ldarg.0 
+   005E ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0063 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0068 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   006D ldarg.0 
+   006E ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0073 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0078 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::defaultSkinList
+   007D ldc.i4.0 
+   007E stloc.s V_5
+   0080 br IL_00e6: ldloc.s V_5
+   0085 ldloca.s V_0
+   0087 ldloc.s V_5
+   0089 call ResData.ResDT_WifiPrivilege_HeroInfo ResData.ResCltWifiPrivilege::astHeroInfo(System.Int32)
+   008E stloc.s V_6
+   0090 ldloca.s V_6
+   0092 ldfld ResData.ResDT_WifiPrivilege_HeroInfo::bIsHeroPrivilege
+   0097 ldc.i4.1 
+   0098 bne.un IL_00b4: ldloca.s V_6
+   009D ldarg.0 
+   009E ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   00A3 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   00A8 ldloca.s V_6
+   00AA ldfld ResData.ResDT_WifiPrivilege_HeroInfo::dwHeroID
+   00AF callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   00B4 ldloca.s V_6
+   00B6 ldfld ResData.ResDT_WifiPrivilege_HeroInfo::ullSkinBits
+   00BB stloc.s V_7
+   00BD ldarg.0 
+   00BE ldloc.s V_7
+   00C0 ldloca.s V_6
+   00C2 ldfld ResData.ResDT_WifiPrivilege_HeroInfo::dwHeroID
+   00C7 call System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.WifiPrivilegeManager::GetSkinList(System.UInt64,System.UInt32)
+   00CC stloc.s V_8
+   00CE ldarg.0 
+   00CF ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   00D4 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   00D9 ldloc.s V_8
+   00DB callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   00E0 ldloc.s V_5
+   00E2 ldc.i4.1 
+   00E3 add 
+   00E4 stloc.s V_5
+   00E6 ldloc.s V_5
+   00E8 ldloca.s V_0
+   00EA ldfld ResData.ResCltWifiPrivilege::wHeroCnt
+   00EF blt IL_0085: ldloca.s V_0
+   00F4 ldc.i4.0 
+   00F5 stloc.s V_9
+   00F7 br IL_014c: ldloc.s V_9
+   00FC ldloca.s V_0
+   00FE ldloc.s V_9
+   0100 call ResData.ResDT_WifiPrivilege_TimeItem ResData.ResCltWifiPrivilege::astTimeHeroList(System.Int32)
+   0105 stloc.s V_10
+   0107 ldarg.0 
+   0108 ldloca.s V_10
+   010A ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOnTimeGen
+   010F ldloca.s V_10
+   0111 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOffTimeGen
+   0116 call System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager::ReaminDaysWifiItem(System.UInt32,System.UInt32)
+   011B ldc.i4.0 
+   011C ble IL_0146: ldloc.s V_9
+   0121 newobj System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::.ctor()
+   0126 stloc.s V_11
+   0128 ldloc.s V_11
+   012A ldloc.s V_10
+   012C stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   0131 ldloc.s V_11
+   0133 ldc.i4.0 
+   0134 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   0139 ldarg.0 
+   013A ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   013F ldloc.s V_11
+   0141 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::Add(!0)
+   0146 ldloc.s V_9
+   0148 ldc.i4.1 
+   0149 add 
+   014A stloc.s V_9
+   014C ldloc.s V_9
+   014E ldloca.s V_0
+   0150 ldfld ResData.ResCltWifiPrivilege::bTimeHeroCnt
+   0155 blt IL_00fc: ldloca.s V_0
+   015A ldc.i4.0 
+   015B stloc.s V_12
+   015D br IL_01b2: ldloc.s V_12
+   0162 ldloca.s V_0
+   0164 ldloc.s V_12
+   0166 call ResData.ResDT_WifiPrivilege_TimeItem ResData.ResCltWifiPrivilege::astTimeSkinList(System.Int32)
+   016B stloc.s V_13
+   016D ldarg.0 
+   016E ldloca.s V_13
+   0170 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOnTimeGen
+   0175 ldloca.s V_13
+   0177 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOffTimeGen
+   017C call System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager::ReaminDaysWifiItem(System.UInt32,System.UInt32)
+   0181 ldc.i4.0 
+   0182 ble IL_01ac: ldloc.s V_12
+   0187 newobj System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::.ctor()
+   018C stloc.s V_14
+   018E ldloc.s V_14
+   0190 ldloc.s V_13
+   0192 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   0197 ldloc.s V_14
+   0199 ldc.i4.1 
+   019A stfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   019F ldarg.0 
+   01A0 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   01A5 ldloc.s V_14
+   01A7 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::Add(!0)
+   01AC ldloc.s V_12
+   01AE ldc.i4.1 
+   01AF add 
+   01B0 stloc.s V_12
+   01B2 ldloc.s V_12
+   01B4 ldloca.s V_0
+   01B6 ldfld ResData.ResCltWifiPrivilege::bTimeSkinCnt
+   01BB blt IL_0162: ldloca.s V_0
+   01C0 ldc.i4.1 
+   01C1 stloc.s V_15
+   01C3 leave IL_01fa: ldloc.s V_15
+   01C8 ldloc.2 
+   01C9 ldc.i4.1 
+   01CA add 
+   01CB stloc.2 
+   01CC ldloc.2 
+   01CD ldloc.1 
+   01CE blt IL_0023: ldloc.2
+   01D3 ldc.i4.0 
+   01D4 stloc.s V_15
+   01D6 leave IL_01fa: ldloc.s V_15
+   01DB stloc.s V_16
+   01DD ldstr InitWifilData ex 
+   01E2 ldloc.s V_16
+   01E4 callvirt System.String System.Object::ToString()
+   01E9 call System.String System.String::Concat(System.String,System.String)
+   01EE call System.Void UnityEngine.Debug::Log(System.Object)
+   01F3 leave IL_01f8: ldc.i4.0
+   01F8 ldc.i4.0 
+   01F9 ret 
+   01FA ldloc.s V_15
+   01FC ret 
+== System.Int32 ReaminDaysWifiItem(System.UInt32 OnTimeGen, System.UInt32 OffTimeGen) attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0007 stloc.1 
+   0008 ldarg.1 
+   0009 ldloc.1 
+   000A bge.un IL_002f: ldc.i4.0
+   000F ldarg.2 
+   0010 ldloc.1 
+   0011 sub 
+   0012 stloc.0 
+   0013 ldloc.0 
+   0014 ldc.i4.0 
+   0015 ble IL_002f: ldc.i4.0
+   001A ldloc.0 
+   001B conv.r8 
+   001C ldc.r8 86400
+   0025 div 
+   0026 call System.Double System.Math::Ceiling(System.Double)
+   002B conv.i4 
+   002C stloc.2 
+   002D ldloc.2 
+   002E ret 
+   002F ldc.i4.0 
+   0030 ret 
+== System.Boolean IsValidTime() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_ExpireEndTime
+   0007 ldc.i4.0 
+   0008 ble.un IL_0033: ldloc.0
+   000D ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_ExpireEndTime
+   0012 conv.u8 
+   0013 call System.DateTime Utility::ToUtcTime(System.Int64)
+   0018 stloc.1 
+   0019 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   001E conv.i8 
+   001F call System.DateTime Utility::ToUtcTime(System.Int64)
+   0024 stloc.2 
+   0025 ldloc.2 
+   0026 ldloc.1 
+   0027 call System.Boolean System.DateTime::op_LessThan(System.DateTime,System.DateTime)
+   002C brfalse IL_0033: ldloc.0
+   0031 ldc.i4.1 
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 ret 
+== ListView`1<Assets.Scripts.GameSystem.IHeroData> GetShowSelectHeroListEx(ListView`1<Assets.Scripts.GameSystem.IHeroData> canUseHeroList) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0006 brtrue IL_0011: newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   000B newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0010 ret 
+   0011 newobj System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::.ctor()
+   0016 stloc.0 
+   0017 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   001C stloc.1 
+   001D ldloc.1 
+   001E ldarg.0 
+   001F ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0024 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   0029 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   002E ldc.i4.0 
+   002F stloc.2 
+   0030 br IL_006e: ldloc.2
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   003B ldloc.2 
+   003C callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Item(System.Int32)
+   0041 stloc.3 
+   0042 ldloc.3 
+   0043 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   0048 brtrue IL_006a: ldloc.2
+   004D ldloc.3 
+   004E callvirt System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::Days()
+   0053 ldc.i4.0 
+   0054 ble IL_006a: ldloc.2
+   0059 ldloc.1 
+   005A ldloc.3 
+   005B ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   0060 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwItemID
+   0065 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   006A ldloc.2 
+   006B ldc.i4.1 
+   006C add 
+   006D stloc.2 
+   006E ldloc.2 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0075 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   007A blt IL_0035: ldarg.0
+   007F ldc.i4.0 
+   0080 stloc.s V_4
+   0082 br IL_00b7: ldloc.s V_4
+   0087 ldarg.1 
+   0088 ldloc.s V_4
+   008A callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   008F stloc.s V_5
+   0091 ldloc.1 
+   0092 ldloc.s V_5
+   0094 callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   0099 callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Contains(!0)
+   009E brfalse IL_00b1: ldloc.s V_4
+   00A3 ldloc.1 
+   00A4 ldloc.s V_5
+   00A6 callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   00AB callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Remove(!0)
+   00B0 pop 
+   00B1 ldloc.s V_4
+   00B3 ldc.i4.1 
+   00B4 add 
+   00B5 stloc.s V_4
+   00B7 ldloc.s V_4
+   00B9 ldarg.1 
+   00BA callvirt System.Int32 ListViewBase::get_Count()
+   00BF blt IL_0087: ldarg.1
+   00C4 ldc.i4.0 
+   00C5 stloc.s V_6
+   00C7 br IL_00ea: ldloc.s V_6
+   00CC ldloc.1 
+   00CD ldloc.s V_6
+   00CF callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   00D4 ldc.i4.1 
+   00D5 call Assets.Scripts.GameSystem.IHeroData Assets.Scripts.GameSystem.CHeroDataFactory::CreateCustomHeroData(System.UInt32,System.Boolean)
+   00DA stloc.s V_7
+   00DC ldloc.0 
+   00DD ldloc.s V_7
+   00DF callvirt System.Void ListView`1<Assets.Scripts.GameSystem.IHeroData>::Add(!0)
+   00E4 ldloc.s V_6
+   00E6 ldc.i4.1 
+   00E7 add 
+   00E8 stloc.s V_6
+   00EA ldloc.s V_6
+   00EC ldloc.1 
+   00ED callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   00F2 blt IL_00cc: ldloc.1
+   00F7 ldloc.0 
+   00F8 ret 
+== System.Boolean IsOpen(System.Int32 FuncSwitchBits, System.Int32 index) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 ldarg.2 
+   0003 ldc.i4.s 31
+   0005 and 
+   0006 shl 
+   0007 and 
+   0008 ldc.i4.0 
+   0009 cgt 
+   000B ret 
+== System.Collections.Generic.List`1<System.UInt32> GetSkinList(System.UInt64 bits, System.UInt32 heroID) attrs=Private, HideBySig maxstack=3
+   0000 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.2 
+   0007 ldc.i4.0 
+   0008 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   000D stloc.1 
+   000E ldarg.0 
+   000F ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0014 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::defaultSkinList
+   0019 ldloc.1 
+   001A callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   001F ldc.i4.1 
+   0020 stloc.2 
+   0021 br IL_0047: ldloc.2
+   0026 ldarg.0 
+   0027 ldarg.1 
+   0028 conv.i4 
+   0029 ldloc.2 
+   002A call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsOpen(System.Int32,System.Int32)
+   002F brfalse IL_0043: ldloc.2
+   0034 ldarg.2 
+   0035 ldloc.2 
+   0036 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   003B stloc.1 
+   003C ldloc.0 
+   003D ldloc.1 
+   003E callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0043 ldloc.2 
+   0044 ldc.i4.1 
+   0045 add 
+   0046 stloc.2 
+   0047 ldloc.2 
+   0048 ldc.i4.s 9
+   004A blt IL_0026: ldarg.0
+   004F ldloc.0 
+   0050 ret 
+== System.Int32 GetHeroCount() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0006 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   000B callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0010 stloc.0 
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 ldc.i4.0 
+   0014 stloc.2 
+   0015 br IL_0046: ldloc.2
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0020 ldloc.2 
+   0021 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Item(System.Int32)
+   0026 stloc.3 
+   0027 ldloc.3 
+   0028 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   002D brtrue IL_0042: ldloc.2
+   0032 ldloc.3 
+   0033 callvirt System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::Days()
+   0038 ldc.i4.0 
+   0039 ble IL_0042: ldloc.2
+   003E ldloc.1 
+   003F ldc.i4.1 
+   0040 add 
+   0041 stloc.1 
+   0042 ldloc.2 
+   0043 ldc.i4.1 
+   0044 add 
+   0045 stloc.2 
+   0046 ldloc.2 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   004D callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0052 blt IL_001a: ldarg.0
+   0057 ldloc.0 
+   0058 ldloc.1 
+   0059 add 
+   005A ret 
+== System.Int32 GetSkinCount() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0006 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   000B callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0010 stloc.0 
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 ldc.i4.0 
+   0014 stloc.2 
+   0015 br IL_0047: ldloc.2
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0020 ldloc.2 
+   0021 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Item(System.Int32)
+   0026 stloc.3 
+   0027 ldloc.3 
+   0028 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   002D ldc.i4.1 
+   002E bne.un IL_0043: ldloc.2
+   0033 ldloc.3 
+   0034 callvirt System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::Days()
+   0039 ldc.i4.0 
+   003A ble IL_0043: ldloc.2
+   003F ldloc.1 
+   0040 ldc.i4.1 
+   0041 add 
+   0042 stloc.1 
+   0043 ldloc.2 
+   0044 ldc.i4.1 
+   0045 add 
+   0046 stloc.2 
+   0047 ldloc.2 
+   0048 ldarg.0 
+   0049 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   004E callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0053 blt IL_001a: ldarg.0
+   0058 ldloc.0 
+   0059 ldloc.1 
+   005A add 
+   005B ret 
+== System.Void OpenWifiPrivilegeForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::ShowOrHideWifiInfo()
+   000A ldarg.0 
+   000B call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::InitWifilData()
+   0010 pop 
+   0011 ldarg.0 
+   0012 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::ShowWifiPrivilegeUI()
+   0017 ret 
+== System.Void ShowWifiTopBar(UnityEngine.GameObject wifiObj) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000d: ldarg.1
+   000C ret 
+   000D ldarg.1 
+   000E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0013 ldstr lab2
+   0018 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   001D stloc.0 
+   001E ldloc.0 
+   001F call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0024 brfalse IL_0087: ldarg.1
+   0029 ldloc.0 
+   002A callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   002F stloc.1 
+   0030 ldloc.1 
+   0031 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0036 brfalse IL_0087: ldarg.1
+   003B ldarg.0 
+   003C call System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager::GetHeroCount()
+   0041 stloc.2 
+   0042 ldloc.2 
+   0043 ldc.i4.0 
+   0044 bgt IL_005a: ldloc.0
+   0049 ldloc.0 
+   004A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   004F ldc.i4.0 
+   0050 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0055 br IL_0087: ldarg.1
+   005A ldloc.0 
+   005B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0060 ldc.i4.1 
+   0061 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0066 ldloc.1 
+   0067 call !0 Singleton`1<CTextManager>::GetInstance()
+   006C ldstr WifiPrivilege_ToBar_lab2
+   0071 ldc.i4.1 
+   0072 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0077 ldloc.2 
+   0078 box System.Int32
+   007D call System.String System.String::Format(System.String,System.Object)
+   0082 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0087 ldarg.1 
+   0088 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   008D ldstr lab3
+   0092 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0097 stloc.3 
+   0098 ldloc.3 
+   0099 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   009E brfalse IL_0107: ret
+   00A3 ldloc.3 
+   00A4 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   00A9 stloc.s V_4
+   00AB ldloc.s V_4
+   00AD call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00B2 brfalse IL_0107: ret
+   00B7 ldarg.0 
+   00B8 call System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager::GetSkinCount()
+   00BD stloc.s V_5
+   00BF ldloc.s V_5
+   00C1 ldc.i4.0 
+   00C2 bgt IL_00d8: ldloc.3
+   00C7 ldloc.3 
+   00C8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00CD ldc.i4.0 
+   00CE call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D3 br IL_0107: ret
+   00D8 ldloc.3 
+   00D9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00DE ldc.i4.1 
+   00DF call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00E4 ldloc.s V_4
+   00E6 call !0 Singleton`1<CTextManager>::GetInstance()
+   00EB ldstr WifiPrivilege_ToBar_lab3
+   00F0 ldc.i4.1 
+   00F1 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00F6 ldloc.s V_5
+   00F8 box System.Int32
+   00FD call System.String System.String::Format(System.String,System.Object)
+   0102 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0107 ret 
+== System.Boolean IsInWifiPrivilege() attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bUseWifi
+   0005 brtrue IL_000c: ldarg.0
+   000A ldc.i4.0 
+   000B ret 
+   000C ldarg.0 
+   000D call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0012 brtrue IL_0019: ldc.i4.1
+   0017 ldc.i4.0 
+   0018 ret 
+   0019 ldc.i4.1 
+   001A ret 
+== System.Boolean IsPrivilegeItem(System.Int32 ID, System.Boolean bSkin) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0006 brtrue IL_000d: ldc.i4.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldc.i4.0 
+   000E stloc.0 
+   000F br IL_0046: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   001A ldloc.0 
+   001B callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Item(System.Int32)
+   0020 stloc.1 
+   0021 ldloc.1 
+   0022 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   0027 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwItemID
+   002C conv.u8 
+   002D ldarg.1 
+   002E conv.i8 
+   002F bne.un IL_0042: ldloc.0
+   0034 ldloc.1 
+   0035 callvirt System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::Days()
+   003A ldc.i4.0 
+   003B ble IL_0042: ldloc.0
+   0040 ldc.i4.1 
+   0041 ret 
+   0042 ldloc.0 
+   0043 ldc.i4.1 
+   0044 add 
+   0045 stloc.0 
+   0046 ldloc.0 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   004D callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0052 blt IL_0014: ldarg.0
+   0057 ldarg.2 
+   0058 brfalse IL_0092: ldarg.0
+   005D ldarg.0 
+   005E ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0063 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   0068 ldarg.1 
+   0069 callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Contains(!0)
+   006E brfalse IL_0075: ldarg.0
+   0073 ldc.i4.1 
+   0074 ret 
+   0075 ldarg.0 
+   0076 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   007B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::defaultSkinList
+   0080 ldarg.1 
+   0081 callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Contains(!0)
+   0086 brfalse IL_008d: br IL_00aa
+   008B ldc.i4.1 
+   008C ret 
+   008D br IL_00aa: ldc.i4.0
+   0092 ldarg.0 
+   0093 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0098 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   009D ldarg.1 
+   009E callvirt System.Boolean System.Collections.Generic.List`1<System.UInt32>::Contains(!0)
+   00A3 brfalse IL_00aa: ldc.i4.0
+   00A8 ldc.i4.1 
+   00A9 ret 
+   00AA ldc.i4.0 
+   00AB ret 
+== System.Void Init() attrs=Family, Virtual, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 41031
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::OnTabChanged(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 41032
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::OnItemEnable(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 41033
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::OpenWifiPrivilegeForm(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::DELTA_TIME
+   005C ldc.i4.m1 
+   005D ldarg.0 
+   005E ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::OnUpdateRenewal(System.Int32)
+   0064 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0069 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   006E pop 
+   006F ret 
+== System.Boolean IsInBattle() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CBattleSystem::get_IsFormOpen()
+   000A brfalse IL_0011: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   000F ldc.i4.1 
+   0010 ret 
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0016 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   001B brfalse IL_0022: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0020 ldc.i4.1 
+   0021 ret 
+   0022 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::GetInstance()
+   0027 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.GameSystem.CBattleSystem::get_FormScript()
+   002C ldnull 
+   002D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0032 brfalse IL_0039: ldc.i4.0
+   0037 ldc.i4.1 
+   0038 ret 
+   0039 ldc.i4.0 
+   003A ret 
+== System.Void OnLobbyConnectSucced() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsInBattle()
+   0006 brfalse IL_000c: ldsfld System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bUseWifi
+   000B ret 
+   000C ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bUseWifi
+   0011 brtrue IL_001d: ldc.i4.0
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::ClearWifiData()
+   001C ret 
+   001D ldc.i4.0 
+   001E stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bDelayShowUI
+   0023 ldarg.0 
+   0024 call System.Single UnityEngine.Time::get_time()
+   0029 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_lastRequstTime
+   002E call System.Void WifiPrivilegeSDK::InitPrivilegeSDK()
+   0033 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache0
+   0038 brtrue.s IL_004b: ldsfld WifiPrivilegeSDK/onGetPriTokenDelegate Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache0
+   003A ldnull 
+   003B ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::getWifiPriSDKToken(System.String,System.String,System.Int32)
+   0041 newobj System.Void WifiPrivilegeSDK/onGetPriTokenDelegate::.ctor(System.Object,System.IntPtr)
+   0046 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache0
+   004B ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache0
+   0050 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache1
+   0055 brtrue.s IL_0068: ldsfld WifiPrivilegeSDK/onGetPriErrorDelegate Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache1
+   0057 ldnull 
+   0058 ldftn System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::getWifiPriSDKError(System.String,System.String)
+   005E newobj System.Void WifiPrivilegeSDK/onGetPriErrorDelegate::.ctor(System.Object,System.IntPtr)
+   0063 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache1
+   0068 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::<>f__mg$cache1
+   006D call System.Void WifiPrivilegeSDK::SetCallBack(WifiPrivilegeSDK/onGetPriTokenDelegate,WifiPrivilegeSDK/onGetPriErrorDelegate)
+   0072 call System.Void WifiPrivilegeSDK::AskWifiPrivilege()
+   0077 ret 
+== System.Void getWifiPriSDKError(System.String errorCode, System.String errorMsg) attrs=Private, Static, HideBySig maxstack=4
+   0000 ldstr wifipri errorCode:
+   0005 ldarg.0 
+   0006 ldstr 
+errorMsg
+   000B ldarg.1 
+   000C call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   0011 ldc.i4.0 
+   0012 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0017 ldstr errorCode:
+   001C ldarg.0 
+   001D ldstr 
+errorMsg
+   0022 ldarg.1 
+   0023 call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   0028 stsfld WifiPrivilegeSDK::hintStr
+   002D ldstr out of wifi privilege
+   0032 stsfld WifiPrivilegeSDK::hintStr
+   0037 ldc.i4.0 
+   0038 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bGetTokenSucc
+   003D call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   0042 callvirt System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0047 brtrue IL_0061: ldstr "Gettoken error code="
+   004C ldstr clearwifiData in error sdk
+   0051 ldc.i4.1 
+   0052 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0057 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   005C callvirt System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::ClearWifiData()
+   0061 ldstr Gettoken error code=
+   0066 ldarg.0 
+   0067 ldstr |
+   006C ldarg.1 
+   006D call System.String System.String::Concat(System.String,System.String,System.String,System.String)
+   0072 call System.Void WifiPrivilegeSDK::LogPriInfo(System.String)
+   0077 ret 
+== System.Void getWifiPriSDKToken(System.String deviceId, System.String token, System.Int32 expireTime) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldstr wifipri get token and sending pkg..., 
+   0005 ldc.i4.0 
+   0006 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   000B ldstr get token and sending pkg...
+   0010 stsfld WifiPrivilegeSDK::hintStr
+   0015 ldc.i4 1255
+   001A call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   001F stloc.0 
+   0020 ldloc.0 
+   0021 ldfld CSProtocol.CSPkg::stPkgData
+   0026 callvirt CSProtocol.CSPKG_WIFI_TOKEN_VERIFY_REQ CSProtocol.CSPkgBody::get_stWifiTokenVerifyReq()
+   002B ldarg.1 
+   002C call System.Byte[] Utility::BytesConvert(System.String)
+   0031 stfld CSProtocol.CSPKG_WIFI_TOKEN_VERIFY_REQ::szToken
+   0036 ldloc.0 
+   0037 ldfld CSProtocol.CSPkg::stPkgData
+   003C callvirt CSProtocol.CSPKG_WIFI_TOKEN_VERIFY_REQ CSProtocol.CSPkgBody::get_stWifiTokenVerifyReq()
+   0041 ldarg.0 
+   0042 call System.Byte[] Utility::BytesConvert(System.String)
+   0047 stfld CSProtocol.CSPKG_WIFI_TOKEN_VERIFY_REQ::szDeviceID
+   004C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0051 ldloca.s V_0
+   0053 ldc.i4.0 
+   0054 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0059 pop 
+   005A ldstr Gettoken succ send token to server 
+   005F ldarg.1 
+   0060 call System.String System.String::Concat(System.String,System.String)
+   0065 call System.Void WifiPrivilegeSDK::LogPriInfo(System.String)
+   006A ldc.i4.1 
+   006B stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bGetTokenSucc
+   0070 ret 
+== System.Void TryRquestWifiPriviilegeRenewal() attrs=Public, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bUseWifi
+   0005 brfalse IL_004f: ret
+   000A ldarg.0 
+   000B call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsInBattle()
+   0010 brtrue IL_004f: ret
+   0015 call System.Single UnityEngine.Time::get_time()
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_lastRequstTime
+   0020 sub 
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::DELTA_TIME
+   0027 conv.r4 
+   0028 ldc.r4 0.001
+   002D mul 
+   002E ble.un IL_004f: ret
+   0033 ldarg.0 
+   0034 call System.Single UnityEngine.Time::get_time()
+   0039 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_lastRequstTime
+   003E ldstr wifipri TryRquestWifiPriviilegeRenewal.
+   0043 ldc.i4.0 
+   0044 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0049 ldarg.0 
+   004A call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::RquestWifiPriviilegeRenewal()
+   004F ret 
+== System.Void RquestWifiPriviilegeRenewal() attrs=Private, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bGetTokenSucc
+   0005 brfalse IL_002e: ret
+   000A ldstr wifipri RquestWifiPriviilegeRenewal.
+   000F ldc.i4.0 
+   0010 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0015 ldc.i4 1257
+   001A call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   001F stloc.0 
+   0020 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0025 ldloca.s V_0
+   0027 ldc.i4.0 
+   0028 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   002D pop 
+   002E ret 
+== System.Void ClearWifiData() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_curWifiPrivilegeLevel
+   0006 ldarg.0 
+   0007 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   000C call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::ClearData()
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0017 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::Clear()
+   001C ldsfld System.String::Empty
+   0021 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   0026 ret 
+== System.Void OnGetWifiPriRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldstr srv token verify 
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   0010 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::iResult
+   0015 box System.Int32
+   001A call System.String System.String::Concat(System.Object,System.Object)
+   001F call System.Void WifiPrivilegeSDK::LogPriInfo(System.String)
+   0024 ldarg.0 
+   0025 ldfld CSProtocol.CSPkg::stPkgData
+   002A callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   002F ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::iResult
+   0034 brtrue IL_0139: ldstr "out of wifi privilege"
+   0039 ldstr in Wifi Privilege
+   003E stsfld WifiPrivilegeSDK::hintStr
+   0043 ldarg.0 
+   0044 ldfld CSProtocol.CSPkg::stPkgData
+   0049 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   004E ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bPrivilegeLvl
+   0053 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_curWifiPrivilegeLevel
+   0058 ldarg.0 
+   0059 ldfld CSProtocol.CSPkg::stPkgData
+   005E callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   0063 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::dwExpireEndTime
+   0068 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_ExpireEndTime
+   006D ldarg.0 
+   006E ldfld CSProtocol.CSPkg::stPkgData
+   0073 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   0078 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bIsFirst
+   007D stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_isFirst
+   0082 ldarg.0 
+   0083 ldfld CSProtocol.CSPkg::stPkgData
+   0088 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   008D ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::szCorpName
+   0092 call System.String Utility::UTF8Convert(System.Byte[])
+   0097 stloc.0 
+   0098 ldarg.0 
+   0099 ldfld CSProtocol.CSPkg::stPkgData
+   009E callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   00A3 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::szRidsName
+   00A8 call System.String Utility::UTF8Convert(System.Byte[])
+   00AD stloc.1 
+   00AE ldloc.0 
+   00AF ldloc.1 
+   00B0 call System.String System.String::Concat(System.String,System.String)
+   00B5 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   00BA ldstr wifipri OnGetWifiPriRsp 
+   00BF ldarg.0 
+   00C0 ldfld CSProtocol.CSPkg::stPkgData
+   00C5 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   00CA ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bVerifyType
+   00CF box System.Byte
+   00D4 call System.String System.String::Concat(System.Object,System.Object)
+   00D9 ldc.i4.0 
+   00DA call System.Void ocsys::NSLog(System.String,System.Boolean)
+   00DF call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   00E4 callvirt System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::InitWifilData()
+   00E9 pop 
+   00EA ldarg.0 
+   00EB ldfld CSProtocol.CSPkg::stPkgData
+   00F0 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   00F5 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bVerifyType
+   00FA ldc.i4.1 
+   00FB bne.un IL_0115: ldarg.0
+   0100 ldc.i4.1 
+   0101 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bDelayShowUI
+   0106 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   010B callvirt System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::TryOpenWifiPrivilegeUI()
+   0110 br IL_0134: br IL_017d
+   0115 ldarg.0 
+   0116 ldfld CSProtocol.CSPkg::stPkgData
+   011B callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   0120 ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bVerifyType
+   0125 brtrue IL_0134: br IL_017d
+   012A ldsfld System.String::Empty
+   012F stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   0134 br IL_017d: ret
+   0139 ldstr out of wifi privilege
+   013E stsfld WifiPrivilegeSDK::hintStr
+   0143 ldarg.0 
+   0144 ldfld CSProtocol.CSPkg::stPkgData
+   0149 callvirt CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP CSProtocol.CSPkgBody::get_stWifiTokenVerifyRsp()
+   014E ldfld CSProtocol.SCPKG_WIFI_TOKEN_VERIFY_RSP::bVerifyType
+   0153 ldc.i4.2 
+   0154 beq IL_0168: ldstr "clearwifiData in bverify2"
+   0159 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   015E callvirt System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0163 brtrue IL_017d: ret
+   0168 ldstr clearwifiData in bverify2
+   016D ldc.i4.0 
+   016E call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0173 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   0178 callvirt System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::ClearWifiData()
+   017D ret 
+== System.Void TryOpenWifiPrivilegeUI() attrs=Public, HideBySig maxstack=8
+   0000 call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bLobbyEntryBlocked()
+   0005 brfalse IL_000b: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   000A ret 
+   000B call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0010 callvirt System.Boolean Assets.Scripts.GameSystem.CLobbySystem::IsLeavelLobby()
+   0015 brtrue IL_003a: ret
+   001A ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bDelayShowUI
+   001F brfalse IL_003a: ret
+   0024 ldc.i4.0 
+   0025 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bDelayShowUI
+   002A call System.Boolean NewbieGuideManager::get_isNewbieGuiding()
+   002F brtrue IL_003a: ret
+   0034 ldarg.0 
+   0035 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::ShowWifiPrivilegeUI()
+   003A ret 
+== System.Void OnUpdateRenewal(System.Int32 timer) attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_bUseWifi
+   0005 brfalse IL_001f: ret
+   000A call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   000F callvirt System.Boolean Assets.Scripts.GameSystem.CLobbySystem::IsLeavelLobby()
+   0014 brtrue IL_001f: ret
+   0019 ldarg.0 
+   001A call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::RquestWifiPriviilegeRenewal()
+   001F ret 
+== System.Void OnGetWifiPriviilegeRenewal(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_WIFIPRIVILEGEINFO_RSP CSProtocol.CSPkgBody::get_stWifiPrivilegeInfoRsp()
+   000B ldfld CSProtocol.SCPKG_WIFIPRIVILEGEINFO_RSP::bPrivilegeLvl
+   0010 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_curWifiPrivilegeLevel
+   0015 ret 
+== System.Void ShowWifiPrivilegeUI() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsValidTime()
+   0006 brtrue IL_0017: ldarg.0
+   000B ldstr ShowWifiPrivilegeUI validTime 
+   0010 ldc.i4.0 
+   0011 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldc.i4.0 
+   0019 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   001E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0023 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::s_WifiPrivilegeUI
+   0028 ldc.i4.0 
+   0029 ldc.i4.1 
+   002A ldnull 
+   002B callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0030 stloc.0 
+   0031 ldloc.0 
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_003e: ldc.i4.2
+   003D ret 
+   003E ldc.i4.2 
+   003F newarr System.String
+   0044 dup 
+   0045 ldc.i4.0 
+   0046 ldstr WifiPrivilege_UI_Tab_0
+   004B stelem.ref 
+   004C dup 
+   004D ldc.i4.1 
+   004E ldstr WifiPrivilege_UI_Tab_1
+   0053 stelem.ref 
+   0054 stloc.1 
+   0055 ldloc.0 
+   0056 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   005B ldstr Panel/BgGroup/Text
+   0060 call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0065 stloc.2 
+   0066 ldloc.2 
+   0067 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   006C brfalse IL_00a0: ldloc.0
+   0071 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   0076 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   007B brfalse IL_0095: ldloc.2
+   0080 call !0 Singleton`1<CTextManager>::GetInstance()
+   0085 ldstr WifiPrivilege_TITLE
+   008A ldc.i4.1 
+   008B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0090 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   0095 ldloc.2 
+   0096 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   009B callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00A0 ldloc.0 
+   00A1 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   00A6 ldstr Panel/Tab
+   00AB call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   00B0 stloc.3 
+   00B1 ldloc.1 
+   00B2 ldlen 
+   00B3 conv.i4 
+   00B4 stloc.s V_4
+   00B6 ldc.i4.0 
+   00B7 stloc.s V_5
+   00B9 ldarg.0 
+   00BA ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   00BF callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   00C4 ldc.i4.0 
+   00C5 ble IL_00cd: ldloc.3
+   00CA ldc.i4.1 
+   00CB stloc.s V_5
+   00CD ldloc.3 
+   00CE ldloc.s V_4
+   00D0 ldloc.s V_5
+   00D2 add 
+   00D3 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   00D8 ldloc.s V_4
+   00DA ldloc.s V_5
+   00DC add 
+   00DD newarr System.String
+   00E2 stloc.s V_6
+   00E4 ldloc.s V_5
+   00E6 ldc.i4.0 
+   00E7 ble IL_011c: ldc.i4.0
+   00EC ldloc.s V_6
+   00EE ldc.i4.0 
+   00EF ldstr WifiPrivilege_UI_Tab_2
+   00F4 stelem.ref 
+   00F5 ldc.i4.0 
+   00F6 stloc.s V_7
+   00F8 br IL_010e: ldloc.s V_7
+   00FD ldloc.s V_6
+   00FF ldloc.s V_7
+   0101 ldc.i4.1 
+   0102 add 
+   0103 ldloc.1 
+   0104 ldloc.s V_7
+   0106 ldelem.ref 
+   0107 stelem.ref 
+   0108 ldloc.s V_7
+   010A ldc.i4.1 
+   010B add 
+   010C stloc.s V_7
+   010E ldloc.s V_7
+   0110 ldloc.s V_4
+   0112 blt IL_00fd: ldloc.s V_6
+   0117 br IL_013c: ldc.i4.0
+   011C ldc.i4.0 
+   011D stloc.s V_8
+   011F br IL_0133: ldloc.s V_8
+   0124 ldloc.s V_6
+   0126 ldloc.s V_8
+   0128 ldloc.1 
+   0129 ldloc.s V_8
+   012B ldelem.ref 
+   012C stelem.ref 
+   012D ldloc.s V_8
+   012F ldc.i4.1 
+   0130 add 
+   0131 stloc.s V_8
+   0133 ldloc.s V_8
+   0135 ldloc.s V_4
+   0137 blt IL_0124: ldloc.s V_6
+   013C ldc.i4.0 
+   013D stloc.s V_9
+   013F br IL_0233: ldloc.s V_9
+   0144 ldloc.3 
+   0145 ldloc.s V_9
+   0147 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   014C stloc.s V_10
+   014E ldloc.s V_10
+   0150 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0155 ldstr Text
+   015A call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   015F stloc.s V_11
+   0161 ldloc.s V_11
+   0163 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0168 brfalse IL_022d: ldloc.s V_9
+   016D ldloc.s V_9
+   016F ldloc.s V_6
+   0171 ldlen 
+   0172 conv.i4 
+   0173 bge IL_022d: ldloc.s V_9
+   0178 ldc.i4.0 
+   0179 stloc.s V_12
+   017B ldloc.s V_5
+   017D ldc.i4.0 
+   017E ble IL_01da: ldloc.s V_9
+   0183 ldloc.s V_9
+   0185 brtrue IL_019c: ldloc.s V_9
+   018A ldarg.0 
+   018B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0190 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0195 stloc.s V_12
+   0197 br IL_01d5: br IL_020a
+   019C ldloc.s V_9
+   019E ldc.i4.1 
+   019F bne.un IL_01bb: ldloc.s V_9
+   01A4 ldarg.0 
+   01A5 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   01AA ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   01AF callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   01B4 stloc.s V_12
+   01B6 br IL_01d5: br IL_020a
+   01BB ldloc.s V_9
+   01BD ldc.i4.2 
+   01BE bne.un IL_01d5: br IL_020a
+   01C3 ldarg.0 
+   01C4 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   01C9 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   01CE callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   01D3 stloc.s V_12
+   01D5 br IL_020a: ldloc.s V_11
+   01DA ldloc.s V_9
+   01DC brtrue IL_01f8: ldarg.0
+   01E1 ldarg.0 
+   01E2 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   01E7 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   01EC callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   01F1 stloc.s V_12
+   01F3 br IL_020a: ldloc.s V_11
+   01F8 ldarg.0 
+   01F9 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   01FE ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   0203 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0208 stloc.s V_12
+   020A ldloc.s V_11
+   020C call !0 Singleton`1<CTextManager>::GetInstance()
+   0211 ldloc.s V_6
+   0213 ldloc.s V_9
+   0215 ldelem.ref 
+   0216 ldc.i4.1 
+   0217 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   021C ldloc.s V_12
+   021E box System.Int32
+   0223 call System.String System.String::Format(System.String,System.Object)
+   0228 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   022D ldloc.s V_9
+   022F ldc.i4.1 
+   0230 add 
+   0231 stloc.s V_9
+   0233 ldloc.s V_9
+   0235 ldloc.s V_4
+   0237 ldloc.s V_5
+   0239 add 
+   023A blt IL_0144: ldloc.3
+   023F ldloc.3 
+   0240 ldc.i4.0 
+   0241 ldc.i4.1 
+   0242 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   0247 ldarg.0 
+   0248 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::RefrshUI()
+   024D ret 
+== System.Void OnTabChanged(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::s_WifiPrivilegeUI
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0023 ldstr Panel/Tab
+   0028 call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIListScript>(UnityEngine.GameObject,System.String)
+   002D stloc.1 
+   002E ldloc.1 
+   002F ldnull 
+   0030 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0035 brfalse IL_003b: ldarg.0
+   003A ret 
+   003B ldarg.0 
+   003C ldloc.1 
+   003D callvirt System.Int32 Assets.Scripts.UI.CUIListScript::GetSelectedIndex()
+   0042 stfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0047 ldarg.0 
+   0048 call System.Void Assets.Scripts.GameSystem.WifiPrivilegeManager::RefrshUI()
+   004D ret 
+== System.Void OnItemEnable(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   000D stloc.1 
+   000E ldloc.0 
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 brtrue IL_0026: ret
+   001A ldloc.1 
+   001B ldnull 
+   001C call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0021 brfalse IL_0027: ldloc.1
+   0026 ret 
+   0027 ldloc.1 
+   0028 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002D stloc.2 
+   002E ldloc.2 
+   002F ldstr heroItem
+   0034 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0039 stloc.3 
+   003A ldloc.3 
+   003B ldstr tag
+   0040 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0045 stloc.s V_4
+   0047 ldloc.s V_4
+   0049 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004E brfalse IL_0060: ldloc.3
+   0053 ldloc.s V_4
+   0055 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005A ldc.i4.0 
+   005B call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0060 ldloc.3 
+   0061 ldstr skinLabelImage
+   0066 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006B stloc.s V_5
+   006D ldloc.s V_5
+   006F call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0074 brfalse IL_0086: ldsfld System.String System.String::Empty
+   0079 ldloc.s V_5
+   007B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0080 ldc.i4.0 
+   0081 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0086 ldsfld System.String::Empty
+   008B stloc.s V_6
+   008D ldsfld System.String::Empty
+   0092 stloc.s V_7
+   0094 ldarg.1 
+   0095 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   009A stloc.s V_8
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   00A2 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   00A7 stloc.s V_9
+   00A9 ldloc.s V_9
+   00AB ldc.i4.0 
+   00AC ble IL_0302: ldarg.0
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   00B7 brtrue IL_021b: ldarg.0
+   00BC ldloc.s V_8
+   00BE ldc.i4.0 
+   00BF blt IL_0216: br IL_02fd
+   00C4 ldloc.s V_8
+   00C6 ldarg.0 
+   00C7 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   00CC callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   00D1 bge IL_0216: br IL_02fd
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   00DC ldloc.s V_8
+   00DE callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Item(System.Int32)
+   00E3 stloc.s V_10
+   00E5 ldloc.s V_10
+   00E7 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   00EC brtrue IL_0120: ldloc.s V_10
+   00F1 ldloca.s V_11
+   00F3 ldloc.s V_10
+   00F5 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   00FA ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwItemID
+   00FF call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   0104 brfalse IL_011b: br IL_018e
+   0109 ldloca.s V_11
+   010B call System.String ResData.ResHeroCfgInfo::get_szImagePath()
+   0110 stloc.s V_7
+   0112 ldloca.s V_11
+   0114 call System.String ResData.ResHeroCfgInfo::get_szName()
+   0119 stloc.s V_6
+   011B br IL_018e: ldarg.0
+   0120 ldloc.s V_10
+   0122 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::HeroType
+   0127 ldc.i4.1 
+   0128 bne.un IL_018e: ldarg.0
+   012D ldc.i4.0 
+   012E stloc.s V_12
+   0130 ldc.i4.0 
+   0131 stloc.s V_13
+   0133 ldloc.s V_10
+   0135 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   013A ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwItemID
+   013F ldloca.s V_12
+   0141 ldloca.s V_13
+   0143 call System.Void Assets.Scripts.GameSystem.CSkinInfo::ResolveHeroSkin(System.UInt32,System.UInt32&,System.UInt32&)
+   0148 ldloc.s V_12
+   014A ldloc.s V_13
+   014C ldloca.s V_14
+   014E call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0153 brfalse IL_018e: ldarg.0
+   0158 ldloca.s V_14
+   015A call System.String ResData.ResHeroSkin::get_szSkinPicID()
+   015F stloc.s V_7
+   0161 ldstr {0} <color=#00D8FFFF>{1}</Color>
+   0166 ldloca.s V_14
+   0168 call System.String ResData.ResHeroSkin::get_szHeroName()
+   016D ldloca.s V_14
+   016F call System.String ResData.ResHeroSkin::get_szSkinName()
+   0174 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0179 stloc.s V_6
+   017B ldloc.0 
+   017C ldloc.s V_5
+   017E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0183 ldloc.s V_12
+   0185 ldloc.s V_13
+   0187 ldc.i4.0 
+   0188 ldnull 
+   0189 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetHeroSkinLabelPic(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,System.UInt32,System.UInt32,System.Boolean,System.UInt32[])
+   018E ldarg.0 
+   018F ldloc.s V_10
+   0191 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   0196 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOnTimeGen
+   019B ldloc.s V_10
+   019D ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo::itemInfo
+   01A2 ldfld ResData.ResDT_WifiPrivilege_TimeItem::dwOffTimeGen
+   01A7 call System.Int32 Assets.Scripts.GameSystem.WifiPrivilegeManager::ReaminDaysWifiItem(System.UInt32,System.UInt32)
+   01AC stloc.s V_15
+   01AE ldloc.s V_4
+   01B0 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   01B5 brfalse IL_0216: br IL_02fd
+   01BA ldloc.s V_4
+   01BC callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01C1 ldc.i4.1 
+   01C2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   01C7 call !0 Singleton`1<CTextManager>::GetInstance()
+   01CC ldstr Mall_Promotion_Tag_1
+   01D1 ldc.i4.1 
+   01D2 newarr System.String
+   01D7 dup 
+   01D8 ldc.i4.0 
+   01D9 ldloca.s V_15
+   01DB constrained. System.Int32
+   01E1 callvirt System.String System.Object::ToString()
+   01E6 stelem.ref 
+   01E7 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   01EC stloc.s V_16
+   01EE ldloc.s V_4
+   01F0 ldstr Text
+   01F5 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01FA stloc.s V_17
+   01FC ldloc.s V_17
+   01FE call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0203 brfalse IL_0216: br IL_02fd
+   0208 ldloc.s V_17
+   020A callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   020F ldloc.s V_16
+   0211 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0216 br IL_02fd: br IL_03e3
+   021B ldarg.0 
+   021C ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0221 ldc.i4.1 
+   0222 bne.un IL_02aa: ldarg.0
+   0227 ldc.i4.0 
+   0228 stloc.s V_18
+   022A ldc.i4.0 
+   022B stloc.s V_19
+   022D ldloc.s V_8
+   022F ldarg.0 
+   0230 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0235 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   023A callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   023F bge IL_02a5: br IL_02fd
+   0244 ldarg.0 
+   0245 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   024A ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   024F ldloc.s V_8
+   0251 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0256 ldloca.s V_18
+   0258 ldloca.s V_19
+   025A call System.Void Assets.Scripts.GameSystem.CSkinInfo::ResolveHeroSkin(System.UInt32,System.UInt32&,System.UInt32&)
+   025F ldloc.s V_18
+   0261 ldloc.s V_19
+   0263 ldloca.s V_20
+   0265 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   026A brfalse IL_02a5: br IL_02fd
+   026F ldloca.s V_20
+   0271 call System.String ResData.ResHeroSkin::get_szSkinPicID()
+   0276 stloc.s V_7
+   0278 ldstr {0} <color=#00D8FFFF>{1}</Color>
+   027D ldloca.s V_20
+   027F call System.String ResData.ResHeroSkin::get_szHeroName()
+   0284 ldloca.s V_20
+   0286 call System.String ResData.ResHeroSkin::get_szSkinName()
+   028B call System.String System.String::Format(System.String,System.Object,System.Object)
+   0290 stloc.s V_6
+   0292 ldloc.0 
+   0293 ldloc.s V_5
+   0295 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   029A ldloc.s V_18
+   029C ldloc.s V_19
+   029E ldc.i4.0 
+   029F ldnull 
+   02A0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetHeroSkinLabelPic(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,System.UInt32,System.UInt32,System.Boolean,System.UInt32[])
+   02A5 br IL_02fd: br IL_03e3
+   02AA ldarg.0 
+   02AB ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   02B0 ldc.i4.2 
+   02B1 bne.un IL_02fd: br IL_03e3
+   02B6 ldloc.s V_8
+   02B8 ldarg.0 
+   02B9 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   02BE ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   02C3 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   02C8 bge IL_02fd: br IL_03e3
+   02CD ldloca.s V_21
+   02CF ldarg.0 
+   02D0 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   02D5 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   02DA ldloc.s V_8
+   02DC callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   02E1 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   02E6 brfalse IL_02fd: br IL_03e3
+   02EB ldloca.s V_21
+   02ED call System.String ResData.ResHeroCfgInfo::get_szImagePath()
+   02F2 stloc.s V_7
+   02F4 ldloca.s V_21
+   02F6 call System.String ResData.ResHeroCfgInfo::get_szName()
+   02FB stloc.s V_6
+   02FD br IL_03e3: ldloc.3
+   0302 ldarg.0 
+   0303 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0308 brtrue IL_0390: ldarg.0
+   030D ldc.i4.0 
+   030E stloc.s V_22
+   0310 ldc.i4.0 
+   0311 stloc.s V_23
+   0313 ldloc.s V_8
+   0315 ldarg.0 
+   0316 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   031B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   0320 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0325 bge IL_038b: br IL_03e3
+   032A ldarg.0 
+   032B ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   0330 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   0335 ldloc.s V_8
+   0337 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   033C ldloca.s V_22
+   033E ldloca.s V_23
+   0340 call System.Void Assets.Scripts.GameSystem.CSkinInfo::ResolveHeroSkin(System.UInt32,System.UInt32&,System.UInt32&)
+   0345 ldloc.s V_22
+   0347 ldloc.s V_23
+   0349 ldloca.s V_24
+   034B call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0350 brfalse IL_038b: br IL_03e3
+   0355 ldloca.s V_24
+   0357 call System.String ResData.ResHeroSkin::get_szSkinPicID()
+   035C stloc.s V_7
+   035E ldstr {0} <color=#00D8FFFF>{1}</Color>
+   0363 ldloca.s V_24
+   0365 call System.String ResData.ResHeroSkin::get_szHeroName()
+   036A ldloca.s V_24
+   036C call System.String ResData.ResHeroSkin::get_szSkinName()
+   0371 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0376 stloc.s V_6
+   0378 ldloc.0 
+   0379 ldloc.s V_5
+   037B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0380 ldloc.s V_22
+   0382 ldloc.s V_23
+   0384 ldc.i4.0 
+   0385 ldnull 
+   0386 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetHeroSkinLabelPic(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,System.UInt32,System.UInt32,System.Boolean,System.UInt32[])
+   038B br IL_03e3: ldloc.3
+   0390 ldarg.0 
+   0391 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0396 ldc.i4.1 
+   0397 bne.un IL_03e3: ldloc.3
+   039C ldloc.s V_8
+   039E ldarg.0 
+   039F ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   03A4 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   03A9 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   03AE bge IL_03e3: ldloc.3
+   03B3 ldloca.s V_25
+   03B5 ldarg.0 
+   03B6 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   03BB ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   03C0 ldloc.s V_8
+   03C2 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   03C7 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   03CC brfalse IL_03e3: ldloc.3
+   03D1 ldloca.s V_25
+   03D3 call System.String ResData.ResHeroCfgInfo::get_szImagePath()
+   03D8 stloc.s V_7
+   03DA ldloca.s V_25
+   03DC call System.String ResData.ResHeroCfgInfo::get_szName()
+   03E1 stloc.s V_6
+   03E3 ldloc.3 
+   03E4 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   03E9 ldc.i4.1 
+   03EA call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   03EF ldloc.3 
+   03F0 ldstr imageIcon
+   03F5 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   03FA stloc.s V_26
+   03FC ldloc.s V_26
+   03FE call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0403 brfalse IL_0415: ldloc.0
+   0408 ldloc.s V_26
+   040A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   040F ldc.i4.1 
+   0410 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0415 ldloc.0 
+   0416 ldloc.3 
+   0417 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   041C ldloc.s V_7
+   041E ldc.i4.1 
+   041F ldc.i4.0 
+   0420 ldc.i4.1 
+   0421 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetHeroItemImage(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,System.String,Assets.Scripts.GameSystem.enHeroHeadType,System.Boolean,System.Boolean)
+   0426 ldloc.3 
+   0427 ldstr heroNamePanel/heroNameText
+   042C callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0431 callvirt !!0 UnityEngine.Component::GetComponent<UnityEngine.UI.Text>()
+   0436 stloc.s V_27
+   0438 ldloc.s V_27
+   043A ldloc.s V_6
+   043C callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0441 ret 
+== System.Void RefrshUI() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::s_WifiPrivilegeUI
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0023 ldstr Panel/HeroList
+   0028 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   002D stloc.1 
+   002E ldloc.1 
+   002F ldc.i4.1 
+   0030 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0035 ldloc.1 
+   0036 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListScript>()
+   003B stloc.2 
+   003C ldloc.2 
+   003D ldnull 
+   003E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0043 brfalse IL_0049: ldarg.0
+   0048 ret 
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   004F callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0054 stloc.3 
+   0055 ldc.i4.0 
+   0056 stloc.s V_4
+   0058 ldloc.3 
+   0059 ldc.i4.0 
+   005A ble IL_00c2: ldarg.0
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0065 brtrue IL_007c: ldarg.0
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TimeWifiData
+   0070 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo>::get_Count()
+   0075 stloc.s V_4
+   0077 br IL_00bd: br IL_00f6
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   0082 ldc.i4.1 
+   0083 bne.un IL_009f: ldarg.0
+   0088 ldarg.0 
+   0089 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   008E ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   0093 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0098 stloc.s V_4
+   009A br IL_00bd: br IL_00f6
+   009F ldarg.0 
+   00A0 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   00A5 ldc.i4.2 
+   00A6 bne.un IL_00bd: br IL_00f6
+   00AB ldarg.0 
+   00AC ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   00B1 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   00B6 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   00BB stloc.s V_4
+   00BD br IL_00f6: ldloc.2
+   00C2 ldarg.0 
+   00C3 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_CurTabID
+   00C8 brtrue IL_00e4: ldarg.0
+   00CD ldarg.0 
+   00CE ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   00D3 ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::skinIDList
+   00D8 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   00DD stloc.s V_4
+   00DF br IL_00f6: ldloc.2
+   00E4 ldarg.0 
+   00E5 ldflda Assets.Scripts.GameSystem.WifiPrivilegeManager::m_wifiData
+   00EA ldfld Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo::heroIDList
+   00EF callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   00F4 stloc.s V_4
+   00F6 ldloc.2 
+   00F7 ldloc.s V_4
+   00F9 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   00FE ret 
+== System.Void getCallbackMessage(System.String msg) attrs=Private, HideBySig maxstack=4
+   0000 ldstr wifipri get ios call back:
+   0005 ldarg.1 
+   0006 call System.String System.String::Concat(System.String,System.String)
+   000B ldc.i4.0 
+   000C call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0011 ldstr get ios call back:
+   0016 ldarg.1 
+   0017 call System.String System.String::Concat(System.String,System.String)
+   001C stsfld WifiPrivilegeSDK::hintStr
+   0021 ldc.i4.2 
+   0022 newarr System.Char
+   0027 dup 
+   0028 ldc.i4.0 
+   0029 ldc.i4.s 61
+   002B stelem.i2 
+   002C dup 
+   002D ldc.i4.1 
+   002E ldc.i4.s 38
+   0030 stelem.i2 
+   0031 stloc.0 
+   0032 ldarg.1 
+   0033 ldloc.0 
+   0034 callvirt System.String[] System.String::Split(System.Char[])
+   0039 stloc.1 
+   003A ldsfld System.String::Empty
+   003F stloc.2 
+   0040 ldsfld System.String::Empty
+   0045 stloc.3 
+   0046 ldsfld System.String::Empty
+   004B stloc.s V_4
+   004D ldsfld System.String::Empty
+   0052 stloc.s V_5
+   0054 ldc.i4.0 
+   0055 stloc.s V_6
+   0057 br IL_00fc: ldloc.s V_6
+   005C ldloc.1 
+   005D ldloc.s V_6
+   005F ldelem.ref 
+   0060 ldstr token
+   0065 call System.Int32 System.String::Compare(System.String,System.String)
+   006A brtrue IL_0082: ldloc.1
+   006F ldloc.1 
+   0070 ldlen 
+   0071 conv.i4 
+   0072 ldloc.s V_6
+   0074 ldc.i4.1 
+   0075 add 
+   0076 ble IL_0082: ldloc.1
+   007B ldloc.1 
+   007C ldloc.s V_6
+   007E ldc.i4.1 
+   007F add 
+   0080 ldelem.ref 
+   0081 stloc.2 
+   0082 ldloc.1 
+   0083 ldloc.s V_6
+   0085 ldelem.ref 
+   0086 ldstr expire
+   008B call System.Int32 System.String::Compare(System.String,System.String)
+   0090 brtrue IL_00a8: ldloc.1
+   0095 ldloc.1 
+   0096 ldlen 
+   0097 conv.i4 
+   0098 ldloc.s V_6
+   009A ldc.i4.1 
+   009B add 
+   009C ble IL_00a8: ldloc.1
+   00A1 ldloc.1 
+   00A2 ldloc.s V_6
+   00A4 ldc.i4.1 
+   00A5 add 
+   00A6 ldelem.ref 
+   00A7 stloc.3 
+   00A8 ldloc.1 
+   00A9 ldloc.s V_6
+   00AB ldelem.ref 
+   00AC ldstr deviceId
+   00B1 call System.Int32 System.String::Compare(System.String,System.String)
+   00B6 brtrue IL_00cf: ldloc.1
+   00BB ldloc.1 
+   00BC ldlen 
+   00BD conv.i4 
+   00BE ldloc.s V_6
+   00C0 ldc.i4.1 
+   00C1 add 
+   00C2 ble IL_00cf: ldloc.1
+   00C7 ldloc.1 
+   00C8 ldloc.s V_6
+   00CA ldc.i4.1 
+   00CB add 
+   00CC ldelem.ref 
+   00CD stloc.s V_4
+   00CF ldloc.1 
+   00D0 ldloc.s V_6
+   00D2 ldelem.ref 
+   00D3 ldstr error
+   00D8 call System.Int32 System.String::Compare(System.String,System.String)
+   00DD brtrue IL_00f6: ldloc.s V_6
+   00E2 ldloc.1 
+   00E3 ldlen 
+   00E4 conv.i4 
+   00E5 ldloc.s V_6
+   00E7 ldc.i4.1 
+   00E8 add 
+   00E9 ble IL_00f6: ldloc.s V_6
+   00EE ldloc.1 
+   00EF ldloc.s V_6
+   00F1 ldc.i4.1 
+   00F2 add 
+   00F3 ldelem.ref 
+   00F4 stloc.s V_5
+   00F6 ldloc.s V_6
+   00F8 ldc.i4.1 
+   00F9 add 
+   00FA stloc.s V_6
+   00FC ldloc.s V_6
+   00FE ldloc.1 
+   00FF ldlen 
+   0100 conv.i4 
+   0101 blt IL_005c: ldloc.1
+   0106 ldloc.2 
+   0107 callvirt System.Int32 System.String::get_Length()
+   010C ldc.i4.0 
+   010D ble IL_0163: ldloc.s V_5
+   0112 ldstr get ios token
+   0117 ldarg.1 
+   0118 call System.String System.String::Concat(System.String,System.String)
+   011D stsfld WifiPrivilegeSDK::hintStr
+   0122 ldc.i4.0 
+   0123 stloc.s V_7
+   0125 ldloc.3 
+   0126 call System.Int32 System.Convert::ToInt32(System.String)
+   012B stloc.s V_7
+   012D leave IL_0154: ldsfld WifiPrivilegeSDK/onGetPriTokenDelegate WifiPrivilegeSDK::m_onGetPriTokenDelegate
+   0132 pop 
+   0133 ldstr wifipri 超时时间溢出
+   0138 ldc.i4.1 
+   0139 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   013E leave IL_0154: ldsfld WifiPrivilegeSDK/onGetPriTokenDelegate WifiPrivilegeSDK::m_onGetPriTokenDelegate
+   0143 pop 
+   0144 ldstr wifipri 超时时间不是数字？
+   0149 ldc.i4.1 
+   014A call System.Void ocsys::NSLog(System.String,System.Boolean)
+   014F leave IL_0154: ldsfld WifiPrivilegeSDK/onGetPriTokenDelegate WifiPrivilegeSDK::m_onGetPriTokenDelegate
+   0154 ldsfld WifiPrivilegeSDK::m_onGetPriTokenDelegate
+   0159 ldloc.s V_4
+   015B ldloc.2 
+   015C ldloc.s V_7
+   015E callvirt System.Void WifiPrivilegeSDK/onGetPriTokenDelegate::Invoke(System.String,System.String,System.Int32)
+   0163 ldloc.s V_5
+   0165 callvirt System.Int32 System.String::get_Length()
+   016A ldc.i4.0 
+   016B ble IL_01a6: ret
+   0170 ldstr get ios error
+   0175 ldarg.1 
+   0176 call System.String System.String::Concat(System.String,System.String)
+   017B stsfld WifiPrivilegeSDK::hintStr
+   0180 ldsfld WifiPrivilegeSDK::m_onGetPriErrorDelegate
+   0185 ldloc.s V_5
+   0187 ldsfld System.String::Empty
+   018C callvirt System.Void WifiPrivilegeSDK/onGetPriErrorDelegate::Invoke(System.String,System.String)
+   0191 ldstr wifipri 
+   0196 ldsfld WifiPrivilegeSDK::hintStr
+   019B call System.String System.String::Concat(System.String,System.String)
+   01A0 ldc.i4.1 
+   01A1 call System.Void ocsys::NSLog(System.String,System.Boolean)
+   01A6 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/Mall/Form_WifiPriviilege.prefab
+   0005 stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::s_WifiPrivilegeUI
+   000A ldsfld System.String::Empty
+   000F stsfld Assets.Scripts.GameSystem.WifiPrivilegeManager::m_TitleName
+   0014 ret 
+  NESTED Assets.Scripts.GameSystem.WifiPrivilegeManager/TimeWifiDataInfo
+  NESTED Assets.Scripts.GameSystem.WifiPrivilegeManager/WIfiDataInfo

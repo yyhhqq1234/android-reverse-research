@@ -1,0 +1,222 @@
+// TYPE Assets.Scripts.GameSystem.SingleGameSettleMgr  base=Singleton`1<Assets.Scripts.GameSystem.SingleGameSettleMgr>  attrs=BeforeFieldInit
+  FIELD System.String PATH_BURNING_WINLOSE
+  FIELD System.String PATH_BURNING_SETTLE
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.SingleGameSettleMgr>::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 2609
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OnOpenSettle(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 2608
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OnSettleConfirm(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.SingleGameSettleMgr>::UnInit()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 2609
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OnOpenSettle(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 2608
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OnSettleConfirm(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C ret 
+== System.Void StartSettle() attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_001c: ret
+   0011 ldloc.0 
+   0012 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stMultipleDetail
+   0017 brtrue IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stMultipleDetail
+   0023 ldfld CSProtocol.COMDT_REWARD_MULTIPLE_DETAIL::bZeroProfit
+   0028 ldc.i4.1 
+   0029 bne.un IL_004a: ldloc.0
+   002E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0033 ldstr ZeroProfit_Tips
+   0038 ldc.i4.1 
+   0039 ldc.r4 1.5
+   003E ldnull 
+   003F ldc.i4.0 
+   0040 newarr System.Object
+   0045 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   004A ldloc.0 
+   004B ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0050 ldfld CSProtocol.COMDT_GAME_INFO::bGameType
+   0055 stloc.1 
+   0056 ldloc.1 
+   0057 switch Mono.Cecil.Cil.Instruction[]
+   0080 ldloc.1 
+   0081 ldc.i4.s 12
+   0083 beq IL_0124: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::GetInstance()
+   0088 br IL_0134: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   008D ldloca.s V_0
+   008F call System.Void Assets.Scripts.GameLogic.BurnExpeditionUT::Handle_Burn_Settle(CSProtocol.COMDT_SETTLE_RESULT_DETAIL&)
+   0094 ldarg.0 
+   0095 ldloc.0 
+   0096 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   009B ldfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   00A0 ldc.i4.1 
+   00A1 ceq 
+   00A3 call System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OpenWinLose(System.Boolean)
+   00A8 br IL_0160: ret
+   00AD ldarg.0 
+   00AE ldloc.0 
+   00AF ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   00B4 ldfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   00B9 ldc.i4.1 
+   00BA ceq 
+   00BC call System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::OpenWinLose(System.Boolean)
+   00C1 call !0 Singleton`1<Assets.Scripts.GameSystem.CArenaSystem>::GetInstance()
+   00C6 ldloc.0 
+   00C7 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   00CC ldfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   00D1 ldc.i4.1 
+   00D2 ceq 
+   00D4 callvirt System.Void Assets.Scripts.GameSystem.CArenaSystem::BattleReturn(System.Boolean)
+   00D9 br IL_0160: ret
+   00DE ldc.i4.0 
+   00DF stloc.2 
+   00E0 ldloc.1 
+   00E1 brtrue IL_0103: call !0 Singleton`1<Assets.Scripts.GameSystem.PVESettleSys>::GetInstance()
+   00E6 ldloc.0 
+   00E7 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   00EC ldfld CSProtocol.COMDT_GAME_INFO::bGameResult
+   00F1 ldc.i4.1 
+   00F2 bne.un IL_0103: call !0 Singleton`1<Assets.Scripts.GameSystem.PVESettleSys>::GetInstance()
+   00F7 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::GetInstance()
+   00FC ldc.i4.1 
+   00FD callvirt System.Boolean Assets.Scripts.GameSystem.CAdventureSys::UpdateAdvProgress(System.Boolean)
+   0102 stloc.2 
+   0103 call !0 Singleton`1<Assets.Scripts.GameSystem.PVESettleSys>::GetInstance()
+   0108 ldloc.0 
+   0109 ldloc.2 
+   010A callvirt System.Void Assets.Scripts.GameSystem.PVESettleSys::StartSettle(CSProtocol.COMDT_SETTLE_RESULT_DETAIL,System.Boolean)
+   010F br IL_0160: ret
+   0114 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::GetInstance()
+   0119 ldloc.0 
+   011A callvirt System.Void Assets.Scripts.GameSystem.CMatchingTrainingSys::StartSettle(CSProtocol.COMDT_SETTLE_RESULT_DETAIL)
+   011F br IL_0160: ret
+   0124 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::GetInstance()
+   0129 ldloc.0 
+   012A callvirt System.Void Assets.Scripts.GameSystem.CMatchingTrainingSys::StartSettle(CSProtocol.COMDT_SETTLE_RESULT_DETAIL)
+   012F br IL_0160: ret
+   0134 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0139 ldstr Invalid GameType -- 
+   013E ldloc.1 
+   013F box System.Byte
+   0144 call System.String System.String::Concat(System.Object,System.Object)
+   0149 ldc.i4.0 
+   014A ldc.r4 1.5
+   014F ldnull 
+   0150 ldc.i4.0 
+   0151 newarr System.Object
+   0156 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   015B br IL_0160: ret
+   0160 ret 
+== System.Void OpenWinLose(System.Boolean bWin) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_WINLOSE
+   000A ldc.i4.0 
+   000B ldc.i4.1 
+   000C ldnull 
+   000D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0012 stloc.0 
+   0013 ldarg.1 
+   0014 brfalse IL_002f: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0019 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   001E ldstr Set_Victor
+   0023 ldnull 
+   0024 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0029 pop 
+   002A br IL_0040: ldloc.0
+   002F call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0034 ldstr Set_Defeat
+   0039 ldnull 
+   003A callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   003F pop 
+   0040 ldloc.0 
+   0041 ldarg.1 
+   0042 call System.Void Assets.Scripts.GameSystem.CSingleGameSettleView::ShowBurnWinLose(Assets.Scripts.UI.CUIFormScript,System.Boolean)
+   0047 ret 
+== System.Void CloseBurnArenaSettleView() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_SETTLE
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0014 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   0019 ret 
+== System.Void OnOpenSettle(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_WINLOSE
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0014 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   0019 stloc.0 
+   001A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001F ldsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_SETTLE
+   0024 ldc.i4.0 
+   0025 ldc.i4.1 
+   0026 ldnull 
+   0027 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   002C stloc.1 
+   002D ldloc.1 
+   002E ldloca.s V_0
+   0030 call System.Void Assets.Scripts.GameSystem.CSingleGameSettleView::SetBurnSettleData(Assets.Scripts.UI.CUIFormScript,CSProtocol.COMDT_SETTLE_RESULT_DETAIL&)
+   0035 ldloc.0 
+   0036 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   003B ldfld CSProtocol.COMDT_GAME_INFO::bGameType
+   0040 ldc.i4.8 
+   0041 bne.un IL_0051: ret
+   0046 call !0 Singleton`1<Assets.Scripts.GameSystem.CArenaSystem>::GetInstance()
+   004B ldloc.0 
+   004C callvirt System.Void Assets.Scripts.GameSystem.CArenaSystem::ShowBattleResult(CSProtocol.COMDT_SETTLE_RESULT_DETAIL)
+   0051 ret 
+== System.Void OnSettleConfirm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.SingleGameSettleMgr::CloseBurnArenaSettleView()
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000B callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0017 ldfld CSProtocol.COMDT_GAME_INFO::bGameType
+   001C ldc.i4.7 
+   001D bne.un IL_0036: ldloc.0
+   0022 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0027 ldc.i4 2606
+   002C callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   0031 br IL_0056: ret
+   0036 ldloc.0 
+   0037 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   003C ldfld CSProtocol.COMDT_GAME_INFO::bGameType
+   0041 ldc.i4.8 
+   0042 bne.un IL_0056: ret
+   0047 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   004C ldc.i4 3300
+   0051 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   0056 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/BurnExpedition/Form_WinLose.prefab
+   0005 stsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_WINLOSE
+   000A ldstr UGUI/Form/System/BurnExpedition/Form_Settle.prefab
+   000F stsfld Assets.Scripts.GameSystem.SingleGameSettleMgr::PATH_BURNING_SETTLE
+   0014 ret 

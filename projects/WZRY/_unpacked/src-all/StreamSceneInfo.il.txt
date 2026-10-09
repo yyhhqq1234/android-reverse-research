@@ -1,0 +1,276 @@
+// TYPE StreamSceneInfo  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Vector3 BoundCenter
+  FIELD UnityEngine.Vector3 BoundSize
+  FIELD System.Int32 numChunkDimension
+  FIELD System.Int32 numGroundChunk
+  FIELD System.Int32 LayerCount
+  FIELD UnityEngine.GameObject[] LayerRoots
+  FIELD System.Single widthChunk
+  FIELD System.Single depthChunk
+  FIELD UnityEngine.Vector3 BoundStartPt
+  FIELD UnityEngine.Vector3 BoundEndPt
+  FIELD System.String _scenePath
+  FIELD StreamSceneLoader loader
+  FIELD StreamSceneInfo inst
+  FIELD SceneChunkProxyData[] chunkProxyData
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0006 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 stsfld StreamSceneInfo::inst
+   0006 call !0 MonoSingleton`1<ChunkManager>::get_instance()
+   000B callvirt System.Void ChunkManager::Initialize()
+   0010 ldarg.0 
+   0011 ldfld StreamSceneInfo::numChunkDimension
+   0016 ldc.i4.0 
+   0017 ble IL_0090: ldarg.0
+   001C ldarg.0 
+   001D ldarg.0 
+   001E ldflda StreamSceneInfo::BoundSize
+   0023 ldfld UnityEngine.Vector3::x
+   0028 ldarg.0 
+   0029 ldfld StreamSceneInfo::numChunkDimension
+   002E conv.r4 
+   002F div 
+   0030 stfld StreamSceneInfo::widthChunk
+   0035 ldarg.0 
+   0036 ldarg.0 
+   0037 ldflda StreamSceneInfo::BoundSize
+   003C ldfld UnityEngine.Vector3::z
+   0041 ldarg.0 
+   0042 ldfld StreamSceneInfo::numChunkDimension
+   0047 conv.r4 
+   0048 div 
+   0049 stfld StreamSceneInfo::depthChunk
+   004E ldarg.0 
+   004F ldarg.0 
+   0050 ldfld StreamSceneInfo::BoundCenter
+   0055 ldarg.0 
+   0056 ldfld StreamSceneInfo::BoundSize
+   005B ldc.r4 2
+   0060 call UnityEngine.Vector3 UnityEngine.Vector3::op_Division(UnityEngine.Vector3,System.Single)
+   0065 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   006A stfld StreamSceneInfo::BoundStartPt
+   006F ldarg.0 
+   0070 ldarg.0 
+   0071 ldfld StreamSceneInfo::BoundCenter
+   0076 ldarg.0 
+   0077 ldfld StreamSceneInfo::BoundSize
+   007C ldc.r4 2
+   0081 call UnityEngine.Vector3 UnityEngine.Vector3::op_Division(UnityEngine.Vector3,System.Single)
+   0086 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   008B stfld StreamSceneInfo::BoundEndPt
+   0090 ldarg.0 
+   0091 ldfld StreamSceneInfo::numGroundChunk
+   0096 brtrue IL_00a7: ldarg.0
+   009B ldarg.0 
+   009C ldarg.0 
+   009D ldfld StreamSceneInfo::numChunkDimension
+   00A2 stfld StreamSceneInfo::numGroundChunk
+   00A7 ldarg.0 
+   00A8 ldfld StreamSceneInfo::chunkProxyData
+   00AD brfalse IL_00e2: ret
+   00B2 ldc.i4.0 
+   00B3 stloc.0 
+   00B4 br IL_00d4: ldloc.0
+   00B9 call !0 MonoSingleton`1<ChunkManager>::get_instance()
+   00BE ldarg.0 
+   00BF ldfld StreamSceneInfo::chunkProxyData
+   00C4 ldloc.0 
+   00C5 ldelem.ref 
+   00C6 newobj System.Void SceneChunkProxy::.ctor(SceneChunkProxyData)
+   00CB callvirt System.Void ChunkManager::AddChunk(SceneChunkProxy)
+   00D0 ldloc.0 
+   00D1 ldc.i4.1 
+   00D2 add 
+   00D3 stloc.0 
+   00D4 ldloc.0 
+   00D5 ldarg.0 
+   00D6 ldfld StreamSceneInfo::chunkProxyData
+   00DB ldlen 
+   00DC conv.i4 
+   00DD blt IL_00b9: call !0 MonoSingleton`1<ChunkManager>::get_instance()
+   00E2 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldnull 
+   0001 stsfld StreamSceneInfo::inst
+   0006 ret 
+== System.Boolean GetChunkCoord(UnityEngine.Vector3 pos, System.Int32& xCoord, System.Int32& zCoord, System.Single& xDelta, System.Single& zDelta) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldarg.0 
+   0004 ldfld StreamSceneInfo::BoundStartPt
+   0009 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   000E stloc.1 
+   000F ldloca.s V_1
+   0011 ldfld UnityEngine.Vector3::x
+   0016 ldarg.0 
+   0017 ldfld StreamSceneInfo::widthChunk
+   001C div 
+   001D stloc.2 
+   001E ldloca.s V_1
+   0020 ldfld UnityEngine.Vector3::z
+   0025 ldarg.0 
+   0026 ldfld StreamSceneInfo::depthChunk
+   002B div 
+   002C stloc.3 
+   002D ldloc.2 
+   002E ldc.r4 0
+   0033 bge.un IL_0040: ldloc.3
+   0038 ldc.i4.0 
+   0039 stloc.0 
+   003A ldc.r4 0
+   003F stloc.2 
+   0040 ldloc.3 
+   0041 ldc.r4 0
+   0046 bge.un IL_0053: ldloc.2
+   004B ldc.i4.0 
+   004C stloc.0 
+   004D ldc.r4 0
+   0052 stloc.3 
+   0053 ldloc.2 
+   0054 ldarg.0 
+   0055 ldflda StreamSceneInfo::BoundEndPt
+   005A ldfld UnityEngine.Vector3::x
+   005F ble.un IL_0072: ldloc.3
+   0064 ldc.i4.0 
+   0065 stloc.0 
+   0066 ldarg.0 
+   0067 ldflda StreamSceneInfo::BoundEndPt
+   006C ldfld UnityEngine.Vector3::x
+   0071 stloc.2 
+   0072 ldloc.3 
+   0073 ldarg.0 
+   0074 ldflda StreamSceneInfo::BoundEndPt
+   0079 ldfld UnityEngine.Vector3::z
+   007E ble.un IL_0091: ldarg.2
+   0083 ldc.i4.0 
+   0084 stloc.0 
+   0085 ldarg.0 
+   0086 ldflda StreamSceneInfo::BoundEndPt
+   008B ldfld UnityEngine.Vector3::z
+   0090 stloc.3 
+   0091 ldarg.2 
+   0092 ldloc.2 
+   0093 conv.i4 
+   0094 stind.i4 
+   0095 ldarg.3 
+   0096 ldloc.3 
+   0097 conv.i4 
+   0098 stind.i4 
+   0099 ldarg.s xDelta
+   009B ldloc.2 
+   009C ldarg.2 
+   009D ldind.i4 
+   009E conv.r4 
+   009F sub 
+   00A0 ldc.r4 0.5
+   00A5 sub 
+   00A6 ldarg.0 
+   00A7 ldfld StreamSceneInfo::widthChunk
+   00AC mul 
+   00AD stind.r4 
+   00AE ldarg.s zDelta
+   00B0 ldloc.3 
+   00B1 ldarg.3 
+   00B2 ldind.i4 
+   00B3 conv.r4 
+   00B4 sub 
+   00B5 ldc.r4 0.5
+   00BA sub 
+   00BB ldarg.0 
+   00BC ldfld StreamSceneInfo::depthChunk
+   00C1 mul 
+   00C2 stind.r4 
+   00C3 ldloc.0 
+   00C4 ret 
+== System.Void Init(System.String scenePath) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld StreamSceneInfo::_scenePath
+   0007 ldarg.0 
+   0008 newobj System.Void StreamSceneLoader::.ctor()
+   000D stfld StreamSceneInfo::loader
+   0012 ldarg.0 
+   0013 ldfld StreamSceneInfo::loader
+   0018 ldarg.1 
+   0019 callvirt System.Void StreamSceneLoader::Init(System.String)
+   001E ldarg.0 
+   001F ldfld StreamSceneInfo::loader
+   0024 ldarg.0 
+   0025 callvirt System.Void StreamSceneLoader::SetCoroutineBehaviour(UnityEngine.MonoBehaviour)
+   002A ldarg.0 
+   002B ldarg.0 
+   002C ldfld StreamSceneInfo::loader
+   0031 callvirt System.Collections.IEnumerator StreamSceneLoader::Update()
+   0036 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   003B pop 
+   003C ret 
+== System.String GetScenePath() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::_scenePath
+   0006 ret 
+== System.Void LoadChunkAsync(System.String chunkName, StreamSceneLoader/OnChunkLoad onLoadCB, System.Boolean groundFirst) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::loader
+   0006 brfalse IL_0019: ret
+   000B ldarg.0 
+   000C ldfld StreamSceneInfo::loader
+   0011 ldarg.1 
+   0012 ldarg.2 
+   0013 ldarg.3 
+   0014 callvirt System.Void StreamSceneLoader::LoadChunkAsync(System.String,StreamSceneLoader/OnChunkLoad,System.Boolean)
+   0019 ret 
+== System.Void BatchLoadChunkAsync(ListView`1<System.String> chunkProxys) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::loader
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld StreamSceneInfo::loader
+   0011 ldarg.1 
+   0012 callvirt System.Void StreamSceneLoader::BatchLoadChunkAsync(ListView`1<System.String>)
+   0017 ret 
+== System.Void DoBatchLoadChunkAsync_Begin() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::loader
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld StreamSceneInfo::loader
+   0011 callvirt System.Void StreamSceneLoader::DoBatchLoadChunkAsync_Begin()
+   0016 ret 
+== System.Void DoBatchLoadChunkAsync_End() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::loader
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld StreamSceneInfo::loader
+   0011 callvirt System.Void StreamSceneLoader::DoBatchLoadChunkAsync_End()
+   0016 ret 
+== System.Void LoadChunkSync(System.String chunkName, StreamSceneLoader/OnChunkLoad onLoadCB) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld StreamSceneInfo::loader
+   0006 brfalse IL_0018: ret
+   000B ldarg.0 
+   000C ldfld StreamSceneInfo::loader
+   0011 ldarg.1 
+   0012 ldarg.2 
+   0013 callvirt System.Void StreamSceneLoader::LoadChunkSync(System.String,StreamSceneLoader/OnChunkLoad)
+   0018 ret 
+== System.Boolean TryCancelLoad(System.String chunkName) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld StreamSceneInfo::loader
+   0008 brfalse IL_001a: ldloc.0
+   000D ldarg.0 
+   000E ldfld StreamSceneInfo::loader
+   0013 ldarg.1 
+   0014 callvirt System.Boolean StreamSceneLoader::TryCancelLoad(System.String)
+   0019 stloc.0 
+   001A ldloc.0 
+   001B ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ret 

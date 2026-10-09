@@ -1,0 +1,751 @@
+// TYPE Assets.Scripts.Framework.NetworkModule  base=Singleton`1<Assets.Scripts.Framework.NetworkModule>  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.Framework.GameConnector gameSvr
+  FIELD Assets.Scripts.Framework.LobbyConnector lobbySvr
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate> mNetMsgHandlers
+  FIELD System.UInt32 sFrameCmdInval
+  FIELD System.Boolean _bOnlineMode
+  FIELD System.Single _preLobbyHeartTime
+  FIELD System.Single _preGameHeartTime
+  FIELD System.UInt32 <lobbyPing>k__BackingField
+  FIELD System.UInt32 m_uiRecvGameMsgCount
+  FIELD System.AsyncCallback <>f__mg$cache0
+  PROP System.Boolean isOnlineMode
+  PROP System.UInt32 lobbyPing
+  PROP System.UInt32 RecvGameMsgCount
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void Assets.Scripts.Framework.GameConnector::.ctor()
+   0006 stfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   000B ldarg.0 
+   000C newobj System.Void Assets.Scripts.Framework.LobbyConnector::.ctor()
+   0011 stfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::.ctor()
+   001C stfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0021 ldarg.0 
+   0022 ldc.i4.1 
+   0023 stfld Assets.Scripts.Framework.NetworkModule::_bOnlineMode
+   0028 ldarg.0 
+   0029 call System.Void Singleton`1<Assets.Scripts.Framework.NetworkModule>::.ctor()
+   002E ret 
+== System.Boolean get_isOnlineMode() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::_bOnlineMode
+   0006 ret 
+== System.Void set_isOnlineMode(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.NetworkModule::_bOnlineMode
+   0007 ret 
+== System.UInt32 get_lobbyPing() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::<lobbyPing>k__BackingField
+   0006 ret 
+== System.Void set_lobbyPing(System.UInt32 value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.NetworkModule::<lobbyPing>k__BackingField
+   0007 ret 
+== System.UInt32 get_RecvGameMsgCount() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::m_uiRecvGameMsgCount
+   0006 ret 
+== System.Void set_RecvGameMsgCount(System.UInt32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Framework.NetworkModule::m_uiRecvGameMsgCount
+   0007 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.Framework.NetworkModule::set_isOnlineMode(System.Boolean)
+   0007 ldtoken MessageHandlerClassAttribute
+   000C call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0011 ldnull 
+   0012 ldtoken Assets.Scripts.Framework.NetworkModule
+   0017 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   001C callvirt System.Reflection.Assembly System.Type::get_Assembly()
+   0021 ldc.i4.1 
+   0022 ldc.i4.0 
+   0023 ldc.i4.0 
+   0024 newobj System.Void ClassEnumerator::.ctor(System.Type,System.Type,System.Reflection.Assembly,System.Boolean,System.Boolean,System.Boolean)
+   0029 stloc.0 
+   002A ldloc.0 
+   002B callvirt ListView`1<System.Type> ClassEnumerator::get_results()
+   0030 callvirt ListView`1/Enumerator<!0> ListView`1<System.Type>::GetEnumerator()
+   0035 stloc.1 
+   0036 br IL_0131: ldloca.s V_1
+   003B ldloca.s V_1
+   003D call !0 ListView`1/Enumerator<System.Type>::get_Current()
+   0042 stloc.2 
+   0043 ldloc.2 
+   0044 callvirt System.Reflection.MethodInfo[] System.Type::GetMethods()
+   0049 stloc.3 
+   004A ldc.i4.0 
+   004B stloc.s V_4
+   004D br IL_0121: ldloc.3
+   0052 ldloc.3 
+   0053 ldloc.s V_4
+   0055 ldelem.ref 
+   0056 stloc.s V_5
+   0058 ldloc.s V_5
+   005A callvirt System.Boolean System.Reflection.MethodBase::get_IsStatic()
+   005F brfalse IL_011b: ldloc.s V_4
+   0064 ldloc.s V_5
+   0066 ldtoken MessageHandlerAttribute
+   006B call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0070 ldc.i4.1 
+   0071 callvirt System.Object[] System.Reflection.MemberInfo::GetCustomAttributes(System.Type,System.Boolean)
+   0076 stloc.s V_6
+   0078 ldc.i4.0 
+   0079 stloc.s V_7
+   007B br IL_0110: ldloc.s V_7
+   0080 ldloc.s V_6
+   0082 ldloc.s V_7
+   0084 ldelem.ref 
+   0085 isinst MessageHandlerAttribute
+   008A stloc.s V_8
+   008C ldloc.s V_8
+   008E brfalse IL_010a: ldloc.s V_7
+   0093 ldarg.0 
+   0094 ldloc.s V_8
+   0096 callvirt System.UInt32 MessageHandlerAttribute::get_ID()
+   009B ldtoken Assets.Scripts.Framework.NetMsgDelegate
+   00A0 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00A5 ldloc.s V_5
+   00A7 call System.Delegate System.Delegate::CreateDelegate(System.Type,System.Reflection.MethodInfo)
+   00AC castclass Assets.Scripts.Framework.NetMsgDelegate
+   00B1 call System.Void Assets.Scripts.Framework.NetworkModule::RegisterMsgHandler(System.UInt32,Assets.Scripts.Framework.NetMsgDelegate)
+   00B6 ldloc.s V_8
+   00B8 callvirt System.UInt32[] MessageHandlerAttribute::get_AdditionalIdList()
+   00BD brfalse IL_010a: ldloc.s V_7
+   00C2 ldloc.s V_8
+   00C4 callvirt System.UInt32[] MessageHandlerAttribute::get_AdditionalIdList()
+   00C9 ldlen 
+   00CA conv.i4 
+   00CB stloc.s V_9
+   00CD ldc.i4.0 
+   00CE stloc.s V_10
+   00D0 br IL_0101: ldloc.s V_10
+   00D5 ldarg.0 
+   00D6 ldloc.s V_8
+   00D8 callvirt System.UInt32[] MessageHandlerAttribute::get_AdditionalIdList()
+   00DD ldloc.s V_10
+   00DF ldelem.u4 
+   00E0 ldtoken Assets.Scripts.Framework.NetMsgDelegate
+   00E5 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   00EA ldloc.s V_5
+   00EC call System.Delegate System.Delegate::CreateDelegate(System.Type,System.Reflection.MethodInfo)
+   00F1 castclass Assets.Scripts.Framework.NetMsgDelegate
+   00F6 call System.Void Assets.Scripts.Framework.NetworkModule::RegisterMsgHandler(System.UInt32,Assets.Scripts.Framework.NetMsgDelegate)
+   00FB ldloc.s V_10
+   00FD ldc.i4.1 
+   00FE add 
+   00FF stloc.s V_10
+   0101 ldloc.s V_10
+   0103 ldloc.s V_9
+   0105 blt IL_00d5: ldarg.0
+   010A ldloc.s V_7
+   010C ldc.i4.1 
+   010D add 
+   010E stloc.s V_7
+   0110 ldloc.s V_7
+   0112 ldloc.s V_6
+   0114 ldlen 
+   0115 conv.i4 
+   0116 blt IL_0080: ldloc.s V_6
+   011B ldloc.s V_4
+   011D ldc.i4.1 
+   011E add 
+   011F stloc.s V_4
+   0121 ldloc.3 
+   0122 brfalse IL_0131: ldloca.s V_1
+   0127 ldloc.s V_4
+   0129 ldloc.3 
+   012A ldlen 
+   012B conv.i4 
+   012C blt IL_0052: ldloc.3
+   0131 ldloca.s V_1
+   0133 call System.Boolean ListView`1/Enumerator<System.Type>::MoveNext()
+   0138 brtrue IL_003b: ldloca.s V_1
+   013D ret 
+== System.Void RegisterMsgHandler(System.UInt32 cmdID, Assets.Scripts.Framework.NetMsgDelegate handler) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0006 ldarg.1 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::ContainsKey(!0)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0018 ldarg.1 
+   0019 ldarg.2 
+   001A callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::Add(!0,!1)
+   001F ret 
+== System.Void RemoveMsgHandler(System.UInt32 cmdID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0006 ldarg.1 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::ContainsKey(!0)
+   000C brtrue IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0018 ldarg.1 
+   0019 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::Remove(!0)
+   001E pop 
+   001F ret 
+== System.Void InitRelayConnnecting(CSProtocol.COMDT_TGWINFO inRelayTgw) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.COMDT_TGWINFO::dwVipCnt
+   0006 ldc.i4.0 
+   0007 ble.un IL_0143: ret
+   000C ldnull 
+   000D stloc.0 
+   000E ldsfld System.String::Empty
+   0013 stloc.1 
+   0014 call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   0019 callvirt System.Boolean CTongCaiSys::IsCanUseTongCai()
+   001E brfalse IL_002e: ldarg.0
+   0023 ldsfld ApolloConfig::loginOnlyIpOrUrl
+   0028 stloc.0 
+   0029 br IL_0060: ldarg.0
+   002E ldarg.0 
+   002F ldfld CSProtocol.COMDT_TGWINFO::szRelayUrl
+   0034 ldlen 
+   0035 conv.i4 
+   0036 ldc.i4.0 
+   0037 ble IL_005a: ldsfld System.String ApolloConfig::loginOnlyIpOrUrl
+   003C ldarg.0 
+   003D ldfld CSProtocol.COMDT_TGWINFO::szRelayUrl
+   0042 ldc.i4.0 
+   0043 ldelem.u1 
+   0044 brfalse IL_005a: ldsfld System.String ApolloConfig::loginOnlyIpOrUrl
+   0049 ldarg.0 
+   004A ldflda CSProtocol.COMDT_TGWINFO::szRelayUrl
+   004F call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   0054 stloc.0 
+   0055 br IL_0060: ldarg.0
+   005A ldsfld ApolloConfig::loginOnlyIpOrUrl
+   005F stloc.0 
+   0060 ldarg.0 
+   0061 ldfld CSProtocol.COMDT_TGWINFO::szZSDCode
+   0066 ldlen 
+   0067 conv.i4 
+   0068 ldc.i4.0 
+   0069 ble IL_0087: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   006E ldarg.0 
+   006F ldfld CSProtocol.COMDT_TGWINFO::szZSDCode
+   0074 ldc.i4.0 
+   0075 ldelem.u1 
+   0076 brfalse IL_0087: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   007B ldarg.0 
+   007C ldflda CSProtocol.COMDT_TGWINFO::szZSDCode
+   0081 call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   0086 stloc.1 
+   0087 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   008C callvirt System.Void GSDKsys::DetermineWhichSpeed()
+   0091 call !0 Singleton`1<Assets.Scripts.Framework.ReconnectIpSelect>::get_instance()
+   0096 ldarg.0 
+   0097 callvirt System.Void Assets.Scripts.Framework.ReconnectIpSelect::SetRelayTgw(CSProtocol.COMDT_TGWINFO)
+   009C ldloc.0 
+   009D ldarg.0 
+   009E ldfld CSProtocol.COMDT_TGWINFO::wEchoPort
+   00A3 call System.Void Assets.Scripts.Framework.NetworkModule::LookUpDNSOfServerAndConfigNetAcc(System.String,System.Int32)
+   00A8 newobj System.Void Assets.Scripts.Framework.ConnectorParam::.ctor()
+   00AD stloc.2 
+   00AE ldloc.2 
+   00AF ldarg.0 
+   00B0 ldfld CSProtocol.COMDT_TGWINFO::bIsUDP
+   00B5 ldc.i4.0 
+   00B6 ble IL_00c1: ldc.i4.0
+   00BB ldc.i4.1 
+   00BC br IL_00c2: stfld System.Boolean Assets.Scripts.Framework.ConnectorParam::bIsUDP
+   00C1 ldc.i4.0 
+   00C2 stfld Assets.Scripts.Framework.ConnectorParam::bIsUDP
+   00C7 ldloc.2 
+   00C8 ldloc.0 
+   00C9 stfld Assets.Scripts.Framework.ConnectorParam::ip
+   00CE ldloc.2 
+   00CF ldloc.1 
+   00D0 stfld Assets.Scripts.Framework.ConnectorParam::zsdcode
+   00D5 ldloc.2 
+   00D6 ldarg.0 
+   00D7 ldfld CSProtocol.COMDT_TGWINFO::wVPort
+   00DC callvirt System.Void Assets.Scripts.Framework.ConnectorParam::SetVPort(System.UInt16)
+   00E1 call System.Void NetworkAccelerator::ClearUDPCache()
+   00E6 ldarg.0 
+   00E7 ldfld CSProtocol.COMDT_TGWINFO::wEchoPort
+   00EC call System.Void NetworkAccelerator::SetEchoPort(System.Int32)
+   00F1 ldarg.0 
+   00F2 ldfld CSProtocol.COMDT_TGWINFO::wEchoPort
+   00F7 stsfld ApolloConfig::echoPort
+   00FC call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0101 ldloc.2 
+   0102 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::InitGameServerConnect(Assets.Scripts.Framework.ConnectorParam)
+   0107 pop 
+   0108 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   010D ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0112 callvirt Assets.Scripts.Framework.ConnectorParam Assets.Scripts.Framework.BaseConnector::GetConnectionParam()
+   0117 ldfld Assets.Scripts.Framework.ConnectorParam::httpDns
+   011C ldstr #
+   0121 ldloc.0 
+   0122 call System.String System.String::Concat(System.String,System.String,System.String)
+   0127 stloc.3 
+   0128 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   012D ldloc.3 
+   012E ldarg.0 
+   012F ldfld CSProtocol.COMDT_TGWINFO::wVPort
+   0134 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TGPSDKSys>::GetInstance()
+   0139 callvirt System.String Assets.Scripts.GameSystem.TGPSDKSys::GetGameID()
+   013E callvirt System.Void GSDKsys::StartSpeed(System.String,System.Int32,System.String)
+   0143 ret 
+== System.Void LookUpDNSOfServerAndConfigNetAcc(System.String host, System.Int32 port) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld System.String::Empty
+   0005 stsfld ApolloConfig::loginOnlyIp
+   000A ldarg.0 
+   000B ldsfld Assets.Scripts.Framework.NetworkModule::<>f__mg$cache0
+   0010 brtrue.s IL_0023: ldsfld System.AsyncCallback Assets.Scripts.Framework.NetworkModule::<>f__mg$cache0
+   0012 ldnull 
+   0013 ldftn System.Void Assets.Scripts.Framework.NetworkModule::DNSAsyncCallback(System.IAsyncResult)
+   0019 newobj System.Void System.AsyncCallback::.ctor(System.Object,System.IntPtr)
+   001E stsfld Assets.Scripts.Framework.NetworkModule::<>f__mg$cache0
+   0023 ldsfld Assets.Scripts.Framework.NetworkModule::<>f__mg$cache0
+   0028 ldarg.1 
+   0029 box System.Int32
+   002E call System.IAsyncResult System.Net.Dns::BeginGetHostAddresses(System.String,System.AsyncCallback,System.Object)
+   0033 pop 
+   0034 leave IL_003f: ret
+   0039 stloc.0 
+   003A leave IL_003f: ret
+   003F ret 
+== System.Void DNSAsyncCallback(System.IAsyncResult ar) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Net.IPAddress[] System.Net.Dns::EndGetHostAddresses(System.IAsyncResult)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse IL_0015: ret
+   000D ldloc.0 
+   000E ldlen 
+   000F conv.i4 
+   0010 brtrue IL_0016: ldloc.0
+   0015 ret 
+   0016 ldloc.0 
+   0017 ldc.i4.0 
+   0018 ldelem.ref 
+   0019 callvirt System.String System.Object::ToString()
+   001E stsfld ApolloConfig::loginOnlyIp
+   0023 ret 
+== System.Boolean InitLobbyServerConnect(Assets.Scripts.Framework.ConnectorParam para) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void Assets.Scripts.Framework.NetworkModule::set_isOnlineMode(System.Boolean)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   000D ldarg.1 
+   000E callvirt System.Boolean Assets.Scripts.Framework.LobbyConnector::Init(Assets.Scripts.Framework.ConnectorParam)
+   0013 ret 
+== System.Boolean InitGameServerConnect(Assets.Scripts.Framework.ConnectorParam para) attrs=Public, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0005 ldc.i4.1 
+   0006 callvirt System.Void Assets.Scripts.Framework.Reconnection::ResetRelaySyncCache(System.Boolean)
+   000B call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0010 callvirt System.Void Assets.Scripts.Framework.FrameWindow::Reset()
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   001B ldarg.1 
+   001C callvirt System.Boolean Assets.Scripts.Framework.GameConnector::Init(Assets.Scripts.Framework.ConnectorParam)
+   0021 ret 
+== System.Void ResetLobbySending() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0006 ldc.i4.1 
+   0007 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::ResetSending(System.Boolean)
+   000C ret 
+== System.Void CloseAllServerConnect() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.NetworkModule::CloseLobbyServerConnect()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.Framework.NetworkModule::CloseGameServerConnect()
+   000C ret 
+== System.Void CloseLobbyServerConnect() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0006 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::CleanUp()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0011 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::Disconnect()
+   0016 ldarg.0 
+   0017 ldc.i4.0 
+   0018 call System.Void Assets.Scripts.Framework.NetworkModule::set_lobbyPing(System.UInt32)
+   001D ret 
+== System.Void CloseGameServerConnect() attrs=Public, HideBySig maxstack=8
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   0005 ldc.i4.0 
+   0006 callvirt System.Void Assets.Scripts.Framework.Reconnection::ResetRelaySyncCache(System.Boolean)
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0011 callvirt System.Void Assets.Scripts.Framework.GameConnector::CleanUp()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   001C callvirt System.Void Assets.Scripts.Framework.GameConnector::Disconnect()
+   0021 ret 
+== System.Void UpdateNetRecv() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_0073: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.Framework.NetworkModule::HandleLobbyMsgRecv()
+   0011 leave IL_003f: ldarg.0
+   0016 stloc.0 
+   0017 ldc.i4.0 
+   0018 ldstr Error In HandleLobbyMsgRecv: {0}, Call stack : {1}
+   001D ldc.i4.2 
+   001E newarr System.Object
+   0023 dup 
+   0024 ldc.i4.0 
+   0025 ldloc.0 
+   0026 callvirt System.String System.Exception::get_Message()
+   002B stelem.ref 
+   002C dup 
+   002D ldc.i4.1 
+   002E ldloc.0 
+   002F callvirt System.String System.Exception::get_StackTrace()
+   0034 stelem.ref 
+   0035 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   003A leave IL_003f: ldarg.0
+   003F ldarg.0 
+   0040 call System.Void Assets.Scripts.Framework.NetworkModule::HandleGameMsgRecv()
+   0045 leave IL_0073: ret
+   004A stloc.1 
+   004B ldc.i4.0 
+   004C ldstr Error In HandleGameMsgRecv: {0}, Call stack : {1}
+   0051 ldc.i4.2 
+   0052 newarr System.Object
+   0057 dup 
+   0058 ldc.i4.0 
+   0059 ldloc.1 
+   005A callvirt System.String System.Exception::get_Message()
+   005F stelem.ref 
+   0060 dup 
+   0061 ldc.i4.1 
+   0062 ldloc.1 
+   0063 callvirt System.String System.Exception::get_StackTrace()
+   0068 stelem.ref 
+   0069 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   006E leave IL_0073: ret
+   0073 ret 
+== System.Void UpdateNetSend() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_007f: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.Framework.NetworkModule::UpdateLobbyConnection()
+   0011 ldarg.0 
+   0012 call System.Void Assets.Scripts.Framework.NetworkModule::UpdateGameConnection()
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.Framework.NetworkModule::HandleLobbyMsgSend()
+   001D leave IL_004b: ldarg.0
+   0022 stloc.0 
+   0023 ldc.i4.0 
+   0024 ldstr Error In HandleLobbyMsgSend: {0}, Call stack : {1}
+   0029 ldc.i4.2 
+   002A newarr System.Object
+   002F dup 
+   0030 ldc.i4.0 
+   0031 ldloc.0 
+   0032 callvirt System.String System.Exception::get_Message()
+   0037 stelem.ref 
+   0038 dup 
+   0039 ldc.i4.1 
+   003A ldloc.0 
+   003B callvirt System.String System.Exception::get_StackTrace()
+   0040 stelem.ref 
+   0041 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0046 leave IL_004b: ldarg.0
+   004B ldarg.0 
+   004C call System.Void Assets.Scripts.Framework.NetworkModule::HandleGameMsgSend()
+   0051 leave IL_007f: ret
+   0056 stloc.1 
+   0057 ldc.i4.0 
+   0058 ldstr Error In HandleGameMsgSend: {0}, Call stack : {1}
+   005D ldc.i4.2 
+   005E newarr System.Object
+   0063 dup 
+   0064 ldc.i4.0 
+   0065 ldloc.1 
+   0066 callvirt System.String System.Exception::get_Message()
+   006B stelem.ref 
+   006C dup 
+   006D ldc.i4.1 
+   006E ldloc.1 
+   006F callvirt System.String System.Exception::get_StackTrace()
+   0074 stelem.ref 
+   0075 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   007A leave IL_007f: ret
+   007F ret 
+== System.Void HandleLobbyMsgSend() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0011 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::HandleSending()
+   0016 ret 
+== System.Void HandleLobbyMsgRecv() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0006 brfalse IL_00c9: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0011 callvirt CSProtocol.CSPkg Assets.Scripts.Framework.LobbyConnector::RecvPackage()
+   0016 stloc.0 
+   0017 br IL_00c3: ldloc.0
+   001C ldnull 
+   001D stloc.1 
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0024 ldloc.0 
+   0025 ldfld CSProtocol.CSPkg::stPkgHead
+   002A ldfld CSProtocol.CSPkgHead::dwMsgID
+   002F ldloca.s V_1
+   0031 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::TryGetValue(!0,!1&)
+   0036 brfalse IL_0047: ldloc.0
+   003B ldloc.1 
+   003C ldloc.0 
+   003D callvirt System.Void Assets.Scripts.Framework.NetMsgDelegate::Invoke(CSProtocol.CSPkg)
+   0042 br IL_008a: ldarg.0
+   0047 ldloc.0 
+   0048 ldfld CSProtocol.CSPkg::stPkgHead
+   004D ldfld CSProtocol.CSPkgHead::dwMsgID
+   0052 ldc.i4 1261
+   0057 bne.un IL_008a: ldarg.0
+   005C call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0061 ldc.r4 1000
+   0066 mul 
+   0067 conv.u4 
+   0068 ldloc.0 
+   0069 ldfld CSProtocol.CSPkg::stPkgData
+   006E callvirt CSProtocol.CSPKG_GAMESVRPING CSProtocol.CSPkgBody::get_stGameSvrPing()
+   0073 ldfld CSProtocol.CSPKG_GAMESVRPING::dwTime
+   0078 sub 
+   0079 stloc.2 
+   007A ldarg.0 
+   007B ldloc.2 
+   007C ldarg.0 
+   007D call System.UInt32 Assets.Scripts.Framework.NetworkModule::get_lobbyPing()
+   0082 add 
+   0083 ldc.i4.2 
+   0084 div.un 
+   0085 call System.Void Assets.Scripts.Framework.NetworkModule::set_lobbyPing(System.UInt32)
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0090 ldloc.0 
+   0091 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::PostRecvPackage(CSProtocol.CSPkg)
+   0096 ldloc.0 
+   0097 brfalse IL_00b7: ldarg.0
+   009C ldloc.0 
+   009D ldfld CSProtocol.CSPkg::stPkgHead
+   00A2 ldfld CSProtocol.CSPkgHead::dwMsgID
+   00A7 ldc.i4 1261
+   00AC bne.un IL_00b7: ldarg.0
+   00B1 ldloc.0 
+   00B2 callvirt System.Void Assets.Scripts.Common.ProtocolObject::Release()
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   00BD callvirt CSProtocol.CSPkg Assets.Scripts.Framework.LobbyConnector::RecvPackage()
+   00C2 stloc.0 
+   00C3 ldloc.0 
+   00C4 brtrue IL_001c: ldnull
+   00C9 ret 
+== System.Void HandleGameMsgSend() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0011 callvirt System.Void Assets.Scripts.Framework.GameConnector::HandleSending()
+   0016 ret 
+== System.Void HandleGameMsgRecv() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0006 brfalse IL_004e: ret
+   000B ldnull 
+   000C stloc.0 
+   000D br IL_003c: ldarg.0
+   0012 ldarg.0 
+   0013 dup 
+   0014 ldfld Assets.Scripts.Framework.NetworkModule::m_uiRecvGameMsgCount
+   0019 ldc.i4.1 
+   001A add 
+   001B stfld Assets.Scripts.Framework.NetworkModule::m_uiRecvGameMsgCount
+   0020 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0025 ldloc.0 
+   0026 callvirt System.Boolean Assets.Scripts.Framework.Reconnection::FilterRelaySvrPackage(CSProtocol.CSPkg)
+   002B brtrue IL_003c: ldarg.0
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0036 ldloc.0 
+   0037 callvirt System.Void Assets.Scripts.Framework.GameConnector::HandleMsg(CSProtocol.CSPkg)
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0042 callvirt CSProtocol.CSPkg Assets.Scripts.Framework.GameConnector::RecvPackage()
+   0047 dup 
+   0048 stloc.0 
+   0049 brtrue IL_0012: ldarg.0
+   004E ret 
+== System.Void UpdateLobbyConnection() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0006 callvirt System.Boolean Assets.Scripts.Framework.LobbyConnector::CanSendPing()
+   000B brfalse IL_0064: ret
+   0010 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.Framework.NetworkModule::_preLobbyHeartTime
+   001B sub 
+   001C ldc.r4 3
+   0021 ble.un IL_0064: ret
+   0026 ldarg.0 
+   0027 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   002C stfld Assets.Scripts.Framework.NetworkModule::_preLobbyHeartTime
+   0031 ldc.i4 1261
+   0036 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldfld CSProtocol.CSPkg::stPkgData
+   0042 callvirt CSProtocol.CSPKG_GAMESVRPING CSProtocol.CSPkgBody::get_stGameSvrPing()
+   0047 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   004C ldc.r4 1000
+   0051 mul 
+   0052 conv.u4 
+   0053 stfld CSProtocol.CSPKG_GAMESVRPING::dwTime
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   005E ldloc.0 
+   005F callvirt System.Void Assets.Scripts.Framework.LobbyConnector::PushSendMsg(CSProtocol.CSPkg)
+   0064 ret 
+== System.Boolean IsNeedSendGamePing() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0006 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   000B brfalse IL_0025: ldc.i4.0
+   0010 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0015 ldarg.0 
+   0016 ldfld Assets.Scripts.Framework.NetworkModule::_preGameHeartTime
+   001B sub 
+   001C ldc.r4 2
+   0021 cgt 
+   0023 br.s IL_0026: ret
+   0025 ldc.i4.0 
+   0026 ret 
+== System.Void UpdateGameConnection() attrs=Private, HideBySig maxstack=3
+   0000 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.Framework.Reconnection::UpdateFrame()
+   000A ldarg.0 
+   000B ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0010 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0015 brtrue IL_0024: ldarg.0
+   001A call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::get_instance()
+   001F callvirt System.Void Assets.Scripts.Framework.Reconnection::UpdateReconnect()
+   0024 ldarg.0 
+   0025 call System.Boolean Assets.Scripts.Framework.NetworkModule::IsNeedSendGamePing()
+   002A brfalse IL_0087: ret
+   002F ldarg.0 
+   0030 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0035 stfld Assets.Scripts.Framework.NetworkModule::_preGameHeartTime
+   003A ldc.i4 1260
+   003F call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0044 stloc.0 
+   0045 ldloc.0 
+   0046 ldfld CSProtocol.CSPkg::stPkgData
+   004B callvirt CSProtocol.CSPKG_RELAYSVRPING CSProtocol.CSPkgBody::get_stRelaySvrPing()
+   0050 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0055 ldc.r4 1000
+   005A mul 
+   005B conv.u4 
+   005C stfld CSProtocol.CSPKG_RELAYSVRPING::dwTime
+   0061 ldloc.0 
+   0062 ldfld CSProtocol.CSPkg::stPkgData
+   0067 callvirt CSProtocol.CSPKG_RELAYSVRPING CSProtocol.CSPkgBody::get_stRelaySvrPing()
+   006C call !0 Singleton`1<DataReportSys>::GetInstance()
+   0071 callvirt System.Int32 DataReportSys::SendHeartAdd()
+   0076 stfld CSProtocol.CSPKG_RELAYSVRPING::dwSeqNo
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0081 ldloc.0 
+   0082 callvirt System.Void Assets.Scripts.Framework.GameConnector::PushSendMsg(CSProtocol.CSPkg)
+   0087 ret 
+== System.Boolean SendLobbyMsg(CSProtocol.CSPkg& msg, System.Boolean isShowAlert) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_003b: ldc.i4.0
+   000B ldarg.2 
+   000C brfalse IL_002c: ldarg.0
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0016 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   001B brtrue IL_002c: ldarg.0
+   0020 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0025 ldc.i4.5 
+   0026 ldc.i4.0 
+   0027 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenSendMsgAlert(System.Int32,Assets.Scripts.UI.enUIEventID)
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0032 ldarg.1 
+   0033 ldind.ref 
+   0034 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::PushSendMsg(CSProtocol.CSPkg)
+   0039 ldc.i4.1 
+   003A ret 
+   003B ldc.i4.0 
+   003C ret 
+== System.Boolean SendGameMsg(CSProtocol.CSPkg& msg, System.UInt32 confirmMsgID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   0006 brfalse IL_0037: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   0011 ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0016 brfalse IL_0037: ldc.i4.0
+   001B ldarg.1 
+   001C ldind.ref 
+   001D ldfld CSProtocol.CSPkg::stPkgHead
+   0022 ldarg.2 
+   0023 stfld CSProtocol.CSPkgHead::dwReserve
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   002E ldarg.1 
+   002F ldind.ref 
+   0030 callvirt System.Void Assets.Scripts.Framework.GameConnector::PushSendMsg(CSProtocol.CSPkg)
+   0035 ldc.i4.1 
+   0036 ret 
+   0037 ldc.i4.0 
+   0038 ret 
+== Assets.Scripts.Framework.NetMsgDelegate GetMsgHandler(System.UInt32 msgId) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Framework.NetworkModule::mNetMsgHandlers
+   0006 ldarg.1 
+   0007 ldloca.s V_0
+   0009 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.Framework.NetMsgDelegate>::TryGetValue(!0,!1&)
+   000E pop 
+   000F ldloc.0 
+   0010 ret 
+== CSProtocol.CSPkg CreateDefaultCSPKG(System.UInt32 msgID) attrs=Public, Static, HideBySig maxstack=2
+   0000 call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldfld CSProtocol.CSPkg::stPkgHead
+   000C ldarg.0 
+   000D stfld CSProtocol.CSPkgHead::dwMsgID
+   0012 ldloc.0 
+   0013 ldfld CSProtocol.CSPkg::stPkgHead
+   0018 call System.Int32 CSProtocol.MetaLib::getVersion()
+   001D stfld CSProtocol.CSPkgHead::iVersion
+   0022 ldloc.0 
+   0023 ldfld CSProtocol.CSPkg::stPkgData
+   0028 ldarg.0 
+   0029 conv.u8 
+   002A callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSPkgBody::construct(System.Int64)
+   002F pop 
+   0030 ldloc.0 
+   0031 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

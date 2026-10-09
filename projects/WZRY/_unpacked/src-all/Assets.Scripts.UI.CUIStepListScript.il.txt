@@ -1,0 +1,1825 @@
+// TYPE Assets.Scripts.UI.CUIStepListScript  base=Assets.Scripts.UI.CUIListScript  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.UI.enReduceType m_rateReduceType
+  FIELD System.Single m_reductionRate
+  FIELD System.Single m_baseReduceRate
+  FIELD System.Single m_linearReduceRate
+  FIELD System.Single m_minSpeedToFixScroll
+  FIELD System.Single m_fixScrollTime
+  FIELD Assets.Scripts.UI.enUIEventID m_onStartDraggingEventID
+  FIELD Assets.Scripts.UI.stUIEventParams m_onStartDraggingEventParams
+  FIELD System.Single m_contentExtendSize
+  FIELD System.Single m_stepListCenter
+  FIELD System.Single m_selectAreaMin
+  FIELD System.Single m_selectAreaMax
+  FIELD System.Single m_scrollRectLastScrollSpeed
+  FIELD System.Boolean m_scrollRectIsDragged
+  FIELD System.Boolean m_fixingScroll
+  FIELD System.Single m_fixScrollSpeed
+  FIELD System.Single m_contentFixScrollTargetPosition
+  FIELD System.Boolean m_bDontUpdate
+  FIELD System.Boolean m_enableOverlapping
+  FIELD System.Single m_OverlappingFixWeith
+  FIELD System.Collections.Generic.List`1<System.Int32> m_elementSiblingIndexes
+  FIELD System.Boolean m_needRefreshElementSiblingIndexes
+  FIELD ListView`1<Assets.Scripts.UI.CUIListElementScript> m_tempElementScripts
+  FIELD System.Single m_scaleFixValue
+  FIELD System.Int32 m_yOffset
+  FIELD System.Int32 m_baseReductionYOffset
+  FIELD System.Int32 m_linearReductionYOffset
+  FIELD System.Single m_yOffsetFixValue
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.r4 0.8
+   0006 stfld Assets.Scripts.UI.CUIStepListScript::m_reductionRate
+   000B ldarg.0 
+   000C ldc.r4 0.8
+   0011 stfld Assets.Scripts.UI.CUIStepListScript::m_baseReduceRate
+   0016 ldarg.0 
+   0017 ldc.r4 0.05
+   001C stfld Assets.Scripts.UI.CUIStepListScript::m_linearReduceRate
+   0021 ldarg.0 
+   0022 ldc.r4 50
+   0027 stfld Assets.Scripts.UI.CUIStepListScript::m_minSpeedToFixScroll
+   002C ldarg.0 
+   002D ldc.r4 0.3
+   0032 stfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollTime
+   0037 ldarg.0 
+   0038 ldc.r4 0.35
+   003D stfld Assets.Scripts.UI.CUIStepListScript::m_OverlappingFixWeith
+   0042 ldarg.0 
+   0043 call System.Void Assets.Scripts.UI.CUIListScript::.ctor()
+   0048 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_029b: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIListScript::m_listType
+   0011 ldc.i4.1 
+   0012 beq IL_0023: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIListScript::m_listType
+   001D ldc.i4.3 
+   001E bne.un IL_002f: ldarg.0
+   0023 ldarg.0 
+   0024 ldc.i4.1 
+   0025 stfld Assets.Scripts.UI.CUIListScript::m_listType
+   002A br IL_004d: ldarg.0
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIListScript::m_listType
+   0035 brfalse IL_0046: ldarg.0
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.UI.CUIListScript::m_listType
+   0040 ldc.i4.2 
+   0041 bne.un IL_004d: ldarg.0
+   0046 ldarg.0 
+   0047 ldc.i4.0 
+   0048 stfld Assets.Scripts.UI.CUIListScript::m_listType
+   004D ldarg.0 
+   004E call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0053 stfld Assets.Scripts.UI.CUIListScript::m_elementSpacing
+   0058 ldarg.0 
+   0059 ldc.r4 0
+   005E stfld Assets.Scripts.UI.CUIListScript::m_elementLayoutOffset
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0069 stloc.0 
+   006A ldarg.0 
+   006B ldc.i4.0 
+   006C stfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0071 ldarg.0 
+   0072 dup 
+   0073 ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0078 ldc.i4.3 
+   0079 or 
+   007A stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   007F ldarg.0 
+   0080 ldarg.1 
+   0081 call System.Void Assets.Scripts.UI.CUIListScript::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.UI.CUIListScript::m_elementTemplate
+   008C callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIListElementScript>()
+   0091 stloc.1 
+   0092 ldloc.1 
+   0093 ldnull 
+   0094 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0099 brfalse IL_00a5: ldarg.0
+   009E ldloc.1 
+   009F ldc.i4.0 
+   00A0 stfld Assets.Scripts.UI.CUIListElementScript::m_pivotType
+   00A5 ldarg.0 
+   00A6 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00AB brfalse IL_018b: ldarg.0
+   00B0 ldarg.0 
+   00B1 ldarg.0 
+   00B2 ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   00B7 ldfld UnityEngine.Vector2::x
+   00BC ldarg.0 
+   00BD ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00C2 ldfld UnityEngine.Vector2::x
+   00C7 sub 
+   00C8 ldc.r4 0.5
+   00CD mul 
+   00CE stfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   00D3 ldarg.0 
+   00D4 ldarg.0 
+   00D5 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   00DA ldarg.0 
+   00DB ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00E0 ldfld UnityEngine.Vector2::x
+   00E5 ldc.r4 0.5
+   00EA mul 
+   00EB add 
+   00EC stfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   00F1 ldarg.0 
+   00F2 ldarg.0 
+   00F3 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   00F8 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   00FD ldarg.0 
+   00FE ldarg.0 
+   00FF ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   0104 ldfld UnityEngine.Vector2::x
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   010F sub 
+   0110 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   011B brfalse IL_015c: ldarg.0
+   0120 ldarg.0 
+   0121 dup 
+   0122 ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   0127 ldarg.0 
+   0128 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   012D ldfld UnityEngine.Vector2::x
+   0132 ldc.r4 0.25
+   0137 mul 
+   0138 add 
+   0139 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   013E ldarg.0 
+   013F dup 
+   0140 ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   0145 ldarg.0 
+   0146 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   014B ldfld UnityEngine.Vector2::x
+   0150 ldc.r4 0.25
+   0155 mul 
+   0156 sub 
+   0157 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   015C ldarg.0 
+   015D ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0162 ldnull 
+   0163 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0168 brfalse IL_0186: br IL_0264
+   016D ldarg.0 
+   016E ldarg.0 
+   016F ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0174 callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   0179 stloc.2 
+   017A ldloca.s V_2
+   017C ldfld UnityEngine.Vector2::x
+   0181 stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectLastScrollSpeed
+   0186 br IL_0264: ldarg.0
+   018B ldarg.0 
+   018C ldarg.0 
+   018D ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   0192 ldfld UnityEngine.Vector2::y
+   0197 ldarg.0 
+   0198 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   019D ldfld UnityEngine.Vector2::y
+   01A2 sub 
+   01A3 ldc.r4 0.5
+   01A8 mul 
+   01A9 stfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   01AE ldarg.0 
+   01AF ldarg.0 
+   01B0 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   01B5 ldarg.0 
+   01B6 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   01BB ldfld UnityEngine.Vector2::y
+   01C0 ldc.r4 0.5
+   01C5 mul 
+   01C6 add 
+   01C7 neg 
+   01C8 stfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   01CD ldarg.0 
+   01CE ldarg.0 
+   01CF ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   01D4 ldfld UnityEngine.Vector2::x
+   01D9 ldarg.0 
+   01DA ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   01DF sub 
+   01E0 neg 
+   01E1 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   01E6 ldarg.0 
+   01E7 ldarg.0 
+   01E8 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   01ED neg 
+   01EE stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   01F3 ldarg.0 
+   01F4 ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   01F9 brfalse IL_023a: ldarg.0
+   01FE ldarg.0 
+   01FF dup 
+   0200 ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   0205 ldarg.0 
+   0206 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   020B ldfld UnityEngine.Vector2::y
+   0210 ldc.r4 0.25
+   0215 mul 
+   0216 add 
+   0217 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   021C ldarg.0 
+   021D dup 
+   021E ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   0223 ldarg.0 
+   0224 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0229 ldfld UnityEngine.Vector2::y
+   022E ldc.r4 0.25
+   0233 mul 
+   0234 sub 
+   0235 stfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   023A ldarg.0 
+   023B ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0240 ldnull 
+   0241 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0246 brfalse IL_0264: ldarg.0
+   024B ldarg.0 
+   024C ldarg.0 
+   024D ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0252 callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   0257 stloc.3 
+   0258 ldloca.s V_3
+   025A ldfld UnityEngine.Vector2::y
+   025F stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectLastScrollSpeed
+   0264 ldarg.0 
+   0265 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   026A brtrue IL_027a: ldarg.0
+   026F ldarg.0 
+   0270 newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::.ctor()
+   0275 stfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   027A ldarg.0 
+   027B ldloc.0 
+   027C call System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   0281 ldarg.0 
+   0282 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0287 ldc.i4.0 
+   0288 ble IL_0294: ldarg.0
+   028D ldarg.0 
+   028E ldc.i4.0 
+   028F call System.Void Assets.Scripts.UI.CUIStepListScript::SelectElementImmediately(System.Int32)
+   0294 ldarg.0 
+   0295 ldc.i4.1 
+   0296 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   029B ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_005d: ret
+   000B ldarg.0 
+   000C ldflda Assets.Scripts.UI.CUIStepListScript::m_onStartDraggingEventParams
+   0011 call System.Void Assets.Scripts.UI.stUIEventParams::Clear()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   001C brfalse IL_0033: ldarg.0
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0027 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   002C ldarg.0 
+   002D ldnull 
+   002E stfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0039 brfalse IL_0050: ldarg.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0044 callvirt System.Void ListViewBase::Clear()
+   0049 ldarg.0 
+   004A ldnull 
+   004B stfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0050 ldarg.0 
+   0051 call System.Void Assets.Scripts.UI.CUIListScript::UnInitialize()
+   0056 ldarg.0 
+   0057 ldc.i4.0 
+   0058 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   005D ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIListScript::OnDestroy()
+   000C ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.UI.CUIListScript::DetectScroll()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse IL_003b: ldarg.0
+   000D ldarg.0 
+   000E call System.Void Assets.Scripts.UI.CUIListScript::UpdateSGameGraphicRaycaster()
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUIListScript::m_useOptimized
+   0019 brfalse IL_003b: ldarg.0
+   001E ldarg.0 
+   001F call System.Boolean Assets.Scripts.UI.CUIListScript::UpdateOptimizeElementsScroll()
+   0024 brfalse IL_003b: ldarg.0
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   002F brfalse IL_003b: ldarg.0
+   0034 ldarg.0 
+   0035 ldc.i4.1 
+   0036 stfld Assets.Scripts.UI.CUIStepListScript::m_needRefreshElementSiblingIndexes
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   0041 brfalse IL_004c: ldarg.0
+   0046 ldarg.0 
+   0047 call System.Void Assets.Scripts.UI.CUIStepListScript::RefreshExistElementSiblingIndexes()
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.UI.CUIStepListScript::m_bDontUpdate
+   0052 brtrue IL_0068: ret
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   005D ldnull 
+   005E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0063 brfalse IL_0069: ldarg.0
+   0068 ret 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CUIStepListScript::m_fixingScroll
+   006F brfalse IL_01f8: ldarg.0
+   0074 ldarg.0 
+   0075 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   007A ldc.i4.0 
+   007B blt IL_01f8: ldarg.0
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   008C bge IL_01f8: ldarg.0
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0097 ldc.i4.0 
+   0098 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   009D ldarg.0 
+   009E call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00A3 brfalse IL_00c0: ldarg.0
+   00A8 ldarg.0 
+   00A9 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00AE callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00B3 stloc.2 
+   00B4 ldloca.s V_2
+   00B6 ldfld UnityEngine.Vector2::x
+   00BB br IL_00d3: ldarg.0
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00C6 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00CB stloc.3 
+   00CC ldloca.s V_3
+   00CE ldfld UnityEngine.Vector2::y
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   00D9 add 
+   00DA stloc.1 
+   00DB ldloc.1 
+   00DC ldarg.0 
+   00DD ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   00E2 ble.un IL_00f7: ldloc.1
+   00E7 ldarg.0 
+   00E8 ldfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   00ED ldc.r4 0
+   00F2 bgt IL_0113: ldarg.0
+   00F7 ldloc.1 
+   00F8 ldarg.0 
+   00F9 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   00FE bge.un IL_0199: ldarg.0
+   0103 ldarg.0 
+   0104 ldfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   0109 ldc.r4 0
+   010E bge.un IL_0199: ldarg.0
+   0113 ldarg.0 
+   0114 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0119 brfalse IL_014d: ldarg.0
+   011E ldarg.0 
+   011F ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0124 ldarg.0 
+   0125 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   012A ldarg.0 
+   012B ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0130 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0135 stloc.s V_4
+   0137 ldloca.s V_4
+   0139 ldfld UnityEngine.Vector2::y
+   013E newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0143 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0148 br IL_0177: ldarg.0
+   014D ldarg.0 
+   014E ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0153 ldarg.0 
+   0154 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0159 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   015E stloc.s V_5
+   0160 ldloca.s V_5
+   0162 ldfld UnityEngine.Vector2::x
+   0167 ldarg.0 
+   0168 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   016D newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0172 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0177 ldarg.0 
+   0178 ldc.r4 0
+   017D stfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   0182 ldarg.0 
+   0183 ldc.i4.0 
+   0184 stfld Assets.Scripts.UI.CUIStepListScript::m_fixingScroll
+   0189 ldarg.0 
+   018A ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   018F callvirt System.Void UnityEngine.UI.ScrollRect::StopMovement()
+   0194 br IL_01f3: br IL_0513
+   0199 ldarg.0 
+   019A call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   019F brfalse IL_01ce: ldarg.0
+   01A4 ldarg.0 
+   01A5 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   01AA ldloc.1 
+   01AB ldarg.0 
+   01AC ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   01B1 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   01B6 stloc.s V_6
+   01B8 ldloca.s V_6
+   01BA ldfld UnityEngine.Vector2::y
+   01BF newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   01C4 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   01C9 br IL_01f3: br IL_0513
+   01CE ldarg.0 
+   01CF ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   01D4 ldarg.0 
+   01D5 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   01DA callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   01DF stloc.s V_7
+   01E1 ldloca.s V_7
+   01E3 ldfld UnityEngine.Vector2::x
+   01E8 ldloc.1 
+   01E9 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   01EE callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   01F3 br IL_0513: ldloc.0
+   01F8 ldarg.0 
+   01F9 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   01FE ldc.i4.1 
+   01FF callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0204 ldarg.0 
+   0205 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   020A callvirt System.Type System.Object::GetType()
+   020F ldstr m_Dragging
+   0214 ldc.i4.s 36
+   0216 callvirt System.Reflection.FieldInfo System.Type::GetField(System.String,System.Reflection.BindingFlags)
+   021B stloc.s V_8
+   021D ldloc.s V_8
+   021F ldarg.0 
+   0220 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0225 callvirt System.Object System.Reflection.FieldInfo::GetValue(System.Object)
+   022A unbox.any System.Boolean
+   022F stloc.s V_9
+   0231 ldloc.s V_9
+   0233 brtrue IL_04b8: ldarg.0
+   0238 ldarg.0 
+   0239 ldfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   023E brfalse IL_03d4: ldarg.0
+   0243 ldarg.0 
+   0244 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0249 brfalse IL_0267: ldarg.0
+   024E ldarg.0 
+   024F ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0254 callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   0259 stloc.s V_11
+   025B ldloca.s V_11
+   025D ldfld UnityEngine.Vector2::x
+   0262 br IL_027b: call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0267 ldarg.0 
+   0268 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   026D callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   0272 stloc.s V_12
+   0274 ldloca.s V_12
+   0276 ldfld UnityEngine.Vector2::y
+   027B call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0280 stloc.s V_10
+   0282 ldc.i4.m1 
+   0283 stloc.s V_13
+   0285 ldarg.0 
+   0286 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   028B brfalse IL_02ae: ldarg.0
+   0290 ldarg.0 
+   0291 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0296 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   029B stloc.s V_14
+   029D ldloca.s V_14
+   029F ldfld UnityEngine.Vector2::x
+   02A4 ldc.r4 0
+   02A9 bgt IL_02d7: ldc.i4.0
+   02AE ldarg.0 
+   02AF call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   02B4 brtrue IL_02df: ldarg.0
+   02B9 ldarg.0 
+   02BA ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   02BF callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   02C4 stloc.s V_15
+   02C6 ldloca.s V_15
+   02C8 ldfld UnityEngine.Vector2::y
+   02CD ldc.r4 0
+   02D2 bge.un IL_02df: ldarg.0
+   02D7 ldc.i4.0 
+   02D8 stloc.s V_13
+   02DA br IL_03b7: ldloc.s V_13
+   02DF ldarg.0 
+   02E0 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   02E5 brfalse IL_031a: ldarg.0
+   02EA ldarg.0 
+   02EB ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   02F0 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   02F5 stloc.s V_16
+   02F7 ldloca.s V_16
+   02F9 ldfld UnityEngine.Vector2::x
+   02FE ldarg.0 
+   02FF ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0304 ldfld UnityEngine.Vector2::x
+   0309 add 
+   030A ldarg.0 
+   030B ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   0310 ldfld UnityEngine.Vector2::x
+   0315 blt IL_0355: ldarg.0
+   031A ldarg.0 
+   031B call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0320 brtrue IL_0364: ldloc.s V_10
+   0325 ldarg.0 
+   0326 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   032B callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0330 stloc.s V_17
+   0332 ldloca.s V_17
+   0334 ldfld UnityEngine.Vector2::y
+   0339 ldarg.0 
+   033A ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   033F ldfld UnityEngine.Vector2::y
+   0344 ldarg.0 
+   0345 ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   034A ldfld UnityEngine.Vector2::y
+   034F sub 
+   0350 ble.un IL_0364: ldloc.s V_10
+   0355 ldarg.0 
+   0356 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   035B ldc.i4.1 
+   035C sub 
+   035D stloc.s V_13
+   035F br IL_03b7: ldloc.s V_13
+   0364 ldloc.s V_10
+   0366 ldarg.0 
+   0367 ldfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectLastScrollSpeed
+   036C bgt.un IL_03b7: ldloc.s V_13
+   0371 ldloc.s V_10
+   0373 ldarg.0 
+   0374 ldfld Assets.Scripts.UI.CUIStepListScript::m_minSpeedToFixScroll
+   0379 bge.un IL_03b7: ldloc.s V_13
+   037E ldc.i4.0 
+   037F stloc.s V_18
+   0381 br IL_03aa: ldloc.s V_18
+   0386 ldloc.s V_13
+   0388 ldc.i4.0 
+   0389 bge IL_03a4: ldloc.s V_18
+   038E ldarg.0 
+   038F ldloc.s V_18
+   0391 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsElementInSelectedArea(System.Int32)
+   0396 brfalse IL_03a4: ldloc.s V_18
+   039B ldloc.s V_18
+   039D stloc.s V_13
+   039F br IL_03b7: ldloc.s V_13
+   03A4 ldloc.s V_18
+   03A6 ldc.i4.1 
+   03A7 add 
+   03A8 stloc.s V_18
+   03AA ldloc.s V_18
+   03AC ldarg.0 
+   03AD ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   03B2 blt IL_0386: ldloc.s V_13
+   03B7 ldloc.s V_13
+   03B9 ldc.i4.0 
+   03BA blt IL_03cf: br IL_04b3
+   03BF ldarg.0 
+   03C0 ldloc.s V_13
+   03C2 ldc.i4.1 
+   03C3 callvirt System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   03C8 ldarg.0 
+   03C9 ldc.i4.0 
+   03CA stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   03CF br IL_04b3: br IL_04d0
+   03D4 ldarg.0 
+   03D5 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   03DA ldc.i4.0 
+   03DB blt IL_04b3: br IL_04d0
+   03E0 ldarg.0 
+   03E1 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   03E6 ldarg.0 
+   03E7 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   03EC bge IL_04b3: br IL_04d0
+   03F1 ldarg.0 
+   03F2 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   03F7 brfalse IL_0420: ldarg.0
+   03FC ldarg.0 
+   03FD ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0402 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0407 stloc.s V_19
+   0409 ldloca.s V_19
+   040B ldfld UnityEngine.Vector2::x
+   0410 ldarg.0 
+   0411 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0416 call System.Boolean Assets.Scripts.UI.CUIUtility::Approximately(System.Single,System.Single)
+   041B brfalse IL_044f: ldarg.0
+   0420 ldarg.0 
+   0421 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0426 brtrue IL_04b3: br IL_04d0
+   042B ldarg.0 
+   042C ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0431 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0436 stloc.s V_20
+   0438 ldloca.s V_20
+   043A ldfld UnityEngine.Vector2::y
+   043F ldarg.0 
+   0440 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0445 call System.Boolean Assets.Scripts.UI.CUIUtility::Approximately(System.Single,System.Single)
+   044A brtrue IL_04b3: br IL_04d0
+   044F ldarg.0 
+   0450 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0455 brfalse IL_0489: ldarg.0
+   045A ldarg.0 
+   045B ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0460 ldarg.0 
+   0461 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0466 ldarg.0 
+   0467 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   046C callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0471 stloc.s V_21
+   0473 ldloca.s V_21
+   0475 ldfld UnityEngine.Vector2::y
+   047A newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   047F callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0484 br IL_04b3: br IL_04d0
+   0489 ldarg.0 
+   048A ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   048F ldarg.0 
+   0490 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0495 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   049A stloc.s V_22
+   049C ldloca.s V_22
+   049E ldfld UnityEngine.Vector2::x
+   04A3 ldarg.0 
+   04A4 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   04A9 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   04AE callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   04B3 br IL_04d0: ldarg.0
+   04B8 ldarg.0 
+   04B9 ldfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   04BE brtrue IL_04c9: ldarg.0
+   04C3 ldarg.0 
+   04C4 call System.Void Assets.Scripts.UI.CUIStepListScript::DispatchOnStartDraggingEvent()
+   04C9 ldarg.0 
+   04CA ldc.i4.1 
+   04CB stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   04D0 ldarg.0 
+   04D1 ldarg.0 
+   04D2 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   04D7 brfalse IL_04f5: ldarg.0
+   04DC ldarg.0 
+   04DD ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   04E2 callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   04E7 stloc.s V_23
+   04E9 ldloca.s V_23
+   04EB ldfld UnityEngine.Vector2::x
+   04F0 br IL_0509: call System.Single UnityEngine.Mathf::Abs(System.Single)
+   04F5 ldarg.0 
+   04F6 ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   04FB callvirt UnityEngine.Vector2 UnityEngine.UI.ScrollRect::get_velocity()
+   0500 stloc.s V_24
+   0502 ldloca.s V_24
+   0504 ldfld UnityEngine.Vector2::y
+   0509 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   050E stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectLastScrollSpeed
+   0513 ldloc.0 
+   0514 brfalse IL_051f: ret
+   0519 ldarg.0 
+   051A call System.Void Assets.Scripts.UI.CUIListScript::DispatchScrollChangedEvent()
+   051F ret 
+== System.Void CustomLateUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIStepListScript::m_bDontUpdate
+   0006 brtrue IL_001c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   001C ret 
+   001D call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   0022 stloc.0 
+   0023 ldc.r4 0
+   0028 stloc.1 
+   0029 ldc.i4.0 
+   002A stloc.2 
+   002B br IL_0140: ldloc.2
+   0030 ldarg.0 
+   0031 ldloc.2 
+   0032 call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   0037 stloc.3 
+   0038 ldloc.3 
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003F brfalse IL_013c: ldloc.2
+   0044 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   0049 ldarg.0 
+   004A ldloc.2 
+   004B call System.Single Assets.Scripts.UI.CUIStepListScript::GetElementScale(System.Int32)
+   0050 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0055 stloc.0 
+   0056 ldloc.3 
+   0057 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   005C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0061 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0066 ldloc.0 
+   0067 call System.Boolean UnityEngine.Vector3::op_Inequality(UnityEngine.Vector3,UnityEngine.Vector3)
+   006C brfalse IL_00b2: ldarg.0
+   0071 ldloc.3 
+   0072 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0077 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007C callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localScale()
+   0081 stloc.s V_4
+   0083 ldloca.s V_4
+   0085 ldfld UnityEngine.Vector3::x
+   008A ldloca.s V_0
+   008C ldfld UnityEngine.Vector3::x
+   0091 sub 
+   0092 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0097 ldsfld Assets.Scripts.UI.CUIStepListScript::m_scaleFixValue
+   009C ble.un IL_00b2: ldarg.0
+   00A1 ldloc.3 
+   00A2 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00A7 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00AC ldloc.0 
+   00AD callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReductionYOffset
+   00B8 brtrue IL_00d3: ldarg.0
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.UI.CUIStepListScript::m_linearReductionYOffset
+   00C3 brtrue IL_00d3: ldarg.0
+   00C8 ldarg.0 
+   00C9 ldfld Assets.Scripts.UI.CUIStepListScript::m_yOffset
+   00CE brfalse IL_013c: ldloc.2
+   00D3 ldarg.0 
+   00D4 ldloc.2 
+   00D5 call System.Single Assets.Scripts.UI.CUIStepListScript::GetElementAnchoredPositionY(System.Int32)
+   00DA stloc.1 
+   00DB ldloc.3 
+   00DC callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00E1 castclass UnityEngine.RectTransform
+   00E6 stloc.s V_5
+   00E8 ldloc.s V_5
+   00EA callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00EF stloc.s V_6
+   00F1 ldloca.s V_6
+   00F3 ldfld UnityEngine.Vector2::y
+   00F8 ldloc.1 
+   00F9 beq IL_013c: ldloc.2
+   00FE ldloc.s V_5
+   0100 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0105 stloc.s V_7
+   0107 ldloca.s V_7
+   0109 ldfld UnityEngine.Vector2::y
+   010E ldloc.1 
+   010F sub 
+   0110 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   0115 ldsfld Assets.Scripts.UI.CUIStepListScript::m_yOffsetFixValue
+   011A ble.un IL_013c: ldloc.2
+   011F ldloc.s V_5
+   0121 ldloc.s V_5
+   0123 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0128 stloc.s V_8
+   012A ldloca.s V_8
+   012C ldfld UnityEngine.Vector2::x
+   0131 ldloc.1 
+   0132 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0137 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   013C ldloc.2 
+   013D ldc.i4.1 
+   013E add 
+   013F stloc.2 
+   0140 ldloc.2 
+   0141 ldarg.0 
+   0142 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0147 blt IL_0030: ldarg.0
+   014C ret 
+== System.Void SelectElementImmediately(System.Int32 index) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldc.i4.1 
+   0003 call System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   0008 ldarg.1 
+   0009 ldc.i4.0 
+   000A blt IL_001b: ret
+   000F ldarg.1 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0016 blt IL_001c: ldarg.0
+   001B ret 
+   001C ldarg.0 
+   001D ldarg.0 
+   001E ldarg.1 
+   001F call System.Single Assets.Scripts.UI.CUIStepListScript::GetContentTargetPosition(System.Int32)
+   0024 stfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0029 ldarg.0 
+   002A call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   002F brfalse IL_0080: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   003A callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   003F stloc.0 
+   0040 ldloca.s V_0
+   0042 ldfld UnityEngine.Vector2::x
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   004D beq IL_007b: br IL_00c7
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0064 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0069 stloc.1 
+   006A ldloca.s V_1
+   006C ldfld UnityEngine.Vector2::y
+   0071 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0076 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   007B br IL_00c7: ldarg.0
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0086 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   008B stloc.2 
+   008C ldloca.s V_2
+   008E ldfld UnityEngine.Vector2::y
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0099 beq IL_00c7: ldarg.0
+   009E ldarg.0 
+   009F ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00AA callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00AF stloc.3 
+   00B0 ldloca.s V_3
+   00B2 ldfld UnityEngine.Vector2::x
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   00BD newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00C2 callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   00C7 ldarg.0 
+   00C8 ldc.i4.0 
+   00C9 stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   00CE ldarg.0 
+   00CF ldc.i4.0 
+   00D0 stfld Assets.Scripts.UI.CUIStepListScript::m_fixingScroll
+   00D5 ldarg.0 
+   00D6 ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   00DB brfalse IL_00e6: ret
+   00E0 ldarg.0 
+   00E1 call System.Void Assets.Scripts.UI.CUIStepListScript::CalculateElementSiblingIndexes()
+   00E6 ret 
+== System.Void SelectElement(System.Int32 index, System.Boolean isDispatchSelectedChangeEvent) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 call System.Void Assets.Scripts.UI.CUIListScript::SelectElement(System.Int32,System.Boolean)
+   0008 ldarg.1 
+   0009 ldc.i4.0 
+   000A blt IL_001b: ret
+   000F ldarg.1 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0016 blt IL_001c: ldarg.0
+   001B ret 
+   001C ldarg.0 
+   001D ldarg.0 
+   001E ldarg.1 
+   001F call System.Single Assets.Scripts.UI.CUIStepListScript::GetContentTargetPosition(System.Int32)
+   0024 stfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0029 ldarg.0 
+   002A call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   002F brfalse IL_0052: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   003A callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   003F stloc.0 
+   0040 ldloca.s V_0
+   0042 ldfld UnityEngine.Vector2::x
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   004D bne.un IL_007b: ldarg.0
+   0052 ldarg.0 
+   0053 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0058 brtrue IL_0175: ldarg.0
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0063 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0068 stloc.1 
+   0069 ldloca.s V_1
+   006B ldfld UnityEngine.Vector2::y
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0076 beq IL_0175: ldarg.0
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0081 ldnull 
+   0082 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0087 brfalse IL_0097: ldarg.0
+   008C ldarg.0 
+   008D ldfld Assets.Scripts.UI.CUIListScript::m_scrollRect
+   0092 callvirt System.Void UnityEngine.UI.ScrollRect::StopMovement()
+   0097 ldarg.0 
+   0098 ldarg.0 
+   0099 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   009E ldarg.0 
+   009F call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00A4 brfalse IL_00c1: ldarg.0
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00AF callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00B4 stloc.2 
+   00B5 ldloca.s V_2
+   00B7 ldfld UnityEngine.Vector2::x
+   00BC br IL_00d4: sub
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00C7 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   00CC stloc.3 
+   00CD ldloca.s V_3
+   00CF ldfld UnityEngine.Vector2::y
+   00D4 sub 
+   00D5 ldarg.0 
+   00D6 ldfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollTime
+   00DB ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   00E0 conv.r4 
+   00E1 mul 
+   00E2 conv.r4 
+   00E3 div 
+   00E4 stfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.UI.CUIStepListScript::m_fixScrollSpeed
+   00EF call System.Single UnityEngine.Mathf::Abs(System.Single)
+   00F4 ldc.r4 0.001
+   00F9 bge.un IL_0167: ldarg.0
+   00FE ldarg.0 
+   00FF call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0104 brfalse IL_0138: ldarg.0
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   010F ldarg.0 
+   0110 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   011B callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0120 stloc.s V_4
+   0122 ldloca.s V_4
+   0124 ldfld UnityEngine.Vector2::y
+   0129 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   012E callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0133 br IL_0162: br IL_016e
+   0138 ldarg.0 
+   0139 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   013E ldarg.0 
+   013F ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0144 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0149 stloc.s V_5
+   014B ldloca.s V_5
+   014D ldfld UnityEngine.Vector2::x
+   0152 ldarg.0 
+   0153 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentFixScrollTargetPosition
+   0158 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   015D callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   0162 br IL_016e: ldarg.0
+   0167 ldarg.0 
+   0168 ldc.i4.1 
+   0169 stfld Assets.Scripts.UI.CUIStepListScript::m_fixingScroll
+   016E ldarg.0 
+   016F ldc.i4.0 
+   0170 stfld Assets.Scripts.UI.CUIStepListScript::m_scrollRectIsDragged
+   0175 ldarg.0 
+   0176 ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   017B brfalse IL_0186: ret
+   0180 ldarg.0 
+   0181 call System.Void Assets.Scripts.UI.CUIStepListScript::CalculateElementSiblingIndexes()
+   0186 ret 
+== System.Void SetDontUpdate(System.Boolean bDontUpdate) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.UI.CUIStepListScript::m_bDontUpdate
+   0007 ret 
+== System.Void ProcessElements() attrs=Family, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0006 stfld Assets.Scripts.UI.CUIListScript::m_contentSize
+   000B call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0010 stloc.0 
+   0011 ldarg.0 
+   0012 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0017 brfalse IL_004d: ldarg.0
+   001C ldarg.0 
+   001D ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0022 dup 
+   0023 ldfld UnityEngine.Vector2::x
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   002E add 
+   002F stfld UnityEngine.Vector2::x
+   0034 ldloca.s V_0
+   0036 dup 
+   0037 ldfld UnityEngine.Vector2::x
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   0042 add 
+   0043 stfld UnityEngine.Vector2::x
+   0048 br IL_0079: ldc.i4.0
+   004D ldarg.0 
+   004E ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0053 dup 
+   0054 ldfld UnityEngine.Vector2::y
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   005F add 
+   0060 stfld UnityEngine.Vector2::y
+   0065 ldloca.s V_0
+   0067 dup 
+   0068 ldfld UnityEngine.Vector2::y
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   0073 sub 
+   0074 stfld UnityEngine.Vector2::y
+   0079 ldc.i4.0 
+   007A stloc.1 
+   007B br IL_0140: ldloc.1
+   0080 ldarg.0 
+   0081 ldloc.1 
+   0082 ldarg.0 
+   0083 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0088 ldloca.s V_0
+   008A call Assets.Scripts.UI.stRect Assets.Scripts.UI.CUIListScript::LayoutElement(System.Int32,UnityEngine.Vector2&,UnityEngine.Vector2&)
+   008F stloc.2 
+   0090 ldloc.1 
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0097 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Count()
+   009C bge IL_00b3: ldarg.0
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   00A7 ldloc.1 
+   00A8 ldloc.2 
+   00A9 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::set_Item(System.Int32,!0)
+   00AE br IL_00bf: ldarg.0
+   00B3 ldarg.0 
+   00B4 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   00B9 ldloc.2 
+   00BA callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::Add(!0)
+   00BF ldarg.0 
+   00C0 ldfld Assets.Scripts.UI.CUIListScript::m_useOptimized
+   00C5 brfalse IL_00d7: ldarg.0
+   00CA ldarg.0 
+   00CB ldloca.s V_2
+   00CD call System.Boolean Assets.Scripts.UI.CUIListScript::IsRectInScrollArea(Assets.Scripts.UI.stRect&)
+   00D2 brfalse IL_00e1: ldarg.0
+   00D7 ldarg.0 
+   00D8 ldloc.1 
+   00D9 ldloca.s V_2
+   00DB call Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::CreateElement(System.Int32,Assets.Scripts.UI.stRect&)
+   00E0 stloc.3 
+   00E1 ldarg.0 
+   00E2 ldfld Assets.Scripts.UI.CUIStepListScript::m_enableOverlapping
+   00E7 brfalse IL_013c: ldloc.1
+   00EC ldarg.0 
+   00ED call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00F2 brfalse IL_011c: ldloca.s V_0
+   00F7 ldloca.s V_0
+   00F9 dup 
+   00FA ldfld UnityEngine.Vector2::x
+   00FF ldarg.0 
+   0100 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0105 ldfld UnityEngine.Vector2::x
+   010A ldarg.0 
+   010B ldfld Assets.Scripts.UI.CUIStepListScript::m_OverlappingFixWeith
+   0110 mul 
+   0111 sub 
+   0112 stfld UnityEngine.Vector2::x
+   0117 br IL_013c: ldloc.1
+   011C ldloca.s V_0
+   011E dup 
+   011F ldfld UnityEngine.Vector2::y
+   0124 ldarg.0 
+   0125 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   012A ldfld UnityEngine.Vector2::y
+   012F ldarg.0 
+   0130 ldfld Assets.Scripts.UI.CUIStepListScript::m_OverlappingFixWeith
+   0135 mul 
+   0136 add 
+   0137 stfld UnityEngine.Vector2::y
+   013C ldloc.1 
+   013D ldc.i4.1 
+   013E add 
+   013F stloc.1 
+   0140 ldloc.1 
+   0141 ldarg.0 
+   0142 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0147 blt IL_0080: ldarg.0
+   014C ldarg.0 
+   014D call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0152 brfalse IL_0174: ldarg.0
+   0157 ldarg.0 
+   0158 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   015D dup 
+   015E ldfld UnityEngine.Vector2::x
+   0163 ldarg.0 
+   0164 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   0169 add 
+   016A stfld UnityEngine.Vector2::x
+   016F br IL_018c: ldarg.0
+   0174 ldarg.0 
+   0175 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   017A dup 
+   017B ldfld UnityEngine.Vector2::y
+   0180 ldarg.0 
+   0181 ldfld Assets.Scripts.UI.CUIStepListScript::m_contentExtendSize
+   0186 add 
+   0187 stfld UnityEngine.Vector2::y
+   018C ldarg.0 
+   018D ldarg.0 
+   018E ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0193 ldc.i4.0 
+   0194 callvirt System.Void Assets.Scripts.UI.CUIListScript::ResizeContent(UnityEngine.Vector2&,System.Boolean)
+   0199 ret 
+== System.Void ResizeContent(UnityEngine.Vector2& size, System.Boolean resetPosition) attrs=Family, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00e3: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0017 ldarg.1 
+   0018 ldobj UnityEngine.Vector2
+   001D callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0028 ldarg.0 
+   0029 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   002E brfalse IL_0047: ldc.r4 0.5
+   0033 ldc.r4 0
+   0038 ldc.r4 0.5
+   003D newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0042 br IL_0056: callvirt System.Void UnityEngine.RectTransform::set_pivot(UnityEngine.Vector2)
+   0047 ldc.r4 0.5
+   004C ldc.r4 1
+   0051 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0056 callvirt System.Void UnityEngine.RectTransform::set_pivot(UnityEngine.Vector2)
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   0061 ldarg.0 
+   0062 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0067 brfalse IL_0080: ldc.r4 0.5
+   006C ldc.r4 0
+   0071 ldc.r4 0.5
+   0076 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   007B br IL_008f: callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   0080 ldc.r4 0.5
+   0085 ldc.r4 1
+   008A newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   008F callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   009A ldarg.0 
+   009B call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00A0 brfalse IL_00b9: ldc.r4 0.5
+   00A5 ldc.r4 0
+   00AA ldc.r4 0.5
+   00AF newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00B4 br IL_00c8: callvirt System.Void UnityEngine.RectTransform::set_anchorMax(UnityEngine.Vector2)
+   00B9 ldc.r4 0.5
+   00BE ldc.r4 1
+   00C3 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00C8 callvirt System.Void UnityEngine.RectTransform::set_anchorMax(UnityEngine.Vector2)
+   00CD ldarg.2 
+   00CE brfalse IL_00e3: ret
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   00D9 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   00DE callvirt System.Void UnityEngine.RectTransform::set_anchoredPosition(UnityEngine.Vector2)
+   00E3 ret 
+== System.Boolean IsElementInSelectedArea(System.Int32 index) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0006 brfalse IL_003d: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0011 ldarg.1 
+   0012 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   0017 stloc.1 
+   0018 ldloca.s V_1
+   001A ldflda Assets.Scripts.UI.stRect::m_center
+   001F ldfld UnityEngine.Vector2::x
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   002A callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   002F stloc.2 
+   0030 ldloca.s V_2
+   0032 ldfld UnityEngine.Vector2::x
+   0037 add 
+   0038 br IL_006b: stloc.0
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0043 ldarg.1 
+   0044 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   0049 stloc.3 
+   004A ldloca.s V_3
+   004C ldflda Assets.Scripts.UI.stRect::m_center
+   0051 ldfld UnityEngine.Vector2::y
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   005C callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0061 stloc.s V_4
+   0063 ldloca.s V_4
+   0065 ldfld UnityEngine.Vector2::y
+   006A add 
+   006B stloc.0 
+   006C ldloc.0 
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMin
+   0073 ble.un IL_0083: ldc.i4.0
+   0078 ldloc.0 
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.UI.CUIStepListScript::m_selectAreaMax
+   007F clt 
+   0081 br.s IL_0084: ret
+   0083 ldc.i4.0 
+   0084 ret 
+== System.Single GetElementScale(System.Int32 index) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0006 brfalse IL_003d: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0011 ldarg.1 
+   0012 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   0017 stloc.1 
+   0018 ldloca.s V_1
+   001A ldflda Assets.Scripts.UI.stRect::m_center
+   001F ldfld UnityEngine.Vector2::x
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   002A callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   002F stloc.2 
+   0030 ldloca.s V_2
+   0032 ldfld UnityEngine.Vector2::x
+   0037 add 
+   0038 br IL_006b: conv.i4
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0043 ldarg.1 
+   0044 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   0049 stloc.3 
+   004A ldloca.s V_3
+   004C ldflda Assets.Scripts.UI.stRect::m_center
+   0051 ldfld UnityEngine.Vector2::y
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   005C callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0061 stloc.s V_4
+   0063 ldloca.s V_4
+   0065 ldfld UnityEngine.Vector2::y
+   006A add 
+   006B conv.i4 
+   006C stloc.0 
+   006D ldloc.0 
+   006E conv.r4 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   0075 sub 
+   0076 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   007B conv.i4 
+   007C stloc.s V_5
+   007E ldloc.s V_5
+   0080 ldarg.0 
+   0081 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0086 brfalse IL_009b: ldarg.0
+   008B ldarg.0 
+   008C ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0091 ldfld UnityEngine.Vector2::x
+   0096 br IL_00a6: conv.i4
+   009B ldarg.0 
+   009C ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00A1 ldfld UnityEngine.Vector2::y
+   00A6 conv.i4 
+   00A7 div 
+   00A8 stloc.s V_6
+   00AA ldloc.s V_5
+   00AC ldarg.0 
+   00AD call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   00B2 brfalse IL_00c7: ldarg.0
+   00B7 ldarg.0 
+   00B8 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00BD ldfld UnityEngine.Vector2::x
+   00C2 br IL_00d2: conv.i4
+   00C7 ldarg.0 
+   00C8 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00CD ldfld UnityEngine.Vector2::y
+   00D2 conv.i4 
+   00D3 rem 
+   00D4 stloc.s V_7
+   00D6 ldc.r4 0
+   00DB stloc.s V_8
+   00DD ldc.r4 0
+   00E2 stloc.s V_9
+   00E4 ldarg.0 
+   00E5 ldfld Assets.Scripts.UI.CUIStepListScript::m_rateReduceType
+   00EA brtrue IL_0116: ldarg.0
+   00EF ldarg.0 
+   00F0 ldfld Assets.Scripts.UI.CUIStepListScript::m_reductionRate
+   00F5 ldloc.s V_6
+   00F7 conv.r4 
+   00F8 call System.Single UnityEngine.Mathf::Pow(System.Single,System.Single)
+   00FD stloc.s V_8
+   00FF ldarg.0 
+   0100 ldfld Assets.Scripts.UI.CUIStepListScript::m_reductionRate
+   0105 ldloc.s V_6
+   0107 ldc.i4.1 
+   0108 add 
+   0109 conv.r4 
+   010A call System.Single UnityEngine.Mathf::Pow(System.Single,System.Single)
+   010F stloc.s V_9
+   0111 br IL_0166: ldloc.s V_8
+   0116 ldarg.0 
+   0117 ldfld Assets.Scripts.UI.CUIStepListScript::m_rateReduceType
+   011C ldc.i4.1 
+   011D bne.un IL_0166: ldloc.s V_8
+   0122 ldloc.s V_6
+   0124 ldc.i4.1 
+   0125 blt IL_0157: ldc.r4 1
+   012A ldarg.0 
+   012B ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReduceRate
+   0130 ldloc.s V_6
+   0132 ldc.i4.1 
+   0133 sub 
+   0134 conv.r4 
+   0135 ldarg.0 
+   0136 ldfld Assets.Scripts.UI.CUIStepListScript::m_linearReduceRate
+   013B mul 
+   013C add 
+   013D stloc.s V_8
+   013F ldarg.0 
+   0140 ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReduceRate
+   0145 ldloc.s V_6
+   0147 conv.r4 
+   0148 ldarg.0 
+   0149 ldfld Assets.Scripts.UI.CUIStepListScript::m_linearReduceRate
+   014E mul 
+   014F add 
+   0150 stloc.s V_9
+   0152 br IL_0166: ldloc.s V_8
+   0157 ldc.r4 1
+   015C stloc.s V_8
+   015E ldarg.0 
+   015F ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReduceRate
+   0164 stloc.s V_9
+   0166 ldloc.s V_8
+   0168 ldloc.s V_8
+   016A ldloc.s V_9
+   016C sub 
+   016D ldloc.s V_7
+   016F conv.r4 
+   0170 ldarg.0 
+   0171 call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   0176 brfalse IL_018b: ldarg.0
+   017B ldarg.0 
+   017C ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0181 ldfld UnityEngine.Vector2::x
+   0186 br IL_0196: div
+   018B ldarg.0 
+   018C ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0191 ldfld UnityEngine.Vector2::y
+   0196 div 
+   0197 mul 
+   0198 sub 
+   0199 stloc.s V_10
+   019B ldloc.s V_10
+   019D ret 
+== System.Single GetElementAnchoredPositionY(System.Int32 index) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0006 ldarg.1 
+   0007 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   000C stloc.1 
+   000D ldloca.s V_1
+   000F ldflda Assets.Scripts.UI.stRect::m_center
+   0014 ldfld UnityEngine.Vector2::x
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.UI.CUIListScript::m_contentRectTransform
+   001F callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_anchoredPosition()
+   0024 stloc.2 
+   0025 ldloca.s V_2
+   0027 ldfld UnityEngine.Vector2::x
+   002C add 
+   002D conv.i4 
+   002E stloc.0 
+   002F ldloc.0 
+   0030 conv.r4 
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   0037 sub 
+   0038 call System.Single UnityEngine.Mathf::Abs(System.Single)
+   003D conv.i4 
+   003E stloc.3 
+   003F ldloc.3 
+   0040 ldarg.0 
+   0041 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0046 ldfld UnityEngine.Vector2::x
+   004B conv.i4 
+   004C div 
+   004D stloc.s V_4
+   004F ldloc.3 
+   0050 ldarg.0 
+   0051 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   0056 ldfld UnityEngine.Vector2::x
+   005B conv.i4 
+   005C rem 
+   005D stloc.s V_5
+   005F ldc.r4 0
+   0064 stloc.s V_6
+   0066 ldc.r4 0
+   006B stloc.s V_7
+   006D ldloc.s V_4
+   006F ldc.i4.1 
+   0070 blt IL_00a2: ldc.r4 0
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReductionYOffset
+   007B ldloc.s V_4
+   007D ldc.i4.1 
+   007E sub 
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.UI.CUIStepListScript::m_linearReductionYOffset
+   0085 mul 
+   0086 add 
+   0087 conv.r4 
+   0088 stloc.s V_6
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReductionYOffset
+   0090 ldloc.s V_4
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.UI.CUIStepListScript::m_linearReductionYOffset
+   0098 mul 
+   0099 add 
+   009A conv.r4 
+   009B stloc.s V_7
+   009D br IL_00b2: ldarg.0
+   00A2 ldc.r4 0
+   00A7 stloc.s V_6
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.UI.CUIStepListScript::m_baseReductionYOffset
+   00AF conv.r4 
+   00B0 stloc.s V_7
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.UI.CUIStepListScript::m_yOffset
+   00B8 conv.r4 
+   00B9 ldloc.s V_6
+   00BB ldloc.s V_6
+   00BD ldloc.s V_7
+   00BF sub 
+   00C0 ldloc.s V_5
+   00C2 conv.r4 
+   00C3 ldarg.0 
+   00C4 ldflda Assets.Scripts.UI.CUIListScript::m_elementDefaultSize
+   00C9 ldfld UnityEngine.Vector2::x
+   00CE div 
+   00CF mul 
+   00D0 sub 
+   00D1 add 
+   00D2 stloc.s V_8
+   00D4 ldloc.s V_8
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   00DC ldarg.1 
+   00DD callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   00E2 stloc.s V_10
+   00E4 ldloca.s V_10
+   00E6 ldflda Assets.Scripts.UI.stRect::m_center
+   00EB ldfld UnityEngine.Vector2::y
+   00F0 add 
+   00F1 stloc.s V_9
+   00F3 ldloc.s V_9
+   00F5 ret 
+== System.Single GetContentTargetPosition(System.Int32 selectedIndex) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0013: ldc.r4 0
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   000E blt IL_0019: ldarg.0
+   0013 ldc.r4 0
+   0018 ret 
+   0019 ldarg.0 
+   001A call System.Boolean Assets.Scripts.UI.CUIStepListScript::IsHorizontal()
+   001F brfalse IL_0092: ldarg.0
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   0030 ldarg.1 
+   0031 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   0036 stloc.1 
+   0037 ldloca.s V_1
+   0039 ldflda Assets.Scripts.UI.stRect::m_center
+   003E ldfld UnityEngine.Vector2::x
+   0043 sub 
+   0044 stloc.0 
+   0045 ldloc.0 
+   0046 ldc.r4 0
+   004B ble.un IL_005b: ldloc.0
+   0050 ldc.r4 0
+   0055 stloc.0 
+   0056 br IL_0090: ldloc.0
+   005B ldloc.0 
+   005C ldarg.0 
+   005D ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   0062 ldfld UnityEngine.Vector2::x
+   0067 ldarg.0 
+   0068 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   006D ldfld UnityEngine.Vector2::x
+   0072 sub 
+   0073 bge.un IL_0090: ldloc.0
+   0078 ldarg.0 
+   0079 ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   007E ldfld UnityEngine.Vector2::x
+   0083 ldarg.0 
+   0084 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   0089 ldfld UnityEngine.Vector2::x
+   008E sub 
+   008F stloc.0 
+   0090 ldloc.0 
+   0091 ret 
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.UI.CUIStepListScript::m_stepListCenter
+   0098 ldarg.0 
+   0099 ldfld Assets.Scripts.UI.CUIListScript::m_elementsRect
+   009E ldarg.1 
+   009F callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.UI.stRect>::get_Item(System.Int32)
+   00A4 stloc.3 
+   00A5 ldloca.s V_3
+   00A7 ldflda Assets.Scripts.UI.stRect::m_center
+   00AC ldfld UnityEngine.Vector2::y
+   00B1 sub 
+   00B2 stloc.2 
+   00B3 ldloc.2 
+   00B4 ldc.r4 0
+   00B9 bge.un IL_00c9: ldloc.2
+   00BE ldc.r4 0
+   00C3 stloc.2 
+   00C4 br IL_00fe: ldloc.2
+   00C9 ldloc.2 
+   00CA ldarg.0 
+   00CB ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   00D0 ldfld UnityEngine.Vector2::y
+   00D5 ldarg.0 
+   00D6 ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   00DB ldfld UnityEngine.Vector2::y
+   00E0 sub 
+   00E1 ble.un IL_00fe: ldloc.2
+   00E6 ldarg.0 
+   00E7 ldflda Assets.Scripts.UI.CUIListScript::m_contentSize
+   00EC ldfld UnityEngine.Vector2::y
+   00F1 ldarg.0 
+   00F2 ldflda Assets.Scripts.UI.CUIListScript::m_scrollAreaSize
+   00F7 ldfld UnityEngine.Vector2::y
+   00FC sub 
+   00FD stloc.2 
+   00FE ldloc.2 
+   00FF ret 
+== System.Void DispatchOnStartDraggingEvent() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIStepListScript::m_onStartDraggingEventID
+   0006 brfalse IL_0073: ret
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0010 callvirt Assets.Scripts.UI.CUIEvent Assets.Scripts.UI.CUIEventManager::GetUIEvent()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIStepListScript::m_onStartDraggingEventID
+   001D stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0022 ldloc.0 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUIStepListScript::m_onStartDraggingEventParams
+   0029 stfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   002E ldloc.0 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0035 stfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   003A ldloc.0 
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.UI.CUIComponent::m_belongedListScript
+   0041 stfld Assets.Scripts.UI.CUIEvent::m_srcWidgetBelongedListScript
+   0046 ldloc.0 
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIComponent::m_indexInlist
+   004D callvirt System.Void Assets.Scripts.UI.CUIEvent::set_m_srcWidgetIndexInBelongedList(System.Int32)
+   0052 ldloc.0 
+   0053 ldarg.0 
+   0054 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0059 stfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   005E ldloc.0 
+   005F ldarg.0 
+   0060 stfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0065 ldloc.0 
+   0066 ldnull 
+   0067 stfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   006C ldarg.0 
+   006D ldloc.0 
+   006E call System.Void Assets.Scripts.UI.CUIComponent::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   0073 ret 
+== System.Void CalculateElementSiblingIndexes() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0006 ldc.i4.0 
+   0007 ble IL_0029: ret
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   0012 ldc.i4.0 
+   0013 blt IL_0029: ret
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0024 blt IL_002a: ldarg.0
+   0029 ret 
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0030 brtrue IL_0046: ldc.i4.0
+   0035 ldarg.0 
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   003C newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor(System.Int32)
+   0041 stfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0046 ldc.i4.0 
+   0047 stloc.0 
+   0048 ldc.i4.0 
+   0049 stloc.1 
+   004A br IL_00c9: ldloc.1
+   004F ldloc.1 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   0056 bge IL_0076: ldloc.1
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0061 ldc.i4.1 
+   0062 sub 
+   0063 ldarg.0 
+   0064 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   0069 ldloc.1 
+   006A sub 
+   006B ldc.i4.1 
+   006C shl 
+   006D ldc.i4.1 
+   006E sub 
+   006F sub 
+   0070 stloc.0 
+   0071 br IL_0096: ldloc.1
+   0076 ldloc.1 
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   007D blt IL_0096: ldloc.1
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   0088 ldc.i4.1 
+   0089 sub 
+   008A ldloc.1 
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.UI.CUIListScript::m_selectedElementIndex
+   0091 sub 
+   0092 ldc.i4.1 
+   0093 shl 
+   0094 sub 
+   0095 stloc.0 
+   0096 ldloc.1 
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   009D callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   00A2 bge IL_00b9: ldarg.0
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   00AD ldloc.1 
+   00AE ldloc.0 
+   00AF callvirt System.Void System.Collections.Generic.List`1<System.Int32>::set_Item(System.Int32,!0)
+   00B4 br IL_00c5: ldloc.1
+   00B9 ldarg.0 
+   00BA ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   00BF ldloc.0 
+   00C0 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   00C5 ldloc.1 
+   00C6 ldc.i4.1 
+   00C7 add 
+   00C8 stloc.1 
+   00C9 ldloc.1 
+   00CA ldarg.0 
+   00CB ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   00D0 blt IL_004f: ldloc.1
+   00D5 ldarg.0 
+   00D6 ldc.i4.1 
+   00D7 stfld Assets.Scripts.UI.CUIStepListScript::m_needRefreshElementSiblingIndexes
+   00DC ret 
+== System.Void RefreshExistElementSiblingIndexes() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIStepListScript::m_needRefreshElementSiblingIndexes
+   0006 brfalse IL_0099: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0011 brtrue IL_0027: ldarg.0
+   0016 ldarg.0 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIListScript::m_elementAmount
+   001D newobj System.Void ListView`1<Assets.Scripts.UI.CUIListElementScript>::.ctor(System.Int32)
+   0022 stfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   002D callvirt System.Void ListViewBase::Clear()
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.UI.CUIListScript::m_elementScripts
+   003E callvirt System.Void ListView`1<Assets.Scripts.UI.CUIListElementScript>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0049 ldarg.0 
+   004A ldftn System.Int32 Assets.Scripts.UI.CUIStepListScript::SortExistElements(Assets.Scripts.UI.CUIListElementScript,Assets.Scripts.UI.CUIListElementScript)
+   0050 newobj System.Void System.Comparison`1<Assets.Scripts.UI.CUIListElementScript>::.ctor(System.Object,System.IntPtr)
+   0055 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIListElementScript>::Sort(System.Comparison`1<!0>)
+   005A ldc.i4.0 
+   005B stloc.0 
+   005C br IL_0081: ldloc.0
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0067 ldloc.0 
+   0068 callvirt !0 ListView`1<Assets.Scripts.UI.CUIListElementScript>::get_Item(System.Int32)
+   006D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0072 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0077 ldloc.0 
+   0078 callvirt System.Void UnityEngine.Transform::SetSiblingIndex(System.Int32)
+   007D ldloc.0 
+   007E ldc.i4.1 
+   007F add 
+   0080 stloc.0 
+   0081 ldloc.0 
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.UI.CUIStepListScript::m_tempElementScripts
+   0088 callvirt System.Int32 ListViewBase::get_Count()
+   008D blt IL_0061: ldarg.0
+   0092 ldarg.0 
+   0093 ldc.i4.0 
+   0094 stfld Assets.Scripts.UI.CUIStepListScript::m_needRefreshElementSiblingIndexes
+   0099 ret 
+== System.Int32 SortExistElements(Assets.Scripts.UI.CUIListElementScript elementScript1, Assets.Scripts.UI.CUIListElementScript elementScript2) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0006 ldarg.1 
+   0007 ldfld Assets.Scripts.UI.CUIListElementScript::m_index
+   000C callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0017 ldarg.2 
+   0018 ldfld Assets.Scripts.UI.CUIListElementScript::m_index
+   001D callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   0022 ble IL_0029: ldarg.0
+   0027 ldc.i4.1 
+   0028 ret 
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   002F ldarg.1 
+   0030 ldfld Assets.Scripts.UI.CUIListElementScript::m_index
+   0035 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   003A ldarg.0 
+   003B ldfld Assets.Scripts.UI.CUIStepListScript::m_elementSiblingIndexes
+   0040 ldarg.2 
+   0041 ldfld Assets.Scripts.UI.CUIListElementScript::m_index
+   0046 callvirt !0 System.Collections.Generic.List`1<System.Int32>::get_Item(System.Int32)
+   004B bge IL_0052: ldc.i4.0
+   0050 ldc.i4.m1 
+   0051 ret 
+   0052 ldc.i4.0 
+   0053 ret 
+== System.Boolean IsHorizontal() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIListScript::m_listType
+   0006 ldc.i4.1 
+   0007 ceq 
+   0009 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.r4 0.01
+   0005 stsfld Assets.Scripts.UI.CUIStepListScript::m_scaleFixValue
+   000A ldc.r4 0.01
+   000F stsfld Assets.Scripts.UI.CUIStepListScript::m_yOffsetFixValue
+   0014 ret 

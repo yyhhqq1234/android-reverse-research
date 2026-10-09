@@ -1,0 +1,249 @@
+// TYPE Assets.Scripts.GameSystem.GuildPlatformGroupComponent  base=System.Object  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== Assets.Scripts.GameSystem.IGuildPlatformGroupService GetGuildPlatformGroupService() attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 ldfld ApolloHelper::CurPlatform
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldc.i4.2 
+   000D beq IL_001e: call !0 Singleton`1<Assets.Scripts.GameSystem.GuildQQGroup>::GetInstance()
+   0012 ldloc.0 
+   0013 ldc.i4.1 
+   0014 beq IL_0024: call !0 Singleton`1<Assets.Scripts.GameSystem.GuildWxGroup>::GetInstance()
+   0019 br IL_002a: call !0 Singleton`1<Assets.Scripts.GameSystem.GuildQQGroup>::GetInstance()
+   001E call !0 Singleton`1<Assets.Scripts.GameSystem.GuildQQGroup>::GetInstance()
+   0023 ret 
+   0024 call !0 Singleton`1<Assets.Scripts.GameSystem.GuildWxGroup>::GetInstance()
+   0029 ret 
+   002A call !0 Singleton`1<Assets.Scripts.GameSystem.GuildQQGroup>::GetInstance()
+   002F ret 
+== System.Void SyncGroupOpenId() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.String Assets.Scripts.GameSystem.CGuildHelper::GetGroupOpenId()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000C brtrue IL_0021: ldstr "**GuildPlatformGroup** SyncGroupOpenId groupOpenId Is Null"
+   0011 ldloc.0 
+   0012 ldstr 0
+   0017 call System.Boolean System.String::op_Equality(System.String,System.String)
+   001C brfalse IL_0037: ldc.i4 2283
+   0021 ldstr **GuildPlatformGroup** SyncGroupOpenId groupOpenId Is Null
+   0026 ldc.i4.0 
+   0027 newarr System.Object
+   002C call System.String System.String::Format(System.String,System.Object[])
+   0031 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0036 ret 
+   0037 ldc.i4 2283
+   003C call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0041 stloc.1 
+   0042 ldloc.0 
+   0043 ldloc.1 
+   0044 ldfld CSProtocol.CSPkg::stPkgData
+   0049 callvirt CSProtocol.CSPKG_SET_GUILD_GROUP_OPENID_REQ CSProtocol.CSPkgBody::get_stSetGuildGroupOpenIDReq()
+   004E ldflda CSProtocol.CSPKG_SET_GUILD_GROUP_OPENID_REQ::szGroupOpenID
+   0053 call System.Void StringHelper::StringToUTF8Bytes(System.String,System.Byte[]&)
+   0058 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   005D ldloca.s V_1
+   005F ldc.i4.1 
+   0060 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0065 pop 
+   0066 ldstr Send groupOpenId to server, groupOpenId=
+   006B ldloc.0 
+   006C call System.String System.String::Concat(System.String,System.String)
+   0071 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0076 ret 
+== System.Void RequestGroupGuildId() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 2281
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 ldloca.s V_0
+   0012 ldc.i4.1 
+   0013 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0018 pop 
+   0019 ldstr Request 32 bit guild id
+   001E call System.Void UnityEngine.Debug::Log(System.Object)
+   0023 ret 
+== System.Void ReceiveSetGuildGroupOpenIdNtf(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A call !0 Singleton`1<Assets.Scripts.GameSystem.CGuildSystem>::GetInstance()
+   000F callvirt Assets.Scripts.GameSystem.CGuildModel Assets.Scripts.GameSystem.CGuildSystem::get_Model()
+   0014 callvirt Assets.Scripts.GameSystem.GuildInfo Assets.Scripts.GameSystem.CGuildModel::get_CurrentGuildInfo()
+   0019 stloc.0 
+   001A ldloc.0 
+   001B brfalse IL_0050: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0020 ldloc.0 
+   0021 ldarg.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.SCPKG_SET_GUILD_GROUP_OPENID_NTF CSProtocol.CSPkgBody::get_stSetGuildGroupOpenIDNtf()
+   002C ldflda CSProtocol.SCPKG_SET_GUILD_GROUP_OPENID_NTF::szGroupOpenID
+   0031 call System.String StringHelper::UTF8BytesToString(System.Byte[]&)
+   0036 stfld Assets.Scripts.GameSystem.GuildInfo::groupOpenId
+   003B ldstr Got guildOpenId from server: 
+   0040 ldloc.0 
+   0041 ldfld Assets.Scripts.GameSystem.GuildInfo::groupOpenId
+   0046 call System.String System.String::Concat(System.String,System.String)
+   004B call System.Void UnityEngine.Debug::Log(System.Object)
+   0050 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0055 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   005A brtrue IL_00b5: ret
+   005F call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0064 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   0069 brtrue IL_00b5: ret
+   006E call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0073 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0078 brtrue IL_00b5: ret
+   007D call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0082 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0087 brtrue IL_00b5: ret
+   008C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0091 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   0096 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   009B ldnull 
+   009C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A1 brtrue IL_00b5: ret
+   00A6 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   00AB callvirt System.Boolean Assets.Scripts.GameSystem.SettlementSystem::IsExistSettleForm()
+   00B0 brfalse IL_00b6: call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   00B5 ret 
+   00B6 call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   00BB stloc.1 
+   00BC ldloc.1 
+   00BD callvirt System.Void Assets.Scripts.GameSystem.IGuildPlatformGroupService::Query()
+   00C2 ret 
+== System.Void SendRemindMsg() attrs=Public, Static, HideBySig maxstack=6
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.s 62
+   0004 call System.UInt32 ResData.GameDataMgr/guildMiscDatabin::GetConfValue(System.UInt32)
+   0009 stloc.1 
+   000A ldloc.1 
+   000B ldc.i4.0 
+   000C ble.un IL_0013: ldstr "PLATFORM_GROUP_REMIND_OP_INTERVAL_KEY"
+   0011 ldloc.1 
+   0012 stloc.0 
+   0013 ldstr PLATFORM_GROUP_REMIND_OP_INTERVAL_KEY
+   0018 ldc.i4.0 
+   0019 call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   001E stloc.2 
+   001F call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0024 stloc.3 
+   0025 ldloc.3 
+   0026 ldloc.2 
+   0027 sub 
+   0028 ldloc.0 
+   0029 bgt IL_004b: call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   002E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0033 ldstr Guild_Platform_Group_Send_Remind_Err_Frequency
+   0038 ldc.i4.1 
+   0039 ldc.r4 1.5
+   003E ldnull 
+   003F ldc.i4.0 
+   0040 newarr System.Object
+   0045 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   004A ret 
+   004B call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0050 stloc.s V_4
+   0052 call Assets.Scripts.GameSystem.IGuildPlatformGroupService Assets.Scripts.GameSystem.GuildPlatformGroupComponent::GetGuildPlatformGroupService()
+   0057 stloc.s V_5
+   0059 ldsfld System.String::Empty
+   005E stloc.s V_6
+   0060 call System.Boolean Assets.Scripts.GameSystem.CGuildSystem::HasManageQQGroupAuthority()
+   0065 brtrue IL_008f: ldloc.s V_5
+   006A ldloc.s V_5
+   006C callvirt Assets.Scripts.GameSystem.enGuildPlatformGroupStatus Assets.Scripts.GameSystem.IGuildPlatformGroupService::get_Status()
+   0071 ldc.i4.4 
+   0072 beq IL_0078: call !0 Singleton`1<CTextManager>::GetInstance()
+   0077 ret 
+   0078 call !0 Singleton`1<CTextManager>::GetInstance()
+   007D ldstr Guild_Platform_Remind_Bind_Chat_Text
+   0082 ldc.i4.1 
+   0083 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0088 stloc.s V_6
+   008A br IL_00e4: ldc.i4.4
+   008F ldloc.s V_5
+   0091 callvirt Assets.Scripts.GameSystem.enGuildPlatformGroupStatus Assets.Scripts.GameSystem.IGuildPlatformGroupService::get_Status()
+   0096 ldc.i4.1 
+   0097 beq IL_009d: ldstr "{0}{1}{2}"
+   009C ret 
+   009D ldstr {0}{1}{2}
+   00A2 ldloc.s V_4
+   00A4 box System.Int32
+   00A9 ldc.i4 4042
+   00AE box System.Int32
+   00B3 ldstr j9cWiS6lPjw4g
+   00B8 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00BD ldc.i4.1 
+   00BE call System.String Utility::CreateMD5Hash(System.String,Utility/MD5_STRING_CASE)
+   00C3 stloc.s V_7
+   00C5 ldstr [{0}#{1}#{2}]
+   00CA ldloc.s V_4
+   00CC box System.Int32
+   00D1 ldc.i4 4042
+   00D6 box System.Int32
+   00DB ldloc.s V_7
+   00DD call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00E2 stloc.s V_6
+   00E4 ldc.i4.4 
+   00E5 ldloc.s V_6
+   00E7 ldsfld System.String::Empty
+   00EC ldc.i4.0 
+   00ED ldc.i4.0 
+   00EE conv.i8 
+   00EF ldc.i4.0 
+   00F0 call System.Void Assets.Scripts.GameSystem.CChatNetUT::SendChatMsgEx(Assets.Scripts.GameSystem.EChatChannel,System.String,System.String,System.Byte,System.UInt64,System.UInt32)
+   00F5 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00FA ldstr Guild_Platform_Group_Send_Remind_Success
+   00FF ldc.i4.1 
+   0100 ldc.r4 1.5
+   0105 ldnull 
+   0106 ldc.i4.0 
+   0107 newarr System.Object
+   010C callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0111 ldstr PLATFORM_GROUP_REMIND_OP_INTERVAL_KEY
+   0116 ldloc.3 
+   0117 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   011C call System.Void UnityEngine.PlayerPrefs::Save()
+   0121 ret 
+== System.Void SendPlatformGroupLog(Assets.Scripts.GameSystem.enGuildPlatformGroupStatus status, System.String openid) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldc.i4.1 
+   0004 beq IL_0015: ldc.i4 2291
+   0009 ldarg.0 
+   000A ldc.i4.3 
+   000B beq IL_003b: ldc.i4 2292
+   0010 br IL_0061: ldloc.0
+   0015 ldc.i4 2291
+   001A call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   001F stloc.0 
+   0020 ldarg.1 
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_GUILD_BINDQUNLOG_REQ CSProtocol.CSPkgBody::get_stGuildBindQunReq()
+   002C ldflda CSProtocol.CSPKG_GUILD_BINDQUNLOG_REQ::szGroupOpenID
+   0031 call System.Void StringHelper::StringToUTF8Bytes(System.String,System.Byte[]&)
+   0036 br IL_0061: ldloc.0
+   003B ldc.i4 2292
+   0040 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0045 stloc.0 
+   0046 ldarg.1 
+   0047 ldloc.0 
+   0048 ldfld CSProtocol.CSPkg::stPkgData
+   004D callvirt CSProtocol.CSPKG_GUILD_UNBINDQUNLOG_REQ CSProtocol.CSPkgBody::get_stGuildUnBindQunReq()
+   0052 ldflda CSProtocol.CSPKG_GUILD_UNBINDQUNLOG_REQ::szGroupOpenID
+   0057 call System.Void StringHelper::StringToUTF8Bytes(System.String,System.Byte[]&)
+   005C br IL_0061: ldloc.0
+   0061 ldloc.0 
+   0062 brfalse IL_0075: ret
+   0067 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   006C ldloca.s V_0
+   006E ldc.i4.0 
+   006F callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0074 pop 
+   0075 ret 

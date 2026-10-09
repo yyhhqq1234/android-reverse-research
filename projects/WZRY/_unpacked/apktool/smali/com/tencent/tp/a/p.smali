@@ -1,0 +1,131 @@
+.class public Lcom/tencent/tp/a/p;
+.super Ljava/lang/Object;
+
+
+# static fields
+.field public static final a:[B
+
+
+# direct methods
+.method static constructor <clinit>()V
+    .locals 1
+
+    const/16 v0, 0x61
+
+    new-array v0, v0, [B
+
+    fill-array-data v0, :array_0
+
+    sput-object v0, Lcom/tencent/tp/a/p;->a:[B
+
+    return-void
+
+    :array_0
+    .array-data 1
+        -0x77t
+        0x50t
+        0x4et
+        0x47t
+        0xdt
+        0xat
+        0x1at
+        0xat
+        0x0t
+        0x0t
+        0x0t
+        0xdt
+        0x49t
+        0x48t
+        0x44t
+        0x52t
+        0x0t
+        0x0t
+        0x0t
+        0xat
+        0x0t
+        0x0t
+        0x0t
+        0xat
+        0x8t
+        0x3t
+        0x0t
+        0x0t
+        0x0t
+        -0x46t
+        -0x14t
+        0x3ft
+        -0x71t
+        0x0t
+        0x0t
+        0x0t
+        0x3t
+        0x50t
+        0x4ct
+        0x54t
+        0x45t
+        0x0t
+        0x0t
+        0x0t
+        -0x59t
+        0x7at
+        0x3dt
+        -0x26t
+        0x0t
+        0x0t
+        0x0t
+        0x1t
+        0x74t
+        0x52t
+        0x4et
+        0x53t
+        -0x4dt
+        0x12t
+        -0x72t
+        0x3at
+        0x50t
+        0x0t
+        0x0t
+        0x0t
+        0xct
+        0x49t
+        0x44t
+        0x41t
+        0x54t
+        0x8t
+        -0x29t
+        0x63t
+        0x60t
+        -0x60t
+        0x27t
+        0x0t
+        0x0t
+        0x0t
+        0x6et
+        0x0t
+        0x1t
+        -0x67t
+        0x7et
+        0x65t
+        0x3ct
+        0x0t
+        0x0t
+        0x0t
+        0x0t
+        0x49t
+        0x45t
+        0x4et
+        0x44t
+        -0x52t
+        0x42t
+        0x60t
+        -0x7et
+    .end array-data
+.end method
+
+.method public constructor <init>()V
+    .locals 0
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method

@@ -1,0 +1,2268 @@
+// TYPE Assets.Scripts.GameLogic.GameBuilderHelper  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 m_iMapId
+  FIELD CSProtocol.COM_GAME_TYPE m_kGameType
+  FIELD System.Single m_fLoadingTime
+  FIELD System.Single m_fLoadProgress
+  FIELD System.Single s_StartGameCount
+  FIELD System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> m_eventsLoadingTime
+  FIELD Assets.Scripts.GameLogic.GameBuilderClientBase gameBuilder
+  FIELD Assets.Scripts.GameLogic.BattleLoader gameLoader
+  FIELD Assets.Scripts.GameLogic.GameBuilderHelper/SMemData s_MemData_BeforeLoading
+  FIELD Assets.Scripts.GameLogic.GameBuilderHelper/SMemData s_MemData_LoadingPeak
+  FIELD Assets.Scripts.GameLogic.GameBuilderHelper/SMemData s_MemData_LoadingDone
+  FIELD Assets.Scripts.GameLogic.GameBuilderHelper/SMemData s_MemData_BattleEnd
+  FIELD Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext startGameContext_
+  FIELD System.String dumpHomePath
+  FIELD SGW/PlayerInfosCpp2CsTypeDelegate <>f__mg$cache0
+  PROP Assets.Scripts.GameLogic.GameBuilderClientBase GameBuilder
+  PROP System.String DumpHomePath
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=8
+   0000 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0005 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::Reset()
+   000A ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingPeak
+   000F call System.Void Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::Reset()
+   0014 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   0019 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::Reset()
+   001E ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0023 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::Reset()
+   0028 ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== Assets.Scripts.GameLogic.GameBuilderClientBase get_GameBuilder() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0005 ret 
+== System.Boolean PrevStartGame(Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext& startGameContext) attrs=Private, HideBySig maxstack=4
+   0000 ldsfld TDM.ITDataMaster::Instance
+   0005 ldc.i4.0 
+   0006 callvirt System.Void TDM.ITDataMaster::EnableReport(System.Boolean)
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0010 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldnull 
+   0018 ceq 
+   001A ldc.i4.0 
+   001B ceq 
+   001D call System.Void DebugHelper::Assert(System.Boolean)
+   0022 ldloc.0 
+   0023 brtrue IL_002a: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0028 ldc.i4.0 
+   0029 ret 
+   002A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   002F ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0034 brfalse IL_003b: ldarg.0
+   0039 ldc.i4.0 
+   003A ret 
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0041 brfalse IL_0058: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::GetInstance()
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   004C callvirt System.Void Assets.Scripts.GameLogic.BattleLoader::Destroy()
+   0051 ldarg.0 
+   0052 ldnull 
+   0053 stfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0058 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::GetInstance()
+   005D callvirt System.Void Assets.Scripts.GameSystem.TssdkSys::NotifyTssSdkStartGame()
+   0062 call System.Void BinaryNode::ClearPool()
+   0067 call System.Void SGamePInvoke::ClearBuffers()
+   006C call !0 Singleton`1<Assets.Scripts.GameLogic.GameInput>::GetInstance()
+   0071 ldloc.0 
+   0072 ldfld Assets.Scripts.GameLogic.CLevelContext::isSlowUpMoveCmd
+   0077 stfld Assets.Scripts.GameLogic.GameInput::isSlowUpMoveCmd
+   007C ldloc.0 
+   007D ldfld Assets.Scripts.GameLogic.CLevelContext::m_nCmdSendInterval
+   0082 stsfld Assets.Scripts.Framework.NetworkModule::sFrameCmdInval
+   0087 ldarg.1 
+   0088 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::gameMode
+   008D ldc.i4.1 
+   008E bne.un IL_0098: call System.Void Assets.Scripts.Framework.GameSettings::DecideDynamicParticleLOD()
+   0093 call System.Void Assets.Scripts.Framework.SynchrReport::Reset()
+   0098 call System.Void Assets.Scripts.Framework.GameSettings::DecideDynamicParticleLOD()
+   009D ldloc.0 
+   009E callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   00A3 brfalse IL_00d8: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   00A8 call System.Int32 Assets.Scripts.Framework.GameSettings::get_EnableHDMode()
+   00AD ldc.i4.1 
+   00AE bne.un IL_00d8: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   00B3 call !0 Singleton`1<CTextManager>::GetInstance()
+   00B8 ldstr DisableTaoShaAndroidHDMode
+   00BD ldc.i4.1 
+   00BE callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00C3 ldstr 1
+   00C8 call System.Boolean System.String::op_Equality(System.String,System.String)
+   00CD brfalse IL_00d8: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   00D2 ldc.i4.0 
+   00D3 call System.Void Assets.Scripts.Framework.GameSettings::SetHDMode(System.Int32)
+   00D8 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   00DD callvirt System.Void GSDKsys::MapEnter()
+   00E2 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TGPSDKSys>::GetInstance()
+   00E7 ldc.i4.1 
+   00E8 callvirt System.Void Assets.Scripts.GameSystem.TGPSDKSys::EnablePhone(System.Boolean)
+   00ED call System.Single UnityEngine.Time::get_time()
+   00F2 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadingTime
+   00F7 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   00FC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Clear()
+   0101 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0106 ldc.i4.0 
+   0107 callvirt Apollo.ApolloAccountInfo ApolloHelper::GetAccountInfo(System.Boolean)
+   010C stloc.1 
+   010D ldloc.1 
+   010E ldnull 
+   010F ceq 
+   0111 ldc.i4.0 
+   0112 ceq 
+   0114 ldstr account info is null
+   0119 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   011E ldloc.0 
+   011F ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   0124 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0129 ldloc.0 
+   012A callvirt CSProtocol.COM_GAME_TYPE Assets.Scripts.GameLogic.CLevelContext::GetGameType()
+   012F stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_kGameType
+   0134 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0139 ldstr OpenID
+   013E ldloc.1 
+   013F brfalse IL_014f: ldstr "0"
+   0144 ldloc.1 
+   0145 callvirt System.String Apollo.ApolloAccountInfo::get_OpenId()
+   014A br IL_0154: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   014F ldstr 0
+   0154 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0159 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   015E ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0163 ldstr LevelID
+   0168 ldloc.0 
+   0169 ldflda Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   016E constrained. System.Int32
+   0174 callvirt System.String System.Object::ToString()
+   0179 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   017E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0183 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0188 ldstr isPVPLevel
+   018D ldloc.0 
+   018E callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0193 stloc.2 
+   0194 ldloca.s V_2
+   0196 constrained. System.Boolean
+   019C callvirt System.String System.Object::ToString()
+   01A1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01A6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01AB ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   01B0 ldstr isPVPMode
+   01B5 ldloc.0 
+   01B6 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   01BB stloc.3 
+   01BC ldloca.s V_3
+   01BE constrained. System.Boolean
+   01C4 callvirt System.String System.Object::ToString()
+   01C9 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01CE callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01D3 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   01D8 ldstr bLevelNo
+   01DD ldloc.0 
+   01DE ldflda Assets.Scripts.GameLogic.CLevelContext::m_levelNo
+   01E3 constrained. System.Byte
+   01E9 callvirt System.String System.Object::ToString()
+   01EE newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01F3 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01F8 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01FD ldc.i4.1 
+   01FE stfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0203 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0208 ldc.i4.0 
+   0209 stfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   020E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0213 ldc.i4.0 
+   0214 stfld Assets.Scripts.GameLogic.BattleLogic::isGameOver
+   0219 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   021E ldc.i4.0 
+   021F stfld Assets.Scripts.GameLogic.BattleLogic::isWaitMultiStart
+   0224 call !0 MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::get_instance()
+   0229 ldloc.0 
+   022A callvirt System.Void Assets.Scripts.GameLogic.GameLoader::InitOption(Assets.Scripts.GameLogic.CLevelContext)
+   022F ldarg.0 
+   0230 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper::SpecifiedGameSetting()
+   0235 ldc.i4.0 
+   0236 stloc.s V_4
+   0238 ldloc.0 
+   0239 ldfld Assets.Scripts.GameLogic.CLevelContext::forceLowQualityDeviceScore
+   023E ldc.i4.0 
+   023F ble.un IL_029f: ldloc.0
+   0244 call System.Int32 Assets.Scripts.Framework.DetectRenderQuality::getAndroidScore()
+   0249 conv.i8 
+   024A ldloc.0 
+   024B ldfld Assets.Scripts.GameLogic.CLevelContext::forceLowQualityDeviceScore
+   0250 conv.u8 
+   0251 bge IL_029f: ldloc.0
+   0256 call System.Boolean Assets.Scripts.GameSystem.CCheatSystem::get_IsTaoShaWhiteList()
+   025B stloc.s V_5
+   025D call System.String UnityEngine.SystemInfo::get_deviceModel()
+   0262 ldc.i4.7 
+   0263 call System.Boolean Assets.Scripts.Framework.GameSettings::IsDeviceFunctionOpen(System.String,System.Int32)
+   0268 stloc.s V_6
+   026A ldloc.s V_6
+   026C brtrue IL_029f: ldloc.0
+   0271 ldloc.s V_5
+   0273 brtrue IL_029f: ldloc.0
+   0278 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   027D ldc.i4.3 
+   027E bne.un IL_028e: ldc.i4.4
+   0283 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0288 ldc.i4.3 
+   0289 beq IL_029f: ldloc.0
+   028E ldc.i4.4 
+   028F ldc.i4.3 
+   0290 call System.Void Assets.Scripts.GameLogic.AgeSetGameSettingHelper::SetGameSetting(System.UInt32,System.Byte)
+   0295 ldc.i4.5 
+   0296 ldc.i4.3 
+   0297 call System.Void Assets.Scripts.GameLogic.AgeSetGameSettingHelper::SetGameSetting(System.UInt32,System.Byte)
+   029C ldc.i4.1 
+   029D stloc.s V_4
+   029F ldloc.0 
+   02A0 ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapType
+   02A5 ldc.i4.3 
+   02A6 bne.un IL_02bc: ldloc.0
+   02AB ldc.i4.s 40
+   02AD ldstr 0
+   02B2 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   02B7 br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   02BC ldloc.0 
+   02BD callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsNorma5v5PlayMode()
+   02C2 brfalse IL_02d8: ldloc.0
+   02C7 ldc.i4.s 40
+   02C9 ldstr 1
+   02CE call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   02D3 br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   02D8 ldloc.0 
+   02D9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsLuanDouPlayMode()
+   02DE brfalse IL_02f4: ldloc.0
+   02E3 ldc.i4.s 40
+   02E5 ldstr 2
+   02EA call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   02EF br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   02F4 ldloc.0 
+   02F5 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsUnLimitPlayMode()
+   02FA brfalse IL_0310: ldloc.0
+   02FF ldc.i4.s 40
+   0301 ldstr 5
+   0306 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   030B br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0310 ldloc.0 
+   0311 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsClonePlayMode()
+   0316 brfalse IL_032c: ldloc.0
+   031B ldc.i4.s 40
+   031D ldstr 7
+   0322 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0327 br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   032C ldloc.0 
+   032D callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsFiveCampPlayMode()
+   0332 brfalse IL_0348: ldloc.0
+   0337 ldc.i4.s 40
+   0339 ldstr 9
+   033E call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   0343 br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0348 ldloc.0 
+   0349 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   034E brfalse IL_0364: ldloc.0
+   0353 ldc.i4.s 40
+   0355 ldstr 10
+   035A call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   035F br IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0364 ldloc.0 
+   0365 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   036A brfalse IL_037b: call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   036F ldc.i4.s 40
+   0371 ldstr 14
+   0376 call System.Void com.tencent.vmpsdk.VmpSdk::UpdateGameInfo(com.tencent.vmpsdk.GameDataKey,System.String)
+   037B call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0380 callvirt System.Void Assets.Scripts.GameLogic.CKdaDataManager::ClearMatchData()
+   0385 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   038A callvirt System.Void SceneMgr::ClearAll()
+   038F call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::get_instance()
+   0394 callvirt System.Void Assets.Scripts.GameLogic.CSettleDataManager::Clear()
+   0399 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   039E callvirt System.Void UnityObjMgr::Reset()
+   03A3 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   03A8 ldloc.0 
+   03A9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaModeWithOutGuide()
+   03AE brfalse IL_03be: ldc.i4.0
+   03B3 ldloc.0 
+   03B4 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   03B9 ldc.i4.0 
+   03BA ceq 
+   03BC br.s IL_03bf: callvirt System.Void UnityObjMgr::BuildRenderCullingStructure(System.Boolean)
+   03BE ldc.i4.0 
+   03BF callvirt System.Void UnityObjMgr::BuildRenderCullingStructure(System.Boolean)
+   03C4 call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   03C9 ldloc.0 
+   03CA callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaModeWithOutGuide()
+   03CF brfalse IL_03df: ldc.i4.0
+   03D4 ldloc.0 
+   03D5 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   03DA ldc.i4.0 
+   03DB ceq 
+   03DD br.s IL_03e0: callvirt System.Void SceneMgr::OnStartGame(System.Boolean)
+   03DF ldc.i4.0 
+   03E0 callvirt System.Void SceneMgr::OnStartGame(System.Boolean)
+   03E5 ldarg.0 
+   03E6 ldarg.1 
+   03E7 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::gameMode
+   03EC call Assets.Scripts.GameLogic.GameBuilderClientBase Assets.Scripts.GameLogic.GameBuilderHelper::GetGameBuilder(Assets.Scripts.GameLogic.EGameMode)
+   03F1 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   03F6 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   03FB ldnull 
+   03FC ceq 
+   03FE ldc.i4.0 
+   03FF ceq 
+   0401 ldstr can't create game builder object!
+   0406 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   040B ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0410 ldloc.0 
+   0411 ldarg.1 
+   0412 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::beginLoadMsg
+   0417 ldarg.1 
+   0418 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::deskPoolData
+   041D callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::Initialize(Assets.Scripts.GameLogic.CLevelContext,System.Object,System.Byte[])
+   0422 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0427 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::BuildCSharpPlayer()
+   042C ldarg.1 
+   042D ldloc.0 
+   042E stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   0433 ldarg.1 
+   0434 ldloc.s V_4
+   0436 stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::needForceLowQuality
+   043B ldc.i4.1 
+   043C ret 
+== System.Void StartGame(Assets.Scripts.GameLogic.EGameMode gameMode, System.Object beginLoadMsg, System.Byte[] deskPoolData) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isLoading
+   000A brfalse IL_0010: ldsflda Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   000F ret 
+   0010 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0015 ldarg.0 
+   0016 stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::curGameBuilder
+   001B ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0020 ldarg.1 
+   0021 stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::gameMode
+   0026 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   002B ldarg.2 
+   002C stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::beginLoadMsg
+   0031 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0036 ldarg.3 
+   0037 stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::deskPoolData
+   003C ldarg.0 
+   003D ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0042 call System.Boolean Assets.Scripts.GameLogic.GameBuilderHelper::PrevStartGame(Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext&)
+   0047 brfalse IL_00ab: ret
+   004C ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0051 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0056 callvirt System.UInt32 Assets.Scripts.GameLogic.GameBuilderClientBase::NtfCoreStartGame()
+   005B stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::startFrame
+   0060 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0065 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   006A ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::startFrame
+   006F stfld Assets.Scripts.GameLogic.BattleLogic::startFrame
+   0074 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0079 ldc.i4.1 
+   007A stfld Assets.Scripts.GameLogic.BattleLogic::isLoading
+   007F ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0084 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::<>f__mg$cache0
+   0089 brtrue.s IL_009c: ldsfld SGW/PlayerInfosCpp2CsTypeDelegate Assets.Scripts.GameLogic.GameBuilderHelper::<>f__mg$cache0
+   008B ldnull 
+   008C ldftn System.Void Assets.Scripts.GameLogic.GameBuilderHelper::PostStartGame_static(SGW/PlayerInfosCpp2Cs&)
+   0092 newobj System.Void SGW/PlayerInfosCpp2CsTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0097 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::<>f__mg$cache0
+   009C ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::<>f__mg$cache0
+   00A1 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::NtfCoreSetupClient(SGW/PlayerInfosCpp2CsTypeDelegate)
+   00A6 br IL_00ab: ret
+   00AB ret 
+== System.Void PostStartGame_static(SGW/PlayerInfosCpp2Cs& playerInfos) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0005 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::curGameBuilder
+   000A ldnull 
+   000B ceq 
+   000D ldc.i4.0 
+   000E ceq 
+   0010 call System.Void DebugHelper::Assert(System.Boolean)
+   0015 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   001A ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::curGameBuilder
+   001F ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0024 ldarg.0 
+   0025 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderHelper::PostStartGame(Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext&,SGW/PlayerInfosCpp2Cs&)
+   002A ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   002F ldnull 
+   0030 stfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::curGameBuilder
+   0035 ret 
+== System.Void PostStartGame(Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext& startGameContext, SGW/PlayerInfosCpp2Cs& playerInfos) attrs=Private, HideBySig maxstack=8
+   0000 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0005 call System.Int64 MemoryTracker::MonoUsedSize()
+   000A stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   000F ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0014 call System.Int64 MemoryTracker::MonoHeapSize()
+   0019 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   001E ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0023 call System.Int32 MemoryTracker::GetTotalUsedMemoryMegaBytesImmediately()
+   0028 conv.i8 
+   0029 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   002E ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0033 ldc.i4.0 
+   0034 call System.Int32 System.GC::CollectionCount(System.Int32)
+   0039 conv.i8 
+   003A stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::gcCnt
+   003F call Assets.Scripts.GameLogic.GamePlayerCenter Assets.Scripts.GameLogic.CGameDataManager::GetPlayerCenterManager()
+   0044 ldarg.2 
+   0045 callvirt System.Void Assets.Scripts.GameLogic.GamePlayerCenter::InitPlayers(SGW/PlayerInfosCpp2Cs&)
+   004A ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   004F call System.Void SGW::NtfFrameRate(System.UInt32)
+   0054 call System.Boolean Assets.Scripts.Framework.GameSettings::get_DynamicParticleLOD()
+   0059 call System.Void SGW::SetDynamicParticleEnable(System.Boolean)
+   005E ldarg.1 
+   005F ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   0064 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0069 brfalse IL_01e4: ldsfld Assets.Scripts.GameLogic.GameBuilderClientBase Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   006E ldsfld System.String::Empty
+   0073 stloc.0 
+   0074 call !0 Singleton`1<Assets.Scripts.GameLogic.DataCenter.ActorDataCenter>::get_instance()
+   0079 ldc.i4.1 
+   007A callvirt Assets.Scripts.GameLogic.DataCenter.IGameActorDataProvider Assets.Scripts.GameLogic.DataCenter.ActorDataCenter::GetActorDataProvider(Assets.Scripts.GameLogic.DataCenter.GameActorDataProviderType)
+   007F stloc.1 
+   0080 ldloca.s V_2
+   0082 initobj Assets.Scripts.GameLogic.DataCenter.ActorStaticData
+   0088 ldloca.s V_3
+   008A initobj Assets.Scripts.GameLogic.DataCenter.ActorMeta
+   0090 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0095 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   009A stloc.s V_4
+   009C ldc.i4.1 
+   009D stloc.s V_5
+   009F br IL_01d6: ldloc.s V_5
+   00A4 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00A9 ldloc.s V_5
+   00AB callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllCampPlayers(CSProtocol.COM_PLAYERCAMP)
+   00B0 stloc.s V_6
+   00B2 ldc.i4.0 
+   00B3 stloc.s V_7
+   00B5 br IL_01c2: ldloc.s V_7
+   00BA ldloc.s V_6
+   00BC ldloc.s V_7
+   00BE callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   00C3 callvirt Assets.Scripts.GameLogic.DataCenter.PlayerServerData Assets.Scripts.GameLogic.Player::GetPlayerServerData()
+   00C8 stloc.s V_8
+   00CA ldloc.s V_8
+   00CC brfalse IL_01bc: ldloc.s V_7
+   00D1 ldc.i4.0 
+   00D2 stloc.s V_9
+   00D4 br IL_01a0: ldloc.s V_9
+   00D9 ldloc.s V_8
+   00DB ldfld Assets.Scripts.GameLogic.DataCenter.PlayerServerData::HeroData
+   00E0 ldloc.s V_9
+   00E2 ldelem.ref 
+   00E3 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::HeroId
+   00E8 stloc.s V_10
+   00EA ldloca.s V_3
+   00EC ldc.i4.0 
+   00ED stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   00F2 ldloca.s V_3
+   00F4 ldloc.s V_10
+   00F6 stfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00FB ldloc.1 
+   00FC ldloca.s V_3
+   00FE ldloca.s V_2
+   0100 callvirt System.Boolean Assets.Scripts.GameLogic.DataCenter.IGameActorDataProvider::GetActorStaticData(Assets.Scripts.GameLogic.DataCenter.ActorMeta&,Assets.Scripts.GameLogic.DataCenter.ActorStaticData&)
+   0105 pop 
+   0106 ldloca.s V_2
+   0108 ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheResInfo
+   010D ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/ResInfo::Name
+   0112 stloc.s V_11
+   0114 ldloc.s V_8
+   0116 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerServerData::HeroData
+   011B ldloc.s V_9
+   011D ldelem.ref 
+   011E ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::HeroId
+   0123 ldloc.s V_8
+   0125 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerServerData::HeroData
+   012A ldloc.s V_9
+   012C ldelem.ref 
+   012D ldfld Assets.Scripts.GameLogic.DataCenter.PlayerHeroServerData::SkinId
+   0132 ldloca.s V_12
+   0134 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0139 pop 
+   013A ldloca.s V_12
+   013C call System.String ResData.ResHeroSkin::get_szSkinName()
+   0141 stloc.s V_13
+   0143 ldstr {4}{0}|{1}|{2}|{3}|;
+   0148 ldc.i4.5 
+   0149 newarr System.Object
+   014E dup 
+   014F ldc.i4.0 
+   0150 ldloc.0 
+   0151 stelem.ref 
+   0152 dup 
+   0153 ldc.i4.1 
+   0154 ldloc.s V_10
+   0156 box System.UInt32
+   015B stelem.ref 
+   015C dup 
+   015D ldc.i4.2 
+   015E ldloc.s V_11
+   0160 stelem.ref 
+   0161 dup 
+   0162 ldc.i4.3 
+   0163 ldloc.s V_13
+   0165 stelem.ref 
+   0166 dup 
+   0167 ldc.i4.4 
+   0168 ldloc.s V_6
+   016A ldloc.s V_7
+   016C callvirt !0 ListView`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0171 ldloc.s V_4
+   0173 bne.un IL_0182: ldsfld System.String System.String::Empty
+   0178 ldstr Host>
+   017D br IL_0187: stelem.ref
+   0182 ldsfld System.String::Empty
+   0187 stelem.ref 
+   0188 call System.String System.String::Format(System.String,System.Object[])
+   018D stloc.0 
+   018E ldloc.0 
+   018F ldstr +
+   0194 call System.String System.String::Concat(System.String,System.String)
+   0199 stloc.0 
+   019A ldloc.s V_9
+   019C ldc.i4.1 
+   019D add 
+   019E stloc.s V_9
+   01A0 ldloc.s V_9
+   01A2 conv.i8 
+   01A3 ldloc.s V_8
+   01A5 ldfld Assets.Scripts.GameLogic.DataCenter.PlayerServerData::HeroNum
+   01AA conv.u8 
+   01AB blt IL_00d9: ldloc.s V_8
+   01B0 ldloc.0 
+   01B1 ldstr /
+   01B6 call System.String System.String::Concat(System.String,System.String)
+   01BB stloc.0 
+   01BC ldloc.s V_7
+   01BE ldc.i4.1 
+   01BF add 
+   01C0 stloc.s V_7
+   01C2 ldloc.s V_7
+   01C4 ldloc.s V_6
+   01C6 callvirt System.Int32 ListViewBase::get_Count()
+   01CB blt IL_00ba: ldloc.s V_6
+   01D0 ldloc.s V_5
+   01D2 ldc.i4.1 
+   01D3 add 
+   01D4 stloc.s V_5
+   01D6 ldloc.s V_5
+   01D8 ldc.i4.2 
+   01D9 ble IL_00a4: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   01DE ldloc.0 
+   01DF call System.Void DebugHelper::CustomLog(System.String)
+   01E4 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   01E9 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::NtfAllBuildComplete()
+   01EE call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   01F3 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   01F8 call System.Void SGW::SetLOD(System.Int32,System.Int32)
+   01FD call System.Boolean DeviceCheckSys::IsLowMemoryDevice()
+   0202 call System.Void SGW::SetDeviceInfo(System.Boolean)
+   0207 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   020C callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::PreBeginPlay()
+   0211 ldstr GameBuilder Start Game: ispvplevel={0} ispvpmode={4} levelid={1} leveltype={6} levelname={3} Gametype={2} pick={5}
+   0216 ldc.i4.7 
+   0217 newarr System.Object
+   021C dup 
+   021D ldc.i4.0 
+   021E ldarg.1 
+   021F ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   0224 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0229 box System.Boolean
+   022E stelem.ref 
+   022F dup 
+   0230 ldc.i4.1 
+   0231 ldarg.1 
+   0232 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   0237 ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   023C box System.Int32
+   0241 stelem.ref 
+   0242 dup 
+   0243 ldc.i4.2 
+   0244 ldarg.1 
+   0245 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   024A callvirt CSProtocol.COM_GAME_TYPE Assets.Scripts.GameLogic.CLevelContext::GetGameType()
+   024F box CSProtocol.COM_GAME_TYPE
+   0254 stelem.ref 
+   0255 dup 
+   0256 ldc.i4.3 
+   0257 ldarg.1 
+   0258 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   025D ldfld Assets.Scripts.GameLogic.CLevelContext::m_levelName
+   0262 stelem.ref 
+   0263 dup 
+   0264 ldc.i4.4 
+   0265 ldarg.1 
+   0266 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   026B callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0270 box System.Boolean
+   0275 stelem.ref 
+   0276 dup 
+   0277 ldc.i4.5 
+   0278 ldarg.1 
+   0279 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   027E callvirt Assets.Scripts.GameSystem.enSelectType Assets.Scripts.GameLogic.CLevelContext::GetSelectHeroType()
+   0283 box Assets.Scripts.GameSystem.enSelectType
+   0288 stelem.ref 
+   0289 dup 
+   028A ldc.i4.6 
+   028B ldarg.1 
+   028C ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   0291 ldfld Assets.Scripts.GameLogic.CLevelContext::m_pveLevelType
+   0296 box ResData.RES_LEVEL_TYPE
+   029B stelem.ref 
+   029C call System.Void DebugHelper::CustomLog(System.String,System.Object[])
+   02A1 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   02A6 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   02AB stloc.s V_14
+   02AD ldloc.s V_14
+   02AF brfalse IL_02ec: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::get_instance()
+   02B4 ldstr HostPlayer player id={0} name={1} Camp={2} 
+   02B9 ldc.i4.3 
+   02BA newarr System.Object
+   02BF dup 
+   02C0 ldc.i4.0 
+   02C1 ldloc.s V_14
+   02C3 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   02C8 box System.UInt32
+   02CD stelem.ref 
+   02CE dup 
+   02CF ldc.i4.1 
+   02D0 ldloc.s V_14
+   02D2 ldfld Assets.Scripts.GameLogic.Player::Name
+   02D7 stelem.ref 
+   02D8 dup 
+   02D9 ldc.i4.2 
+   02DA ldloc.s V_14
+   02DC ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   02E1 box CSProtocol.COM_PLAYERCAMP
+   02E6 stelem.ref 
+   02E7 call System.Void DebugHelper::CustomLog(System.String,System.Object[])
+   02EC call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::get_instance()
+   02F1 ldc.i4.2 
+   02F2 ldc.i4.0 
+   02F3 ldc.i4.0 
+   02F4 ldc.i4.0 
+   02F5 ldsfld System.String::Empty
+   02FA ldc.i4.0 
+   02FB ldc.i4.0 
+   02FC callvirt System.Void Assets.Scripts.GameSystem.ShareSys::SendQQGameTeamStateChgMsg(Assets.Scripts.GameSystem.ShareSys/QQGameTeamEventType,CSProtocol.COM_ROOM_TYPE,System.Byte,System.UInt32,System.String,System.UInt32,System.UInt32)
+   0301 leave IL_030c: call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::get_instance()
+   0306 pop 
+   0307 leave IL_030c: call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::get_instance()
+   030C call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::get_instance()
+   0311 ldfld Assets.Scripts.Framework.GameFramework::EditorPreviewMode
+   0316 brtrue IL_0376: ldarg.1
+   031B ldc.r4 0
+   0320 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadProgress
+   0325 ldarg.0 
+   0326 ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   032B ldnull 
+   032C ceq 
+   032E call System.Void DebugHelper::Assert(System.Boolean)
+   0333 ldarg.0 
+   0334 ldarg.1 
+   0335 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   033A ldarg.0 
+   033B ldftn System.Void Assets.Scripts.GameLogic.GameBuilderHelper::onGameLoadProgress(System.Single)
+   0341 newobj System.Void Assets.Scripts.GameLogic.ProgressDelegate::.ctor(System.Object,System.IntPtr)
+   0346 ldarg.0 
+   0347 ldftn System.Void Assets.Scripts.GameLogic.GameBuilderHelper::OnGameLoadComplete(System.Boolean,System.String)
+   034D newobj System.Void Assets.Scripts.GameLogic.CompleteDelegate::.ctor(System.Object,System.IntPtr)
+   0352 newobj System.Void Assets.Scripts.GameLogic.BattleLoader::.ctor(Assets.Scripts.GameLogic.CLevelContext,Assets.Scripts.GameLogic.ProgressDelegate,Assets.Scripts.GameLogic.CompleteDelegate)
+   0357 stfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   035C call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0361 ldstr LoadingState
+   0366 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   036B ldarg.0 
+   036C ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0371 callvirt System.Void Assets.Scripts.GameLogic.BattleLoader::Load()
+   0376 ldarg.1 
+   0377 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::needForceLowQuality
+   037C brfalse IL_03fb: ret
+   0381 ldstr sgameSettings_HasForceLowQualityForLevel{0}_{1}
+   0386 ldarg.1 
+   0387 ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   038C ldflda Assets.Scripts.GameLogic.CLevelContext::m_mapType
+   0391 constrained. System.Int32
+   0397 callvirt System.String System.Object::ToString()
+   039C ldarg.1 
+   039D ldfld Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext::levelContext
+   03A2 ldflda Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   03A7 constrained. System.Int32
+   03AD callvirt System.String System.Object::ToString()
+   03B2 call System.String System.String::Format(System.String,System.Object,System.Object)
+   03B7 stloc.s V_15
+   03B9 ldloc.s V_15
+   03BB ldc.i4.0 
+   03BC call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String,System.Int32)
+   03C1 stloc.s V_16
+   03C3 ldloc.s V_16
+   03C5 ldc.i4.2 
+   03C6 bge IL_03fb: ret
+   03CB call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   03D0 ldstr ForceLowQualityWarning
+   03D5 ldc.i4.1 
+   03D6 ldc.r4 10
+   03DB ldnull 
+   03DC ldc.i4.0 
+   03DD newarr System.Object
+   03E2 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   03E7 ldloc.s V_16
+   03E9 ldc.i4.1 
+   03EA add 
+   03EB stloc.s V_16
+   03ED ldloc.s V_15
+   03EF ldloc.s V_16
+   03F1 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   03F6 call System.Void UnityEngine.PlayerPrefs::Save()
+   03FB ret 
+== System.Void SpecifiedGameSetting() attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call !0 MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::get_instance()
+   0007 ldc.i4.1 
+   0008 ldloca.s V_0
+   000A callvirt System.Boolean Assets.Scripts.GameLogic.GameLoader::GetOptionParam(CoreDef.GameLoaderOption,System.Int32&)
+   000F brfalse IL_004e: call !0 MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::get_instance()
+   0014 ldloc.0 
+   0015 ldc.i4.1 
+   0016 sub 
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ldc.i4.0 
+   001A bge IL_0026: ldloc.0
+   001F ldc.i4.0 
+   0020 stloc.0 
+   0021 br IL_002f: ldloc.0
+   0026 ldloc.0 
+   0027 ldc.i4.2 
+   0028 ble IL_002f: ldloc.0
+   002D ldc.i4.2 
+   002E stloc.0 
+   002F ldloc.0 
+   0030 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0035 bge IL_0044: ldloc.0
+   003A call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   003F br IL_0045: stloc.0
+   0044 ldloc.0 
+   0045 stloc.0 
+   0046 ldc.i4.4 
+   0047 ldloc.0 
+   0048 conv.u1 
+   0049 call System.Void Assets.Scripts.GameLogic.AgeSetGameSettingHelper::SetGameSetting(System.UInt32,System.Byte)
+   004E call !0 MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::get_instance()
+   0053 ldc.i4.2 
+   0054 ldloca.s V_0
+   0056 callvirt System.Boolean Assets.Scripts.GameLogic.GameLoader::GetOptionParam(CoreDef.GameLoaderOption,System.Int32&)
+   005B brfalse IL_009a: ret
+   0060 ldloc.0 
+   0061 ldc.i4.1 
+   0062 sub 
+   0063 stloc.0 
+   0064 ldloc.0 
+   0065 ldc.i4.0 
+   0066 bge IL_0072: ldloc.0
+   006B ldc.i4.0 
+   006C stloc.0 
+   006D br IL_007b: ldloc.0
+   0072 ldloc.0 
+   0073 ldc.i4.2 
+   0074 ble IL_007b: ldloc.0
+   0079 ldc.i4.2 
+   007A stloc.0 
+   007B ldloc.0 
+   007C call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0081 bge IL_0090: ldloc.0
+   0086 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   008B br IL_0091: stloc.0
+   0090 ldloc.0 
+   0091 stloc.0 
+   0092 ldc.i4.5 
+   0093 ldloc.0 
+   0094 conv.u1 
+   0095 call System.Void Assets.Scripts.GameLogic.AgeSetGameSettingHelper::SetGameSetting(System.UInt32,System.Byte)
+   009A ret 
+== Assets.Scripts.GameLogic.GameBuilderClientBase GetGameBuilder(Assets.Scripts.GameLogic.EGameMode mode) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_000c: ldarg.1
+   0006 newobj System.Void Assets.Scripts.GameLogic.SingleGameBuilder::.ctor()
+   000B ret 
+   000C ldarg.1 
+   000D ldc.i4.1 
+   000E bne.un IL_0019: ldnull
+   0013 newobj System.Void Assets.Scripts.GameLogic.PVPMobaGameBuilder::.ctor()
+   0018 ret 
+   0019 ldnull 
+   001A ret 
+== System.Void EndGameStep1(Assets.Scripts.GameLogic.EndGameLineType lineType) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_0010: ldsflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   000F ret 
+   0010 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0015 call System.Int64 MemoryTracker::MonoUsedSize()
+   001A stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   001F ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0024 call System.Int64 MemoryTracker::MonoHeapSize()
+   0029 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   002E ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0033 call System.Int32 MemoryTracker::GetTotalUsedMemoryMegaBytesImmediately()
+   0038 conv.i8 
+   0039 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   003E ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0043 ldc.i4.0 
+   0044 call System.Int32 System.GC::CollectionCount(System.Int32)
+   0049 conv.i8 
+   004A stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::gcCnt
+   004F call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::get_instance()
+   0054 ldc.i4.1 
+   0055 callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::ClearAll(System.Boolean)
+   005A ldarg.0 
+   005B ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0060 brfalse IL_0077: call System.Void InGameActorPreloader::StopAllPreloads()
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   006B callvirt System.Void Assets.Scripts.GameLogic.BattleLoader::Destroy()
+   0070 ldarg.0 
+   0071 ldnull 
+   0072 stfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0077 call System.Void InGameActorPreloader::StopAllPreloads()
+   007C call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::GetInstance()
+   0081 ldc.i4 500
+   0086 stfld Assets.Scripts.Framework.GameLogic::HashCheckFreq
+   008B call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::GetInstance()
+   0090 ldc.i4.0 
+   0091 stfld Assets.Scripts.Framework.GameLogic::SnakeTraceMasks
+   0096 call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::GetInstance()
+   009B ldc.i4 1024000
+   00A0 stfld Assets.Scripts.Framework.GameLogic::SnakeTraceSize
+   00A5 ldarg.1 
+   00A6 brtrue IL_013b: call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   00AB ldstr Prepare GameBuilder EndGame
+   00B0 call System.Void DebugHelper::CustomLog(System.String)
+   00B5 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TGPSDKSys>::GetInstance()
+   00BA ldc.i4.0 
+   00BB callvirt System.Void Assets.Scripts.GameSystem.TGPSDKSys::EnablePhone(System.Boolean)
+   00C0 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   00C5 call !0 Singleton`1<DataReportSys>::GetInstance()
+   00CA callvirt System.String DataReportSys::ReportToMNA()
+   00CF callvirt System.Void GSDKsys::EndSpeed(System.String)
+   00D4 leave IL_00df: call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   00D9 pop 
+   00DA leave IL_00df: call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   00DF call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   00E4 callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::StopGameEndTimer()
+   00E9 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   00EE callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::StopSettleMsgTimer()
+   00F3 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   00F8 callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::StopSettlePanelTimer()
+   00FD call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0102 callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::ClearVoiceStateData()
+   0107 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::get_instance()
+   010C ldc.i4.3 
+   010D ldc.i4.0 
+   010E ldc.i4.0 
+   010F ldc.i4.0 
+   0110 ldsfld System.String::Empty
+   0115 ldc.i4.0 
+   0116 ldc.i4.0 
+   0117 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::SendQQGameTeamStateChgMsg(Assets.Scripts.GameSystem.ShareSys/QQGameTeamEventType,CSProtocol.COM_ROOM_TYPE,System.Byte,System.UInt32,System.String,System.UInt32,System.UInt32)
+   011C call !0 MonoSingleton`1<Assets.Scripts.GameLogic.DialogueProcessor>::get_instance()
+   0121 callvirt System.Void Assets.Scripts.GameLogic.DialogueProcessor::Uninit()
+   0126 ldarg.0 
+   0127 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper::ReportDataOnGameEnd()
+   012C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0131 callvirt System.Void Assets.Scripts.Framework.NetworkModule::CloseGameServerConnect()
+   0136 call System.Void NetworkAccelerator::ClearConnectIP()
+   013B call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0140 callvirt System.Void Assets.Scripts.Framework.FrameWindow::ResetSendCmdSeq()
+   0145 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::get_instance()
+   014A ldc.i4.0 
+   014B stfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   0150 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0155 ldnull 
+   0156 stfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   015B call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0160 callvirt System.Void Assets.Scripts.Framework.FrameWindow::Reset()
+   0165 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   016A callvirt System.Void Assets.Scripts.GameLogic.GamePlayerCenter::OnEndGame()
+   016F call !0 Singleton`1<AGE.AGEWrapManager>::GetInstance()
+   0174 callvirt System.Void AGE.AGEWrapManager::Clear()
+   0179 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   017E callvirt System.Void Assets.Scripts.GameLogic.ActorManager::ClearActor()
+   0183 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0188 callvirt System.Void Assets.Scripts.Framework.FrameSynchr::ResetSynchr()
+   018D call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0192 callvirt System.Void Assets.Scripts.Framework.GameReplayModule::StopReplay()
+   0197 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   019C callvirt System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   01A1 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   01A6 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::ResetBattleSystem()
+   01AB call System.Void Assets.Scripts.Framework.GameSettings::RemoveAllCmdTimer()
+   01B0 call System.Void FogOfWar::EndLevel()
+   01B5 leave IL_01e3: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   01BA stloc.0 
+   01BB ldc.i4.0 
+   01BC ldstr FOW Exception {0} {1}
+   01C1 ldc.i4.2 
+   01C2 newarr System.Object
+   01C7 dup 
+   01C8 ldc.i4.0 
+   01C9 ldloc.0 
+   01CA callvirt System.String System.Exception::get_Message()
+   01CF stelem.ref 
+   01D0 dup 
+   01D1 ldc.i4.1 
+   01D2 ldloc.0 
+   01D3 callvirt System.String System.Exception::get_StackTrace()
+   01D8 stelem.ref 
+   01D9 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   01DE leave IL_01e3: call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   01E3 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   01E8 callvirt System.Void CGameObjectPool::ClearDelayRecycleObjectsSync()
+   01ED call !0 Singleton`1<Assets.Scripts.GameLogic.CBattleGuideManager>::GetInstance()
+   01F2 callvirt System.Void Assets.Scripts.GameLogic.CBattleGuideManager::EndGame()
+   01F7 call System.Void Assets.Scripts.GameSystem.CRoleInfo::SyncMasterRoleInfoClientBits()
+   01FC call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   0201 callvirt System.Void UnityObjMgr::Reset()
+   0206 call !0 Singleton`1<UnityObjMgr>::GetInstance()
+   020B callvirt System.Void UnityObjMgr::ClearRenderingCullingStructure()
+   0210 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper::CleanDumpFolder()
+   0215 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   021A stloc.1 
+   021B ldloc.1 
+   021C brfalse IL_025c: ldstr "Finish GameBuilder EndGame"
+   0221 ldloc.1 
+   0222 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0227 brfalse IL_025c: ldstr "Finish GameBuilder EndGame"
+   022C call System.Int32 Assets.Scripts.Framework.GameSettings::get_EnableHDMode()
+   0231 ldc.i4.1 
+   0232 bne.un IL_025c: ldstr "Finish GameBuilder EndGame"
+   0237 call !0 Singleton`1<CTextManager>::GetInstance()
+   023C ldstr DisableTaoShaAndroidHDMode
+   0241 ldc.i4.1 
+   0242 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0247 ldstr 1
+   024C call System.Boolean System.String::op_Equality(System.String,System.String)
+   0251 brfalse IL_025c: ldstr "Finish GameBuilder EndGame"
+   0256 ldc.i4.1 
+   0257 call System.Void Assets.Scripts.Framework.GameSettings::SetHDMode(System.Int32)
+   025C ldstr Finish GameBuilder EndGame
+   0261 call System.Void DebugHelper::CustomLog(System.String)
+   0266 leave IL_0271: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::GetInstance()
+   026B pop 
+   026C leave IL_0271: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::GetInstance()
+   0271 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TssdkSys>::GetInstance()
+   0276 callvirt System.Void Assets.Scripts.GameSystem.TssdkSys::NotifyTssSdkEndGame()
+   027B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0280 ldc.i4.0 
+   0281 stfld Assets.Scripts.GameLogic.BattleLogic::ThisDeskID
+   0286 call System.Void SnakeTrack::CloseTrace()
+   028B call System.Void CubeApmAgent::MarkLevelFin()
+   0290 ret 
+== System.Void EndGameStep2(Assets.Scripts.GameLogic.EndGameLineType lineType) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_0010: ldarg.1
+   000F ret 
+   0010 ldarg.1 
+   0011 ldc.i4.1 
+   0012 bne.un IL_0071: ldarg.1
+   0017 call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   001C callvirt IState Assets.Scripts.Framework.GameStateCtrl::GetCurrentState()
+   0021 isinst Assets.Scripts.Framework.LoginState
+   0026 brtrue IL_006c: br IL_00dc
+   002B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0030 brfalse IL_0053: ldstr "GotoLoginState by EndGame"
+   0035 ldstr LoginState
+   003A stsfld Assets.Scripts.Framework.WaitingState::s_NextState
+   003F call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0044 ldstr WaitingState
+   0049 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   004E br IL_006c: br IL_00dc
+   0053 ldstr GotoLoginState by EndGame
+   0058 call System.Void DebugHelper::CustomLog(System.String)
+   005D call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0062 ldstr LoginState
+   0067 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   006C br IL_00dc: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0071 ldarg.1 
+   0072 ldc.i4.2 
+   0073 bne.un IL_008c: call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::get_instance()
+   0078 call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   007D ldstr OfflineSysState
+   0082 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   0087 br IL_00dc: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   008C call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::get_instance()
+   0091 callvirt System.Boolean Assets.Scripts.Framework.GameStateCtrl::get_isLobbyState()
+   0096 brtrue IL_00dc: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   009B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   00A0 brfalse IL_00c3: ldstr "GotoLobbyState by EndGame"
+   00A5 ldstr LobbyState
+   00AA stsfld Assets.Scripts.Framework.WaitingState::s_NextState
+   00AF call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   00B4 ldstr WaitingState
+   00B9 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   00BE br IL_00dc: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00C3 ldstr GotoLobbyState by EndGame
+   00C8 call System.Void DebugHelper::CustomLog(System.String)
+   00CD call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   00D2 ldstr LobbyState
+   00D7 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   00DC call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00E1 ldc.i4.0 
+   00E2 stfld Assets.Scripts.GameLogic.BattleLogic::inMultiGame
+   00E7 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00EC ldc.i4.0 
+   00ED stfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   00F2 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   00F7 ldc.i4.0 
+   00F8 stfld Assets.Scripts.GameLogic.BattleLogic::isFighting
+   00FD call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0102 ldc.i4.0 
+   0103 stfld Assets.Scripts.GameLogic.BattleLogic::isGameOver
+   0108 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   010D ldc.i4.0 
+   010E stfld Assets.Scripts.GameLogic.BattleLogic::isWaitMultiStart
+   0113 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0118 ldc.i4.0 
+   0119 stfld Assets.Scripts.GameLogic.BattleLogic::isRollbacking
+   011E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0123 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::resetAllPause()
+   0128 ret 
+== System.Void EndGame(System.Boolean isOfflineGame) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_000c: ldc.i4.0
+   0006 ldc.i4.1 
+   0007 br IL_000d: stloc.0
+   000C ldc.i4.0 
+   000D stloc.0 
+   000E ldarg.0 
+   000F ldloc.0 
+   0010 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper::EndGameStep1(Assets.Scripts.GameLogic.EndGameLineType)
+   0015 ldarg.0 
+   0016 ldloc.0 
+   0017 call System.Void Assets.Scripts.GameLogic.GameBuilderHelper::EndGameStep2(Assets.Scripts.GameLogic.EndGameLineType)
+   001C ret 
+== System.Void ReportDataOnGameEnd() attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0005 callvirt System.String ApolloHelper::GetOpenID()
+   000A stloc.0 
+   000B newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0010 stloc.1 
+   0011 ldloc.1 
+   0012 ldstr g_version
+   0017 call System.String CVersion::GetAppVersion()
+   001C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0021 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0026 ldloc.1 
+   0027 ldstr WorldID
+   002C call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0031 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0036 stloc.2 
+   0037 ldloca.s V_2
+   0039 ldflda TdirUrl::logicWorldID
+   003E constrained. System.Int32
+   0044 callvirt System.String System.Object::ToString()
+   0049 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   004E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0053 ldloc.1 
+   0054 ldstr platform
+   0059 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   005E ldflda ApolloHelper::CurPlatform
+   0063 constrained. Apollo.ApolloPlatform
+   0069 callvirt System.String System.Object::ToString()
+   006E newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0073 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0078 ldloc.1 
+   0079 ldstr openid
+   007E ldloc.0 
+   007F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0084 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0089 ldloc.1 
+   008A ldstr GameType
+   008F ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_kGameType
+   0094 constrained. CSProtocol.COM_GAME_TYPE
+   009A callvirt System.String System.Object::ToString()
+   009F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00A4 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00A9 ldloc.1 
+   00AA ldstr MapID
+   00AF ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   00B4 constrained. System.Int32
+   00BA callvirt System.String System.Object::ToString()
+   00BF newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00C4 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00C9 ldloc.1 
+   00CA ldstr LoadingTime
+   00CF ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadingTime
+   00D4 constrained. System.Single
+   00DA callvirt System.String System.Object::ToString()
+   00DF newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00E4 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00E9 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00EE ldstr Service_LoadingBattle
+   00F3 ldloc.1 
+   00F4 ldc.i4.1 
+   00F5 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00FA newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   00FF stloc.3 
+   0100 ldloc.3 
+   0101 ldstr g_version
+   0106 call System.String CVersion::GetAppVersion()
+   010B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0110 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0115 ldloc.3 
+   0116 ldstr openid
+   011B ldloc.0 
+   011C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0121 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0126 ldloc.3 
+   0127 ldstr MapID
+   012C ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0131 constrained. System.Int32
+   0137 callvirt System.String System.Object::ToString()
+   013C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0141 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0146 ldloc.3 
+   0147 ldstr monoUsed_loadingDone
+   014C ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   0151 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   0156 constrained. System.Int64
+   015C callvirt System.String System.Object::ToString()
+   0161 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0166 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   016B ldloc.3 
+   016C ldstr monoHeap_loadingDone
+   0171 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   0176 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   017B constrained. System.Int64
+   0181 callvirt System.String System.Object::ToString()
+   0186 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   018B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0190 ldloc.3 
+   0191 ldstr pss_loadingDone
+   0196 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   019B ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   01A0 constrained. System.Int64
+   01A6 callvirt System.String System.Object::ToString()
+   01AB newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01B0 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01B5 ldloc.3 
+   01B6 ldstr monoUsed_BattleEnd
+   01BB ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   01C0 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   01C5 constrained. System.Int64
+   01CB callvirt System.String System.Object::ToString()
+   01D0 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01D5 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01DA ldloc.3 
+   01DB ldstr monoHeap_BattleEnd
+   01E0 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   01E5 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   01EA constrained. System.Int64
+   01F0 callvirt System.String System.Object::ToString()
+   01F5 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   01FA callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   01FF ldloc.3 
+   0200 ldstr pss_BattleEnd
+   0205 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   020A ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   020F constrained. System.Int64
+   0215 callvirt System.String System.Object::ToString()
+   021A newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   021F callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0224 ldloc.3 
+   0225 ldstr monoUsed_BeforeLoading
+   022A ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   022F ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   0234 constrained. System.Int64
+   023A callvirt System.String System.Object::ToString()
+   023F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0244 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0249 ldloc.3 
+   024A ldstr monoHeap_BeforeLoading
+   024F ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0254 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   0259 constrained. System.Int64
+   025F callvirt System.String System.Object::ToString()
+   0264 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0269 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   026E ldloc.3 
+   026F ldstr pss_BeforeLoading
+   0274 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BeforeLoading
+   0279 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   027E constrained. System.Int64
+   0284 callvirt System.String System.Object::ToString()
+   0289 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   028E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0293 ldloc.3 
+   0294 ldstr monoUsed_LoadingPeak
+   0299 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingPeak
+   029E ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   02A3 constrained. System.Int64
+   02A9 callvirt System.String System.Object::ToString()
+   02AE newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   02B3 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   02B8 ldloc.3 
+   02B9 ldstr monoHeap_LoadingPeak
+   02BE ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingPeak
+   02C3 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   02C8 constrained. System.Int64
+   02CE callvirt System.String System.Object::ToString()
+   02D3 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   02D8 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   02DD ldloc.3 
+   02DE ldstr pss_LoadingPeak
+   02E3 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingPeak
+   02E8 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   02ED constrained. System.Int64
+   02F3 callvirt System.String System.Object::ToString()
+   02F8 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   02FD callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0302 ldloc.3 
+   0303 ldstr start_game_count
+   0308 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_StartGameCount
+   030D constrained. System.Single
+   0313 callvirt System.String System.Object::ToString()
+   0318 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   031D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0322 ldloc.3 
+   0323 ldstr gccnt_start
+   0328 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   032D ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::gcCnt
+   0332 constrained. System.Int64
+   0338 callvirt System.String System.Object::ToString()
+   033D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0342 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0347 ldloc.3 
+   0348 ldstr gccnt_end
+   034D ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_BattleEnd
+   0352 ldflda Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::gcCnt
+   0357 constrained. System.Int64
+   035D callvirt System.String System.Object::ToString()
+   0362 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0367 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   036C ldloc.3 
+   036D ldstr quality
+   0372 ldsflda Assets.Scripts.Framework.GameSettings::RenderQuality
+   0377 constrained. Assets.Scripts.Framework.SGameRenderQuality
+   037D callvirt System.String System.Object::ToString()
+   0382 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0387 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   038C ldloc.3 
+   038D ldstr Quality_Mode
+   0392 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0397 stloc.s V_4
+   0399 ldloca.s V_4
+   039B constrained. System.Int32
+   03A1 callvirt System.String System.Object::ToString()
+   03A6 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   03AB callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   03B0 ldloc.3 
+   03B1 ldstr Quality_Particle
+   03B6 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   03BB stloc.s V_5
+   03BD ldloca.s V_5
+   03BF constrained. System.Int32
+   03C5 callvirt System.String System.Object::ToString()
+   03CA newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   03CF callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   03D4 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   03D9 ldstr Service_Memory
+   03DE ldloc.3 
+   03DF ldc.i4.1 
+   03E0 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   03E5 call !0 Singleton`1<DataReportSys>::GetInstance()
+   03EA callvirt System.Int32 DataReportSys::get_GameTime()
+   03EF conv.r4 
+   03F0 stloc.s V_6
+   03F2 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   03F7 stloc.s V_7
+   03F9 ldloc.s V_7
+   03FB ldstr g_version
+   0400 call System.String CVersion::GetAppVersion()
+   0405 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   040A callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   040F ldloc.s V_7
+   0411 ldstr WorldID
+   0416 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   041B callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   0420 stloc.s V_8
+   0422 ldloca.s V_8
+   0424 ldflda TdirUrl::logicWorldID
+   0429 constrained. System.Int32
+   042F callvirt System.String System.Object::ToString()
+   0434 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0439 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   043E ldloc.s V_7
+   0440 ldstr platform
+   0445 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   044A callvirt System.String ApolloHelper::GetPlatformStr()
+   044F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0454 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0459 ldloc.s V_7
+   045B ldstr openid
+   0460 ldloc.0 
+   0461 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0466 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   046B ldloc.s V_7
+   046D ldstr GameType
+   0472 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_kGameType
+   0477 constrained. CSProtocol.COM_GAME_TYPE
+   047D callvirt System.String System.Object::ToString()
+   0482 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0487 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   048C ldloc.s V_7
+   048E ldstr MapID
+   0493 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0498 constrained. System.Int32
+   049E callvirt System.String System.Object::ToString()
+   04A3 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   04A8 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   04AD ldloc.s V_7
+   04AF ldstr Battle_Time
+   04B4 ldloca.s V_6
+   04B6 constrained. System.Single
+   04BC callvirt System.String System.Object::ToString()
+   04C1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   04C6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   04CB ldloc.s V_7
+   04CD ldstr music
+   04D2 call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableMusic()
+   04D7 stloc.s V_9
+   04D9 ldloca.s V_9
+   04DB constrained. System.Boolean
+   04E1 callvirt System.String System.Object::ToString()
+   04E6 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   04EB callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   04F0 ldloc.s V_7
+   04F2 ldstr quality
+   04F7 ldsflda Assets.Scripts.Framework.GameSettings::RenderQuality
+   04FC constrained. Assets.Scripts.Framework.SGameRenderQuality
+   0502 callvirt System.String System.Object::ToString()
+   0507 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   050C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0511 ldloc.s V_7
+   0513 ldstr status
+   0518 ldstr 1
+   051D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0522 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0527 ldloc.s V_7
+   0529 ldstr Quality_Mode
+   052E call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0533 stloc.s V_10
+   0535 ldloca.s V_10
+   0537 constrained. System.Int32
+   053D callvirt System.String System.Object::ToString()
+   0542 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0547 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   054C ldloc.s V_7
+   054E ldstr Quality_Particle
+   0553 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0558 stloc.s V_11
+   055A ldloca.s V_11
+   055C constrained. System.Int32
+   0562 callvirt System.String System.Object::ToString()
+   0567 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   056C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0571 ldloc.s V_7
+   0573 ldstr Default_Quality_Mode
+   0578 ldsflda Assets.Scripts.Framework.GameSettings::DeviceLevel
+   057D constrained. Assets.Scripts.Framework.SGameRenderQuality
+   0583 callvirt System.String System.Object::ToString()
+   0588 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   058D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0592 ldloc.s V_7
+   0594 ldstr Default_Quality_Particle
+   0599 ldsflda Assets.Scripts.Framework.GameSettings::DeviceLevel
+   059E constrained. Assets.Scripts.Framework.SGameRenderQuality
+   05A4 callvirt System.String System.Object::ToString()
+   05A9 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   05AE callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   05B3 ldloc.s V_7
+   05B5 ldstr CameraHeight
+   05BA call System.Int32 Assets.Scripts.Framework.GameSettings::get_CameraHeight()
+   05BF stloc.s V_12
+   05C1 ldloca.s V_12
+   05C3 constrained. System.Int32
+   05C9 callvirt System.String System.Object::ToString()
+   05CE newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   05D3 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   05D8 ldloc.s V_7
+   05DA ldstr receiveMoveCmdAverage
+   05DF call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   05E4 ldflda Assets.Scripts.Framework.FrameSynchr::m_receiveMoveCmdAverage
+   05E9 constrained. System.Int32
+   05EF callvirt System.String System.Object::ToString()
+   05F4 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   05F9 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   05FE ldloc.s V_7
+   0600 ldstr receiveMoveCmdMax
+   0605 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   060A ldflda Assets.Scripts.Framework.FrameSynchr::m_receiveMoveCmdMax
+   060F constrained. System.UInt32
+   0615 callvirt System.String System.Object::ToString()
+   061A newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   061F callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0624 ldloc.s V_7
+   0626 ldstr execMoveCmdAverage
+   062B call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0630 ldflda Assets.Scripts.Framework.FrameSynchr::m_execMoveCmdAverage
+   0635 constrained. System.Int32
+   063B callvirt System.String System.Object::ToString()
+   0640 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0645 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   064A ldloc.s V_7
+   064C ldstr execMoveCmdMax
+   0651 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0656 ldflda Assets.Scripts.Framework.FrameSynchr::m_execMoveCmdMax
+   065B constrained. System.UInt32
+   0661 callvirt System.String System.Object::ToString()
+   0666 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   066B callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0670 ldloc.s V_7
+   0672 ldstr LOD_Down
+   0677 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   067C ldflda Assets.Scripts.GameLogic.BattleLogic::m_iAutoLODState
+   0681 constrained. System.Int32
+   0687 callvirt System.String System.Object::ToString()
+   068C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0691 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0696 ldloc.s V_7
+   0698 ldstr FPS_Down
+   069D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   06A2 ldflda Assets.Scripts.GameLogic.BattleLogic::m_iAutoDegrade60FPSState
+   06A7 constrained. System.Int32
+   06AD callvirt System.String System.Object::ToString()
+   06B2 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   06B7 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   06BC ldloc.s V_7
+   06BE ldstr CPU_NAME
+   06C3 call System.String UnityEngine.SystemInfo::get_processorType()
+   06C8 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   06CD callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   06D2 ldloc.s V_7
+   06D4 ldstr CPU_Frequency
+   06D9 call System.Int32 UnityEngine.SystemInfo::get_processorFrequency()
+   06DE stloc.s V_13
+   06E0 ldloca.s V_13
+   06E2 constrained. System.Int32
+   06E8 callvirt System.String System.Object::ToString()
+   06ED newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   06F2 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   06F7 ldloc.s V_7
+   06F9 ldstr GPU_NAME
+   06FE call System.String UnityEngine.SystemInfo::get_graphicsDeviceName()
+   0703 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0708 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   070D ldloc.s V_7
+   070F ldstr SystemMemSize
+   0714 call System.Int32 DeviceCheckSys::GetSafeTotalMemoryMegaBytes()
+   0719 stloc.s V_14
+   071B ldloca.s V_14
+   071D constrained. System.Int32
+   0723 callvirt System.String System.Object::ToString()
+   0728 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   072D callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0732 ldloc.s V_7
+   0734 ldstr CPUCount
+   0739 call System.Int32 UnityEngine.SystemInfo::get_processorCount()
+   073E stloc.s V_15
+   0740 ldloca.s V_15
+   0742 constrained. System.Int32
+   0748 callvirt System.String System.Object::ToString()
+   074D newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0752 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0757 call System.Boolean NetworkAccelerator::get_started()
+   075C brfalse IL_07a1: ldloc.s V_7
+   0761 call System.Boolean NetworkAccelerator::isAccerating()
+   0766 brfalse IL_0786: ldloc.s V_7
+   076B ldloc.s V_7
+   076D ldstr AccState
+   0772 ldstr Acc
+   0777 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   077C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0781 br IL_079c: br IL_07b7
+   0786 ldloc.s V_7
+   0788 ldstr AccState
+   078D ldstr Direct
+   0792 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0797 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   079C br IL_07b7: ldloc.s V_7
+   07A1 ldloc.s V_7
+   07A3 ldstr AccState
+   07A8 ldstr Off
+   07AD newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   07B2 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   07B7 ldloc.s V_7
+   07B9 ldstr MnaState
+   07BE call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   07C3 ldflda GSDKsys::m_GsdkSpeedFlag
+   07C8 constrained. System.Int32
+   07CE callvirt System.String System.Object::ToString()
+   07D3 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   07D8 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   07DD ldloc.s V_7
+   07DF ldstr GameID
+   07E4 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.TGPSDKSys>::GetInstance()
+   07E9 callvirt System.String Assets.Scripts.GameSystem.TGPSDKSys::GetGameID()
+   07EE newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   07F3 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   07F8 ldc.i4.0 
+   07F9 stloc.s V_16
+   07FB call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0800 callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_UseSpeak()
+   0805 brfalse IL_0821: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   080A call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   080F callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_UseMic()
+   0814 brfalse IL_0821: call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0819 ldc.i4.2 
+   081A stloc.s V_16
+   081C br IL_0833: ldloc.s V_7
+   0821 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0826 callvirt System.Boolean Assets.Scripts.GameSystem.VoiceSys::get_UseSpeak()
+   082B brfalse IL_0833: ldloc.s V_7
+   0830 ldc.i4.1 
+   0831 stloc.s V_16
+   0833 ldloc.s V_7
+   0835 ldstr Mic
+   083A ldloca.s V_16
+   083C constrained. System.Int32
+   0842 callvirt System.String System.Object::ToString()
+   0847 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   084C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0851 ldloc.s V_7
+   0853 ldstr NetWorkType
+   0858 call System.Int32 AndroidJavaUtility::Android_GetNetworkType()
+   085D stloc.s V_17
+   085F ldloca.s V_17
+   0861 constrained. System.Int32
+   0867 callvirt System.String System.Object::ToString()
+   086C newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0871 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0876 ldloc.s V_7
+   0878 ldstr vport
+   087D call System.String NetworkAccelerator::GetConnectIPstr()
+   0882 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0887 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   088C ldloc.s V_7
+   088E ldstr RealUseTongCai
+   0893 call !0 MonoSingleton`1<CTongCaiSys>::get_instance()
+   0898 callvirt System.Boolean CTongCaiSys::IsCanUseTongCai()
+   089D brfalse IL_08ac: ldstr "0"
+   08A2 ldstr 1
+   08A7 br IL_08b1: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   08AC ldstr 0
+   08B1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   08B6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   08BB ldloc.s V_7
+   08BD ldstr JianquanUseTonCai
+   08C2 call !0 MonoSingleton`1<CTongCaiSys>::get_instance()
+   08C7 ldfld CTongCaiSys::isTongCaiValid
+   08CC brfalse IL_08db: ldstr "0"
+   08D1 ldstr 1
+   08D6 br IL_08e0: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   08DB ldstr 0
+   08E0 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   08E5 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   08EA ldloc.s V_7
+   08EC ldstr TdirUseTongCai
+   08F1 call !0 MonoSingleton`1<CTongCaiSys>::get_instance()
+   08F6 ldfld CTongCaiSys::isCanUseTongCai
+   08FB brfalse IL_090a: ldstr "0"
+   0900 ldstr 1
+   0905 br IL_090f: newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   090A ldstr 0
+   090F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0914 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0919 ldloc.s V_7
+   091B ldstr TongCaiNet
+   0920 call Assets.Scripts.GameSystem.enNetWorkType Assets.Scripts.GameSystem.CUICommonSystem::GetNetWorkType()
+   0925 stloc.s V_18
+   0927 ldloca.s V_18
+   0929 constrained. Assets.Scripts.GameSystem.enNetWorkType
+   092F callvirt System.String System.Object::ToString()
+   0934 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0939 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   093E ldloc.s V_7
+   0940 ldstr TdirServerType
+   0945 ldsfld TdirConfig::curServerType
+   094A stloc.s V_19
+   094C ldloca.s V_19
+   094E constrained. System.Int32
+   0954 callvirt System.String System.Object::ToString()
+   0959 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   095E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0963 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::get_instance()
+   0968 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   096D brfalse IL_09db: ldloc.s V_7
+   0972 ldloc.s V_7
+   0974 ldstr RoomIdentify
+   0979 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::get_instance()
+   097E ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0983 ldflda Assets.Scripts.GameSystem.RoomInfo::iRoomEntity
+   0988 constrained. System.Int32
+   098E callvirt System.String System.Object::ToString()
+   0993 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::get_instance()
+   0998 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   099D ldflda Assets.Scripts.GameSystem.RoomInfo::dwRoomID
+   09A2 constrained. System.UInt32
+   09A8 callvirt System.String System.Object::ToString()
+   09AD call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::get_instance()
+   09B2 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   09B7 ldflda Assets.Scripts.GameSystem.RoomInfo::dwRoomSeq
+   09BC constrained. System.UInt32
+   09C2 callvirt System.String System.Object::ToString()
+   09C7 call System.String System.String::Concat(System.String,System.String,System.String)
+   09CC newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   09D1 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   09D6 br IL_09f1: call !0 Singleton`1<DataReportSys>::GetInstance()
+   09DB ldloc.s V_7
+   09DD ldstr RoomIdentify
+   09E2 ldstr 0
+   09E7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   09EC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   09F1 call !0 Singleton`1<DataReportSys>::GetInstance()
+   09F6 callvirt System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> DataReportSys::ReportPingToBeacon()
+   09FB stloc.s V_20
+   09FD ldc.i4.0 
+   09FE stloc.s V_21
+   0A00 br IL_0a1b: ldloc.s V_21
+   0A05 ldloc.s V_7
+   0A07 ldloc.s V_20
+   0A09 ldloc.s V_21
+   0A0B callvirt !0 System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::get_Item(System.Int32)
+   0A10 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0A15 ldloc.s V_21
+   0A17 ldc.i4.1 
+   0A18 add 
+   0A19 stloc.s V_21
+   0A1B ldloc.s V_21
+   0A1D ldloc.s V_20
+   0A1F callvirt System.Int32 System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::get_Count()
+   0A24 blt IL_0a05: ldloc.s V_7
+   0A29 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0A2E callvirt System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> DataReportSys::ReportFPSToBeacon()
+   0A33 stloc.s V_20
+   0A35 ldc.i4.0 
+   0A36 stloc.s V_22
+   0A38 br IL_0a53: ldloc.s V_22
+   0A3D ldloc.s V_7
+   0A3F ldloc.s V_20
+   0A41 ldloc.s V_22
+   0A43 callvirt !0 System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::get_Item(System.Int32)
+   0A48 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0A4D ldloc.s V_22
+   0A4F ldc.i4.1 
+   0A50 add 
+   0A51 stloc.s V_22
+   0A53 ldloc.s V_22
+   0A55 ldloc.s V_20
+   0A57 callvirt System.Int32 System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::get_Count()
+   0A5C blt IL_0a3d: ldloc.s V_7
+   0A61 ldloc.s V_7
+   0A63 ldstr IsWin
+   0A68 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0A6D callvirt System.Boolean Assets.Scripts.GameLogic.BattleLogic::LastGameIsWin()
+   0A72 stloc.s V_23
+   0A74 ldloca.s V_23
+   0A76 constrained. System.Boolean
+   0A7C callvirt System.String System.Object::ToString()
+   0A81 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0A86 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0A8B ldloc.s V_7
+   0A8D ldstr IsQosWork
+   0A92 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   0A97 callvirt System.Int32 GSDKsys::IsQosWork()
+   0A9C stloc.s V_24
+   0A9E ldloca.s V_24
+   0AA0 constrained. System.Int32
+   0AA6 callvirt System.String System.Object::ToString()
+   0AAB newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0AB0 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0AB5 ldloc.s V_7
+   0AB7 ldstr IsAIRunning
+   0ABC call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0AC1 ldflda Assets.Scripts.GameLogic.BattleLogic::m_isRunAI
+   0AC6 constrained. System.Boolean
+   0ACC callvirt System.String System.Object::ToString()
+   0AD1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0AD6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0ADB ldloc.s V_7
+   0ADD ldstr ComputeShader
+   0AE2 call System.Boolean UnityEngine.SystemInfo::get_supportsComputeShaders()
+   0AE7 stloc.s V_25
+   0AE9 ldloca.s V_25
+   0AEB constrained. System.Boolean
+   0AF1 callvirt System.String System.Object::ToString()
+   0AF6 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0AFB callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0B00 ldloc.s V_7
+   0B02 ldstr Instancing
+   0B07 call System.Boolean UnityEngine.SystemInfo::get_supportsInstancing()
+   0B0C stloc.s V_26
+   0B0E ldloca.s V_26
+   0B10 constrained. System.Boolean
+   0B16 callvirt System.String System.Object::ToString()
+   0B1B newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0B20 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0B25 ldloc.s V_7
+   0B27 ldstr 2DArrayTexture
+   0B2C call System.Boolean UnityEngine.SystemInfo::get_supports2DArrayTextures()
+   0B31 stloc.s V_27
+   0B33 ldloca.s V_27
+   0B35 constrained. System.Boolean
+   0B3B callvirt System.String System.Object::ToString()
+   0B40 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0B45 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0B4A ldloc.s V_7
+   0B4C ldstr 3DTexture
+   0B51 call System.Boolean UnityEngine.SystemInfo::get_supports3DTextures()
+   0B56 stloc.s V_28
+   0B58 ldloca.s V_28
+   0B5A constrained. System.Boolean
+   0B60 callvirt System.String System.Object::ToString()
+   0B65 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0B6A callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0B6F ldloc.s V_7
+   0B71 ldstr WatchMode
+   0B76 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0B7B callvirt Assets.Scripts.GameSystem.WatchController/WorkMode Assets.Scripts.GameSystem.WatchController::get_workMode()
+   0B80 stloc.s V_29
+   0B82 ldloca.s V_29
+   0B84 constrained. Assets.Scripts.GameSystem.WatchController/WorkMode
+   0B8A callvirt System.String System.Object::ToString()
+   0B8F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0B94 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0B99 ldloc.s V_7
+   0B9B ldstr GLES3
+   0BA0 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0BA5 ldflda Assets.Scripts.Framework.GameFramework::useGLES3
+   0BAA constrained. System.Boolean
+   0BB0 callvirt System.String System.Object::ToString()
+   0BB5 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0BBA callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0BBF ldloc.s V_7
+   0BC1 ldstr MTR
+   0BC6 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0BCB ldflda Assets.Scripts.Framework.GameFramework::mtrOpen
+   0BD0 constrained. System.Boolean
+   0BD6 callvirt System.String System.Object::ToString()
+   0BDB newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0BE0 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0BE5 ldloc.s V_7
+   0BE7 ldstr Vulkan
+   0BEC call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0BF1 ldflda Assets.Scripts.Framework.GameFramework::useVulkan
+   0BF6 constrained. System.Boolean
+   0BFC callvirt System.String System.Object::ToString()
+   0C01 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0C06 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0C0B ldloc.s V_7
+   0C0D ldstr FakeDevice
+   0C12 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0C17 ldflda Assets.Scripts.Framework.GameFramework::fakeDeviceModel
+   0C1C constrained. System.Boolean
+   0C22 callvirt System.String System.Object::ToString()
+   0C27 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0C2C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0C31 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0C36 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0C3B stloc.s V_30
+   0C3D ldloc.s V_30
+   0C3F brfalse IL_0c6b: ldloc.s V_7
+   0C44 ldloc.s V_7
+   0C46 ldstr SelectHeroType
+   0C4B ldloc.s V_30
+   0C4D callvirt Assets.Scripts.GameSystem.enSelectType Assets.Scripts.GameLogic.CLevelContext::GetSelectHeroType()
+   0C52 stloc.s V_31
+   0C54 ldloca.s V_31
+   0C56 constrained. Assets.Scripts.GameSystem.enSelectType
+   0C5C callvirt System.String System.Object::ToString()
+   0C61 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0C66 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0C6B ldloc.s V_7
+   0C6D ldstr GameObjectPoolLimitSize
+   0C72 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0C77 ldflda CGameObjectPool::m_gameObjectPoolLimitSize
+   0C7C constrained. System.Int32
+   0C82 callvirt System.String System.Object::ToString()
+   0C87 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0C8C callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0C91 ldloc.s V_7
+   0C93 ldstr GameObjectInPoolStatisticAmount
+   0C98 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0C9D callvirt System.Int32 CGameObjectPool::GetGameObjectInPoolStatisticAmount()
+   0CA2 stloc.s V_32
+   0CA4 ldloca.s V_32
+   0CA6 constrained. System.Int32
+   0CAC callvirt System.String System.Object::ToString()
+   0CB1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0CB6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0CBB call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0CC0 ldstr Service_PVPBattle_Summary
+   0CC5 ldloc.s V_7
+   0CC7 ldc.i4.1 
+   0CC8 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0CCD ldsfld TDM.ITDataMaster::Instance
+   0CD2 ldstr Service_PVPBattle_Summary
+   0CD7 ldloc.s V_7
+   0CD9 callvirt System.Void TDM.ITDataMaster::ReportEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>)
+   0CDE ldsfld SProfiler::AutoCollectAndUploadData
+   0CE3 brfalse IL_0de3: ldsfld System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0CE8 newobj System.Void ListView`1<System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>>::.ctor()
+   0CED stloc.s V_33
+   0CEF ldloc.s V_33
+   0CF1 call System.Void SProfiler::PrintProfileData(ListView`1<System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>>)
+   0CF6 call System.DateTime System.DateTime::get_Now()
+   0CFB stloc.s V_35
+   0CFD ldloca.s V_35
+   0CFF ldstr yyyy-MM-dd-HH-mm-ss-ffff
+   0D04 call System.String System.DateTime::ToString(System.String)
+   0D09 stloc.s V_34
+   0D0B ldc.i4.0 
+   0D0C stloc.s V_36
+   0D0E br IL_0dc9: ldloc.s V_36
+   0D13 ldstr {0};{1};{2};{3};{4};{5};{6}
+   0D18 ldc.i4.7 
+   0D19 newarr System.Object
+   0D1E dup 
+   0D1F ldc.i4.0 
+   0D20 ldloc.0 
+   0D21 stelem.ref 
+   0D22 dup 
+   0D23 ldc.i4.1 
+   0D24 ldloc.s V_34
+   0D26 stelem.ref 
+   0D27 dup 
+   0D28 ldc.i4.2 
+   0D29 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0D2E box System.Int32
+   0D33 stelem.ref 
+   0D34 dup 
+   0D35 ldc.i4.3 
+   0D36 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0D3B stloc.s V_38
+   0D3D ldloca.s V_38
+   0D3F constrained. System.Int32
+   0D45 callvirt System.String System.Object::ToString()
+   0D4A stelem.ref 
+   0D4B dup 
+   0D4C ldc.i4.4 
+   0D4D call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0D52 stloc.s V_39
+   0D54 ldloca.s V_39
+   0D56 constrained. System.Int32
+   0D5C callvirt System.String System.Object::ToString()
+   0D61 stelem.ref 
+   0D62 dup 
+   0D63 ldc.i4.5 
+   0D64 call System.Boolean Assets.Scripts.Framework.GameSettings::get_Use60FPSMode()
+   0D69 box System.Boolean
+   0D6E stelem.ref 
+   0D6F dup 
+   0D70 ldc.i4.6 
+   0D71 call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableMTR()
+   0D76 box System.Boolean
+   0D7B stelem.ref 
+   0D7C call System.String System.String::Format(System.String,System.Object[])
+   0D81 stloc.s V_37
+   0D83 ldloc.s V_33
+   0D85 ldloc.s V_36
+   0D87 callvirt !0 ListView`1<System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>>::get_Item(System.Int32)
+   0D8C ldc.i4.0 
+   0D8D ldstr Common Setting
+   0D92 ldloc.s V_37
+   0D94 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0D99 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Insert(System.Int32,!0)
+   0D9E call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0DA3 ldstr Service_PVPBattle_Function_Profile{0}
+   0DA8 ldloc.s V_36
+   0DAA box System.Int32
+   0DAF call System.String System.String::Format(System.String,System.Object)
+   0DB4 ldloc.s V_33
+   0DB6 ldloc.s V_36
+   0DB8 callvirt !0 ListView`1<System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>>::get_Item(System.Int32)
+   0DBD ldc.i4.1 
+   0DBE callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0DC3 ldloc.s V_36
+   0DC5 ldc.i4.1 
+   0DC6 add 
+   0DC7 stloc.s V_36
+   0DC9 ldloc.s V_36
+   0DCB ldloc.s V_33
+   0DCD callvirt System.Int32 ListViewBase::get_Count()
+   0DD2 blt IL_0d13: ldstr "{0};{1};{2};{3};{4};{5};{6}"
+   0DD7 leave IL_0de3: ldsfld System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0DDC stloc.s V_40
+   0DDE leave IL_0de3: ldsfld System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>> Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0DE3 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0DE8 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Clear()
+   0DED call !0 Singleton`1<DataReportSys>::GetInstance()
+   0DF2 callvirt System.Void DataReportSys::ReportFrameDataToTDM()
+   0DF7 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0DFC callvirt System.Int32 DataReportSys::get_FPS10Count()
+   0E01 conv.r4 
+   0E02 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0E07 callvirt System.Int32 DataReportSys::get_FPSCount()
+   0E0C conv.r4 
+   0E0D div 
+   0E0E stloc.s V_41
+   0E10 ldloc.s V_41
+   0E12 ldc.r4 100
+   0E17 mul 
+   0E18 ldc.r4 10
+   0E1D div 
+   0E1E call System.Int32 UnityEngine.Mathf::CeilToInt(System.Single)
+   0E23 ldc.i4.s 10
+   0E25 mul 
+   0E26 stloc.s V_42
+   0E28 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0E2D callvirt System.Int32 DataReportSys::get_FPS10Count()
+   0E32 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0E37 callvirt System.Int32 DataReportSys::get_FPS18Count()
+   0E3C add 
+   0E3D conv.r4 
+   0E3E call !0 Singleton`1<DataReportSys>::GetInstance()
+   0E43 callvirt System.Int32 DataReportSys::get_FPSCount()
+   0E48 conv.r4 
+   0E49 div 
+   0E4A stloc.s V_43
+   0E4C ldloc.s V_43
+   0E4E ldc.r4 100
+   0E53 mul 
+   0E54 ldc.r4 10
+   0E59 div 
+   0E5A call System.Int32 UnityEngine.Mathf::CeilToInt(System.Single)
+   0E5F ldc.i4.s 10
+   0E61 mul 
+   0E62 stloc.s V_44
+   0E64 ldc.i4 5000
+   0E69 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0E6E stloc.s V_45
+   0E70 ldloc.s V_45
+   0E72 ldfld CSProtocol.CSPkg::stPkgData
+   0E77 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0E7C ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0E81 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iMapID
+   0E86 ldloc.s V_45
+   0E88 ldfld CSProtocol.CSPkg::stPkgData
+   0E8D callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0E92 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0E97 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllPlayers()
+   0E9C callvirt System.Int32 ListViewBase::get_Count()
+   0EA1 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iPlayerCnt
+   0EA6 ldloc.s V_45
+   0EA8 ldfld CSProtocol.CSPkg::stPkgData
+   0EAD callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0EB2 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0EB7 conv.i1 
+   0EB8 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::chModelLOD
+   0EBD ldloc.s V_45
+   0EBF ldfld CSProtocol.CSPkg::stPkgData
+   0EC4 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0EC9 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   0ECE conv.i1 
+   0ECF stfld CSProtocol.CSPKG_CLT_PERFORMANCE::chParticleLOD
+   0ED4 ldloc.s V_45
+   0ED6 ldfld CSProtocol.CSPkg::stPkgData
+   0EDB callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0EE0 call System.Int32 Assets.Scripts.Framework.GameSettings::get_CameraHeight()
+   0EE5 conv.i1 
+   0EE6 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::chCameraHeight
+   0EEB ldloc.s V_45
+   0EED ldfld CSProtocol.CSPkg::stPkgData
+   0EF2 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0EF7 call System.Boolean Assets.Scripts.Framework.GameSettings::get_EnableOutline()
+   0EFC brfalse IL_0f07: ldc.i4.0
+   0F01 ldc.i4.1 
+   0F02 br IL_0f08: stfld System.SByte CSProtocol.CSPKG_CLT_PERFORMANCE::chEnableOutline
+   0F07 ldc.i4.0 
+   0F08 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::chEnableOutline
+   0F0D ldloc.s V_45
+   0F0F ldfld CSProtocol.CSPkg::stPkgData
+   0F14 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F19 ldloc.s V_42
+   0F1B stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iFps10PercentNum
+   0F20 ldloc.s V_45
+   0F22 ldfld CSProtocol.CSPkg::stPkgData
+   0F27 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F2C ldloc.s V_44
+   0F2E stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iFps18PercentNum
+   0F33 ldloc.s V_45
+   0F35 ldfld CSProtocol.CSPkg::stPkgData
+   0F3A callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F3F call !0 Singleton`1<DataReportSys>::GetInstance()
+   0F44 callvirt System.Int32 DataReportSys::get_FPSAVE()
+   0F49 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iAveFps
+   0F4E ldloc.s V_45
+   0F50 ldfld CSProtocol.CSPkg::stPkgData
+   0F55 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F5A call !0 Singleton`1<DataReportSys>::GetInstance()
+   0F5F callvirt System.Int32 DataReportSys::get_HeartPingAve()
+   0F64 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iPingAverage
+   0F69 ldloc.s V_45
+   0F6B ldfld CSProtocol.CSPkg::stPkgData
+   0F70 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F75 call !0 Singleton`1<DataReportSys>::GetInstance()
+   0F7A callvirt System.Int32 DataReportSys::get_HeartPingVar()
+   0F7F stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iPingVariance
+   0F84 call System.String UnityEngine.SystemInfo::get_deviceModel()
+   0F89 ldloc.s V_45
+   0F8B ldfld CSProtocol.CSPkg::stPkgData
+   0F90 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0F95 ldflda CSProtocol.CSPKG_CLT_PERFORMANCE::szDeviceModel
+   0F9A call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0F9F call System.String UnityEngine.SystemInfo::get_graphicsDeviceName()
+   0FA4 ldloc.s V_45
+   0FA6 ldfld CSProtocol.CSPkg::stPkgData
+   0FAB callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0FB0 ldflda CSProtocol.CSPKG_CLT_PERFORMANCE::szGPUName
+   0FB5 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0FBA ldloc.s V_45
+   0FBC ldfld CSProtocol.CSPkg::stPkgData
+   0FC1 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0FC6 call System.Int32 UnityEngine.SystemInfo::get_processorCount()
+   0FCB stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iCpuCoreNum
+   0FD0 ldloc.s V_45
+   0FD2 ldfld CSProtocol.CSPkg::stPkgData
+   0FD7 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0FDC call System.Int32 DeviceCheckSys::GetSafeTotalMemoryMegaBytes()
+   0FE1 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iSysMemorySize
+   0FE6 ldloc.s V_45
+   0FE8 ldfld CSProtocol.CSPkg::stPkgData
+   0FED callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   0FF2 call System.Int32 DeviceCheckSys::GetAvailMemory()
+   0FF7 stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iAvailMemory
+   0FFC ldloc.s V_45
+   0FFE ldfld CSProtocol.CSPkg::stPkgData
+   1003 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   1008 call !0 MonoSingleton`1<CTongCaiSys>::GetInstance()
+   100D callvirt System.Boolean CTongCaiSys::IsCanUseTongCai()
+   1012 brfalse IL_101d: ldc.i4.0
+   1017 ldc.i4.1 
+   1018 br IL_101e: stfld System.Int32 CSProtocol.CSPKG_CLT_PERFORMANCE::iIsTongCai
+   101D ldc.i4.0 
+   101E stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iIsTongCai
+   1023 call !0 Singleton`1<DataReportSys>::GetInstance()
+   1028 ldloca.s V_45
+   102A callvirt System.Void DataReportSys::SendPerformanceDataSrv(CSProtocol.CSPkg&)
+   102F ldc.i4.0 
+   1030 stloc.s V_46
+   1032 call System.Boolean NetworkAccelerator::get_started()
+   1037 brfalse IL_1056: ldc.i4.0
+   103C call System.Boolean NetworkAccelerator::isAccerating()
+   1041 brfalse IL_104e: ldc.i4.2
+   1046 ldc.i4.1 
+   1047 stloc.s V_46
+   1049 br IL_1051: br IL_1059
+   104E ldc.i4.2 
+   104F stloc.s V_46
+   1051 br IL_1059: call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   1056 ldc.i4.0 
+   1057 stloc.s V_46
+   1059 call !0 MonoSingleton`1<GSDKsys>::GetInstance()
+   105E callvirt System.Boolean GSDKsys::get_UseGSdkSpeed()
+   1063 brfalse IL_106e: ldloc.s V_45
+   1068 ldc.i4.4 
+   1069 ldloc.s V_46
+   106B add 
+   106C stloc.s V_46
+   106E ldloc.s V_45
+   1070 ldfld CSProtocol.CSPkg::stPkgData
+   1075 callvirt CSProtocol.CSPKG_CLT_PERFORMANCE CSProtocol.CSPkgBody::get_stCltPerformance()
+   107A ldloc.s V_46
+   107C stfld CSProtocol.CSPKG_CLT_PERFORMANCE::iIsSpeedUp
+   1081 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   1086 ldloca.s V_45
+   1088 ldc.i4.0 
+   1089 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   108E pop 
+   108F leave IL_10a7: ldc.i4.s 17
+   1094 stloc.s V_47
+   1096 ldloc.s V_47
+   1098 callvirt System.String System.Exception::get_Message()
+   109D call System.Void UnityEngine.Debug::Log(System.Object)
+   10A2 leave IL_10a7: ldc.i4.s 17
+   10A7 ldc.i4.s 17
+   10A9 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_kGameType
+   10AE ldc.i4.0 
+   10AF stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   10B4 call !0 Singleton`1<DataReportSys>::GetInstance()
+   10B9 callvirt System.Void DataReportSys::ClearAllData()
+   10BE ret 
+== System.Void onGameLoadProgress(System.Single progress) attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0005 brfalse IL_002c: ret
+   000A ldarg.1 
+   000B ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadProgress
+   0010 ldc.r4 0.01
+   0015 add 
+   0016 blt.un IL_002c: ret
+   001B ldarg.1 
+   001C stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadProgress
+   0021 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0026 ldarg.1 
+   0027 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::OnLoadingProgress(System.Single)
+   002C ret 
+== System.Void OnGameLoadComplete(System.Boolean bFileError, System.String invalidFile) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 brfalse IL_0012: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0006 call !0 Singleton`1<Assets.Scripts.GameSystem.CUICommonSystem>::GetInstance()
+   000B ldarg.2 
+   000C callvirt System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenResourceDamagedMsgBox(System.String)
+   0011 ret 
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0017 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   001C brtrue IL_002d: call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0021 ldc.i4.0 
+   0022 ldstr 都没有在游戏局内，何来的游戏加载完成
+   0027 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   002C ret 
+   002D call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0032 callvirt Assets.Scripts.GameSystem.WatchController/WorkMode Assets.Scripts.GameSystem.WatchController::get_workMode()
+   0037 brfalse IL_0067: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   003C ldstr 观战模式:{0}
+   0041 ldc.i4.1 
+   0042 newarr System.Object
+   0047 dup 
+   0048 ldc.i4.0 
+   0049 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   004E callvirt Assets.Scripts.GameSystem.WatchController/WorkMode Assets.Scripts.GameSystem.WatchController::get_workMode()
+   0053 stloc.0 
+   0054 ldloca.s V_0
+   0056 constrained. Assets.Scripts.GameSystem.WatchController/WorkMode
+   005C callvirt System.String System.Object::ToString()
+   0061 stelem.ref 
+   0062 call System.Void DebugHelper::CustomLog(System.String,System.Object[])
+   0067 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   006C callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::OnLoadComplete()
+   0071 ldarg.0 
+   0072 ldnull 
+   0073 stfld Assets.Scripts.GameLogic.GameBuilderHelper::gameLoader
+   0078 ret 
+== System.Void OnAllLoadComplete() attrs=Public, HideBySig maxstack=4
+   0000 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   0005 callvirt System.Void Assets.Scripts.GameLogic.GameBuilderClientBase::PostBeginPlay()
+   000A ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   000F call System.Int64 MemoryTracker::MonoUsedSize()
+   0014 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoUsed
+   0019 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   001E call System.Int64 MemoryTracker::MonoHeapSize()
+   0023 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::monoHeap
+   0028 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   002D call System.Int32 MemoryTracker::GetTotalUsedMemoryMegaBytesImmediately()
+   0032 conv.i8 
+   0033 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::pss
+   0038 ldsflda Assets.Scripts.GameLogic.GameBuilderHelper::s_MemData_LoadingDone
+   003D ldc.i4.0 
+   003E call System.Int32 System.GC::CollectionCount(System.Int32)
+   0043 conv.i8 
+   0044 stfld Assets.Scripts.GameLogic.GameBuilderHelper/SMemData::gcCnt
+   0049 call System.Single UnityEngine.Time::get_time()
+   004E ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadingTime
+   0053 sub 
+   0054 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadingTime
+   0059 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::s_StartGameCount
+   005E ldc.r4 1
+   0063 add 
+   0064 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::s_StartGameCount
+   0069 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   006E ldfld Assets.Scripts.Framework.Reconnection::g_fBeginReconnectTime
+   0073 ldc.r4 0
+   0078 ble.un IL_00d1: call System.Void TimeSampleComponentHelper::Setup()
+   007D newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0082 stloc.0 
+   0083 ldloc.0 
+   0084 ldstr ReconnectTime
+   0089 call System.Single UnityEngine.Time::get_time()
+   008E call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   0093 ldfld Assets.Scripts.Framework.Reconnection::g_fBeginReconnectTime
+   0098 sub 
+   0099 stloc.1 
+   009A ldloca.s V_1
+   009C constrained. System.Single
+   00A2 callvirt System.String System.Object::ToString()
+   00A7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00AC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00B1 call !0 MonoSingleton`1<Assets.Scripts.Framework.Reconnection>::GetInstance()
+   00B6 ldc.r4 -1
+   00BB stfld Assets.Scripts.Framework.Reconnection::g_fBeginReconnectTime
+   00C0 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   00C5 ldstr Service_Reconnet_IntoGame
+   00CA ldloc.0 
+   00CB ldc.i4.1 
+   00CC callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   00D1 call System.Void TimeSampleComponentHelper::Setup()
+   00D6 ret 
+== System.Void CleanDumpFolder() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.String Assets.Scripts.GameLogic.GameBuilderHelper::get_DumpHomePath()
+   0005 ldstr *.dmg
+   000A ldc.i4.0 
+   000B call System.String[] System.IO.Directory::GetFiles(System.String,System.String,System.IO.SearchOption)
+   0010 stloc.0 
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 br IL_0024: ldloc.1
+   0018 ldloc.0 
+   0019 ldloc.1 
+   001A ldelem.ref 
+   001B call System.Void System.IO.File::Delete(System.String)
+   0020 ldloc.1 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 ldloc.0 
+   0026 ldlen 
+   0027 conv.i4 
+   0028 blt IL_0018: ldloc.0
+   002D leave IL_0038: ret
+   0032 pop 
+   0033 leave IL_0038: ret
+   0038 ret 
+== System.String get_DumpHomePath() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::dumpHomePath
+   0005 brtrue IL_0014: ldsfld System.String Assets.Scripts.GameLogic.GameBuilderHelper::dumpHomePath
+   000A call System.String UnityEngine.Application::get_persistentDataPath()
+   000F stsfld Assets.Scripts.GameLogic.GameBuilderHelper::dumpHomePath
+   0014 ldsfld Assets.Scripts.GameLogic.GameBuilderHelper::dumpHomePath
+   0019 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=1
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_iMapId
+   0006 ldc.i4.s 17
+   0008 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_kGameType
+   000D ldc.r4 0
+   0012 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadingTime
+   0017 ldc.r4 0
+   001C stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_fLoadProgress
+   0021 ldc.r4 0
+   0026 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::s_StartGameCount
+   002B newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0030 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::m_eventsLoadingTime
+   0035 ldnull 
+   0036 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::gameBuilder
+   003B ldloca.s V_0
+   003D initobj Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext
+   0043 ldloc.0 
+   0044 stsfld Assets.Scripts.GameLogic.GameBuilderHelper::startGameContext_
+   0049 ldnull 
+   004A stsfld Assets.Scripts.GameLogic.GameBuilderHelper::dumpHomePath
+   004F ret 
+  NESTED Assets.Scripts.GameLogic.GameBuilderHelper/SMemData
+  NESTED Assets.Scripts.GameLogic.GameBuilderHelper/StartGameContext

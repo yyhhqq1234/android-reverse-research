@@ -1,0 +1,377 @@
+// TYPE Assets.Scripts.UI.CUIHttpFileManagerScript  base=Assets.Scripts.UI.CUIComponent  attrs=Public, BeforeFieldInit
+  FIELD System.String m_fileUrl
+  FIELD Assets.Scripts.UI.enHttpFileCacheType m_cacheType
+  FIELD System.Single m_cachedFileValidDays
+  FIELD System.String m_cacheFileExtension
+  FIELD UnityEngine.GameObject m_loadingCover
+  FIELD Assets.Scripts.UI.HttpFileDownloadErrorDelegate m_errorDelegate
+  FIELD Assets.Scripts.UI.HttpFileDownloadSuccesDelegate m_loadedDelegate
+  FIELD Assets.Scripts.UI.enHttpFileDownloadState m_downloadState
+  FIELD Assets.Scripts.UI.CHttpFileCacher m_fileCacher
+  FIELD System.Int32 m_instanceID
+  FIELD System.Collections.Generic.List`1<System.Int32> s_downloadingInstanceList
+  FIELD System.Int32 c_downloadingInstanceMaxCount = 5
+  FIELD System.Single c_downloadingOverTime = 30
+  FIELD System.Single m_downloadingStartTimestamp
+  FIELD System.Int32 c_downloadingRetryMaxTimes = 3
+  FIELD System.Int32 m_downloadingRetryTimes
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_cacheType
+   0007 ldarg.0 
+   0008 ldc.r4 2
+   000D stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_cachedFileValidDays
+   0012 ldarg.0 
+   0013 ldstr .mp4
+   0018 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_cacheFileExtension
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.UI.CUIComponent::.ctor()
+   0023 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_006c: ret
+   000B ldarg.0 
+   000C ldarg.0 
+   000D call System.Int32 UnityEngine.Object::GetInstanceID()
+   0012 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_instanceID
+   0017 ldarg.0 
+   0018 dup 
+   0019 ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   001E ldc.i4.1 
+   001F or 
+   0020 stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0025 ldarg.0 
+   0026 ldarg.1 
+   0027 call System.Void Assets.Scripts.UI.CUIComponent::Initialize(Assets.Scripts.UI.CUIFormScript)
+   002C ldsfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileCacher
+   0031 brtrue IL_004d: ldarg.0
+   0036 ldc.i4.s 30
+   0038 ldstr Video
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_cacheFileExtension
+   0043 newobj System.Void Assets.Scripts.UI.CHttpFileCacher::.ctor(System.Int32,System.String,System.String)
+   0048 stsfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileCacher
+   004D ldarg.0 
+   004E call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterUnloadState()
+   0053 ldarg.0 
+   0054 ldc.r4 0
+   0059 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingStartTimestamp
+   005E ldarg.0 
+   005F ldc.i4.0 
+   0060 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingRetryTimes
+   0065 ldarg.0 
+   0066 ldc.i4.1 
+   0067 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   006C ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_004c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0011 ldc.i4.2 
+   0012 bne.un IL_001d: ldarg.0
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::StopDownloading()
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterUnloadState()
+   0023 ldarg.0 
+   0024 ldnull 
+   0025 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_errorDelegate
+   002A ldarg.0 
+   002B ldnull 
+   002C stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadedDelegate
+   0031 ldarg.0 
+   0032 ldnull 
+   0033 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   0038 ldarg.0 
+   0039 ldnull 
+   003A stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   003F ldarg.0 
+   0040 call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0045 ldarg.0 
+   0046 ldc.i4.0 
+   0047 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   004C ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0023: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0011 ldc.i4.2 
+   0012 bne.un IL_0023: ret
+   0017 ldarg.0 
+   0018 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::StopDownloading()
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterWaitingState()
+   0023 ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   000C brfalse IL_0029: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0017 ldc.i4.2 
+   0018 bne.un IL_0029: ret
+   001D ldarg.0 
+   001E call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::StopDownloading()
+   0023 ldarg.0 
+   0024 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterWaitingState()
+   0029 ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_00d7: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   0011 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0016 brfalse IL_001c: ldarg.0
+   001B ret 
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0022 stloc.0 
+   0023 ldloc.0 
+   0024 switch Mono.Cecil.Cil.Instruction[]
+   0035 br IL_00d2: br IL_00d7
+   003A ldarg.0 
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   0041 call System.String Assets.Scripts.UI.CUIHttpFileManagerScript::TryGetLoadedFilePath(System.String)
+   0046 stloc.1 
+   0047 ldloc.1 
+   0048 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   004D brtrue IL_005e: ldarg.0
+   0052 ldarg.0 
+   0053 ldloc.1 
+   0054 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterLoadedState(System.String)
+   0059 br IL_0064: br IL_00d7
+   005E ldarg.0 
+   005F call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterWaitingState()
+   0064 br IL_00d7: ret
+   0069 ldsfld Assets.Scripts.UI.CUIHttpFileManagerScript::s_downloadingInstanceList
+   006E callvirt System.Int32 System.Collections.Generic.List`1<System.Int32>::get_Count()
+   0073 ldc.i4.5 
+   0074 bge IL_007f: br IL_00d7
+   0079 ldarg.0 
+   007A call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterDownloadingState()
+   007F br IL_00d7: ret
+   0084 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingStartTimestamp
+   008F sub 
+   0090 ldc.r4 30
+   0095 blt.un IL_00cd: br IL_00d7
+   009A ldarg.0 
+   009B call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::StopDownloading()
+   00A0 ldarg.0 
+   00A1 dup 
+   00A2 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingRetryTimes
+   00A7 dup 
+   00A8 stloc.2 
+   00A9 ldc.i4.1 
+   00AA add 
+   00AB stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingRetryTimes
+   00B0 ldloc.2 
+   00B1 ldc.i4.3 
+   00B2 blt IL_00c7: ldarg.0
+   00B7 ldarg.0 
+   00B8 ldstr time out
+   00BD call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterErrorState(System.String)
+   00C2 br IL_00cd: br IL_00d7
+   00C7 ldarg.0 
+   00C8 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterWaitingState()
+   00CD br IL_00d7: ret
+   00D2 br IL_00d7: ret
+   00D7 ret 
+== System.Void EnterLoadedState(System.String path) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.3 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   000D ldc.i4.0 
+   000E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadedDelegate
+   0019 brfalse IL_002a: ret
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadedDelegate
+   0024 ldarg.1 
+   0025 callvirt System.Void Assets.Scripts.UI.HttpFileDownloadSuccesDelegate::Invoke(System.String)
+   002A ret 
+== System.Void EnterWaitingState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   000D ldc.i4.1 
+   000E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0013 ret 
+== System.Void EnterDownloadingState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.2 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0007 ldarg.0 
+   0008 ldc.r4 0
+   000D stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingStartTimestamp
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   0018 ldc.i4.1 
+   0019 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   001E ldarg.0 
+   001F ldarg.0 
+   0020 call System.Collections.IEnumerator Assets.Scripts.UI.CUIHttpFileManagerScript::DownloadFileEnumerator()
+   0025 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   002A pop 
+   002B ret 
+== System.Void EnterUnloadState() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   000D ldc.i4.1 
+   000E call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0013 ret 
+== System.Void EnterErrorState(System.String errMsg) attrs=Private, HideBySig maxstack=8
+   0000 ldstr 视频错误, error={0}
+   0005 ldarg.1 
+   0006 call System.String System.String::Format(System.String,System.Object)
+   000B ldc.i4.1 
+   000C call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0011 ldarg.0 
+   0012 ldc.i4.4 
+   0013 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadingCover
+   001E ldc.i4.1 
+   001F call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_errorDelegate
+   002A brfalse IL_003b: ret
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_errorDelegate
+   0035 ldarg.1 
+   0036 callvirt System.Void Assets.Scripts.UI.HttpFileDownloadErrorDelegate::Invoke(System.String)
+   003B ret 
+== System.Void SetFileUrl(System.String url, Assets.Scripts.UI.HttpFileDownloadErrorDelegate errorDelegate, Assets.Scripts.UI.HttpFileDownloadSuccesDelegate loadedDelegate, System.Boolean forceSetFileUrl) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.2 
+   0002 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_errorDelegate
+   0007 ldarg.0 
+   0008 ldarg.3 
+   0009 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_loadedDelegate
+   000E ldarg.s forceSetFileUrl
+   0010 brtrue IL_0032: ldarg.1
+   0015 ldarg.1 
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   001C call System.Boolean System.String::Equals(System.String,System.String)
+   0021 brfalse IL_0032: ldarg.1
+   0026 ldarg.0 
+   0027 ldstr repeat video url
+   002C call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterErrorState(System.String)
+   0031 ret 
+   0032 ldarg.1 
+   0033 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0038 brfalse IL_0049: ldarg.0
+   003D ldarg.0 
+   003E ldstr para cdn url is empty
+   0043 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterErrorState(System.String)
+   0048 ret 
+   0049 ldarg.0 
+   004A ldarg.1 
+   004B stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   0050 ldstr set file url={0}
+   0055 ldarg.1 
+   0056 call System.String System.String::Format(System.String,System.Object)
+   005B ldc.i4.1 
+   005C call System.Void ocsys::NSLog(System.String,System.Boolean)
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadState
+   0067 ldc.i4.2 
+   0068 bne.un IL_0073: ldarg.0
+   006D ldarg.0 
+   006E call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::StopDownloading()
+   0073 ldarg.0 
+   0074 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::EnterUnloadState()
+   0079 ldarg.0 
+   007A ldc.r4 0
+   007F stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingStartTimestamp
+   0084 ldarg.0 
+   0085 ldc.i4.0 
+   0086 stfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_downloadingRetryTimes
+   008B ret 
+== System.String TryGetLoadedFilePath(System.String cdnUrl) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_0011: ldsfld Assets.Scripts.UI.CHttpFileCacher Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileCacher
+   000B ldsfld System.String::Empty
+   0010 ret 
+   0011 ldsfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileCacher
+   0016 ldarg.1 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_cachedFileValidDays
+   001D callvirt System.String Assets.Scripts.UI.CHttpFileCacher::GetCachedFilePath(System.String,System.Single)
+   0022 ret 
+== System.Void AddRandomParam(System.String& url) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldstr {0}?{1}
+   0006 ldarg.1 
+   0007 ldind.ref 
+   0008 ldc.i4 -2147483648
+   000D ldc.i4 2147483647
+   0012 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0017 box System.Int32
+   001C call System.String System.String::Format(System.String,System.Object,System.Object)
+   0021 stind.ref 
+   0022 ret 
+== System.Void ResolveLoadedFile(UnityEngine.WWW www) attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileCacher
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_fileUrl
+   000B ldarg.1 
+   000C callvirt System.Byte[] UnityEngine.WWW::get_bytes()
+   0011 ldc.i4.0 
+   0012 ldc.i4.0 
+   0013 ldc.i4.0 
+   0014 callvirt System.Void Assets.Scripts.UI.CHttpFileCacher::AddFile(System.String,System.Byte[],System.Int32,System.Int32,System.Boolean)
+   0019 ret 
+== System.Collections.IEnumerator DownloadFileEnumerator() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.UI.CUIHttpFileManagerScript/<DownloadFileEnumerator>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.UI.CUIHttpFileManagerScript/<DownloadFileEnumerator>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void RemoveFromLoadingList() attrs=Private, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.UI.CUIHttpFileManagerScript::s_downloadingInstanceList
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.UI.CUIHttpFileManagerScript::m_instanceID
+   000B callvirt System.Boolean System.Collections.Generic.List`1<System.Int32>::Remove(!0)
+   0010 pop 
+   0011 ret 
+== System.Void StopDownloading() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIHttpFileManagerScript::RemoveFromLoadingList()
+   000C ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0005 stsfld Assets.Scripts.UI.CUIHttpFileManagerScript::s_downloadingInstanceList
+   000A ret 
+  NESTED Assets.Scripts.UI.CUIHttpFileManagerScript/<DownloadFileEnumerator>c__Iterator0

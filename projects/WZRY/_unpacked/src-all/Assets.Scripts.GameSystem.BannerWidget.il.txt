@@ -1,0 +1,555 @@
+// TYPE Assets.Scripts.GameSystem.BannerWidget  base=Assets.Scripts.GameSystem.ActivityWidget  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.UI.CUIStepListScript _stepList
+  FIELD System.Int32 _curStepIndex
+  FIELD System.Boolean _leftToRight
+  FIELD System.Single _lastScrollTime
+  FIELD ListView`1<Assets.Scripts.GameSystem.UrlAction> _urlaList
+  FIELD UnityEngine.UI.Text _timeCD
+  FIELD UnityEngine.GameObject _pickObject
+  FIELD System.Int32[] _pickIdxList
+  FIELD System.Single SCROLL_TIME_SPAN = 3.5
+  FIELD UnityEngine.Vector2 _lastPos
+  FIELD System.Boolean _bStopAutoMove
+== System.Void .ctor(UnityEngine.GameObject node, Assets.Scripts.GameSystem.ActivityView view) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 call System.Void Assets.Scripts.GameSystem.ActivityWidget::.ctor(UnityEngine.GameObject,Assets.Scripts.GameSystem.ActivityView)
+   0008 ldarg.0 
+   0009 ldarg.1 
+   000A ldstr StepList
+   000F call T Utility::GetComponetInChild<Assets.Scripts.UI.CUIStepListScript>(UnityEngine.GameObject,System.String)
+   0014 stfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   001F ldc.i4.1 
+   0020 callvirt System.Void Assets.Scripts.UI.CUIStepListScript::SetDontUpdate(System.Boolean)
+   0025 ldarg.0 
+   0026 ldarg.1 
+   0027 ldstr TimeCD
+   002C call T Utility::GetComponetInChild<UnityEngine.UI.Text>(UnityEngine.GameObject,System.String)
+   0031 stfld Assets.Scripts.GameSystem.BannerWidget::_timeCD
+   0036 ldarg.0 
+   0037 ldarg.1 
+   0038 ldstr StepList/pickObj
+   003D call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   0042 stfld Assets.Scripts.GameSystem.BannerWidget::_pickObject
+   0047 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   004C ldc.i4 5053
+   0051 ldarg.0 
+   0052 ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnClick(Assets.Scripts.UI.CUIEvent)
+   0058 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   005D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0062 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0067 ldc.i4 5160
+   006C ldarg.0 
+   006D ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnHoldStart_Item(Assets.Scripts.UI.CUIEvent)
+   0073 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0078 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   007D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0082 ldc.i4 5161
+   0087 ldarg.0 
+   0088 ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnHoldEnd_Item(Assets.Scripts.UI.CUIEvent)
+   008E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0093 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0098 ldarg.0 
+   0099 callvirt System.Void Assets.Scripts.GameSystem.ActivityWidget::Validate()
+   009E ret 
+== System.Void Clear() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 5053
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnClick(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0020 ldc.i4 5160
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnHoldStart_Item(Assets.Scripts.UI.CUIEvent)
+   002C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   003B ldc.i4 5161
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.BannerWidget::OnHoldEnd_Item(Assets.Scripts.UI.CUIEvent)
+   0047 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0051 ret 
+== System.Void Update() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.BannerWidget::updateAutoScroll()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.BannerWidget::updateOverTime()
+   000C ret 
+== System.Void Validate() attrs=Public, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call Assets.Scripts.GameSystem.ActivityView Assets.Scripts.GameSystem.ActivityWidget::get_view()
+   0007 callvirt Assets.Scripts.GameSystem.Activity Assets.Scripts.GameSystem.ActivityView::get_activity()
+   000C callvirt System.String Assets.Scripts.GameSystem.Activity::get_Content()
+   0011 ldnull 
+   0012 call ListView`1<Assets.Scripts.GameSystem.UrlAction> Assets.Scripts.GameSystem.UrlAction::ParseFromText(System.String,System.Char[])
+   0017 stfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0022 callvirt System.Int32 ListViewBase::get_Count()
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldc.i4.0 
+   002A ble IL_0144: ret
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   0035 ldloc.0 
+   0036 callvirt System.Void Assets.Scripts.UI.CUIListScript::SetElementAmount(System.Int32)
+   003B ldc.i4.0 
+   003C stloc.1 
+   003D br IL_0092: ldloc.1
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0048 ldloc.1 
+   0049 callvirt !0 ListView`1<Assets.Scripts.GameSystem.UrlAction>::get_Item(System.Int32)
+   004E stloc.2 
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   0055 ldloc.1 
+   0056 callvirt Assets.Scripts.UI.CUIListElementScript Assets.Scripts.UI.CUIListScript::GetElemenet(System.Int32)
+   005B stloc.3 
+   005C ldnull 
+   005D ldloc.3 
+   005E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0063 brfalse IL_008e: ldloc.1
+   0068 ldloc.3 
+   0069 callvirt !!0 UnityEngine.Component::GetComponent<Assets.Scripts.UI.CUIHttpImageScript>()
+   006E stloc.s V_4
+   0070 ldnull 
+   0071 ldloc.s V_4
+   0073 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0078 brfalse IL_008e: ldloc.1
+   007D ldloc.s V_4
+   007F ldloc.2 
+   0080 ldfld Assets.Scripts.GameSystem.UrlAction::target
+   0085 ldc.i4.0 
+   0086 ldc.i4.0 
+   0087 ldc.i4.0 
+   0088 ldc.i4.0 
+   0089 callvirt System.Void Assets.Scripts.UI.CUIHttpImageScript::SetImageUrl(System.String,System.Boolean,System.Boolean,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID)
+   008E ldloc.1 
+   008F ldc.i4.1 
+   0090 add 
+   0091 stloc.1 
+   0092 ldloc.1 
+   0093 ldloc.0 
+   0094 blt IL_0042: ldarg.0
+   0099 ldarg.0 
+   009A ldloc.0 
+   009B newarr System.Int32
+   00A0 stfld Assets.Scripts.GameSystem.BannerWidget::_pickIdxList
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickObject
+   00AB ldnull 
+   00AC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B1 brfalse IL_0107: ldarg.0
+   00B6 ldarg.0 
+   00B7 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickObject
+   00BC callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIContainerScript>()
+   00C1 stloc.s V_5
+   00C3 ldloc.s V_5
+   00C5 ldnull 
+   00C6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00CB brfalse IL_0107: ldarg.0
+   00D0 ldloc.s V_5
+   00D2 callvirt System.Void Assets.Scripts.UI.CUIContainerScript::RecycleAllElement()
+   00D7 ldc.i4.0 
+   00D8 stloc.s V_6
+   00DA br IL_00f5: ldloc.s V_6
+   00DF ldarg.0 
+   00E0 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickIdxList
+   00E5 ldloc.s V_6
+   00E7 ldloc.s V_5
+   00E9 callvirt System.Int32 Assets.Scripts.UI.CUIContainerScript::GetElement()
+   00EE stelem.i4 
+   00EF ldloc.s V_6
+   00F1 ldc.i4.1 
+   00F2 add 
+   00F3 stloc.s V_6
+   00F5 ldloc.s V_6
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   00FD callvirt System.Int32 ListViewBase::get_Count()
+   0102 blt IL_00df: ldarg.0
+   0107 ldarg.0 
+   0108 ldc.i4.0 
+   0109 stfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   010E ldarg.0 
+   010F ldc.i4.1 
+   0110 stfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   011B ldarg.0 
+   011C ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0121 ldc.i4.1 
+   0122 callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   0127 ldarg.0 
+   0128 ldarg.0 
+   0129 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   012E call System.Void Assets.Scripts.GameSystem.BannerWidget::EnablePickObj(System.Int32)
+   0133 ldarg.0 
+   0134 call System.Single UnityEngine.Time::get_time()
+   0139 stfld Assets.Scripts.GameSystem.BannerWidget::_lastScrollTime
+   013E ldarg.0 
+   013F call System.Void Assets.Scripts.GameSystem.BannerWidget::updateOverTime()
+   0144 ret 
+== System.Void EnablePickObj(System.Int32 idx) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickObject
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00d9: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickObject
+   0017 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIContainerScript>()
+   001C stloc.0 
+   001D ldloc.0 
+   001E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0023 brfalse IL_00d9: ret
+   0028 ldc.i4.0 
+   0029 stloc.1 
+   002A br IL_00cb: ldloc.1
+   002F ldloc.1 
+   0030 ldarg.1 
+   0031 bne.un IL_007e: ldloc.0
+   0036 ldloc.0 
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickIdxList
+   003D ldloc.1 
+   003E ldelem.i4 
+   003F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIContainerScript::GetElement(System.Int32)
+   0044 stloc.2 
+   0045 ldloc.2 
+   0046 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   004B brfalse IL_0079: br IL_00c7
+   0050 ldloc.2 
+   0051 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0056 ldstr Image_Pointer
+   005B callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0060 stloc.3 
+   0061 ldloc.3 
+   0062 ldnull 
+   0063 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0068 brfalse IL_0079: br IL_00c7
+   006D ldloc.3 
+   006E callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0073 ldc.i4.1 
+   0074 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0079 br IL_00c7: ldloc.1
+   007E ldloc.0 
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.GameSystem.BannerWidget::_pickIdxList
+   0085 ldloc.1 
+   0086 ldelem.i4 
+   0087 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIContainerScript::GetElement(System.Int32)
+   008C stloc.s V_4
+   008E ldloc.s V_4
+   0090 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0095 brfalse IL_00c7: ldloc.1
+   009A ldloc.s V_4
+   009C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A1 ldstr Image_Pointer
+   00A6 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00AB stloc.s V_5
+   00AD ldloc.s V_5
+   00AF ldnull 
+   00B0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B5 brfalse IL_00c7: ldloc.1
+   00BA ldloc.s V_5
+   00BC callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C1 ldc.i4.0 
+   00C2 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C7 ldloc.1 
+   00C8 ldc.i4.1 
+   00C9 add 
+   00CA stloc.1 
+   00CB ldloc.1 
+   00CC ldarg.0 
+   00CD ldfld Assets.Scripts.GameSystem.BannerWidget::_pickIdxList
+   00D2 ldlen 
+   00D3 conv.i4 
+   00D4 blt IL_002f: ldloc.1
+   00D9 ret 
+== System.Void OnClick(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt System.Int32 Assets.Scripts.UI.CUIEvent::get_m_srcWidgetIndexInBelongedList()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   000D brfalse IL_004b: ret
+   0012 ldloc.0 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0019 callvirt System.Int32 ListViewBase::get_Count()
+   001E bge IL_004b: ret
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0029 ldloc.0 
+   002A callvirt !0 ListView`1<Assets.Scripts.GameSystem.UrlAction>::get_Item(System.Int32)
+   002F stloc.1 
+   0030 ldloc.1 
+   0031 callvirt System.Boolean Assets.Scripts.GameSystem.UrlAction::Execute()
+   0036 brfalse IL_004b: ret
+   003B ldarg.0 
+   003C call Assets.Scripts.GameSystem.ActivityView Assets.Scripts.GameSystem.ActivityWidget::get_view()
+   0041 callvirt Assets.Scripts.GameSystem.ActivityForm Assets.Scripts.GameSystem.ActivityView::get_form()
+   0046 callvirt System.Void Assets.Scripts.GameSystem.ActivityForm::Close()
+   004B ret 
+== System.Void OnHoldStart_Item(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetBelongedListScript
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   000C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0011 brfalse IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldarg.1 
+   0019 ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   001E callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0023 stfld Assets.Scripts.GameSystem.BannerWidget::_lastPos
+   0028 ldarg.0 
+   0029 ldc.i4.1 
+   002A stfld Assets.Scripts.GameSystem.BannerWidget::_bStopAutoMove
+   002F ret 
+== System.Void OnHoldEnd_Item(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidgetBelongedListScript
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   000C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0011 brfalse IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   001D callvirt System.Int32 ListViewBase::get_Count()
+   0022 stloc.0 
+   0023 ldarg.1 
+   0024 ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   0029 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   002E stloc.1 
+   002F ldloca.s V_1
+   0031 ldfld UnityEngine.Vector2::x
+   0036 ldarg.0 
+   0037 ldflda Assets.Scripts.GameSystem.BannerWidget::_lastPos
+   003C ldfld UnityEngine.Vector2::x
+   0041 bgt.un IL_0085: ldarg.0
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   004C ldc.i4.1 
+   004D add 
+   004E ldloc.0 
+   004F bge IL_0080: br IL_00bd
+   0054 ldarg.0 
+   0055 dup 
+   0056 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   005B ldc.i4.1 
+   005C add 
+   005D stfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   006E ldc.i4.0 
+   006F callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   0074 ldarg.0 
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   007B call System.Void Assets.Scripts.GameSystem.BannerWidget::EnablePickObj(System.Int32)
+   0080 br IL_00bd: ldarg.0
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   008B ldc.i4.0 
+   008C ble IL_00bd: ldarg.0
+   0091 ldarg.0 
+   0092 dup 
+   0093 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0098 ldc.i4.1 
+   0099 sub 
+   009A stfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   009F ldarg.0 
+   00A0 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00AB ldc.i4.0 
+   00AC callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   00B1 ldarg.0 
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00B8 call System.Void Assets.Scripts.GameSystem.BannerWidget::EnablePickObj(System.Int32)
+   00BD ldarg.0 
+   00BE ldc.i4.0 
+   00BF stfld Assets.Scripts.GameSystem.BannerWidget::_bStopAutoMove
+   00C4 ldarg.0 
+   00C5 call System.Single UnityEngine.Time::get_time()
+   00CA stfld Assets.Scripts.GameSystem.BannerWidget::_lastScrollTime
+   00CF ret 
+== System.Void updateAutoScroll() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BannerWidget::_bStopAutoMove
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0012 callvirt System.Int32 ListViewBase::get_Count()
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ldc.i4.1 
+   001A ble IL_00df: ret
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0025 ldloc.0 
+   0026 bge IL_00df: ret
+   002B call System.Single UnityEngine.Time::get_time()
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.BannerWidget::_lastScrollTime
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0042 callvirt !0 ListView`1<Assets.Scripts.GameSystem.UrlAction>::get_Item(System.Int32)
+   0047 ldfld Assets.Scripts.GameSystem.UrlAction::showTime
+   004C conv.r4 
+   004D ldc.r4 0.001
+   0052 mul 
+   0053 add 
+   0054 ble.un IL_00df: ret
+   0059 ldarg.0 
+   005A call System.Single UnityEngine.Time::get_time()
+   005F stfld Assets.Scripts.GameSystem.BannerWidget::_lastScrollTime
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   006A ldc.i4.1 
+   006B add 
+   006C ldloc.0 
+   006D bne.un IL_007d: ldarg.0
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   0078 brtrue IL_0093: ldarg.0
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   0083 brtrue IL_00a2: ldarg.0
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   008E brtrue IL_00a2: ldarg.0
+   0093 ldarg.0 
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   009A ldc.i4.0 
+   009B ceq 
+   009D stfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   00A2 ldarg.0 
+   00A3 dup 
+   00A4 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameSystem.BannerWidget::_leftToRight
+   00AF brfalse IL_00ba: ldc.i4.m1
+   00B4 ldc.i4.1 
+   00B5 br IL_00bb: add
+   00BA ldc.i4.m1 
+   00BB add 
+   00BC stfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.GameSystem.BannerWidget::_stepList
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00CD ldc.i4.0 
+   00CE callvirt System.Void Assets.Scripts.UI.CUIListScript::MoveElementInScrollArea(System.Int32,System.Boolean)
+   00D3 ldarg.0 
+   00D4 ldarg.0 
+   00D5 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   00DA call System.Void Assets.Scripts.GameSystem.BannerWidget::EnablePickObj(System.Int32)
+   00DF ret 
+== System.Void updateOverTime() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.BannerWidget::_urlaList
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.BannerWidget::_curStepIndex
+   000C callvirt !0 ListView`1<Assets.Scripts.GameSystem.UrlAction>::get_Item(System.Int32)
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 ldfld Assets.Scripts.GameSystem.UrlAction::overTime
+   0018 ldc.i4.0 
+   0019 conv.i8 
+   001A ble.un IL_010a: ldarg.0
+   001F ldloc.0 
+   0020 ldfld Assets.Scripts.GameSystem.UrlAction::overTime
+   0025 call System.DateTime Utility::ULongToDateTime(System.UInt64)
+   002A stloc.1 
+   002B call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0030 conv.i8 
+   0031 call System.DateTime Utility::ToUtcTime2Local(System.Int64)
+   0036 stloc.2 
+   0037 ldloc.1 
+   0038 ldloc.2 
+   0039 call System.TimeSpan System.DateTime::op_Subtraction(System.DateTime,System.DateTime)
+   003E stloc.3 
+   003F call !0 Singleton`1<CTextManager>::GetInstance()
+   0044 ldstr TIME_SPAN_FORMAT
+   0049 ldc.i4.1 
+   004A callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   004F stloc.s V_4
+   0051 ldloc.s V_4
+   0053 ldstr {0}
+   0058 ldloca.s V_3
+   005A call System.Int32 System.TimeSpan::get_Days()
+   005F stloc.s V_5
+   0061 ldloca.s V_5
+   0063 constrained. System.Int32
+   0069 callvirt System.String System.Object::ToString()
+   006E callvirt System.String System.String::Replace(System.String,System.String)
+   0073 stloc.s V_4
+   0075 ldloc.s V_4
+   0077 ldstr {1}
+   007C ldloca.s V_3
+   007E call System.Int32 System.TimeSpan::get_Hours()
+   0083 stloc.s V_6
+   0085 ldloca.s V_6
+   0087 constrained. System.Int32
+   008D callvirt System.String System.Object::ToString()
+   0092 callvirt System.String System.String::Replace(System.String,System.String)
+   0097 stloc.s V_4
+   0099 ldloc.s V_4
+   009B ldstr {2}
+   00A0 ldloca.s V_3
+   00A2 call System.Int32 System.TimeSpan::get_Minutes()
+   00A7 stloc.s V_7
+   00A9 ldloca.s V_7
+   00AB constrained. System.Int32
+   00B1 callvirt System.String System.Object::ToString()
+   00B6 callvirt System.String System.String::Replace(System.String,System.String)
+   00BB stloc.s V_4
+   00BD ldloc.s V_4
+   00BF ldstr {3}
+   00C4 ldloca.s V_3
+   00C6 call System.Int32 System.TimeSpan::get_Seconds()
+   00CB stloc.s V_8
+   00CD ldloca.s V_8
+   00CF constrained. System.Int32
+   00D5 callvirt System.String System.Object::ToString()
+   00DA callvirt System.String System.String::Replace(System.String,System.String)
+   00DF stloc.s V_4
+   00E1 ldarg.0 
+   00E2 ldfld Assets.Scripts.GameSystem.BannerWidget::_timeCD
+   00E7 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00EC ldloc.1 
+   00ED ldloc.2 
+   00EE call System.Boolean System.DateTime::op_GreaterThanOrEqual(System.DateTime,System.DateTime)
+   00F3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00F8 ldarg.0 
+   00F9 ldfld Assets.Scripts.GameSystem.BannerWidget::_timeCD
+   00FE ldloc.s V_4
+   0100 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0105 br IL_011b: ret
+   010A ldarg.0 
+   010B ldfld Assets.Scripts.GameSystem.BannerWidget::_timeCD
+   0110 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0115 ldc.i4.0 
+   0116 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   011B ret 

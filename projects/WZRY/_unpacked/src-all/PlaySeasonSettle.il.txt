@@ -1,0 +1,51 @@
+// TYPE PlaySeasonSettle  base=CheatCommandCommon  attrs=BeforeFieldInit
+  FIELD System.Int32 _curLogicGrade
+  FIELD System.Int32 _newLogicGrade
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void CheatCommandCommon::.ctor()
+   0006 ret 
+== System.String Execute(System.String[] InArguments) attrs=Family, Virtual, HideBySig maxstack=5
+   0000 newobj System.Void Assets.Scripts.GameLogic.CLevelContext::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldc.i4.4 
+   0008 callvirt System.Void Assets.Scripts.GameLogic.CLevelContext::SetGameType(CSProtocol.COM_GAME_TYPE)
+   000D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0012 ldloca.s V_0
+   0014 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::InitLevelContext(Assets.Scripts.GameLogic.CLevelContext&)
+   0019 newobj System.Void CSProtocol.SCPKG_GAME_OVER_RSP::.ctor()
+   001E stloc.1 
+   001F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0024 callvirt Assets.Scripts.GameLogic.GameFinishProcesser Assets.Scripts.GameLogic.BattleLogic::get_GameEndProcesser()
+   0029 ldloc.1 
+   002A callvirt System.Void Assets.Scripts.GameLogic.GameFinishProcesser::OnRecvGameSettleInfo(CSProtocol.SCPKG_GAME_OVER_RSP)
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0034 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   0039 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stRankInfo
+   003E stloc.2 
+   003F ldloc.2 
+   0040 ldarg.1 
+   0041 ldc.i4.0 
+   0042 ldelem.ref 
+   0043 call !!0 CheatCommandBase::SmartConvert<System.Int32>(System.String)
+   0048 conv.u1 
+   0049 stfld CSProtocol.COMDT_RANK_SETTLE_INFO::bNowShowGrade
+   004E ldloc.2 
+   004F ldarg.1 
+   0050 ldc.i4.1 
+   0051 ldelem.ref 
+   0052 call !!0 CheatCommandBase::SmartConvert<System.Int32>(System.String)
+   0057 stfld CSProtocol.COMDT_RANK_SETTLE_INFO::dwNowScore
+   005C call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   0061 ldc.i4.0 
+   0062 ldc.i4.0 
+   0063 ldloc.2 
+   0064 ldfld CSProtocol.COMDT_RANK_SETTLE_INFO::bNowShowGrade
+   0069 ldloc.2 
+   006A ldfld CSProtocol.COMDT_RANK_SETTLE_INFO::dwNowScore
+   006F callvirt System.Void Assets.Scripts.GameSystem.SettlementSystem::SetSrvOldAndNewGrade(System.UInt32,System.UInt32,System.UInt32,System.UInt32)
+   0074 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   0079 callvirt System.Void Assets.Scripts.GameSystem.SettlementSystem::ShowLadderSettleFormWithoutSettle()
+   007E ldsfld CheatCommandBase::Done
+   0083 ret 

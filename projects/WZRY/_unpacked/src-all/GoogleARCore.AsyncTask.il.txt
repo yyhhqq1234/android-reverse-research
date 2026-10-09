@@ -1,0 +1,46 @@
+// TYPE GoogleARCore.AsyncTask  base=System.Object  attrs=BeforeFieldInit
+  FIELD System.Collections.Generic.Queue`1<System.Action> s_UpdateActionQueue
+  FIELD System.Object s_LockObject
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void PerformActionInUpdate(System.Action action) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld GoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C ldsfld GoogleARCore.AsyncTask::s_UpdateActionQueue
+   0011 ldarg.0 
+   0012 callvirt System.Void System.Collections.Generic.Queue`1<System.Action>::Enqueue(!0)
+   0017 leave IL_0023: ret
+   001C ldloc.0 
+   001D call System.Void System.Threading.Monitor::Exit(System.Object)
+   0022 endfinally 
+   0023 ret 
+== System.Void OnUpdate() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld GoogleARCore.AsyncTask::s_LockObject
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C br IL_0022: ldsfld System.Collections.Generic.Queue`1<System.Action> GoogleARCore.AsyncTask::s_UpdateActionQueue
+   0011 ldsfld GoogleARCore.AsyncTask::s_UpdateActionQueue
+   0016 callvirt !0 System.Collections.Generic.Queue`1<System.Action>::Dequeue()
+   001B stloc.1 
+   001C ldloc.1 
+   001D callvirt System.Void System.Action::Invoke()
+   0022 ldsfld GoogleARCore.AsyncTask::s_UpdateActionQueue
+   0027 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Action>::get_Count()
+   002C ldc.i4.0 
+   002D bgt IL_0011: ldsfld System.Collections.Generic.Queue`1<System.Action> GoogleARCore.AsyncTask::s_UpdateActionQueue
+   0032 leave IL_003e: ret
+   0037 ldloc.0 
+   0038 call System.Void System.Threading.Monitor::Exit(System.Object)
+   003D endfinally 
+   003E ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void System.Collections.Generic.Queue`1<System.Action>::.ctor()
+   0005 stsfld GoogleARCore.AsyncTask::s_UpdateActionQueue
+   000A newobj System.Void System.Object::.ctor()
+   000F stsfld GoogleARCore.AsyncTask::s_LockObject
+   0014 ret 

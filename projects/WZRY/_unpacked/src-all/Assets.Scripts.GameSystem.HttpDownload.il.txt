@@ -1,0 +1,273 @@
+// TYPE Assets.Scripts.GameSystem.HttpDownload  base=MonoSingleton`1<Assets.Scripts.GameSystem.HttpDownload>  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 K_TRY_MAXCOUNT = 5
+  FIELD UnityEngine.WWW m_www
+  FIELD System.String prefabFile
+  FIELD Assets.Scripts.GameSystem.HttpDownload/DownloadHandler m_resultHandler
+  FIELD Assets.Scripts.UI.CUIFormScript m_progressForm
+  FIELD UnityEngine.UI.Image m_progressImage
+  FIELD UnityEngine.UI.Text m_progressText
+  FIELD Assets.Scripts.UI.CUITimerScript m_timer
+  FIELD System.Single m_lastBytesUpdateStamp
+  FIELD System.Single m_lastProgress
+  FIELD System.String m_url
+  FIELD System.Boolean m_isMyTimeout
+  FIELD System.Int32 m_tryTimes
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldstr UGUI/Form/Common/Form_ProgressBar.prefab
+   0006 stfld Assets.Scripts.GameSystem.HttpDownload::prefabFile
+   000B ldarg.0 
+   000C call System.Void MonoSingleton`1<Assets.Scripts.GameSystem.HttpDownload>::.ctor()
+   0011 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0135: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0017 brfalse IL_0135: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0028 callvirt System.Single UnityEngine.WWW::get_progress()
+   002D callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0038 callvirt System.Single UnityEngine.WWW::get_progress()
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.HttpDownload::m_lastProgress
+   0043 sub 
+   0044 call System.Single System.Math::Abs(System.Single)
+   0049 ldc.r4 0.01
+   004E bge.un IL_00c5: ldarg.0
+   0053 call System.Single UnityEngine.Time::get_time()
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameSystem.HttpDownload::m_lastBytesUpdateStamp
+   005E sub 
+   005F ldc.r4 5
+   0064 ble.un IL_00c0: br IL_0135
+   0069 ldarg.0 
+   006A call System.Void UnityEngine.MonoBehaviour::StopAllCoroutines()
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.HttpDownload::m_tryTimes
+   0075 ldc.i4.5 
+   0076 bgt IL_00c0: br IL_0135
+   007B ldarg.0 
+   007C ldnull 
+   007D stfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0082 ldarg.0 
+   0083 dup 
+   0084 ldfld Assets.Scripts.GameSystem.HttpDownload::m_tryTimes
+   0089 ldc.i4.1 
+   008A add 
+   008B stfld Assets.Scripts.GameSystem.HttpDownload::m_tryTimes
+   0090 ldarg.0 
+   0091 ldc.i4.1 
+   0092 stfld Assets.Scripts.GameSystem.HttpDownload::m_isMyTimeout
+   0097 ldarg.0 
+   0098 ldarg.0 
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.HttpDownload::m_url
+   009F call System.Collections.IEnumerator Assets.Scripts.GameSystem.HttpDownload::ProcessFile(System.String)
+   00A4 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   00A9 pop 
+   00AA ldarg.0 
+   00AB ldc.r4 0
+   00B0 stfld Assets.Scripts.GameSystem.HttpDownload::m_lastProgress
+   00B5 ldarg.0 
+   00B6 call System.Single UnityEngine.Time::get_time()
+   00BB stfld Assets.Scripts.GameSystem.HttpDownload::m_lastBytesUpdateStamp
+   00C0 br IL_0135: ret
+   00C5 ldarg.0 
+   00C6 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   00CB ldnull 
+   00CC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D1 brfalse IL_0119: ldarg.0
+   00D6 ldarg.0 
+   00D7 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   00DC call !0 Singleton`1<CTextManager>::GetInstance()
+   00E1 ldstr Downloading
+   00E6 ldc.i4.1 
+   00E7 newarr System.String
+   00EC dup 
+   00ED ldc.i4.0 
+   00EE ldarg.0 
+   00EF ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   00F4 callvirt System.Single UnityEngine.WWW::get_progress()
+   00F9 ldc.r4 100
+   00FE mul 
+   00FF conv.i4 
+   0100 stloc.0 
+   0101 ldloca.s V_0
+   0103 constrained. System.Int32
+   0109 callvirt System.String System.Object::ToString()
+   010E stelem.ref 
+   010F callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0114 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0119 ldarg.0 
+   011A ldarg.0 
+   011B ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0120 callvirt System.Single UnityEngine.WWW::get_progress()
+   0125 stfld Assets.Scripts.GameSystem.HttpDownload::m_lastProgress
+   012A ldarg.0 
+   012B call System.Single UnityEngine.Time::get_time()
+   0130 stfld Assets.Scripts.GameSystem.HttpDownload::m_lastBytesUpdateStamp
+   0135 ret 
+== System.Boolean Download(System.String url, Assets.Scripts.GameSystem.HttpDownload/DownloadHandler resultHandler, System.String progressTips) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0006 brfalse IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0013 brfalse IL_0046: ldarg.0
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   001E callvirt System.Boolean UnityEngine.WWW::get_isDone()
+   0023 brtrue IL_0046: ldarg.0
+   0028 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002D ldstr Download_lastDownNotOver
+   0032 ldc.i4.1 
+   0033 ldc.r4 1.5
+   0038 ldnull 
+   0039 ldc.i4.0 
+   003A newarr System.Object
+   003F callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0044 ldc.i4.0 
+   0045 ret 
+   0046 ldarg.0 
+   0047 ldc.i4.0 
+   0048 stfld Assets.Scripts.GameSystem.HttpDownload::m_isMyTimeout
+   004D ldarg.0 
+   004E ldc.i4.0 
+   004F stfld Assets.Scripts.GameSystem.HttpDownload::m_tryTimes
+   0054 ldarg.0 
+   0055 ldarg.1 
+   0056 stfld Assets.Scripts.GameSystem.HttpDownload::m_url
+   005B ldarg.0 
+   005C ldarg.1 
+   005D newobj System.Void UnityEngine.WWW::.ctor(System.String)
+   0062 stfld Assets.Scripts.GameSystem.HttpDownload::m_www
+   0067 ldarg.0 
+   0068 ldarg.2 
+   0069 stfld Assets.Scripts.GameSystem.HttpDownload::m_resultHandler
+   006E ldarg.0 
+   006F ldc.r4 0
+   0074 stfld Assets.Scripts.GameSystem.HttpDownload::m_lastProgress
+   0079 ldarg.0 
+   007A call System.Single UnityEngine.Time::get_time()
+   007F stfld Assets.Scripts.GameSystem.HttpDownload::m_lastBytesUpdateStamp
+   0084 ldarg.0 
+   0085 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   008A ldarg.0 
+   008B ldfld Assets.Scripts.GameSystem.HttpDownload::prefabFile
+   0090 ldc.i4.1 
+   0091 ldc.i4.1 
+   0092 ldnull 
+   0093 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0098 stfld Assets.Scripts.GameSystem.HttpDownload::m_progressForm
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressForm
+   00A3 ldnull 
+   00A4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A9 brfalse IL_018d: ldarg.0
+   00AE ldarg.0 
+   00AF ldnull 
+   00B0 stfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   00B5 ldarg.0 
+   00B6 ldnull 
+   00B7 stfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressForm
+   00C2 ldc.i4.0 
+   00C3 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00C8 stloc.0 
+   00C9 ldloc.0 
+   00CA ldnull 
+   00CB call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00D0 brfalse IL_00e1: ldarg.0
+   00D5 ldarg.0 
+   00D6 ldloc.0 
+   00D7 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00DC stfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   00E1 ldarg.0 
+   00E2 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressForm
+   00E7 ldc.i4.1 
+   00E8 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00ED stloc.0 
+   00EE ldloc.0 
+   00EF ldnull 
+   00F0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00F5 brfalse IL_0106: ldarg.0
+   00FA ldarg.0 
+   00FB ldloc.0 
+   00FC callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0101 stfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   010C ldnull 
+   010D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0112 brfalse IL_013f: ldarg.0
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressText
+   011D call !0 Singleton`1<CTextManager>::GetInstance()
+   0122 ldstr Downloading
+   0127 ldc.i4.1 
+   0128 newarr System.String
+   012D dup 
+   012E ldc.i4.0 
+   012F ldstr 0
+   0134 stelem.ref 
+   0135 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   013A callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   013F ldarg.0 
+   0140 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   0145 ldnull 
+   0146 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   014B brfalse IL_0160: ldarg.3
+   0150 ldarg.0 
+   0151 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressImage
+   0156 ldc.r4 0
+   015B callvirt System.Void UnityEngine.UI.Image::set_fillAmount(System.Single)
+   0160 ldarg.3 
+   0161 brfalse IL_018d: ldarg.0
+   0166 ldarg.0 
+   0167 ldfld Assets.Scripts.GameSystem.HttpDownload::m_progressForm
+   016C ldc.i4.3 
+   016D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0172 stloc.0 
+   0173 ldloc.0 
+   0174 ldnull 
+   0175 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   017A brfalse IL_018d: ldarg.0
+   017F ldloc.0 
+   0180 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0185 stloc.1 
+   0186 ldloc.1 
+   0187 ldarg.3 
+   0188 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   018D ldarg.0 
+   018E ldarg.0 
+   018F ldarg.1 
+   0190 call System.Collections.IEnumerator Assets.Scripts.GameSystem.HttpDownload::ProcessFile(System.String)
+   0195 call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   019A pop 
+   019B ldc.i4.1 
+   019C ret 
+== System.Collections.IEnumerator ProcessFile(System.String url) attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameSystem.HttpDownload/<ProcessFile>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.GameSystem.HttpDownload/<ProcessFile>c__Iterator0::url
+   000D ldloc.0 
+   000E ldarg.0 
+   000F stfld Assets.Scripts.GameSystem.HttpDownload/<ProcessFile>c__Iterator0::$this
+   0014 ldloc.0 
+   0015 ret 
+  NESTED Assets.Scripts.GameSystem.HttpDownload/DownloadHandler
+  NESTED Assets.Scripts.GameSystem.HttpDownload/<ProcessFile>c__Iterator0

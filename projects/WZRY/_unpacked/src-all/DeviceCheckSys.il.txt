@@ -1,0 +1,1180 @@
+// TYPE DeviceCheckSys  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 LowCoreNum = 1
+  FIELD System.Int32 LowMemorySize = 700
+  FIELD System.Int32 LowEneterMemorySize = 300
+  FIELD System.Int32 LowWidth = 800
+  FIELD System.Int32 LowHeight = 480
+  FIELD System.String CurMemNotEnoughPopTimeKey = DeviceCheck_MemNotEnough
+  FIELD System.Int32 cpuCoreNum
+  FIELD System.Int32 sysMemorySize
+  FIELD System.Int32 width
+  FIELD System.Int32 height
+  FIELD System.Int32 bestThreadNumForAI
+  FIELD System.Boolean s_enableLowMemoryStrategy
+  FIELD UnityEngine.Application/LowMemoryCallback <>f__mg$cache0
+  FIELD UnityEngine.Application/LowMemoryCallback <>f__mg$cache1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Boolean CheckDeviceIsValid() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.1 
+   0001 ret 
+== System.Boolean GetAndroidCpuName(System.String& cpuName) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldstr /proc/cpuinfo
+   0007 call System.String System.IO.File::ReadAllText(System.String)
+   000C stloc.1 
+   000D ldloc.1 
+   000E ldstr Hardware
+   0013 callvirt System.Int32 System.String::IndexOf(System.String)
+   0018 stloc.2 
+   0019 ldloc.1 
+   001A ldloc.2 
+   001B ldc.i4.s 10
+   001D add 
+   001E callvirt System.String System.String::Substring(System.Int32)
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 ldc.i4.1 
+   0026 newarr System.Char
+   002B dup 
+   002C ldc.i4.0 
+   002D ldc.i4.s 10
+   002F stelem.i2 
+   0030 callvirt System.String[] System.String::Split(System.Char[])
+   0035 stloc.3 
+   0036 ldloc.3 
+   0037 ldc.i4.0 
+   0038 ldelem.ref 
+   0039 stloc.1 
+   003A ldloc.1 
+   003B callvirt System.String System.String::Trim()
+   0040 stloc.1 
+   0041 ldarg.0 
+   0042 ldloc.1 
+   0043 stind.ref 
+   0044 ldc.i4.1 
+   0045 stloc.0 
+   0046 leave IL_0072: ldloc.0
+   004B pop 
+   004C ldstr android.os.Build
+   0051 ldc.i4.0 
+   0052 newarr System.Object
+   0057 newobj System.Void UnityEngine.AndroidJavaObject::.ctor(System.String,System.Object[])
+   005C stloc.s V_4
+   005E ldloc.s V_4
+   0060 ldstr HARDWARE
+   0065 callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<System.String>(System.String)
+   006A stloc.1 
+   006B ldc.i4.1 
+   006C stloc.0 
+   006D leave IL_0072: ldloc.0
+   0072 ldloc.0 
+   0073 ret 
+== System.UInt32 GetDevicePerformance() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld DeviceCheckSys::<>f__mg$cache0
+   0005 brtrue.s IL_0018: ldsfld UnityEngine.Application/LowMemoryCallback DeviceCheckSys::<>f__mg$cache0
+   0007 ldnull 
+   0008 ldftn System.Void DeviceCheckSys::OnLowMemoryCallback()
+   000E newobj System.Void UnityEngine.Application/LowMemoryCallback::.ctor(System.Object,System.IntPtr)
+   0013 stsfld DeviceCheckSys::<>f__mg$cache0
+   0018 ldsfld DeviceCheckSys::<>f__mg$cache0
+   001D call System.Void UnityEngine.Application::remove_lowMemory(UnityEngine.Application/LowMemoryCallback)
+   0022 ldsfld DeviceCheckSys::<>f__mg$cache1
+   0027 brtrue.s IL_003a: ldsfld UnityEngine.Application/LowMemoryCallback DeviceCheckSys::<>f__mg$cache1
+   0029 ldnull 
+   002A ldftn System.Void DeviceCheckSys::OnLowMemoryCallback()
+   0030 newobj System.Void UnityEngine.Application/LowMemoryCallback::.ctor(System.Object,System.IntPtr)
+   0035 stsfld DeviceCheckSys::<>f__mg$cache1
+   003A ldsfld DeviceCheckSys::<>f__mg$cache1
+   003F call System.Void UnityEngine.Application::add_lowMemory(UnityEngine.Application/LowMemoryCallback)
+   0044 ldstr android.os.Build
+   0049 ldc.i4.0 
+   004A newarr System.Object
+   004F newobj System.Void UnityEngine.AndroidJavaObject::.ctor(System.String,System.Object[])
+   0054 stloc.0 
+   0055 ldloc.0 
+   0056 ldstr MODEL
+   005B callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<System.String>(System.String)
+   0060 stloc.1 
+   0061 ldloc.1 
+   0062 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0067 brtrue IL_00fb: ldnull
+   006C ldloc.1 
+   006D callvirt System.String System.String::ToLower()
+   0072 stloc.1 
+   0073 call System.Int32 ResData.GameDataMgr/DevicePerfInfoDatabin::Count()
+   0078 stloc.2 
+   0079 ldc.i4.0 
+   007A stloc.3 
+   007B br IL_00f4: ldloc.3
+   0080 ldloc.3 
+   0081 call ResData.ResDevicePerfInfo ResData.GameDataMgr/DevicePerfInfoDatabin::GetByIndex(System.Int32)
+   0086 stloc.s V_4
+   0088 ldloca.s V_4
+   008A ldflda ResData.ResDevicePerfInfo::strIdDeviceName
+   008F constrained. StringId
+   0095 callvirt System.String System.Object::ToString()
+   009A stloc.s V_5
+   009C ldloc.s V_5
+   009E callvirt System.String System.String::ToLower()
+   00A3 stloc.s V_5
+   00A5 ldloc.s V_5
+   00A7 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00AC brtrue IL_00f0: ldloc.3
+   00B1 ldloc.s V_5
+   00B3 ldloc.1 
+   00B4 callvirt System.Int32 System.String::IndexOf(System.String)
+   00B9 ldc.i4.0 
+   00BA bge IL_00cd: ldloca.s V_4
+   00BF ldloc.1 
+   00C0 ldloc.s V_5
+   00C2 callvirt System.Int32 System.String::IndexOf(System.String)
+   00C7 ldc.i4.0 
+   00C8 blt IL_00f0: ldloc.3
+   00CD ldloca.s V_4
+   00CF ldfld ResData.ResDevicePerfInfo::bOpen
+   00D4 ldc.i4.0 
+   00D5 ble IL_00ee: ldc.i4.0
+   00DA ldloca.s V_4
+   00DC ldfld ResData.ResDevicePerfInfo::bTheadNum
+   00E1 stsfld DeviceCheckSys::bestThreadNumForAI
+   00E6 ldloca.s V_4
+   00E8 ldfld ResData.ResDevicePerfInfo::wPerformanceScore
+   00ED ret 
+   00EE ldc.i4.0 
+   00EF ret 
+   00F0 ldloc.3 
+   00F1 ldc.i4.1 
+   00F2 add 
+   00F3 stloc.3 
+   00F4 ldloc.3 
+   00F5 ldloc.2 
+   00F6 blt IL_0080: ldloc.3
+   00FB ldnull 
+   00FC stloc.s V_6
+   00FE ldloca.s V_6
+   0100 call System.Boolean DeviceCheckSys::GetAndroidCpuName(System.String&)
+   0105 stloc.s V_7
+   0107 ldloc.s V_7
+   0109 brfalse IL_01b4: ldc.i4.0
+   010E ldloc.s V_6
+   0110 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0115 brtrue IL_01b4: ldc.i4.0
+   011A ldloc.s V_6
+   011C callvirt System.String System.String::ToLower()
+   0121 stloc.s V_6
+   0123 call System.Int32 ResData.GameDataMgr/CpuPerfInfoDatabin::Count()
+   0128 stloc.s V_8
+   012A ldc.i4.0 
+   012B stloc.s V_9
+   012D br IL_01ab: ldloc.s V_9
+   0132 ldloc.s V_9
+   0134 call ResData.ResCpuPerfInfo ResData.GameDataMgr/CpuPerfInfoDatabin::GetByIndex(System.Int32)
+   0139 stloc.s V_10
+   013B ldloca.s V_10
+   013D ldflda ResData.ResCpuPerfInfo::strIdCpuName
+   0142 constrained. StringId
+   0148 callvirt System.String System.Object::ToString()
+   014D stloc.s V_11
+   014F ldloc.s V_11
+   0151 callvirt System.String System.String::ToLower()
+   0156 stloc.s V_11
+   0158 ldloc.s V_11
+   015A call System.Boolean System.String::IsNullOrEmpty(System.String)
+   015F brtrue IL_01a5: ldloc.s V_9
+   0164 ldloc.s V_11
+   0166 ldloc.s V_6
+   0168 callvirt System.Int32 System.String::IndexOf(System.String)
+   016D ldc.i4.0 
+   016E bge IL_0182: ldloca.s V_10
+   0173 ldloc.s V_6
+   0175 ldloc.s V_11
+   0177 callvirt System.Int32 System.String::IndexOf(System.String)
+   017C ldc.i4.0 
+   017D blt IL_01a5: ldloc.s V_9
+   0182 ldloca.s V_10
+   0184 ldfld ResData.ResCpuPerfInfo::bOpen
+   0189 ldc.i4.0 
+   018A ble IL_01a3: ldc.i4.0
+   018F ldloca.s V_10
+   0191 ldfld ResData.ResCpuPerfInfo::bTheadNum
+   0196 stsfld DeviceCheckSys::bestThreadNumForAI
+   019B ldloca.s V_10
+   019D ldfld ResData.ResCpuPerfInfo::wPerformanceScore
+   01A2 ret 
+   01A3 ldc.i4.0 
+   01A4 ret 
+   01A5 ldloc.s V_9
+   01A7 ldc.i4.1 
+   01A8 add 
+   01A9 stloc.s V_9
+   01AB ldloc.s V_9
+   01AD ldloc.s V_8
+   01AF blt IL_0132: ldloc.s V_9
+   01B4 ldc.i4.0 
+   01B5 ret 
+== System.Void OnLowMemoryCallback() attrs=Private, Static, HideBySig maxstack=4
+   0000 ldstr pc
+   0005 stloc.0 
+   0006 ldstr android.os.Build
+   000B ldc.i4.0 
+   000C newarr System.Object
+   0011 newobj System.Void UnityEngine.AndroidJavaObject::.ctor(System.String,System.Object[])
+   0016 stloc.1 
+   0017 ldloc.1 
+   0018 ldstr MODEL
+   001D callvirt !!0 UnityEngine.AndroidJavaObject::GetStatic<System.String>(System.String)
+   0022 stloc.0 
+   0023 newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0028 stloc.2 
+   0029 ldloc.2 
+   002A ldstr g_version
+   002F call System.String CVersion::GetAppVersion()
+   0034 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0039 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   003E ldloc.2 
+   003F ldstr device
+   0044 ldloc.0 
+   0045 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   004A callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   004F ldloc.2 
+   0050 ldstr openid
+   0055 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   005A callvirt System.String ApolloHelper::GetOpenID()
+   005F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0064 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0069 ldloc.2 
+   006A ldstr quality
+   006F ldsflda Assets.Scripts.Framework.GameSettings::RenderQuality
+   0074 constrained. Assets.Scripts.Framework.SGameRenderQuality
+   007A callvirt System.String System.Object::ToString()
+   007F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0084 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0089 ldloc.2 
+   008A ldstr Quality_Mode
+   008F call System.Int32 Assets.Scripts.Framework.GameSettings::get_ModelLOD()
+   0094 stloc.3 
+   0095 ldloca.s V_3
+   0097 constrained. System.Int32
+   009D callvirt System.String System.Object::ToString()
+   00A2 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00A7 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00AC ldloc.2 
+   00AD ldstr Quality_Particle
+   00B2 call System.Int32 Assets.Scripts.Framework.GameSettings::get_ParticleLOD()
+   00B7 stloc.s V_4
+   00B9 ldloca.s V_4
+   00BB constrained. System.Int32
+   00C1 callvirt System.String System.Object::ToString()
+   00C6 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00CB callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00D0 ldloc.2 
+   00D1 ldstr GLES3
+   00D6 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   00DB ldflda Assets.Scripts.Framework.GameFramework::useGLES3
+   00E0 constrained. System.Boolean
+   00E6 callvirt System.String System.Object::ToString()
+   00EB newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   00F0 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   00F5 ldloc.2 
+   00F6 ldstr MTR
+   00FB call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0100 ldflda Assets.Scripts.Framework.GameFramework::mtrOpen
+   0105 constrained. System.Boolean
+   010B callvirt System.String System.Object::ToString()
+   0110 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0115 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   011A ldloc.2 
+   011B ldstr Vulkan
+   0120 call !0 MonoSingleton`1<Assets.Scripts.Framework.GameFramework>::GetInstance()
+   0125 ldflda Assets.Scripts.Framework.GameFramework::useVulkan
+   012A constrained. System.Boolean
+   0130 callvirt System.String System.Object::ToString()
+   0135 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   013A callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   013F call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0144 ldstr Service_LowMemoryWarning
+   0149 ldloc.2 
+   014A ldc.i4.1 
+   014B callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0150 ret 
+== System.Boolean CheckMemory() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 UnityEngine.SystemInfo::get_systemMemorySize()
+   0005 stsfld DeviceCheckSys::sysMemorySize
+   000A ldsfld DeviceCheckSys::sysMemorySize
+   000F ldc.i4 700
+   0014 bge IL_002c: ldc.i4.1
+   0019 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   001E ldstr MemoryNotEnough
+   0023 ldnull 
+   0024 ldc.i4.1 
+   0025 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   002A ldc.i4.0 
+   002B ret 
+   002C ldc.i4.1 
+   002D ret 
+== System.Int32 GetTotalMemoryMegaBytes() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 UnityEngine.SystemInfo::get_systemMemorySize()
+   0005 ret 
+== System.Int32 GetSafeTotalMemoryMegaBytes() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 UnityEngine.SystemInfo::get_systemMemorySize()
+   0005 call System.Int64 DeviceCheckSys::GetMemInfoByProc()
+   000A conv.i4 
+   000B call System.Int32 System.Math::Max(System.Int32,System.Int32)
+   0010 ret 
+== System.Int64 GetMemInfoByProc() attrs=Public, Static, HideBySig maxstack=4
+   0000 ldstr /proc/meminfo
+   0005 call System.String[] System.IO.File::ReadAllLines(System.String)
+   000A stloc.0 
+   000B ldc.i4.0 
+   000C stloc.1 
+   000D br IL_0243: ldloc.1
+   0012 ldloc.0 
+   0013 ldloc.1 
+   0014 ldelem.ref 
+   0015 callvirt System.String System.String::ToLower()
+   001A stloc.2 
+   001B ldloc.2 
+   001C ldstr memtotal
+   0021 callvirt System.Int32 System.String::IndexOf(System.String)
+   0026 stloc.3 
+   0027 ldloc.3 
+   0028 ldc.i4.0 
+   0029 blt IL_023f: ldloc.1
+   002E ldloc.2 
+   002F ldstr :
+   0034 ldloc.3 
+   0035 ldc.i4.8 
+   0036 add 
+   0037 callvirt System.Int32 System.String::IndexOf(System.String,System.Int32)
+   003C stloc.s V_4
+   003E ldloc.s V_4
+   0040 ldc.i4.0 
+   0041 blt IL_023a: leave IL_024c
+   0046 ldloc.2 
+   0047 ldloc.s V_4
+   0049 ldc.i4.1 
+   004A add 
+   004B callvirt System.String System.String::Substring(System.Int32)
+   0050 stloc.s V_5
+   0052 ldloc.s V_5
+   0054 callvirt System.String System.String::Trim()
+   0059 stloc.s V_5
+   005B ldloc.s V_5
+   005D ldloc.s V_5
+   005F callvirt System.Int32 System.String::get_Length()
+   0064 ldc.i4.2 
+   0065 sub 
+   0066 callvirt System.String System.String::Substring(System.Int32)
+   006B ldstr kb
+   0070 call System.Boolean System.String::op_Equality(System.String,System.String)
+   0075 brfalse IL_00a3: ldloc.s V_5
+   007A ldloc.s V_5
+   007C ldc.i4.0 
+   007D ldloc.s V_5
+   007F callvirt System.Int32 System.String::get_Length()
+   0084 ldc.i4.2 
+   0085 sub 
+   0086 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   008B callvirt System.String System.String::Trim()
+   0090 call System.Int64 System.Int64::Parse(System.String)
+   0095 ldc.i4 1024
+   009A conv.i8 
+   009B div 
+   009C stloc.s V_6
+   009E leave IL_025a: ldloc.s V_6
+   00A3 ldloc.s V_5
+   00A5 ldloc.s V_5
+   00A7 callvirt System.Int32 System.String::get_Length()
+   00AC ldc.i4.1 
+   00AD sub 
+   00AE callvirt System.Char System.String::get_Chars(System.Int32)
+   00B3 ldc.i4.s 107
+   00B5 bne.un IL_00e3: ldloc.s V_5
+   00BA ldloc.s V_5
+   00BC ldc.i4.0 
+   00BD ldloc.s V_5
+   00BF callvirt System.Int32 System.String::get_Length()
+   00C4 ldc.i4.1 
+   00C5 sub 
+   00C6 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   00CB callvirt System.String System.String::Trim()
+   00D0 call System.Int64 System.Int64::Parse(System.String)
+   00D5 ldc.i4 1024
+   00DA conv.i8 
+   00DB div 
+   00DC stloc.s V_6
+   00DE leave IL_025a: ldloc.s V_6
+   00E3 ldloc.s V_5
+   00E5 ldloc.s V_5
+   00E7 callvirt System.Int32 System.String::get_Length()
+   00EC ldc.i4.2 
+   00ED sub 
+   00EE callvirt System.String System.String::Substring(System.Int32)
+   00F3 ldstr mb
+   00F8 call System.Boolean System.String::op_Equality(System.String,System.String)
+   00FD brfalse IL_0124: ldloc.s V_5
+   0102 ldloc.s V_5
+   0104 ldc.i4.0 
+   0105 ldloc.s V_5
+   0107 callvirt System.Int32 System.String::get_Length()
+   010C ldc.i4.2 
+   010D sub 
+   010E callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0113 callvirt System.String System.String::Trim()
+   0118 call System.Int64 System.Int64::Parse(System.String)
+   011D stloc.s V_6
+   011F leave IL_025a: ldloc.s V_6
+   0124 ldloc.s V_5
+   0126 ldloc.s V_5
+   0128 callvirt System.Int32 System.String::get_Length()
+   012D ldc.i4.1 
+   012E sub 
+   012F callvirt System.Char System.String::get_Chars(System.Int32)
+   0134 ldc.i4.s 109
+   0136 bne.un IL_015d: ldloc.s V_5
+   013B ldloc.s V_5
+   013D ldc.i4.0 
+   013E ldloc.s V_5
+   0140 callvirt System.Int32 System.String::get_Length()
+   0145 ldc.i4.1 
+   0146 sub 
+   0147 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   014C callvirt System.String System.String::Trim()
+   0151 call System.Int64 System.Int64::Parse(System.String)
+   0156 stloc.s V_6
+   0158 leave IL_025a: ldloc.s V_6
+   015D ldloc.s V_5
+   015F ldloc.s V_5
+   0161 callvirt System.Int32 System.String::get_Length()
+   0166 ldc.i4.2 
+   0167 sub 
+   0168 callvirt System.String System.String::Substring(System.Int32)
+   016D ldstr gb
+   0172 call System.Boolean System.String::op_Equality(System.String,System.String)
+   0177 brfalse IL_01a5: ldloc.s V_5
+   017C ldloc.s V_5
+   017E ldc.i4.0 
+   017F ldloc.s V_5
+   0181 callvirt System.Int32 System.String::get_Length()
+   0186 ldc.i4.2 
+   0187 sub 
+   0188 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   018D callvirt System.String System.String::Trim()
+   0192 call System.Int64 System.Int64::Parse(System.String)
+   0197 ldc.i4 1024
+   019C conv.i8 
+   019D mul 
+   019E stloc.s V_6
+   01A0 leave IL_025a: ldloc.s V_6
+   01A5 ldloc.s V_5
+   01A7 ldloc.s V_5
+   01A9 callvirt System.Int32 System.String::get_Length()
+   01AE ldc.i4.1 
+   01AF sub 
+   01B0 callvirt System.Char System.String::get_Chars(System.Int32)
+   01B5 ldc.i4.s 103
+   01B7 bne.un IL_01e5: ldloc.s V_5
+   01BC ldloc.s V_5
+   01BE ldc.i4.0 
+   01BF ldloc.s V_5
+   01C1 callvirt System.Int32 System.String::get_Length()
+   01C6 ldc.i4.1 
+   01C7 sub 
+   01C8 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   01CD callvirt System.String System.String::Trim()
+   01D2 call System.Int64 System.Int64::Parse(System.String)
+   01D7 ldc.i4 1024
+   01DC conv.i8 
+   01DD mul 
+   01DE stloc.s V_6
+   01E0 leave IL_025a: ldloc.s V_6
+   01E5 ldloc.s V_5
+   01E7 ldloc.s V_5
+   01E9 callvirt System.Int32 System.String::get_Length()
+   01EE ldc.i4.1 
+   01EF sub 
+   01F0 callvirt System.Char System.String::get_Chars(System.Int32)
+   01F5 ldc.i4.s 98
+   01F7 bne.un IL_0225: ldloc.s V_5
+   01FC ldloc.s V_5
+   01FE ldc.i4.0 
+   01FF ldloc.s V_5
+   0201 callvirt System.Int32 System.String::get_Length()
+   0206 ldc.i4.1 
+   0207 sub 
+   0208 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   020D callvirt System.String System.String::Trim()
+   0212 call System.Int64 System.Int64::Parse(System.String)
+   0217 ldc.i4 1048576
+   021C conv.i8 
+   021D div 
+   021E stloc.s V_6
+   0220 leave IL_025a: ldloc.s V_6
+   0225 ldloc.s V_5
+   0227 call System.Int64 System.Int64::Parse(System.String)
+   022C ldc.i4 1048576
+   0231 conv.i8 
+   0232 div 
+   0233 stloc.s V_6
+   0235 leave IL_025a: ldloc.s V_6
+   023A leave IL_024c: leave IL_0257
+   023F ldloc.1 
+   0240 ldc.i4.1 
+   0241 add 
+   0242 stloc.1 
+   0243 ldloc.1 
+   0244 ldloc.0 
+   0245 ldlen 
+   0246 conv.i4 
+   0247 blt IL_0012: ldloc.0
+   024C leave IL_0257: ldc.i4.0
+   0251 pop 
+   0252 leave IL_0257: ldc.i4.0
+   0257 ldc.i4.0 
+   0258 conv.i8 
+   0259 ret 
+   025A ldloc.s V_6
+   025C ret 
+== System.Int32 GetAvailMemoryMegaBytes() attrs=Public, Static, HideBySig maxstack=1
+   0000 call System.Int64 AndroidJavaUtility::Android_GetAvailMemory()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 conv.i4 
+   0008 ret 
+== System.Void StartDumpTotalUsedMemory() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Void AndroidJavaUtility::Android_StartGetPssTotalThread()
+   0005 ret 
+== System.Int32 GetTotalUsedMemoryMegaBytes() attrs=Public, Static, HideBySig maxstack=1
+   0000 call System.Int32 AndroidJavaUtility::Android_GetPssTotal()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ret 
+== System.Boolean CheckAvailMemory() attrs=Public, Static, HideBySig maxstack=2
+   0000 call System.Int64 AndroidJavaUtility::Android_GetAvailMemory()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldc.i4 300
+   000C conv.i8 
+   000D ble IL_0018: ldc.i4.0
+   0012 ldc.i4.1 
+   0013 br IL_0019: ret
+   0018 ldc.i4.0 
+   0019 ret 
+== System.Void RecordCurMemNotEnoughPopTimes() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldstr DeviceCheck_MemNotEnough
+   0005 call System.String UnityEngine.PlayerPrefs::GetString(System.String)
+   000A stloc.0 
+   000B ldc.i4.1 
+   000C stloc.1 
+   000D ldloc.0 
+   000E call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0013 brfalse IL_0041: ldloc.0
+   0018 ldstr DeviceCheck_MemNotEnough
+   001D ldstr {0}_{1}
+   0022 call System.DateTime System.DateTime::get_Today()
+   0027 box System.DateTime
+   002C ldloc.1 
+   002D box System.Int32
+   0032 call System.String System.String::Format(System.String,System.Object,System.Object)
+   0037 call System.Void UnityEngine.PlayerPrefs::SetString(System.String,System.String)
+   003C br IL_00cc: ret
+   0041 ldloc.0 
+   0042 ldc.i4.1 
+   0043 newarr System.Char
+   0048 dup 
+   0049 ldc.i4.0 
+   004A ldc.i4.s 95
+   004C stelem.i2 
+   004D callvirt System.String[] System.String::Split(System.Char[])
+   0052 stloc.2 
+   0053 ldloc.2 
+   0054 ldlen 
+   0055 conv.i4 
+   0056 ldc.i4.2 
+   0057 blt IL_00a3: ldstr "DeviceCheck_MemNotEnough"
+   005C ldloc.2 
+   005D ldc.i4.0 
+   005E ldelem.ref 
+   005F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0064 brtrue IL_00a3: ldstr "DeviceCheck_MemNotEnough"
+   0069 ldloc.2 
+   006A ldc.i4.1 
+   006B ldelem.ref 
+   006C call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0071 brtrue IL_00a3: ldstr "DeviceCheck_MemNotEnough"
+   0076 ldloc.2 
+   0077 ldc.i4.0 
+   0078 ldelem.ref 
+   0079 call System.DateTime System.Convert::ToDateTime(System.String)
+   007E stloc.3 
+   007F ldloc.2 
+   0080 ldc.i4.1 
+   0081 ldelem.ref 
+   0082 call System.Int32 System.Convert::ToInt32(System.String)
+   0087 stloc.1 
+   0088 call System.DateTime System.DateTime::get_Today()
+   008D ldloc.3 
+   008E call System.Boolean System.DateTime::op_GreaterThan(System.DateTime,System.DateTime)
+   0093 brfalse IL_009f: ldloc.1
+   0098 ldc.i4.1 
+   0099 stloc.1 
+   009A br IL_00a3: ldstr "DeviceCheck_MemNotEnough"
+   009F ldloc.1 
+   00A0 ldc.i4.1 
+   00A1 add 
+   00A2 stloc.1 
+   00A3 ldstr DeviceCheck_MemNotEnough
+   00A8 ldstr {0}_{1}
+   00AD call System.DateTime System.DateTime::get_Today()
+   00B2 box System.DateTime
+   00B7 ldloc.1 
+   00B8 box System.Int32
+   00BD call System.String System.String::Format(System.String,System.Object,System.Object)
+   00C2 call System.Void UnityEngine.PlayerPrefs::SetString(System.String,System.String)
+   00C7 call System.Void UnityEngine.PlayerPrefs::Save()
+   00CC ret 
+== System.Int32 GetRecordCurMemNotEnoughPopTimes() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldstr DeviceCheck_MemNotEnough
+   0007 call System.String UnityEngine.PlayerPrefs::GetString(System.String)
+   000C stloc.1 
+   000D ldloc.1 
+   000E call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0013 brtrue IL_006d: ldloc.0
+   0018 ldloc.1 
+   0019 ldc.i4.1 
+   001A newarr System.Char
+   001F dup 
+   0020 ldc.i4.0 
+   0021 ldc.i4.s 95
+   0023 stelem.i2 
+   0024 callvirt System.String[] System.String::Split(System.Char[])
+   0029 stloc.2 
+   002A ldloc.2 
+   002B ldlen 
+   002C conv.i4 
+   002D ldc.i4.2 
+   002E blt IL_006d: ldloc.0
+   0033 ldloc.2 
+   0034 ldc.i4.0 
+   0035 ldelem.ref 
+   0036 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   003B brtrue IL_006d: ldloc.0
+   0040 ldloc.2 
+   0041 ldc.i4.1 
+   0042 ldelem.ref 
+   0043 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0048 brtrue IL_006d: ldloc.0
+   004D ldloc.2 
+   004E ldc.i4.0 
+   004F ldelem.ref 
+   0050 call System.DateTime System.Convert::ToDateTime(System.String)
+   0055 call System.DateTime System.DateTime::get_Today()
+   005A call System.Boolean System.DateTime::op_Equality(System.DateTime,System.DateTime)
+   005F brfalse IL_006d: ldloc.0
+   0064 ldloc.2 
+   0065 ldc.i4.1 
+   0066 ldelem.ref 
+   0067 call System.Int32 System.Convert::ToInt32(System.String)
+   006C stloc.0 
+   006D ldloc.0 
+   006E ret 
+== System.Int32 GetAvailMemory() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 ret 
+== System.Boolean CheckCPU() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 UnityEngine.SystemInfo::get_processorCount()
+   0005 stsfld DeviceCheckSys::cpuCoreNum
+   000A ldsfld DeviceCheckSys::cpuCoreNum
+   000F ldc.i4.1 
+   0010 bge IL_0017: ldc.i4.1
+   0015 ldc.i4.0 
+   0016 ret 
+   0017 ldc.i4.1 
+   0018 ret 
+== System.Boolean CheckResolution() attrs=Public, Static, HideBySig maxstack=4
+   0000 call System.Int32 UnityEngine.Screen::get_width()
+   0005 stsfld DeviceCheckSys::width
+   000A call System.Int32 UnityEngine.Screen::get_height()
+   000F stsfld DeviceCheckSys::height
+   0014 ldsfld DeviceCheckSys::width
+   0019 ldc.i4 800
+   001E blt IL_0032: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0023 ldsfld DeviceCheckSys::height
+   0028 ldc.i4 480
+   002D bge IL_0045: ldc.i4.1
+   0032 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0037 ldstr ResolutionNotValid
+   003C ldnull 
+   003D ldc.i4.1 
+   003E callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   0043 ldc.i4.0 
+   0044 ret 
+   0045 ldc.i4.1 
+   0046 ret 
+== System.Boolean checkGPU_Adreno(System.String[] tokens) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.1 
+   0003 stloc.1 
+   0004 br IL_0084: ldloc.1
+   0009 ldloca.s V_0
+   000B ldarg.0 
+   000C ldloc.1 
+   000D ldelem.ref 
+   000E call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0013 brfalse IL_0080: ldloc.1
+   0018 ldloc.0 
+   0019 ldc.i4 200
+   001E bge IL_0025: ldloc.0
+   0023 ldc.i4.0 
+   0024 ret 
+   0025 ldloc.0 
+   0026 ldc.i4 300
+   002B bge IL_003f: ldloc.0
+   0030 ldloc.0 
+   0031 ldc.i4 220
+   0036 ble IL_003d: ldc.i4.0
+   003B ldc.i4.1 
+   003C ret 
+   003D ldc.i4.0 
+   003E ret 
+   003F ldloc.0 
+   0040 ldc.i4 400
+   0045 bge IL_0066: ldloc.0
+   004A ldloc.0 
+   004B ldc.i4 320
+   0050 blt IL_0057: ldloc.0
+   0055 ldc.i4.1 
+   0056 ret 
+   0057 ldloc.0 
+   0058 ldc.i4 305
+   005D blt IL_0064: ldc.i4.0
+   0062 ldc.i4.1 
+   0063 ret 
+   0064 ldc.i4.0 
+   0065 ret 
+   0066 ldloc.0 
+   0067 ldc.i4 400
+   006C blt IL_0080: ldloc.1
+   0071 ldloc.0 
+   0072 ldc.i4 410
+   0077 bge IL_007e: ldc.i4.1
+   007C ldc.i4.1 
+   007D ret 
+   007E ldc.i4.1 
+   007F ret 
+   0080 ldloc.1 
+   0081 ldc.i4.1 
+   0082 add 
+   0083 stloc.1 
+   0084 ldloc.1 
+   0085 ldarg.0 
+   0086 ldlen 
+   0087 conv.i4 
+   0088 blt IL_0009: ldloca.s V_0
+   008D ldc.i4.0 
+   008E ret 
+== System.Boolean checkGPU_PowerVR(System.String[] tokens) attrs=Private, Static, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldc.i4.0 
+   0005 stloc.2 
+   0006 ldc.i4.1 
+   0007 stloc.3 
+   0008 br IL_019b: ldloc.3
+   000D ldarg.0 
+   000E ldloc.3 
+   000F ldelem.ref 
+   0010 stloc.s V_4
+   0012 ldloc.s V_4
+   0014 ldstr sgx
+   0019 call System.Boolean System.String::op_Equality(System.String,System.String)
+   001E brfalse IL_002a: ldloc.s V_4
+   0023 ldc.i4.1 
+   0024 stloc.0 
+   0025 br IL_0197: ldloc.3
+   002A ldloc.s V_4
+   002C ldstr rogue
+   0031 call System.Boolean System.String::op_Equality(System.String,System.String)
+   0036 brfalse IL_0042: ldloc.0
+   003B ldc.i4.1 
+   003C stloc.1 
+   003D br IL_01a4: ldloc.1
+   0042 ldloc.0 
+   0043 brfalse IL_00f4: ldloc.s V_4
+   0048 ldloc.s V_4
+   004A ldstr mp
+   004F callvirt System.Int32 System.String::IndexOf(System.String)
+   0054 stloc.s V_5
+   0056 ldloc.s V_5
+   0058 ldc.i4.0 
+   0059 ble IL_0075: ldloca.s V_2
+   005E ldloca.s V_2
+   0060 ldloc.s V_4
+   0062 ldc.i4.0 
+   0063 ldloc.s V_5
+   0065 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   006A call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   006F pop 
+   0070 br IL_00bf: ldloc.2
+   0075 ldloca.s V_2
+   0077 ldloc.s V_4
+   0079 call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   007E brfalse IL_00bf: ldloc.2
+   0083 ldloc.3 
+   0084 ldc.i4.1 
+   0085 add 
+   0086 stloc.s V_6
+   0088 br IL_00b5: ldloc.s V_6
+   008D ldarg.0 
+   008E ldloc.s V_6
+   0090 ldelem.ref 
+   0091 callvirt System.String System.String::ToLower()
+   0096 stloc.s V_4
+   0098 ldloc.s V_4
+   009A ldstr mp
+   009F callvirt System.Int32 System.String::IndexOf(System.String)
+   00A4 ldc.i4.0 
+   00A5 blt IL_00af: ldloc.s V_6
+   00AA br IL_00bf: ldloc.2
+   00AF ldloc.s V_6
+   00B1 ldc.i4.1 
+   00B2 add 
+   00B3 stloc.s V_6
+   00B5 ldloc.s V_6
+   00B7 ldarg.0 
+   00B8 ldlen 
+   00B9 conv.i4 
+   00BA blt IL_008d: ldarg.0
+   00BF ldloc.2 
+   00C0 ldc.i4.0 
+   00C1 ble IL_00ef: br IL_0197
+   00C6 ldloc.2 
+   00C7 ldc.i4 543
+   00CC bge IL_00d3: ldloc.2
+   00D1 ldc.i4.0 
+   00D2 ret 
+   00D3 ldloc.2 
+   00D4 ldc.i4 543
+   00D9 bne.un IL_00e0: ldloc.2
+   00DE ldc.i4.1 
+   00DF ret 
+   00E0 ldloc.2 
+   00E1 ldc.i4 544
+   00E6 bne.un IL_00ed: ldc.i4.1
+   00EB ldc.i4.1 
+   00EC ret 
+   00ED ldc.i4.1 
+   00EE ret 
+   00EF br IL_0197: ldloc.3
+   00F4 ldloc.s V_4
+   00F6 callvirt System.Int32 System.String::get_Length()
+   00FB ldc.i4.4 
+   00FC ble IL_0197: ldloc.3
+   0101 ldloc.s V_4
+   0103 ldc.i4.0 
+   0104 callvirt System.Char System.String::get_Chars(System.Int32)
+   0109 stloc.s V_7
+   010B ldloc.s V_4
+   010D ldc.i4.1 
+   010E callvirt System.Char System.String::get_Chars(System.Int32)
+   0113 stloc.s V_8
+   0115 ldloc.s V_7
+   0117 ldc.i4.s 103
+   0119 beq IL_0123: ldloc.s V_8
+   011E br IL_0197: ldloc.3
+   0123 ldloc.s V_8
+   0125 ldc.i4.s 48
+   0127 blt IL_014a: ldloca.s V_2
+   012C ldloc.s V_8
+   012E ldc.i4.s 57
+   0130 bgt IL_014a: ldloca.s V_2
+   0135 ldloca.s V_2
+   0137 ldloc.s V_4
+   0139 ldc.i4.1 
+   013A callvirt System.String System.String::Substring(System.Int32)
+   013F call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0144 pop 
+   0145 br IL_015a: ldloc.2
+   014A ldloca.s V_2
+   014C ldloc.s V_4
+   014E ldc.i4.2 
+   014F callvirt System.String System.String::Substring(System.Int32)
+   0154 call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0159 pop 
+   015A ldloc.2 
+   015B ldc.i4.0 
+   015C ble IL_0197: ldloc.3
+   0161 ldloc.2 
+   0162 ldc.i4 7000
+   0167 blt IL_016e: ldloc.2
+   016C ldc.i4.1 
+   016D ret 
+   016E ldloc.2 
+   016F ldc.i4 6000
+   0174 blt IL_0195: ldc.i4.0
+   0179 ldloc.2 
+   017A ldc.i4 6100
+   017F bge IL_0186: ldloc.2
+   0184 ldc.i4.0 
+   0185 ret 
+   0186 ldloc.2 
+   0187 ldc.i4 6400
+   018C bge IL_0193: ldc.i4.1
+   0191 ldc.i4.1 
+   0192 ret 
+   0193 ldc.i4.1 
+   0194 ret 
+   0195 ldc.i4.0 
+   0196 ret 
+   0197 ldloc.3 
+   0198 ldc.i4.1 
+   0199 add 
+   019A stloc.3 
+   019B ldloc.3 
+   019C ldarg.0 
+   019D ldlen 
+   019E conv.i4 
+   019F blt IL_000d: ldarg.0
+   01A4 ldloc.1 
+   01A5 brfalse IL_01ac: ldc.i4.0
+   01AA ldc.i4.1 
+   01AB ret 
+   01AC ldc.i4.0 
+   01AD ret 
+== System.Boolean checkGPU_Mali(System.String[] tokens) attrs=Private, Static, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.1 
+   0003 stloc.1 
+   0004 br IL_0127: ldloc.1
+   0009 ldarg.0 
+   000A ldloc.1 
+   000B ldelem.ref 
+   000C stloc.2 
+   000D ldloc.2 
+   000E callvirt System.Int32 System.String::get_Length()
+   0013 ldc.i4.3 
+   0014 bge IL_001e: ldloc.2
+   0019 br IL_0123: ldloc.1
+   001E ldloc.2 
+   001F ldstr mp
+   0024 callvirt System.Int32 System.String::LastIndexOf(System.String)
+   0029 stloc.3 
+   002A ldloc.2 
+   002B ldc.i4.0 
+   002C callvirt System.Char System.String::get_Chars(System.Int32)
+   0031 ldc.i4.s 116
+   0033 ceq 
+   0035 stloc.s V_4
+   0037 ldloc.3 
+   0038 ldc.i4.0 
+   0039 ble IL_0069: ldloc.s V_4
+   003E ldloc.s V_4
+   0040 brfalse IL_004b: ldc.i4.0
+   0045 ldc.i4.1 
+   0046 br IL_004c: stloc.s V_5
+   004B ldc.i4.0 
+   004C stloc.s V_5
+   004E ldloc.2 
+   004F ldloc.s V_5
+   0051 ldloc.3 
+   0052 ldloc.s V_5
+   0054 sub 
+   0055 callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   005A stloc.2 
+   005B ldloca.s V_0
+   005D ldloc.2 
+   005E call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0063 pop 
+   0064 br IL_00ba: ldloc.0
+   0069 ldloc.s V_4
+   006B brfalse IL_0078: ldloca.s V_0
+   0070 ldloc.2 
+   0071 ldc.i4.1 
+   0072 callvirt System.String System.String::Substring(System.Int32)
+   0077 stloc.2 
+   0078 ldloca.s V_0
+   007A ldloc.2 
+   007B call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0080 brfalse IL_00ba: ldloc.0
+   0085 ldloc.1 
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.s V_6
+   008A br IL_00b0: ldloc.s V_6
+   008F ldarg.0 
+   0090 ldloc.s V_6
+   0092 ldelem.ref 
+   0093 stloc.2 
+   0094 ldloc.2 
+   0095 ldstr mp
+   009A callvirt System.Int32 System.String::IndexOf(System.String)
+   009F ldc.i4.0 
+   00A0 blt IL_00aa: ldloc.s V_6
+   00A5 br IL_00ba: ldloc.0
+   00AA ldloc.s V_6
+   00AC ldc.i4.1 
+   00AD add 
+   00AE stloc.s V_6
+   00B0 ldloc.s V_6
+   00B2 ldarg.0 
+   00B3 ldlen 
+   00B4 conv.i4 
+   00B5 blt IL_008f: ldarg.0
+   00BA ldloc.0 
+   00BB ldc.i4.0 
+   00BC ble IL_0123: ldloc.1
+   00C1 ldloc.0 
+   00C2 ldc.i4 400
+   00C7 bge IL_00ce: ldloc.0
+   00CC ldc.i4.0 
+   00CD ret 
+   00CE ldloc.0 
+   00CF ldc.i4 500
+   00D4 bge IL_00f5: ldloc.0
+   00D9 ldloc.0 
+   00DA ldc.i4 400
+   00DF bne.un IL_00e6: ldloc.0
+   00E4 ldc.i4.1 
+   00E5 ret 
+   00E6 ldloc.0 
+   00E7 ldc.i4 450
+   00EC bne.un IL_00f3: ldc.i4.0
+   00F1 ldc.i4.1 
+   00F2 ret 
+   00F3 ldc.i4.0 
+   00F4 ret 
+   00F5 ldloc.0 
+   00F6 ldc.i4 700
+   00FB bge IL_0118: ldloc.s V_4
+   0100 ldloc.s V_4
+   0102 brtrue IL_0109: ldloc.0
+   0107 ldc.i4.0 
+   0108 ret 
+   0109 ldloc.0 
+   010A ldc.i4 620
+   010F bge IL_0116: ldc.i4.1
+   0114 ldc.i4.1 
+   0115 ret 
+   0116 ldc.i4.1 
+   0117 ret 
+   0118 ldloc.s V_4
+   011A brtrue IL_0121: ldc.i4.1
+   011F ldc.i4.0 
+   0120 ret 
+   0121 ldc.i4.1 
+   0122 ret 
+   0123 ldloc.1 
+   0124 ldc.i4.1 
+   0125 add 
+   0126 stloc.1 
+   0127 ldloc.1 
+   0128 ldarg.0 
+   0129 ldlen 
+   012A conv.i4 
+   012B blt IL_0009: ldarg.0
+   0130 ldc.i4.0 
+   0131 ret 
+== System.Boolean checkGPU_Tegra(System.String[] tokens) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldc.i4.1 
+   0005 stloc.2 
+   0006 br IL_004d: ldloc.2
+   000B ldloca.s V_1
+   000D ldarg.0 
+   000E ldloc.2 
+   000F ldelem.ref 
+   0010 call System.Boolean DeviceCheckSys::TryGetInt(System.Int32&,System.String)
+   0015 brfalse IL_0033: ldarg.0
+   001A ldc.i4.1 
+   001B stloc.0 
+   001C ldloc.1 
+   001D ldc.i4.4 
+   001E blt IL_0025: ldloc.1
+   0023 ldc.i4.1 
+   0024 ret 
+   0025 ldloc.1 
+   0026 ldc.i4.3 
+   0027 bne.un IL_002e: br IL_0049
+   002C ldc.i4.1 
+   002D ret 
+   002E br IL_0049: ldloc.2
+   0033 ldarg.0 
+   0034 ldloc.2 
+   0035 ldelem.ref 
+   0036 stloc.3 
+   0037 ldloc.3 
+   0038 ldstr k1
+   003D call System.Boolean System.String::op_Equality(System.String,System.String)
+   0042 brfalse IL_0049: ldloc.2
+   0047 ldc.i4.1 
+   0048 ret 
+   0049 ldloc.2 
+   004A ldc.i4.1 
+   004B add 
+   004C stloc.2 
+   004D ldloc.2 
+   004E ldarg.0 
+   004F ldlen 
+   0050 conv.i4 
+   0051 blt IL_000b: ldloca.s V_1
+   0056 ldloc.0 
+   0057 brtrue IL_005e: ldc.i4.0
+   005C ldc.i4.1 
+   005D ret 
+   005E ldc.i4.0 
+   005F ret 
+== System.Boolean TryGetInt(System.Int32& val, System.String str) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.0 
+   0004 ldarg.1 
+   0005 call System.Int32 System.Convert::ToInt32(System.String)
+   000A stind.i4 
+   000B ldc.i4.1 
+   000C stloc.0 
+   000D leave IL_001a: ldloc.0
+   0012 pop 
+   0013 ldc.i4.0 
+   0014 stloc.0 
+   0015 leave IL_001a: ldloc.0
+   001A ldloc.0 
+   001B ret 
+== System.Boolean IsLowMemoryDevice() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Int32 DeviceCheckSys::GetTotalMemoryMegaBytes()
+   0005 ldc.i4 1024
+   000A cgt 
+   000C ldc.i4.0 
+   000D ceq 
+   000F ret 
+== System.Void DecideLowMemoryStrategy() attrs=Public, Static, HideBySig maxstack=8
+   0000 call System.Boolean DeviceCheckSys::IsLowMemoryDevice()
+   0005 brfalse IL_0019: ldc.i4.0
+   000A ldc.i4 787
+   000F call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   0014 ldc.i4.0 
+   0015 cgt.un 
+   0017 br.s IL_001a: stsfld System.Boolean DeviceCheckSys::s_enableLowMemoryStrategy
+   0019 ldc.i4.0 
+   001A stsfld DeviceCheckSys::s_enableLowMemoryStrategy
+   001F ret 
+== System.Boolean EnableLowMemoryStrategy() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld DeviceCheckSys::s_enableLowMemoryStrategy
+   0005 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.4 
+   0001 stsfld DeviceCheckSys::bestThreadNumForAI
+   0006 ret 

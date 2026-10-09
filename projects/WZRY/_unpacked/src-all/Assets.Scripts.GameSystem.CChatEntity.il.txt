@@ -1,0 +1,201 @@
+// TYPE Assets.Scripts.GameSystem.CChatEntity  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.UInt32 UID
+  FIELD Assets.Scripts.GameSystem.EChatChannel BelongedChannelType
+  FIELD Assets.Scripts.GameSystem.ChaterBasicInfo SenderInfo
+  FIELD System.UInt64 SenderUid
+  FIELD System.Int32 SenderWorldId
+  FIELD System.UInt64 receiverUid
+  FIELD System.Int32 receiverWorldId
+  FIELD System.String text
+  FIELD Assets.Scripts.GameSystem.EChaterType type
+  FIELD System.Boolean bHasReaded
+  FIELD System.Int32 time
+  FIELD ListView`1<Assets.Scripts.GameSystem.CTextImageNode> TextObjList
+  FIELD System.Single final_width
+  FIELD System.Single final_height
+  FIELD System.UInt32 numLine
+  FIELD Assets.Scripts.GameSystem.GuildRecruitInfo guildRecruitInfo
+  FIELD System.Boolean bNeedTeamInfo
+  FIELD CSProtocol.COMDT_INVITE_JOIN_INFO InviteJoinTeamInfo
+  FIELD System.String fileID
+  FIELD System.UInt32 voiceTimeLen
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CTextImageNode>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   000B ldarg.0 
+   000C ldc.i4.1 
+   000D stfld Assets.Scripts.GameSystem.CChatEntity::numLine
+   0012 ldarg.0 
+   0013 call System.Void System.Object::.ctor()
+   0018 ret 
+== System.Object Clone() attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ldarg.0 
+   0001 call System.Object System.Object::MemberwiseClone()
+   0006 ret 
+== System.Void AddVoiceInfo(CSProtocol.COMDT_VOICE_MSG info) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brfalse IL_00a1: ldarg.0
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 ldfld CSProtocol.COMDT_VOICE_MSG::bVoiceLen
+   000D stfld Assets.Scripts.GameSystem.CChatEntity::voiceTimeLen
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CChatEntity::voiceTimeLen
+   0018 ldc.i4.s 9
+   001A blt.un IL_0027: ldarg.0
+   001F ldarg.0 
+   0020 ldc.i4.s 10
+   0022 stfld Assets.Scripts.GameSystem.CChatEntity::voiceTimeLen
+   0027 ldarg.0 
+   0028 ldarg.1 
+   0029 ldfld CSProtocol.COMDT_VOICE_MSG::szFileId
+   002E ldarg.1 
+   002F ldfld CSProtocol.COMDT_VOICE_MSG::wFileLen
+   0034 call System.String Utility::UTF8Convert(System.SByte[],System.Int32)
+   0039 stfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0044 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0049 brtrue IL_0069: call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameSystem.CChatEntity::text
+   0054 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0059 brfalse IL_0069: call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   005E ldarg.0 
+   005F ldstr       
+   0064 stfld Assets.Scripts.GameSystem.CChatEntity::text
+   0069 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   006E ldfld Assets.Scripts.GameSystem.CChatController::model
+   0073 stloc.0 
+   0074 ldloc.0 
+   0075 ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0080 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::ContainsKey(!0)
+   0085 brtrue IL_009c: br IL_00b3
+   008A ldloc.0 
+   008B ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0096 ldc.i4.0 
+   0097 callvirt System.Void System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::Add(!0,!1)
+   009C br IL_00b3: ret
+   00A1 ldarg.0 
+   00A2 ldsfld System.String::Empty
+   00A7 stfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   00AC ldarg.0 
+   00AD ldc.i4.0 
+   00AE stfld Assets.Scripts.GameSystem.CChatEntity::voiceTimeLen
+   00B3 ret 
+== System.Boolean IsVoiceEntityContainsRedPoint() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CChatEntity::type
+   0006 brfalse IL_0022: ldc.i4.0
+   000B ldarg.0 
+   000C call Assets.Scripts.GameSystem.CChatEntity/VoiceFlag Assets.Scripts.GameSystem.CChatEntity::IsVoice()
+   0011 ldc.i4.2 
+   0012 bne.un IL_0022: ldc.i4.0
+   0017 ldarg.0 
+   0018 call System.Boolean Assets.Scripts.GameSystem.CChatEntity::IsVoiceHasPlayed()
+   001D ldc.i4.0 
+   001E ceq 
+   0020 br.s IL_0023: ret
+   0022 ldc.i4.0 
+   0023 ret 
+== System.Boolean IsVoiceHasPlayed() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.CChatController::model
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0017 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::ContainsKey(!0)
+   001C brfalse IL_0033: ldc.i4.1
+   0021 ldloc.0 
+   0022 ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   002D callvirt !1 System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::get_Item(!0)
+   0032 ret 
+   0033 ldc.i4.1 
+   0034 ret 
+== Assets.Scripts.GameSystem.CChatEntity/VoiceFlag IsVoice() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0006 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000B brtrue IL_0028: ldc.i4.0
+   0010 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0015 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   001A callvirt System.Boolean Assets.Scripts.GameSystem.OfflineVoiceSys::get_UseOfflineSys()
+   001F brtrue IL_0026: ldc.i4.2
+   0024 ldc.i4.1 
+   0025 ret 
+   0026 ldc.i4.2 
+   0027 ret 
+   0028 ldc.i4.0 
+   0029 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.CChatController::model
+   000A stloc.0 
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0011 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0016 brtrue IL_0043: ldarg.0
+   001B ldloc.0 
+   001C ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0027 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::ContainsKey(!0)
+   002C brfalse IL_0043: ldarg.0
+   0031 ldloc.0 
+   0032 ldfld Assets.Scripts.GameSystem.CChatModel::isVoiceHasPlayedMap
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   003D callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.String,System.Boolean>::Remove(!0)
+   0042 pop 
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameSystem.CChatEntity::TextObjList
+   0049 callvirt System.Void ListViewBase::Clear()
+   004E ldarg.0 
+   004F ldc.r4 0
+   0054 stfld Assets.Scripts.GameSystem.CChatEntity::final_width
+   0059 ldarg.0 
+   005A ldc.i4.s 11
+   005C stfld Assets.Scripts.GameSystem.CChatEntity::type
+   0061 ldarg.0 
+   0062 ldc.i4.0 
+   0063 stfld Assets.Scripts.GameSystem.CChatEntity::bHasReaded
+   0068 ldarg.0 
+   0069 ldsfld System.String::Empty
+   006E stfld Assets.Scripts.GameSystem.CChatEntity::fileID
+   0073 ldarg.0 
+   0074 ldc.i4.0 
+   0075 stfld Assets.Scripts.GameSystem.CChatEntity::voiceTimeLen
+   007A ldarg.0 
+   007B ldc.i4.s 19
+   007D stfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   0082 ldarg.0 
+   0083 ldnull 
+   0084 stfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   0089 ldarg.0 
+   008A ldc.i4.0 
+   008B conv.i8 
+   008C stfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0091 ldarg.0 
+   0092 ldc.i4.0 
+   0093 stfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   0098 ldarg.0 
+   0099 ldc.i4.0 
+   009A conv.i8 
+   009B stfld Assets.Scripts.GameSystem.CChatEntity::receiverUid
+   00A0 ldarg.0 
+   00A1 ldc.i4.0 
+   00A2 stfld Assets.Scripts.GameSystem.CChatEntity::receiverWorldId
+   00A7 ldarg.0 
+   00A8 ldc.i4.0 
+   00A9 stfld Assets.Scripts.GameSystem.CChatEntity::UID
+   00AE ret 
+  NESTED Assets.Scripts.GameSystem.CChatEntity/VoiceFlag

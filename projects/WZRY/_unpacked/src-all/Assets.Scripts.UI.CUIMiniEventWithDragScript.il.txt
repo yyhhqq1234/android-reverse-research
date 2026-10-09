@@ -1,0 +1,664 @@
+// TYPE Assets.Scripts.UI.CUIMiniEventWithDragScript  base=Assets.Scripts.UI.CUIInputHandler  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.UI.enUIEventID m_onDownEventID
+  FIELD Assets.Scripts.UI.stUIEventParams m_onDownEventParams
+  FIELD Assets.Scripts.UI.enUIEventID m_onUpEventID
+  FIELD Assets.Scripts.UI.stUIEventParams m_onUpEventParams
+  FIELD Assets.Scripts.UI.enUIEventID m_onClickEventID
+  FIELD Assets.Scripts.UI.stUIEventParams m_onClickEventParams
+  FIELD System.Boolean m_closeFormWhenClicked
+  FIELD System.String[] m_onDownWwiseEvents
+  FIELD System.String[] m_onClickedWwiseEvents
+  FIELD System.Boolean m_isDown
+  FIELD System.Boolean m_isHold
+  FIELD System.Boolean m_canClickOrHold
+  FIELD System.Single c_holdTimeValue
+  FIELD System.Single c_clickAreaValue = 40
+  FIELD System.Single m_downTimestamp
+  FIELD UnityEngine.Vector2 m_downPosition
+  FIELD UnityEngine.EventSystems.PointerEventData m_holdPointerEventData
+  FIELD System.Boolean m_needClearInputStatus
+  FIELD UnityEngine.UI.ScrollRect m_faterScrollRect
+  FIELD NewbieWeakGuideControl/OnUIEventHandler onClick
+  FIELD NewbieWeakGuideControl/OnUIEventHandler onDown
+  FIELD System.Boolean m_isApplicationPaused
+  FIELD System.Single m_applicationPausedTimestamp
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 newarr System.String
+   0007 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownWwiseEvents
+   000C ldarg.0 
+   000D ldc.i4.0 
+   000E newarr System.String
+   0013 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickedWwiseEvents
+   0018 ldarg.0 
+   0019 ldc.r4 1
+   001E stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::c_holdTimeValue
+   0023 ldarg.0 
+   0024 call System.Void Assets.Scripts.UI.CUIInputHandler::.ctor()
+   0029 ret 
+== System.Void Initialize(Assets.Scripts.UI.CUIFormScript formScript) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brtrue IL_0027: ret
+   000B ldarg.0 
+   000C dup 
+   000D ldfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0012 ldc.i4.3 
+   0013 or 
+   0014 stfld Assets.Scripts.UI.CUIComponent::m_customUpdateFlags
+   0019 ldarg.0 
+   001A ldarg.1 
+   001B call System.Void Assets.Scripts.UI.CUIInputHandler::Initialize(Assets.Scripts.UI.CUIFormScript)
+   0020 ldarg.0 
+   0021 ldc.i4.1 
+   0022 stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0027 ret 
+== System.Void UnInitialize() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0006 brfalse IL_0063: ret
+   000B ldarg.0 
+   000C ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   0011 call System.Void Assets.Scripts.UI.stUIEventParams::Clear()
+   0016 ldarg.0 
+   0017 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventParams
+   001C call System.Void Assets.Scripts.UI.stUIEventParams::Clear()
+   0021 ldarg.0 
+   0022 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   0027 call System.Void Assets.Scripts.UI.stUIEventParams::Clear()
+   002C ldarg.0 
+   002D ldnull 
+   002E stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownWwiseEvents
+   0033 ldarg.0 
+   0034 ldnull 
+   0035 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickedWwiseEvents
+   003A ldarg.0 
+   003B ldnull 
+   003C stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0041 ldarg.0 
+   0042 ldnull 
+   0043 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0048 ldarg.0 
+   0049 ldnull 
+   004A stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   004F ldarg.0 
+   0050 ldnull 
+   0051 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   0056 ldarg.0 
+   0057 call System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   005C ldarg.0 
+   005D ldc.i4.0 
+   005E stfld Assets.Scripts.UI.CUIComponent::m_isInitialized
+   0063 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void Assets.Scripts.UI.CUIComponent::UnInitialize()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.UI.CUIComponent::OnDestroy()
+   000C ret 
+== System.Void Close() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::ExecuteClearInputStatus()
+   0006 ret 
+== System.Void SetUIEvent(Assets.Scripts.UI.enUIEventType eventType, Assets.Scripts.UI.enUIEventID eventID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_001a: ldarg.0
+   0006 ldarg.1 
+   0007 ldc.i4.s 9
+   0009 beq IL_0026: ldarg.0
+   000E ldarg.1 
+   000F ldc.i4.1 
+   0010 beq IL_0032: ldarg.0
+   0015 br IL_003e: ret
+   001A ldarg.0 
+   001B ldarg.2 
+   001C stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventID
+   0021 br IL_003e: ret
+   0026 ldarg.0 
+   0027 ldarg.2 
+   0028 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventID
+   002D br IL_003e: ret
+   0032 ldarg.0 
+   0033 ldarg.2 
+   0034 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventID
+   0039 br IL_003e: ret
+   003E ret 
+== System.Void SetUIEvent(Assets.Scripts.UI.enUIEventType eventType, Assets.Scripts.UI.enUIEventID eventID, Assets.Scripts.UI.stUIEventParams eventParams) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_001a: ldarg.0
+   0006 ldarg.1 
+   0007 ldc.i4.s 9
+   0009 beq IL_002d: ldarg.0
+   000E ldarg.1 
+   000F ldc.i4.1 
+   0010 beq IL_0040: ldarg.0
+   0015 br IL_0053: ret
+   001A ldarg.0 
+   001B ldarg.2 
+   001C stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventID
+   0021 ldarg.0 
+   0022 ldarg.3 
+   0023 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   0028 br IL_0053: ret
+   002D ldarg.0 
+   002E ldarg.2 
+   002F stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventID
+   0034 ldarg.0 
+   0035 ldarg.3 
+   0036 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventParams
+   003B br IL_0053: ret
+   0040 ldarg.0 
+   0041 ldarg.2 
+   0042 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventID
+   0047 ldarg.0 
+   0048 ldarg.3 
+   0049 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   004E br IL_0053: ret
+   0053 ret 
+== System.Void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.UI.CUIInputHandler::OnPointerDown(UnityEngine.EventSystems.PointerEventData)
+   0007 ldarg.0 
+   0008 ldc.i4.1 
+   0009 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isDown
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isHold
+   0015 ldarg.0 
+   0016 ldc.i4.1 
+   0017 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   001C ldarg.0 
+   001D call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0022 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downTimestamp
+   0027 ldarg.0 
+   0028 ldarg.1 
+   0029 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   002E stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downPosition
+   0033 ldarg.0 
+   0034 ldarg.1 
+   0035 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   003A ldarg.0 
+   003B ldc.i4.0 
+   003C stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0041 ldarg.0 
+   0042 ldc.i4.0 
+   0043 ldarg.1 
+   0044 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   0049 ret 
+== System.Void OnPointerUp(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Void Assets.Scripts.UI.CUIInputHandler::OnPointerUp(UnityEngine.EventSystems.PointerEventData)
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isHold
+   000D brfalse IL_002a: ldarg.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0018 brfalse IL_002a: ldarg.0
+   001D ldarg.0 
+   001E ldc.i4.4 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0025 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   002A ldarg.0 
+   002B ldc.i4.s 9
+   002D ldarg.1 
+   002E call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   0033 ldarg.0 
+   0034 call System.Boolean Assets.Scripts.UI.CUIMiniEventWithDragScript::ClearInputStatus()
+   0039 pop 
+   003A ret 
+== System.Void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0008 ldnull 
+   0009 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000E brfalse IL_0045: ldarg.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0019 ldfld Assets.Scripts.UI.CUIFormScript::m_enableMultiClickedEvent
+   001E brtrue IL_0045: ldarg.0
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0029 ldfld Assets.Scripts.UI.CUIFormScript::m_clickedEventDispatchedCounter
+   002E ldc.i4.0 
+   002F ceq 
+   0031 stloc.0 
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0038 dup 
+   0039 ldfld Assets.Scripts.UI.CUIFormScript::m_clickedEventDispatchedCounter
+   003E ldc.i4.1 
+   003F add 
+   0040 stfld Assets.Scripts.UI.CUIFormScript::m_clickedEventDispatchedCounter
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   004B brfalse IL_0086: ldarg.0
+   0050 ldloc.0 
+   0051 brfalse IL_0086: ldarg.0
+   0056 ldarg.0 
+   0057 ldc.i4.1 
+   0058 ldarg.1 
+   0059 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   005E ldarg.0 
+   005F ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_closeFormWhenClicked
+   0064 brfalse IL_0086: ldarg.0
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   006F ldnull 
+   0070 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0075 brfalse IL_0086: ldarg.0
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0080 ldc.i4.0 
+   0081 callvirt System.Void Assets.Scripts.UI.CUIFormScript::Close(System.Boolean)
+   0086 ldarg.0 
+   0087 call System.Boolean Assets.Scripts.UI.CUIMiniEventWithDragScript::ClearInputStatus()
+   008C pop 
+   008D ret 
+== System.Void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.UI.CUIInputHandler::m_instanceID
+   0007 call System.Void Assets.Scripts.UI.CUIInputHandler::RecordTouchHandlerID(UnityEngine.EventSystems.PointerEventData,System.Int32)
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0012 brfalse IL_0055: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_0055: ldarg.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   002E ldarg.1 
+   002F callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downPosition
+   003A call System.Single UnityEngine.Vector2::Distance(UnityEngine.Vector2,UnityEngine.Vector2)
+   003F callvirt System.Single Assets.Scripts.UI.CUIFormScript::ChangeScreenValueToForm(System.Single)
+   0044 ldc.r4 40
+   0049 ble.un IL_0055: ldarg.0
+   004E ldarg.0 
+   004F ldc.i4.0 
+   0050 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0055 ldarg.0 
+   0056 ldc.i4.5 
+   0057 ldarg.1 
+   0058 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0063 ldnull 
+   0064 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0069 brfalse IL_007a: ret
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0074 ldarg.1 
+   0075 callvirt System.Void UnityEngine.UI.ScrollRect::OnBeginDrag(UnityEngine.EventSystems.PointerEventData)
+   007A ret 
+== System.Void OnDrag(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.UI.CUIInputHandler::m_instanceID
+   0007 call System.Void Assets.Scripts.UI.CUIInputHandler::RecordTouchHandlerID(UnityEngine.EventSystems.PointerEventData,System.Int32)
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0012 brfalse IL_0055: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_0055: ldarg.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   002E ldarg.1 
+   002F callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downPosition
+   003A call System.Single UnityEngine.Vector2::Distance(UnityEngine.Vector2,UnityEngine.Vector2)
+   003F callvirt System.Single Assets.Scripts.UI.CUIFormScript::ChangeScreenValueToForm(System.Single)
+   0044 ldc.r4 40
+   0049 ble.un IL_0055: ldarg.0
+   004E ldarg.0 
+   004F ldc.i4.0 
+   0050 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0055 ldarg.0 
+   0056 ldc.i4.6 
+   0057 ldarg.1 
+   0058 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0063 ldnull 
+   0064 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0069 brfalse IL_007a: ret
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0074 ldarg.1 
+   0075 callvirt System.Void UnityEngine.UI.ScrollRect::OnDrag(UnityEngine.EventSystems.PointerEventData)
+   007A ret 
+== System.Void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0006 brfalse IL_0049: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0049: ldarg.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0022 ldarg.1 
+   0023 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_position()
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downPosition
+   002E call System.Single UnityEngine.Vector2::Distance(UnityEngine.Vector2,UnityEngine.Vector2)
+   0033 callvirt System.Single Assets.Scripts.UI.CUIFormScript::ChangeScreenValueToForm(System.Single)
+   0038 ldc.r4 40
+   003D ble.un IL_0049: ldarg.0
+   0042 ldarg.0 
+   0043 ldc.i4.0 
+   0044 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0049 ldarg.0 
+   004A ldc.i4.7 
+   004B ldarg.1 
+   004C call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0057 ldnull 
+   0058 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   005D brfalse IL_006e: ldarg.0
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_faterScrollRect
+   0068 ldarg.1 
+   0069 callvirt System.Void UnityEngine.UI.ScrollRect::OnEndDrag(UnityEngine.EventSystems.PointerEventData)
+   006E ldarg.0 
+   006F call System.Boolean Assets.Scripts.UI.CUIMiniEventWithDragScript::ClearInputStatus()
+   0074 pop 
+   0075 ret 
+== System.Void OnDrop(UnityEngine.EventSystems.PointerEventData eventData) attrs=Public, Final, Virtual, HideBySig, VtableLayoutMask maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.8 
+   0002 ldarg.1 
+   0003 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   0008 ret 
+== System.Boolean ClearInputStatus() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isDown
+   000D ret 
+== System.Void ExecuteClearInputStatus() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isDown
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isHold
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0015 ldarg.0 
+   0016 ldc.r4 0
+   001B stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downTimestamp
+   0020 ldarg.0 
+   0021 call UnityEngine.Vector2 UnityEngine.Vector2::get_zero()
+   0026 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downPosition
+   002B ldarg.0 
+   002C ldnull 
+   002D stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0032 ret 
+== System.Void CustomUpdate() attrs=Public, Virtual, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isDown
+   0012 brfalse IL_0071: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isHold
+   001D brtrue IL_0064: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0028 brfalse IL_005f: br IL_0071
+   002D call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_downTimestamp
+   0038 sub 
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::c_holdTimeValue
+   003F blt.un IL_005f: br IL_0071
+   0044 ldarg.0 
+   0045 ldc.i4.1 
+   0046 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isHold
+   004B ldarg.0 
+   004C ldc.i4.0 
+   004D stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_canClickOrHold
+   0052 ldarg.0 
+   0053 ldc.i4.2 
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   005A call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   005F br IL_0071: ret
+   0064 ldarg.0 
+   0065 ldc.i4.3 
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   006C call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::DispatchUIEvent(Assets.Scripts.UI.enUIEventType,UnityEngine.EventSystems.PointerEventData)
+   0071 ret 
+== System.Void CustomLateUpdate() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0006 brfalse IL_0018: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::ExecuteClearInputStatus()
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0018 ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0006 brfalse IL_0018: ret
+   000B ldarg.0 
+   000C call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::ExecuteClearInputStatus()
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   0018 ret 
+== System.Void Hide() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.UI.CUIComponent::Hide()
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   000C brfalse IL_001e: ret
+   0011 ldarg.0 
+   0012 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::ExecuteClearInputStatus()
+   0017 ldarg.0 
+   0018 ldc.i4.0 
+   0019 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   001E ret 
+== System.Void OnApplicationPause(System.Boolean pauseStatus) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_001d: ldarg.0
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isApplicationPaused
+   000D ldarg.0 
+   000E call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0013 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_applicationPausedTimestamp
+   0018 br IL_0095: ret
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isApplicationPaused
+   0023 brfalse IL_0083: ldarg.0
+   0028 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_applicationPausedTimestamp
+   0033 sub 
+   0034 ldc.r4 2
+   0039 blt.un IL_0083: ldarg.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isDown
+   0044 brfalse IL_0083: ldarg.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   004F brfalse IL_0083: ldarg.0
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_needClearInputStatus
+   005A brtrue IL_0083: ldarg.0
+   005F ldarg.0 
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0066 callvirt System.Void Assets.Scripts.UI.CUIInputHandler::OnPointerUp(UnityEngine.EventSystems.PointerEventData)
+   006B ldarg.0 
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   0072 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::OnPointerClick(UnityEngine.EventSystems.PointerEventData)
+   0077 ldarg.0 
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_holdPointerEventData
+   007E call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::OnEndDrag(UnityEngine.EventSystems.PointerEventData)
+   0083 ldarg.0 
+   0084 ldc.i4.0 
+   0085 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_isApplicationPaused
+   008A ldarg.0 
+   008B ldc.r4 0
+   0090 stfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_applicationPausedTimestamp
+   0095 ret 
+== System.Void DispatchUIEvent(Assets.Scripts.UI.enUIEventType eventType, UnityEngine.EventSystems.PointerEventData pointerEventData) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 callvirt Assets.Scripts.UI.CUIEvent Assets.Scripts.UI.CUIEventManager::GetUIEvent()
+   000A stloc.0 
+   000B ldarg.1 
+   000C brfalse IL_0025: ldarg.0
+   0011 ldarg.1 
+   0012 ldc.i4.s 9
+   0014 beq IL_0070: ldarg.0
+   0019 ldarg.1 
+   001A ldc.i4.1 
+   001B beq IL_0099: ldarg.0
+   0020 br IL_00fc: ldloc.0
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   002B brfalse IL_0047: ldarg.0
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onDown
+   0036 ldarg.0 
+   0037 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   003C ldarg.0 
+   003D call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0042 callvirt System.Void NewbieWeakGuideControl/OnUIEventHandler::Invoke(Assets.Scripts.UI.stUIEventParams&,UnityEngine.GameObject)
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventID
+   004D brtrue IL_0053: ldloc.0
+   0052 ret 
+   0053 ldloc.0 
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventID
+   005A stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   005F ldloc.0 
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownEventParams
+   0066 stfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   006B br IL_00fc: ldloc.0
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventID
+   0076 brtrue IL_007c: ldloc.0
+   007B ret 
+   007C ldloc.0 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventID
+   0083 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0088 ldloc.0 
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onUpEventParams
+   008F stfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   0094 br IL_00fc: ldloc.0
+   0099 ldarg.0 
+   009A ldarg.0 
+   009B ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onDownWwiseEvents
+   00A0 call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::PostWwiseEvent(System.String[])
+   00A5 ldarg.0 
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickedWwiseEvents
+   00AC call System.Void Assets.Scripts.UI.CUIMiniEventWithDragScript::PostWwiseEvent(System.String[])
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   00B7 brfalse IL_00d3: ldarg.0
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::onClick
+   00C2 ldarg.0 
+   00C3 ldflda Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   00C8 ldarg.0 
+   00C9 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00CE callvirt System.Void NewbieWeakGuideControl/OnUIEventHandler::Invoke(Assets.Scripts.UI.stUIEventParams&,UnityEngine.GameObject)
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventID
+   00D9 brtrue IL_00df: ldloc.0
+   00DE ret 
+   00DF ldloc.0 
+   00E0 ldarg.0 
+   00E1 ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventID
+   00E6 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   00EB ldloc.0 
+   00EC ldarg.0 
+   00ED ldfld Assets.Scripts.UI.CUIMiniEventWithDragScript::m_onClickEventParams
+   00F2 stfld Assets.Scripts.UI.CUIEvent::m_eventParams
+   00F7 br IL_00fc: ldloc.0
+   00FC ldloc.0 
+   00FD ldarg.0 
+   00FE ldfld Assets.Scripts.UI.CUIComponent::m_belongedFormScript
+   0103 stfld Assets.Scripts.UI.CUIEvent::m_srcFormScript
+   0108 ldloc.0 
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.UI.CUIComponent::m_belongedListScript
+   010F stfld Assets.Scripts.UI.CUIEvent::m_srcWidgetBelongedListScript
+   0114 ldloc.0 
+   0115 ldarg.0 
+   0116 ldfld Assets.Scripts.UI.CUIComponent::m_indexInlist
+   011B callvirt System.Void Assets.Scripts.UI.CUIEvent::set_m_srcWidgetIndexInBelongedList(System.Int32)
+   0120 ldloc.0 
+   0121 ldarg.0 
+   0122 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0127 stfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   012C ldloc.0 
+   012D ldarg.0 
+   012E stfld Assets.Scripts.UI.CUIEvent::m_srcWidgetScript
+   0133 ldloc.0 
+   0134 ldarg.2 
+   0135 stfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   013A ldarg.0 
+   013B ldloc.0 
+   013C call System.Void Assets.Scripts.UI.CUIComponent::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   0141 ret 
+== System.Void PostWwiseEvent(System.String[] wwiseEvents) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0027: ldloc.0
+   0007 ldarg.1 
+   0008 ldloc.0 
+   0009 ldelem.ref 
+   000A call System.Boolean System.String::IsNullOrEmpty(System.String)
+   000F brtrue IL_0023: ldloc.0
+   0014 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0019 ldarg.1 
+   001A ldloc.0 
+   001B ldelem.ref 
+   001C ldnull 
+   001D callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0022 pop 
+   0023 ldloc.0 
+   0024 ldc.i4.1 
+   0025 add 
+   0026 stloc.0 
+   0027 ldloc.0 
+   0028 ldarg.1 
+   0029 ldlen 
+   002A conv.i4 
+   002B blt IL_0007: ldarg.1
+   0030 ret 

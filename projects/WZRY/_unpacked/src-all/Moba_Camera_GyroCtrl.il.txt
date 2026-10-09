@@ -1,0 +1,215 @@
+// TYPE Moba_Camera_GyroCtrl  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean gyroEnabled
+  FIELD System.Single lowPassFilterFactor
+  FIELD UnityEngine.Quaternion baseIdentity
+  FIELD UnityEngine.Quaternion landscapeRight
+  FIELD UnityEngine.Quaternion landscapeLeft
+  FIELD UnityEngine.Quaternion upsideDown
+  FIELD UnityEngine.Quaternion cameraBase
+  FIELD UnityEngine.Quaternion calibration
+  FIELD UnityEngine.Quaternion baseOrientation
+  FIELD UnityEngine.Quaternion baseOrientationRotationFix
+  FIELD UnityEngine.Quaternion referanceRotation
+  FIELD System.Boolean debug
+  FIELD TransformHolder transform
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Moba_Camera_GyroCtrl::gyroEnabled
+   0007 ldarg.0 
+   0008 ldc.r4 0.6
+   000D stfld Moba_Camera_GyroCtrl::lowPassFilterFactor
+   0012 ldarg.0 
+   0013 ldc.r4 90
+   0018 ldc.r4 0
+   001D ldc.r4 0
+   0022 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   0027 stfld Moba_Camera_GyroCtrl::baseIdentity
+   002C ldarg.0 
+   002D ldc.r4 0
+   0032 ldc.r4 0
+   0037 ldc.r4 90
+   003C call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   0041 stfld Moba_Camera_GyroCtrl::landscapeRight
+   0046 ldarg.0 
+   0047 ldc.r4 0
+   004C ldc.r4 0
+   0051 ldc.r4 -90
+   0056 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   005B stfld Moba_Camera_GyroCtrl::landscapeLeft
+   0060 ldarg.0 
+   0061 ldc.r4 0
+   0066 ldc.r4 0
+   006B ldc.r4 180
+   0070 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   0075 stfld Moba_Camera_GyroCtrl::upsideDown
+   007A ldarg.0 
+   007B call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0080 stfld Moba_Camera_GyroCtrl::cameraBase
+   0085 ldarg.0 
+   0086 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   008B stfld Moba_Camera_GyroCtrl::calibration
+   0090 ldarg.0 
+   0091 ldc.r4 90
+   0096 ldc.r4 0
+   009B ldc.r4 0
+   00A0 call UnityEngine.Quaternion UnityEngine.Quaternion::Euler(System.Single,System.Single,System.Single)
+   00A5 stfld Moba_Camera_GyroCtrl::baseOrientation
+   00AA ldarg.0 
+   00AB call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   00B0 stfld Moba_Camera_GyroCtrl::baseOrientationRotationFix
+   00B5 ldarg.0 
+   00B6 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   00BB stfld Moba_Camera_GyroCtrl::referanceRotation
+   00C0 ldarg.0 
+   00C1 ldc.i4.1 
+   00C2 stfld Moba_Camera_GyroCtrl::debug
+   00C7 ldarg.0 
+   00C8 newobj System.Void TransformHolder::.ctor()
+   00CD stfld Moba_Camera_GyroCtrl::transform
+   00D2 ldarg.0 
+   00D3 call System.Void System.Object::.ctor()
+   00D8 ret 
+== System.Void Update() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Moba_Camera_GyroCtrl::transform
+   0006 ldarg.0 
+   0007 ldfld Moba_Camera_GyroCtrl::transform
+   000C callvirt UnityEngine.Quaternion TransformHolder::get_rotation()
+   0011 ldarg.0 
+   0012 ldfld Moba_Camera_GyroCtrl::cameraBase
+   0017 ldarg.0 
+   0018 ldfld Moba_Camera_GyroCtrl::referanceRotation
+   001D call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   0022 callvirt UnityEngine.Quaternion UnityEngine.Gyroscope::get_attitude()
+   0027 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   002C call UnityEngine.Quaternion Moba_Camera_GyroCtrl::ConvertRotation(UnityEngine.Quaternion)
+   0031 ldarg.0 
+   0032 call UnityEngine.Quaternion Moba_Camera_GyroCtrl::GetRotFix()
+   0037 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   003C call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   0041 ldarg.0 
+   0042 ldfld Moba_Camera_GyroCtrl::lowPassFilterFactor
+   0047 call UnityEngine.Quaternion UnityEngine.Quaternion::Slerp(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   004C callvirt System.Void TransformHolder::set_rotation(UnityEngine.Quaternion)
+   0051 ret 
+== System.Void OnGUI() attrs=Family, HideBySig maxstack=8
+   0000 ret 
+== System.Void AttachGyro() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Moba_Camera_GyroCtrl::ResetBaseOrientation()
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 call System.Void Moba_Camera_GyroCtrl::UpdateCalibration(System.Boolean)
+   000D ldarg.0 
+   000E ldc.i4.1 
+   000F call System.Void Moba_Camera_GyroCtrl::UpdateCameraBaseRotation(System.Boolean)
+   0014 ldarg.0 
+   0015 call System.Void Moba_Camera_GyroCtrl::RecalculateReferenceRotation()
+   001A ret 
+== System.Void DetachGyro() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void UpdateCalibration(System.Boolean onlyHorizontal) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brfalse IL_006d: ldarg.0
+   0006 call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   000B callvirt UnityEngine.Quaternion UnityEngine.Gyroscope::get_attitude()
+   0010 call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   0015 call UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+   001A call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   001F stloc.0 
+   0020 ldloca.s V_0
+   0022 ldc.r4 0
+   0027 stfld UnityEngine.Vector3::z
+   002C ldloc.0 
+   002D call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0032 call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0037 brfalse IL_004c: ldarg.0
+   003C ldarg.0 
+   003D call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0042 stfld Moba_Camera_GyroCtrl::calibration
+   0047 br IL_0068: br IL_007d
+   004C ldarg.0 
+   004D ldarg.0 
+   004E ldfld Moba_Camera_GyroCtrl::baseOrientationRotationFix
+   0053 call UnityEngine.Vector3 UnityEngine.Vector3::get_up()
+   0058 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   005D ldloc.0 
+   005E call UnityEngine.Quaternion UnityEngine.Quaternion::FromToRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+   0063 stfld Moba_Camera_GyroCtrl::calibration
+   0068 br IL_007d: ret
+   006D ldarg.0 
+   006E call UnityEngine.Gyroscope UnityEngine.Input::get_gyro()
+   0073 callvirt UnityEngine.Quaternion UnityEngine.Gyroscope::get_attitude()
+   0078 stfld Moba_Camera_GyroCtrl::calibration
+   007D ret 
+== System.Void UpdateCameraBaseRotation(System.Boolean onlyHorizontal) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brfalse IL_0054: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld Moba_Camera_GyroCtrl::transform
+   000C callvirt UnityEngine.Vector3 TransformHolder::get_forward()
+   0011 stloc.0 
+   0012 ldloca.s V_0
+   0014 ldc.r4 0
+   0019 stfld UnityEngine.Vector3::y
+   001E ldloc.0 
+   001F call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0024 call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0029 brfalse IL_003e: ldarg.0
+   002E ldarg.0 
+   002F call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0034 stfld Moba_Camera_GyroCtrl::cameraBase
+   0039 br IL_004f: br IL_0065
+   003E ldarg.0 
+   003F call UnityEngine.Vector3 UnityEngine.Vector3::get_forward()
+   0044 ldloc.0 
+   0045 call UnityEngine.Quaternion UnityEngine.Quaternion::FromToRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+   004A stfld Moba_Camera_GyroCtrl::cameraBase
+   004F br IL_0065: ret
+   0054 ldarg.0 
+   0055 ldarg.0 
+   0056 ldfld Moba_Camera_GyroCtrl::transform
+   005B callvirt UnityEngine.Quaternion TransformHolder::get_rotation()
+   0060 stfld Moba_Camera_GyroCtrl::cameraBase
+   0065 ret 
+== UnityEngine.Quaternion ConvertRotation(UnityEngine.Quaternion q) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarga.s q
+   0002 ldfld UnityEngine.Quaternion::x
+   0007 ldarga.s q
+   0009 ldfld UnityEngine.Quaternion::y
+   000E ldarga.s q
+   0010 ldfld UnityEngine.Quaternion::z
+   0015 neg 
+   0016 ldarga.s q
+   0018 ldfld UnityEngine.Quaternion::w
+   001D neg 
+   001E newobj System.Void UnityEngine.Quaternion::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0023 ret 
+== UnityEngine.Quaternion GetRotFix() attrs=Private, HideBySig maxstack=8
+   0000 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0005 ret 
+== System.Void ResetBaseOrientation() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call UnityEngine.Quaternion Moba_Camera_GyroCtrl::GetRotFix()
+   0007 stfld Moba_Camera_GyroCtrl::baseOrientationRotationFix
+   000C ldarg.0 
+   000D ldarg.0 
+   000E ldfld Moba_Camera_GyroCtrl::baseOrientationRotationFix
+   0013 ldarg.0 
+   0014 ldfld Moba_Camera_GyroCtrl::baseIdentity
+   0019 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   001E stfld Moba_Camera_GyroCtrl::baseOrientation
+   0023 ret 
+== System.Void RecalculateReferenceRotation() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Moba_Camera_GyroCtrl::baseOrientation
+   0007 call UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+   000C ldarg.0 
+   000D ldfld Moba_Camera_GyroCtrl::calibration
+   0012 call UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+   0017 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   001C stfld Moba_Camera_GyroCtrl::referanceRotation
+   0021 ret 

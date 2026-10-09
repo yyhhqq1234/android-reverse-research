@@ -1,0 +1,1074 @@
+// TYPE ImpostorRenderer  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 MAX_MESH_NUM
+  FIELD System.Int32 CHUNK_NUM
+  FIELD System.Int32 MAX_VERTEX_NUM
+  FIELD System.Single CHUNK_SIZE
+  FIELD UnityEngine.Material impostorMaterial
+  FIELD ImpostorData impostorData
+  FIELD System.Collections.ArrayList[0...,0...] m_impostorChunkData
+  FIELD ListView`1<UnityEngine.Mesh> m_proxyMeshs
+  FIELD System.Int32[] m_meshVerticesNum
+  FIELD System.Collections.Generic.List`1<UnityEngine.Vector3> m_vertices
+  FIELD System.Collections.Generic.List`1<UnityEngine.Vector2> m_uvs
+  FIELD System.Collections.Generic.List`1<System.Int32> m_indices
+  FIELD System.Collections.Generic.List`1<UnityEngine.Vector3> m_inClusterVertexPositions
+  FIELD System.Collections.Generic.List`1<UnityEngine.Vector3> m_inClusterVertexOffsets
+  FIELD UnityEngine.Vector2[] m_uv0
+  FIELD UnityEngine.Vector2[] m_uv1
+  FIELD UnityEngine.Vector2[] m_uv2
+  FIELD UnityEngine.Vector2[] m_uv3
+  FIELD System.Int32 m_curHeroChunkX
+  FIELD System.Int32 m_curHeroChunkZ
+  FIELD System.Int32[] m_dxdz
+  FIELD System.Int32 m_curMeshNum
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_actor
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.4 
+   0002 stfld ImpostorRenderer::MAX_MESH_NUM
+   0007 ldarg.0 
+   0008 ldc.i4.s 28
+   000A stfld ImpostorRenderer::CHUNK_NUM
+   000F ldarg.0 
+   0010 ldc.i4 30000
+   0015 stfld ImpostorRenderer::MAX_VERTEX_NUM
+   001A ldarg.0 
+   001B ldc.r4 50
+   0020 stfld ImpostorRenderer::CHUNK_SIZE
+   0025 ldarg.0 
+   0026 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   002B ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld ImpostorRenderer::impostorData
+   0006 ldfld ImpostorData::startPosArray
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 call System.Void ImpostorRenderer::InitData()
+   0017 ldarg.0 
+   0018 call System.Void ImpostorRenderer::RecalculateInClusterPositions()
+   001D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0022 ldfld Assets.Scripts.GameLogic.BattleLogic::mapLogic
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 ldnull 
+   002A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002F brfalse IL_003b: ret
+   0034 ldloc.0 
+   0035 ldarg.0 
+   0036 callvirt System.Void Assets.Scripts.GameLogic.MapWrapper::RegisterImpostorRender(ImpostorRenderer)
+   003B ret 
+== System.Void InitData() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld ImpostorRenderer::CHUNK_NUM
+   0007 ldarg.0 
+   0008 ldfld ImpostorRenderer::CHUNK_NUM
+   000D newobj System.Void System.Collections.ArrayList[0...,0...]::.ctor(System.Int32,System.Int32)
+   0012 stfld ImpostorRenderer::m_impostorChunkData
+   0017 ldarg.0 
+   0018 ldfld ImpostorRenderer::impostorData
+   001D ldfld ImpostorData::startPosArray
+   0022 ldlen 
+   0023 conv.i4 
+   0024 stloc.2 
+   0025 ldc.i4.0 
+   0026 stloc.3 
+   0027 ldc.i4.0 
+   0028 stloc.s V_4
+   002A br IL_02a4: ldloc.s V_4
+   002F ldarg.0 
+   0030 ldfld ImpostorRenderer::impostorData
+   0035 ldfld ImpostorData::startPosArray
+   003A ldloc.s V_4
+   003C ldelema UnityEngine.Vector3
+   0041 ldobj UnityEngine.Vector3
+   0046 stloc.s V_5
+   0048 ldarg.0 
+   0049 ldfld ImpostorRenderer::impostorData
+   004E ldfld ImpostorData::xNumArray
+   0053 ldloc.s V_4
+   0055 ldelem.i4 
+   0056 stloc.s V_6
+   0058 ldarg.0 
+   0059 ldfld ImpostorRenderer::impostorData
+   005E ldfld ImpostorData::zNumArray
+   0063 ldloc.s V_4
+   0065 ldelem.i4 
+   0066 stloc.s V_7
+   0068 ldloc.s V_6
+   006A ldc.i4.5 
+   006B blt IL_007a: ldc.i4.0
+   0070 ldloc.s V_7
+   0072 ldc.i4.5 
+   0073 clt 
+   0075 ldc.i4.0 
+   0076 ceq 
+   0078 br.s IL_007b: stloc.s V_8
+   007A ldc.i4.0 
+   007B stloc.s V_8
+   007D ldarg.0 
+   007E ldfld ImpostorRenderer::impostorData
+   0083 ldfld ImpostorData::xGapArray
+   0088 ldloc.s V_4
+   008A ldelema UnityEngine.Vector3
+   008F ldobj UnityEngine.Vector3
+   0094 stloc.s V_9
+   0096 ldarg.0 
+   0097 ldfld ImpostorRenderer::impostorData
+   009C ldfld ImpostorData::zGapArray
+   00A1 ldloc.s V_4
+   00A3 ldelema UnityEngine.Vector3
+   00A8 ldobj UnityEngine.Vector3
+   00AD stloc.s V_10
+   00AF ldloca.s V_11
+   00B1 ldc.r4 0
+   00B6 ldc.r4 0
+   00BB ldc.r4 0
+   00C0 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00C5 ldc.i4.1 
+   00C6 stloc.s V_12
+   00C8 ldc.i4.0 
+   00C9 stloc.s V_13
+   00CB br IL_0295: ldloc.s V_13
+   00D0 ldloca.s V_14
+   00D2 ldc.r4 0
+   00D7 ldc.r4 0
+   00DC ldc.r4 0
+   00E1 call System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00E6 ldloc.s V_13
+   00E8 ldc.i4.0 
+   00E9 ble IL_00f8: ldc.i4.0
+   00EE ldloc.s V_13
+   00F0 ldloc.s V_7
+   00F2 ldc.i4.1 
+   00F3 sub 
+   00F4 clt 
+   00F6 br.s IL_00f9: stloc.s V_12
+   00F8 ldc.i4.0 
+   00F9 stloc.s V_12
+   00FB ldc.i4.0 
+   00FC stloc.s V_15
+   00FE br IL_0266: ldloc.s V_15
+   0103 ldloc.s V_5
+   0105 ldloc.s V_14
+   0107 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   010C ldloc.s V_11
+   010E call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0113 stloc.s V_16
+   0115 ldarg.0 
+   0116 ldfld ImpostorRenderer::impostorData
+   011B ldfld ImpostorData::forceBorder
+   0120 brfalse IL_0146: call UnityEngine.Vector2 UnityEngine.Random::get_insideUnitCircle()
+   0125 ldloc.s V_8
+   0127 brfalse IL_0187: ldloca.s V_16
+   012C ldloc.s V_12
+   012E brfalse IL_0187: ldloca.s V_16
+   0133 ldloc.s V_15
+   0135 ldc.i4.0 
+   0136 ble IL_0187: ldloca.s V_16
+   013B ldloc.s V_15
+   013D ldloc.s V_6
+   013F ldc.i4.1 
+   0140 sub 
+   0141 bge IL_0187: ldloca.s V_16
+   0146 call UnityEngine.Vector2 UnityEngine.Random::get_insideUnitCircle()
+   014B ldarg.0 
+   014C ldfld ImpostorRenderer::impostorData
+   0151 ldfld ImpostorData::posRandomRadius
+   0156 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   015B stloc.s V_17
+   015D ldloca.s V_16
+   015F dup 
+   0160 ldfld UnityEngine.Vector3::x
+   0165 ldloca.s V_17
+   0167 ldfld UnityEngine.Vector2::x
+   016C add 
+   016D stfld UnityEngine.Vector3::x
+   0172 ldloca.s V_16
+   0174 dup 
+   0175 ldfld UnityEngine.Vector3::z
+   017A ldloca.s V_17
+   017C ldfld UnityEngine.Vector2::y
+   0181 add 
+   0182 stfld UnityEngine.Vector3::z
+   0187 ldloca.s V_16
+   0189 ldfld UnityEngine.Vector3::x
+   018E ldarg.0 
+   018F ldfld ImpostorRenderer::CHUNK_SIZE
+   0194 div 
+   0195 call System.Int32 UnityEngine.Mathf::FloorToInt(System.Single)
+   019A ldarg.0 
+   019B ldfld ImpostorRenderer::CHUNK_NUM
+   01A0 ldc.i4.1 
+   01A1 shr 
+   01A2 add 
+   01A3 stloc.0 
+   01A4 ldloca.s V_16
+   01A6 ldfld UnityEngine.Vector3::z
+   01AB ldarg.0 
+   01AC ldfld ImpostorRenderer::CHUNK_SIZE
+   01B1 div 
+   01B2 call System.Int32 UnityEngine.Mathf::FloorToInt(System.Single)
+   01B7 ldarg.0 
+   01B8 ldfld ImpostorRenderer::CHUNK_NUM
+   01BD ldc.i4.1 
+   01BE shr 
+   01BF add 
+   01C0 stloc.1 
+   01C1 ldarg.0 
+   01C2 ldfld ImpostorRenderer::m_impostorChunkData
+   01C7 ldloc.0 
+   01C8 ldloc.1 
+   01C9 call System.Collections.ArrayList System.Collections.ArrayList[0...,0...]::Get(System.Int32,System.Int32)
+   01CE brtrue IL_01e5: ldarg.0
+   01D3 ldarg.0 
+   01D4 ldfld ImpostorRenderer::m_impostorChunkData
+   01D9 ldloc.0 
+   01DA ldloc.1 
+   01DB newobj System.Void System.Collections.ArrayList::.ctor()
+   01E0 call System.Void System.Collections.ArrayList[0...,0...]::Set(System.Int32,System.Int32,System.Collections.ArrayList)
+   01E5 ldarg.0 
+   01E6 ldfld ImpostorRenderer::impostorData
+   01EB ldfld ImpostorData::impostorSizeSmall
+   01F0 ldarg.0 
+   01F1 ldfld ImpostorRenderer::impostorData
+   01F6 ldfld ImpostorData::impostorSizeBig
+   01FB call System.Single UnityEngine.Random::Range(System.Single,System.Single)
+   0200 stloc.s V_18
+   0202 ldloc.3 
+   0203 ldc.i4.1 
+   0204 add 
+   0205 stloc.3 
+   0206 ldloc.3 
+   0207 ldc.i4.4 
+   0208 blt IL_0211: ldarg.0
+   020D ldloc.3 
+   020E ldc.i4.4 
+   020F sub 
+   0210 stloc.3 
+   0211 ldarg.0 
+   0212 ldfld ImpostorRenderer::m_impostorChunkData
+   0217 ldloc.0 
+   0218 ldloc.1 
+   0219 call System.Collections.ArrayList System.Collections.ArrayList[0...,0...]::Get(System.Int32,System.Int32)
+   021E ldloca.s V_16
+   0220 ldfld UnityEngine.Vector3::x
+   0225 ldloc.3 
+   0226 conv.r4 
+   0227 ldloca.s V_16
+   0229 ldfld UnityEngine.Vector3::z
+   022E ldloc.s V_18
+   0230 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0235 box UnityEngine.Vector4
+   023A callvirt System.Int32 System.Collections.ArrayList::Add(System.Object)
+   023F pop 
+   0240 ldloc.s V_14
+   0242 ldarg.0 
+   0243 ldfld ImpostorRenderer::impostorData
+   0248 ldfld ImpostorData::xGapArray
+   024D ldloc.s V_4
+   024F ldelema UnityEngine.Vector3
+   0254 ldobj UnityEngine.Vector3
+   0259 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   025E stloc.s V_14
+   0260 ldloc.s V_15
+   0262 ldc.i4.1 
+   0263 add 
+   0264 stloc.s V_15
+   0266 ldloc.s V_15
+   0268 ldloc.s V_6
+   026A blt IL_0103: ldloc.s V_5
+   026F ldloc.s V_11
+   0271 ldarg.0 
+   0272 ldfld ImpostorRenderer::impostorData
+   0277 ldfld ImpostorData::zGapArray
+   027C ldloc.s V_4
+   027E ldelema UnityEngine.Vector3
+   0283 ldobj UnityEngine.Vector3
+   0288 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   028D stloc.s V_11
+   028F ldloc.s V_13
+   0291 ldc.i4.1 
+   0292 add 
+   0293 stloc.s V_13
+   0295 ldloc.s V_13
+   0297 ldloc.s V_7
+   0299 blt IL_00d0: ldloca.s V_14
+   029E ldloc.s V_4
+   02A0 ldc.i4.1 
+   02A1 add 
+   02A2 stloc.s V_4
+   02A4 ldloc.s V_4
+   02A6 ldloc.2 
+   02A7 blt IL_002f: ldarg.0
+   02AC ldarg.0 
+   02AD newobj System.Void ListView`1<UnityEngine.Mesh>::.ctor()
+   02B2 stfld ImpostorRenderer::m_proxyMeshs
+   02B7 ldarg.0 
+   02B8 ldarg.0 
+   02B9 ldfld ImpostorRenderer::MAX_MESH_NUM
+   02BE newarr System.Int32
+   02C3 stfld ImpostorRenderer::m_meshVerticesNum
+   02C8 ldc.i4.0 
+   02C9 stloc.s V_19
+   02CB br IL_02f0: ldloc.s V_19
+   02D0 ldarg.0 
+   02D1 ldfld ImpostorRenderer::m_proxyMeshs
+   02D6 newobj System.Void UnityEngine.Mesh::.ctor()
+   02DB callvirt System.Void ListView`1<UnityEngine.Mesh>::Add(!0)
+   02E0 ldarg.0 
+   02E1 ldfld ImpostorRenderer::m_meshVerticesNum
+   02E6 ldloc.s V_19
+   02E8 ldc.i4.0 
+   02E9 stelem.i4 
+   02EA ldloc.s V_19
+   02EC ldc.i4.1 
+   02ED add 
+   02EE stloc.s V_19
+   02F0 ldloc.s V_19
+   02F2 ldarg.0 
+   02F3 ldfld ImpostorRenderer::MAX_MESH_NUM
+   02F8 blt IL_02d0: ldarg.0
+   02FD ldarg.0 
+   02FE newobj System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::.ctor()
+   0303 stfld ImpostorRenderer::m_vertices
+   0308 ldarg.0 
+   0309 newobj System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::.ctor()
+   030E stfld ImpostorRenderer::m_uvs
+   0313 ldarg.0 
+   0314 newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0319 stfld ImpostorRenderer::m_indices
+   031E ldarg.0 
+   031F ldc.i4.4 
+   0320 newarr UnityEngine.Vector2
+   0325 dup 
+   0326 ldc.i4.0 
+   0327 ldelema UnityEngine.Vector2
+   032C ldc.r4 0
+   0331 ldc.r4 0
+   0336 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   033B stobj UnityEngine.Vector2
+   0340 dup 
+   0341 ldc.i4.1 
+   0342 ldelema UnityEngine.Vector2
+   0347 ldc.r4 0.1
+   034C ldc.r4 0
+   0351 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0356 stobj UnityEngine.Vector2
+   035B dup 
+   035C ldc.i4.2 
+   035D ldelema UnityEngine.Vector2
+   0362 ldc.r4 0.2
+   0367 ldc.r4 0
+   036C newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0371 stobj UnityEngine.Vector2
+   0376 dup 
+   0377 ldc.i4.3 
+   0378 ldelema UnityEngine.Vector2
+   037D ldc.r4 0.3
+   0382 ldc.r4 0
+   0387 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   038C stobj UnityEngine.Vector2
+   0391 stfld ImpostorRenderer::m_uv0
+   0396 ldarg.0 
+   0397 ldc.i4.4 
+   0398 newarr UnityEngine.Vector2
+   039D dup 
+   039E ldc.i4.0 
+   039F ldelema UnityEngine.Vector2
+   03A4 ldc.r4 1
+   03A9 ldc.r4 0
+   03AE newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   03B3 stobj UnityEngine.Vector2
+   03B8 dup 
+   03B9 ldc.i4.1 
+   03BA ldelema UnityEngine.Vector2
+   03BF ldc.r4 1.1
+   03C4 ldc.r4 0
+   03C9 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   03CE stobj UnityEngine.Vector2
+   03D3 dup 
+   03D4 ldc.i4.2 
+   03D5 ldelema UnityEngine.Vector2
+   03DA ldc.r4 1.2
+   03DF ldc.r4 0
+   03E4 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   03E9 stobj UnityEngine.Vector2
+   03EE dup 
+   03EF ldc.i4.3 
+   03F0 ldelema UnityEngine.Vector2
+   03F5 ldc.r4 1.3
+   03FA ldc.r4 0
+   03FF newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0404 stobj UnityEngine.Vector2
+   0409 stfld ImpostorRenderer::m_uv1
+   040E ldarg.0 
+   040F ldc.i4.4 
+   0410 newarr UnityEngine.Vector2
+   0415 dup 
+   0416 ldc.i4.0 
+   0417 ldelema UnityEngine.Vector2
+   041C ldc.r4 0
+   0421 ldc.r4 1
+   0426 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   042B stobj UnityEngine.Vector2
+   0430 dup 
+   0431 ldc.i4.1 
+   0432 ldelema UnityEngine.Vector2
+   0437 ldc.r4 0.1
+   043C ldc.r4 1
+   0441 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0446 stobj UnityEngine.Vector2
+   044B dup 
+   044C ldc.i4.2 
+   044D ldelema UnityEngine.Vector2
+   0452 ldc.r4 0.2
+   0457 ldc.r4 1
+   045C newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0461 stobj UnityEngine.Vector2
+   0466 dup 
+   0467 ldc.i4.3 
+   0468 ldelema UnityEngine.Vector2
+   046D ldc.r4 0.3
+   0472 ldc.r4 1
+   0477 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   047C stobj UnityEngine.Vector2
+   0481 stfld ImpostorRenderer::m_uv2
+   0486 ldarg.0 
+   0487 ldc.i4.4 
+   0488 newarr UnityEngine.Vector2
+   048D dup 
+   048E ldc.i4.0 
+   048F ldelema UnityEngine.Vector2
+   0494 ldc.r4 1
+   0499 ldc.r4 1
+   049E newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   04A3 stobj UnityEngine.Vector2
+   04A8 dup 
+   04A9 ldc.i4.1 
+   04AA ldelema UnityEngine.Vector2
+   04AF ldc.r4 1.1
+   04B4 ldc.r4 1
+   04B9 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   04BE stobj UnityEngine.Vector2
+   04C3 dup 
+   04C4 ldc.i4.2 
+   04C5 ldelema UnityEngine.Vector2
+   04CA ldc.r4 1.2
+   04CF ldc.r4 1
+   04D4 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   04D9 stobj UnityEngine.Vector2
+   04DE dup 
+   04DF ldc.i4.3 
+   04E0 ldelema UnityEngine.Vector2
+   04E5 ldc.r4 1.3
+   04EA ldc.r4 1
+   04EF newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   04F4 stobj UnityEngine.Vector2
+   04F9 stfld ImpostorRenderer::m_uv3
+   04FE ldarg.0 
+   04FF ldc.i4.m1 
+   0500 stfld ImpostorRenderer::m_curHeroChunkX
+   0505 ldarg.0 
+   0506 ldc.i4.m1 
+   0507 stfld ImpostorRenderer::m_curHeroChunkZ
+   050C ldarg.0 
+   050D ldc.i4.0 
+   050E stfld ImpostorRenderer::m_curMeshNum
+   0513 ldarg.0 
+   0514 ldc.i4.s 18
+   0516 newarr System.Int32
+   051B dup 
+   051C ldtoken <PrivateImplementationDetails>::$field-574D9E9499853316CAD7346F3DC6616428323584
+   0521 call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0526 stfld ImpostorRenderer::m_dxdz
+   052B ret 
+== System.Void RecalculateInClusterPositions() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld ImpostorRenderer::m_inClusterVertexPositions
+   0006 brtrue IL_0016: ldarg.0
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::.ctor()
+   0011 stfld ImpostorRenderer::m_inClusterVertexPositions
+   0016 ldarg.0 
+   0017 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   001C brtrue IL_002c: ldarg.0
+   0021 ldarg.0 
+   0022 newobj System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::.ctor()
+   0027 stfld ImpostorRenderer::m_inClusterVertexOffsets
+   002C ldarg.0 
+   002D ldfld ImpostorRenderer::m_inClusterVertexPositions
+   0032 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Clear()
+   0037 ldarg.0 
+   0038 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   003D callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Clear()
+   0042 ldc.r4 3.1415927
+   0047 ldarg.0 
+   0048 ldfld ImpostorRenderer::impostorData
+   004D ldfld ImpostorData::foliageNumInCluster
+   0052 conv.r4 
+   0053 div 
+   0054 stloc.0 
+   0055 ldc.r4 0
+   005A stloc.1 
+   005B ldc.i4.0 
+   005C stloc.2 
+   005D br IL_0117: ldloc.2
+   0062 call UnityEngine.Vector2 UnityEngine.Random::get_insideUnitCircle()
+   0067 ldarg.0 
+   0068 ldfld ImpostorRenderer::impostorData
+   006D ldfld ImpostorData::foliageClusterRaidus
+   0072 call UnityEngine.Vector2 UnityEngine.Vector2::op_Multiply(UnityEngine.Vector2,System.Single)
+   0077 stloc.3 
+   0078 ldloc.1 
+   0079 call System.Single UnityEngine.Mathf::Cos(System.Single)
+   007E ldc.r4 0.5
+   0083 mul 
+   0084 stloc.s V_4
+   0086 ldloc.1 
+   0087 call System.Single UnityEngine.Mathf::Sin(System.Single)
+   008C neg 
+   008D ldc.r4 0.5
+   0092 mul 
+   0093 stloc.s V_5
+   0095 ldc.r4 1
+   009A stloc.s V_6
+   009C ldarg.0 
+   009D ldfld ImpostorRenderer::m_inClusterVertexPositions
+   00A2 ldloc.3 
+   00A3 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   00A8 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   00AD ldarg.0 
+   00AE ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   00B3 ldloc.s V_4
+   00B5 ldc.r4 0
+   00BA ldloc.s V_5
+   00BC newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00C1 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   00C6 ldarg.0 
+   00C7 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   00CC ldloc.s V_4
+   00CE neg 
+   00CF ldc.r4 0
+   00D4 ldloc.s V_5
+   00D6 neg 
+   00D7 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00DC callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   00E1 ldarg.0 
+   00E2 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   00E7 ldloc.s V_4
+   00E9 ldloc.s V_6
+   00EB ldloc.s V_5
+   00ED newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00F2 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   00F7 ldarg.0 
+   00F8 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   00FD ldloc.s V_4
+   00FF neg 
+   0100 ldloc.s V_6
+   0102 ldloc.s V_5
+   0104 neg 
+   0105 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   010A callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   010F ldloc.1 
+   0110 ldloc.0 
+   0111 add 
+   0112 stloc.1 
+   0113 ldloc.2 
+   0114 ldc.i4.1 
+   0115 add 
+   0116 stloc.2 
+   0117 ldloc.2 
+   0118 ldarg.0 
+   0119 ldfld ImpostorRenderer::impostorData
+   011E ldfld ImpostorData::foliageNumInCluster
+   0123 blt IL_0062: call UnityEngine.Vector2 UnityEngine.Random::get_insideUnitCircle()
+   0128 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld ImpostorRenderer::impostorData
+   0006 ldfld ImpostorData::startPosArray
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 call System.Void ImpostorRenderer::RefreshChunks()
+   0017 ldarg.0 
+   0018 call System.Void ImpostorRenderer::RenderImpostors()
+   001D ret 
+== System.Void SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> focus) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld ImpostorRenderer::m_actor
+   0007 ret 
+== System.Void RefreshChunks() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld ImpostorRenderer::m_actor
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldflda ImpostorRenderer::m_actor
+   0017 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001C ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0021 stloc.0 
+   0022 ldloca.s V_0
+   0024 ldfld UnityEngine.Vector3::x
+   0029 ldarg.0 
+   002A ldfld ImpostorRenderer::CHUNK_SIZE
+   002F div 
+   0030 call System.Int32 UnityEngine.Mathf::FloorToInt(System.Single)
+   0035 ldarg.0 
+   0036 ldfld ImpostorRenderer::CHUNK_NUM
+   003B ldc.i4.1 
+   003C shr 
+   003D add 
+   003E stloc.1 
+   003F ldloca.s V_0
+   0041 ldfld UnityEngine.Vector3::z
+   0046 ldarg.0 
+   0047 ldfld ImpostorRenderer::CHUNK_SIZE
+   004C div 
+   004D call System.Int32 UnityEngine.Mathf::FloorToInt(System.Single)
+   0052 ldarg.0 
+   0053 ldfld ImpostorRenderer::CHUNK_NUM
+   0058 ldc.i4.1 
+   0059 shr 
+   005A add 
+   005B stloc.2 
+   005C ldloc.1 
+   005D ldarg.0 
+   005E ldfld ImpostorRenderer::m_curHeroChunkX
+   0063 bne.un IL_0074: ldarg.0
+   0068 ldloc.2 
+   0069 ldarg.0 
+   006A ldfld ImpostorRenderer::m_curHeroChunkZ
+   006F beq IL_0088: ret
+   0074 ldarg.0 
+   0075 ldloc.1 
+   0076 stfld ImpostorRenderer::m_curHeroChunkX
+   007B ldarg.0 
+   007C ldloc.2 
+   007D stfld ImpostorRenderer::m_curHeroChunkZ
+   0082 ldarg.0 
+   0083 call System.Void ImpostorRenderer::UpdateProxyMesh()
+   0088 ret 
+== System.Void SetCurrentMeshData() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld ImpostorRenderer::m_vertices
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Count()
+   000B ldarg.0 
+   000C ldfld ImpostorRenderer::m_meshVerticesNum
+   0011 ldarg.0 
+   0012 ldfld ImpostorRenderer::m_curMeshNum
+   0017 ldelem.i4 
+   0018 bgt IL_0078: ldarg.0
+   001D ldarg.0 
+   001E ldfld ImpostorRenderer::m_proxyMeshs
+   0023 ldarg.0 
+   0024 ldfld ImpostorRenderer::m_curMeshNum
+   0029 callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   002E ldarg.0 
+   002F ldfld ImpostorRenderer::m_indices
+   0034 ldc.i4.0 
+   0035 callvirt System.Void UnityEngine.Mesh::SetTriangles(System.Collections.Generic.List`1<System.Int32>,System.Int32)
+   003A ldarg.0 
+   003B ldfld ImpostorRenderer::m_proxyMeshs
+   0040 ldarg.0 
+   0041 ldfld ImpostorRenderer::m_curMeshNum
+   0046 callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   004B ldarg.0 
+   004C ldfld ImpostorRenderer::m_vertices
+   0051 callvirt System.Void UnityEngine.Mesh::SetVertices(System.Collections.Generic.List`1<UnityEngine.Vector3>)
+   0056 ldarg.0 
+   0057 ldfld ImpostorRenderer::m_proxyMeshs
+   005C ldarg.0 
+   005D ldfld ImpostorRenderer::m_curMeshNum
+   0062 callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   0067 ldc.i4.0 
+   0068 ldarg.0 
+   0069 ldfld ImpostorRenderer::m_uvs
+   006E callvirt System.Void UnityEngine.Mesh::SetUVs(System.Int32,System.Collections.Generic.List`1<UnityEngine.Vector2>)
+   0073 br IL_00ce: ldarg.0
+   0078 ldarg.0 
+   0079 ldfld ImpostorRenderer::m_proxyMeshs
+   007E ldarg.0 
+   007F ldfld ImpostorRenderer::m_curMeshNum
+   0084 callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   0089 ldarg.0 
+   008A ldfld ImpostorRenderer::m_vertices
+   008F callvirt System.Void UnityEngine.Mesh::SetVertices(System.Collections.Generic.List`1<UnityEngine.Vector3>)
+   0094 ldarg.0 
+   0095 ldfld ImpostorRenderer::m_proxyMeshs
+   009A ldarg.0 
+   009B ldfld ImpostorRenderer::m_curMeshNum
+   00A0 callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   00A5 ldc.i4.0 
+   00A6 ldarg.0 
+   00A7 ldfld ImpostorRenderer::m_uvs
+   00AC callvirt System.Void UnityEngine.Mesh::SetUVs(System.Int32,System.Collections.Generic.List`1<UnityEngine.Vector2>)
+   00B1 ldarg.0 
+   00B2 ldfld ImpostorRenderer::m_proxyMeshs
+   00B7 ldarg.0 
+   00B8 ldfld ImpostorRenderer::m_curMeshNum
+   00BD callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   00C2 ldarg.0 
+   00C3 ldfld ImpostorRenderer::m_indices
+   00C8 ldc.i4.0 
+   00C9 callvirt System.Void UnityEngine.Mesh::SetTriangles(System.Collections.Generic.List`1<System.Int32>,System.Int32)
+   00CE ldarg.0 
+   00CF ldfld ImpostorRenderer::m_proxyMeshs
+   00D4 ldarg.0 
+   00D5 ldfld ImpostorRenderer::m_curMeshNum
+   00DA callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   00DF call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00E4 ldc.r4 10000
+   00E9 ldc.r4 10000
+   00EE ldc.r4 10000
+   00F3 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00F8 newobj System.Void UnityEngine.Bounds::.ctor(UnityEngine.Vector3,UnityEngine.Vector3)
+   00FD callvirt System.Void UnityEngine.Mesh::set_bounds(UnityEngine.Bounds)
+   0102 ldarg.0 
+   0103 ldfld ImpostorRenderer::m_meshVerticesNum
+   0108 ldarg.0 
+   0109 ldfld ImpostorRenderer::m_curMeshNum
+   010E ldarg.0 
+   010F ldfld ImpostorRenderer::m_vertices
+   0114 callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Count()
+   0119 stelem.i4 
+   011A ldarg.0 
+   011B ldfld ImpostorRenderer::m_vertices
+   0120 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Clear()
+   0125 ldarg.0 
+   0126 ldfld ImpostorRenderer::m_uvs
+   012B callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Clear()
+   0130 ldarg.0 
+   0131 ldfld ImpostorRenderer::m_indices
+   0136 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   013B ldarg.0 
+   013C dup 
+   013D ldfld ImpostorRenderer::m_curMeshNum
+   0142 ldc.i4.1 
+   0143 add 
+   0144 stfld ImpostorRenderer::m_curMeshNum
+   0149 ret 
+== System.Void UpdateProxyMesh() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld ImpostorRenderer::m_curMeshNum
+   0007 ldarg.0 
+   0008 ldfld ImpostorRenderer::m_vertices
+   000D callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Clear()
+   0012 ldarg.0 
+   0013 ldfld ImpostorRenderer::m_uvs
+   0018 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Clear()
+   001D ldarg.0 
+   001E ldfld ImpostorRenderer::m_indices
+   0023 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   0028 ldc.i4.0 
+   0029 stloc.2 
+   002A ldc.i4.0 
+   002B stloc.3 
+   002C br IL_031b: ldloc.3
+   0031 ldarg.0 
+   0032 ldfld ImpostorRenderer::m_curHeroChunkX
+   0037 ldarg.0 
+   0038 ldfld ImpostorRenderer::m_dxdz
+   003D ldloc.3 
+   003E ldc.i4.1 
+   003F shl 
+   0040 ldelem.i4 
+   0041 add 
+   0042 stloc.0 
+   0043 ldarg.0 
+   0044 ldfld ImpostorRenderer::m_curHeroChunkZ
+   0049 ldarg.0 
+   004A ldfld ImpostorRenderer::m_dxdz
+   004F ldloc.3 
+   0050 ldc.i4.1 
+   0051 shl 
+   0052 ldc.i4.1 
+   0053 add 
+   0054 ldelem.i4 
+   0055 add 
+   0056 stloc.1 
+   0057 ldloc.0 
+   0058 ldc.i4.0 
+   0059 blt IL_007d: br IL_0317
+   005E ldloc.0 
+   005F ldarg.0 
+   0060 ldfld ImpostorRenderer::CHUNK_NUM
+   0065 bge IL_007d: br IL_0317
+   006A ldloc.1 
+   006B ldc.i4.0 
+   006C blt IL_007d: br IL_0317
+   0071 ldloc.1 
+   0072 ldarg.0 
+   0073 ldfld ImpostorRenderer::CHUNK_NUM
+   0078 blt IL_0082: ldarg.0
+   007D br IL_0317: ldloc.3
+   0082 ldarg.0 
+   0083 ldfld ImpostorRenderer::m_impostorChunkData
+   0088 ldloc.0 
+   0089 ldloc.1 
+   008A call System.Collections.ArrayList System.Collections.ArrayList[0...,0...]::Get(System.Int32,System.Int32)
+   008F brtrue IL_0099: ldarg.0
+   0094 br IL_0317: ldloc.3
+   0099 ldarg.0 
+   009A ldfld ImpostorRenderer::m_impostorChunkData
+   009F ldloc.0 
+   00A0 ldloc.1 
+   00A1 call System.Collections.ArrayList System.Collections.ArrayList[0...,0...]::Get(System.Int32,System.Int32)
+   00A6 callvirt System.Collections.IEnumerator System.Collections.ArrayList::GetEnumerator()
+   00AB stloc.s V_5
+   00AD br IL_02d9: ldloc.s V_5
+   00B2 ldloc.s V_5
+   00B4 callvirt System.Object System.Collections.IEnumerator::get_Current()
+   00B9 unbox.any UnityEngine.Vector4
+   00BE stloc.s V_4
+   00C0 ldloc.2 
+   00C1 ldarg.0 
+   00C2 ldfld ImpostorRenderer::MAX_VERTEX_NUM
+   00C7 blt IL_00ea: ldloca.s V_4
+   00CC ldarg.0 
+   00CD call System.Void ImpostorRenderer::SetCurrentMeshData()
+   00D2 ldc.i4.0 
+   00D3 stloc.2 
+   00D4 ldarg.0 
+   00D5 ldfld ImpostorRenderer::m_curMeshNum
+   00DA ldarg.0 
+   00DB ldfld ImpostorRenderer::MAX_MESH_NUM
+   00E0 blt IL_00ea: ldloca.s V_4
+   00E5 leave IL_02e5: leave IL_0301
+   00EA ldloca.s V_4
+   00EC ldfld UnityEngine.Vector4::y
+   00F1 call System.Int32 UnityEngine.Mathf::RoundToInt(System.Single)
+   00F6 stloc.s V_6
+   00F8 ldloc.s V_4
+   00FA call UnityEngine.Vector3 MMGame_Math::toVec3(UnityEngine.Vector4)
+   00FF stloc.s V_7
+   0101 ldloca.s V_7
+   0103 ldc.r4 0
+   0108 stfld UnityEngine.Vector3::y
+   010D ldc.i4.0 
+   010E stloc.s V_8
+   0110 br IL_02c7: ldloc.s V_8
+   0115 ldloc.s V_8
+   0117 ldc.i4.2 
+   0118 shl 
+   0119 stloc.s V_9
+   011B ldloc.s V_7
+   011D ldarg.0 
+   011E ldfld ImpostorRenderer::m_inClusterVertexPositions
+   0123 ldloc.s V_8
+   0125 callvirt !0 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Item(System.Int32)
+   012A call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   012F stloc.s V_10
+   0131 ldarg.0 
+   0132 ldfld ImpostorRenderer::m_vertices
+   0137 ldloc.s V_10
+   0139 ldarg.0 
+   013A ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   013F ldloc.s V_9
+   0141 callvirt !0 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Item(System.Int32)
+   0146 ldloca.s V_4
+   0148 ldfld UnityEngine.Vector4::w
+   014D call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0152 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0157 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   015C ldarg.0 
+   015D ldfld ImpostorRenderer::m_vertices
+   0162 ldloc.s V_10
+   0164 ldarg.0 
+   0165 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   016A ldloc.s V_9
+   016C ldc.i4.1 
+   016D add 
+   016E callvirt !0 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Item(System.Int32)
+   0173 ldloca.s V_4
+   0175 ldfld UnityEngine.Vector4::w
+   017A call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   017F call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0184 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   0189 ldarg.0 
+   018A ldfld ImpostorRenderer::m_vertices
+   018F ldloc.s V_10
+   0191 ldarg.0 
+   0192 ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   0197 ldloc.s V_9
+   0199 ldc.i4.2 
+   019A add 
+   019B callvirt !0 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Item(System.Int32)
+   01A0 ldloca.s V_4
+   01A2 ldfld UnityEngine.Vector4::w
+   01A7 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   01AC call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   01B1 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   01B6 ldarg.0 
+   01B7 ldfld ImpostorRenderer::m_vertices
+   01BC ldloc.s V_10
+   01BE ldarg.0 
+   01BF ldfld ImpostorRenderer::m_inClusterVertexOffsets
+   01C4 ldloc.s V_9
+   01C6 ldc.i4.3 
+   01C7 add 
+   01C8 callvirt !0 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Item(System.Int32)
+   01CD ldloca.s V_4
+   01CF ldfld UnityEngine.Vector4::w
+   01D4 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   01D9 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   01DE callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector3>::Add(!0)
+   01E3 ldarg.0 
+   01E4 ldfld ImpostorRenderer::m_uvs
+   01E9 ldarg.0 
+   01EA ldfld ImpostorRenderer::m_uv0
+   01EF ldloc.s V_6
+   01F1 ldelema UnityEngine.Vector2
+   01F6 ldobj UnityEngine.Vector2
+   01FB callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Add(!0)
+   0200 ldarg.0 
+   0201 ldfld ImpostorRenderer::m_uvs
+   0206 ldarg.0 
+   0207 ldfld ImpostorRenderer::m_uv1
+   020C ldloc.s V_6
+   020E ldelema UnityEngine.Vector2
+   0213 ldobj UnityEngine.Vector2
+   0218 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Add(!0)
+   021D ldarg.0 
+   021E ldfld ImpostorRenderer::m_uvs
+   0223 ldarg.0 
+   0224 ldfld ImpostorRenderer::m_uv2
+   0229 ldloc.s V_6
+   022B ldelema UnityEngine.Vector2
+   0230 ldobj UnityEngine.Vector2
+   0235 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Add(!0)
+   023A ldarg.0 
+   023B ldfld ImpostorRenderer::m_uvs
+   0240 ldarg.0 
+   0241 ldfld ImpostorRenderer::m_uv3
+   0246 ldloc.s V_6
+   0248 ldelema UnityEngine.Vector2
+   024D ldobj UnityEngine.Vector2
+   0252 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.Vector2>::Add(!0)
+   0257 ldarg.0 
+   0258 ldfld ImpostorRenderer::m_indices
+   025D ldloc.2 
+   025E callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0263 ldarg.0 
+   0264 ldfld ImpostorRenderer::m_indices
+   0269 ldloc.2 
+   026A ldc.i4.1 
+   026B add 
+   026C callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0271 ldarg.0 
+   0272 ldfld ImpostorRenderer::m_indices
+   0277 ldloc.2 
+   0278 ldc.i4.2 
+   0279 add 
+   027A callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   027F ldarg.0 
+   0280 ldfld ImpostorRenderer::m_indices
+   0285 ldloc.2 
+   0286 ldc.i4.2 
+   0287 add 
+   0288 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   028D ldarg.0 
+   028E ldfld ImpostorRenderer::m_indices
+   0293 ldloc.2 
+   0294 ldc.i4.1 
+   0295 add 
+   0296 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   029B ldarg.0 
+   029C ldfld ImpostorRenderer::m_indices
+   02A1 ldloc.2 
+   02A2 ldc.i4.3 
+   02A3 add 
+   02A4 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   02A9 ldloc.2 
+   02AA ldc.i4.4 
+   02AB add 
+   02AC stloc.2 
+   02AD ldloc.s V_6
+   02AF ldc.i4.1 
+   02B0 add 
+   02B1 stloc.s V_6
+   02B3 ldloc.s V_6
+   02B5 ldc.i4.4 
+   02B6 blt IL_02c1: ldloc.s V_8
+   02BB ldloc.s V_6
+   02BD ldc.i4.4 
+   02BE sub 
+   02BF stloc.s V_6
+   02C1 ldloc.s V_8
+   02C3 ldc.i4.1 
+   02C4 add 
+   02C5 stloc.s V_8
+   02C7 ldloc.s V_8
+   02C9 ldarg.0 
+   02CA ldfld ImpostorRenderer::impostorData
+   02CF ldfld ImpostorData::foliageNumInCluster
+   02D4 blt IL_0115: ldloc.s V_8
+   02D9 ldloc.s V_5
+   02DB callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   02E0 brtrue IL_00b2: ldloc.s V_5
+   02E5 leave IL_0301: ldarg.0
+   02EA ldloc.s V_5
+   02EC isinst System.IDisposable
+   02F1 dup 
+   02F2 stloc.s V_11
+   02F4 brfalse IL_0300: endfinally
+   02F9 ldloc.s V_11
+   02FB callvirt System.Void System.IDisposable::Dispose()
+   0300 endfinally 
+   0301 ldarg.0 
+   0302 ldfld ImpostorRenderer::m_curMeshNum
+   0307 ldarg.0 
+   0308 ldfld ImpostorRenderer::MAX_MESH_NUM
+   030D blt IL_0317: ldloc.3
+   0312 br IL_0323: ldarg.0
+   0317 ldloc.3 
+   0318 ldc.i4.1 
+   0319 add 
+   031A stloc.3 
+   031B ldloc.3 
+   031C ldc.i4.s 9
+   031E blt IL_0031: ldarg.0
+   0323 ldarg.0 
+   0324 ldfld ImpostorRenderer::m_curMeshNum
+   0329 ldarg.0 
+   032A ldfld ImpostorRenderer::MAX_MESH_NUM
+   032F bge IL_034b: ret
+   0334 ldarg.0 
+   0335 ldfld ImpostorRenderer::m_vertices
+   033A callvirt System.Int32 System.Collections.Generic.List`1<UnityEngine.Vector3>::get_Count()
+   033F ldc.i4.0 
+   0340 ble IL_034b: ret
+   0345 ldarg.0 
+   0346 call System.Void ImpostorRenderer::SetCurrentMeshData()
+   034B ret 
+== System.Void Destory() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void RenderImpostors() attrs=Private, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0031: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld ImpostorRenderer::m_proxyMeshs
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<UnityEngine.Mesh>::get_Item(System.Int32)
+   0013 call UnityEngine.Matrix4x4 UnityEngine.Matrix4x4::get_identity()
+   0018 ldarg.0 
+   0019 ldfld ImpostorRenderer::impostorMaterial
+   001E ldstr Block
+   0023 call System.Int32 UnityEngine.LayerMask::NameToLayer(System.String)
+   0028 call System.Void UnityEngine.Graphics::DrawMesh(UnityEngine.Mesh,UnityEngine.Matrix4x4,UnityEngine.Material,System.Int32)
+   002D ldloc.0 
+   002E ldc.i4.1 
+   002F add 
+   0030 stloc.0 
+   0031 ldloc.0 
+   0032 ldarg.0 
+   0033 ldfld ImpostorRenderer::m_curMeshNum
+   0038 blt IL_0007: ldarg.0
+   003D ret 

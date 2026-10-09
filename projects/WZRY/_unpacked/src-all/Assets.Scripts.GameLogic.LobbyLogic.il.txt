@@ -1,0 +1,2481 @@
+// TYPE Assets.Scripts.GameLogic.LobbyLogic  base=Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>  attrs=Public, BeforeFieldInit
+  FIELD System.UInt64 ulAccountUid
+  FIELD System.UInt32 uPlayerID
+  FIELD System.Int32 _settleMsgTimer
+  FIELD System.Int32 _gameEndTimer
+  FIELD System.Int32 _settlePanelTimer
+  FIELD CSProtocol.CSDT_RECONN_GAMEINGINFO reconnGameInfo
+  FIELD System.Boolean isLogin
+  FIELD System.Boolean inMultiRoom
+  FIELD System.Boolean inMultiGame
+  FIELD System.Boolean m_bShowNewbieEnterTaskForm
+  FIELD System.Boolean m_bShowNewbieEnterExploreForm
+  FIELD System.Boolean <CanShowRolling>k__BackingField
+  FIELD System.Boolean NeedUpdateClient
+  FIELD System.Byte bNoticeType
+  FIELD System.Boolean isKick
+  FIELD System.String noticeInfo
+  FIELD System.Boolean NeedToShowAntiAddictNotice
+  FIELD System.Byte bTongCaiState
+  FIELD System.String tongCaiInfo
+  FIELD System.Boolean NeedToShowTongCaiNotice
+  FIELD System.String kickTips
+  FIELD System.Boolean NeedToShowKickTips
+  FIELD Assets.Scripts.GameLogic.ErrNotify m_errNotify
+  FIELD System.String LOADLOBBYFORM
+  FIELD System.String NewLobbyAnimForm
+  FIELD System.Boolean useLoadForm
+  FIELD System.Int32 s_waitingStepMs
+  FIELD System.String[] _lobbyOpenFormCmd
+  PROP System.Boolean CanShowRolling
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameLogic.LobbyLogic::bTongCaiState
+   0007 ldarg.0 
+   0008 call System.Void Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::.ctor()
+   000D ret 
+== System.Boolean get_CanShowRolling() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LobbyLogic::<CanShowRolling>k__BackingField
+   0006 ret 
+== System.Void set_CanShowRolling(System.Boolean value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.LobbyLogic::<CanShowRolling>k__BackingField
+   0007 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameLogic.LobbyLogic::_settleMsgTimer
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 stfld Assets.Scripts.GameLogic.LobbyLogic::_gameEndTimer
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E stfld Assets.Scripts.GameLogic.LobbyLogic::_settlePanelTimer
+   0023 ldarg.0 
+   0024 ldnull 
+   0025 stfld Assets.Scripts.GameLogic.LobbyLogic::reconnGameInfo
+   002A ldarg.0 
+   002B ldflda Assets.Scripts.GameLogic.LobbyLogic::m_errNotify
+   0030 ldc.i4.0 
+   0031 stfld Assets.Scripts.GameLogic.ErrNotify::needToOpen
+   0036 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003B dup 
+   003C ldfld Assets.Scripts.UI.CUIManager::onFormSorted
+   0041 ldarg.0 
+   0042 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OnUiFormUpdate(ListView`1<Assets.Scripts.UI.CUIFormScript>)
+   0048 newobj System.Void Assets.Scripts.UI.CUIManager/OnFormSorted::.ctor(System.Object,System.IntPtr)
+   004D call System.Delegate System.Delegate::Combine(System.Delegate,System.Delegate)
+   0052 castclass Assets.Scripts.UI.CUIManager/OnFormSorted
+   0057 stfld Assets.Scripts.UI.CUIManager::onFormSorted
+   005C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0061 ldc.i4 2804
+   0066 ldarg.0 
+   0067 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OnClickSingleGameFinishError(Assets.Scripts.UI.CUIEvent)
+   006D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0072 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0077 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::UnInit()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 2804
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OnClickSingleGameFinishError(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 ret 
+== System.Boolean ConnectServer() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::get_isOnlineMode()
+   000A brfalse IL_00bb: ldc.i4.0
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0015 brtrue IL_00bb: ldc.i4.0
+   001A call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   001F ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0024 ldarg.0 
+   0025 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::onLobbyConnected(System.Object)
+   002B newobj System.Void Assets.Scripts.Framework.NetConnectedEvent::.ctor(System.Object,System.IntPtr)
+   0030 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::remove_ConnectedEvent(Assets.Scripts.Framework.NetConnectedEvent)
+   0035 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   003A ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   003F ldarg.0 
+   0040 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::onLobbyDisconnected(System.Object)
+   0046 newobj System.Void Assets.Scripts.Framework.NetDisconnectEvent::.ctor(System.Object,System.IntPtr)
+   004B callvirt System.Void Assets.Scripts.Framework.LobbyConnector::remove_DisconnectEvent(Assets.Scripts.Framework.NetDisconnectEvent)
+   0050 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0055 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   005A ldarg.0 
+   005B ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::onLobbyConnected(System.Object)
+   0061 newobj System.Void Assets.Scripts.Framework.NetConnectedEvent::.ctor(System.Object,System.IntPtr)
+   0066 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::add_ConnectedEvent(Assets.Scripts.Framework.NetConnectedEvent)
+   006B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0070 ldfld Assets.Scripts.Framework.NetworkModule::lobbySvr
+   0075 ldarg.0 
+   0076 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::onLobbyDisconnected(System.Object)
+   007C newobj System.Void Assets.Scripts.Framework.NetDisconnectEvent::.ctor(System.Object,System.IntPtr)
+   0081 callvirt System.Void Assets.Scripts.Framework.LobbyConnector::add_DisconnectEvent(Assets.Scripts.Framework.NetDisconnectEvent)
+   0086 newobj System.Void Assets.Scripts.Framework.ConnectorParam::.ctor()
+   008B stloc.0 
+   008C ldloc.0 
+   008D ldsfld ApolloConfig::loginUrl
+   0092 stfld Assets.Scripts.Framework.ConnectorParam::url
+   0097 ldloc.0 
+   0098 ldsfld ApolloConfig::loginOnlyIpOrUrl
+   009D stfld Assets.Scripts.Framework.ConnectorParam::ip
+   00A2 ldloc.0 
+   00A3 ldsfld ApolloConfig::loginOnlyVPort
+   00A8 stfld Assets.Scripts.Framework.ConnectorParam::vPort
+   00AD call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00B2 ldloc.0 
+   00B3 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::InitLobbyServerConnect(Assets.Scripts.Framework.ConnectorParam)
+   00B8 stloc.1 
+   00B9 ldloc.1 
+   00BA ret 
+   00BB ldc.i4.0 
+   00BC ret 
+== System.Void BeginLoadLobbyStep() attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.SettlementSystem::IsExistSettleForm()
+   000A brfalse IL_005f: ldsfld System.Boolean Assets.Scripts.GameLogic.LobbyLogic::useLoadForm
+   000F call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0014 brfalse IL_0033: ldsfld System.Int32 Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0019 ldsfld Assets.Scripts.GameSystem.CLobbySystem::VeryBigTimer
+   001E stsfld Assets.Scripts.GameLogic.LobbyLogic::s_waitingStepMs
+   0023 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0028 ldc.i4.1 
+   0029 callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   002E br IL_003d: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0033 ldsfld Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0038 stsfld Assets.Scripts.GameLogic.LobbyLogic::s_waitingStepMs
+   003D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0042 ldsfld Assets.Scripts.GameLogic.LobbyLogic::s_waitingStepMs
+   0047 ldc.i4.1 
+   0048 ldarg.0 
+   0049 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep1(System.Int32)
+   004F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0054 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0059 pop 
+   005A br IL_00bc: ret
+   005F ldsfld Assets.Scripts.GameLogic.LobbyLogic::useLoadForm
+   0064 brfalse IL_009e: ldarg.0
+   0069 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   006E ldsfld Assets.Scripts.GameLogic.LobbyLogic::LOADLOBBYFORM
+   0073 ldc.i4.0 
+   0074 ldc.i4.1 
+   0075 ldnull 
+   0076 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   007B pop 
+   007C call !0 Singleton`1<CTimerManager>::GetInstance()
+   0081 ldsfld Assets.Scripts.GameSystem.CLobbySystem::BigTimer
+   0086 ldc.i4.1 
+   0087 ldarg.0 
+   0088 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep1(System.Int32)
+   008E newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0093 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0098 pop 
+   0099 br IL_00bc: ret
+   009E ldarg.0 
+   009F call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep1()
+   00A4 ldarg.0 
+   00A5 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep2()
+   00AA ldarg.0 
+   00AB call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep3()
+   00B0 ldarg.0 
+   00B1 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep4()
+   00B6 ldarg.0 
+   00B7 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep5()
+   00BC ret 
+== System.Void OpenLobbyStep1(System.Int32 timerId) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0010 brfalse IL_0020: ldarg.0
+   0015 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001A ldc.i4.1 
+   001B callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0020 ldarg.0 
+   0021 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep1()
+   0026 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002B ldsfld Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0030 ldc.i4.1 
+   0031 ldarg.0 
+   0032 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep2(System.Int32)
+   0038 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0042 pop 
+   0043 ret 
+== System.Void OpenLobbyStep2(System.Int32 timerId) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0010 brfalse IL_0020: ldarg.0
+   0015 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001A ldc.i4.1 
+   001B callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0020 ldarg.0 
+   0021 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep2()
+   0026 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002B ldsfld Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0030 ldc.i4.1 
+   0031 ldarg.0 
+   0032 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep3(System.Int32)
+   0038 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0042 pop 
+   0043 ret 
+== System.Void OpenLobbyStep3(System.Int32 timerId) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0010 brfalse IL_0020: ldarg.0
+   0015 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001A ldc.i4.1 
+   001B callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0020 ldarg.0 
+   0021 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep3()
+   0026 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002B ldsfld Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0030 ldc.i4.1 
+   0031 ldarg.0 
+   0032 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep4(System.Int32)
+   0038 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0042 pop 
+   0043 ret 
+== System.Void OpenLobbyStep4(System.Int32 timerId) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0010 brfalse IL_0020: ldarg.0
+   0015 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001A ldc.i4.1 
+   001B callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0020 ldarg.0 
+   0021 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep4()
+   0026 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002B ldsfld Assets.Scripts.GameSystem.CLobbySystem::SmallTimer
+   0030 ldc.i4.1 
+   0031 ldarg.0 
+   0032 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::OpenLobbyStep5(System.Int32)
+   0038 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0042 pop 
+   0043 ret 
+== System.Void OpenLobbyStep5(System.Int32 timerId) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CTimerManager>::get_instance()
+   0005 ldarg.1 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call System.Boolean DeviceCheckSys::EnableLowMemoryStrategy()
+   0010 brfalse IL_0020: ldarg.0
+   0015 call !0 Singleton`1<CResourceManager>::GetInstance()
+   001A ldc.i4.1 
+   001B callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   0020 ldarg.0 
+   0021 call System.Void Assets.Scripts.GameLogic.LobbyLogic::ImpOpenLobbyStep5()
+   0026 ret 
+== System.Void ImpOpenLobbyStep1() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::OnOpenLobbyStep1()
+   000A ret 
+== System.Void ImpOpenLobbyStep2() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::OnOpenLobbyStep2()
+   000A ret 
+== System.Void ImpOpenLobbyStep3() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::OnOpenLobbyStep3()
+   000A ret 
+== System.Void ImpOpenLobbyStep4() attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::OnOpenLobbyStep4()
+   000A call !0 Singleton`1<Assets.Scripts.GameSystem.CRecordUseSDK>::get_instance()
+   000F callvirt System.Void Assets.Scripts.GameSystem.CRecordUseSDK::OnLobbyOpen()
+   0014 ret 
+== System.Void ImpOpenLobbyStep5() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GameInput>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.GameLogic.GameInput::ChangeLobbyMode()
+   000A ldc.i4.0 
+   000B call System.Void Assets.Scripts.GameSystem.CCSCoreSys::UpdateCustomCompetitionChatChannel(System.Boolean)
+   0010 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::GetInstance()
+   0015 callvirt System.Void Assets.Scripts.GameSystem.CChatController::CreateForm()
+   001A call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::GetInstance()
+   001F ldc.i4.1 
+   0020 ldc.i4.0 
+   0021 callvirt System.Void Assets.Scripts.GameSystem.CChatController::ShowPanel(System.Boolean,System.Boolean)
+   0026 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::GetInstance()
+   002B ldc.i4.1 
+   002C stfld Assets.Scripts.GameSystem.CChatController::bSendChat
+   0031 call !0 Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::get_instance()
+   0036 callvirt System.Void Assets.Scripts.GameSystem.CLoudSpeakerSys::StartReqTimer()
+   003B call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   0040 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::SendShareDataMsg()
+   0045 ldnull 
+   0046 call System.Void NetworkAccelerator::TryToSendExpireTime(System.String)
+   004B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0050 ldc.i4 280
+   0055 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   005A call !0 Singleton`1<Assets.Scripts.GameSystem.CBigEventSys>::GetInstance()
+   005F callvirt System.Boolean Assets.Scripts.GameSystem.CBigEventSys::IsNotShowAllPopUpWindows()
+   0064 brtrue IL_0071: call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0069 ldarg.0 
+   006A ldnull 
+   006B call System.Boolean Assets.Scripts.GameLogic.LobbyLogic::ExecOpenForm(System.String[])
+   0070 pop 
+   0071 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0076 ldfld Assets.Scripts.GameSystem.CHeroSelectBaseSystem::m_isInHeroSelectState
+   007B brtrue IL_00b3: call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenFps()
+   0080 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::get_instance()
+   0085 callvirt System.String Assets.Scripts.GameSystem.SettlementSystem::GetOfficialBank()
+   008A stloc.0 
+   008B ldloc.0 
+   008C call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0091 brtrue IL_00a2: call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0096 ldloc.0 
+   0097 call System.Boolean Assets.Scripts.GameSystem.CCSOfficialSys::LoadBank(System.String)
+   009C pop 
+   009D br IL_00b3: call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenFps()
+   00A2 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   00A7 ldstr Main_Play
+   00AC ldnull 
+   00AD callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   00B2 pop 
+   00B3 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenFps()
+   00B8 call !0 Singleton`1<Assets.Scripts.GameSystem.CUIParticleSystem>::GetInstance()
+   00BD ldc.i4.0 
+   00BE callvirt System.Void Assets.Scripts.GameSystem.CUIParticleSystem::Open(System.Boolean)
+   00C3 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::GetInstance()
+   00C8 ldc.i4.1 
+   00C9 callvirt System.Void Assets.Scripts.GameSystem.CChatController::SetChatTimerEnable(System.Boolean)
+   00CE call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::GetInstance()
+   00D3 ldfld Assets.Scripts.GameSystem.CChatController::CGuildChatModule
+   00D8 ldc.i4.1 
+   00D9 callvirt System.Void Assets.Scripts.GameSystem.CGuildChatModule::SetGuildRecruitTimerEnable(System.Boolean)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00E3 ldsfld Assets.Scripts.GameLogic.LobbyLogic::LOADLOBBYFORM
+   00E8 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   00ED call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00F2 ldc.i4 290
+   00F7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   00FC call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::get_instance()
+   0101 callvirt System.Void Assets.Scripts.GameSystem.SettlementSystem::AfterClearFightField()
+   0106 call System.Void Assets.Scripts.GameSystem.CCSToolQR::HandleQRLaunch()
+   010B call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0110 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0115 stloc.1 
+   0116 ldloc.1 
+   0117 ldc.i4.s 20
+   0119 callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsClientBitsSet(System.Int32)
+   011E brtrue IL_012d: ret
+   0123 ldloc.1 
+   0124 ldc.i4.s 20
+   0126 ldc.i4.1 
+   0127 ldc.i4.1 
+   0128 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfo::SetClientBits(System.Int32,System.Boolean,System.Boolean)
+   012D ret 
+== System.Void OpenLobby() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LobbyLogic::BeginLoadLobbyStep()
+   0006 ret 
+== System.Void OnUiFormUpdate(ListView`1<Assets.Scripts.UI.CUIFormScript> inForms) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.Framework.GameStateCtrl::get_isLobbyState()
+   000A brtrue IL_0010: ldarg.1
+   000F ret 
+   0010 ldarg.1 
+   0011 brtrue IL_0017: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0016 ret 
+   0017 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001C ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBYBOTTOM_FORM_PATH
+   0021 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0026 stloc.0 
+   0027 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002C ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   0031 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0036 stloc.1 
+   0037 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   003C ldsfld Assets.Scripts.GameSystem.CLobbySystem::SYSENTRY_FORM_PATH
+   0041 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0046 stloc.2 
+   0047 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   004C ldsfld Assets.Scripts.GameSystem.CChatController::ChatFormPath
+   0051 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0056 stloc.3 
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   005C ldsfld Assets.Scripts.GameSystem.CChatController::ChatEntryPath
+   0061 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0066 stloc.s V_4
+   0068 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   006D ldsfld Assets.Scripts.GameSystem.CUICommonSystem::FPS_FORM_PATH
+   0072 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0077 stloc.s V_5
+   0079 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   007E ldsfld Assets.Scripts.GameSystem.CUIParticleSystem::s_qualifyingFormPath
+   0083 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0088 stloc.s V_6
+   008A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   008F ldstr UGUI/Form/System/Dialog/Form_WeakGuide
+   0094 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0099 stloc.s V_7
+   009B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00A0 ldsfld Assets.Scripts.GameSystem.CFunctionUnlockSys::FUC_UNLOCK_FORM_PATH
+   00A5 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00AA stloc.s V_8
+   00AC call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00B1 ldsfld NewbieGuideScriptControl::FormGuideMaskPath
+   00B6 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00BB stloc.s V_9
+   00BD call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C2 ldsfld Assets.Scripts.GameSystem.CUICommonSystem::FORM_MESSAGE_BOX
+   00C7 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00CC stloc.s V_10
+   00CE call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00D3 ldsfld Assets.Scripts.GameSystem.CUICommonSystem::FORM_SENDING_ALERT
+   00D8 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00DD stloc.s V_11
+   00DF call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00E4 ldsfld Assets.Scripts.GameSystem.CCareerSystem::CAREER_LOBBY_FORM_PATH
+   00E9 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00EE stloc.s V_12
+   00F0 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   00F5 ldsfld Assets.Scripts.GameSystem.CAdventureSys::EXLPORE_FORM_PATH
+   00FA callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00FF stloc.s V_13
+   0101 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0106 ldsfld Assets.Scripts.GameSystem.CSymbolSystem::s_symbolFormPath
+   010B callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0110 stloc.s V_14
+   0112 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0117 ldsfld Assets.Scripts.GameSystem.CLobbySystem::RANKING_BTN_FORM_PATH
+   011C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0121 stloc.s V_15
+   0123 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0128 ldsfld Assets.Scripts.GameSystem.ShareSys::s_formShareNewAchievementPath
+   012D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0132 stloc.s V_16
+   0134 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0139 ldsfld Assets.Scripts.UI.CUIManager::sTestTopMaskForm
+   013E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0143 stloc.s V_17
+   0145 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   014A ldsfld Assets.Scripts.UI.CUIManager::sTestTopMarkForm
+   014F callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0154 stloc.s V_18
+   0156 newobj System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::.ctor()
+   015B stloc.s V_19
+   015D ldloc.0 
+   015E ldnull 
+   015F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0164 brfalse IL_0171: ldloc.1
+   0169 ldloc.s V_19
+   016B ldloc.0 
+   016C callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0171 ldloc.1 
+   0172 ldnull 
+   0173 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0178 brfalse IL_0185: ldloc.2
+   017D ldloc.s V_19
+   017F ldloc.1 
+   0180 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0185 ldloc.2 
+   0186 ldnull 
+   0187 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   018C brfalse IL_0199: ldloc.3
+   0191 ldloc.s V_19
+   0193 ldloc.2 
+   0194 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0199 ldloc.3 
+   019A ldnull 
+   019B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01A0 brfalse IL_01ad: ldloc.s V_4
+   01A5 ldloc.s V_19
+   01A7 ldloc.3 
+   01A8 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   01AD ldloc.s V_4
+   01AF ldnull 
+   01B0 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01B5 brfalse IL_01c3: ldloc.s V_5
+   01BA ldloc.s V_19
+   01BC ldloc.s V_4
+   01BE callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   01C3 ldloc.s V_5
+   01C5 ldnull 
+   01C6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01CB brfalse IL_01d9: ldloc.s V_6
+   01D0 ldloc.s V_19
+   01D2 ldloc.s V_5
+   01D4 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   01D9 ldloc.s V_6
+   01DB ldnull 
+   01DC call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01E1 brfalse IL_01ef: ldloc.s V_7
+   01E6 ldloc.s V_19
+   01E8 ldloc.s V_6
+   01EA callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   01EF ldloc.s V_7
+   01F1 ldnull 
+   01F2 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01F7 brfalse IL_0205: ldloc.s V_15
+   01FC ldloc.s V_19
+   01FE ldloc.s V_7
+   0200 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0205 ldloc.s V_15
+   0207 ldnull 
+   0208 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   020D brfalse IL_021b: ldloc.s V_17
+   0212 ldloc.s V_19
+   0214 ldloc.s V_15
+   0216 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   021B ldloc.s V_17
+   021D ldnull 
+   021E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0223 brfalse IL_0231: ldloc.s V_18
+   0228 ldloc.s V_19
+   022A ldloc.s V_17
+   022C callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0231 ldloc.s V_18
+   0233 ldnull 
+   0234 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0239 brfalse IL_0247: ldc.i4.1
+   023E ldloc.s V_19
+   0240 ldloc.s V_18
+   0242 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0247 ldc.i4.1 
+   0248 stloc.s V_20
+   024A ldarg.1 
+   024B callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.UI.CUIFormScript>::GetEnumerator()
+   0250 stloc.s V_21
+   0252 br IL_0272: ldloca.s V_21
+   0257 ldloc.s V_19
+   0259 ldloca.s V_21
+   025B call !0 ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::get_Current()
+   0260 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   0265 brtrue IL_0272: ldloca.s V_21
+   026A ldc.i4.0 
+   026B stloc.s V_20
+   026D br IL_027e: ldloc.s V_20
+   0272 ldloca.s V_21
+   0274 call System.Boolean ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::MoveNext()
+   0279 brtrue IL_0257: ldloc.s V_19
+   027E ldloc.s V_20
+   0280 brfalse IL_03e7: ldloc.s V_9
+   0285 ldarg.1 
+   0286 ldloc.1 
+   0287 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   028C brfalse IL_03e7: ldloc.s V_9
+   0291 ldarg.1 
+   0292 ldloc.2 
+   0293 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   0298 brfalse IL_03e7: ldloc.s V_9
+   029D ldarg.1 
+   029E ldloc.s V_8
+   02A0 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   02A5 brtrue IL_03e7: ldloc.s V_9
+   02AA ldarg.1 
+   02AB ldloc.s V_16
+   02AD callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   02B2 brtrue IL_03e7: ldloc.s V_9
+   02B7 call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   02BC callvirt System.Boolean Assets.Scripts.Framework.GameStateCtrl::get_isLobbyState()
+   02C1 brfalse IL_03e7: ldloc.s V_9
+   02C6 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::GetInstance()
+   02CB ldfld Assets.Scripts.GameSystem.CHeroSelectBaseSystem::m_isInHeroSelectState
+   02D0 brtrue IL_03e7: ldloc.s V_9
+   02D5 ldc.i4.1 
+   02D6 ldc.i4.0 
+   02D7 newarr System.UInt32
+   02DC call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   02E1 pop 
+   02E2 call System.Boolean NewbieGuideManager::get_isNewbieGuiding()
+   02E7 ldc.i4.0 
+   02E8 ceq 
+   02EA stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   02EF call System.Boolean NewbieGuideManager::get_isNewbieGuiding()
+   02F4 brfalse IL_02fa: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   02F9 ret 
+   02FA call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   02FF ldfld Assets.Scripts.GameSystem.CMatchingSystem::IsInMatchingWaitConfirm
+   0304 brtrue IL_0338: ldc.i4.s 23
+   0309 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   030E callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   0313 brtrue IL_0338: ldc.i4.s 23
+   0318 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   031D callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0322 brtrue IL_0338: ldc.i4.s 23
+   0327 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   032C ldstr Stop_Hall_JJ_Mode
+   0331 ldnull 
+   0332 callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0337 pop 
+   0338 ldc.i4.s 23
+   033A ldc.i4.1 
+   033B ldnull 
+   033C ldnull 
+   033D ldc.i4.0 
+   033E ldc.i4.0 
+   033F ldc.i4.1 
+   0340 ldc.i4.1 
+   0341 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0346 ldc.i4.s 37
+   0348 ldc.i4.1 
+   0349 ldnull 
+   034A ldnull 
+   034B ldc.i4.0 
+   034C ldc.i4.0 
+   034D ldc.i4.1 
+   034E ldc.i4.1 
+   034F call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0354 ldc.i4.s 36
+   0356 ldc.i4.1 
+   0357 ldnull 
+   0358 ldnull 
+   0359 ldc.i4.0 
+   035A ldc.i4.0 
+   035B ldc.i4.1 
+   035C ldc.i4.1 
+   035D call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0362 ldc.i4.s 31
+   0364 ldc.i4.1 
+   0365 ldnull 
+   0366 ldnull 
+   0367 ldc.i4.0 
+   0368 ldc.i4.0 
+   0369 ldc.i4.1 
+   036A ldc.i4.1 
+   036B call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0370 ldc.i4.s 10
+   0372 ldc.i4.1 
+   0373 ldnull 
+   0374 ldnull 
+   0375 ldc.i4.0 
+   0376 ldc.i4.0 
+   0377 ldc.i4.1 
+   0378 ldc.i4.1 
+   0379 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   037E ldc.i4.s 48
+   0380 ldc.i4.1 
+   0381 ldnull 
+   0382 ldnull 
+   0383 ldc.i4.0 
+   0384 ldc.i4.0 
+   0385 ldc.i4.1 
+   0386 ldc.i4.1 
+   0387 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   038C call !0 MonoSingleton`1<Assets.Scripts.GameSystem.WifiPrivilegeManager>::GetInstance()
+   0391 callvirt System.Boolean Assets.Scripts.GameSystem.WifiPrivilegeManager::IsInWifiPrivilege()
+   0396 brfalse IL_03a9: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   039B ldc.i4.s 58
+   039D ldc.i4.1 
+   039E ldnull 
+   039F ldnull 
+   03A0 ldc.i4.0 
+   03A1 ldc.i4.0 
+   03A2 ldc.i4.1 
+   03A3 ldc.i4.1 
+   03A4 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   03A9 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   03AE callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   03B3 stloc.s V_22
+   03B5 ldloc.s V_22
+   03B7 brfalse IL_03d8: call !0 Singleton`1<EventRouter>::GetInstance()
+   03BC ldloc.s V_22
+   03BE callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PvpLevel()
+   03C3 ldc.i4.s 10
+   03C5 blt.un IL_03d8: call !0 Singleton`1<EventRouter>::GetInstance()
+   03CA ldc.i4.s 29
+   03CC ldc.i4.1 
+   03CD ldnull 
+   03CE ldnull 
+   03CF ldc.i4.1 
+   03D0 ldc.i4.0 
+   03D1 ldc.i4.1 
+   03D2 ldc.i4.1 
+   03D3 call System.Void Assets.Scripts.GameSystem.CUICommonGuideSystem::ShowBubbleTips(System.UInt16,System.Boolean,UnityEngine.Transform,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   03D8 call !0 Singleton`1<EventRouter>::GetInstance()
+   03DD ldsfld EventID::IN_PURE_LOBBY
+   03E2 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   03E7 ldloc.s V_9
+   03E9 ldnull 
+   03EA call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03EF brfalse IL_03fd: ldc.i4.1
+   03F4 ldloc.s V_19
+   03F6 ldloc.s V_9
+   03F8 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   03FD ldc.i4.1 
+   03FE stloc.s V_20
+   0400 ldarg.1 
+   0401 callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.UI.CUIFormScript>::GetEnumerator()
+   0406 stloc.s V_21
+   0408 br IL_0428: ldloca.s V_21
+   040D ldloc.s V_19
+   040F ldloca.s V_21
+   0411 call !0 ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::get_Current()
+   0416 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   041B brtrue IL_0428: ldloca.s V_21
+   0420 ldc.i4.0 
+   0421 stloc.s V_20
+   0423 br IL_0434: ldloc.s V_20
+   0428 ldloca.s V_21
+   042A call System.Boolean ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::MoveNext()
+   042F brtrue IL_040d: ldloc.s V_19
+   0434 ldloc.s V_20
+   0436 brfalse IL_048d: ldloc.s V_10
+   043B ldarg.1 
+   043C ldloc.1 
+   043D callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   0442 brfalse IL_048d: ldloc.s V_10
+   0447 ldarg.1 
+   0448 ldloc.2 
+   0449 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   044E brfalse IL_048d: ldloc.s V_10
+   0453 ldarg.1 
+   0454 ldloc.s V_8
+   0456 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   045B brtrue IL_048d: ldloc.s V_10
+   0460 call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0465 callvirt System.Boolean Assets.Scripts.Framework.GameStateCtrl::get_isLobbyState()
+   046A brfalse IL_048d: ldloc.s V_10
+   046F call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::GetInstance()
+   0474 ldfld Assets.Scripts.Framework.LobbySvrMgr::isLogin
+   0479 brfalse IL_048d: ldloc.s V_10
+   047E call !0 Singleton`1<EventRouter>::get_instance()
+   0483 ldsfld EventID::FUC_UNLOCK_CONDITION_CHANGED
+   0488 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   048D ldloc.s V_10
+   048F ldnull 
+   0490 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0495 brfalse IL_04a3: ldloc.s V_11
+   049A ldloc.s V_19
+   049C ldloc.s V_10
+   049E callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   04A3 ldloc.s V_11
+   04A5 ldnull 
+   04A6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   04AB brfalse IL_04b9: ldc.i4.1
+   04B0 ldloc.s V_19
+   04B2 ldloc.s V_11
+   04B4 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   04B9 ldc.i4.1 
+   04BA stloc.s V_20
+   04BC ldarg.1 
+   04BD callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.UI.CUIFormScript>::GetEnumerator()
+   04C2 stloc.s V_21
+   04C4 br IL_04e4: ldloca.s V_21
+   04C9 ldloc.s V_19
+   04CB ldloca.s V_21
+   04CD call !0 ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::get_Current()
+   04D2 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   04D7 brtrue IL_04e4: ldloca.s V_21
+   04DC ldc.i4.0 
+   04DD stloc.s V_20
+   04DF br IL_04f0: ldloc.s V_20
+   04E4 ldloca.s V_21
+   04E6 call System.Boolean ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::MoveNext()
+   04EB brtrue IL_04c9: ldloc.s V_19
+   04F0 ldloc.s V_20
+   04F2 brfalse IL_054e: ldarg.0
+   04F7 ldarg.1 
+   04F8 ldloc.1 
+   04F9 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   04FE brfalse IL_054e: ldarg.0
+   0503 ldarg.1 
+   0504 ldloc.2 
+   0505 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   050A brfalse IL_054e: ldarg.0
+   050F call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0514 callvirt System.Boolean Assets.Scripts.Framework.GameStateCtrl::get_isLobbyState()
+   0519 brfalse IL_054e: ldarg.0
+   051E ldarg.0 
+   051F call System.Boolean Assets.Scripts.GameLogic.LobbyLogic::get_CanShowRolling()
+   0524 brtrue IL_053a: call !0 Singleton`1<EventRouter>::GetInstance()
+   0529 ldarg.0 
+   052A ldc.i4.1 
+   052B call System.Void Assets.Scripts.GameLogic.LobbyLogic::set_CanShowRolling(System.Boolean)
+   0530 call !0 Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>::GetInstance()
+   0535 callvirt System.Void Assets.Scripts.GameSystem.CRollingSystem::StartRolling()
+   053A call !0 Singleton`1<EventRouter>::GetInstance()
+   053F ldsfld EventID::LOBBY_PURE_LOBBY_SHOW
+   0544 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0549 br IL_056a: newobj System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::.ctor()
+   054E ldarg.0 
+   054F call System.Boolean Assets.Scripts.GameLogic.LobbyLogic::get_CanShowRolling()
+   0554 brfalse IL_056a: newobj System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::.ctor()
+   0559 ldarg.0 
+   055A ldc.i4.0 
+   055B call System.Void Assets.Scripts.GameLogic.LobbyLogic::set_CanShowRolling(System.Boolean)
+   0560 call !0 Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>::GetInstance()
+   0565 callvirt System.Void Assets.Scripts.GameSystem.CRollingSystem::StopRolling()
+   056A newobj System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::.ctor()
+   056F stloc.s V_23
+   0571 ldloc.s V_23
+   0573 ldloc.s V_6
+   0575 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   057A ldloc.s V_23
+   057C ldloc.s V_7
+   057E callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0583 ldloc.s V_23
+   0585 ldloc.s V_5
+   0587 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   058C ldloc.s V_23
+   058E ldloc.2 
+   058F callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   0594 ldloc.s V_23
+   0596 ldloc.s V_17
+   0598 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::Add(!0)
+   059D ldarg.0 
+   059E ldloc.s V_12
+   05A0 ldloc.s V_23
+   05A2 call System.Boolean Assets.Scripts.GameLogic.LobbyLogic::TestTopFormCustom(Assets.Scripts.UI.CUIFormScript,ListView`1<Assets.Scripts.UI.CUIFormScript>)
+   05A7 stfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterTaskForm
+   05AC ldarg.0 
+   05AD ldloc.s V_13
+   05AF ldloc.s V_23
+   05B1 call System.Boolean Assets.Scripts.GameLogic.LobbyLogic::TestTopFormCustom(Assets.Scripts.UI.CUIFormScript,ListView`1<Assets.Scripts.UI.CUIFormScript>)
+   05B6 stfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterExploreForm
+   05BB ret 
+== System.Boolean TestTopFormCustom(Assets.Scripts.UI.CUIFormScript inTesterForm, ListView`1<Assets.Scripts.UI.CUIFormScript> inExcludeForms) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000e: ldc.i4.0
+   000C ldc.i4.0 
+   000D ret 
+   000E ldc.i4.0 
+   000F stloc.0 
+   0010 newobj System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::.ctor()
+   0015 stloc.1 
+   0016 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   001B callvirt ListView`1<Assets.Scripts.UI.CUIFormScript> Assets.Scripts.UI.CUIManager::GetForms()
+   0020 stloc.2 
+   0021 ldloc.2 
+   0022 brfalse IL_002e: ldloc.1
+   0027 ldloc.1 
+   0028 ldloc.2 
+   0029 callvirt System.Void ListView`1<Assets.Scripts.UI.CUIFormScript>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   002E ldloc.1 
+   002F callvirt System.Int32 ListViewBase::get_Count()
+   0034 ldc.i4.0 
+   0035 ble IL_0106: ldloc.0
+   003A ldarg.1 
+   003B brfalse IL_0072: ldloc.1
+   0040 ldarg.1 
+   0041 callvirt System.Int32 ListViewBase::get_Count()
+   0046 ldc.i4.0 
+   0047 ble IL_0072: ldloc.1
+   004C ldarg.1 
+   004D callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.UI.CUIFormScript>::GetEnumerator()
+   0052 stloc.3 
+   0053 br IL_0066: ldloca.s V_3
+   0058 ldloc.1 
+   0059 ldloca.s V_3
+   005B call !0 ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::get_Current()
+   0060 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Remove(!0)
+   0065 pop 
+   0066 ldloca.s V_3
+   0068 call System.Boolean ListView`1/Enumerator<Assets.Scripts.UI.CUIFormScript>::MoveNext()
+   006D brtrue IL_0058: ldloc.1
+   0072 ldloc.1 
+   0073 ldarg.0 
+   0074 callvirt System.Boolean ListView`1<Assets.Scripts.UI.CUIFormScript>::Contains(!0)
+   0079 brfalse IL_0106: ldloc.0
+   007E ldnull 
+   007F stloc.s V_4
+   0081 ldloc.1 
+   0082 callvirt System.Int32 ListViewBase::get_Count()
+   0087 stloc.s V_5
+   0089 ldc.i4.0 
+   008A stloc.s V_6
+   008C br IL_00ee: ldloc.s V_6
+   0091 ldloc.1 
+   0092 ldloc.s V_6
+   0094 callvirt !0 ListView`1<Assets.Scripts.UI.CUIFormScript>::get_Item(System.Int32)
+   0099 ldnull 
+   009A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   009F brfalse IL_00a9: ldloc.s V_4
+   00A4 br IL_00e8: ldloc.s V_6
+   00A9 ldloc.s V_4
+   00AB ldnull 
+   00AC call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00B1 brfalse IL_00c5: ldloc.1
+   00B6 ldloc.1 
+   00B7 ldloc.s V_6
+   00B9 callvirt !0 ListView`1<Assets.Scripts.UI.CUIFormScript>::get_Item(System.Int32)
+   00BE stloc.s V_4
+   00C0 br IL_00e8: ldloc.s V_6
+   00C5 ldloc.1 
+   00C6 ldloc.s V_6
+   00C8 callvirt !0 ListView`1<Assets.Scripts.UI.CUIFormScript>::get_Item(System.Int32)
+   00CD callvirt System.Int32 Assets.Scripts.UI.CUIFormScript::GetSortingOrder()
+   00D2 ldloc.s V_4
+   00D4 callvirt System.Int32 Assets.Scripts.UI.CUIFormScript::GetSortingOrder()
+   00D9 ble IL_00e8: ldloc.s V_6
+   00DE ldloc.1 
+   00DF ldloc.s V_6
+   00E1 callvirt !0 ListView`1<Assets.Scripts.UI.CUIFormScript>::get_Item(System.Int32)
+   00E6 stloc.s V_4
+   00E8 ldloc.s V_6
+   00EA ldc.i4.1 
+   00EB add 
+   00EC stloc.s V_6
+   00EE ldloc.s V_6
+   00F0 ldloc.s V_5
+   00F2 blt IL_0091: ldloc.1
+   00F7 ldloc.s V_4
+   00F9 ldarg.0 
+   00FA call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00FF brfalse IL_0106: ldloc.0
+   0104 ldc.i4.1 
+   0105 stloc.0 
+   0106 ldloc.0 
+   0107 ret 
+== System.Void LateUpdate() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brfalse IL_0010: ldarg.0
+   000F ret 
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterTaskForm
+   0016 brfalse IL_0030: ldarg.0
+   001B ldc.i4.s 23
+   001D ldc.i4.0 
+   001E newarr System.UInt32
+   0023 call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   0028 pop 
+   0029 ldarg.0 
+   002A ldc.i4.0 
+   002B stfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterTaskForm
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterExploreForm
+   0036 brfalse IL_0050: ret
+   003B ldc.i4.s 24
+   003D ldc.i4.0 
+   003E newarr System.UInt32
+   0043 call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   0048 pop 
+   0049 ldarg.0 
+   004A ldc.i4.0 
+   004B stfld Assets.Scripts.GameLogic.LobbyLogic::m_bShowNewbieEnterExploreForm
+   0050 ret 
+== System.Void UpdateLogic(System.Int32 delta) attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void onLobbyConnected(System.Object sender) attrs=Private, HideBySig maxstack=8
+   0000 ldstr onLobbyConnected
+   0005 call System.Void UnityEngine.Debug::Log(System.Object)
+   000A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000F callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   0014 ret 
+== System.Void onLobbyDisconnected(System.Object sender) attrs=Private, HideBySig maxstack=8
+   0000 ldstr onLobbyDisconnected
+   0005 call System.Void UnityEngine.Debug::Log(System.Object)
+   000A ret 
+== System.Void StopSettleMsgTimer() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldflda Assets.Scripts.GameLogic.LobbyLogic::_settleMsgTimer
+   000B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0010 ret 
+== System.Void onSettleMsgTimer(System.Int32 seq) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   000A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000F ldstr disconWithServer
+   0014 ldc.i4.1 
+   0015 ldc.r4 2
+   001A ldnull 
+   001B ldc.i4.0 
+   001C newarr System.Object
+   0021 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0026 ret 
+== System.Void StopGameEndTimer() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldflda Assets.Scripts.GameLogic.LobbyLogic::_gameEndTimer
+   000B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0010 ret 
+== System.Void StartSettlePanelTimer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.LobbyLogic::StopSettlePanelTimer()
+   0006 ldarg.0 
+   0007 call !0 Singleton`1<CTimerManager>::GetInstance()
+   000C ldc.i4 20000
+   0011 ldc.i4.1 
+   0012 ldarg.0 
+   0013 ldftn System.Void Assets.Scripts.GameLogic.LobbyLogic::onSettlePanelTimer(System.Int32)
+   0019 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   001E callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0023 stfld Assets.Scripts.GameLogic.LobbyLogic::_settlePanelTimer
+   0028 ret 
+== System.Void StopSettlePanelTimer() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 ldflda Assets.Scripts.GameLogic.LobbyLogic::_settlePanelTimer
+   000B callvirt System.Void CTimerManager::RemoveTimerSafely(System.Int32&)
+   0010 ret 
+== System.Void onSettlePanelTimer(System.Int32 seq) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   000A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000F ldstr cannotShowSettle
+   0014 ldc.i4.1 
+   0015 ldc.r4 2
+   001A ldnull 
+   001B ldc.i4.0 
+   001C newarr System.Object
+   0021 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0026 ret 
+== System.Void CreateLocalPlayer(System.UInt32 playerID, System.UInt64 ullUplayerID, System.Int32 logicWorldID) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 ldarg.2 
+   0006 callvirt System.Void Assets.Scripts.GameSystem.CRoleInfoManager::SetMaterUUID(System.UInt64)
+   000B call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::GetInstance()
+   0010 callvirt Assets.Scripts.GameSystem.OfflineVoiceSys Assets.Scripts.GameSystem.VoiceSys::get_OfflineVoice()
+   0015 ldarga.s ullUplayerID
+   0017 constrained. System.UInt64
+   001D callvirt System.String System.Object::ToString()
+   0022 callvirt System.Void Assets.Scripts.GameSystem.OfflineVoiceSys::SetMasterID(System.String)
+   0027 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   002C ldc.i4.1 
+   002D ldarg.2 
+   002E ldarg.3 
+   002F callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::CreateRoleInfo(Assets.Scripts.GameSystem.enROLEINFO_TYPE,System.UInt64,System.Int32)
+   0034 pop 
+   0035 ret 
+== System.Void LoginGame() attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0006 brtrue IL_047c: ret
+   000B call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::GetInstance()
+   0010 callvirt System.Void Assets.Scripts.Framework.GameLogic::ClearLogicData()
+   0015 ldc.i4.7 
+   0016 newarr System.String
+   001B dup 
+   001C ldc.i4.0 
+   001D ldsfld CLoginSystem2::s_splashFormPath
+   0022 stelem.ref 
+   0023 dup 
+   0024 ldc.i4.1 
+   0025 ldsfld CLoginSystem2::sLoginFormPath
+   002A stelem.ref 
+   002B dup 
+   002C ldc.i4.2 
+   002D ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBYBOTTOM_FORM_PATH
+   0032 stelem.ref 
+   0033 dup 
+   0034 ldc.i4.3 
+   0035 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   003A stelem.ref 
+   003B dup 
+   003C ldc.i4.4 
+   003D ldsfld Assets.Scripts.GameSystem.CLobbySystem::SYSENTRY_FORM_PATH
+   0042 stelem.ref 
+   0043 dup 
+   0044 ldc.i4.5 
+   0045 ldsfld Assets.Scripts.GameSystem.CChatController::ChatFormPath
+   004A stelem.ref 
+   004B dup 
+   004C ldc.i4.6 
+   004D ldsfld Assets.Scripts.GameSystem.CLobbySystem::RANKING_BTN_FORM_PATH
+   0052 stelem.ref 
+   0053 stloc.0 
+   0054 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0059 ldloc.0 
+   005A ldc.i4.1 
+   005B ldc.i4.1 
+   005C callvirt System.Void Assets.Scripts.UI.CUIManager::CloseAllForm(System.String[],System.Boolean,System.Boolean)
+   0061 ldc.i4 1002
+   0066 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   006B stloc.1 
+   006C call System.String Assets.Scripts.GameSystem.WebViewSys::GetRealIMEI()
+   0071 stloc.2 
+   0072 ldstr realImei 
+   0077 ldloc.2 
+   0078 call System.String System.String::Concat(System.String,System.String)
+   007D call System.Void UnityEngine.Debug::Log(System.Object)
+   0082 ldloc.2 
+   0083 ldloc.1 
+   0084 ldfld CSProtocol.CSPkg::stPkgData
+   0089 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   008E ldflda CSProtocol.CSPKG_CMD_GAMELOGINREQ::szRealIMEI
+   0093 call System.Void StringHelper::StringToUTF8Bytes(System.String,System.Byte[]&)
+   0098 ldsfld Assets.Scripts.Framework.GameFramework::AppVersion
+   009D call System.UInt32 CVersion::GetVersionNumber(System.String)
+   00A2 stloc.3 
+   00A3 ldloc.1 
+   00A4 ldfld CSProtocol.CSPkg::stPkgData
+   00A9 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   00AE ldloc.3 
+   00AF stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::iCltAppVersion
+   00B4 call System.String CVersion::GetUsedResourceVersion()
+   00B9 call System.UInt32 CVersion::GetVersionNumber(System.String)
+   00BE stloc.s V_4
+   00C0 ldloc.1 
+   00C1 ldfld CSProtocol.CSPkg::stPkgData
+   00C6 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   00CB ldloc.s V_4
+   00CD stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::iCltResVersion
+   00D2 call System.String CVersion::GetBuildNumber()
+   00D7 stloc.s V_5
+   00D9 ldloc.s V_5
+   00DB ldloc.1 
+   00DC ldfld CSProtocol.CSPkg::stPkgData
+   00E1 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   00E6 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   00EB ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szCltBuildNumber
+   00F0 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   00F5 call System.String CVersion::GetRevisonNumber()
+   00FA stloc.s V_6
+   00FC ldloc.s V_6
+   00FE ldloc.1 
+   00FF ldfld CSProtocol.CSPkg::stPkgData
+   0104 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0109 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   010E ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szCltSvnVersion
+   0113 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0118 call System.String UnityEngine.SystemInfo::get_deviceName()
+   011D ldstr  
+   0122 call System.String UnityEngine.SystemInfo::get_deviceModel()
+   0127 call System.String System.String::Concat(System.String,System.String,System.String)
+   012C ldloc.1 
+   012D ldfld CSProtocol.CSPkg::stPkgData
+   0132 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0137 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   013C ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szSystemHardware
+   0141 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0146 call System.String UnityEngine.SystemInfo::get_operatingSystem()
+   014B ldloc.1 
+   014C ldfld CSProtocol.CSPkg::stPkgData
+   0151 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0156 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   015B ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szSystemSoftware
+   0160 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   0165 call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   016A stloc.s V_7
+   016C ldloc.s V_7
+   016E ldc.i4.1 
+   016F beq IL_0181: ldstr "2G/3G"
+   0174 ldloc.s V_7
+   0176 ldc.i4.2 
+   0177 beq IL_01a5: ldstr "Wi-Fi/LAN"
+   017C br IL_01c9: ldsfld System.String Assets.Scripts.Framework.GameFramework::AppVersion
+   0181 ldstr 2G/3G
+   0186 ldloc.1 
+   0187 ldfld CSProtocol.CSPkg::stPkgData
+   018C callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0191 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   0196 ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szNetwork
+   019B call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   01A0 br IL_01c9: ldsfld System.String Assets.Scripts.Framework.GameFramework::AppVersion
+   01A5 ldstr Wi-Fi/LAN
+   01AA ldloc.1 
+   01AB ldfld CSProtocol.CSPkg::stPkgData
+   01B0 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   01B5 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   01BA ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szNetwork
+   01BF call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   01C4 br IL_01c9: ldsfld System.String Assets.Scripts.Framework.GameFramework::AppVersion
+   01C9 ldsfld Assets.Scripts.Framework.GameFramework::AppVersion
+   01CE ldloc.1 
+   01CF ldfld CSProtocol.CSPkg::stPkgData
+   01D4 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   01D9 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   01DE ldflda CSProtocol.COMDT_CLIENT_INFO_DATA::szClientVersion
+   01E3 call System.Void Utility::StringToByteArray(System.String,System.Byte[]&)
+   01E8 ldc.i4.0 
+   01E9 conv.i8 
+   01EA stloc.s V_8
+   01EC ldstr visitorUid
+   01F1 call System.Boolean UnityEngine.PlayerPrefs::HasKey(System.String)
+   01F6 brfalse IL_0226: ldloc.1
+   01FB ldstr visitorUid
+   0200 ldstr NotFound
+   0205 call System.String UnityEngine.PlayerPrefs::GetString(System.String,System.String)
+   020A stloc.s V_9
+   020C ldloc.s V_9
+   020E ldstr NotFound
+   0213 call System.Boolean System.String::op_Inequality(System.String,System.String)
+   0218 brfalse IL_0226: ldloc.1
+   021D ldloc.s V_9
+   021F call System.UInt64 System.UInt64::Parse(System.String)
+   0224 stloc.s V_8
+   0226 ldloc.1 
+   0227 ldfld CSProtocol.CSPkg::stPkgData
+   022C callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0231 ldloc.s V_8
+   0233 stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::ullVisitorUid
+   0238 ldloc.1 
+   0239 ldfld CSProtocol.CSPkg::stPkgData
+   023E callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0243 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   0248 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   024D callvirt System.Int32 ApolloHelper::GetChannelID()
+   0252 stfld CSProtocol.COMDT_CLIENT_INFO_DATA::iLoginChannel
+   0257 ldloc.1 
+   0258 ldfld CSProtocol.CSPkg::stPkgData
+   025D callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0262 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   0267 call System.Int32 DeviceCheckSys::GetSafeTotalMemoryMegaBytes()
+   026C stfld CSProtocol.COMDT_CLIENT_INFO_DATA::iMemorySize
+   0271 ldloc.1 
+   0272 ldfld CSProtocol.CSPkg::stPkgData
+   0277 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   027C ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   0281 ldfld CSProtocol.COMDT_CLIENT_INFO_DATA::szTelecomOper
+   0286 ldc.i4.0 
+   0287 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   028C callvirt IspType TdirMgr::GetISP()
+   0291 conv.u1 
+   0292 stelem.i1 
+   0293 ldloc.1 
+   0294 ldfld CSProtocol.CSPkg::stPkgData
+   0299 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   029E call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   02A3 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   02A8 stloc.s V_10
+   02AA ldloca.s V_10
+   02AC ldfld TdirUrl::logicWorldID
+   02B1 stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::iLogicWorldID
+   02B6 ldloc.1 
+   02B7 ldfld CSProtocol.CSPkg::stPkgData
+   02BC callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   02C1 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   02C6 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   02CB stloc.s V_11
+   02CD ldloca.s V_11
+   02CF ldfld TdirUrl::nodeID
+   02D4 stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::dwTaccZoneID
+   02D9 call System.UInt32 DeviceCheckSys::GetDevicePerformance()
+   02DE stloc.s V_12
+   02E0 ldloc.1 
+   02E1 ldfld CSProtocol.CSPkg::stPkgData
+   02E6 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   02EB ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stClientInfo
+   02F0 ldloc.s V_12
+   02F2 stfld CSProtocol.COMDT_CLIENT_INFO_DATA::dwMachineScore
+   02F7 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   02FC callvirt System.Boolean ApolloHelper::get_IsLastLoginFromWXGameCenter()
+   0301 brfalse IL_0321: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0306 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   030B ldc.i4.1 
+   030C callvirt System.Void ApolloHelper::set_IsWXGameCenter(System.Boolean)
+   0311 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0316 ldc.i4.0 
+   0317 callvirt System.Void ApolloHelper::set_IsLastLoginFromWXGameCenter(System.Boolean)
+   031C br IL_032c: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0321 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0326 ldc.i4.0 
+   0327 callvirt System.Void ApolloHelper::set_IsWXGameCenter(System.Boolean)
+   032C call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0331 callvirt System.Boolean ApolloHelper::get_IsLastLoginFromQQGameCenter()
+   0336 brfalse IL_0356: call !0 Singleton`1<ApolloHelper>::GetInstance()
+   033B call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0340 ldc.i4.1 
+   0341 callvirt System.Void ApolloHelper::set_IsQQGameCenter(System.Boolean)
+   0346 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   034B ldc.i4.0 
+   034C callvirt System.Void ApolloHelper::set_IsLastLoginFromQQGameCenter(System.Boolean)
+   0351 br IL_0361: ldloc.1
+   0356 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   035B ldc.i4.0 
+   035C callvirt System.Void ApolloHelper::set_IsQQGameCenter(System.Boolean)
+   0361 ldloc.1 
+   0362 ldfld CSProtocol.CSPkg::stPkgData
+   0367 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   036C call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0371 callvirt CSProtocol.COM_PRIVILEGE_TYPE ApolloHelper::GetCurrentLoginPrivilege()
+   0376 conv.u1 
+   0377 stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::bPrivilege
+   037C ldloc.1 
+   037D ldfld CSProtocol.CSPkg::stPkgData
+   0382 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0387 call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::get_instance()
+   038C ldfld Assets.Scripts.Framework.LobbySvrMgr::chooseSvrPol
+   0391 ldc.i4.1 
+   0392 bne.un IL_039d: ldc.i4.1
+   0397 ldc.i4.0 
+   0398 br IL_039e: conv.u1
+   039D ldc.i4.1 
+   039E conv.u1 
+   039F stfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::bSelectGameSvr
+   03A4 call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::get_instance()
+   03A9 ldfld Assets.Scripts.Framework.LobbySvrMgr::chooseSvrPol
+   03AE ldc.i4.1 
+   03AF bne.un IL_03bf: call System.Text.Encoding System.Text.Encoding::get_ASCII()
+   03B4 call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::get_instance()
+   03B9 ldc.i4.2 
+   03BA stfld Assets.Scripts.Framework.LobbySvrMgr::chooseSvrPol
+   03BF call System.Text.Encoding System.Text.Encoding::get_ASCII()
+   03C4 call System.String UnityEngine.SystemInfo::get_deviceUniqueIdentifier()
+   03C9 callvirt System.Byte[] System.Text.Encoding::GetBytes(System.String)
+   03CE stloc.s V_13
+   03D0 ldloc.s V_13
+   03D2 ldlen 
+   03D3 conv.i4 
+   03D4 ldc.i4.0 
+   03D5 ble IL_0409: call !0 MonoSingleton`1<TdirMgr>::get_instance()
+   03DA ldloc.s V_13
+   03DC ldc.i4.0 
+   03DD ldloc.1 
+   03DE ldfld CSProtocol.CSPkg::stPkgData
+   03E3 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   03E8 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::szCltIMEI
+   03ED ldc.i4.0 
+   03EE ldloc.s V_13
+   03F0 ldlen 
+   03F1 conv.i4 
+   03F2 ldc.i4.s 64
+   03F4 ble IL_0400: ldloc.s V_13
+   03F9 ldc.i4.s 64
+   03FB br IL_0404: call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   0400 ldloc.s V_13
+   0402 ldlen 
+   0403 conv.i4 
+   0404 call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   0409 call !0 MonoSingleton`1<TdirMgr>::get_instance()
+   040E callvirt System.Byte TdirMgr::GetGrpId()
+   0413 stloc.s V_14
+   0415 call !0 MonoSingleton`1<TdirMgr>::get_instance()
+   041A callvirt System.Byte TdirMgr::GetInsId()
+   041F stloc.s V_15
+   0421 ldloc.1 
+   0422 ldfld CSProtocol.CSPkg::stPkgData
+   0427 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   042C ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stRegionInfo
+   0431 ldloc.s V_14
+   0433 stfld CSProtocol.COMDT_ACNT_REGIONINFO::bGrpId
+   0438 ldloc.1 
+   0439 ldfld CSProtocol.CSPkg::stPkgData
+   043E callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   0443 ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stRegionInfo
+   0448 ldloc.s V_15
+   044A stfld CSProtocol.COMDT_ACNT_REGIONINFO::bInsId
+   044F ldloc.1 
+   0450 ldfld CSProtocol.CSPkg::stPkgData
+   0455 callvirt CSProtocol.CSPKG_CMD_GAMELOGINREQ CSProtocol.CSPkgBody::get_stGameLoginReq()
+   045A ldfld CSProtocol.CSPKG_CMD_GAMELOGINREQ::stMapDownLoadInfo
+   045F call !0 MonoSingleton`1<Assets.Scripts.GameSystem.CVersionUpdateSystem>::GetInstance()
+   0464 callvirt System.Int32 Assets.Scripts.GameSystem.CVersionUpdateSystem::GetCurCachedExtraInfoStatusFlag()
+   0469 stfld CSProtocol.COMDT_MAP_DOWNLOAD_INFO::dwFlag
+   046E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0473 ldloca.s V_1
+   0475 ldc.i4.1 
+   0476 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   047B pop 
+   047C ret 
+== System.Void ReqStartGuideLevel11(System.Boolean bReEntry) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldloc.0 
+   0003 brtrue IL_001d: ldc.i4.0
+   0008 ldloca.s V_1
+   000A ldc.i4 284
+   000F call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   0014 pop 
+   0015 ldloca.s V_1
+   0017 ldfld ResData.ResGlobalInfo::dwConfValue
+   001C stloc.0 
+   001D ldc.i4.0 
+   001E stloc.2 
+   001F ldc.i4.0 
+   0020 stloc.3 
+   0021 ldloc.0 
+   0022 ldloca.s V_2
+   0024 ldloca.s V_3
+   0026 call System.Boolean Assets.Scripts.GameLogic.CBattleGuideManager::GetGuide1v1HeroIDAndLevelID(System.UInt32,System.UInt32&,System.Int32&)
+   002B brfalse IL_004d: ret
+   0030 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0035 ldloc.3 
+   0036 ldloc.2 
+   0037 callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::ReqStartGuideLevel(System.Int32,System.UInt32)
+   003C ldc.i4.0 
+   003D stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   0042 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0047 ldarg.0 
+   0048 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   004D ret 
+== System.Void ReqStartGuideLevel33(System.Boolean bReEntry) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldc.i4 144
+   0007 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   000C pop 
+   000D ldloca.s V_0
+   000F ldfld ResData.ResGlobalInfo::dwConfValue
+   0014 stloc.1 
+   0015 ldloca.s V_0
+   0017 ldc.i4.s 117
+   0019 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   001E pop 
+   001F ldloca.s V_0
+   0021 ldfld ResData.ResGlobalInfo::dwConfValue
+   0026 stloc.2 
+   0027 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   002C ldloc.2 
+   002D ldloc.1 
+   002E callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::ReqStartGuideLevel(System.Int32,System.UInt32)
+   0033 ldc.i4.0 
+   0034 stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   0039 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   003E ldarg.0 
+   003F stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   0044 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0049 ldc.i4.1 
+   004A stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   004F ret 
+== System.Void ReqStartGuideLevel55(System.Boolean bReEntry, System.UInt32 heroType) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brtrue IL_0012: ldc.i4.0
+   0006 ldc.i4 284
+   000B call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   0010 starg.s heroType
+   0012 ldc.i4.0 
+   0013 stloc.0 
+   0014 ldc.i4.0 
+   0015 stloc.1 
+   0016 ldarg.1 
+   0017 ldloca.s V_0
+   0019 ldloca.s V_1
+   001B call System.Boolean Assets.Scripts.GameLogic.CBattleGuideManager::GetGuide5v5HeroIDAndLevelID(System.UInt32,System.UInt32&,System.Int32&)
+   0020 brfalse IL_004d: ret
+   0025 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   002A ldloc.1 
+   002B ldloc.0 
+   002C callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::ReqStartGuideLevel(System.Int32,System.UInt32)
+   0031 ldc.i4.0 
+   0032 stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   0037 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   003C ldarg.0 
+   003D stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   0042 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0047 ldc.i4.1 
+   0048 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   004D ret 
+== System.Void ReqStartGuideLevelCasting(System.Boolean bReEntry) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldc.i4 146
+   0007 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   000C pop 
+   000D ldloca.s V_0
+   000F ldfld ResData.ResGlobalInfo::dwConfValue
+   0014 stloc.1 
+   0015 ldloca.s V_0
+   0017 ldc.i4.s 119
+   0019 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   001E pop 
+   001F ldloca.s V_0
+   0021 ldfld ResData.ResGlobalInfo::dwConfValue
+   0026 stloc.2 
+   0027 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   002C ldloc.2 
+   002D ldloc.1 
+   002E callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::ReqStartGuideLevel(System.Int32,System.UInt32)
+   0033 ldc.i4.0 
+   0034 stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   0039 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   003E ldarg.0 
+   003F stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   0044 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0049 ldc.i4.1 
+   004A stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   004F ret 
+== System.Void ReqStartGuideLevelJungle(System.Boolean bReEntry) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldc.i4.s 115
+   0004 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   0009 pop 
+   000A ldloca.s V_0
+   000C ldfld ResData.ResGlobalInfo::dwConfValue
+   0011 stloc.1 
+   0012 ldloca.s V_0
+   0014 ldc.i4.s 121
+   0016 call System.Boolean ResData.GameDataMgr/globalInfoDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   001B pop 
+   001C ldloca.s V_0
+   001E ldfld ResData.ResGlobalInfo::dwConfValue
+   0023 stloc.2 
+   0024 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0029 ldloc.2 
+   002A ldloc.1 
+   002B callvirt System.Void Assets.Scripts.GameLogic.LobbyLogic::ReqStartGuideLevel(System.Int32,System.UInt32)
+   0030 ldc.i4.0 
+   0031 stsfld Assets.Scripts.GameSystem.CLobbySystem::AutoPopAllow
+   0036 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   003B ldarg.0 
+   003C stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   0041 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0046 ldc.i4.1 
+   0047 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   004C ret 
+== System.Void ReqStartGuideLevelSelHero(System.Boolean bReEntry, System.Int32 levelId) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldloca.s V_0
+   0002 ldarg.1 
+   0003 call System.Boolean ResData.GameDataMgr/trainLevelDatabin::FindByKey(ResData.ResTrainLevelCfgInfo&,System.Int32)
+   0008 brtrue IL_0027: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   000D ldc.i4.0 
+   000E ldstr Can't find level config -- ID: {0}
+   0013 ldc.i4.1 
+   0014 newarr System.Object
+   0019 dup 
+   001A ldc.i4.0 
+   001B ldarg.1 
+   001C box System.Int32
+   0021 stelem.ref 
+   0022 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0027 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   002C callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0031 stloc.1 
+   0032 ldloc.1 
+   0033 ldnull 
+   0034 ceq 
+   0036 ldc.i4.0 
+   0037 ceq 
+   0039 ldstr Master role info is NULL!
+   003E call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0043 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0048 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   004D brfalse IL_006f: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0052 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0057 ldstr PVP_Matching
+   005C ldc.i4.1 
+   005D ldc.r4 1.5
+   0062 ldnull 
+   0063 ldc.i4.0 
+   0064 newarr System.Object
+   0069 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   006E ret 
+   006F call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0074 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0079 brfalse IL_0089: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   007E call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   0083 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   0088 ret 
+   0089 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   008E callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   0093 brfalse IL_00a3: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   0098 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   009D callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   00A2 ret 
+   00A3 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   00A8 ldc.i4.1 
+   00A9 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   00AE call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   00B3 ldarg.0 
+   00B4 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   00B9 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::get_instance()
+   00BE ldarg.1 
+   00BF stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   00C4 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::get_instance()
+   00C9 ldc.i4.1 
+   00CA stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00CF newobj System.Void CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::.ctor()
+   00D4 stloc.2 
+   00D5 ldloc.2 
+   00D6 ldloca.s V_0
+   00D8 ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   00DD ldfld ResData.ResLevelCfgInfo::iCfgID
+   00E2 stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::iLevelID
+   00E7 ldloc.2 
+   00E8 ldloca.s V_0
+   00EA ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   00EF ldfld ResData.ResLevelCfgInfo::iChapterId
+   00F4 conv.u1 
+   00F5 stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bChapterNo
+   00FA ldloc.2 
+   00FB ldloca.s V_0
+   00FD ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   0102 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0107 stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bLevelNo
+   010C ldloc.2 
+   010D ldc.i4.1 
+   010E stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bDifficultType
+   0113 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0118 ldloca.s V_0
+   011A ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   011F ldfld ResData.ResLevelCfgInfo::dwBattleListID
+   0124 ldloc.2 
+   0125 ldloca.s V_0
+   0127 ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   012C call System.String ResData.ResLevelCfgInfo::get_szName()
+   0131 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::SetPVEDataWithAdventure(System.UInt32,CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE,System.String)
+   0136 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   013B ldc.i4.s 12
+   013D ldloca.s V_0
+   013F ldflda ResData.ResTrainLevelCfgInfo::stBaseLevelCfg
+   0144 ldfld ResData.ResLevelCfgInfo::iHeroNum
+   0149 conv.u1 
+   014A ldc.i4.0 
+   014B ldc.i4.0 
+   014C ldc.i4.0 
+   014D ldnull 
+   014E ldc.i4.0 
+   014F callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::OpenForm(Assets.Scripts.GameSystem.enSelectGameType,System.Byte,System.UInt32,System.Byte,System.Int32,CSProtocol.CSDT_VOTE_HERO_DETAIL,System.UInt32)
+   0154 ret 
+== System.Void ReqStartGuideLevel(System.Int32 inGuideLevelId, System.UInt32 heroID) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   000A brfalse IL_002c: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   000F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0014 ldstr PVP_Matching
+   0019 ldc.i4.1 
+   001A ldc.r4 1.5
+   001F ldnull 
+   0020 ldc.i4.0 
+   0021 newarr System.Object
+   0026 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002B ret 
+   002C call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0031 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0036 brfalse IL_0046: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   003B call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   0040 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   0045 ret 
+   0046 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   004B callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   0050 brfalse IL_0060: ldc.i4 1050
+   0055 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   005A callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   005F ret 
+   0060 ldc.i4 1050
+   0065 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   006A stloc.0 
+   006B ldloca.s V_1
+   006D ldarg.1 
+   006E call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0073 brtrue IL_0092: ldloc.0
+   0078 ldc.i4.0 
+   0079 ldstr Can't find level config with ID -- {0}
+   007E ldc.i4.1 
+   007F newarr System.Object
+   0084 dup 
+   0085 ldc.i4.0 
+   0086 ldarg.1 
+   0087 box System.Int32
+   008C stelem.ref 
+   008D call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0092 ldloc.0 
+   0093 ldfld CSProtocol.CSPkg::stPkgData
+   0098 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   009D ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   00A2 ldc.i4.2 
+   00A3 stfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::bGameType
+   00A8 ldloc.0 
+   00A9 ldfld CSProtocol.CSPkg::stPkgData
+   00AE callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00B3 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   00B8 ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   00BD ldc.i4.2 
+   00BE conv.i8 
+   00BF callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSDT_SINGLE_GAME_DETAIL::construct(System.Int64)
+   00C4 pop 
+   00C5 ldloc.0 
+   00C6 ldfld CSProtocol.CSPkg::stPkgData
+   00CB callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00D0 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   00D5 ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   00DA callvirt CSProtocol.CSDT_SINGLE_GAME_OF_GUIDE CSProtocol.CSDT_SINGLE_GAME_DETAIL::get_stGameOfGuide()
+   00DF ldarg.1 
+   00E0 stfld CSProtocol.CSDT_SINGLE_GAME_OF_GUIDE::iLevelID
+   00E5 ldloc.0 
+   00E6 ldfld CSProtocol.CSPkg::stPkgData
+   00EB callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00F0 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   00F5 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00FA ldc.i4.1 
+   00FB stfld CSProtocol.COMDT_BATTLEHERO::wHeroCnt
+   0100 ldloc.0 
+   0101 ldfld CSProtocol.CSPkg::stPkgData
+   0106 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   010B ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   0110 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   0115 ldfld CSProtocol.COMDT_BATTLEHERO::BattleHeroList
+   011A ldc.i4.0 
+   011B ldarg.2 
+   011C stelem.i4 
+   011D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0122 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0127 stloc.2 
+   0128 ldloc.2 
+   0129 ldfld Assets.Scripts.GameSystem.CRoleInfo::battleHeroList
+   012E callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   0133 ldloc.2 
+   0134 ldfld Assets.Scripts.GameSystem.CRoleInfo::battleHeroList
+   0139 ldarg.2 
+   013A callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   013F ldloc.0 
+   0140 ldfld CSProtocol.CSPkg::stPkgData
+   0145 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   014A ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattlePlayer
+   014F stloc.3 
+   0150 ldloc.3 
+   0151 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0156 ldc.i4.0 
+   0157 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   015C ldc.i4.0 
+   015D stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   0162 ldloc.3 
+   0163 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0168 ldc.i4.0 
+   0169 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   016E ldc.i4.1 
+   016F stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0174 ldloc.3 
+   0175 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   017A ldc.i4.0 
+   017B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0180 ldc.i4.1 
+   0181 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0186 ldloc.3 
+   0187 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   018C ldc.i4.0 
+   018D callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0192 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0197 ldc.i4.0 
+   0198 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   019D ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   01A2 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   01A7 ldarg.2 
+   01A8 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   01AD ldc.i4.1 
+   01AE stloc.s V_4
+   01B0 ldc.i4.0 
+   01B1 stloc.s V_5
+   01B3 br IL_023c: ldloc.s V_5
+   01B8 ldloca.s V_1
+   01BA ldloc.s V_5
+   01BC call System.UInt32 ResData.ResLevelCfgInfo::SelfCampAIHeroID(System.Int32)
+   01C1 stloc.s V_6
+   01C3 ldloc.s V_6
+   01C5 brfalse IL_0236: ldloc.s V_5
+   01CA ldloc.3 
+   01CB ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01D0 ldloc.s V_4
+   01D2 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   01D7 ldloc.s V_5
+   01D9 ldc.i4.1 
+   01DA add 
+   01DB conv.u1 
+   01DC stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   01E1 ldloc.3 
+   01E2 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01E7 ldloc.s V_4
+   01E9 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   01EE ldc.i4.2 
+   01EF stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   01F4 ldloc.3 
+   01F5 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01FA ldloc.s V_4
+   01FC callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0201 ldc.i4.1 
+   0202 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0207 ldloc.3 
+   0208 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   020D ldloc.s V_4
+   020F callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0214 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0219 ldc.i4.0 
+   021A callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   021F ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0224 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0229 ldloc.s V_6
+   022B stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0230 ldloc.s V_4
+   0232 ldc.i4.1 
+   0233 add 
+   0234 stloc.s V_4
+   0236 ldloc.s V_5
+   0238 ldc.i4.1 
+   0239 add 
+   023A stloc.s V_5
+   023C ldloc.s V_5
+   023E ldc.i4.5 
+   023F blt IL_01b8: ldloca.s V_1
+   0244 ldc.i4.0 
+   0245 stloc.s V_7
+   0247 br IL_02ce: ldloc.s V_7
+   024C ldloca.s V_1
+   024E ldloc.s V_7
+   0250 call System.UInt32 ResData.ResLevelCfgInfo::AIHeroID(System.Int32)
+   0255 stloc.s V_8
+   0257 ldloc.s V_8
+   0259 brfalse IL_02c8: ldloc.s V_7
+   025E ldloc.3 
+   025F ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0264 ldloc.s V_4
+   0266 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   026B ldloc.s V_7
+   026D conv.u1 
+   026E stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   0273 ldloc.3 
+   0274 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0279 ldloc.s V_4
+   027B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0280 ldc.i4.2 
+   0281 stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0286 ldloc.3 
+   0287 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   028C ldloc.s V_4
+   028E callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0293 ldc.i4.2 
+   0294 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0299 ldloc.3 
+   029A ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   029F ldloc.s V_4
+   02A1 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   02A6 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   02AB ldc.i4.0 
+   02AC callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   02B1 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   02B6 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   02BB ldloc.s V_8
+   02BD stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   02C2 ldloc.s V_4
+   02C4 ldc.i4.1 
+   02C5 add 
+   02C6 stloc.s V_4
+   02C8 ldloc.s V_7
+   02CA ldc.i4.1 
+   02CB add 
+   02CC stloc.s V_7
+   02CE ldloc.s V_7
+   02D0 ldc.i4.5 
+   02D1 blt IL_024c: ldloca.s V_1
+   02D6 ldloc.3 
+   02D7 ldloc.s V_4
+   02D9 conv.u1 
+   02DA stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   02DF call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   02E4 ldloca.s V_0
+   02E6 ldc.i4.1 
+   02E7 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   02EC pop 
+   02ED ret 
+== System.Void ReqStartHeroGuideLevel(System.Int32 levelID, System.UInt32 heroID) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   000A brfalse IL_002c: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   000F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0014 ldstr PVP_Matching
+   0019 ldc.i4.1 
+   001A ldc.r4 1.5
+   001F ldnull 
+   0020 ldc.i4.0 
+   0021 newarr System.Object
+   0026 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002B ret 
+   002C call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0031 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0036 brfalse IL_0046: ldc.i4 1050
+   003B call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   0040 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   0045 ret 
+   0046 ldc.i4 1050
+   004B call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0050 stloc.0 
+   0051 ldloca.s V_1
+   0053 ldarg.1 
+   0054 call System.Boolean ResData.GameDataMgr/trainLevelDatabin::FindByKey(ResData.ResTrainLevelCfgInfo&,System.Int32)
+   0059 brtrue IL_0078: ldloc.0
+   005E ldc.i4.0 
+   005F ldstr Can't find level config with ID -- {0}
+   0064 ldc.i4.1 
+   0065 newarr System.Object
+   006A dup 
+   006B ldc.i4.0 
+   006C ldarg.1 
+   006D box System.Int32
+   0072 stelem.ref 
+   0073 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0078 ldloc.0 
+   0079 ldfld CSProtocol.CSPkg::stPkgData
+   007E callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   0083 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   0088 ldc.i4.s 12
+   008A stfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::bGameType
+   008F ldloc.0 
+   0090 ldfld CSProtocol.CSPkg::stPkgData
+   0095 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   009A ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   009F ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   00A4 ldc.i4.s 12
+   00A6 conv.i8 
+   00A7 callvirt tsf4g_tdr_csharp.TdrError/ErrorType CSProtocol.CSDT_SINGLE_GAME_DETAIL::construct(System.Int64)
+   00AC pop 
+   00AD ldloc.0 
+   00AE ldfld CSProtocol.CSPkg::stPkgData
+   00B3 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00B8 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   00BD ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   00C2 callvirt CSProtocol.CSDT_SINGLE_GAME_OF_TRAINING CSProtocol.CSDT_SINGLE_GAME_DETAIL::get_stGameOfTraining()
+   00C7 ldarg.1 
+   00C8 stfld CSProtocol.CSDT_SINGLE_GAME_OF_TRAINING::iLevelID
+   00CD ldloc.0 
+   00CE ldfld CSProtocol.CSPkg::stPkgData
+   00D3 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00D8 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   00DD ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00E2 ldc.i4.1 
+   00E3 stfld CSProtocol.COMDT_BATTLEHERO::wHeroCnt
+   00E8 ldloc.0 
+   00E9 ldfld CSProtocol.CSPkg::stPkgData
+   00EE callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00F3 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   00F8 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00FD ldfld CSProtocol.COMDT_BATTLEHERO::BattleHeroList
+   0102 ldc.i4.0 
+   0103 ldarg.2 
+   0104 stelem.i4 
+   0105 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   010A callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   010F stloc.2 
+   0110 ldloc.2 
+   0111 ldfld Assets.Scripts.GameSystem.CRoleInfo::battleHeroList
+   0116 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   011B ldloc.2 
+   011C ldfld Assets.Scripts.GameSystem.CRoleInfo::battleHeroList
+   0121 ldarg.2 
+   0122 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0127 ldc.i4.0 
+   0128 stloc.3 
+   0129 ldloc.0 
+   012A ldfld CSProtocol.CSPkg::stPkgData
+   012F callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   0134 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattlePlayer
+   0139 stloc.s V_4
+   013B ldloc.s V_4
+   013D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0142 ldloc.3 
+   0143 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0148 ldc.i4.0 
+   0149 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   014E ldloc.s V_4
+   0150 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0155 ldloc.3 
+   0156 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   015B ldc.i4.1 
+   015C stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   0161 ldloc.s V_4
+   0163 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0168 ldloc.3 
+   0169 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   016E ldc.i4.1 
+   016F stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0174 ldloc.s V_4
+   0176 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   017B ldloc.3 
+   017C callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0181 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0186 ldc.i4.0 
+   0187 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   018C ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0191 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0196 ldarg.2 
+   0197 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   019C ldloc.3 
+   019D ldc.i4.1 
+   019E add 
+   019F stloc.3 
+   01A0 ldloca.s V_1
+   01A2 ldc.i4.0 
+   01A3 call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   01A8 stloc.s V_5
+   01AA ldc.i4.1 
+   01AB stloc.s V_6
+   01AD br IL_0232: ldloc.s V_6
+   01B2 ldloca.s V_5
+   01B4 ldloc.s V_6
+   01B6 call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   01BB stloc.s V_7
+   01BD ldloc.s V_7
+   01BF brfalse IL_022c: ldloc.s V_6
+   01C4 ldloc.s V_4
+   01C6 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01CB ldloc.3 
+   01CC callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   01D1 ldloc.s V_6
+   01D3 conv.u1 
+   01D4 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   01D9 ldloc.s V_4
+   01DB ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01E0 ldloc.3 
+   01E1 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   01E6 ldc.i4.2 
+   01E7 stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   01EC ldloc.s V_4
+   01EE ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   01F3 ldloc.3 
+   01F4 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   01F9 ldc.i4.1 
+   01FA stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   01FF ldloc.s V_4
+   0201 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0206 ldloc.3 
+   0207 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   020C ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0211 ldc.i4.0 
+   0212 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0217 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   021C ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0221 ldloc.s V_7
+   0223 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0228 ldloc.3 
+   0229 ldc.i4.1 
+   022A add 
+   022B stloc.3 
+   022C ldloc.s V_6
+   022E ldc.i4.1 
+   022F add 
+   0230 stloc.s V_6
+   0232 ldloc.s V_6
+   0234 ldc.i4.5 
+   0235 bge IL_024c: ldc.i4.1
+   023A ldloc.3 
+   023B ldloc.s V_4
+   023D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0242 callvirt System.Int32 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Length()
+   0247 blt IL_01b2: ldloca.s V_5
+   024C ldc.i4.1 
+   024D stloc.s V_8
+   024F br IL_030b: ldloc.s V_8
+   0254 ldloca.s V_1
+   0256 ldloc.s V_8
+   0258 call ResData.ResTrainCampHeroInfo ResData.ResTrainLevelCfgInfo::astCampsHeroInfo(System.Int32)
+   025D stloc.s V_9
+   025F ldc.i4.0 
+   0260 stloc.s V_10
+   0262 br IL_02eb: ldloc.s V_10
+   0267 ldloca.s V_9
+   0269 ldloc.s V_10
+   026B call System.UInt32 ResData.ResTrainCampHeroInfo::HeroID(System.Int32)
+   0270 stloc.s V_11
+   0272 ldloc.s V_11
+   0274 brfalse IL_02e5: ldloc.s V_10
+   0279 ldloc.s V_4
+   027B ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0280 ldloc.3 
+   0281 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0286 ldloc.s V_10
+   0288 conv.u1 
+   0289 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   028E ldloc.s V_4
+   0290 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0295 ldloc.3 
+   0296 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   029B ldc.i4.2 
+   029C stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   02A1 ldloc.s V_4
+   02A3 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   02A8 ldloc.3 
+   02A9 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   02AE ldloc.s V_8
+   02B0 ldc.i4.1 
+   02B1 add 
+   02B2 conv.u1 
+   02B3 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   02B8 ldloc.s V_4
+   02BA ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   02BF ldloc.3 
+   02C0 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   02C5 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   02CA ldc.i4.0 
+   02CB callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   02D0 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   02D5 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   02DA ldloc.s V_11
+   02DC stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   02E1 ldloc.3 
+   02E2 ldc.i4.1 
+   02E3 add 
+   02E4 stloc.3 
+   02E5 ldloc.s V_10
+   02E7 ldc.i4.1 
+   02E8 add 
+   02E9 stloc.s V_10
+   02EB ldloc.s V_10
+   02ED ldc.i4.5 
+   02EE bge IL_0305: ldloc.s V_8
+   02F3 ldloc.3 
+   02F4 ldloc.s V_4
+   02F6 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   02FB callvirt System.Int32 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Length()
+   0300 blt IL_0267: ldloca.s V_9
+   0305 ldloc.s V_8
+   0307 ldc.i4.1 
+   0308 add 
+   0309 stloc.s V_8
+   030B ldloc.s V_8
+   030D ldc.i4.5 
+   030E blt IL_0254: ldloca.s V_1
+   0313 ldloc.s V_4
+   0315 ldloc.3 
+   0316 conv.u1 
+   0317 stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   031C call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::GetInstance()
+   0321 ldc.i4.1 
+   0322 stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bReEntry
+   0327 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   032C ldloca.s V_0
+   032E ldc.i4.1 
+   032F callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0334 pop 
+   0335 ret 
+== System.Int32 CheckWifi() attrs=Public, HideBySig maxstack=8
+   0000 call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   0005 ldc.i4.1 
+   0006 bne.un IL_000d: call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   000B ldc.i4.1 
+   000C ret 
+   000D call UnityEngine.NetworkReachability UnityEngine.Application::get_internetReachability()
+   0012 ldc.i4.2 
+   0013 bne.un IL_001a: ldc.i4.0
+   0018 ldc.i4.2 
+   0019 ret 
+   001A ldc.i4.0 
+   001B ret 
+== System.Void ReqQuitMultiGame() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0006 brfalse IL_0071: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   0011 brfalse IL_0071: ret
+   0016 ldc.i4 1023
+   001B call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0020 stloc.0 
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_QUITMULTIGAMEREQ CSProtocol.CSPkgBody::get_stQuitMultGameReq()
+   002C ldfld CSProtocol.CSPKG_QUITMULTIGAMEREQ::stExtraInviteInfo
+   0031 ldc.i4.5 
+   0032 stfld CSProtocol.COMDT_EXTRA_INVITEINFO::bInviteIndex
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_QUITMULTIGAMEREQ CSProtocol.CSPkgBody::get_stQuitMultGameReq()
+   0042 ldfld CSProtocol.CSPKG_QUITMULTIGAMEREQ::stExtraInviteInfo
+   0047 ldc.i4.1 
+   0048 stfld CSProtocol.COMDT_EXTRA_INVITEINFO::bPrepare
+   004D ldloc.0 
+   004E ldfld CSProtocol.CSPkg::stPkgData
+   0053 callvirt CSProtocol.CSPKG_QUITMULTIGAMEREQ CSProtocol.CSPkgBody::get_stQuitMultGameReq()
+   0058 ldfld CSProtocol.CSPKG_QUITMULTIGAMEREQ::stExtraInviteInfo
+   005D ldc.i4.0 
+   005E stfld CSProtocol.COMDT_EXTRA_INVITEINFO::bIsFromApply
+   0063 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0068 ldloca.s V_0
+   006A ldc.i4.1 
+   006B callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0070 pop 
+   0071 ret 
+== System.Void ReqStartMultiGame() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0006 brfalse IL_005c: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   0011 brfalse IL_005c: ret
+   0016 ldc.i4 1076
+   001B call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0020 stloc.0 
+   0021 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0026 ldloca.s V_0
+   0028 ldc.i4.0 
+   0029 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   002E pop 
+   002F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0034 ldfld Assets.Scripts.GameLogic.BattleLogic::isWaitMultiStart
+   0039 brtrue IL_0052: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   003E call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0043 ldfld Assets.Scripts.GameLogic.BattleLogic::startFrame
+   0048 brtrue IL_0052: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   004D br IL_005c: ret
+   0052 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0057 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::StartFightMultiGame()
+   005C ret 
+== System.Void ReqMultiGameRunaway() attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 1086
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 newobj System.Void CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ::.ctor()
+   0016 callvirt System.Void CSProtocol.CSPkgBody::set_stQuitBattleReq(CSProtocol.CSPKG_MULTGAME_QUIT_BATTLE_REQ)
+   001B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::get_instance()
+   0020 ldloca.s V_0
+   0022 ldc.i4.0 
+   0023 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0028 pop 
+   0029 ret 
+== System.Void ReqSelectHero(System.UInt32 id) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0006 brfalse IL_0035: ret
+   000B ldc.i4 1800
+   0010 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ldfld CSProtocol.CSPkg::stPkgData
+   001C callvirt CSProtocol.CSPKG_ACHIEVEHERO_REQ CSProtocol.CSPkgBody::get_stAchieveHeroReq()
+   0021 ldarg.1 
+   0022 stfld CSProtocol.CSPKG_ACHIEVEHERO_REQ::dwHeroId
+   0027 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   002C ldloca.s V_0
+   002E ldc.i4.0 
+   002F callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0034 pop 
+   0035 ret 
+== System.Void GotoAccLoginPage(System.Boolean logout) attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   000A call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::GetInstance()
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.Framework.LobbySvrMgr::isLogin
+   0015 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   001A ldc.i4.0 
+   001B stfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0020 call !0 Singleton`1<Assets.Scripts.Framework.LobbySvrMgr>::GetInstance()
+   0025 ldc.i4.0 
+   0026 stfld Assets.Scripts.Framework.LobbySvrMgr::isFirstLogin
+   002B ldarg.1 
+   002C brfalse IL_004b: call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0031 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0036 callvirt System.Boolean ApolloHelper::Logout()
+   003B brtrue IL_004b: call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0040 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   0045 callvirt System.Boolean ApolloHelper::Logout()
+   004A pop 
+   004B call !0 Singleton`1<Assets.Scripts.Framework.GameStateCtrl>::GetInstance()
+   0050 ldstr LoginState
+   0055 callvirt System.Void Assets.Scripts.Framework.GameStateCtrl::GotoState(System.String)
+   005A call !0 Singleton`1<Assets.Scripts.Framework.GameLogic>::GetInstance()
+   005F callvirt System.Void Assets.Scripts.Framework.GameLogic::OnPlayerLogout()
+   0064 ret 
+== System.Void OnSendSingleGameFinishFail() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 call !0 Singleton`1<CTextManager>::GetInstance()
+   000A ldstr network_is_wrong_back_to_lobby
+   000F ldc.i4.1 
+   0010 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0015 ldc.i4 2804
+   001A ldc.i4.0 
+   001B callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0020 ret 
+== System.Void OnClickSingleGameFinishError(Assets.Scripts.UI.CUIEvent e) attrs=Family, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   000F callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::DestroyGame()
+   0014 ret 
+== System.Void SvrNtfUpdateClient() attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brfalse IL_001b: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000F ldarg.0 
+   0010 ldc.i4.1 
+   0011 stfld Assets.Scripts.GameLogic.LobbyLogic::NeedUpdateClient
+   0016 br IL_0037: ret
+   001B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0020 call !0 Singleton`1<CTextManager>::GetInstance()
+   0025 ldstr VersionIsLow
+   002A ldc.i4.1 
+   002B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0030 ldc.i4.0 
+   0031 ldc.i4.0 
+   0032 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0037 ret 
+== System.Void SvrNtfAntiaddict(System.Byte noticeType, System.Boolean kick, System.String info) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_001e: ldarg.0
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brfalse IL_003f: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 stfld Assets.Scripts.GameLogic.LobbyLogic::bNoticeType
+   0025 ldarg.0 
+   0026 ldarg.2 
+   0027 stfld Assets.Scripts.GameLogic.LobbyLogic::isKick
+   002C ldarg.0 
+   002D ldarg.3 
+   002E stfld Assets.Scripts.GameLogic.LobbyLogic::noticeInfo
+   0033 ldarg.0 
+   0034 ldc.i4.1 
+   0035 stfld Assets.Scripts.GameLogic.LobbyLogic::NeedToShowAntiAddictNotice
+   003A br IL_004b: ret
+   003F call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0044 ldarg.2 
+   0045 ldarg.3 
+   0046 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::ShowAntiAddictNotice(System.Boolean,System.String)
+   004B ret 
+== System.Void SvrNtfTongCaiInfo(System.Byte dingGouState, System.String info) attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_001e: ldarg.0
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brfalse IL_0038: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 stfld Assets.Scripts.GameLogic.LobbyLogic::bTongCaiState
+   0025 ldarg.0 
+   0026 ldarg.2 
+   0027 stfld Assets.Scripts.GameLogic.LobbyLogic::tongCaiInfo
+   002C ldarg.0 
+   002D ldc.i4.1 
+   002E stfld Assets.Scripts.GameLogic.LobbyLogic::NeedToShowTongCaiNotice
+   0033 br IL_0044: ret
+   0038 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   003D ldarg.1 
+   003E ldarg.2 
+   003F callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::HandleTongCaiInfo(System.Byte,System.String)
+   0044 ret 
+== System.Void SvrNtfErr(Assets.Scripts.GameLogic.ErrNotify errNotify) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_001e: ldarg.0
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brfalse IL_002a: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 stfld Assets.Scripts.GameLogic.LobbyLogic::m_errNotify
+   0025 br IL_0036: ret
+   002A call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   002F ldarga.s errNotify
+   0031 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::HandleErrNotify(Assets.Scripts.GameLogic.ErrNotify&)
+   0036 ret 
+== System.Void SvrNtfKickTips(System.String tips) attrs=Public, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   000A brtrue IL_001e: ldarg.0
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0014 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0019 brfalse IL_0031: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   001E ldarg.0 
+   001F ldarg.1 
+   0020 stfld Assets.Scripts.GameLogic.LobbyLogic::kickTips
+   0025 ldarg.0 
+   0026 ldc.i4.1 
+   0027 stfld Assets.Scripts.GameLogic.LobbyLogic::NeedToShowKickTips
+   002C br IL_003c: ret
+   0031 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::get_instance()
+   0036 ldarg.1 
+   0037 callvirt System.Void Assets.Scripts.GameSystem.CLobbySystem::ShowKickTips(System.String)
+   003C ret 
+== System.Boolean IsLobbyFormPure() attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldnull 
+   0011 ldloc.0 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0027: ldc.i4.0
+   001C ldloc.0 
+   001D callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsHided()
+   0022 ldc.i4.0 
+   0023 ceq 
+   0025 br.s IL_0028: ret
+   0027 ldc.i4.0 
+   0028 ret 
+== System.Boolean ExecOpenForm(System.String[] prms) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 brfalse IL_000d: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   000D call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0012 callvirt System.Boolean Assets.Scripts.GameSystem.CLobbySystem::IsInLobbyForm()
+   0017 brfalse IL_0027: ldc.i4.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.LobbyLogic::isLogin
+   0022 brtrue IL_0029: ldarg.0
+   0027 ldc.i4.0 
+   0028 ret 
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   002F brfalse IL_0059: ldarg.0
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   003A ldlen 
+   003B conv.i4 
+   003C ldc.i4.2 
+   003D blt IL_0059: ldarg.0
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   0048 ldc.i4.0 
+   0049 ldelem.ref 
+   004A ldstr OpenForm
+   004F call System.Boolean System.String::op_Inequality(System.String,System.String)
+   0054 brfalse IL_0062: ldc.i4.0
+   0059 ldarg.0 
+   005A ldnull 
+   005B stfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   0060 ldc.i4.0 
+   0061 ret 
+   0062 ldc.i4.0 
+   0063 stloc.0 
+   0064 ldc.i4.0 
+   0065 stloc.1 
+   0066 ldc.i4.0 
+   0067 stloc.2 
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   006E ldc.i4.1 
+   006F ldelem.ref 
+   0070 ldloca.s V_0
+   0072 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0077 pop 
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   007E ldlen 
+   007F conv.i4 
+   0080 ldc.i4.2 
+   0081 ble IL_0096: ldarg.0
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   008C ldc.i4.2 
+   008D ldelem.ref 
+   008E ldloca.s V_1
+   0090 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   0095 pop 
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   009C ldlen 
+   009D conv.i4 
+   009E ldc.i4.3 
+   009F ble IL_00b4: ldarg.0
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   00AA ldc.i4.3 
+   00AB ldelem.ref 
+   00AC ldloca.s V_2
+   00AE call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   00B3 pop 
+   00B4 ldarg.0 
+   00B5 ldnull 
+   00B6 stfld Assets.Scripts.GameLogic.LobbyLogic::_lobbyOpenFormCmd
+   00BB ldloc.0 
+   00BC ldloc.1 
+   00BD ldloc.2 
+   00BE ldnull 
+   00BF call System.Boolean Assets.Scripts.GameSystem.CUICommonSystem::JumpForm(ResData.RES_GAME_ENTRANCE_TYPE,System.Int32,System.Int32,System.Collections.Generic.List`1<System.UInt32>)
+   00C4 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/Lobby/Form_LoadLobby.prefab
+   0005 stsfld Assets.Scripts.GameLogic.LobbyLogic::LOADLOBBYFORM
+   000A ldstr UGUI/Form/System/Lobby/Form_NewLobbyAnim.prefab
+   000F stsfld Assets.Scripts.GameLogic.LobbyLogic::NewLobbyAnimForm
+   0014 ret 
+  NESTED Assets.Scripts.GameLogic.LobbyLogic/SendMessageDeletageType
+  NESTED Assets.Scripts.GameLogic.LobbyLogic/SendMsgFailNetErrorCallback

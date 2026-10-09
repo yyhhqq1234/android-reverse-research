@@ -1,0 +1,653 @@
+// TYPE Assets.Scripts.GameLogic.CKdaDataManager  base=Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 PER_CAMP_PLAYER_NUM = 20
+  FIELD Assets.Scripts.GameLogic.CKdaPlayerPtr[] m_kdaWarrperList
+  FIELD SGW/stCampInfo[] m_campInfo
+  FIELD CSProtocol.COM_PLAYERCAMP[] campRank
+  FIELD System.UInt32 m_bestPlayer
+  FIELD System.UInt32 m_lastBestPlayer
+  FIELD CSProtocol.CS_CAMPSTATE_TYPE[] campStates
+  FIELD System.Int32 _collectTime
+  FIELD System.Int32 _accumeTime
+  FIELD System.Int32 _period
+  FIELD System.Collections.Generic.List`1<System.Int32> _teamMoneyDiff
+  FIELD SGW/stPlayerKDAInfoListTypeDelegate <>f__mg$cache0
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.s 40
+   0003 newarr Assets.Scripts.GameLogic.CKdaPlayerPtr
+   0008 stfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   000D ldarg.0 
+   000E ldc.i4.s 40
+   0010 newarr SGW/stCampInfo
+   0015 stfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   001A ldarg.0 
+   001B ldc.i4.s 40
+   001D newarr CSProtocol.COM_PLAYERCAMP
+   0022 stfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   0027 ldarg.0 
+   0028 ldc.i4.s 40
+   002A newarr CSProtocol.CS_CAMPSTATE_TYPE
+   002F stfld Assets.Scripts.GameLogic.CKdaDataManager::campStates
+   0034 ldarg.0 
+   0035 ldc.i4 60000
+   003A stfld Assets.Scripts.GameLogic.CKdaDataManager::_period
+   003F ldarg.0 
+   0040 newobj System.Void System.Collections.Generic.List`1<System.Int32>::.ctor()
+   0045 stfld Assets.Scripts.GameLogic.CKdaDataManager::_teamMoneyDiff
+   004A ldarg.0 
+   004B call System.Void Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::.ctor()
+   0050 ret 
+== System.Void Cpp2CsKda(SGW/stPlayerKDAInfo& src, Assets.Scripts.GameLogic.CKdaPlayerPtr dest) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld SGW/stPlayerKDAInfo::playerID
+   0007 stfld Assets.Scripts.GameLogic.CKdaPlayerPtr::playerID
+   000C ldarg.1 
+   000D ldarg.0 
+   000E ldfld SGW/stPlayerKDAInfo::camp
+   0013 stfld Assets.Scripts.GameLogic.CKdaPlayerPtr::camp
+   0018 ldarg.1 
+   0019 ldarg.0 
+   001A ldfld SGW/stPlayerKDAInfo::pos
+   001F stfld Assets.Scripts.GameLogic.CKdaPlayerPtr::pos
+   0024 ldarg.1 
+   0025 ldarg.0 
+   0026 ldfld SGW/stPlayerKDAInfo::heroNum
+   002B stfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroNum
+   0030 ldc.i4.0 
+   0031 stloc.0 
+   0032 br IL_0069: ldloc.0
+   0037 ldarg.1 
+   0038 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   003D ldloc.0 
+   003E ldelem.ref 
+   003F brtrue IL_0051: ldarg.1
+   0044 ldarg.1 
+   0045 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   004A ldloc.0 
+   004B newobj System.Void Assets.Scripts.GameLogic.CKdaHeroPtr::.ctor()
+   0050 stelem.ref 
+   0051 ldarg.1 
+   0052 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::heroArr
+   0057 ldloc.0 
+   0058 ldelem.ref 
+   0059 ldarg.0 
+   005A ldloc.0 
+   005B call SGW/stHeroKDAInfo SGW/stPlayerKDAInfo::getHeroKDAList(System.Int32)
+   0060 stfld Assets.Scripts.GameLogic.CKdaHeroPtr::heroKda
+   0065 ldloc.0 
+   0066 ldc.i4.1 
+   0067 add 
+   0068 stloc.0 
+   0069 ldloc.0 
+   006A ldarg.0 
+   006B ldfld SGW/stPlayerKDAInfo::heroNum
+   0070 blt IL_0037: ldarg.1
+   0075 ret 
+== System.Void ClearMatchData() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_teamMoneyDiff
+   0006 callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Clear()
+   000B ldarg.0 
+   000C ldc.i4.0 
+   000D stfld Assets.Scripts.GameLogic.CKdaDataManager::_collectTime
+   0012 ldarg.0 
+   0013 ldc.i4.0 
+   0014 stfld Assets.Scripts.GameLogic.CKdaDataManager::_accumeTime
+   0019 ret 
+== System.Void DoPrepareFight() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld Assets.Scripts.GameLogic.CLevelContext::campCount
+   0011 stloc.1 
+   0012 ldarg.0 
+   0013 ldloc.1 
+   0014 newarr SGW/stCampInfo
+   0019 stfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   001E ldc.i4.0 
+   001F stloc.2 
+   0020 br IL_003e: ldloc.2
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   002B ldloc.2 
+   002C ldelema SGW/stCampInfo
+   0031 ldloc.2 
+   0032 ldc.i4.1 
+   0033 add 
+   0034 conv.u1 
+   0035 stfld SGW/stCampInfo::camp
+   003A ldloc.2 
+   003B ldc.i4.1 
+   003C add 
+   003D stloc.2 
+   003E ldloc.2 
+   003F ldloc.1 
+   0040 blt IL_0025: ldarg.0
+   0045 ret 
+== System.Void BattleStart() attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001f: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   000D ldloc.0 
+   000E ldloc.0 
+   000F ldc.i4.1 
+   0010 add 
+   0011 stelem.i4 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campStates
+   0018 ldloc.0 
+   0019 ldc.i4.0 
+   001A stelem.i4 
+   001B ldloc.0 
+   001C ldc.i4.1 
+   001D add 
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldc.i4.s 40
+   0022 blt IL_0007: ldarg.0
+   0027 ret 
+== System.Int32 GetCollectPeriod() attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.1 
+   0001 ret 
+== System.Void CollectTeamInfoPeriod(System.Int32 delta) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0006 ldlen 
+   0007 conv.i4 
+   0008 ldc.i4.2 
+   0009 bge IL_000f: ldarg.0
+   000E ret 
+   000F ldarg.0 
+   0010 dup 
+   0011 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_accumeTime
+   0016 ldarg.1 
+   0017 add 
+   0018 stfld Assets.Scripts.GameLogic.CKdaDataManager::_accumeTime
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.CKdaDataManager::_accumeTime
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_collectTime
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameLogic.CKdaDataManager::_period
+   002F add 
+   0030 blt IL_0071: ret
+   0035 ldarg.0 
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_accumeTime
+   003C stfld Assets.Scripts.GameLogic.CKdaDataManager::_collectTime
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0047 ldc.i4.0 
+   0048 ldelema SGW/stCampInfo
+   004D ldfld SGW/stCampInfo::coinTotal
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0058 ldc.i4.1 
+   0059 ldelema SGW/stCampInfo
+   005E ldfld SGW/stCampInfo::coinTotal
+   0063 sub 
+   0064 stloc.0 
+   0065 ldarg.0 
+   0066 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_teamMoneyDiff
+   006B ldloc.0 
+   006C callvirt System.Void System.Collections.Generic.List`1<System.Int32>::Add(!0)
+   0071 ret 
+== System.Void SetCampState(CSProtocol.COM_PLAYERCAMP camp, CSProtocol.CS_CAMPSTATE_TYPE state) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campStates
+   0006 ldarg.1 
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 ldarg.2 
+   000A stelem.i4 
+   000B call !0 Singleton`1<EventRouter>::get_instance()
+   0010 ldsfld EventID::CampStateChange
+   0015 ldarg.1 
+   0016 ldarg.2 
+   0017 callvirt System.Void EventRouter::BroadCastEvent<CSProtocol.COM_PLAYERCAMP,CSProtocol.CS_CAMPSTATE_TYPE>(System.Int32,!!0,!!1)
+   001C ret 
+== CSProtocol.CS_CAMPSTATE_TYPE GetCampState(CSProtocol.COM_PLAYERCAMP camp) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldc.i4.0 
+   0004 ble IL_001c: ldloc.0
+   0009 ldarg.1 
+   000A ldc.i4.s 41
+   000C bge IL_001c: ldloc.0
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campStates
+   0017 ldarg.1 
+   0018 ldc.i4.1 
+   0019 sub 
+   001A ldelem.i4 
+   001B stloc.0 
+   001C ldloc.0 
+   001D ret 
+== System.Collections.Generic.List`1<System.Int32> GetTeamCoinList() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::_teamMoneyDiff
+   0006 ret 
+== System.Void SyncAllKdaData() attrs=Public, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameLogic.CKdaDataManager::<>f__mg$cache0
+   0005 brtrue.s IL_0018: ldsfld SGW/stPlayerKDAInfoListTypeDelegate Assets.Scripts.GameLogic.CKdaDataManager::<>f__mg$cache0
+   0007 ldnull 
+   0008 ldftn System.Void Assets.Scripts.GameLogic.CKdaDataManager::OnReqAllPlayerKDACallBack(SGW/stPlayerKDAInfoList&)
+   000E newobj System.Void SGW/stPlayerKDAInfoListTypeDelegate::.ctor(System.Object,System.IntPtr)
+   0013 stsfld Assets.Scripts.GameLogic.CKdaDataManager::<>f__mg$cache0
+   0018 ldsfld Assets.Scripts.GameLogic.CKdaDataManager::<>f__mg$cache0
+   001D call System.Void SGW::ReqAllPlayerKDA(SGW/stPlayerKDAInfoListTypeDelegate)
+   0022 ret 
+== System.Void OnNtfOnePlayerKDA(SGW/stPlayerKDAInfo& playerKDAInfo) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld SGW/stPlayerKDAInfo::camp
+   0007 call System.Boolean Assets.Scripts.GameLogic.CKdaDataManager::IsCamp1OrCamp2(System.Byte)
+   000C brtrue IL_0037: ldc.i4.0
+   0011 ldc.i4.0 
+   0012 ldstr CKdaDataManager OnNtfOnePlayerKDA(SGW.stPlayerKDAInfo playerKDAInfo)  playerKDAInfo.camp is invalid
+   0017 ldc.i4.1 
+   0018 newarr System.Object
+   001D dup 
+   001E ldc.i4.0 
+   001F ldarg.1 
+   0020 ldflda SGW/stPlayerKDAInfo::playerID
+   0025 constrained. System.UInt32
+   002B callvirt System.String System.Object::ToString()
+   0030 stelem.ref 
+   0031 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0036 ret 
+   0037 ldc.i4.0 
+   0038 stloc.0 
+   0039 br IL_006d: ldloc.0
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0044 ldloc.0 
+   0045 ldelem.ref 
+   0046 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::playerID
+   004B ldarg.1 
+   004C ldfld SGW/stPlayerKDAInfo::playerID
+   0051 bne.un IL_0069: ldloc.0
+   0056 ldarg.1 
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   005D ldloc.0 
+   005E ldelem.ref 
+   005F call System.Void Assets.Scripts.GameLogic.CKdaDataManager::Cpp2CsKda(SGW/stPlayerKDAInfo&,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0064 br IL_0075: call !0 Singleton`1<EventRouter>::get_instance()
+   0069 ldloc.0 
+   006A ldc.i4.1 
+   006B add 
+   006C stloc.0 
+   006D ldloc.0 
+   006E ldc.i4.s 40
+   0070 blt IL_003e: ldarg.0
+   0075 call !0 Singleton`1<EventRouter>::get_instance()
+   007A ldsfld EventID::BATTLE_KDA_CHANGED
+   007F callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0084 ret 
+== System.Void OnNtfAllPlayersKDA(SGW/stPlayerKDAInfoList& playerKDAInfoList) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_003c: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   000D ldloc.0 
+   000E ldelem.ref 
+   000F brtrue IL_0021: ldarg.1
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   001A ldloc.0 
+   001B newobj System.Void Assets.Scripts.GameLogic.CKdaPlayerPtr::.ctor()
+   0020 stelem.ref 
+   0021 ldarg.1 
+   0022 ldloc.0 
+   0023 call SGW/stPlayerKDAInfo SGW/stPlayerKDAInfoList::getPlayerKDAList(System.Int32)
+   0028 stloc.1 
+   0029 ldloca.s V_1
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0031 ldloc.0 
+   0032 ldelem.ref 
+   0033 call System.Void Assets.Scripts.GameLogic.CKdaDataManager::Cpp2CsKda(SGW/stPlayerKDAInfo&,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0038 ldloc.0 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.0 
+   003C ldloc.0 
+   003D ldc.i4.s 40
+   003F blt IL_0007: ldarg.0
+   0044 ldarg.0 
+   0045 ldarg.1 
+   0046 ldfld SGW/stPlayerKDAInfoList::bestPlayer
+   004B stfld Assets.Scripts.GameLogic.CKdaDataManager::m_bestPlayer
+   0050 ldarg.0 
+   0051 ldarg.1 
+   0052 ldfld SGW/stPlayerKDAInfoList::lastBestPlayer
+   0057 stfld Assets.Scripts.GameLogic.CKdaDataManager::m_lastBestPlayer
+   005C call !0 Singleton`1<EventRouter>::get_instance()
+   0061 ldsfld EventID::BATTLE_KDA_CHANGED
+   0066 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   006B call !0 Singleton`1<EventRouter>::get_instance()
+   0070 ldsfld EventID::BATTLE_KDA_CHANGED_BY_ACTOR_DEAD
+   0075 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   007A ret 
+== System.Void OnNtfCampScore(SGW/stCampInfo& campScore) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 br IL_0030: ldloc.0
+   0007 ldarg.1 
+   0008 ldfld SGW/stCampInfo::camp
+   000D ldloc.0 
+   000E bne.un IL_002c: ldloc.0
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0019 ldloc.0 
+   001A ldc.i4.1 
+   001B sub 
+   001C ldelema SGW/stCampInfo
+   0021 ldarg.1 
+   0022 ldobj SGW/stCampInfo
+   0027 stobj SGW/stCampInfo
+   002C ldloc.0 
+   002D ldc.i4.1 
+   002E add 
+   002F stloc.0 
+   0030 ldloc.0 
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0037 ldlen 
+   0038 conv.i4 
+   0039 ble IL_0007: ldarg.1
+   003E call !0 Singleton`1<EventRouter>::get_instance()
+   0043 ldsfld EventID::BATTLE_KDA_CHANGED
+   0048 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   004D ret 
+== System.Void OnNtfCampRankChange(SGW/stCampRank campRankInfo) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0023: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   000D ldloc.0 
+   000E ldarga.s campRankInfo
+   0010 ldflda SGW/stCampRank::camp
+   0015 ldflda SGW/stCampRank/<camp>__FixedBuffer31::FixedElementField
+   001A ldloc.0 
+   001B conv.i 
+   001C add 
+   001D ldind.u1 
+   001E stelem.i4 
+   001F ldloc.0 
+   0020 ldc.i4.1 
+   0021 add 
+   0022 stloc.0 
+   0023 ldloc.0 
+   0024 ldarga.s campRankInfo
+   0026 ldfld SGW/stCampRank::campCount
+   002B bge IL_0038: call !0 Singleton`1<EventRouter>::get_instance()
+   0030 ldloc.0 
+   0031 ldc.i4.s 40
+   0033 blt IL_0007: ldarg.0
+   0038 call !0 Singleton`1<EventRouter>::get_instance()
+   003D ldsfld EventID::BATTLE_CAMPRANK_CHANGED
+   0042 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0047 ret 
+== CSProtocol.COM_PLAYERCAMP GetRank_Camp(System.Int32 Idx) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.s 40
+   0003 blt IL_000a: ldarg.0
+   0008 ldc.i4.0 
+   0009 ret 
+   000A ldarg.0 
+   000B ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   0010 ldarg.1 
+   0011 ldelem.i4 
+   0012 ret 
+== System.Int32 GetCamp_Rank(CSProtocol.COM_PLAYERCAMP camp) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001b: ldloc.0
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   000E ldloc.0 
+   000F ldelem.i4 
+   0010 bne.un IL_0017: ldloc.0
+   0015 ldloc.0 
+   0016 ret 
+   0017 ldloc.0 
+   0018 ldc.i4.1 
+   0019 add 
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   0022 ldlen 
+   0023 conv.i4 
+   0024 blt IL_0007: ldarg.1
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   002F ldlen 
+   0030 conv.i4 
+   0031 ret 
+== CSProtocol.COM_PLAYERCAMP GetFirstRankCamp() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::campRank
+   0006 ldc.i4.0 
+   0007 ldelem.i4 
+   0008 stloc.0 
+   0009 ldloc.0 
+   000A ret 
+== System.Boolean IsCamp1OrCamp2(System.Byte camp) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 beq IL_000d: ldc.i4.1
+   0007 ldarg.1 
+   0008 ldc.i4.2 
+   0009 ceq 
+   000B br.s IL_000e: ret
+   000D ldc.i4.1 
+   000E ret 
+== SGW/stCampInfo GetCampInfo(CSProtocol.COM_PLAYERCAMP camp) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 blt IL_0015: ldc.i4.0
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   000E ldlen 
+   000F conv.i4 
+   0010 ble IL_0032: ldarg.0
+   0015 ldc.i4.0 
+   0016 ldstr CKdaDataManager GetCampInfo(COM_PLAYERCAMP camp)  camp is invalid
+   001B ldarga.s camp
+   001D constrained. CSProtocol.COM_PLAYERCAMP
+   0023 callvirt System.String System.Object::ToString()
+   0028 call System.String System.String::Concat(System.String,System.String)
+   002D call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_campInfo
+   0038 ldarg.1 
+   0039 ldc.i4.1 
+   003A sub 
+   003B ldelema SGW/stCampInfo
+   0040 ldobj SGW/stCampInfo
+   0045 ret 
+== Assets.Scripts.GameLogic.CKdaPlayerPtr GetPlayerKDAInfoByIndex(System.Int32 index) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.s 40
+   0003 bge IL_000f: ldc.i4.0
+   0008 ldarg.1 
+   0009 ldc.i4.0 
+   000A bge IL_001a: ldarg.0
+   000F ldc.i4.0 
+   0010 ldstr CKdaDataManager CKdaDataManager(int index)  index must be [0-40)
+   0015 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0020 ldarg.1 
+   0021 ldelem.ref 
+   0022 ret 
+== Assets.Scripts.GameLogic.CKdaPlayerPtr GetPlayerKDAInfoByID(System.UInt32 playerID) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0034: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   000D ldloc.0 
+   000E ldelem.ref 
+   000F brfalse IL_0030: ldloc.0
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   001A ldloc.0 
+   001B ldelem.ref 
+   001C ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::playerID
+   0021 ldarg.1 
+   0022 bne.un IL_0030: ldloc.0
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   002D ldloc.0 
+   002E ldelem.ref 
+   002F ret 
+   0030 ldloc.0 
+   0031 ldc.i4.1 
+   0032 add 
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   003B ldlen 
+   003C conv.i4 
+   003D blt IL_0007: ldarg.0
+   0042 ldnull 
+   0043 ret 
+== Assets.Scripts.GameLogic.CKdaPlayerPtr[] GetAllPlayerKDAInfo() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0006 ret 
+== System.UInt32 GetBestPlayer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_bestPlayer
+   0006 ret 
+== System.UInt32 GetMvpPlayer(CSProtocol.COM_PLAYERCAMP camp, System.Boolean bWin) attrs=Public, HideBySig maxstack=1
+   0000 ldarg.2 
+   0001 brfalse IL_0019: call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::GetInstance()
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::GetInstance()
+   000B callvirt SGW/stPlayerSettlementKDAInfoList Assets.Scripts.GameLogic.CSettleDataManager::GetAllSettlementInfo()
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 ldfld SGW/stPlayerSettlementKDAInfoList::WinMvpPlayerId
+   0018 ret 
+   0019 call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::GetInstance()
+   001E callvirt SGW/stPlayerSettlementKDAInfoList Assets.Scripts.GameLogic.CSettleDataManager::GetAllSettlementInfo()
+   0023 stloc.1 
+   0024 ldloca.s V_1
+   0026 ldfld SGW/stPlayerSettlementKDAInfoList::LoseMvpPlayerId
+   002B ret 
+== System.UInt32 GetLastBestPlayer() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_lastBestPlayer
+   0006 ret 
+== Assets.Scripts.GameLogic.CKdaPlayerPtr GetHostKDA() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0006 ldfld Assets.Scripts.GameLogic.GamePlayerCenter::hostPlayerID
+   000B call Assets.Scripts.GameLogic.CKdaPlayerPtr Assets.Scripts.GameLogic.CKdaDataManager::GetPlayerKDAInfoByID(System.UInt32)
+   0010 ret 
+== System.UInt32 GetClientMvpValue(System.UInt32 playerID) attrs=Public, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 ret 
+== System.Void OnReqAllPlayerKDACallBack(SGW/stPlayerKDAInfoList& callback) attrs=Private, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.CKdaDataManager>::GetInstance()
+   0005 ldarg.0 
+   0006 callvirt System.Void Assets.Scripts.GameLogic.CKdaDataManager::OnNtfAllPlayersKDA(SGW/stPlayerKDAInfoList&)
+   000B ret 
+== System.Void NtfPlayerBattleExtraInfo(SGW/stPlayerBattleExtraInfo& playerBattleExtraInfo) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld SGW/stPlayerBattleExtraInfo::playerID
+   0006 brfalse IL_0066: ret
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_004f: ldloc.0
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0018 ldloc.0 
+   0019 ldelem.ref 
+   001A brfalse IL_004b: ldloc.0
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   0025 ldloc.0 
+   0026 ldelem.ref 
+   0027 ldfld Assets.Scripts.GameLogic.CKdaPlayerPtr::playerID
+   002C ldarg.1 
+   002D ldfld SGW/stPlayerBattleExtraInfo::playerID
+   0032 bne.un IL_004b: ldloc.0
+   0037 ldarg.0 
+   0038 ldarg.1 
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   003F ldloc.0 
+   0040 ldelem.ref 
+   0041 call System.Void Assets.Scripts.GameLogic.CKdaDataManager::Cpp2CsPlayerExtraInfo(SGW/stPlayerBattleExtraInfo&,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0046 br IL_0057: call !0 Singleton`1<EventRouter>::get_instance()
+   004B ldloc.0 
+   004C ldc.i4.1 
+   004D add 
+   004E stloc.0 
+   004F ldloc.0 
+   0050 ldc.i4.s 40
+   0052 blt IL_0012: ldarg.0
+   0057 call !0 Singleton`1<EventRouter>::get_instance()
+   005C ldsfld EventID::BATTLE_EXTRA_INFO_CHANGED
+   0061 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0066 ret 
+== System.Void NtfPlayerBattleExtraInfoList(SGW/stPlayerBattleExtraInfoList& playerBattleExtraInfoList) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0049: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   000D ldloc.0 
+   000E ldelem.ref 
+   000F brtrue IL_0021: ldarg.1
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   001A ldloc.0 
+   001B newobj System.Void Assets.Scripts.GameLogic.CKdaPlayerPtr::.ctor()
+   0020 stelem.ref 
+   0021 ldarg.1 
+   0022 ldloc.0 
+   0023 call SGW/stPlayerBattleExtraInfo SGW/stPlayerBattleExtraInfoList::getPlayerExtraInfoList(System.Int32)
+   0028 stloc.1 
+   0029 ldloca.s V_1
+   002B ldfld SGW/stPlayerBattleExtraInfo::playerID
+   0030 brfalse IL_0045: ldloc.0
+   0035 ldarg.0 
+   0036 ldloca.s V_1
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameLogic.CKdaDataManager::m_kdaWarrperList
+   003E ldloc.0 
+   003F ldelem.ref 
+   0040 call System.Void Assets.Scripts.GameLogic.CKdaDataManager::Cpp2CsPlayerExtraInfo(SGW/stPlayerBattleExtraInfo&,Assets.Scripts.GameLogic.CKdaPlayerPtr)
+   0045 ldloc.0 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.0 
+   0049 ldloc.0 
+   004A ldc.i4.s 40
+   004C blt IL_0007: ldarg.0
+   0051 call !0 Singleton`1<EventRouter>::get_instance()
+   0056 ldsfld EventID::BATTLE_EXTRA_INFO_CHANGED
+   005B callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0060 ret 
+== System.Void Cpp2CsPlayerExtraInfo(SGW/stPlayerBattleExtraInfo& src, Assets.Scripts.GameLogic.CKdaPlayerPtr dest) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.2 
+   0001 ldarg.1 
+   0002 ldobj SGW/stPlayerBattleExtraInfo
+   0007 stfld Assets.Scripts.GameLogic.CKdaPlayerPtr::extraInfo
+   000C ret 

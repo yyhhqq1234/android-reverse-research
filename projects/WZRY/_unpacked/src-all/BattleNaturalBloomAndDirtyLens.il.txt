@@ -1,0 +1,376 @@
+// TYPE BattleNaturalBloomAndDirtyLens  base=BattleBloomBase  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Texture2D m_LutTexture
+  FIELD System.Single m_BloomIntensity
+  FIELD System.Single m_BloomThreshold
+  FIELD System.Single m_Aperture
+  FIELD System.Single m_LutLerp
+  FIELD UnityEngine.Material m_material
+  FIELD System.Single m_blurSize
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 0.05
+   0006 stfld BattleNaturalBloomAndDirtyLens::m_BloomIntensity
+   000B ldarg.0 
+   000C ldc.r4 1
+   0011 stfld BattleNaturalBloomAndDirtyLens::m_Aperture
+   0016 ldarg.0 
+   0017 ldc.r4 0.5
+   001C stfld BattleNaturalBloomAndDirtyLens::m_LutLerp
+   0021 ldarg.0 
+   0022 ldc.r4 4
+   0027 stfld BattleNaturalBloomAndDirtyLens::m_blurSize
+   002C ldarg.0 
+   002D call System.Void BattleBloomBase::.ctor()
+   0032 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Boolean IsSupported() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.s 22
+   0002 call System.Boolean UnityEngine.SystemInfo::SupportsRenderTextureFormat(UnityEngine.RenderTextureFormat)
+   0007 ret 
+== System.Void OnEnable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_00a5: ret
+   0011 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0016 ldstr Shaders/Post/BattleNaturalBloomAndDirtyLens
+   001B ldtoken UnityEngine.Shader
+   0020 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0025 ldc.i4.0 
+   0026 ldc.i4.1 
+   0027 ldc.i4.1 
+   0028 ldc.i4.0 
+   0029 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   002E ldfld CResource::m_content
+   0033 isinst UnityEngine.Shader
+   0038 stloc.0 
+   0039 ldloc.0 
+   003A ldnull 
+   003B call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0040 brfalse IL_0050: ldarg.0
+   0045 ldstr Load shader SGame_Post/BattleNaturalBloomAndDirtyLens failed
+   004A call System.Void UnityEngine.Debug::LogError(System.Object)
+   004F ret 
+   0050 ldarg.0 
+   0051 ldloc.0 
+   0052 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   0057 stfld BattleNaturalBloomAndDirtyLens::m_material
+   005C ldarg.0 
+   005D ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0062 ldc.i4.s 61
+   0064 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   0069 ldstr _GammaToLinearAdjust
+   006E ldc.r4 1
+   0073 call System.Void UnityEngine.Shader::SetGlobalFloat(System.String,System.Single)
+   0078 ldarg.0 
+   0079 call !0 Singleton`1<CResourceManager>::GetInstance()
+   007E ldstr Shaders/Textures/LUT_Reddish.png
+   0083 ldtoken UnityEngine.Texture2D
+   0088 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   008D ldc.i4.0 
+   008E ldc.i4.1 
+   008F ldc.i4.1 
+   0090 ldc.i4.0 
+   0091 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0096 ldfld CResource::m_content
+   009B isinst UnityEngine.Texture2D
+   00A0 stfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   00A5 ret 
+== System.Void OnDisable() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001c: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0017 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   001C ldarg.0 
+   001D ldnull 
+   001E stfld BattleNaturalBloomAndDirtyLens::m_material
+   0023 ldarg.0 
+   0024 ldnull 
+   0025 stfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   002A ldarg.0 
+   002B ldnull 
+   002C stfld BattleNaturalBloomAndDirtyLens::m_material
+   0031 ret 
+== System.Void OnRender(UnityEngine.RenderTexture source, UnityEngine.RenderTexture destination) attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld BattleBloomBase::m_lutEnabled
+   0006 brfalse IL_0048: ldarg.0
+   000B ldarg.0 
+   000C ldfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0048: ldarg.0
+   001C ldarg.0 
+   001D ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0022 ldstr _LutTex
+   0027 ldarg.0 
+   0028 ldfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   002D callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   0032 ldarg.0 
+   0033 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0038 ldstr _LutLerp
+   003D ldarg.0 
+   003E ldfld BattleNaturalBloomAndDirtyLens::m_LutLerp
+   0043 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   0048 ldarg.0 
+   0049 ldfld BattleBloomBase::m_bloomEnabled
+   004E brtrue IL_00a3: ldarg.0
+   0053 ldarg.0 
+   0054 ldfld BattleBloomBase::m_lutEnabled
+   0059 brfalse IL_0094: ldarg.1
+   005E ldarg.0 
+   005F ldfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   0064 ldnull 
+   0065 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006A brfalse IL_0094: ldarg.1
+   006F ldarg.0 
+   0070 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0075 ldstr _Aperture
+   007A ldarg.0 
+   007B ldfld BattleNaturalBloomAndDirtyLens::m_Aperture
+   0080 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   0085 ldarg.1 
+   0086 ldarg.2 
+   0087 ldarg.0 
+   0088 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   008D ldc.i4.4 
+   008E call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0093 ret 
+   0094 ldarg.1 
+   0095 ldarg.2 
+   0096 ldarg.0 
+   0097 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   009C ldc.i4.6 
+   009D call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   00A2 ret 
+   00A3 ldarg.0 
+   00A4 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   00A9 ldstr _BloomIntensity
+   00AE ldarg.0 
+   00AF ldfld BattleNaturalBloomAndDirtyLens::m_BloomIntensity
+   00B4 call System.Single UnityEngine.Mathf::Exp(System.Single)
+   00B9 ldc.r4 1
+   00BE sub 
+   00BF callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00C4 ldarg.0 
+   00C5 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   00CA ldstr _BloomThreshold
+   00CF ldarg.0 
+   00D0 ldfld BattleNaturalBloomAndDirtyLens::m_BloomThreshold
+   00D5 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00DA ldarg.0 
+   00DB ldfld BattleNaturalBloomAndDirtyLens::m_material
+   00E0 ldstr _Aperture
+   00E5 ldarg.0 
+   00E6 ldfld BattleNaturalBloomAndDirtyLens::m_Aperture
+   00EB callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00F0 ldarg.1 
+   00F1 ldc.i4.1 
+   00F2 callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   00F7 ldarg.1 
+   00F8 callvirt System.Int32 UnityEngine.Texture::get_width()
+   00FD ldc.i4.2 
+   00FE div 
+   00FF stloc.0 
+   0100 ldarg.1 
+   0101 callvirt System.Int32 UnityEngine.Texture::get_height()
+   0106 ldc.i4.2 
+   0107 div 
+   0108 stloc.1 
+   0109 ldarg.1 
+   010A stloc.2 
+   010B ldc.r4 1
+   0110 stloc.3 
+   0111 ldc.i4.2 
+   0112 stloc.s V_4
+   0114 ldc.i4.0 
+   0115 stloc.s V_5
+   0117 br IL_02ef: ldloc.s V_5
+   011C ldloc.0 
+   011D ldloc.1 
+   011E ldc.i4.0 
+   011F ldarg.1 
+   0120 callvirt UnityEngine.RenderTextureFormat UnityEngine.RenderTexture::get_format()
+   0125 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   012A stloc.s V_6
+   012C ldloc.s V_6
+   012E ldc.i4.1 
+   012F callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   0134 ldloc.s V_5
+   0136 brtrue IL_014f: ldloc.2
+   013B ldloc.2 
+   013C ldloc.s V_6
+   013E ldarg.0 
+   013F ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0144 ldc.i4.7 
+   0145 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   014A br IL_015e: ldloc.s V_6
+   014F ldloc.2 
+   0150 ldloc.s V_6
+   0152 ldarg.0 
+   0153 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0158 ldc.i4.1 
+   0159 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   015E ldloc.s V_6
+   0160 stloc.2 
+   0161 ldloc.s V_5
+   0163 ldc.i4.1 
+   0164 ble IL_0174: ldc.r4 0.5
+   0169 ldc.r4 1
+   016E stloc.3 
+   016F br IL_017a: ldloc.s V_5
+   0174 ldc.r4 0.5
+   0179 stloc.3 
+   017A ldloc.s V_5
+   017C ldc.i4.2 
+   017D bne.un IL_0188: ldc.i4.0
+   0182 ldc.r4 0.75
+   0187 stloc.3 
+   0188 ldc.i4.0 
+   0189 stloc.s V_7
+   018B br IL_021e: ldloc.s V_7
+   0190 ldarg.0 
+   0191 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0196 ldstr _BlurSize
+   019B ldarg.0 
+   019C ldfld BattleNaturalBloomAndDirtyLens::m_blurSize
+   01A1 ldc.r4 0.5
+   01A6 mul 
+   01A7 ldloc.s V_7
+   01A9 conv.r4 
+   01AA add 
+   01AB ldloc.3 
+   01AC mul 
+   01AD callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   01B2 ldloc.0 
+   01B3 ldloc.1 
+   01B4 ldc.i4.0 
+   01B5 ldarg.1 
+   01B6 callvirt UnityEngine.RenderTextureFormat UnityEngine.RenderTexture::get_format()
+   01BB call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   01C0 stloc.s V_8
+   01C2 ldloc.s V_8
+   01C4 ldc.i4.1 
+   01C5 callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   01CA ldloc.s V_6
+   01CC ldloc.s V_8
+   01CE ldarg.0 
+   01CF ldfld BattleNaturalBloomAndDirtyLens::m_material
+   01D4 ldc.i4.2 
+   01D5 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   01DA ldloc.s V_6
+   01DC call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   01E1 ldloc.s V_8
+   01E3 stloc.s V_6
+   01E5 ldloc.0 
+   01E6 ldloc.1 
+   01E7 ldc.i4.0 
+   01E8 ldarg.1 
+   01E9 callvirt UnityEngine.RenderTextureFormat UnityEngine.RenderTexture::get_format()
+   01EE call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   01F3 stloc.s V_8
+   01F5 ldloc.s V_8
+   01F7 ldc.i4.1 
+   01F8 callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   01FD ldloc.s V_6
+   01FF ldloc.s V_8
+   0201 ldarg.0 
+   0202 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0207 ldc.i4.3 
+   0208 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   020D ldloc.s V_6
+   020F call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0214 ldloc.s V_8
+   0216 stloc.s V_6
+   0218 ldloc.s V_7
+   021A ldc.i4.1 
+   021B add 
+   021C stloc.s V_7
+   021E ldloc.s V_7
+   0220 ldloc.s V_4
+   0222 blt IL_0190: ldarg.0
+   0227 ldloc.s V_5
+   0229 switch Mono.Cecil.Cil.Instruction[]
+   0246 br IL_02d5: br IL_02da
+   024B ldarg.0 
+   024C ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0251 ldstr _Bloom0
+   0256 ldloc.s V_6
+   0258 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   025D br IL_02da: ldloc.s V_6
+   0262 ldarg.0 
+   0263 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0268 ldstr _Bloom1
+   026D ldloc.s V_6
+   026F callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   0274 br IL_02da: ldloc.s V_6
+   0279 ldarg.0 
+   027A ldfld BattleNaturalBloomAndDirtyLens::m_material
+   027F ldstr _Bloom2
+   0284 ldloc.s V_6
+   0286 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   028B br IL_02da: ldloc.s V_6
+   0290 ldarg.0 
+   0291 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   0296 ldstr _Bloom3
+   029B ldloc.s V_6
+   029D callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   02A2 br IL_02da: ldloc.s V_6
+   02A7 ldarg.0 
+   02A8 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   02AD ldstr _Bloom4
+   02B2 ldloc.s V_6
+   02B4 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   02B9 br IL_02da: ldloc.s V_6
+   02BE ldarg.0 
+   02BF ldfld BattleNaturalBloomAndDirtyLens::m_material
+   02C4 ldstr _Bloom5
+   02C9 ldloc.s V_6
+   02CB callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   02D0 br IL_02da: ldloc.s V_6
+   02D5 br IL_02da: ldloc.s V_6
+   02DA ldloc.s V_6
+   02DC call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   02E1 ldloc.0 
+   02E2 ldc.i4.2 
+   02E3 div 
+   02E4 stloc.0 
+   02E5 ldloc.1 
+   02E6 ldc.i4.2 
+   02E7 div 
+   02E8 stloc.1 
+   02E9 ldloc.s V_5
+   02EB ldc.i4.1 
+   02EC add 
+   02ED stloc.s V_5
+   02EF ldloc.s V_5
+   02F1 ldc.i4.6 
+   02F2 blt IL_011c: ldloc.0
+   02F7 ldarg.0 
+   02F8 ldfld BattleBloomBase::m_lutEnabled
+   02FD brfalse IL_0326: ldarg.1
+   0302 ldarg.0 
+   0303 ldfld BattleNaturalBloomAndDirtyLens::m_LutTexture
+   0308 ldnull 
+   0309 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   030E brfalse IL_0326: ldarg.1
+   0313 ldarg.1 
+   0314 ldarg.2 
+   0315 ldarg.0 
+   0316 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   031B ldc.i4.5 
+   031C call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0321 br IL_0334: ret
+   0326 ldarg.1 
+   0327 ldarg.2 
+   0328 ldarg.0 
+   0329 ldfld BattleNaturalBloomAndDirtyLens::m_material
+   032E ldc.i4.0 
+   032F call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   0334 ret 

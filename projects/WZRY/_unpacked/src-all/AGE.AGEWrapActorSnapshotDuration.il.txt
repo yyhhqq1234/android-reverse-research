@@ -1,0 +1,645 @@
+// TYPE AGE.AGEWrapActorSnapshotDuration  base=AGE.AGEWrapBase  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.GameObject m_snapShotGo
+  FIELD UnityEngine.Material m_GhostMat
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_srcActor
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_SnapshotsActor
+  FIELD System.Int32 m_iMoveSpeed
+  FIELD System.Int32 m_iMoveAcceleration
+  FIELD UnityEngine.Vector3 m_MoveDir
+  FIELD System.Single m_fCurMoveSpeed
+  FIELD System.Single m_fMoveAcceleration
+  FIELD ListView`1<UnityEngine.Material> m_material
+  FIELD UnityEngine.Color beginColor
+  FIELD UnityEngine.Color curColor
+  FIELD System.Single colorAlphaDelta
+  FIELD System.Int32 moveTimeLen
+  FIELD System.Int32 discolorStartTime
+  FIELD System.Int32 discolorTimeLen
+  FIELD System.Int32 durTimeLen
+  FIELD System.Boolean bUpdateColor
+  FIELD System.Boolean bUpdatePosition
+  FIELD System.Boolean bUseXYZCoordinateMove
+  FIELD System.String strMaterialColorName = _Color
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::.ctor()
+   0006 ret 
+== System.Void Init(SGW/ActorSnapshotParam& data) attrs=Public, HideBySig maxstack=7
+   0000 ldarg.1 
+   0001 ldflda SGW/ActorSnapshotParam::materialPath
+   0006 constrained. StringId
+   000C callvirt System.String System.Object::ToString()
+   0011 stloc.0 
+   0012 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0017 ldloc.0 
+   0018 ldtoken UnityEngine.Material
+   001D call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0022 ldc.i4.0 
+   0023 ldc.i4.1 
+   0024 ldc.i4.0 
+   0025 ldc.i4.0 
+   0026 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   002B stloc.1 
+   002C ldloc.1 
+   002D brfalse IL_0040: ldc.i4.0
+   0032 ldloc.1 
+   0033 ldfld CResource::m_content
+   0038 ldnull 
+   0039 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003E br.s IL_0041: ldstr "faled to load "
+   0040 ldc.i4.0 
+   0041 ldstr faled to load 
+   0046 ldloc.0 
+   0047 call System.String System.String::Concat(System.String,System.String)
+   004C call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0051 ldarg.0 
+   0052 ldloc.1 
+   0053 ldfld CResource::m_content
+   0058 isinst UnityEngine.Material
+   005D stfld AGE.AGEWrapActorSnapshotDuration::m_GhostMat
+   0062 ldarg.0 
+   0063 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   0068 ldarg.1 
+   0069 ldfld SGW/ActorSnapshotParam::srcActorObjID
+   006E ldc.i4.1 
+   006F callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0074 stfld AGE.AGEWrapActorSnapshotDuration::m_srcActor
+   0079 ldarg.0 
+   007A call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   007F ldarg.1 
+   0080 ldfld SGW/ActorSnapshotParam::targetID
+   0085 ldc.i4.1 
+   0086 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   008B stfld AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0090 ldarg.0 
+   0091 ldarg.1 
+   0092 ldfld SGW/ActorSnapshotParam::moveSpeed
+   0097 stfld AGE.AGEWrapActorSnapshotDuration::m_iMoveSpeed
+   009C ldarg.0 
+   009D ldarg.1 
+   009E ldfld SGW/ActorSnapshotParam::acceleration
+   00A3 stfld AGE.AGEWrapActorSnapshotDuration::m_iMoveAcceleration
+   00A8 ldarg.0 
+   00A9 ldarg.0 
+   00AA ldfld AGE.AGEWrapActorSnapshotDuration::m_iMoveSpeed
+   00AF conv.r4 
+   00B0 ldc.r4 1000
+   00B5 div 
+   00B6 stfld AGE.AGEWrapActorSnapshotDuration::m_fCurMoveSpeed
+   00BB ldarg.0 
+   00BC ldarg.0 
+   00BD ldfld AGE.AGEWrapActorSnapshotDuration::m_iMoveAcceleration
+   00C2 conv.r4 
+   00C3 ldc.r4 1000
+   00C8 div 
+   00C9 stfld AGE.AGEWrapActorSnapshotDuration::m_fMoveAcceleration
+   00CE ldarg.0 
+   00CF ldarg.1 
+   00D0 ldfld SGW/ActorSnapshotParam::discolorStartTime
+   00D5 stfld AGE.AGEWrapActorSnapshotDuration::discolorStartTime
+   00DA ldarg.0 
+   00DB ldarg.1 
+   00DC ldfld SGW/ActorSnapshotParam::discolorTimeLen
+   00E1 stfld AGE.AGEWrapActorSnapshotDuration::discolorTimeLen
+   00E6 ldarg.0 
+   00E7 ldfld AGE.AGEWrapActorSnapshotDuration::discolorTimeLen
+   00EC ldc.i4.0 
+   00ED ble IL_012c: ldarg.0
+   00F2 ldarg.0 
+   00F3 ldarg.1 
+   00F4 ldfld SGW/ActorSnapshotParam::endColorAlpha
+   00F9 ldarg.1 
+   00FA ldfld SGW/ActorSnapshotParam::beginColorAlpha
+   00FF ceq 
+   0101 ldc.i4.0 
+   0102 ceq 
+   0104 stfld AGE.AGEWrapActorSnapshotDuration::bUpdateColor
+   0109 ldarg.0 
+   010A ldarg.1 
+   010B ldfld SGW/ActorSnapshotParam::endColorAlpha
+   0110 conv.r4 
+   0111 ldarg.1 
+   0112 ldfld SGW/ActorSnapshotParam::beginColorAlpha
+   0117 conv.r4 
+   0118 sub 
+   0119 ldc.r4 255
+   011E div 
+   011F ldarg.1 
+   0120 ldfld SGW/ActorSnapshotParam::discolorTimeLen
+   0125 conv.r4 
+   0126 div 
+   0127 stfld AGE.AGEWrapActorSnapshotDuration::colorAlphaDelta
+   012C ldarg.0 
+   012D ldarg.1 
+   012E ldfld SGW/ActorSnapshotParam::moveTimeLen
+   0133 stfld AGE.AGEWrapActorSnapshotDuration::moveTimeLen
+   0138 ldarg.0 
+   0139 ldarg.0 
+   013A ldfld AGE.AGEWrapActorSnapshotDuration::moveTimeLen
+   013F ldc.i4.0 
+   0140 ble IL_0161: ldc.i4.0
+   0145 ldarg.0 
+   0146 ldfld AGE.AGEWrapActorSnapshotDuration::m_iMoveSpeed
+   014B brtrue IL_015e: ldc.i4.1
+   0150 ldarg.0 
+   0151 ldfld AGE.AGEWrapActorSnapshotDuration::m_iMoveAcceleration
+   0156 ldc.i4.0 
+   0157 ceq 
+   0159 ldc.i4.0 
+   015A ceq 
+   015C br.s IL_015f: br.s IL_0162
+   015E ldc.i4.1 
+   015F br.s IL_0162: stfld System.Boolean AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   0161 ldc.i4.0 
+   0162 stfld AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   0167 ldarg.0 
+   0168 ldarg.1 
+   0169 call System.Boolean SGW/ActorSnapshotParam::get_bUseXYZCoordinateMove()
+   016E stfld AGE.AGEWrapActorSnapshotDuration::bUseXYZCoordinateMove
+   0173 ldarg.0 
+   0174 ldfld AGE.AGEWrapActorSnapshotDuration::bUseXYZCoordinateMove
+   0179 brfalse IL_0194: ldarg.0
+   017E ldarg.0 
+   017F ldarg.1 
+   0180 ldfld SGW/ActorSnapshotParam::moveDir
+   0185 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   018A stfld AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   018F br IL_01bf: ldarg.0
+   0194 ldarg.0 
+   0195 ldfld AGE.AGEWrapActorSnapshotDuration::m_srcActor
+   019A call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   019F brfalse IL_01bf: ldarg.0
+   01A4 ldarg.0 
+   01A5 ldarg.0 
+   01A6 ldflda AGE.AGEWrapActorSnapshotDuration::m_srcActor
+   01AB call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01B0 ldfld Assets.Scripts.GameLogic.ActorLinker::forward
+   01B5 call UnityEngine.Vector3 VInt3::op_Explicit(VInt3)
+   01BA stfld AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   01BF ldarg.0 
+   01C0 ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   01C5 call System.Void UnityEngine.Vector3::Normalize()
+   01CA ldarg.0 
+   01CB newobj System.Void ListView`1<UnityEngine.Material>::.ctor()
+   01D0 stfld AGE.AGEWrapActorSnapshotDuration::m_material
+   01D5 ret 
+== System.Void Clear() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld AGE.AGEWrapActorSnapshotDuration::m_GhostMat
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld AGE.AGEWrapActorSnapshotDuration::m_iMoveSpeed
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld AGE.AGEWrapActorSnapshotDuration::m_iMoveAcceleration
+   0015 ldarg.0 
+   0016 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   001B stfld AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   0020 ldarg.0 
+   0021 ldc.r4 0
+   0026 stfld AGE.AGEWrapActorSnapshotDuration::m_fCurMoveSpeed
+   002B ldarg.0 
+   002C call UnityEngine.Color UnityEngine.Color::get_black()
+   0031 stfld AGE.AGEWrapActorSnapshotDuration::beginColor
+   0036 ldarg.0 
+   0037 call UnityEngine.Color UnityEngine.Color::get_black()
+   003C stfld AGE.AGEWrapActorSnapshotDuration::curColor
+   0041 ldarg.0 
+   0042 ldc.r4 0
+   0047 stfld AGE.AGEWrapActorSnapshotDuration::colorAlphaDelta
+   004C ldarg.0 
+   004D ldc.i4.0 
+   004E stfld AGE.AGEWrapActorSnapshotDuration::moveTimeLen
+   0053 ldarg.0 
+   0054 ldc.i4.0 
+   0055 stfld AGE.AGEWrapActorSnapshotDuration::discolorTimeLen
+   005A ldarg.0 
+   005B ldc.i4.0 
+   005C stfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   0061 ldarg.0 
+   0062 ldc.i4.0 
+   0063 stfld AGE.AGEWrapActorSnapshotDuration::bUpdateColor
+   0068 ldarg.0 
+   0069 ldc.i4.0 
+   006A stfld AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   006F ldarg.0 
+   0070 ldc.i4.0 
+   0071 stfld AGE.AGEWrapActorSnapshotDuration::bUseXYZCoordinateMove
+   0076 ldarg.0 
+   0077 ldfld AGE.AGEWrapActorSnapshotDuration::m_srcActor
+   007C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0081 brfalse IL_0091: ldarg.0
+   0086 ldarg.0 
+   0087 ldflda AGE.AGEWrapActorSnapshotDuration::m_srcActor
+   008C call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   0091 ldarg.0 
+   0092 ldfld AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0097 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   009C brfalse IL_00ac: ldarg.0
+   00A1 ldarg.0 
+   00A2 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   00A7 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   00AC ldarg.0 
+   00AD ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   00B2 ldnull 
+   00B3 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B8 brfalse IL_00cf: ldarg.0
+   00BD ldarg.0 
+   00BE ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   00C3 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00C8 ldarg.0 
+   00C9 ldnull 
+   00CA stfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   00CF ldarg.0 
+   00D0 ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   00D5 brfalse IL_00ec: ret
+   00DA ldarg.0 
+   00DB ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   00E0 callvirt System.Void ListViewBase::Clear()
+   00E5 ldarg.0 
+   00E6 ldnull 
+   00E7 stfld AGE.AGEWrapActorSnapshotDuration::m_material
+   00EC ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::OnUse()
+   0006 ldarg.0 
+   0007 call System.Void AGE.AGEWrapActorSnapshotDuration::Clear()
+   000C ret 
+== System.Void End() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapActorSnapshotDuration::Clear()
+   0006 ret 
+== System.Void Start() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::Start()
+   0006 ldarg.0 
+   0007 ldfld AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 call System.Void AGE.AGEWrapActorSnapshotDuration::CaptureGhost()
+   001D ret 
+== System.Void CaptureGhost() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 newobj System.Void UnityEngine.GameObject::.ctor()
+   0006 stfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   000B ldarg.0 
+   000C ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0011 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0016 callvirt UnityEngine.SkinnedMeshRenderer Assets.Scripts.GameLogic.ActorLinker::get_SkinMeshRdr()
+   001B stloc.0 
+   001C ldarg.0 
+   001D ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0022 ldnull 
+   0023 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0028 brfalse IL_0261: ret
+   002D ldloc.0 
+   002E ldnull 
+   002F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0034 brfalse IL_0261: ret
+   0039 ldarg.0 
+   003A ldarg.0 
+   003B ldfld AGE.AGEWrapActorSnapshotDuration::m_GhostMat
+   0040 ldstr _Color
+   0045 callvirt UnityEngine.Color UnityEngine.Material::GetColor(System.String)
+   004A stfld AGE.AGEWrapActorSnapshotDuration::beginColor
+   004F ldarg.0 
+   0050 ldarg.0 
+   0051 ldfld AGE.AGEWrapActorSnapshotDuration::beginColor
+   0056 stfld AGE.AGEWrapActorSnapshotDuration::curColor
+   005B ldarg.0 
+   005C ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0061 ldloc.0 
+   0062 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0067 callvirt System.String UnityEngine.Object::get_name()
+   006C ldstr _snapshot
+   0071 call System.String System.String::Concat(System.String,System.String)
+   0076 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   007B ldarg.0 
+   007C ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0081 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0086 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   008B brfalse IL_00e2: ldarg.0
+   0090 ldarg.0 
+   0091 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0096 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   009B ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   00A0 callvirt UnityEngine.SkinnedMeshRenderer[] CPooledGameObjectScript::get_SkinnedRenderers()
+   00A5 brfalse IL_00e2: ldarg.0
+   00AA ldarg.0 
+   00AB ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   00B0 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B5 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   00BA callvirt UnityEngine.SkinnedMeshRenderer[] CPooledGameObjectScript::get_SkinnedRenderers()
+   00BF ldlen 
+   00C0 conv.i4 
+   00C1 ldc.i4.0 
+   00C2 ble IL_00e2: ldarg.0
+   00C7 ldarg.0 
+   00C8 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   00CD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00D2 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   00D7 callvirt UnityEngine.SkinnedMeshRenderer[] CPooledGameObjectScript::get_SkinnedRenderers()
+   00DC stloc.1 
+   00DD br IL_0150: ldloc.1
+   00E2 ldarg.0 
+   00E3 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   00E8 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00ED ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   00F2 brfalse IL_014e: ldnull
+   00F7 ldarg.0 
+   00F8 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   00FD call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0102 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   0107 callvirt UnityEngine.MeshRenderer[] CPooledGameObjectScript::get_MeshRenderers()
+   010C brfalse IL_014e: ldnull
+   0111 ldarg.0 
+   0112 ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0117 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   011C ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   0121 callvirt UnityEngine.MeshRenderer[] CPooledGameObjectScript::get_MeshRenderers()
+   0126 ldlen 
+   0127 conv.i4 
+   0128 ldc.i4.0 
+   0129 ble IL_014e: ldnull
+   012E ldarg.0 
+   012F ldflda AGE.AGEWrapActorSnapshotDuration::m_SnapshotsActor
+   0134 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0139 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorMesh
+   013E callvirt UnityEngine.MeshRenderer[] CPooledGameObjectScript::get_MeshRenderers()
+   0143 isinst UnityEngine.SkinnedMeshRenderer[]
+   0148 stloc.1 
+   0149 br IL_0150: ldloc.1
+   014E ldnull 
+   014F stloc.1 
+   0150 ldloc.1 
+   0151 brtrue IL_0157: ldc.i4.0
+   0156 ret 
+   0157 ldc.i4.0 
+   0158 stloc.2 
+   0159 br IL_0218: ldloc.2
+   015E ldloc.1 
+   015F ldloc.2 
+   0160 ldelem.ref 
+   0161 stloc.3 
+   0162 ldloc.3 
+   0163 ldnull 
+   0164 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0169 brfalse IL_0214: ldloc.2
+   016E ldloc.3 
+   016F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0174 callvirt System.Boolean UnityEngine.GameObject::get_activeSelf()
+   0179 brfalse IL_0214: ldloc.2
+   017E newobj System.Void UnityEngine.GameObject::.ctor()
+   0183 stloc.s V_4
+   0185 ldloc.s V_4
+   0187 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   018C brfalse IL_0214: ldloc.2
+   0191 ldloc.s V_4
+   0193 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0198 ldarg.0 
+   0199 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   019E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   01A3 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   01A8 ldloc.s V_4
+   01AA ldloc.3 
+   01AB callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01B0 callvirt System.String UnityEngine.Object::get_name()
+   01B5 ldstr _snapshot
+   01BA call System.String System.String::Concat(System.String,System.String)
+   01BF callvirt System.Void UnityEngine.Object::set_name(System.String)
+   01C4 ldloc.s V_4
+   01C6 callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshFilter>()
+   01CB stloc.s V_5
+   01CD ldloc.3 
+   01CE ldloc.s V_5
+   01D0 callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   01D5 callvirt System.Void UnityEngine.SkinnedMeshRenderer::BakeMesh(UnityEngine.Mesh)
+   01DA ldloc.s V_5
+   01DC callvirt UnityEngine.Mesh UnityEngine.MeshFilter::get_mesh()
+   01E1 ldloc.3 
+   01E2 callvirt System.String UnityEngine.Object::get_name()
+   01E7 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   01EC ldloc.s V_4
+   01EE callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.MeshRenderer>()
+   01F3 stloc.s V_6
+   01F5 ldloc.s V_6
+   01F7 ldarg.0 
+   01F8 ldfld AGE.AGEWrapActorSnapshotDuration::m_GhostMat
+   01FD callvirt System.Void UnityEngine.Renderer::set_material(UnityEngine.Material)
+   0202 ldarg.0 
+   0203 ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   0208 ldloc.s V_6
+   020A callvirt UnityEngine.Material UnityEngine.Renderer::get_material()
+   020F callvirt System.Void ListView`1<UnityEngine.Material>::Add(!0)
+   0214 ldloc.2 
+   0215 ldc.i4.1 
+   0216 add 
+   0217 stloc.2 
+   0218 ldloc.2 
+   0219 ldloc.1 
+   021A ldlen 
+   021B conv.i4 
+   021C blt IL_015e: ldloc.1
+   0221 ldarg.0 
+   0222 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0227 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   022C ldloc.0 
+   022D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0232 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   0237 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   023C callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0241 ldarg.0 
+   0242 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0247 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   024C ldloc.0 
+   024D callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0252 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Transform>()
+   0257 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   025C callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0261 ret 
+== System.Void Update(System.Int32 nDelta) attrs=Public, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapActorSnapshotDuration::bUpdateColor
+   0006 brtrue IL_0017: ldarg.0
+   000B ldarg.0 
+   000C ldfld AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldfld AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   001D brfalse IL_0126: ldarg.0
+   0022 ldarg.0 
+   0023 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0126: ldarg.0
+   0033 ldarg.0 
+   0034 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0039 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   003E callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0043 stloc.0 
+   0044 ldarg.1 
+   0045 conv.r4 
+   0046 ldc.r4 1000
+   004B div 
+   004C stloc.1 
+   004D ldarg.0 
+   004E ldfld AGE.AGEWrapActorSnapshotDuration::m_fCurMoveSpeed
+   0053 ldloc.1 
+   0054 mul 
+   0055 ldarg.0 
+   0056 ldfld AGE.AGEWrapActorSnapshotDuration::m_fMoveAcceleration
+   005B ldloc.1 
+   005C mul 
+   005D ldloc.1 
+   005E mul 
+   005F ldc.r4 2
+   0064 div 
+   0065 add 
+   0066 stloc.2 
+   0067 ldarg.0 
+   0068 ldfld AGE.AGEWrapActorSnapshotDuration::bUseXYZCoordinateMove
+   006D brfalse IL_00cb: ldarg.0
+   0072 ldarg.0 
+   0073 ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   0078 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   007D ldloca.s V_0
+   007F ldfld UnityEngine.Vector3::x
+   0084 ldarg.0 
+   0085 ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   008A ldfld UnityEngine.Vector3::x
+   008F ldloc.2 
+   0090 mul 
+   0091 add 
+   0092 ldloca.s V_0
+   0094 ldfld UnityEngine.Vector3::y
+   0099 ldarg.0 
+   009A ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   009F ldfld UnityEngine.Vector3::y
+   00A4 ldloc.2 
+   00A5 mul 
+   00A6 add 
+   00A7 ldloca.s V_0
+   00A9 ldfld UnityEngine.Vector3::z
+   00AE ldarg.0 
+   00AF ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   00B4 ldfld UnityEngine.Vector3::z
+   00B9 ldloc.2 
+   00BA mul 
+   00BB add 
+   00BC newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   00C1 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   00C6 br IL_0111: ldarg.0
+   00CB ldarg.0 
+   00CC ldfld AGE.AGEWrapActorSnapshotDuration::m_snapShotGo
+   00D1 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00D6 ldloca.s V_0
+   00D8 ldfld UnityEngine.Vector3::x
+   00DD ldarg.0 
+   00DE ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   00E3 ldfld UnityEngine.Vector3::x
+   00E8 ldloc.2 
+   00E9 mul 
+   00EA add 
+   00EB ldloca.s V_0
+   00ED ldfld UnityEngine.Vector3::y
+   00F2 ldloca.s V_0
+   00F4 ldfld UnityEngine.Vector3::z
+   00F9 ldarg.0 
+   00FA ldflda AGE.AGEWrapActorSnapshotDuration::m_MoveDir
+   00FF ldfld UnityEngine.Vector3::z
+   0104 ldloc.2 
+   0105 mul 
+   0106 add 
+   0107 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   010C callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0111 ldarg.0 
+   0112 ldarg.0 
+   0113 ldfld AGE.AGEWrapActorSnapshotDuration::m_fCurMoveSpeed
+   0118 ldarg.0 
+   0119 ldfld AGE.AGEWrapActorSnapshotDuration::m_fMoveAcceleration
+   011E ldloc.1 
+   011F mul 
+   0120 add 
+   0121 stfld AGE.AGEWrapActorSnapshotDuration::m_fCurMoveSpeed
+   0126 ldarg.0 
+   0127 ldfld AGE.AGEWrapActorSnapshotDuration::bUpdateColor
+   012C brfalse IL_01c5: ldarg.0
+   0131 ldarg.0 
+   0132 ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   0137 brfalse IL_01c5: ldarg.0
+   013C ldarg.0 
+   013D ldfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   0142 ldarg.0 
+   0143 ldfld AGE.AGEWrapActorSnapshotDuration::discolorStartTime
+   0148 ble IL_01c5: ldarg.0
+   014D ldarg.0 
+   014E ldflda AGE.AGEWrapActorSnapshotDuration::curColor
+   0153 dup 
+   0154 ldfld UnityEngine.Color::a
+   0159 ldarg.0 
+   015A ldfld AGE.AGEWrapActorSnapshotDuration::colorAlphaDelta
+   015F ldarg.1 
+   0160 conv.r4 
+   0161 mul 
+   0162 add 
+   0163 stfld UnityEngine.Color::a
+   0168 ldarg.0 
+   0169 ldflda AGE.AGEWrapActorSnapshotDuration::curColor
+   016E ldfld UnityEngine.Color::a
+   0173 ldc.r4 0
+   0178 bge.un IL_018d: ldc.i4.0
+   017D ldarg.0 
+   017E ldflda AGE.AGEWrapActorSnapshotDuration::curColor
+   0183 ldc.r4 0
+   0188 stfld UnityEngine.Color::a
+   018D ldc.i4.0 
+   018E stloc.3 
+   018F br IL_01b4: ldloc.3
+   0194 ldarg.0 
+   0195 ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   019A ldloc.3 
+   019B callvirt !0 ListView`1<UnityEngine.Material>::get_Item(System.Int32)
+   01A0 ldstr _Color
+   01A5 ldarg.0 
+   01A6 ldfld AGE.AGEWrapActorSnapshotDuration::curColor
+   01AB callvirt System.Void UnityEngine.Material::SetColor(System.String,UnityEngine.Color)
+   01B0 ldloc.3 
+   01B1 ldc.i4.1 
+   01B2 add 
+   01B3 stloc.3 
+   01B4 ldloc.3 
+   01B5 ldarg.0 
+   01B6 ldfld AGE.AGEWrapActorSnapshotDuration::m_material
+   01BB callvirt System.Int32 ListViewBase::get_Count()
+   01C0 blt IL_0194: ldarg.0
+   01C5 ldarg.0 
+   01C6 dup 
+   01C7 ldfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   01CC ldarg.1 
+   01CD add 
+   01CE stfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   01D3 ldarg.0 
+   01D4 ldfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   01D9 ldarg.0 
+   01DA ldfld AGE.AGEWrapActorSnapshotDuration::moveTimeLen
+   01DF ble IL_01eb: ldarg.0
+   01E4 ldarg.0 
+   01E5 ldc.i4.0 
+   01E6 stfld AGE.AGEWrapActorSnapshotDuration::bUpdatePosition
+   01EB ldarg.0 
+   01EC ldfld AGE.AGEWrapActorSnapshotDuration::durTimeLen
+   01F1 ldarg.0 
+   01F2 ldfld AGE.AGEWrapActorSnapshotDuration::discolorTimeLen
+   01F7 ldarg.0 
+   01F8 ldfld AGE.AGEWrapActorSnapshotDuration::discolorStartTime
+   01FD add 
+   01FE ble IL_020a: ret
+   0203 ldarg.0 
+   0204 ldc.i4.0 
+   0205 stfld AGE.AGEWrapActorSnapshotDuration::bUpdateColor
+   020A ret 

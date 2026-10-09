@@ -1,0 +1,616 @@
+// TYPE Assets.Scripts.GameSystem.PlayAgainWithFriend  base=Assets.Scripts.GameSystem.PlayAgainBase  attrs=Public, BeforeFieldInit
+  FIELD System.Single TIMEOUT = 1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.PlayAgainBase::.ctor()
+   0006 ret 
+== System.Boolean IsFuncOpen() attrs=Public, Virtual, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_ACNT_INFO Assets.Scripts.GameLogic.BattleLogic::GetLastGameSvrAcntInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldc.i4.s 75
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldc.i4.s 75
+   0015 call System.UInt32 ResData.GameDataMgr::GetSrv2CltGlobalValue(ResData.RES_SRV2CLT_GLOBAL_CONF_TYPE)
+   001A ldc.i4.0 
+   001B cgt.un 
+   001D ret 
+== System.Void Start(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Family, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.SettlementSystem>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.GameSystem.SettlementSystem::CloseSettlementPanel()
+   000A ldarg.0 
+   000B callvirt System.Boolean Assets.Scripts.GameSystem.PlayAgainBase::IsFuncOpen()
+   0010 brtrue IL_0016: ldarg.0
+   0015 ret 
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameSystem.PlayAgainWithFriend::DoPlayAgain()
+   001C ret 
+== System.Void DoPlayAgain() attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0021: ldloc.0
+   0011 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0016 ldc.i4 10005
+   001B callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.enUIEventID)
+   0020 ret 
+   0021 ldloc.0 
+   0022 ldfld Assets.Scripts.GameLogic.CLevelContext::m_mapID
+   0027 stloc.1 
+   0028 newobj System.Void Assets.Scripts.UI.CUIEvent::.ctor()
+   002D stloc.2 
+   002E ldloc.2 
+   002F ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0034 ldc.i4.1 
+   0035 stfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   003A ldloc.0 
+   003B callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeLadder()
+   0040 brfalse IL_0097: ldloc.0
+   0045 ldarg.0 
+   0046 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsFiveTeam()
+   004B brfalse IL_0060: ldarg.0
+   0050 ldloc.2 
+   0051 ldc.i4 425
+   0056 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   005B br IL_0092: br IL_02cd
+   0060 ldarg.0 
+   0061 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsNoTeam()
+   0066 brfalse IL_0087: ldloc.2
+   006B ldloc.2 
+   006C ldc.i4 424
+   0071 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0076 ldloc.2 
+   0077 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   007C ldc.i4.0 
+   007D stfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   0082 br IL_0092: br IL_02cd
+   0087 ldloc.2 
+   0088 ldc.i4 424
+   008D stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0092 br IL_02cd: ldloc.0
+   0097 ldloc.0 
+   0098 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpMatch()
+   009D brtrue IL_00c3: ldarg.0
+   00A2 ldloc.0 
+   00A3 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeComBat()
+   00A8 brfalse IL_0149: ldloc.0
+   00AD ldloc.0 
+   00AE ldfld Assets.Scripts.GameLogic.CLevelContext::m_isWarmBattle
+   00B3 brfalse IL_0149: ldloc.0
+   00B8 ldloc.0 
+   00B9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   00BE brtrue IL_0149: ldloc.0
+   00C3 ldarg.0 
+   00C4 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsPKAI()
+   00C9 brfalse IL_00de: ldloc.0
+   00CE ldloc.2 
+   00CF ldc.i4 436
+   00D4 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   00D9 br IL_012d: ldarg.0
+   00DE ldloc.0 
+   00DF ldfld Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   00E4 ldc.i4.2 
+   00E5 div 
+   00E6 ldc.i4.5 
+   00E7 bne.un IL_0108: ldloc.0
+   00EC ldloc.2 
+   00ED ldc.i4 422
+   00F2 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   00F7 ldloc.2 
+   00F8 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   00FD ldloc.1 
+   00FE stfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   0103 br IL_012d: ldarg.0
+   0108 ldloc.0 
+   0109 ldfld Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   010E ldc.i4.2 
+   010F div 
+   0110 ldc.i4.3 
+   0111 bne.un IL_012d: ldarg.0
+   0116 ldloc.2 
+   0117 ldc.i4 423
+   011C stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0121 ldloc.2 
+   0122 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0127 ldloc.1 
+   0128 stfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   012D ldarg.0 
+   012E call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsNoTeam()
+   0133 brfalse IL_0144: br IL_02cd
+   0138 ldloc.2 
+   0139 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   013E ldc.i4.0 
+   013F stfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   0144 br IL_02cd: ldloc.0
+   0149 ldloc.0 
+   014A callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeEntertainment()
+   014F brtrue IL_016a: ldarg.0
+   0154 ldloc.0 
+   0155 ldfld Assets.Scripts.GameLogic.CLevelContext::m_isWarmBattle
+   015A brfalse IL_02b7: ldloc.0
+   015F ldloc.0 
+   0160 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0165 brfalse IL_02b7: ldloc.0
+   016A ldarg.0 
+   016B call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsPKAI()
+   0170 brfalse IL_0185: ldloc.0
+   0175 ldloc.2 
+   0176 ldc.i4 435
+   017B stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0180 br IL_029b: ldarg.0
+   0185 ldloc.0 
+   0186 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsLuanDouPlayMode()
+   018B brfalse IL_01b8: ldloc.0
+   0190 ldloc.2 
+   0191 ldc.i4 471
+   0196 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   019B ldloc.2 
+   019C ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   01A1 ldc.i4.1 
+   01A2 stfld Assets.Scripts.UI.stUIEventParams::commonBool
+   01A7 ldloc.2 
+   01A8 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   01AD ldloc.1 
+   01AE stfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   01B3 br IL_029b: ldarg.0
+   01B8 ldloc.0 
+   01B9 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   01BE brfalse IL_01d3: ldloc.0
+   01C3 ldloc.2 
+   01C4 ldc.i4 498
+   01C9 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   01CE br IL_029b: ldarg.0
+   01D3 ldloc.0 
+   01D4 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   01D9 brfalse IL_024b: ldc.i4.4
+   01DE call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   01E3 callvirt System.UInt32 Assets.Scripts.GameLogic.GamePlayerCenter::GetMaxPlayerNumPerCamp()
+   01E8 stloc.3 
+   01E9 ldloc.3 
+   01EA ldc.i4.2 
+   01EB bne.un IL_020c: ldloc.3
+   01F0 ldloc.2 
+   01F1 ldc.i4 5902
+   01F6 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   01FB ldloc.2 
+   01FC ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0201 ldc.i4.2 
+   0202 stfld Assets.Scripts.UI.stUIEventParams::tag
+   0207 br IL_0246: br IL_029b
+   020C ldloc.3 
+   020D ldc.i4.3 
+   020E bne.un IL_022f: ldloc.2
+   0213 ldloc.2 
+   0214 ldc.i4 5902
+   0219 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   021E ldloc.2 
+   021F ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0224 ldc.i4.3 
+   0225 stfld Assets.Scripts.UI.stUIEventParams::tag
+   022A br IL_0246: br IL_029b
+   022F ldloc.2 
+   0230 ldc.i4 5902
+   0235 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   023A ldloc.2 
+   023B ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0240 ldc.i4.5 
+   0241 stfld Assets.Scripts.UI.stUIEventParams::tag
+   0246 br IL_029b: ldarg.0
+   024B ldc.i4.4 
+   024C ldloc.1 
+   024D call System.Boolean Assets.Scripts.GameSystem.CUICommonSystem::IsMatchOpened(ResData.RES_BATTLE_MAP_TYPE,System.UInt32)
+   0252 stloc.s V_4
+   0254 ldloc.s V_4
+   0256 brtrue IL_0278: ldloc.2
+   025B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0260 ldstr Matching_Tip_6
+   0265 ldc.i4.1 
+   0266 ldc.r4 1.5
+   026B ldnull 
+   026C ldc.i4.0 
+   026D newarr System.Object
+   0272 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0277 ret 
+   0278 ldloc.2 
+   0279 ldc.i4 473
+   027E stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   0283 ldloc.2 
+   0284 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0289 ldloc.1 
+   028A stfld Assets.Scripts.UI.stUIEventParams::tagUInt
+   028F ldloc.2 
+   0290 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0295 ldc.i4.1 
+   0296 stfld Assets.Scripts.UI.stUIEventParams::commonBool
+   029B ldarg.0 
+   029C call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsNoTeam()
+   02A1 brfalse IL_02b2: br IL_02cd
+   02A6 ldloc.2 
+   02A7 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   02AC ldc.i4.0 
+   02AD stfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   02B2 br IL_02cd: ldloc.0
+   02B7 ldloc.0 
+   02B8 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeMaster()
+   02BD brfalse IL_02cd: ldloc.0
+   02C2 ldloc.2 
+   02C3 ldc.i4 31204
+   02C8 stfld Assets.Scripts.UI.CUIEvent::m_eventID
+   02CD ldloc.0 
+   02CE callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpMatch()
+   02D3 brfalse IL_0328: ldloc.2
+   02D8 ldarg.0 
+   02D9 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsPKAI()
+   02DE brfalse IL_0328: ldloc.2
+   02E3 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   02E8 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   02ED stloc.s V_5
+   02EF ldloc.s V_5
+   02F1 brfalse IL_0323: br IL_034e
+   02F6 ldloc.s V_5
+   02F8 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   02FD ldfld CSProtocol.COMDT_GAME_INFO::stPkAIChallenge
+   0302 brfalse IL_0323: br IL_034e
+   0307 ldloc.s V_5
+   0309 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   030E ldfld CSProtocol.COMDT_GAME_INFO::stPkAIChallenge
+   0313 ldfld CSProtocol.COMDT_PKAI_CHALLENGE_RESULT::bLevelID
+   0318 ldc.i4.0 
+   0319 ble IL_0323: br IL_034e
+   031E call System.Void Assets.Scripts.GameSystem.CMatchingSystem::SendPkAiLevelBackToTeam()
+   0323 br IL_034e: newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0328 ldloc.2 
+   0329 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   032E ldfld Assets.Scripts.UI.stUIEventParams::commonUInt16Param1
+   0333 ldc.i4.1 
+   0334 bne.un IL_0343: call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0339 call System.Void Assets.Scripts.GameSystem.CMatchingSystem::SendBackToTeam()
+   033E br IL_034e: newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0343 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0348 ldloc.2 
+   0349 callvirt System.Void Assets.Scripts.UI.CUIEventManager::DispatchUIEvent(Assets.Scripts.UI.CUIEvent)
+   034E newobj System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::.ctor()
+   0353 stloc.s V_6
+   0355 ldloc.s V_6
+   0357 ldstr g_version
+   035C call System.String CVersion::GetAppVersion()
+   0361 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0366 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   036B ldloc.s V_6
+   036D ldstr WorldID
+   0372 call !0 MonoSingleton`1<TdirMgr>::GetInstance()
+   0377 callvirt TdirUrl TdirMgr::get_SelectedTdir()
+   037C stloc.s V_7
+   037E ldloca.s V_7
+   0380 ldflda TdirUrl::logicWorldID
+   0385 constrained. System.Int32
+   038B callvirt System.String System.Object::ToString()
+   0390 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0395 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   039A ldloc.s V_6
+   039C ldstr platform
+   03A1 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   03A6 ldflda ApolloHelper::CurPlatform
+   03AB constrained. Apollo.ApolloPlatform
+   03B1 callvirt System.String System.Object::ToString()
+   03B6 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   03BB callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   03C0 ldloc.s V_6
+   03C2 ldstr openid
+   03C7 call !0 Singleton`1<ApolloHelper>::GetInstance()
+   03CC ldfld ApolloHelper::LastOpenID
+   03D1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   03D6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   03DB ldloc.s V_6
+   03DD ldstr gameType
+   03E2 ldloc.0 
+   03E3 callvirt CSProtocol.COM_GAME_TYPE Assets.Scripts.GameLogic.CLevelContext::GetGameType()
+   03E8 stloc.s V_8
+   03EA ldloca.s V_8
+   03EC constrained. CSProtocol.COM_GAME_TYPE
+   03F2 callvirt System.String System.Object::ToString()
+   03F7 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   03FC callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0401 ldloc.s V_6
+   0403 ldstr entertainmentSubGameType
+   0408 ldloc.0 
+   0409 ldflda Assets.Scripts.GameLogic.CLevelContext::m_entertainmentSubMapType
+   040E constrained. System.Int32
+   0414 callvirt System.String System.Object::ToString()
+   0419 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   041E callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0423 ldloc.s V_6
+   0425 ldstr teamNum
+   042A ldarg.0 
+   042B call System.Byte Assets.Scripts.GameSystem.PlayAgainWithFriend::TeamAcntNum()
+   0430 stloc.s V_9
+   0432 ldloca.s V_9
+   0434 constrained. System.Byte
+   043A callvirt System.String System.Object::ToString()
+   043F newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0444 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   0449 ldloc.s V_6
+   044B ldstr warmBattle
+   0450 ldloc.0 
+   0451 ldflda Assets.Scripts.GameLogic.CLevelContext::m_isWarmBattle
+   0456 constrained. System.Boolean
+   045C callvirt System.String System.Object::ToString()
+   0461 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0466 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   046B ldloc.s V_6
+   046D ldstr pvpPlayerNum
+   0472 ldloc.0 
+   0473 ldflda Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   0478 constrained. System.Int32
+   047E callvirt System.String System.Object::ToString()
+   0483 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   0488 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   048D ldloc.s V_6
+   048F ldstr mapID
+   0494 ldloca.s V_1
+   0496 constrained. System.Int32
+   049C callvirt System.String System.Object::ToString()
+   04A1 newobj System.Void System.Collections.Generic.KeyValuePair`2<System.String,System.String>::.ctor(!0,!1)
+   04A6 callvirt System.Void System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>::Add(!0)
+   04AB call !0 Singleton`1<ApolloHelper>::GetInstance()
+   04B0 ldstr PlayAgain
+   04B5 ldloc.s V_6
+   04B7 ldc.i4.1 
+   04B8 callvirt System.Void ApolloHelper::ApolloRepoertEvent(System.String,System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<System.String,System.String>>,System.Boolean)
+   04BD ldc.i4.s 78
+   04BF call System.Void Assets.Scripts.GameSystem.CMiShuSystem::SendUIClickToServer(Assets.Scripts.GameSystem.enUIClickReprotID)
+   04C4 ret 
+== System.Void RegisterEvents() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 323
+   000A ldarg.0 
+   000B dup 
+   000C ldvirtftn System.Void Assets.Scripts.GameSystem.PlayAgainBase::Start(Assets.Scripts.UI.CUIEvent)
+   0012 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0017 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001C ret 
+== System.Void UnRegisterEvents() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 323
+   000A ldarg.0 
+   000B dup 
+   000C ldvirtftn System.Void Assets.Scripts.GameSystem.PlayAgainBase::Start(Assets.Scripts.UI.CUIEvent)
+   0012 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0017 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001C ret 
+== System.Void InitPlayAgainBtn(UnityEngine.GameObject go) attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0007 ldarg.0 
+   0008 callvirt System.Boolean Assets.Scripts.GameSystem.PlayAgainBase::IsFuncOpen()
+   000D brtrue IL_0013: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0012 ret 
+   0013 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0018 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   001D stloc.0 
+   001E ldloc.0 
+   001F callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpMatch()
+   0024 brfalse IL_0052: ldloc.0
+   0029 ldloc.0 
+   002A ldfld Assets.Scripts.GameLogic.CLevelContext::m_pvpPlayerNum
+   002F ldc.i4.2 
+   0030 div 
+   0031 ldc.i4.1 
+   0032 bne.un IL_0052: ldloc.0
+   0037 ldarg.0 
+   0038 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsNoTeam()
+   003D brfalse IL_0052: ldloc.0
+   0042 ldarg.1 
+   0043 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   0048 ldc.i4.0 
+   0049 ldc.i4.0 
+   004A ldc.i4.1 
+   004B ldc.i4.0 
+   004C call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0051 ret 
+   0052 ldloc.0 
+   0053 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0058 brfalse IL_008a: ldloc.0
+   005D ldarg.0 
+   005E call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsNoTeam()
+   0063 brfalse IL_008a: ldloc.0
+   0068 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   006D callvirt System.UInt32 Assets.Scripts.GameLogic.GamePlayerCenter::GetMaxPlayerNumPerCamp()
+   0072 stloc.1 
+   0073 ldloc.1 
+   0074 ldc.i4.1 
+   0075 bne.un IL_008a: ldloc.0
+   007A ldarg.1 
+   007B callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   0080 ldc.i4.0 
+   0081 ldc.i4.0 
+   0082 ldc.i4.1 
+   0083 ldc.i4.0 
+   0084 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0089 ret 
+   008A ldloc.0 
+   008B callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeComBat()
+   0090 brtrue IL_00a0: ldarg.1
+   0095 ldloc.0 
+   0096 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpRoom()
+   009B brfalse IL_00b0: ldloc.0
+   00A0 ldarg.1 
+   00A1 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   00A6 ldc.i4.0 
+   00A7 ldc.i4.0 
+   00A8 ldc.i4.1 
+   00A9 ldc.i4.0 
+   00AA call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00AF ret 
+   00B0 ldloc.0 
+   00B1 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeGuildMatch()
+   00B6 brtrue IL_00c6: ldarg.1
+   00BB ldloc.0 
+   00BC callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeRewardMatch()
+   00C1 brfalse IL_00d6: ldloc.0
+   00C6 ldarg.1 
+   00C7 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   00CC ldc.i4.0 
+   00CD ldc.i4.0 
+   00CE ldc.i4.1 
+   00CF ldc.i4.0 
+   00D0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00D5 ret 
+   00D6 ldloc.0 
+   00D7 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeCustomCompetition()
+   00DC brfalse IL_00f1: ldloc.0
+   00E1 ldarg.1 
+   00E2 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   00E7 ldc.i4.0 
+   00E8 ldc.i4.0 
+   00E9 ldc.i4.1 
+   00EA ldc.i4.0 
+   00EB call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00F0 ret 
+   00F1 ldloc.0 
+   00F2 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypeOfficialCompetition()
+   00F7 brfalse IL_010c: ldarg.1
+   00FC ldarg.1 
+   00FD callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   0102 ldc.i4.0 
+   0103 ldc.i4.0 
+   0104 ldc.i4.1 
+   0105 ldc.i4.0 
+   0106 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnableWithShader(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   010B ret 
+   010C ldarg.1 
+   010D callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   0112 stloc.2 
+   0113 ldloc.2 
+   0114 ldnull 
+   0115 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   011A brfalse IL_012b: ldloc.0
+   011F ldloc.2 
+   0120 ldc.i4.1 
+   0121 ldc.i4 323
+   0126 callvirt System.Void Assets.Scripts.UI.CUIEventScript::SetUIEvent(Assets.Scripts.UI.enUIEventType,Assets.Scripts.UI.enUIEventID)
+   012B ldloc.0 
+   012C callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsGameTypePvpMatch()
+   0131 brfalse IL_01d0: ret
+   0136 ldarg.0 
+   0137 call System.Boolean Assets.Scripts.GameSystem.PlayAgainWithFriend::IsPKAI()
+   013C brfalse IL_01d0: ret
+   0141 ldarg.1 
+   0142 ldstr Text
+   0147 call UnityEngine.GameObject Utility::FindChild(UnityEngine.GameObject,System.String)
+   014C stloc.3 
+   014D call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0152 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   0157 stloc.s V_4
+   0159 ldloc.s V_4
+   015B brfalse IL_01d0: ret
+   0160 ldloc.s V_4
+   0162 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0167 ldfld CSProtocol.COMDT_GAME_INFO::stPkAIChallenge
+   016C brfalse IL_01d0: ret
+   0171 ldloc.s V_4
+   0173 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0178 ldfld CSProtocol.COMDT_GAME_INFO::stPkAIChallenge
+   017D ldfld CSProtocol.COMDT_PKAI_CHALLENGE_RESULT::bLevelID
+   0182 ldc.i4.0 
+   0183 ble IL_01d0: ret
+   0188 ldloc.s V_4
+   018A ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   018F ldfld CSProtocol.COMDT_GAME_INFO::stPkAIChallenge
+   0194 ldfld CSProtocol.COMDT_PKAI_CHALLENGE_RESULT::bIsPass
+   0199 ldc.i4.0 
+   019A ble IL_01ba: ldarg.1
+   019F ldarg.1 
+   01A0 call !0 Singleton`1<CTextManager>::GetInstance()
+   01A5 ldstr PlayAgainBtn_BackToTeam_Txt
+   01AA ldc.i4.1 
+   01AB callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01B0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.GameObject,System.String)
+   01B5 br IL_01d0: ret
+   01BA ldarg.1 
+   01BB call !0 Singleton`1<CTextManager>::GetInstance()
+   01C0 ldstr PlayAgainBtn_NextLevel_Txt
+   01C5 ldc.i4.1 
+   01C6 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01CB call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.GameObject,System.String)
+   01D0 ret 
+== System.Boolean IsTeamLeader() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_ACNT_INFO Assets.Scripts.GameLogic.BattleLogic::GetLastGameSvrAcntInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.COMDT_ACNT_INFO::bIsTeamMaster
+   0019 ldc.i4.0 
+   001A ble IL_0021: ldc.i4.0
+   001F ldc.i4.1 
+   0020 ret 
+   0021 ldc.i4.0 
+   0022 ret 
+== System.Boolean IsFiveTeam() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_ACNT_INFO Assets.Scripts.GameLogic.BattleLogic::GetLastGameSvrAcntInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.COMDT_ACNT_INFO::bTeamAcntNum
+   0019 ldc.i4.5 
+   001A bne.un IL_0021: ldc.i4.0
+   001F ldc.i4.1 
+   0020 ret 
+   0021 ldc.i4.0 
+   0022 ret 
+== System.Byte TeamAcntNum() attrs=Private, HideBySig maxstack=1
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_ACNT_INFO Assets.Scripts.GameLogic.BattleLogic::GetLastGameSvrAcntInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.COMDT_ACNT_INFO::bTeamAcntNum
+   0019 ret 
+== System.Boolean IsNoTeam() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_ACNT_INFO Assets.Scripts.GameLogic.BattleLogic::GetLastGameSvrAcntInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.COMDT_ACNT_INFO::bIsInTeam
+   0019 call System.Boolean System.Convert::ToBoolean(System.Byte)
+   001E ldc.i4.0 
+   001F ceq 
+   0021 ret 
+== System.Boolean IsPKAI() attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::GetInstance()
+   0005 callvirt CSProtocol.COMDT_SETTLE_RESULT_DETAIL Assets.Scripts.GameLogic.BattleLogic::GetLastGameCachedSvrInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloc.0
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldloc.0 
+   0014 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0019 brtrue IL_0020: ldloc.0
+   001E ldc.i4.0 
+   001F ret 
+   0020 ldloc.0 
+   0021 ldfld CSProtocol.COMDT_SETTLE_RESULT_DETAIL::stGameInfo
+   0026 ldfld CSProtocol.COMDT_GAME_INFO::bIsPKAI
+   002B ldc.i4.2 
+   002C ceq 
+   002E ret 

@@ -1,0 +1,1606 @@
+// TYPE Assets.Scripts.GameLogic.SkillSlotLinker  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Single MAX_KEY_PRESS_TIME = 0.1
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Actor
+  FIELD CoreDef.SkillSlotType SlotType
+  FIELD CoreDef.SkillSlotType LinkedSlotType
+  FIELD System.Int32 skillLevel
+  FIELD System.Boolean bIsUsableZeroLevel
+  FIELD System.Int32 beanAmount
+  FIELD System.Boolean bConsumeBean
+  FIELD System.UInt32 m_skillbeanMaxCD
+  FIELD System.UInt32 m_skillbeanCD
+  FIELD System.Int32 CurSkillCD
+  FIELD System.Int32 CurSkillCDMax
+  FIELD System.Int32 CDMax
+  FIELD System.Boolean IsCDReady
+  FIELD System.Single keyPressTime
+  FIELD System.UInt32 skillTargetId
+  FIELD System.Int32 m_disabledFlags
+  FIELD System.Boolean m_ingnoreDisable
+  FIELD System.Boolean m_isCanLevelUp
+  FIELD ResData.ResSkillBeanCfgInfo beanCfgData
+  FIELD Assets.Scripts.GameLogic.SkillChangeEvent skillChangeEvent
+  FIELD Assets.Scripts.GameLogic.SkillControlIndicator skillIndicator
+  FIELD Assets.Scripts.GameLogic.SkillLinker InitSkillObj
+  FIELD Assets.Scripts.GameLogic.SkillLinker SkillObj
+  FIELD Assets.Scripts.GameLogic.SkillLinker NextSkillObj
+  FIELD System.Int32 AtkRangeExt
+  FIELD System.Int32 SearchRangeExt
+  FIELD ListValueView`1<System.UInt32> NextSkillTargetIDs
+  FIELD System.Boolean bIsNextSkillTargetIDsDirty
+  FIELD SGW/SGCSkill/stSkillTargetSearchTypeDelegate <>f__mg$cache0
+  FIELD SGW/SGCSkill/stSkillTargetSearchTypeDelegate <>f__mg$cache1
+  PROP System.Int32 skillBeanAmount
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void SetKeyPressTime(System.Single _keyPressTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::keyPressTime
+   0007 ret 
+== System.Int32 GetSkillCDMax() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::CDMax
+   0006 ret 
+== System.Int32 GetSkillLevel() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillLevel
+   0006 ret 
+== System.Void SetSkillLevel(System.Int32 _level) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillLevel
+   0007 ret 
+== System.Void IncAtkRangeExt(System.Int32 inAtkRangeExt) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   0007 ldarg.1 
+   0008 add 
+   0009 stfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0014 brfalse IL_003f: ret
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   001F brtrue IL_0034: ldarg.0
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   002A callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::UpdatePrefabScalerFix()
+   002F br IL_003f: ret
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   003A callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::UpdatePrefabScalerGuide()
+   003F ret 
+== System.Void IncSearchRangeExt(System.Int32 inSearchRangeExt) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SearchRangeExt
+   0007 ldarg.1 
+   0008 add 
+   0009 stfld Assets.Scripts.GameLogic.SkillSlotLinker::SearchRangeExt
+   000E ret 
+== System.Int32 GetSkillAttackRange() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000B ldfld ResData.ResSkillCfgInfo::iMaxAttackDistance
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   0016 add 
+   0017 ret 
+== System.Int32 GetSkillAttackGuideRange() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000B ldfld ResData.ResSkillCfgInfo::iGuideDistance
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   0016 add 
+   0017 ret 
+== System.Int32 GetSkillAppointTypeParam(System.Int32 index) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000B ldarg.1 
+   000C call ResData.ResDT_IntParamArrayNode ResData.ResSkillCfgInfo::astRangeAppointTypePrams(System.Int32)
+   0011 stloc.0 
+   0012 ldloca.s V_0
+   0014 ldfld ResData.ResDT_IntParamArrayNode::iParam
+   0019 ret 
+== System.Int32 GetSkillAttackRangeExt() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   0006 ret 
+== System.Int32 GetSkillSearchRange() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.0 
+   0007 ldc.i4.s 100
+   0009 stloc.1 
+   000A ldloc.0 
+   000B brfalse IL_0024: ldloc.1
+   0010 ldloc.0 
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillLevel
+   0017 callvirt System.Int32 Assets.Scripts.GameLogic.SkillLinker::GetMaxSearchDistance(System.Int32)
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SearchRangeExt
+   0022 add 
+   0023 stloc.1 
+   0024 ldloc.1 
+   0025 ret 
+== System.Void InitSkillSlot(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> _actor, CoreDef.SkillSlotType _slotType, System.Int32 _skillID, System.Byte disabledFlags, System.Boolean isCanLevelUp, System.UInt32 cdMax, System.Int32 iSkillAttackRangeExt) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   000E ldarg.0 
+   000F ldarg.3 
+   0010 newobj System.Void Assets.Scripts.GameLogic.SkillLinker::.ctor(System.Int32)
+   0015 stfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0020 ldarg.0 
+   0021 callvirt System.Void Assets.Scripts.GameLogic.SkillLinker::Init(Assets.Scripts.GameLogic.SkillSlotLinker)
+   0026 ldarg.0 
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   002D stfld Assets.Scripts.GameLogic.SkillSlotLinker::InitSkillObj
+   0032 ldarg.0 
+   0033 ldnull 
+   0034 stfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0039 ldarg.0 
+   003A ldc.i4.1 
+   003B stfld Assets.Scripts.GameLogic.SkillSlotLinker::IsCDReady
+   0040 ldarg.0 
+   0041 ldarg.s disabledFlags
+   0043 stfld Assets.Scripts.GameLogic.SkillSlotLinker::m_disabledFlags
+   0048 ldarg.0 
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   004F ldfld Assets.Scripts.GameLogic.SkillLinker::isSkillCfgVaild
+   0054 brfalse IL_0071: ldc.i4.0
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   005F ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0064 ldfld ResData.ResSkillCfgInfo::bBIngnoreDisable
+   0069 ldc.i4.0 
+   006A cgt 
+   006C br IL_0072: stfld System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::m_ingnoreDisable
+   0071 ldc.i4.0 
+   0072 stfld Assets.Scripts.GameLogic.SkillSlotLinker::m_ingnoreDisable
+   0077 ldarg.0 
+   0078 ldarg.s isCanLevelUp
+   007A stfld Assets.Scripts.GameLogic.SkillSlotLinker::m_isCanLevelUp
+   007F ldarg.0 
+   0080 ldarg.s cdMax
+   0082 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CDMax
+   0087 ldarg.0 
+   0088 ldarg.s iSkillAttackRangeExt
+   008A stfld Assets.Scripts.GameLogic.SkillSlotLinker::AtkRangeExt
+   008F ldarg.0 
+   0090 ldarg.0 
+   0091 newobj System.Void Assets.Scripts.GameLogic.SkillControlIndicator::.ctor(Assets.Scripts.GameLogic.SkillSlotLinker)
+   0096 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   009B ldarg.0 
+   009C ldarg.0 
+   009D newobj System.Void Assets.Scripts.GameLogic.SkillChangeEvent::.ctor(Assets.Scripts.GameLogic.SkillSlotLinker)
+   00A2 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillChangeEvent
+   00A7 ldarg.0 
+   00A8 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::CheckConsumeBean()
+   00AD ldarg.0 
+   00AE call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::InitSkillControlIndicator()
+   00B3 ldarg.0 
+   00B4 ldc.i4.s 16
+   00B6 stfld Assets.Scripts.GameLogic.SkillSlotLinker::LinkedSlotType
+   00BB ldarg.0 
+   00BC ldc.i4.0 
+   00BD stfld Assets.Scripts.GameLogic.SkillSlotLinker::bIsUsableZeroLevel
+   00C2 ldloca.s V_0
+   00C4 ldarg.0 
+   00C5 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00CA call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00CF callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   00D4 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   00D9 brfalse IL_012f: ldarg.0
+   00DE ldarg.0 
+   00DF ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00E4 ldc.i4.1 
+   00E5 blt IL_0111: ldarg.0
+   00EA ldarg.0 
+   00EB ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00F0 ldc.i4.4 
+   00F1 bgt IL_0111: ldarg.0
+   00F6 ldarg.0 
+   00F7 ldloca.s V_0
+   00F9 ldarg.0 
+   00FA ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00FF call ResData.ResDT_SkillInfo ResData.ResHeroCfgInfo::astSkill(System.Int32)
+   0104 stloc.1 
+   0105 ldloca.s V_1
+   0107 ldfld ResData.ResDT_SkillInfo::bLinkedSkill
+   010C stfld Assets.Scripts.GameLogic.SkillSlotLinker::LinkedSlotType
+   0111 ldarg.0 
+   0112 ldloca.s V_0
+   0114 ldarg.0 
+   0115 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   011A call ResData.ResDT_SkillInfo ResData.ResHeroCfgInfo::astSkill(System.Int32)
+   011F stloc.2 
+   0120 ldloca.s V_2
+   0122 ldfld ResData.ResDT_SkillInfo::bIsUsableZeroLevel
+   0127 ldc.i4.1 
+   0128 ceq 
+   012A stfld Assets.Scripts.GameLogic.SkillSlotLinker::bIsUsableZeroLevel
+   012F ldarg.0 
+   0130 newobj System.Void ListValueView`1<System.UInt32>::.ctor()
+   0135 stfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillTargetIDs
+   013A ldarg.0 
+   013B ldc.i4.0 
+   013C stfld Assets.Scripts.GameLogic.SkillSlotLinker::bIsNextSkillTargetIDsDirty
+   0141 ret 
+== System.Void StartSkillCD(System.Int32 maxCD) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CurSkillCDMax
+   0007 ldarg.0 
+   0008 ldarg.1 
+   0009 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CurSkillCD
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameLogic.SkillSlotLinker::IsCDReady
+   0015 ret 
+== System.Void SetSkillCD(System.Int32 cd, System.Int32 maxCD) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CurSkillCD
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CurSkillCDMax
+   000E ldarg.0 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::CurSkillCD
+   0015 ldc.i4.0 
+   0016 cgt 
+   0018 ldc.i4.0 
+   0019 ceq 
+   001B stfld Assets.Scripts.GameLogic.SkillSlotLinker::IsCDReady
+   0020 ret 
+== System.Void SetLevelUpStatus(System.Boolean isCanLevelUp) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::m_isCanLevelUp
+   0007 ret 
+== System.Void SetSkillCDMax(System.UInt32 cdMax) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::CDMax
+   0007 ret 
+== System.Boolean IsCanLevelUp() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::m_isCanLevelUp
+   0006 ret 
+== System.Void InitSkillControlIndicator() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::InitControlIndicator()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0017 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::CreateIndicatePrefab(Assets.Scripts.GameLogic.SkillLinker)
+   001C ret 
+== System.Void ReInitSkillControlIndicator() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::InitControlIndicator()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0011 ldc.i4.1 
+   0012 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::UnInitIndicatePrefab(System.Boolean)
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0023 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::CreateIndicatePrefab(Assets.Scripts.GameLogic.SkillLinker)
+   0028 ret 
+== System.Void CheckConsumeBean() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.SkillSlotLinker::bConsumeBean
+   0007 ldarg.0 
+   0008 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   000D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0012 callvirt CoreDef.ActorTypeDef Assets.Scripts.GameLogic.ActorLinker::get_objType()
+   0017 brtrue IL_008e: ret
+   001C ldloca.s V_0
+   001E ldarg.0 
+   001F ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0024 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0029 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   002E call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   0033 brfalse IL_008e: ret
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   003E ldc.i4.0 
+   003F blt IL_008e: ret
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   004A ldc.i4.4 
+   004B bgt IL_008e: ret
+   0050 ldarg.0 
+   0051 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::beanCfgData
+   0056 ldloca.s V_0
+   0058 ldarg.0 
+   0059 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   005E call ResData.ResDT_SkillInfo ResData.ResHeroCfgInfo::astSkill(System.Int32)
+   0063 stloc.1 
+   0064 ldloca.s V_1
+   0066 ldfld ResData.ResDT_SkillInfo::dwSkillBeanID
+   006B call System.Boolean ResData.GameDataMgr/skillBeanDatabin::FindByKey(ResData.ResSkillBeanCfgInfo&,System.UInt32)
+   0070 brfalse IL_008e: ret
+   0075 ldarg.0 
+   0076 ldarg.0 
+   0077 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   007C ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0081 ldfld ResData.ResSkillCfgInfo::bConsumeBean
+   0086 ldc.i4.0 
+   0087 ceq 
+   0089 stfld Assets.Scripts.GameLogic.SkillSlotLinker::bConsumeBean
+   008E ret 
+== System.Boolean IsUnLock() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillLevel
+   0006 ldc.i4.0 
+   0007 bgt IL_0014: ldc.i4.1
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.SkillSlotLinker::bIsUsableZeroLevel
+   0012 br.s IL_0015: ret
+   0014 ldc.i4.1 
+   0015 ret 
+== System.Int32 get_skillBeanAmount() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::beanAmount
+   0006 ret 
+== System.Int32 NextSkillEnergyCostTotal() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_0041: ldarg.0
+   0010 ldarg.0 
+   0011 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0016 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001B ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0020 brfalse IL_0041: ldarg.0
+   0025 ldarg.0 
+   0026 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   002B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0030 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0035 callvirt System.Boolean Assets.Scripts.GameLogic.SkillLinkerComponent::get_bZeroCd()
+   003A brfalse IL_0041: ldarg.0
+   003F ldc.i4.0 
+   0040 ret 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillLevel
+   0047 stloc.0 
+   0048 ldloc.0 
+   0049 ldc.i4.0 
+   004A ble IL_0055: ldc.i4.1
+   004F ldloc.0 
+   0050 br IL_0056: stloc.0
+   0055 ldc.i4.1 
+   0056 stloc.0 
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   005D brfalse IL_0075: ldarg.0
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   006E ldloc.0 
+   006F callvirt System.Int32 Assets.Scripts.GameLogic.SkillLinker::SkillEnergyCost(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   0074 ret 
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   007B brfalse IL_0093: ldc.i4.0
+   0080 ldarg.0 
+   0081 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0086 ldarg.0 
+   0087 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   008C ldloc.0 
+   008D callvirt System.Int32 Assets.Scripts.GameLogic.SkillLinker::SkillEnergyCost(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32)
+   0092 ret 
+   0093 ldc.i4.0 
+   0094 ret 
+== Assets.Scripts.GameLogic.SkillLinker GetReadySkill() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0006 brfalse IL_0016: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0011 br IL_001c: ret
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   001C ret 
+== System.Boolean IsEnabled() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::m_disabledFlags
+   0006 ldc.i4.0 
+   0007 ceq 
+   0009 ret 
+== System.Boolean IsChargeSkill() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000D ldfld ResData.ResSkillCfgInfo::dwChargeSkillEffectID
+   0012 ldc.i4.0 
+   0013 cgt.un 
+   0015 ret 
+== System.Boolean IsSkillDirControlRotate() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000D ldfld ResData.ResSkillCfgInfo::bSkillDirControlMove
+   0012 ldc.i4.0 
+   0013 cgt 
+   0015 ret 
+== System.Void Charging(System.Boolean start) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 brfalse IL_0022: ret
+   000B ldarg.0 
+   000C call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsChargeSkill()
+   0011 brfalse IL_0022: ret
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   001C ldarg.1 
+   001D callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::PlayChargingAnim(System.Boolean)
+   0022 ret 
+== System.Void ReadyUseSkill(System.Boolean bForceSkillUseInDefaultPosition) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.1 
+   0007 ldloc.1 
+   0008 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   000D ldfld ResData.ResSkillCfgInfo::bWheelType
+   0012 ldc.i4.1 
+   0013 bne.un IL_0019: ldarg.0
+   0018 ret 
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   001F ldc.i4.1 
+   0020 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUpdate(System.Boolean)
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   002B callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::Reset()
+   0030 ldarg.0 
+   0031 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0036 call Assets.Scripts.Framework.OperateMode Assets.Scripts.GameLogic.ActorHelper::GetHostPlayerOperateMode(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   003B stloc.0 
+   003C call !0 Singleton`1<Assets.Scripts.GameLogic.GameInput>::GetInstance()
+   0041 callvirt System.Boolean Assets.Scripts.GameLogic.GameInput::IsSmartUse()
+   0046 brtrue IL_005e: ldloc.0
+   004B ldloc.0 
+   004C brtrue IL_005e: ldloc.0
+   0051 ldarg.0 
+   0052 ldloc.1 
+   0053 ldarg.1 
+   0054 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::ReadyUseSkillDefaultAttackMode(Assets.Scripts.GameLogic.SkillLinker,System.Boolean)
+   0059 br IL_006d: ret
+   005E ldloc.0 
+   005F ldc.i4.1 
+   0060 bne.un IL_006d: ret
+   0065 ldarg.0 
+   0066 ldloc.1 
+   0067 ldarg.1 
+   0068 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::ReadyUseSkillLockAttackMode(Assets.Scripts.GameLogic.SkillLinker,System.Boolean)
+   006D ret 
+== System.Boolean CanUseSkillWithEnemyHeroSelectMode() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0006 brfalse IL_0016: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0011 br IL_001c: stloc.0
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   001C stloc.0 
+   001D ldloc.0 
+   001E brfalse IL_002e: ldc.i4.0
+   0023 ldarg.0 
+   0024 call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   0029 brtrue IL_0030: ldloc.0
+   002E ldc.i4.0 
+   002F ret 
+   0030 ldloc.0 
+   0031 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0036 ldfld ResData.ResSkillCfgInfo::bSkillUseRule
+   003B ldc.i4.1 
+   003C bne.un IL_0054: ldc.i4.0
+   0041 ldloc.0 
+   0042 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0047 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilter
+   004C ldc.i4.1 
+   004D and 
+   004E ldc.i4.0 
+   004F ble.un IL_0056: ldc.i4.1
+   0054 ldc.i4.0 
+   0055 ret 
+   0056 ldc.i4.1 
+   0057 ret 
+== System.Void RequestUseSkillEnemyHeroSelectMode(System.UInt32 objID) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brtrue IL_0007: call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   0006 ret 
+   0007 call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   000C ldarg.1 
+   000D ldc.i4.1 
+   000E callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorManager::GetActor(System.UInt32,System.Boolean)
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   001A brfalse IL_0035: ret
+   001F ldloca.s V_0
+   0021 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0026 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   002B callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0030 brfalse IL_0036: ldarg.0
+   0035 ret 
+   0036 ldarg.0 
+   0037 call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::CanUseSkillWithEnemyHeroSelectMode()
+   003C brfalse IL_0060: ret
+   0041 call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UseObjectiveSkillCommand>()
+   0046 stloc.1 
+   0047 ldloc.1 
+   0048 ldarg.1 
+   0049 stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::ObjectID
+   004E ldloc.1 
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0055 stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::SlotType
+   005A ldloc.1 
+   005B callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   0060 ret 
+== System.Void ReadyUseSkillDefaultAttackMode(Assets.Scripts.GameLogic.SkillLinker readySkillObj, System.Boolean bForceSkillUseInDefaultPosition) attrs=Private, HideBySig maxstack=11
+   0000 ldloca.s V_0
+   0002 initobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0008 ldarg.2 
+   0009 brfalse IL_001e: ldarg.0
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0014 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0019 br IL_0143: ret
+   001E ldarg.0 
+   001F ldc.i4.0 
+   0020 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillTargetId
+   0025 ldarg.1 
+   0026 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   002B ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   0030 ldc.i4.1 
+   0031 beq IL_0078: ldloc.0
+   0036 call !0 Singleton`1<Assets.Scripts.GameLogic.TargetSearcher>::GetInstance()
+   003B ldarg.0 
+   003C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0041 ldarg.1 
+   0042 callvirt Assets.Scripts.GameLogic.SkillSlotLinker Assets.Scripts.GameLogic.SkillLinker::get_OwnerSlot()
+   0047 callvirt System.Int32 Assets.Scripts.GameLogic.SkillSlotLinker::GetSkillAttackRange()
+   004C ldc.i4.0 
+   004D ldarg.1 
+   004E ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0053 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilter
+   0058 ldarg.1 
+   0059 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   005E ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldMonsterSubType
+   0063 ldarg.1 
+   0064 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0069 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldOrganSubType
+   006E ldc.i4.1 
+   006F ldc.i4.1 
+   0070 ldc.i4.1 
+   0071 ldc.i4.0 
+   0072 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.TargetSearcher::GetLowestHpTarget(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Int32,Assets.Scripts.GameLogic.TargetPriority,System.UInt32,System.UInt32,System.UInt32,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0077 stloc.0 
+   0078 ldloc.0 
+   0079 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   007E brfalse IL_00a6: ldarg.0
+   0083 ldarg.0 
+   0084 ldloca.s V_0
+   0086 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0090 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillTargetId
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   009B ldloc.0 
+   009C callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUsePosition(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   00A1 br IL_00b1: ldarg.1
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00AC callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   00B1 ldarg.1 
+   00B2 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   00B7 ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   00BC ldc.i4.1 
+   00BD bne.un IL_011f: ldarg.0
+   00C2 ldarg.1 
+   00C3 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   00C8 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   00CD ldc.i4.2 
+   00CE beq IL_011f: ldarg.0
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00D9 ldc.i4.0 
+   00DA callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildPrefabShow(System.Boolean)
+   00DF ldarg.0 
+   00E0 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00E5 ldc.i4.0 
+   00E6 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildWarnPrefabShow(System.Boolean)
+   00EB ldarg.0 
+   00EC ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00F1 ldc.i4.0 
+   00F2 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUseAdvanceMode(System.Boolean)
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00FD callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0102 ldarg.0 
+   0103 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0108 ldc.i4.0 
+   0109 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetEffectPrefabShow(System.Boolean)
+   010E ldarg.0 
+   010F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0114 ldc.i4.1 
+   0115 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetFixedPrefabShow(System.Boolean)
+   011A br IL_0143: ret
+   011F ldarg.0 
+   0120 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0125 ldc.i4.1 
+   0126 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildPrefabShow(System.Boolean)
+   012B ldarg.0 
+   012C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0131 ldc.i4.0 
+   0132 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildWarnPrefabShow(System.Boolean)
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   013D ldc.i4.1 
+   013E callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUseAdvanceMode(System.Boolean)
+   0143 ret 
+== System.Void ReadyUseSkillLockAttackMode(Assets.Scripts.GameLogic.SkillLinker readySkillObj, System.Boolean bForceSkillUseInDefaultPosition) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.2 
+   0001 brfalse IL_0016: ldarg.1
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   000C callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0011 br IL_01ec: ret
+   0016 ldarg.1 
+   0017 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   001C ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   0021 ldc.i4.1 
+   0022 bne.un IL_0084: ldarg.0
+   0027 ldarg.1 
+   0028 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   002D ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   0032 ldc.i4.2 
+   0033 beq IL_0084: ldarg.0
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   003E ldc.i4.0 
+   003F callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildPrefabShow(System.Boolean)
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   004A ldc.i4.0 
+   004B callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildWarnPrefabShow(System.Boolean)
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0056 ldc.i4.0 
+   0057 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUseAdvanceMode(System.Boolean)
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0062 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   006D ldc.i4.0 
+   006E callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetEffectPrefabShow(System.Boolean)
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0079 ldc.i4.1 
+   007A callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetFixedPrefabShow(System.Boolean)
+   007F br IL_00a8: ldarg.0
+   0084 ldarg.0 
+   0085 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   008A ldc.i4.1 
+   008B callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildPrefabShow(System.Boolean)
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0096 ldc.i4.0 
+   0097 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildWarnPrefabShow(System.Boolean)
+   009C ldarg.0 
+   009D ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00A2 ldc.i4.1 
+   00A3 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUseAdvanceMode(System.Boolean)
+   00A8 ldarg.0 
+   00A9 ldc.i4.0 
+   00AA stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillTargetId
+   00AF ldc.i4.1 
+   00B0 stloc.0 
+   00B1 ldc.i4.0 
+   00B2 stloc.1 
+   00B3 ldarg.0 
+   00B4 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00B9 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00BE ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00C3 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::linkerData
+   00C8 isinst Assets.Scripts.GameLogic.HeroObjLinkerData
+   00CD stloc.2 
+   00CE ldloc.2 
+   00CF brfalse IL_00e0: ldloc.1
+   00D4 ldloc.2 
+   00D5 ldfld Assets.Scripts.GameLogic.HeroObjLinkerData::LockTargetAttackModeControl
+   00DA callvirt System.UInt32 Assets.Scripts.GameLogic.LockTargetAttackMode::GetLockTargetID()
+   00DF stloc.1 
+   00E0 ldloc.1 
+   00E1 brtrue IL_01e5: ldarg.0
+   00E6 ldarg.0 
+   00E7 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00EC call Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.ActorHelper::GetOwnerPlayer(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   00F1 stloc.3 
+   00F2 ldloc.3 
+   00F3 brfalse IL_00ff: ldarg.1
+   00F8 ldloc.3 
+   00F9 ldfld Assets.Scripts.GameLogic.Player::AttackTargetMode
+   00FE stloc.0 
+   00FF ldarg.1 
+   0100 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0105 ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   010A ldc.i4.1 
+   010B bne.un IL_0117: ldarg.1
+   0110 ldc.i4.0 
+   0111 stloc.1 
+   0112 br IL_01e5: ldarg.0
+   0117 ldarg.1 
+   0118 callvirt Assets.Scripts.GameLogic.SkillSlotLinker Assets.Scripts.GameLogic.SkillLinker::get_OwnerSlot()
+   011D callvirt System.Int32 Assets.Scripts.GameLogic.SkillSlotLinker::GetSkillAttackRange()
+   0122 stloc.s V_4
+   0124 ldarg.1 
+   0125 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   012A ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilter
+   012F stloc.s V_5
+   0131 ldarg.1 
+   0132 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0137 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldMonsterSubType
+   013C stloc.s V_6
+   013E ldarg.1 
+   013F ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0144 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldOrganSubType
+   0149 stloc.s V_7
+   014B ldarg.0 
+   014C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0151 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0156 ldloc.0 
+   0157 ldc.i4.1 
+   0158 bne.un IL_01a3: ldarg.0
+   015D ldarg.0 
+   015E ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0163 conv.u1 
+   0164 ldarg.0 
+   0165 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   016A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   016F callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0174 ldloc.s V_4
+   0176 ldloc.s V_5
+   0178 ldloc.s V_6
+   017A ldloc.s V_7
+   017C ldsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache0
+   0181 brtrue.s IL_0194: ldsfld SGW/SGCSkill/stSkillTargetSearchTypeDelegate Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache0
+   0183 ldnull 
+   0184 ldftn System.Void Assets.Scripts.GameLogic.SkillSlotLinker::ReadyUseSkillLockAttackModeSearchTargetCallBack(SGW/SGCSkill/stSkillTargetSearch&)
+   018A newobj System.Void SGW/SGCSkill/stSkillTargetSearchTypeDelegate::.ctor(System.Object,System.IntPtr)
+   018F stsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache0
+   0194 ldsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache0
+   0199 call System.Void SGW/SGCSkill::AttackModeTargetSearchLowestHpTarget(System.Byte,System.UInt32,System.Int32,System.UInt32,System.UInt32,System.UInt32,SGW/SGCSkill/stSkillTargetSearchTypeDelegate)
+   019E br IL_01e4: ret
+   01A3 ldarg.0 
+   01A4 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   01A9 conv.u1 
+   01AA ldarg.0 
+   01AB ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   01B0 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01B5 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01BA ldloc.s V_4
+   01BC ldloc.s V_5
+   01BE ldloc.s V_6
+   01C0 ldloc.s V_7
+   01C2 ldsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache1
+   01C7 brtrue.s IL_01da: ldsfld SGW/SGCSkill/stSkillTargetSearchTypeDelegate Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache1
+   01C9 ldnull 
+   01CA ldftn System.Void Assets.Scripts.GameLogic.SkillSlotLinker::ReadyUseSkillLockAttackModeSearchTargetCallBack(SGW/SGCSkill/stSkillTargetSearch&)
+   01D0 newobj System.Void SGW/SGCSkill/stSkillTargetSearchTypeDelegate::.ctor(System.Object,System.IntPtr)
+   01D5 stsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache1
+   01DA ldsfld Assets.Scripts.GameLogic.SkillSlotLinker::<>f__mg$cache1
+   01DF call System.Void SGW/SGCSkill::AttackModeTargetSearchNearestTarget(System.Byte,System.UInt32,System.Int32,System.UInt32,System.UInt32,System.UInt32,SGW/SGCSkill/stSkillTargetSearchTypeDelegate)
+   01E4 ret 
+   01E5 ldarg.0 
+   01E6 ldloc.1 
+   01E7 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SetSkillUsePosition(System.UInt32)
+   01EC ret 
+== System.Void ReadyUseSkillLockAttackModeSearchTargetCallBack(SGW/SGCSkill/stSkillTargetSearch& info) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A ldfld Assets.Scripts.GameLogic.Player::Captain
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0016 brfalse IL_0049: ret
+   001B ldloca.s V_0
+   001D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0022 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0027 brfalse IL_0049: ret
+   002C ldloca.s V_0
+   002E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0033 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0038 ldarg.0 
+   0039 ldfld SGW/SGCSkill/stSkillTargetSearch::slotType
+   003E ldarg.0 
+   003F ldfld SGW/SGCSkill/stSkillTargetSearch::targetActorID
+   0044 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::SetSkillUsePosition(CoreDef.SkillSlotType,System.UInt32)
+   0049 ret 
+== System.Void SelectSkillTargetSearchTargetCallBack(SGW/SGCSkill/stSkillTargetSearch& info) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000A ldfld Assets.Scripts.GameLogic.Player::Captain
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0016 brfalse IL_0066: ret
+   001B ldloca.s V_0
+   001D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0022 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0027 brfalse IL_0066: ret
+   002C ldloca.s V_0
+   002E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0033 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0038 ldarg.0 
+   0039 ldfld SGW/SGCSkill/stSkillTargetSearch::slotType
+   003E ldarg.0 
+   003F ldfld SGW/SGCSkill/stSkillTargetSearch::targetActorID
+   0044 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::SendLockAttackTarget(CoreDef.SkillSlotType,System.UInt32)
+   0049 ldloca.s V_0
+   004B call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0050 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0055 ldarg.0 
+   0056 ldfld SGW/SGCSkill/stSkillTargetSearch::slotType
+   005B ldarg.0 
+   005C ldfld SGW/SGCSkill/stSkillTargetSearch::targetActorID
+   0061 callvirt System.Void Assets.Scripts.GameLogic.SkillLinkerComponent::RealSendRequestUseSkillTarget(CoreDef.SkillSlotType,System.UInt32)
+   0066 ret 
+== System.Void SetSkillUsePosition(System.UInt32 targetActorID) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 ble.un IL_0013: ldloca.s V_0
+   0007 ldarg.1 
+   0008 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetActorLinker(System.UInt32)
+   000D stloc.0 
+   000E br IL_001b: ldloc.0
+   0013 ldloca.s V_0
+   0015 initobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   001B ldloc.0 
+   001C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0021 brfalse IL_0049: ldarg.0
+   0026 ldarg.0 
+   0027 ldloca.s V_0
+   0029 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002E callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0033 stfld Assets.Scripts.GameLogic.SkillSlotLinker::skillTargetId
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   003E ldloc.0 
+   003F callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUsePosition(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0044 br IL_0054: ret
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   004F callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetSkillUseDefaultPosition()
+   0054 ret 
+== System.Void SendLockAttackTarget(System.UInt32 selectID) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0007 call System.Boolean Assets.Scripts.GameLogic.LockTargetAttackMode::IsValidLockTargetID(System.UInt32,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   000C brfalse IL_001c: ret
+   0011 call !0 Singleton`1<Assets.Scripts.GameLogic.NetLockAttackTarget>::GetInstance()
+   0016 ldarg.1 
+   0017 callvirt System.Void Assets.Scripts.GameLogic.NetLockAttackTarget::SendLockAttackTarget(System.UInt32)
+   001C ret 
+== System.Void RequestUseSkillGeneralMode() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   000D ldc.i4.0 
+   000E callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetFixedPrefabShow(System.Boolean)
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0019 ldc.i4.0 
+   001A callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildPrefabShow(System.Boolean)
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0025 ldc.i4.0 
+   0026 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetGuildWarnPrefabShow(System.Boolean)
+   002B call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::keyPressTime
+   0036 sub 
+   0037 ldc.r4 0.1
+   003C bge.un IL_005e: ldloc.0
+   0041 ldloca.s V_1
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0049 ldc.i4.0 
+   004A call System.Void Assets.Scripts.GameLogic.GameCommonEventParam::.ctor(System.Int32,System.Int32)
+   004F call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0054 ldc.i4.s 65
+   0056 ldloca.s V_1
+   0058 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   005D ret 
+   005E ldloc.0 
+   005F brfalse IL_006f: ret
+   0064 ldarg.0 
+   0065 call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   006A brtrue IL_0070: call !0 Singleton`1<Assets.Scripts.GameLogic.SkillDetectionControl>::GetInstance()
+   006F ret 
+   0070 call !0 Singleton`1<Assets.Scripts.GameLogic.SkillDetectionControl>::GetInstance()
+   0075 ldloc.0 
+   0076 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   007B ldfld ResData.ResSkillCfgInfo::bSkillUseRule
+   0080 ldarg.0 
+   0081 callvirt System.Boolean Assets.Scripts.GameLogic.SkillDetectionControl::Detection(ResData.SkillUseRule,Assets.Scripts.GameLogic.SkillSlotLinker)
+   0086 brfalse IL_0091: ret
+   008B ldarg.0 
+   008C call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendRequestUseSkill()
+   0091 ret 
+== System.Void SendSkillNoTargetEvent() attrs=Public, HideBySig maxstack=4
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   000E ldc.i4.0 
+   000F call System.Void Assets.Scripts.GameLogic.SkillCommonEventParam::.ctor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&,CoreDef.SkillSlotType,System.Int32)
+   0014 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   0019 ldc.i4.s 45
+   001B ldloca.s V_0
+   001D callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.SkillCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   0022 ret 
+== System.Void RequestUseSkillSelectMode(System.UInt32 objID) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call Assets.Scripts.GameLogic.SkillLinker Assets.Scripts.GameLogic.SkillSlotLinker::GetReadySkill()
+   0006 stloc.1 
+   0007 ldarg.1 
+   0008 brfalse IL_001e: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   000D ldloc.1 
+   000E brfalse IL_001e: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0013 ldarg.0 
+   0014 call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   0019 brtrue IL_0030: ldarg.1
+   001E call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0029 ldc.i4.0 
+   002A callvirt System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   002F ret 
+   0030 ldarg.1 
+   0031 call Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorHelper::GetActorLinker(System.UInt32)
+   0036 stloc.0 
+   0037 ldloc.0 
+   0038 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   003D brfalse IL_0058: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0042 ldloca.s V_0
+   0044 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0049 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   004E callvirt System.Boolean Assets.Scripts.GameLogic.ObjLinkerWrapper::get_IsDeadState()
+   0053 brfalse IL_006a: call !0 Singleton`1<Assets.Scripts.GameLogic.SkillDetectionControl>::GetInstance()
+   0058 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0063 ldc.i4.0 
+   0064 callvirt System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0069 ret 
+   006A call !0 Singleton`1<Assets.Scripts.GameLogic.SkillDetectionControl>::GetInstance()
+   006F ldloc.1 
+   0070 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0075 ldfld ResData.ResSkillCfgInfo::bSkillUseRule
+   007A ldarg.0 
+   007B callvirt System.Boolean Assets.Scripts.GameLogic.SkillDetectionControl::Detection(ResData.SkillUseRule,Assets.Scripts.GameLogic.SkillSlotLinker)
+   0080 brfalse IL_00f0: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0085 call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UseObjectiveSkillCommand>()
+   008A stloc.2 
+   008B ldloc.2 
+   008C ldarg.1 
+   008D stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::ObjectID
+   0092 ldloc.2 
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0099 stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::SlotType
+   009E ldloc.2 
+   009F callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   00A4 ldarg.0 
+   00A5 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00AA call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00AF ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00B4 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00B9 brfalse IL_00eb: br IL_0101
+   00BE ldarg.0 
+   00BF ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00C4 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00C9 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00CE ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00D9 ldelema Assets.Scripts.GameLogic.SkillSlotUsedTimes
+   00DE dup 
+   00DF ldfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   00E4 ldc.i4.1 
+   00E5 add 
+   00E6 stfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   00EB br IL_0101: ret
+   00F0 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   00F5 ldarg.0 
+   00F6 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00FB ldc.i4.0 
+   00FC callvirt System.Void CameraSystem::SetFocusActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.Boolean)
+   0101 ret 
+== System.Void RequestUseSkill(Assets.Scripts.GameSystem.enSkillJoystickMode mode, System.UInt32 objID) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 brfalse IL_000d: ldarg.0
+   0006 ldarg.1 
+   0007 ldc.i4.7 
+   0008 bne.un IL_0018: ldarg.1
+   000D ldarg.0 
+   000E call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::RequestUseSkillGeneralMode()
+   0013 br IL_0055: ldarg.0
+   0018 ldarg.1 
+   0019 ldc.i4.1 
+   001A beq IL_003b: ldarg.0
+   001F ldarg.1 
+   0020 ldc.i4.2 
+   0021 beq IL_003b: ldarg.0
+   0026 ldarg.1 
+   0027 ldc.i4.4 
+   0028 beq IL_003b: ldarg.0
+   002D ldarg.1 
+   002E ldc.i4.5 
+   002F beq IL_003b: ldarg.0
+   0034 ldarg.1 
+   0035 ldc.i4.6 
+   0036 bne.un IL_0047: ldarg.1
+   003B ldarg.0 
+   003C ldarg.2 
+   003D call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::RequestUseSkillSelectMode(System.UInt32)
+   0042 br IL_0055: ldarg.0
+   0047 ldarg.1 
+   0048 ldc.i4.3 
+   0049 bne.un IL_0055: ldarg.0
+   004E ldarg.0 
+   004F ldarg.2 
+   0050 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::RequestUseSkillEnemyHeroSelectMode(System.UInt32)
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   005B ldc.i4.0 
+   005C callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUpdate(System.Boolean)
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0067 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::StopCommonAttackTargetEffect()
+   006C ret 
+== System.Void SendRequestUseSkillTarget() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0006 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   000B ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0010 callvirt Assets.Scripts.GameLogic.BaseAttackMode Assets.Scripts.GameLogic.SkillLinkerComponent::GetCurrentAttackMode()
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brfalse IL_0052: ret
+   001C ldc.i4.1 
+   001D stloc.1 
+   001E ldloc.0 
+   001F ldarg.0 
+   0020 ldloca.s V_1
+   0022 callvirt System.UInt32 Assets.Scripts.GameLogic.BaseAttackMode::SelectSkillTarget(Assets.Scripts.GameLogic.SkillSlotLinker,System.Boolean&)
+   0027 stloc.2 
+   0028 ldloc.1 
+   0029 brfalse IL_0052: ret
+   002E ldloc.2 
+   002F ldc.i4.0 
+   0030 ble.un IL_004c: ldarg.0
+   0035 ldarg.0 
+   0036 ldloc.2 
+   0037 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::RealSendRequestUseSkillTarget(System.UInt32)
+   003C ldarg.0 
+   003D call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0042 stfld Assets.Scripts.GameLogic.SkillSlotLinker::keyPressTime
+   0047 br IL_0052: ret
+   004C ldarg.0 
+   004D call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendSkillNoTargetEvent()
+   0052 ret 
+== System.Void RealSendRequestUseSkillTarget(System.UInt32 objID) attrs=Public, HideBySig maxstack=3
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UseObjectiveSkillCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::ObjectID
+   000D ldloc.0 
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0014 stfld Assets.Scripts.GameLogic.UseObjectiveSkillCommand::SlotType
+   0019 ldloc.0 
+   001A callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   001F ldarg.0 
+   0020 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0025 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   002A ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   002F ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   0034 brfalse IL_0066: ret
+   0039 ldarg.0 
+   003A ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   003F call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0044 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0049 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0054 ldelema Assets.Scripts.GameLogic.SkillSlotUsedTimes
+   0059 dup 
+   005A ldfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   005F ldc.i4.1 
+   0060 add 
+   0061 stfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   0066 ret 
+== System.Void SendRequestUseSkillDir(System.Boolean bExternalDir, VInt3 dir) attrs=Private, HideBySig maxstack=3
+   0000 ldsfld VInt3::one
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   000C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0011 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0016 callvirt Assets.Scripts.GameLogic.BaseAttackMode Assets.Scripts.GameLogic.SkillLinkerComponent::GetCurrentAttackMode()
+   001B stloc.1 
+   001C call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UseDirectionalSkillCommand>()
+   0021 stloc.2 
+   0022 ldloc.2 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0029 stfld Assets.Scripts.GameLogic.UseDirectionalSkillCommand::SlotType
+   002E ldarg.1 
+   002F brtrue IL_0070: ldarg.2
+   0034 ldloc.1 
+   0035 brfalse IL_0042: ldloca.s V_0
+   003A ldloc.1 
+   003B ldarg.0 
+   003C callvirt VInt3 Assets.Scripts.GameLogic.BaseAttackMode::SelectSkillDirection(Assets.Scripts.GameLogic.SkillSlotLinker)
+   0041 stloc.0 
+   0042 ldloca.s V_0
+   0044 ldfld VInt3::x
+   0049 brtrue IL_006b: br IL_0072
+   004E ldloca.s V_0
+   0050 ldfld VInt3::z
+   0055 brtrue IL_006b: br IL_0072
+   005A ldarg.0 
+   005B ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0060 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0065 ldfld Assets.Scripts.GameLogic.ActorLinker::forward
+   006A stloc.0 
+   006B br IL_0072: ldloca.s V_0
+   0070 ldarg.2 
+   0071 stloc.0 
+   0072 ldloca.s V_0
+   0074 ldfld VInt3::z
+   0079 neg 
+   007A conv.r4 
+   007B ldloca.s V_0
+   007D ldfld VInt3::x
+   0082 conv.r4 
+   0083 call System.Single UnityEngine.Mathf::Atan2(System.Single,System.Single)
+   0088 stloc.3 
+   0089 ldloc.3 
+   008A ldc.r4 180
+   008F mul 
+   0090 conv.r8 
+   0091 ldc.r8 3.1416
+   009A div 
+   009B conv.i2 
+   009C stloc.s V_4
+   009E ldloc.2 
+   009F ldloc.s V_4
+   00A1 stfld Assets.Scripts.GameLogic.UseDirectionalSkillCommand::Degree
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   00AC callvirt System.Boolean Assets.Scripts.GameLogic.SkillControlIndicator::GetSkillBtnDrag()
+   00B1 brtrue IL_00c2: ldloc.2
+   00B6 ldloc.2 
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillTargetId
+   00BD stfld Assets.Scripts.GameLogic.UseDirectionalSkillCommand::dwObjectID
+   00C2 ldloc.2 
+   00C3 callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   00C8 ldarg.0 
+   00C9 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00CE call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00D3 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00D8 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00DD brfalse IL_010f: ret
+   00E2 ldarg.0 
+   00E3 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00E8 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00ED ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00F2 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00FD ldelema Assets.Scripts.GameLogic.SkillSlotUsedTimes
+   0102 dup 
+   0103 ldfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   0108 ldc.i4.1 
+   0109 add 
+   010A stfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   010F ret 
+== System.Void SendRequestUseSkillPos(Assets.Scripts.GameLogic.SkillLinker readySkillObj, VInt3 ExternalPos, System.Boolean bExternal) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldsfld VInt3::zero
+   0007 stloc.1 
+   0008 ldarg.0 
+   0009 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   000E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0013 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0018 callvirt Assets.Scripts.GameLogic.BaseAttackMode Assets.Scripts.GameLogic.SkillLinkerComponent::GetCurrentAttackMode()
+   001D stloc.2 
+   001E call T Assets.Scripts.Framework.FrameCommandFactory::CreateCSSyncFrameCommand<Assets.Scripts.GameLogic.UsePositionSkillCommand>()
+   0023 stloc.3 
+   0024 ldloc.2 
+   0025 brfalse IL_0034: ldloc.0
+   002A ldloc.2 
+   002B ldarg.0 
+   002C ldloca.s V_1
+   002E callvirt System.Boolean Assets.Scripts.GameLogic.BaseAttackMode::SelectSkillPos(Assets.Scripts.GameLogic.SkillSlotLinker,VInt3&)
+   0033 stloc.0 
+   0034 ldloc.0 
+   0035 brfalse IL_004c: ldloca.s V_4
+   003A ldloc.3 
+   003B ldloca.s V_1
+   003D call VInt2 VInt3::get_xz()
+   0042 stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::Position
+   0047 br IL_0069: ldarg.3
+   004C ldloca.s V_4
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0054 ldc.i4.0 
+   0055 call System.Void Assets.Scripts.GameLogic.GameCommonEventParam::.ctor(System.Int32,System.Int32)
+   005A call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   005F ldc.i4.s 65
+   0061 ldloca.s V_4
+   0063 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   0068 ret 
+   0069 ldarg.3 
+   006A brfalse IL_007c: ldloc.3
+   006F ldloc.3 
+   0070 ldarga.s ExternalPos
+   0072 call VInt2 VInt3::get_xz()
+   0077 stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::Position
+   007C ldloc.3 
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0083 stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::SlotType
+   0088 ldloc.3 
+   0089 ldarg.1 
+   008A ldfld Assets.Scripts.GameLogic.SkillLinker::SkillID
+   008F stfld Assets.Scripts.GameLogic.UsePositionSkillCommand::iSkillID
+   0094 ldloc.3 
+   0095 callvirt System.Void Assets.Scripts.Framework.FrameCommand::Send()
+   009A ldarg.0 
+   009B ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00A0 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00A5 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00AA ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00AF brfalse IL_00e1: ret
+   00B4 ldarg.0 
+   00B5 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00BA call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00BF ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   00C4 ldfld Assets.Scripts.GameLogic.SkillLinkerComponent::skillSlotUseTimesArray
+   00C9 ldarg.0 
+   00CA ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   00CF ldelema Assets.Scripts.GameLogic.SkillSlotUsedTimes
+   00D4 dup 
+   00D5 ldfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   00DA ldc.i4.1 
+   00DB add 
+   00DC stfld Assets.Scripts.GameLogic.SkillSlotUsedTimes::iSkillUseSendTimes
+   00E1 ret 
+== System.Void SendRequestUseSkill() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0006 brfalse IL_0016: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0011 br IL_001c: stloc.0
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   001C stloc.0 
+   001D ldloc.0 
+   001E brtrue IL_002a: ldloc.0
+   0023 ldarg.0 
+   0024 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendSkillNoTargetEvent()
+   0029 ret 
+   002A ldloc.0 
+   002B ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0030 ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   0035 ldc.i4.1 
+   0036 bne.un IL_0046: ldloc.0
+   003B ldarg.0 
+   003C call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendRequestUseSkillTarget()
+   0041 br IL_0086: ldarg.0
+   0046 ldloc.0 
+   0047 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   004C ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   0051 ldc.i4.3 
+   0052 bne.un IL_0068: ldloc.0
+   0057 ldarg.0 
+   0058 ldc.i4.0 
+   0059 ldsfld VInt3::one
+   005E call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendRequestUseSkillDir(System.Boolean,VInt3)
+   0063 br IL_0086: ldarg.0
+   0068 ldloc.0 
+   0069 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   006E ldfld ResData.ResSkillCfgInfo::bRangeAppointType
+   0073 ldc.i4.2 
+   0074 bne.un IL_0086: ldarg.0
+   0079 ldarg.0 
+   007A ldloc.0 
+   007B ldsfld VInt3::one
+   0080 ldc.i4.0 
+   0081 call System.Void Assets.Scripts.GameLogic.SkillSlotLinker::SendRequestUseSkillPos(Assets.Scripts.GameLogic.SkillLinker,VInt3,System.Boolean)
+   0086 ldarg.0 
+   0087 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   008C stfld Assets.Scripts.GameLogic.SkillSlotLinker::keyPressTime
+   0091 ret 
+== System.Void CancelUseSkill() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 brfalse IL_002e: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0011 ldc.i4.0 
+   0012 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::UnInitIndicatePrefab(System.Boolean)
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   001D callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::StopCommonAttackTargetEffect()
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0028 ldc.i4.0 
+   0029 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::SetUpdate(System.Boolean)
+   002E ldarg.0 
+   002F ldc.r4 0
+   0034 stfld Assets.Scripts.GameLogic.SkillSlotLinker::keyPressTime
+   0039 ret 
+== System.Void DestoryIndicatePrefab() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 brfalse IL_0017: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0011 ldc.i4.1 
+   0012 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::UnInitIndicatePrefab(System.Boolean)
+   0017 ret 
+== System.Void LateUpdate(System.Int32 nDelta) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::skillIndicator
+   0006 ldarg.1 
+   0007 callvirt System.Void Assets.Scripts.GameLogic.SkillControlIndicator::LateUpdate(System.Int32)
+   000C ret 
+== System.Boolean IsUseSkillJoystick() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0006 brtrue IL_000d: ldarg.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldarg.0 
+   000E call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsEnabled()
+   0013 brtrue IL_001a: ldarg.0
+   0018 ldc.i4.0 
+   0019 ret 
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SlotType
+   0020 brfalse IL_0027: ldc.i4.0
+   0025 ldc.i4.1 
+   0026 ret 
+   0027 ldc.i4.0 
+   0028 ret 
+== System.Boolean IsValidSkillTargetFilter(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>& _target) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0006 brfalse IL_0016: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0011 br IL_001c: stloc.0
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   001C stloc.0 
+   001D ldarg.1 
+   001E ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0023 ldloc.0 
+   0024 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0029 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilter
+   002E ldloc.0 
+   002F ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0034 ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldMonsterSubType
+   0039 ldloc.0 
+   003A ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   003F ldfld ResData.ResSkillCfgInfo::dwSkillTargetFilterShieldOrganSubType
+   0044 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsFilterActorType(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,System.UInt32,System.UInt32,System.UInt32)
+   0049 brfalse IL_0050: ldc.i4.1
+   004E ldc.i4.0 
+   004F ret 
+   0050 ldc.i4.1 
+   0051 ret 
+== System.Boolean IsValidSkillTarget(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>& _target) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brtrue IL_0012: ldarg.0
+   0010 ldc.i4.0 
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0018 brfalse IL_0028: ldarg.0
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillObj
+   0023 br IL_002e: stloc.0
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   002E stloc.0 
+   002F ldloc.0 
+   0030 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0035 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   003A brfalse IL_0072: ldarg.0
+   003F ldloc.0 
+   0040 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0045 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   004A ldc.i4.1 
+   004B beq IL_0072: ldarg.0
+   0050 ldloc.0 
+   0051 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0056 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   005B ldc.i4.3 
+   005C beq IL_0072: ldarg.0
+   0061 ldloc.0 
+   0062 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0067 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   006C ldc.i4.6 
+   006D bne.un IL_00a0: ldloc.0
+   0072 ldarg.0 
+   0073 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   0078 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   007D ldarg.1 
+   007E ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0083 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::IsEnemyCamp(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   0088 brfalse IL_009b: br IL_01ff
+   008D ldarg.0 
+   008E ldarg.1 
+   008F call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsValidSkillTargetFilter(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0094 brfalse IL_009b: br IL_01ff
+   0099 ldc.i4.1 
+   009A ret 
+   009B br IL_01ff: ldc.i4.0
+   00A0 ldloc.0 
+   00A1 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   00A6 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   00AB ldc.i4.2 
+   00AC bne.un IL_00ce: ldloc.0
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00B7 ldarg.1 
+   00B8 ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   00BD call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00C2 brfalse IL_00c9: br IL_01ff
+   00C7 ldc.i4.1 
+   00C8 ret 
+   00C9 br IL_01ff: ldc.i4.0
+   00CE ldloc.0 
+   00CF ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   00D4 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   00D9 ldc.i4.4 
+   00DA bne.un IL_0136: ldloc.0
+   00DF ldarg.0 
+   00E0 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   00E5 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00EA ldarg.1 
+   00EB ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   00F0 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::IsSelfCamp(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   00F5 brfalse IL_0131: br IL_01ff
+   00FA ldarg.0 
+   00FB ldarg.1 
+   00FC call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsValidSkillTargetFilter(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0101 brfalse IL_0131: br IL_01ff
+   0106 ldloc.0 
+   0107 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   010C ldfld ResData.ResSkillCfgInfo::bWheelType
+   0111 ldc.i4.1 
+   0112 bne.un IL_012f: ldc.i4.1
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   011D ldarg.1 
+   011E ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0123 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0128 brfalse IL_012f: ldc.i4.1
+   012D ldc.i4.0 
+   012E ret 
+   012F ldc.i4.1 
+   0130 ret 
+   0131 br IL_01ff: ldc.i4.0
+   0136 ldloc.0 
+   0137 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   013C ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   0141 ldc.i4.5 
+   0142 bne.un IL_0191: ldloc.0
+   0147 ldarg.0 
+   0148 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   014D call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0152 ldarg.1 
+   0153 ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   0158 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::IsEnemyCamp(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   015D brfalse IL_018c: br IL_01ff
+   0162 ldarg.0 
+   0163 ldarg.1 
+   0164 call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsValidSkillTargetFilter(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   0169 brfalse IL_018c: br IL_01ff
+   016E ldarg.0 
+   016F ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillTargetIDs
+   0174 ldarg.1 
+   0175 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   017A callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   017F callvirt System.Int32 ListValueView`1<System.UInt32>::IndexOf(!0)
+   0184 ldc.i4.0 
+   0185 blt IL_018c: br IL_01ff
+   018A ldc.i4.1 
+   018B ret 
+   018C br IL_01ff: ldc.i4.0
+   0191 ldloc.0 
+   0192 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   0197 ldfld ResData.ResSkillCfgInfo::bSkillTargetRule
+   019C ldc.i4.7 
+   019D bne.un IL_01ff: ldc.i4.0
+   01A2 ldarg.0 
+   01A3 ldflda Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   01A8 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01AD ldarg.1 
+   01AE ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   01B3 callvirt System.Boolean Assets.Scripts.GameLogic.ActorLinker::IsSelfCamp(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>)
+   01B8 brfalse IL_01ff: ldc.i4.0
+   01BD ldarg.0 
+   01BE ldarg.1 
+   01BF call System.Boolean Assets.Scripts.GameLogic.SkillSlotLinker::IsValidSkillTargetFilter(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   01C4 brfalse IL_01ff: ldc.i4.0
+   01C9 ldarg.0 
+   01CA ldfld Assets.Scripts.GameLogic.SkillSlotLinker::NextSkillTargetIDs
+   01CF ldarg.1 
+   01D0 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01D5 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   01DA callvirt System.Int32 ListValueView`1<System.UInt32>::IndexOf(!0)
+   01DF ldc.i4.0 
+   01E0 blt IL_01e7: ldarg.0
+   01E5 ldc.i4.1 
+   01E6 ret 
+   01E7 ldarg.0 
+   01E8 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::Actor
+   01ED ldarg.1 
+   01EE ldobj Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>
+   01F3 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   01F8 brfalse IL_01ff: ldc.i4.0
+   01FD ldc.i4.1 
+   01FE ret 
+   01FF ldc.i4.0 
+   0200 ret 

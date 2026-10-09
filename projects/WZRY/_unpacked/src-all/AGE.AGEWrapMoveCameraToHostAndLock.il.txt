@@ -1,0 +1,88 @@
+// TYPE AGE.AGEWrapMoveCameraToHostAndLock  base=AGE.AGEWrapBase  attrs=BeforeFieldInit
+  FIELD System.Int32 _moveTime
+  FIELD UnityEngine.Vector3 startPos
+  FIELD System.Boolean moveFinished
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4 3000
+   0006 stfld AGE.AGEWrapMoveCameraToHostAndLock::_moveTime
+   000B ldarg.0 
+   000C call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0011 stfld AGE.AGEWrapMoveCameraToHostAndLock::startPos
+   0016 ldarg.0 
+   0017 call System.Void AGE.AGEWrapBase::.ctor()
+   001C ret 
+== System.Void OnUse() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::OnUse()
+   0006 ldarg.0 
+   0007 ldc.i4 3000
+   000C stfld AGE.AGEWrapMoveCameraToHostAndLock::_moveTime
+   0011 ldarg.0 
+   0012 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0017 stfld AGE.AGEWrapMoveCameraToHostAndLock::startPos
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E stfld AGE.AGEWrapMoveCameraToHostAndLock::moveFinished
+   0023 ret 
+== System.Void Init(System.Int32 moveTime) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld AGE.AGEWrapMoveCameraToHostAndLock::_moveTime
+   0007 ret 
+== System.Void Start() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void AGE.AGEWrapBase::Start()
+   0006 ldarg.0 
+   0007 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   000C ldfld CameraSystem::MobaCamera
+   0011 ldfld Moba_Camera::requirements
+   0016 ldfld Moba_Camera_Requirements::pivot
+   001B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0020 stfld AGE.AGEWrapMoveCameraToHostAndLock::startPos
+   0025 ret 
+== System.Void End() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapMoveCameraToHostAndLock::moveFinished
+   0006 brtrue IL_001c: ret
+   000B call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0010 callvirt System.Void CameraSystem::EndCameraMoveTrack()
+   0015 ldarg.0 
+   0016 ldc.i4.1 
+   0017 stfld AGE.AGEWrapMoveCameraToHostAndLock::moveFinished
+   001C ret 
+== System.Void Update(System.Int32 nDelta) attrs=Public, Virtual, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld AGE.AGEWrapMoveCameraToHostAndLock::moveFinished
+   0006 brfalse IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld AGE.AGEWrapBase::_curTick
+   0012 ldarg.0 
+   0013 ldfld AGE.AGEWrapMoveCameraToHostAndLock::_moveTime
+   0018 blt IL_0033: call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   001D call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0022 callvirt System.Void CameraSystem::EndCameraMoveTrack()
+   0027 ldarg.0 
+   0028 ldc.i4.1 
+   0029 stfld AGE.AGEWrapMoveCameraToHostAndLock::moveFinished
+   002E br IL_0075: ret
+   0033 call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0038 ldfld CameraSystem::MobaCamera
+   003D ldarg.0 
+   003E ldfld AGE.AGEWrapMoveCameraToHostAndLock::startPos
+   0043 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0048 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   004D ldflda Assets.Scripts.GameLogic.Player::Captain
+   0052 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0057 ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   005C ldarg.0 
+   005D ldfld AGE.AGEWrapBase::_curTick
+   0062 conv.r4 
+   0063 ldarg.0 
+   0064 ldfld AGE.AGEWrapMoveCameraToHostAndLock::_moveTime
+   0069 conv.r4 
+   006A div 
+   006B call UnityEngine.Vector3 UnityEngine.Vector3::Lerp(UnityEngine.Vector3,UnityEngine.Vector3,System.Single)
+   0070 callvirt System.Void Moba_Camera::SetAbsoluteLockLocation(UnityEngine.Vector3)
+   0075 ret 

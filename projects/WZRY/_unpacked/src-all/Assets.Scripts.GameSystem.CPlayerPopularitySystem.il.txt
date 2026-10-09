@@ -1,0 +1,986 @@
+// TYPE Assets.Scripts.GameSystem.CPlayerPopularitySystem  base=Singleton`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem>  attrs=Public, BeforeFieldInit
+  FIELD System.String m_kPlayerPopularityFormPath
+  FIELD System.UInt32 m_iTotalPlayerPopularity
+  FIELD System.UInt32 m_iFansNum
+  FIELD System.UInt32 m_iTeamPlayNum
+  FIELD System.UInt32 m_iPhotoLikeNum
+  FIELD System.UInt32 m_iPersonalLikeNum
+  FIELD System.UInt32 m_iHeroGuideLikeNum
+  FIELD System.UInt32 m_iFansWeight
+  FIELD System.UInt32 m_iTeamWeight
+  FIELD System.UInt32 m_iPhotoWeight
+  FIELD System.UInt32 m_iPersonalWeight
+  FIELD System.UInt32 m_iHeroGuideLikeWeight
+  FIELD System.UInt32 m_iPopularityRewardGetMask
+  FIELD System.UInt32 m_iPopularityRewardReachMask
+  FIELD ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData> m_kPopularityRewardList
+  FIELD System.UInt64 m_iLastShowTotalPlayerPopularity
+  PROP System.UInt64 LastShowTotalPlayerPopularity
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.3 
+   0002 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansWeight
+   0007 ldarg.0 
+   0008 ldc.i4.6 
+   0009 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamWeight
+   000E ldarg.0 
+   000F ldc.i4.2 
+   0010 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoWeight
+   0015 ldarg.0 
+   0016 ldc.i4.1 
+   0017 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalWeight
+   001C ldarg.0 
+   001D ldc.i4.1 
+   001E stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeWeight
+   0023 ldarg.0 
+   0024 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::.ctor()
+   0029 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   002E ldarg.0 
+   002F call System.Void Singleton`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem>::.ctor()
+   0034 ret 
+== System.UInt64 get_LastShowTotalPlayerPopularity() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iLastShowTotalPlayerPopularity
+   0006 ret 
+== System.Void set_LastShowTotalPlayerPopularity(System.UInt64 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iLastShowTotalPlayerPopularity
+   0007 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_initPopularuityRewardData()
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_initPopularityWeight()
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0011 ldc.i4 42222
+   0016 ldarg.0 
+   0017 ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getReward(Assets.Scripts.UI.CUIEvent)
+   001D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0022 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0027 call !0 Singleton`1<EventRouter>::GetInstance()
+   002C ldsfld EventID::PlayerPopularityDataChanged
+   0031 ldarg.0 
+   0032 ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_onPlayerPopularityDataChange()
+   0038 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   003D callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   0042 call !0 Singleton`1<EventRouter>::GetInstance()
+   0047 ldsfld EventID::MASTER_ATTRIBUTES_CHANGED
+   004C ldarg.0 
+   004D ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_onPlayerPopularityDataChange()
+   0053 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0058 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   005D ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4 42222
+   000A ldarg.0 
+   000B ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getReward(Assets.Scripts.UI.CUIEvent)
+   0011 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0016 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   001B call !0 Singleton`1<EventRouter>::GetInstance()
+   0020 ldsfld EventID::PlayerPopularityDataChanged
+   0025 ldarg.0 
+   0026 ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_onPlayerPopularityDataChange()
+   002C newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0031 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0036 call !0 Singleton`1<EventRouter>::GetInstance()
+   003B ldsfld EventID::MASTER_ATTRIBUTES_CHANGED
+   0040 ldarg.0 
+   0041 ldftn System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_onPlayerPopularityDataChange()
+   0047 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   004C callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0051 ret 
+== System.Void OpenForm() attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPlayerPopularityFormPath
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 brtrue IL_001d: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001C ret 
+   001D call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0022 ldsfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPlayerPopularityFormPath
+   0027 ldc.i4.0 
+   0028 ldc.i4.1 
+   0029 ldnull 
+   002A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   002F stloc.1 
+   0030 ldloc.1 
+   0031 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0036 brfalse IL_0049: ret
+   003B ldarg.0 
+   003C ldloc.1 
+   003D call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshPopularityValue(Assets.Scripts.UI.CUIFormScript)
+   0042 ldarg.0 
+   0043 ldloc.1 
+   0044 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshPopularityReward(Assets.Scripts.UI.CUIFormScript)
+   0049 ret 
+== System.Void UpdatePlayerPopularityReward(System.UInt32 iPopularitylevel) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 ldc.i4.1 
+   0002 sub 
+   0003 stloc.0 
+   0004 ldarg.0 
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardGetMask
+   000B ldc.i4.1 
+   000C ldloc.0 
+   000D ldc.i4.s 31
+   000F and 
+   0010 shl 
+   0011 or 
+   0012 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardGetMask
+   0017 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001C ldsfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPlayerPopularityFormPath
+   0021 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0026 stloc.1 
+   0027 ldloc.1 
+   0028 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002D brfalse IL_0039: ret
+   0032 ldarg.0 
+   0033 ldloc.1 
+   0034 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshPopularityReward(Assets.Scripts.UI.CUIFormScript)
+   0039 ret 
+== System.Void _onPlayerPopularityDataChange() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_updateRewardReachMask()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000B ldsfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPlayerPopularityFormPath
+   0010 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   001C brfalse IL_002f: ret
+   0021 ldarg.0 
+   0022 ldloc.0 
+   0023 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshPopularityValue(Assets.Scripts.UI.CUIFormScript)
+   0028 ldarg.0 
+   0029 ldloc.0 
+   002A call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshPopularityReward(Assets.Scripts.UI.CUIFormScript)
+   002F ret 
+== System.Void _refreshPopularityReward(Assets.Scripts.UI.CUIFormScript kForm) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0006 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   000B ldstr All/node/RewardNode/Reward_1
+   0010 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0015 stloc.0 
+   0016 ldarg.1 
+   0017 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   001C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0021 ldstr All/node/RewardNode/Reward_2
+   0026 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   002B stloc.1 
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0032 callvirt System.Int32 ListViewBase::get_Count()
+   0037 ldc.i4.0 
+   0038 ble IL_0051: ldarg.0
+   003D ldarg.0 
+   003E ldarg.1 
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0045 ldc.i4.0 
+   0046 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::get_Item(System.Int32)
+   004B ldloc.0 
+   004C call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshOnePopularityReward(Assets.Scripts.UI.CUIFormScript,Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData,UnityEngine.Transform)
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0057 callvirt System.Int32 ListViewBase::get_Count()
+   005C ldc.i4.1 
+   005D ble IL_0076: ret
+   0062 ldarg.0 
+   0063 ldarg.1 
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   006A ldc.i4.1 
+   006B callvirt !0 ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::get_Item(System.Int32)
+   0070 ldloc.1 
+   0071 call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::_refreshOnePopularityReward(Assets.Scripts.UI.CUIFormScript,Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData,UnityEngine.Transform)
+   0076 ret 
+== System.Void _refreshOnePopularityReward(Assets.Scripts.UI.CUIFormScript kForm, Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData kData, UnityEngine.Transform kRewardNode) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.2 
+   0001 stloc.0 
+   0002 ldloca.s V_1
+   0004 ldloc.0 
+   0005 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRewardID
+   000A call System.Boolean ResData.GameDataMgr/randomRewardDB::FindByKey(ResData.ResRandomRewardStore&,System.UInt32)
+   000F brfalse IL_022a: ldarg.3
+   0014 ldarg.3 
+   0015 ldc.i4.1 
+   0016 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   001B newobj System.Void ListView`1<Assets.Scripts.GameSystem.CUseable>::.ctor()
+   0020 stloc.2 
+   0021 ldc.i4.0 
+   0022 stloc.3 
+   0023 br IL_0073: ldloc.3
+   0028 ldloca.s V_1
+   002A ldloc.3 
+   002B call ResData.ResDT_RandomRewardInfo ResData.ResRandomRewardStore::astRewardDetail(System.Int32)
+   0030 stloc.s V_4
+   0032 ldloca.s V_4
+   0034 ldfld ResData.ResDT_RandomRewardInfo::bItemType
+   0039 ldloca.s V_4
+   003B ldfld ResData.ResDT_RandomRewardInfo::dwLowCnt
+   0040 ldloca.s V_4
+   0042 ldfld ResData.ResDT_RandomRewardInfo::dwItemID
+   0047 ldc.i4 10000
+   004C call ListView`1<Assets.Scripts.GameSystem.CUseable> Assets.Scripts.GameSystem.CUseableManager::CreateUsableListByRandowReward(ResData.RES_RANDOM_REWARD_TYPE,System.Int32,System.UInt32,System.UInt32)
+   0051 stloc.s V_5
+   0053 ldloc.s V_5
+   0055 brfalse IL_006f: ldloc.3
+   005A ldloc.s V_5
+   005C callvirt System.Int32 ListViewBase::get_Count()
+   0061 ldc.i4.0 
+   0062 ble IL_006f: ldloc.3
+   0067 ldloc.2 
+   0068 ldloc.s V_5
+   006A callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CUseable>::AddRange(System.Collections.Generic.IEnumerable`1<!0>)
+   006F ldloc.3 
+   0070 ldc.i4.1 
+   0071 add 
+   0072 stloc.3 
+   0073 ldloc.3 
+   0074 ldc.i4.s 20
+   0076 blt IL_0028: ldloca.s V_1
+   007B ldloc.2 
+   007C ldc.i4.0 
+   007D callvirt !0 ListView`1<Assets.Scripts.GameSystem.CUseable>::get_Item(System.Int32)
+   0082 stloc.s V_6
+   0084 ldloc.s V_6
+   0086 brfalse IL_021e: ldarg.3
+   008B ldarg.3 
+   008C ldstr Icon
+   0091 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0096 stloc.s V_7
+   0098 ldloc.s V_7
+   009A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   009F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00A4 stloc.s V_8
+   00A6 ldloc.s V_6
+   00A8 ldfld Assets.Scripts.GameSystem.CUseable::m_type
+   00AD ldc.i4.8 
+   00AE bne.un IL_00e0: ldloc.s V_8
+   00B3 ldarg.1 
+   00B4 ldc.r4 1
+   00B9 ldc.i4.0 
+   00BA ldc.r4 0
+   00BF newobj System.Void Assets.Scripts.GameSystem.HeadEffectParam::.ctor(Assets.Scripts.UI.CUIFormScript,System.Single,System.Boolean,System.Single)
+   00C4 stloc.s V_9
+   00C6 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.NobeSys>::GetInstance()
+   00CB ldloc.s V_8
+   00CD ldloc.s V_6
+   00CF ldfld Assets.Scripts.GameSystem.CUseable::m_baseID
+   00D4 ldloc.s V_9
+   00D6 callvirt System.Void Assets.Scripts.GameSystem.NobeSys::SetHeadIconBk(UnityEngine.UI.Image,System.Int32,Assets.Scripts.GameSystem.HeadEffectParam)
+   00DB br IL_00f4: ldarg.3
+   00E0 ldloc.s V_8
+   00E2 ldloc.s V_6
+   00E4 callvirt System.String Assets.Scripts.GameSystem.CUseable::GetIconPath()
+   00E9 ldarg.1 
+   00EA ldc.i4.0 
+   00EB ldc.i4.0 
+   00EC ldc.i4.0 
+   00ED ldc.i4.0 
+   00EE ldc.i4.0 
+   00EF call System.Void Assets.Scripts.UI.CUIUtility::SetImageSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   00F4 ldarg.3 
+   00F5 ldstr Name
+   00FA callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00FF stloc.s V_10
+   0101 ldloc.s V_10
+   0103 ldloc.s V_6
+   0105 ldfld Assets.Scripts.GameSystem.CUseable::m_name
+   010A call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   010F ldarg.3 
+   0110 ldstr Process/Button
+   0115 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   011A stloc.s V_11
+   011C ldarg.3 
+   011D ldstr Process/AlreadyGet
+   0122 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0127 stloc.s V_12
+   0129 ldc.i4.1 
+   012A ldloc.0 
+   012B ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   0130 ldc.i4.1 
+   0131 sub 
+   0132 ldc.i4.s 31
+   0134 and 
+   0135 shl 
+   0136 conv.i8 
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardGetMask
+   013D conv.u8 
+   013E and 
+   013F ldc.i4.0 
+   0140 conv.i8 
+   0141 cgt 
+   0143 stloc.s V_13
+   0145 ldc.i4.1 
+   0146 ldloc.0 
+   0147 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   014C ldc.i4.1 
+   014D sub 
+   014E ldc.i4.s 31
+   0150 and 
+   0151 shl 
+   0152 conv.i8 
+   0153 ldarg.0 
+   0154 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   0159 conv.u8 
+   015A and 
+   015B ldc.i4.0 
+   015C conv.i8 
+   015D cgt 
+   015F stloc.s V_14
+   0161 ldloc.s V_11
+   0163 ldloc.s V_13
+   0165 ldc.i4.0 
+   0166 ceq 
+   0168 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   016D ldloc.s V_12
+   016F ldloc.s V_13
+   0171 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0176 ldloc.s V_13
+   0178 brtrue IL_0219: br IL_0225
+   017D ldloc.s V_11
+   017F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0184 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   0189 stloc.s V_15
+   018B ldloc.s V_15
+   018D ldloc.s V_14
+   018F ldloc.s V_14
+   0191 ldc.i4.0 
+   0192 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetButtonEnable(UnityEngine.UI.Button,System.Boolean,System.Boolean,System.Boolean)
+   0197 ldloc.s V_11
+   0199 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   019E callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   01A3 stloc.s V_16
+   01A5 ldloc.s V_16
+   01A7 ldnull 
+   01A8 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   01AD brfalse IL_01c4: ldloc.s V_11
+   01B2 ldloc.s V_16
+   01B4 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   01B9 ldloc.0 
+   01BA ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   01BF stfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   01C4 ldloc.s V_11
+   01C6 ldstr Text
+   01CB callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01D0 stloc.s V_17
+   01D2 ldloc.s V_14
+   01D4 brfalse IL_01ee: call !0 Singleton`1<CTextManager>::GetInstance()
+   01D9 call !0 Singleton`1<CTextManager>::GetInstance()
+   01DE ldstr PlayerPopularityReward_CanGet
+   01E3 ldc.i4.1 
+   01E4 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01E9 br IL_020e: stloc.s V_18
+   01EE call !0 Singleton`1<CTextManager>::GetInstance()
+   01F3 ldstr PlayerPopularityReward_Cannotget
+   01F8 ldc.i4.1 
+   01F9 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   01FE ldloc.0 
+   01FF ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRequirePopularity
+   0204 box System.UInt32
+   0209 call System.String System.String::Format(System.String,System.Object)
+   020E stloc.s V_18
+   0210 ldloc.s V_17
+   0212 ldloc.s V_18
+   0214 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0219 br IL_0225: br IL_0231
+   021E ldarg.3 
+   021F ldc.i4.0 
+   0220 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0225 br IL_0231: ret
+   022A ldarg.3 
+   022B ldc.i4.0 
+   022C call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0231 ret 
+== System.Void _refreshPopularityValue(Assets.Scripts.UI.CUIFormScript kForm) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldloc.0 
+   0014 callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PlayerLikeNum()
+   0019 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalLikeNum
+   001E ldarg.1 
+   001F ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0024 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0029 ldstr All/node/PopularityNode/Fans/Value
+   002E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0033 stloc.1 
+   0034 ldarg.1 
+   0035 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   003A callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   003F ldstr All/node/PopularityNode/Game/Value
+   0044 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0049 stloc.2 
+   004A ldarg.1 
+   004B ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0050 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0055 ldstr All/node/PopularityNode/Photo/Value
+   005A callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   005F stloc.3 
+   0060 ldarg.1 
+   0061 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0066 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   006B ldstr All/node/PopularityNode/Personal/Value
+   0070 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0075 stloc.s V_4
+   0077 ldarg.1 
+   0078 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   007D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0082 ldstr All/node/PopularityNode/Total/Value
+   0087 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   008C stloc.s V_5
+   008E ldarg.1 
+   008F ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0094 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0099 ldstr All/node/PopularityNode/HeroGuideLikeNum/Value
+   009E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   00A3 stloc.s V_6
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansNum
+   00AB stloc.s V_7
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   00B3 stloc.s V_8
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoLikeNum
+   00BB stloc.s V_9
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalLikeNum
+   00C3 stloc.s V_10
+   00C5 ldarg.0 
+   00C6 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeNum
+   00CB stloc.s V_11
+   00CD ldarg.0 
+   00CE call System.UInt32 Assets.Scripts.GameSystem.CPlayerPopularitySystem::GetTotalPopularity()
+   00D3 stloc.s V_12
+   00D5 ldloc.s V_5
+   00D7 ldarg.0 
+   00D8 ldloc.s V_12
+   00DA conv.u8 
+   00DB call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   00E0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   00E5 ldloc.1 
+   00E6 ldarg.0 
+   00E7 ldloc.s V_7
+   00E9 conv.u8 
+   00EA call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   00EF call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   00F4 ldloc.2 
+   00F5 ldarg.0 
+   00F6 ldloc.s V_8
+   00F8 conv.u8 
+   00F9 call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   00FE call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0103 ldloc.3 
+   0104 ldarg.0 
+   0105 ldloc.s V_9
+   0107 conv.u8 
+   0108 call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   010D call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0112 ldloc.s V_4
+   0114 ldarg.0 
+   0115 ldloc.s V_10
+   0117 conv.u8 
+   0118 call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   011D call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0122 ldloc.s V_6
+   0124 ldarg.0 
+   0125 ldloc.s V_11
+   0127 conv.u8 
+   0128 call System.String Assets.Scripts.GameSystem.CPlayerPopularitySystem::_getNumString(System.UInt64)
+   012D call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetTextContent(UnityEngine.Transform,System.String)
+   0132 ret 
+== System.Void _getReward(Assets.Scripts.UI.CUIEvent kEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::commonUInt32Param1
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldloc.0 
+   000E call System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::ReqGetPlayerPopularityReward(System.UInt32)
+   0013 ret 
+== System.String _getNumString(System.UInt64 iNum) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldc.i4 10000
+   0006 conv.i8 
+   0007 bge.un IL_001a: ldarg.1
+   000C ldarga.s iNum
+   000E constrained. System.UInt64
+   0014 callvirt System.String System.Object::ToString()
+   0019 ret 
+   001A ldarg.1 
+   001B ldc.i4 10000
+   0020 conv.i8 
+   0021 blt.un IL_0053: ldarg.1
+   0026 ldarg.1 
+   0027 ldc.i4 10000000
+   002C conv.i8 
+   002D bge.un IL_0053: ldarg.1
+   0032 ldarg.1 
+   0033 conv.r.un 
+   0034 conv.r4 
+   0035 ldc.r4 10000
+   003A div 
+   003B stloc.0 
+   003C ldloca.s V_0
+   003E ldstr f1
+   0043 call System.String System.Single::ToString(System.String)
+   0048 ldstr W
+   004D call System.String System.String::Concat(System.String,System.String)
+   0052 ret 
+   0053 ldarg.1 
+   0054 ldc.i4 10000000
+   0059 conv.i8 
+   005A blt.un IL_008c: ldarg.1
+   005F ldarg.1 
+   0060 ldc.i4 99999999
+   0065 conv.i8 
+   0066 bge.un IL_008c: ldarg.1
+   006B ldarg.1 
+   006C conv.r.un 
+   006D conv.r4 
+   006E ldc.r4 10000
+   0073 div 
+   0074 stloc.1 
+   0075 ldloca.s V_1
+   0077 ldstr f0
+   007C call System.String System.Single::ToString(System.String)
+   0081 ldstr W
+   0086 call System.String System.String::Concat(System.String,System.String)
+   008B ret 
+   008C ldarg.1 
+   008D conv.r.un 
+   008E conv.r4 
+   008F ldc.r4 100000000
+   0094 div 
+   0095 stloc.2 
+   0096 ldloca.s V_2
+   0098 ldstr f1
+   009D call System.String System.Single::ToString(System.String)
+   00A2 ldstr E
+   00A7 call System.String System.String::Concat(System.String,System.String)
+   00AC ret 
+== System.Void ClearData() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTotalPlayerPopularity
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansNum
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoLikeNum
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalLikeNum
+   0023 ldarg.0 
+   0024 ldc.i4.0 
+   0025 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardGetMask
+   002A ldarg.0 
+   002B ldc.i4.0 
+   002C stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   0031 ret 
+== System.UInt32 GetPersonalLikeWeight() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalWeight
+   0006 ret 
+== System.UInt32 GetTotalPopularity(CSProtocol.COMDT_POPULARITY_DETAIL kData, System.UInt32 iPersonalLikeNum, System.UInt32 iHeroGuideLikeNum) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwFansNum
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansWeight
+   000C mul 
+   000D stloc.0 
+   000E ldarg.1 
+   000F ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwTeamPlayNum
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamWeight
+   001A mul 
+   001B stloc.1 
+   001C ldarg.1 
+   001D ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwPhotoLikeNum
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoWeight
+   0028 mul 
+   0029 stloc.2 
+   002A ldarg.2 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalWeight
+   0031 mul 
+   0032 stloc.3 
+   0033 ldarg.3 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeWeight
+   003A mul 
+   003B stloc.s V_4
+   003D ldloc.0 
+   003E ldloc.1 
+   003F add 
+   0040 ldloc.2 
+   0041 add 
+   0042 ldloc.3 
+   0043 add 
+   0044 ldloc.s V_4
+   0046 add 
+   0047 ret 
+== System.UInt32 GetTotalPopularity() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldarg.0 
+   000C ldloc.0 
+   000D callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_PlayerLikeNum()
+   0012 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalLikeNum
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansNum
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansWeight
+   0023 mul 
+   0024 stloc.1 
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamWeight
+   0031 mul 
+   0032 stloc.2 
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoLikeNum
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoWeight
+   003F mul 
+   0040 stloc.3 
+   0041 ldarg.0 
+   0042 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalLikeNum
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalWeight
+   004D mul 
+   004E stloc.s V_4
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeNum
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeWeight
+   005C mul 
+   005D stloc.s V_5
+   005F ldloc.1 
+   0060 ldloc.2 
+   0061 add 
+   0062 ldloc.3 
+   0063 add 
+   0064 ldloc.s V_4
+   0066 add 
+   0067 ldloc.s V_5
+   0069 add 
+   006A ret 
+== System.Void InitPlayerPopularityData(CSProtocol.COMDT_POPULARITY_DETAIL kData, System.UInt32 iHeroGuideLikeNum) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwPhotoLikeNum
+   0007 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoLikeNum
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwFansNum
+   0013 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansNum
+   0018 ldarg.0 
+   0019 ldarg.1 
+   001A ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwTeamPlayNum
+   001F stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   0024 ldarg.0 
+   0025 ldarg.1 
+   0026 ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwRewardMask
+   002B stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardGetMask
+   0030 ldarg.0 
+   0031 ldarg.1 
+   0032 ldfld CSProtocol.COMDT_POPULARITY_DETAIL::dwReachMask
+   0037 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   003C ldarg.0 
+   003D ldarg.2 
+   003E stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeNum
+   0043 ret 
+== System.Void UpdatePhotoNumAndFanNum(System.UInt32 iPhotoNum, System.UInt32 iFansNum) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoLikeNum
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansNum
+   000E call !0 Singleton`1<EventRouter>::GetInstance()
+   0013 ldsfld EventID::PlayerPopularityDataChanged
+   0018 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   001D ret 
+== System.Void UpdateTeamPlayNum(System.UInt32 iValue) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   0007 ldarg.1 
+   0008 add 
+   0009 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamPlayNum
+   000E ret 
+== System.Void _updateRewardReachMask() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B ldc.i4.2 
+   000C bge IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0018 ldc.i4.0 
+   0019 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::get_Item(System.Int32)
+   001E stloc.0 
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0025 ldc.i4.1 
+   0026 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::get_Item(System.Int32)
+   002B stloc.1 
+   002C ldloc.0 
+   002D ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRequirePopularity
+   0032 stloc.2 
+   0033 ldloc.1 
+   0034 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRequirePopularity
+   0039 stloc.3 
+   003A ldarg.0 
+   003B call System.UInt32 Assets.Scripts.GameSystem.CPlayerPopularitySystem::GetTotalPopularity()
+   0040 stloc.s V_4
+   0042 ldloc.s V_4
+   0044 ldloc.2 
+   0045 blt.un IL_0068: ldloc.s V_4
+   004A ldloc.0 
+   004B ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   0050 ldc.i4.1 
+   0051 sub 
+   0052 stloc.s V_5
+   0054 ldarg.0 
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   005B ldc.i4.1 
+   005C ldloc.s V_5
+   005E ldc.i4.s 31
+   0060 and 
+   0061 shl 
+   0062 or 
+   0063 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   0068 ldloc.s V_4
+   006A ldloc.3 
+   006B blt.un IL_008e: ret
+   0070 ldloc.1 
+   0071 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   0076 ldc.i4.1 
+   0077 sub 
+   0078 stloc.s V_6
+   007A ldarg.0 
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   0081 ldc.i4.1 
+   0082 ldloc.s V_6
+   0084 ldc.i4.s 31
+   0086 and 
+   0087 shl 
+   0088 or 
+   0089 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPopularityRewardReachMask
+   008E ret 
+== System.Void _initPopularuityRewardData() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B call System.Int32 ResData.GameDataMgr/PopularityRewardDatabin::Count()
+   0010 stloc.0 
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 br IL_005c: ldloc.1
+   0018 ldloc.1 
+   0019 call ResData.ResPopularityReward ResData.GameDataMgr/PopularityRewardDatabin::GetByIndex(System.Int32)
+   001E stloc.2 
+   001F newobj System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::.ctor()
+   0024 stloc.3 
+   0025 ldloc.3 
+   0026 ldloca.s V_2
+   0028 ldfld ResData.ResPopularityReward::dwPopularityLv
+   002D stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iPopularityLevel
+   0032 ldloc.3 
+   0033 ldloca.s V_2
+   0035 ldfld ResData.ResPopularityReward::dwPopularityValue
+   003A stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRequirePopularity
+   003F ldloc.3 
+   0040 ldloca.s V_2
+   0042 ldfld ResData.ResPopularityReward::dwRewardId
+   0047 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData::m_iRewardID
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPopularityRewardList
+   0052 ldloc.3 
+   0053 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData>::Add(!0)
+   0058 ldloc.1 
+   0059 ldc.i4.1 
+   005A add 
+   005B stloc.1 
+   005C ldloc.1 
+   005D ldloc.0 
+   005E blt IL_0018: ldloc.1
+   0063 ret 
+== System.Void _initPopularityWeight() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.1 
+   0001 call ResData.ResPopularity ResData.GameDataMgr/PopularityConfigDatabin::GetByIndex(System.Int32)
+   0006 stloc.0 
+   0007 ldc.i4.2 
+   0008 call ResData.ResPopularity ResData.GameDataMgr/PopularityConfigDatabin::GetByIndex(System.Int32)
+   000D stloc.1 
+   000E ldc.i4.3 
+   000F call ResData.ResPopularity ResData.GameDataMgr/PopularityConfigDatabin::GetByIndex(System.Int32)
+   0014 stloc.2 
+   0015 ldc.i4.4 
+   0016 call ResData.ResPopularity ResData.GameDataMgr/PopularityConfigDatabin::GetByIndex(System.Int32)
+   001B stloc.3 
+   001C ldc.i4.5 
+   001D call ResData.ResPopularity ResData.GameDataMgr/PopularityConfigDatabin::GetByIndex(System.Int32)
+   0022 stloc.s V_4
+   0024 ldarg.0 
+   0025 ldloca.s V_2
+   0027 ldfld ResData.ResPopularity::wPopularityValue
+   002C stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iFansWeight
+   0031 ldarg.0 
+   0032 ldloca.s V_3
+   0034 ldfld ResData.ResPopularity::wPopularityValue
+   0039 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iTeamWeight
+   003E ldarg.0 
+   003F ldloca.s V_1
+   0041 ldfld ResData.ResPopularity::wPopularityValue
+   0046 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPhotoWeight
+   004B ldarg.0 
+   004C ldloca.s V_0
+   004E ldfld ResData.ResPopularity::wPopularityValue
+   0053 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iPersonalWeight
+   0058 ldarg.0 
+   0059 ldloca.s V_4
+   005B ldfld ResData.ResPopularity::wPopularityValue
+   0060 stfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_iHeroGuideLikeWeight
+   0065 ret 
+== System.Void GetPlayerPopularityData(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_GET_LIKEANDFANS_NUM_RSP CSProtocol.CSPkgBody::get_stGetLikeAndFansRsp()
+   000B ldfld CSProtocol.SCPKG_GET_LIKEANDFANS_NUM_RSP::dwLikePhotoNum
+   0010 stloc.0 
+   0011 ldarg.0 
+   0012 ldfld CSProtocol.CSPkg::stPkgData
+   0017 callvirt CSProtocol.SCPKG_GET_LIKEANDFANS_NUM_RSP CSProtocol.CSPkgBody::get_stGetLikeAndFansRsp()
+   001C ldfld CSProtocol.SCPKG_GET_LIKEANDFANS_NUM_RSP::dwFansNum
+   0021 stloc.1 
+   0022 call !0 Singleton`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem>::GetInstance()
+   0027 ldloc.0 
+   0028 ldloc.1 
+   0029 callvirt System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::UpdatePhotoNumAndFanNum(System.UInt32,System.UInt32)
+   002E ret 
+== System.Void GetPlayerPopularityReward(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=13
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP CSProtocol.CSPkgBody::get_stGetPopularityRewardRsp()
+   000B ldfld CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP::dwResult
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 brtrue IL_0087: ldloc.0
+   0017 ldarg.0 
+   0018 ldfld CSProtocol.CSPkg::stPkgData
+   001D callvirt CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP CSProtocol.CSPkgBody::get_stGetPopularityRewardRsp()
+   0022 ldfld CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP::dwPopularityLv
+   0027 stloc.1 
+   0028 call !0 Singleton`1<Assets.Scripts.GameSystem.CPlayerPopularitySystem>::GetInstance()
+   002D ldloc.1 
+   002E callvirt System.Void Assets.Scripts.GameSystem.CPlayerPopularitySystem::UpdatePlayerPopularityReward(System.UInt32)
+   0033 ldarg.0 
+   0034 ldfld CSProtocol.CSPkg::stPkgData
+   0039 callvirt CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP CSProtocol.CSPkgBody::get_stGetPopularityRewardRsp()
+   003E ldfld CSProtocol.SCPKG_GET_POPULARITY_REWARD_RSP::stRewardInfo
+   0043 stloc.2 
+   0044 ldloc.2 
+   0045 call ListView`1<Assets.Scripts.GameSystem.CUseable> Assets.Scripts.GameSystem.CUseableManager::GetUseableListFromReward(CSProtocol.COMDT_REWARD_DETAIL)
+   004A stloc.3 
+   004B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0050 ldloc.3 
+   0051 call !!0[] LinqS::ToArray<Assets.Scripts.GameSystem.CUseable>(ListView`1<!!0>)
+   0056 call !0 Singleton`1<CTextManager>::GetInstance()
+   005B ldstr Mall_Recommend_Lottery_Reward_Title
+   0060 ldc.i4.1 
+   0061 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0066 ldc.i4.1 
+   0067 ldc.i4.0 
+   0068 ldc.i4.0 
+   0069 ldc.i4.0 
+   006A ldstr Form_Award
+   006F ldnull 
+   0070 ldnull 
+   0071 ldc.i4.0 
+   0072 ldloca.s V_4
+   0074 initobj Assets.Scripts.UI.stUIEventParams
+   007A ldloc.s V_4
+   007C ldnull 
+   007D callvirt System.Void Assets.Scripts.UI.CUIManager::OpenAwardTip(Assets.Scripts.GameSystem.CUseable[],System.String,System.Boolean,Assets.Scripts.UI.enUIEventID,System.Boolean,System.Boolean,System.String,System.String,System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String)
+   0082 br IL_00da: ret
+   0087 ldloc.0 
+   0088 ldc.i4 404
+   008D bne.un IL_00b3: ldloc.0
+   0092 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0097 ldstr CS_ERR_GET_POPULARITY_REWARD_NOT_REACH
+   009C ldc.i4.1 
+   009D ldc.r4 1.5
+   00A2 ldnull 
+   00A3 ldc.i4.0 
+   00A4 newarr System.Object
+   00A9 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00AE br IL_00da: ret
+   00B3 ldloc.0 
+   00B4 ldc.i4 405
+   00B9 bne.un IL_00da: ret
+   00BE call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C3 ldstr CS_ERR_GET_POPULARITY_REWARD_ALREADY
+   00C8 ldc.i4.1 
+   00C9 ldc.r4 1.5
+   00CE ldnull 
+   00CF ldc.i4.0 
+   00D0 newarr System.Object
+   00D5 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00DA ret 
+== System.Void ReqPlayerPopularityData() attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 1921
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 ldloca.s V_0
+   0012 ldc.i4.0 
+   0013 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0018 pop 
+   0019 ret 
+== System.Void ReqGetPlayerPopularityReward(System.UInt32 iPopularityRewardID) attrs=Public, HideBySig maxstack=3
+   0000 ldc.i4 1923
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_GET_POPULARITY_REWARD_REQ CSProtocol.CSPkgBody::get_stGetPopularityRewardReq()
+   0016 ldarg.1 
+   0017 stfld CSProtocol.CSPKG_GET_POPULARITY_REWARD_REQ::dwPopularityLv
+   001C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0021 ldloca.s V_0
+   0023 ldc.i4.0 
+   0024 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0029 pop 
+   002A ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldstr UGUI/Form/System/Player/Form_PlayerPopularity.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CPlayerPopularitySystem::m_kPlayerPopularityFormPath
+   000A ret 
+  NESTED Assets.Scripts.GameSystem.CPlayerPopularitySystem/PopularityRewardData

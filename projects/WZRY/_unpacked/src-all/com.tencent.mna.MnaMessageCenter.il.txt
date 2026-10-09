@@ -1,0 +1,254 @@
+// TYPE com.tencent.mna.MnaMessageCenter  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD com.tencent.mna.MnaMessageCenter instance
+  FIELD UnityEngine.GameObject bridgeGameObject
+  FIELD System.Object queueLock
+  FIELD System.Collections.Queue resultQueue
+  FIELD System.Int32 REUSLT_CODE_SUC
+  FIELD System.Int32 REUSLT_CODE_EMPTY
+  FIELD System.Int32 REUSLT_CODE_ERROR
+  PROP com.tencent.mna.MnaMessageCenter Instance
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0006 ret 
+== System.Int32 MessageConsumer(System.String jsonStr) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld com.tencent.mna.MnaMessageCenter::queueLock
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 call System.Void System.Threading.Monitor::Enter(System.Object)
+   000C ldarg.0 
+   000D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0012 brfalse IL_0022: ldsfld System.Collections.Queue com.tencent.mna.MnaMessageCenter::resultQueue
+   0017 ldsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_EMPTY
+   001C stloc.1 
+   001D leave IL_0071: ldloc.1
+   0022 ldsfld com.tencent.mna.MnaMessageCenter::resultQueue
+   0027 ldarg.0 
+   0028 callvirt System.Void System.Collections.Queue::Enqueue(System.Object)
+   002D ldsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_SUC
+   0032 stloc.1 
+   0033 leave IL_0071: ldloc.1
+   0038 stloc.2 
+   0039 ldstr {'MessageComsumerExpInfo':'
+   003E ldloc.2 
+   003F callvirt System.String System.Exception::get_Message()
+   0044 ldstr '}
+   0049 call System.String System.String::Concat(System.String,System.String,System.String)
+   004E stloc.3 
+   004F ldsfld com.tencent.mna.MnaMessageCenter::resultQueue
+   0054 ldloc.3 
+   0055 callvirt System.Void System.Collections.Queue::Enqueue(System.Object)
+   005A leave IL_005f: ldsfld System.Int32 com.tencent.mna.MnaMessageCenter::REUSLT_CODE_SUC
+   005F ldsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_SUC
+   0064 stloc.1 
+   0065 leave IL_0071: ldloc.1
+   006A ldloc.0 
+   006B call System.Void System.Threading.Monitor::Exit(System.Object)
+   0070 endfinally 
+   0071 ldloc.1 
+   0072 ret 
+== com.tencent.mna.MnaMessageCenter get_Instance() attrs=Public, Static, HideBySig, SpecialName maxstack=2
+   0000 ldsfld com.tencent.mna.MnaMessageCenter::instance
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_0061: ldsfld com.tencent.mna.MnaMessageCenter com.tencent.mna.MnaMessageCenter::instance
+   0010 ldsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   0015 ldnull 
+   0016 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001B brfalse IL_0043: ldsfld UnityEngine.GameObject com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   0020 newobj System.Void UnityEngine.GameObject::.ctor()
+   0025 stsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   002A ldsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   002F ldstr MSDKCallbackBridge
+   0034 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   0039 ldsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   003E call System.Void UnityEngine.Object::DontDestroyOnLoad(UnityEngine.Object)
+   0043 ldsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   0048 ldtoken com.tencent.mna.MnaMessageCenter
+   004D call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0052 callvirt UnityEngine.Component UnityEngine.GameObject::AddComponent(System.Type)
+   0057 isinst com.tencent.mna.MnaMessageCenter
+   005C stsfld com.tencent.mna.MnaMessageCenter::instance
+   0061 ldsfld com.tencent.mna.MnaMessageCenter::instance
+   0066 ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=8
+   0000 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=2
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldsfld com.tencent.mna.MnaMessageCenter::queueLock
+   000B stloc.1 
+   000C ldloc.1 
+   000D call System.Void System.Threading.Monitor::Enter(System.Object)
+   0012 ldsfld com.tencent.mna.MnaMessageCenter::resultQueue
+   0017 callvirt System.Int32 System.Collections.Queue::get_Count()
+   001C ldc.i4.0 
+   001D ble IL_0032: leave IL_003e
+   0022 ldsfld com.tencent.mna.MnaMessageCenter::resultQueue
+   0027 callvirt System.Object System.Collections.Queue::Dequeue()
+   002C castclass System.String
+   0031 stloc.0 
+   0032 leave IL_003e: ldloc.0
+   0037 ldloc.1 
+   0038 call System.Void System.Threading.Monitor::Exit(System.Object)
+   003D endfinally 
+   003E ldloc.0 
+   003F call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0044 brfalse IL_004a: ldarg.0
+   0049 ret 
+   004A ldarg.0 
+   004B ldloc.0 
+   004C call System.Void com.tencent.mna.MnaMessageCenter::parseCallbackString(System.String)
+   0051 leave IL_0077: ret
+   0056 stloc.2 
+   0057 ldstr update json parse exception
+   005C call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0061 ldloc.0 
+   0062 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0067 ldloc.2 
+   0068 callvirt System.String System.Exception::get_Message()
+   006D call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0072 leave IL_0077: ret
+   0077 ret 
+== System.Void parseCallbackString(System.String orginStr) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldstr OnStartSpeedNotify
+   0006 callvirt System.Boolean System.String::Contains(System.String)
+   000B brfalse IL_003e: ldarg.1
+   0010 ldarg.1 
+   0011 ldstr OnStartSpeedNotify
+   0016 call System.Int32 System.String::get_Length()
+   001B ldc.i4.1 
+   001C add 
+   001D callvirt System.String System.String::Substring(System.Int32)
+   0022 stloc.0 
+   0023 ldstr parseCallbackString: 
+   0028 ldloc.0 
+   0029 call System.String System.String::Concat(System.String,System.String)
+   002E call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0033 ldloc.0 
+   0034 call System.Void com.tencent.mna.MNA::OnStartSpeedNotify(System.String)
+   0039 br IL_018a: ret
+   003E ldarg.1 
+   003F ldstr OnQueryKartinNotify
+   0044 callvirt System.Boolean System.String::Contains(System.String)
+   0049 brfalse IL_007c: ldarg.1
+   004E ldarg.1 
+   004F ldstr OnQueryKartinNotify
+   0054 call System.Int32 System.String::get_Length()
+   0059 ldc.i4.1 
+   005A add 
+   005B callvirt System.String System.String::Substring(System.Int32)
+   0060 stloc.1 
+   0061 ldstr parseCallbackString: 
+   0066 ldloc.1 
+   0067 call System.String System.String::Concat(System.String,System.String)
+   006C call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0071 ldloc.1 
+   0072 call System.Void com.tencent.mna.MNA::OnQueryKartinNotify(System.String)
+   0077 br IL_018a: ret
+   007C ldarg.1 
+   007D ldstr OnBatteryChangedNotify
+   0082 callvirt System.Boolean System.String::Contains(System.String)
+   0087 brfalse IL_00ba: ldarg.1
+   008C ldarg.1 
+   008D ldstr OnBatteryChangedNotify
+   0092 call System.Int32 System.String::get_Length()
+   0097 ldc.i4.1 
+   0098 add 
+   0099 callvirt System.String System.String::Substring(System.Int32)
+   009E stloc.2 
+   009F ldstr parseCallbackString: 
+   00A4 ldloc.2 
+   00A5 call System.String System.String::Concat(System.String,System.String)
+   00AA call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   00AF ldloc.2 
+   00B0 call System.Void com.tencent.mna.MNA::OnBatteryChangedNotify(System.String)
+   00B5 br IL_018a: ret
+   00BA ldarg.1 
+   00BB ldstr onBinding
+   00C0 callvirt System.Boolean System.String::Contains(System.String)
+   00C5 brfalse IL_00f8: ldarg.1
+   00CA ldarg.1 
+   00CB ldstr onBinding
+   00D0 call System.Int32 System.String::get_Length()
+   00D5 ldc.i4.1 
+   00D6 add 
+   00D7 callvirt System.String System.String::Substring(System.Int32)
+   00DC stloc.3 
+   00DD ldstr parseCallbackString: 
+   00E2 ldloc.3 
+   00E3 call System.String System.String::Concat(System.String,System.String)
+   00E8 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   00ED ldloc.3 
+   00EE call System.Void com.tencent.mna.MNA::OnBindNotify(System.String)
+   00F3 br IL_018a: ret
+   00F8 ldarg.1 
+   00F9 ldstr OnQueryNetworkNotify
+   00FE callvirt System.Boolean System.String::Contains(System.String)
+   0103 brfalse IL_0139: ldarg.1
+   0108 ldarg.1 
+   0109 ldstr OnQueryNetworkNotify
+   010E call System.Int32 System.String::get_Length()
+   0113 ldc.i4.1 
+   0114 add 
+   0115 callvirt System.String System.String::Substring(System.Int32)
+   011A stloc.s V_4
+   011C ldstr parseCallbackString: 
+   0121 ldloc.s V_4
+   0123 call System.String System.String::Concat(System.String,System.String)
+   0128 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   012D ldloc.s V_4
+   012F call System.Void com.tencent.mna.MNA::OnQueryNetworkNotify(System.String)
+   0134 br IL_018a: ret
+   0139 ldarg.1 
+   013A ldstr OnQueryRouterNotify
+   013F callvirt System.Boolean System.String::Contains(System.String)
+   0144 brfalse IL_017a: ldstr "update string parse exception"
+   0149 ldarg.1 
+   014A ldstr OnQueryRouterNotify
+   014F call System.Int32 System.String::get_Length()
+   0154 ldc.i4.1 
+   0155 add 
+   0156 callvirt System.String System.String::Substring(System.Int32)
+   015B stloc.s V_5
+   015D ldstr parseCallbackString: 
+   0162 ldloc.s V_5
+   0164 call System.String System.String::Concat(System.String,System.String)
+   0169 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   016E ldloc.s V_5
+   0170 call System.Void com.tencent.mna.MNA::OnQueryRouterNotify(System.String)
+   0175 br IL_018a: ret
+   017A ldstr update string parse exception
+   017F call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0184 ldarg.1 
+   0185 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   018A ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ret 
+== System.Void OnLoginNotify(System.String jsonRet) attrs=Public, HideBySig maxstack=8
+   0000 ldsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   0005 callvirt System.String UnityEngine.Object::get_name()
+   000A ldstr  OnLoginNotify
+   000F call System.String System.String::Concat(System.String,System.String)
+   0014 call System.Void com.tencent.mna.GSDKUtils::Logger(System.String)
+   0019 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldnull 
+   0001 stsfld com.tencent.mna.MnaMessageCenter::instance
+   0006 ldnull 
+   0007 stsfld com.tencent.mna.MnaMessageCenter::bridgeGameObject
+   000C newobj System.Void System.Object::.ctor()
+   0011 stsfld com.tencent.mna.MnaMessageCenter::queueLock
+   0016 ldc.i4.s 10
+   0018 newobj System.Void System.Collections.Queue::.ctor(System.Int32)
+   001D stsfld com.tencent.mna.MnaMessageCenter::resultQueue
+   0022 ldc.i4.0 
+   0023 stsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_SUC
+   0028 ldc.i4.1 
+   0029 stsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_EMPTY
+   002E ldc.i4.2 
+   002F stsfld com.tencent.mna.MnaMessageCenter::REUSLT_CODE_ERROR
+   0034 ret 
+  NESTED com.tencent.mna.MnaMessageCenter/MNASendToUnity
+  NESTED com.tencent.mna.MnaMessageCenter/MonoPInvokeCallbackAttribute

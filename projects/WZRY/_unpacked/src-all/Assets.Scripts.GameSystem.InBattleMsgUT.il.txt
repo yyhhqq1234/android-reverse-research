@@ -1,0 +1,152 @@
+// TYPE Assets.Scripts.GameSystem.InBattleMsgUT  base=System.Object  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void ShowInBattleMsg(ResData.RES_INBATTLE_MSG_SHOW_TYPE type, System.UInt64 playerid, System.UInt32 heroID, System.String content, System.String sound) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0007 ldarg.1 
+   0008 conv.u4 
+   0009 conv.u8 
+   000A callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayerByUid(System.UInt64)
+   000F stloc.1 
+   0010 ldloc.1 
+   0011 brfalse IL_002c: ldloc.0
+   0016 call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   001B ldfld Assets.Scripts.GameSystem.InBattleMsgMgr::m_InputChat
+   0020 ldloc.1 
+   0021 ldfld Assets.Scripts.GameLogic.Player::PlayerUId
+   0026 callvirt System.Boolean InBattleInputChat::IsForbid(System.UInt64)
+   002B stloc.0 
+   002C ldloc.0 
+   002D brfalse IL_0033: ldarg.0
+   0032 ret 
+   0033 ldarg.0 
+   0034 ldc.i4.1 
+   0035 bne.un IL_0067: ldarg.0
+   003A ldarg.1 
+   003B ldarg.2 
+   003C ldarg.3 
+   003D ldarg.s sound
+   003F newobj System.Void Assets.Scripts.GameSystem.CSignalTips_InBatMsg::.ctor(System.UInt64,System.UInt32,System.String,System.String)
+   0044 stloc.2 
+   0045 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   004A callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   004F callvirt Assets.Scripts.GameSystem.SignalPanel Assets.Scripts.GameSystem.FightForm::GetSignalPanel()
+   0054 ldloc.2 
+   0055 callvirt System.Void Assets.Scripts.GameSystem.SignalPanel::Add_SignalTip(Assets.Scripts.GameSystem.CSignalTipsElement)
+   005A ldarg.s sound
+   005C ldarg.1 
+   005D call System.Void Assets.Scripts.GameSystem.InBattleMsgUT::PlaySound(System.String,System.UInt64)
+   0062 br IL_00b1: ret
+   0067 ldarg.0 
+   0068 ldc.i4.2 
+   0069 bne.un IL_009c: ldarg.0
+   006E ldarg.1 
+   006F ldarg.2 
+   0070 ldarg.3 
+   0071 call System.Void Assets.Scripts.GameSystem.InBattleMsgUT::ShowBubble(System.UInt64,System.UInt32,System.String)
+   0076 call !0 Singleton`1<Assets.Scripts.GameSystem.InBattleMsgMgr>::get_instance()
+   007B ldfld Assets.Scripts.GameSystem.InBattleMsgMgr::m_shortcutChat
+   0080 stloc.3 
+   0081 ldloc.3 
+   0082 brfalse IL_008f: ldarg.s sound
+   0087 ldloc.3 
+   0088 ldarg.1 
+   0089 ldarg.2 
+   008A callvirt System.Void InBattleShortcut::UpdatePlayerBubbleTimer(System.UInt64,System.UInt32)
+   008F ldarg.s sound
+   0091 ldarg.1 
+   0092 call System.Void Assets.Scripts.GameSystem.InBattleMsgUT::PlaySound(System.String,System.UInt64)
+   0097 br IL_00b1: ret
+   009C ldarg.0 
+   009D ldc.i4.3 
+   009E bne.un IL_00b1: ret
+   00A3 ldarg.1 
+   00A4 call System.Void Assets.Scripts.GameSystem.CInBattleCareerTitleMgr::ShowCareerTitle(System.UInt64)
+   00A9 ldarg.s sound
+   00AB ldarg.1 
+   00AC call System.Void Assets.Scripts.GameSystem.InBattleMsgUT::PlaySound(System.String,System.UInt64)
+   00B1 ret 
+== System.Void PlaySound(System.String sound, System.UInt64 playerid) attrs=Private, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0005 ldarg.1 
+   0006 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayerByUid(System.UInt64)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0013: ldarg.0
+   0012 ret 
+   0013 ldarg.0 
+   0014 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0019 brtrue IL_0051: ret
+   001E ldloc.0 
+   001F ldfld Assets.Scripts.GameLogic.Player::Captain
+   0024 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0029 brfalse IL_0051: ret
+   002E call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::GetInstance()
+   0033 ldarg.0 
+   0034 ldloc.0 
+   0035 ldfld Assets.Scripts.GameLogic.Player::Captain
+   003A ldloc.0 
+   003B ldflda Assets.Scripts.GameLogic.Player::Captain
+   0040 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0045 callvirt UnityEngine.GameObject Assets.Scripts.GameLogic.ActorLinker::get_gameObject()
+   004A ldc.i4.0 
+   004B callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PlayBattleSound(System.String,Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>,UnityEngine.GameObject,System.Boolean)
+   0050 pop 
+   0051 ret 
+== System.Void ShowBubble(System.UInt64 playerid, System.UInt32 heroID, System.String content) attrs=Public, Static, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0005 ldarg.0 
+   0006 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayerByUid(System.UInt64)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0013: ldloc.0
+   0012 ret 
+   0013 ldloc.0 
+   0014 callvirt ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>> Assets.Scripts.GameLogic.Player::GetAllHeroes()
+   0019 stloc.1 
+   001A ldc.i4.0 
+   001B stloc.2 
+   001C br IL_0078: ldloc.2
+   0021 ldloca.s V_1
+   0023 ldloc.2 
+   0024 call !0 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   0029 stloc.3 
+   002A ldloca.s V_3
+   002C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0031 brfalse IL_0074: ldloc.2
+   0036 ldloca.s V_1
+   0038 ldloc.2 
+   0039 call !0 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   003E stloc.s V_4
+   0040 ldloca.s V_4
+   0042 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0047 callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   004C ldarg.1 
+   004D bne.un IL_0074: ldloc.2
+   0052 ldloca.s V_1
+   0054 ldloc.2 
+   0055 call !0 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   005A stloc.s V_5
+   005C ldloca.s V_5
+   005E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0063 ldfld Assets.Scripts.GameLogic.ActorLinker::HudControl
+   0068 ldarg.2 
+   0069 ldc.i4.s 12
+   006B ldc.i4.0 
+   006C ldc.i4.1 
+   006D ldc.i4.0 
+   006E callvirt System.Void Assets.Scripts.GameLogic.HudComponent3D::SetTextHud(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean)
+   0073 ret 
+   0074 ldloc.2 
+   0075 ldc.i4.1 
+   0076 add 
+   0077 stloc.2 
+   0078 ldloc.2 
+   0079 ldloca.s V_1
+   007B call System.Int32 ReadonlyContext`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   0080 blt IL_0021: ldloca.s V_1
+   0085 ret 

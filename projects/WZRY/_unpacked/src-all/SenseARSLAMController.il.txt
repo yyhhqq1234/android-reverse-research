@@ -1,0 +1,295 @@
+// TYPE SenseARSLAMController  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD SenseGoogleARCoreInternal.NativeSession m_NativeSession
+  FIELD UnityEngine.Camera m_Camera
+  FIELD UnityEngine.GameObject m_TrackedPlanePrefab
+  FIELD UnityEngine.GameObject m_PointCloudPrefab
+  FIELD System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane> m_NewPlanes
+  FIELD System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane> m_AllPlanes
+  FIELD System.Collections.Generic.List`1<UnityEngine.GameObject> PlaneLists
+  FIELD UnityEngine.GameObject pointCloudInstance
+  FIELD System.Byte[] m_SLAMDebugInfo
+  FIELD System.Int32 mOldPlanes
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane>::.ctor()
+   0006 stfld SenseARSLAMController::m_NewPlanes
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane>::.ctor()
+   0011 stfld SenseARSLAMController::m_AllPlanes
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.List`1<UnityEngine.GameObject>::.ctor()
+   001C stfld SenseARSLAMController::PlaneLists
+   0021 ldarg.0 
+   0022 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0027 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call SenseGoogleARCoreInternal.NativeSession SenseGoogleARCore.Session::GetNativeSession()
+   0006 stfld SenseARSLAMController::m_NativeSession
+   000B call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0010 stloc.0 
+   0011 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0016 stloc.1 
+   0017 ldarg.0 
+   0018 ldfld SenseARSLAMController::m_PointCloudPrefab
+   001D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0022 brfalse IL_003a: ldarg.0
+   0027 ldarg.0 
+   0028 ldarg.0 
+   0029 ldfld SenseARSLAMController::m_PointCloudPrefab
+   002E ldloc.0 
+   002F ldloc.1 
+   0030 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0,UnityEngine.Vector3,UnityEngine.Quaternion)
+   0035 stfld SenseARSLAMController::pointCloudInstance
+   003A ldarg.0 
+   003B ldc.i4.0 
+   003C stfld SenseARSLAMController::mOldPlanes
+   0041 ldarg.0 
+   0042 ldc.i4 2048
+   0047 newarr System.Byte
+   004C stfld SenseARSLAMController::m_SLAMDebugInfo
+   0051 ret 
+== System.String GetSLAMDebugStr() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SenseARSLAMController::m_SLAMDebugInfo
+   0006 ldc.i4.0 
+   0007 ldc.i4 2048
+   000C call System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+   0011 ldarg.0 
+   0012 ldfld SenseARSLAMController::m_NativeSession
+   0017 callvirt SenseGoogleARCoreInternal.SessionApi SenseGoogleARCoreInternal.NativeSession::get_SessionApi()
+   001C ldarg.0 
+   001D ldfld SenseARSLAMController::m_SLAMDebugInfo
+   0022 callvirt System.Void SenseGoogleARCoreInternal.SessionApi::GetSLAMInfo(System.Byte[])
+   0027 call System.Text.Encoding System.Text.Encoding::get_Default()
+   002C ldarg.0 
+   002D ldfld SenseARSLAMController::m_SLAMDebugInfo
+   0032 callvirt System.String System.Text.Encoding::GetString(System.Byte[])
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld SenseARSLAMController::pointCloudInstance
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_002c: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld SenseARSLAMController::pointCloudInstance
+   0016 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   001B ldarg.0 
+   001C ldnull 
+   001D stfld SenseARSLAMController::pointCloudInstance
+   0022 ldstr after pointCloud.Destroy
+   0027 call System.Void UnityEngine.Debug::LogError(System.Object)
+   002C ldarg.0 
+   002D ldc.i4.0 
+   002E stfld SenseARSLAMController::mOldPlanes
+   0033 ldarg.0 
+   0034 call System.Void SenseARSLAMController::_RemovePlaneGameObject()
+   0039 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=4
+   0000 ldc.r4 34.5
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldfld SenseARSLAMController::m_NativeSession
+   000C ldloca.s V_0
+   000E callvirt System.Void SenseGoogleARCoreInternal.NativeSession::getVerticalFov(System.Single&)
+   0013 ldarg.0 
+   0014 ldfld SenseARSLAMController::m_Camera
+   0019 ldloc.0 
+   001A callvirt System.Void UnityEngine.Camera::set_fieldOfView(System.Single)
+   001F ldarg.0 
+   0020 ldfld SenseARSLAMController::m_TrackedPlanePrefab
+   0025 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002A brfalse IL_009c: ret
+   002F ldarg.0 
+   0030 ldarg.0 
+   0031 ldfld SenseARSLAMController::m_NewPlanes
+   0036 ldarg.0 
+   0037 ldfld SenseARSLAMController::m_AllPlanes
+   003C call System.Void SenseARSLAMController::GetPlanes<SenseGoogleARCore.TrackedPlane>(System.Collections.Generic.List`1<T>,System.Collections.Generic.List`1<T>)
+   0041 ldc.i4.0 
+   0042 stloc.1 
+   0043 br IL_008b: ldloc.1
+   0048 ldarg.0 
+   0049 ldfld SenseARSLAMController::m_TrackedPlanePrefab
+   004E call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0053 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0058 ldarg.0 
+   0059 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   005E call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0,UnityEngine.Vector3,UnityEngine.Quaternion,UnityEngine.Transform)
+   0063 stloc.2 
+   0064 ldloc.2 
+   0065 callvirt !!0 UnityEngine.GameObject::GetComponent<SenseGoogleARCore.HelloAR.TrackedPlaneVisualizer>()
+   006A ldarg.0 
+   006B ldfld SenseARSLAMController::m_NewPlanes
+   0070 ldloc.1 
+   0071 callvirt !0 System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane>::get_Item(System.Int32)
+   0076 callvirt System.Void SenseGoogleARCore.HelloAR.TrackedPlaneVisualizer::Initialize(SenseGoogleARCore.TrackedPlane)
+   007B ldarg.0 
+   007C ldfld SenseARSLAMController::PlaneLists
+   0081 ldloc.2 
+   0082 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.GameObject>::Add(!0)
+   0087 ldloc.1 
+   0088 ldc.i4.1 
+   0089 add 
+   008A stloc.1 
+   008B ldloc.1 
+   008C ldarg.0 
+   008D ldfld SenseARSLAMController::m_NewPlanes
+   0092 callvirt System.Int32 System.Collections.Generic.List`1<SenseGoogleARCore.TrackedPlane>::get_Count()
+   0097 blt IL_0048: ldarg.0
+   009C ret 
+== System.Void GetPlanes(System.Collections.Generic.List`1<T> NewTrackables, System.Collections.Generic.List`1<T> AllTrackables) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld SenseARSLAMController::m_NativeSession
+   0006 brtrue IL_000c: ldarg.1
+   000B ret 
+   000C ldarg.1 
+   000D callvirt System.Void System.Collections.Generic.List`1<T>::Clear()
+   0012 ldarg.2 
+   0013 callvirt System.Void System.Collections.Generic.List`1<T>::Clear()
+   0018 newobj System.Void System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::.ctor()
+   001D stloc.0 
+   001E ldarg.0 
+   001F ldfld SenseARSLAMController::m_NativeSession
+   0024 callvirt SenseGoogleARCoreInternal.SessionApi SenseGoogleARCoreInternal.NativeSession::get_SessionApi()
+   0029 ldloc.0 
+   002A callvirt System.Void SenseGoogleARCoreInternal.SessionApi::GetAllTrackables(System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>)
+   002F ldc.i4.0 
+   0030 stloc.1 
+   0031 br IL_0048: ldloc.1
+   0036 ldarg.0 
+   0037 ldloc.0 
+   0038 ldloc.1 
+   0039 callvirt !0 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Item(System.Int32)
+   003E ldarg.2 
+   003F call System.Void SenseARSLAMController::_SafeAdd<T>(SenseGoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   0044 ldloc.1 
+   0045 ldc.i4.1 
+   0046 add 
+   0047 stloc.1 
+   0048 ldloc.1 
+   0049 ldloc.0 
+   004A callvirt System.Int32 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Count()
+   004F blt IL_0036: ldarg.0
+   0054 ldloc.0 
+   0055 callvirt System.Int32 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Count()
+   005A stloc.2 
+   005B ldloc.2 
+   005C ldarg.0 
+   005D ldfld SenseARSLAMController::mOldPlanes
+   0062 ble IL_0099: ldloc.2
+   0067 ldarg.0 
+   0068 ldfld SenseARSLAMController::mOldPlanes
+   006D stloc.3 
+   006E br IL_0085: ldloc.3
+   0073 ldarg.0 
+   0074 ldloc.0 
+   0075 ldloc.3 
+   0076 callvirt !0 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Item(System.Int32)
+   007B ldarg.1 
+   007C call System.Void SenseARSLAMController::_SafeAdd<T>(SenseGoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   0081 ldloc.3 
+   0082 ldc.i4.1 
+   0083 add 
+   0084 stloc.3 
+   0085 ldloc.3 
+   0086 ldloc.0 
+   0087 callvirt System.Int32 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Count()
+   008C blt IL_0073: ldarg.0
+   0091 ldarg.0 
+   0092 ldloc.2 
+   0093 stfld SenseARSLAMController::mOldPlanes
+   0098 ret 
+   0099 ldloc.2 
+   009A ldarg.0 
+   009B ldfld SenseARSLAMController::mOldPlanes
+   00A0 bge IL_00e2: ret
+   00A5 ldarg.0 
+   00A6 ldc.i4.0 
+   00A7 stfld SenseARSLAMController::mOldPlanes
+   00AC ldarg.0 
+   00AD call System.Void SenseARSLAMController::_RemovePlaneGameObject()
+   00B2 ldarg.0 
+   00B3 ldfld SenseARSLAMController::mOldPlanes
+   00B8 stloc.s V_4
+   00BA br IL_00d4: ldloc.s V_4
+   00BF ldarg.0 
+   00C0 ldloc.0 
+   00C1 ldloc.s V_4
+   00C3 callvirt !0 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Item(System.Int32)
+   00C8 ldarg.1 
+   00C9 call System.Void SenseARSLAMController::_SafeAdd<T>(SenseGoogleARCore.Trackable,System.Collections.Generic.List`1<T>)
+   00CE ldloc.s V_4
+   00D0 ldc.i4.1 
+   00D1 add 
+   00D2 stloc.s V_4
+   00D4 ldloc.s V_4
+   00D6 ldloc.0 
+   00D7 callvirt System.Int32 System.Collections.Generic.List`1<SenseGoogleARCore.Trackable>::get_Count()
+   00DC blt IL_00bf: ldarg.0
+   00E1 ret 
+   00E2 ret 
+== System.Void _SafeAdd(SenseGoogleARCore.Trackable trackable, System.Collections.Generic.List`1<T> trackables) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 isinst T
+   0006 brfalse IL_001c: ret
+   000B ldarg.2 
+   000C ldarg.1 
+   000D isinst T
+   0012 unbox.any T
+   0017 callvirt System.Void System.Collections.Generic.List`1<T>::Add(!0)
+   001C ret 
+== System.Void _RemovePlaneGameObject() attrs=Private, HideBySig maxstack=1
+   0000 ldarg.0 
+   0001 ldfld SenseARSLAMController::PlaneLists
+   0006 callvirt System.Collections.Generic.List`1/Enumerator<!0> System.Collections.Generic.List`1<UnityEngine.GameObject>::GetEnumerator()
+   000B stloc.1 
+   000C br IL_001f: ldloca.s V_1
+   0011 ldloca.s V_1
+   0013 call !0 System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>::get_Current()
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   001F ldloca.s V_1
+   0021 call System.Boolean System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>::MoveNext()
+   0026 brtrue IL_0011: ldloca.s V_1
+   002B leave IL_003e: ldarg.0
+   0030 ldloca.s V_1
+   0032 constrained. System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>
+   0038 callvirt System.Void System.IDisposable::Dispose()
+   003D endfinally 
+   003E ldarg.0 
+   003F ldfld SenseARSLAMController::PlaneLists
+   0044 callvirt System.Void System.Collections.Generic.List`1<UnityEngine.GameObject>::Clear()
+   0049 ret 
+== System.Void ShowPlane(System.Boolean bShow) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld SenseARSLAMController::pointCloudInstance
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brfalse IL_001c: ldarg.0
+   0010 ldarg.0 
+   0011 ldfld SenseARSLAMController::pointCloudInstance
+   0016 ldarg.1 
+   0017 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   001C ldarg.0 
+   001D ldfld SenseARSLAMController::PlaneLists
+   0022 callvirt System.Collections.Generic.List`1/Enumerator<!0> System.Collections.Generic.List`1<UnityEngine.GameObject>::GetEnumerator()
+   0027 stloc.1 
+   0028 br IL_003c: ldloca.s V_1
+   002D ldloca.s V_1
+   002F call !0 System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>::get_Current()
+   0034 stloc.0 
+   0035 ldloc.0 
+   0036 ldarg.1 
+   0037 callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   003C ldloca.s V_1
+   003E call System.Boolean System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>::MoveNext()
+   0043 brtrue IL_002d: ldloca.s V_1
+   0048 leave IL_005b: ret
+   004D ldloca.s V_1
+   004F constrained. System.Collections.Generic.List`1/Enumerator<UnityEngine.GameObject>
+   0055 callvirt System.Void System.IDisposable::Dispose()
+   005A endfinally 
+   005B ret 

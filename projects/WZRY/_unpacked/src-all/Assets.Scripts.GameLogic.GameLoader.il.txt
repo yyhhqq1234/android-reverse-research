@@ -1,0 +1,304 @@
+// TYPE Assets.Scripts.GameLogic.GameLoader  base=MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>  attrs=Public, BeforeFieldInit
+  FIELD GameSerializer s_serializer
+  FIELD System.Collections.ArrayList levelList
+  FIELD System.Collections.ArrayList levelDesignList
+  FIELD System.Collections.ArrayList levelArtistList
+  FIELD ListView`1<System.String> levelWeatherEffects
+  FIELD ListView`1<System.String> soundBankList
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameLogic.DataCenter.ActorMeta> actorList
+  FIELD ListView`1<Assets.Scripts.GameLogic.ActorConfig> staticActors
+  FIELD System.Collections.Generic.List`1<Assets.Scripts.GameLogic.DataCenter.ActorMeta> extraActorList
+  FIELD System.Boolean actorInfoVerify
+  FIELD System.Collections.Generic.Dictionary`2<System.Int32,System.Int32> GameLoaderOpParam
+  FIELD System.Int32 _nProgress
+  FIELD Assets.Scripts.GameLogic.GameLoader/LoadProgressDelegate LoadProgressEvent
+  FIELD Assets.Scripts.GameLogic.GameLoader/LoadCompleteDelegate LoadCompleteEvent
+  FIELD System.Single coroutineTime
+  FIELD System.Boolean fileValid
+  FIELD CCoroutine m_handle_PreSpawnSoldiers
+  FIELD CCoroutine m_handle_Spawn
+  FIELD CCoroutine m_handle_LoadAgeRecursiveAssets
+  FIELD CCoroutine m_handle_LoadNoActorAssets
+  FIELD CCoroutine m_handle_LoadActorAssets
+  FIELD CCoroutine m_handle_LoadPlayerAssets
+  FIELD CCoroutine m_handle_LoadCommonAssets
+  FIELD CCoroutine m_handle_LoadDesignLevel
+  FIELD CCoroutine m_handle_LoadArtistLevel
+  FIELD CCoroutine m_handle_LoadCommonAssetBundle
+  FIELD CCoroutine m_handle_LoadCommonEffect
+  FIELD CCoroutine m_handle_CoroutineLoad
+  FIELD CCoroutine m_handle_AnalyseResPreload
+  FIELD System.Int32 m_gameloaderOption
+  FIELD ActorPreloadTab noActorPreLoad
+  PROP System.Int32 nProgress
+  PROP System.Boolean FileValid
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.ArrayList::.ctor()
+   0006 stfld Assets.Scripts.GameLogic.GameLoader::levelList
+   000B ldarg.0 
+   000C newobj System.Void System.Collections.ArrayList::.ctor()
+   0011 stfld Assets.Scripts.GameLogic.GameLoader::levelDesignList
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.ArrayList::.ctor()
+   001C stfld Assets.Scripts.GameLogic.GameLoader::levelArtistList
+   0021 ldarg.0 
+   0022 newobj System.Void ListView`1<System.String>::.ctor()
+   0027 stfld Assets.Scripts.GameLogic.GameLoader::levelWeatherEffects
+   002C ldarg.0 
+   002D newobj System.Void ListView`1<System.String>::.ctor()
+   0032 stfld Assets.Scripts.GameLogic.GameLoader::soundBankList
+   0037 ldarg.0 
+   0038 newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameLogic.DataCenter.ActorMeta>::.ctor()
+   003D stfld Assets.Scripts.GameLogic.GameLoader::actorList
+   0042 ldarg.0 
+   0043 newobj System.Void ListView`1<Assets.Scripts.GameLogic.ActorConfig>::.ctor()
+   0048 stfld Assets.Scripts.GameLogic.GameLoader::staticActors
+   004D ldarg.0 
+   004E newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameLogic.DataCenter.ActorMeta>::.ctor()
+   0053 stfld Assets.Scripts.GameLogic.GameLoader::extraActorList
+   0058 ldarg.0 
+   0059 ldc.i4.1 
+   005A stfld Assets.Scripts.GameLogic.GameLoader::actorInfoVerify
+   005F ldarg.0 
+   0060 newobj System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::.ctor()
+   0065 stfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   006A ldarg.0 
+   006B ldc.i4.1 
+   006C stfld Assets.Scripts.GameLogic.GameLoader::fileValid
+   0071 ldarg.0 
+   0072 call System.Void MonoSingleton`1<Assets.Scripts.GameLogic.GameLoader>::.ctor()
+   0077 ret 
+== System.Int32 get_nProgress() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameLoader::_nProgress
+   0006 ret 
+== System.Void set_nProgress(System.Int32 value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.GameLoader::_nProgress
+   0007 blt IL_0013: ret
+   000C ldarg.0 
+   000D ldarg.1 
+   000E stfld Assets.Scripts.GameLogic.GameLoader::_nProgress
+   0013 ret 
+== System.Boolean get_FileValid() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameLoader::fileValid
+   0006 ret 
+== System.Void InitOption(Assets.Scripts.GameLogic.CLevelContext levelContext) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   000D callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Clear()
+   0012 ldarg.0 
+   0013 ldarg.1 
+   0014 call System.Void Assets.Scripts.GameLogic.GameLoader::LevelSetIgnoreDeviceMemory(Assets.Scripts.GameLogic.CLevelContext)
+   0019 ldarg.1 
+   001A brfalse IL_002a: ret
+   001F ldarg.1 
+   0020 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsLowMemoryDevice()
+   0025 brtrue IL_002b: ldarg.1
+   002A ret 
+   002B ldarg.1 
+   002C ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   0031 ldfld ResData.ResSettingStrategy::dwGraphicSetting
+   0036 brfalse IL_0060: ldarg.1
+   003B ldarg.0 
+   003C dup 
+   003D ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0042 ldc.i4.2 
+   0043 or 
+   0044 stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   004F ldc.i4.1 
+   0050 ldarg.1 
+   0051 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   0056 ldfld ResData.ResSettingStrategy::dwGraphicSetting
+   005B callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Add(!0,!1)
+   0060 ldarg.1 
+   0061 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   0066 ldfld ResData.ResSettingStrategy::dwParticleSetting
+   006B brfalse IL_0095: ldarg.1
+   0070 ldarg.0 
+   0071 dup 
+   0072 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0077 ldc.i4.4 
+   0078 or 
+   0079 stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   007E ldarg.0 
+   007F ldfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   0084 ldc.i4.2 
+   0085 ldarg.1 
+   0086 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   008B ldfld ResData.ResSettingStrategy::dwParticleSetting
+   0090 callvirt System.Void System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::Add(!0,!1)
+   0095 ldarg.1 
+   0096 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   009B ldfld ResData.ResSettingStrategy::bIsCancelEquipAnalysis
+   00A0 brfalse IL_00b4: ldarg.1
+   00A5 ldarg.0 
+   00A6 dup 
+   00A7 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00AC ldc.i4.s 32
+   00AE or 
+   00AF stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00B4 ldarg.1 
+   00B5 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   00BA ldfld ResData.ResSettingStrategy::bIsCancelHostMidLOD
+   00BF brfalse IL_00d3: ldarg.1
+   00C4 ldarg.0 
+   00C5 dup 
+   00C6 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00CB ldc.i4.s 16
+   00CD or 
+   00CE stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00D3 ldarg.1 
+   00D4 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   00D9 ldfld ResData.ResSettingStrategy::bIsCancelPreLoad
+   00DE brfalse IL_00f5: ldarg.1
+   00E3 ldarg.0 
+   00E4 dup 
+   00E5 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00EA ldc.i4 128
+   00EF or 
+   00F0 stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   00F5 ldarg.1 
+   00F6 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   00FB ldfld ResData.ResSettingStrategy::dwHeroVoLoadType
+   0100 brfalse IL_0113: ldarg.1
+   0105 ldarg.0 
+   0106 dup 
+   0107 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   010C ldc.i4.8 
+   010D or 
+   010E stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0113 ldarg.1 
+   0114 ldflda Assets.Scripts.GameLogic.CLevelContext::settingStrategy
+   0119 ldfld ResData.ResSettingStrategy::bIsCancelSomeCommonResPreLoad
+   011E brfalse IL_0132: ret
+   0123 ldarg.0 
+   0124 dup 
+   0125 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   012A ldc.i4.s 64
+   012C or 
+   012D stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0132 ret 
+== System.Void LevelSetIgnoreDeviceMemory(Assets.Scripts.GameLogic.CLevelContext levelContext) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brtrue IL_0007: ldarg.1
+   0006 ret 
+   0007 ldarg.1 
+   0008 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDoubleStarPlayMode()
+   000D brfalse IL_0020: ret
+   0012 ldarg.0 
+   0013 dup 
+   0014 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0019 ldc.i4.8 
+   001A or 
+   001B stfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0020 ret 
+== System.Boolean HasOption(CoreDef.GameLoaderOption option) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0006 ldc.i4.1 
+   0007 ldarg.1 
+   0008 ldc.i4.s 31
+   000A and 
+   000B shl 
+   000C and 
+   000D ldc.i4.0 
+   000E cgt 
+   0010 ret 
+== System.Boolean GetOptionParam(CoreDef.GameLoaderOption option, System.Int32& value) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   0006 ldarg.1 
+   0007 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::ContainsKey(!0)
+   000C brfalse IL_0021: ldc.i4.0
+   0011 ldarg.2 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.GameLoader::GameLoaderOpParam
+   0018 ldarg.1 
+   0019 callvirt !1 System.Collections.Generic.Dictionary`2<System.Int32,System.Int32>::get_Item(!0)
+   001E stind.i4 
+   001F ldc.i4.1 
+   0020 ret 
+   0021 ldc.i4.0 
+   0022 ret 
+== System.Int32 GetGameLoaderOptionData() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.GameLoader::m_gameloaderOption
+   0006 ret 
+== ListView`1<ListView`1<System.String>> composite(System.String[] input) attrs=Private, Static, HideBySig maxstack=3
+   0000 newobj System.Void ListView`1<ListView`1<System.String>>::.ctor()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldlen 
+   0008 conv.i4 
+   0009 ldc.i4.8 
+   000A ble IL_001a: ldc.i4.0
+   000F ldstr only support less than 8 words
+   0014 newobj System.Void System.Exception::.ctor(System.String)
+   0019 throw 
+   001A ldc.i4.0 
+   001B stloc.1 
+   001C br IL_005e: ldloc.1
+   0021 newobj System.Void ListView`1<System.String>::.ctor()
+   0026 stloc.2 
+   0027 ldc.i4.0 
+   0028 stloc.3 
+   0029 br IL_0049: ldloc.3
+   002E ldloc.1 
+   002F ldloc.3 
+   0030 ldc.i4.s 31
+   0032 and 
+   0033 shr 
+   0034 ldc.i4.1 
+   0035 and 
+   0036 ldc.i4.0 
+   0037 ble IL_0045: ldloc.3
+   003C ldloc.2 
+   003D ldarg.0 
+   003E ldloc.3 
+   003F ldelem.ref 
+   0040 callvirt System.Void ListView`1<System.String>::Add(!0)
+   0045 ldloc.3 
+   0046 ldc.i4.1 
+   0047 add 
+   0048 stloc.3 
+   0049 ldloc.3 
+   004A ldarg.0 
+   004B ldlen 
+   004C conv.i4 
+   004D blt IL_002e: ldloc.1
+   0052 ldloc.0 
+   0053 ldloc.2 
+   0054 callvirt System.Void ListView`1<ListView`1<System.String>>::Add(!0)
+   0059 ldloc.1 
+   005A ldc.i4.1 
+   005B add 
+   005C conv.u1 
+   005D stloc.1 
+   005E ldloc.1 
+   005F conv.r4 
+   0060 ldc.r4 2
+   0065 ldarg.0 
+   0066 ldlen 
+   0067 conv.i4 
+   0068 conv.r4 
+   0069 call System.Single UnityEngine.Mathf::Pow(System.Single,System.Single)
+   006E blt IL_0021: newobj System.Void ListView`1<System.String>::.ctor()
+   0073 ldloc.0 
+   0074 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void GameSerializer::.ctor()
+   0005 stsfld Assets.Scripts.GameLogic.GameLoader::s_serializer
+   000A ret 
+  NESTED Assets.Scripts.GameLogic.GameLoader/LoadProgressDelegate
+  NESTED Assets.Scripts.GameLogic.GameLoader/LoadCompleteDelegate
+  NESTED Assets.Scripts.GameLogic.GameLoader/LoaderHelperWrapper
+  NESTED Assets.Scripts.GameLogic.GameLoader/LHCWrapper

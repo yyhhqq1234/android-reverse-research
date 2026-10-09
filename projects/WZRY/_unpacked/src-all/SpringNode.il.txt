@@ -1,0 +1,486 @@
+// TYPE SpringNode  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 autoCopyToAncientsCount
+  FIELD UnityEngine.Transform child
+  FIELD UnityEngine.Vector3 boneAxis
+  FIELD System.Single radius
+  FIELD System.Boolean isUseEachBoneForceSettings
+  FIELD System.Single stiffnessForce
+  FIELD System.Single stiffnessFactor
+  FIELD System.Single dragForce
+  FIELD UnityEngine.Vector3 springForce
+  FIELD System.Single threshold
+  FIELD System.Boolean advance
+  FIELD System.Single springLength
+  FIELD UnityEngine.Quaternion TPoslocalRotation
+  FIELD UnityEngine.Transform trs
+  FIELD UnityEngine.Vector3 currTipPos
+  FIELD UnityEngine.Vector3 prevTipPos
+  FIELD UnityEngine.Transform navParent
+  FIELD UnityEngine.Transform org
+  FIELD SpringRoot managerRef
+  FIELD System.Double startTimeStamp
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldc.r4 -1
+   0006 ldc.r4 0
+   000B ldc.r4 0
+   0010 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0015 stfld SpringNode::boneAxis
+   001A ldarg.0 
+   001B ldc.r4 0.05
+   0020 stfld SpringNode::radius
+   0025 ldarg.0 
+   0026 ldc.r4 0.01
+   002B stfld SpringNode::stiffnessForce
+   0030 ldarg.0 
+   0031 ldc.r4 1000
+   0036 stfld SpringNode::stiffnessFactor
+   003B ldarg.0 
+   003C ldc.r4 0.4
+   0041 stfld SpringNode::dragForce
+   0046 ldarg.0 
+   0047 ldc.r4 0
+   004C ldc.r4 -0.0001
+   0051 ldc.r4 0
+   0056 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   005B stfld SpringNode::springForce
+   0060 ldarg.0 
+   0061 ldc.r4 0.01
+   0066 stfld SpringNode::threshold
+   006B ldarg.0 
+   006C call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0071 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.Framework.GameFramework::IsInGameFramework
+   0005 brtrue IL_0011: ldarg.0
+   000A ldc.i4.s 30
+   000C call System.Void UnityEngine.Application::set_targetFrameRate(System.Int32)
+   0011 ldarg.0 
+   0012 ldarg.0 
+   0013 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0018 stfld SpringNode::trs
+   001D ldarg.0 
+   001E ldarg.0 
+   001F call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0024 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_localRotation()
+   0029 stfld SpringNode::TPoslocalRotation
+   002E ldarg.0 
+   002F ldarg.0 
+   0030 ldarg.0 
+   0031 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0036 call SpringRoot SpringNode::GetSpringRoot(UnityEngine.Transform)
+   003B stfld SpringNode::managerRef
+   0040 ret 
+== SpringRoot GetSpringRoot(UnityEngine.Transform t) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 callvirt !!0 UnityEngine.Component::GetComponent<SpringRoot>()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldnull 
+   0009 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000E brfalse IL_0015: ldarg.1
+   0013 ldloc.0 
+   0014 ret 
+   0015 ldarg.1 
+   0016 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   001B ldnull 
+   001C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0021 brfalse IL_0033: ldnull
+   0026 ldarg.0 
+   0027 ldarg.1 
+   0028 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   002D call SpringRoot SpringNode::GetSpringRoot(UnityEngine.Transform)
+   0032 ret 
+   0033 ldnull 
+   0034 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld SpringNode::trs
+   0007 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   000C ldarg.0 
+   000D ldfld SpringNode::child
+   0012 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0017 call System.Single UnityEngine.Vector3::Distance(UnityEngine.Vector3,UnityEngine.Vector3)
+   001C stfld SpringNode::springLength
+   0021 ldarg.0 
+   0022 ldarg.0 
+   0023 ldfld SpringNode::child
+   0028 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   002D stfld SpringNode::currTipPos
+   0032 ldarg.0 
+   0033 ldarg.0 
+   0034 ldfld SpringNode::child
+   0039 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   003E stfld SpringNode::prevTipPos
+   0043 ldarg.0 
+   0044 ldnull 
+   0045 stfld SpringNode::navParent
+   004A ldarg.0 
+   004B call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0050 conv.r8 
+   0051 stfld SpringNode::startTimeStamp
+   0056 ret 
+== System.Void UpdateSpring(SpringRoot root) attrs=Public, HideBySig maxstack=5
+   0000 call System.Single UnityEngine.Time::get_realtimeSinceStartup()
+   0005 conv.r8 
+   0006 ldarg.0 
+   0007 ldfld SpringNode::startTimeStamp
+   000C sub 
+   000D ldc.r8 0.20000000298023224
+   0016 blt.un IL_0026: ldarg.0
+   001B ldarg.0 
+   001C ldc.r4 1
+   0021 stfld SpringNode::stiffnessFactor
+   0026 ldarg.0 
+   0027 ldarg.0 
+   0028 ldfld SpringNode::trs
+   002D stfld SpringNode::org
+   0032 ldarg.0 
+   0033 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0038 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_localRotation()
+   003D stloc.0 
+   003E ldarg.0 
+   003F ldfld SpringNode::TPoslocalRotation
+   0044 ldloc.0 
+   0045 ldarg.1 
+   0046 ldfld SpringRoot::TPosAnimationClamp
+   004B call UnityEngine.Quaternion UnityEngine.Quaternion::Lerp(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   0050 stloc.1 
+   0051 ldarg.0 
+   0052 ldfld SpringNode::trs
+   0057 ldloc.1 
+   0058 callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   005D ldc.r4 30
+   0062 stloc.2 
+   0063 ldc.r4 1
+   0068 ldloc.2 
+   0069 div 
+   006A ldc.r4 1
+   006F ldloc.2 
+   0070 div 
+   0071 mul 
+   0072 stloc.3 
+   0073 call System.Int32 UnityEngine.Application::get_targetFrameRate()
+   0078 conv.r4 
+   0079 stloc.s V_4
+   007B ldsfld Assets.Scripts.Framework.GameFramework::IsInGameFramework
+   0080 brfalse IL_008d: ldarg.0
+   0085 ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   008A conv.r4 
+   008B stloc.s V_4
+   008D ldarg.0 
+   008E ldfld SpringNode::stiffnessForce
+   0093 ldarg.0 
+   0094 ldfld SpringNode::stiffnessFactor
+   0099 mul 
+   009A ldloc.3 
+   009B div 
+   009C stloc.s V_5
+   009E ldarg.0 
+   009F ldfld SpringNode::navParent
+   00A4 ldnull 
+   00A5 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00AA brfalse IL_0209: ldarg.0
+   00AF ldarg.0 
+   00B0 ldfld SpringNode::trs
+   00B5 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   00BA ldarg.0 
+   00BB ldfld SpringNode::boneAxis
+   00C0 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   00C5 ldloc.s V_5
+   00C7 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   00CC stloc.s V_6
+   00CE ldloc.s V_4
+   00D0 ldc.r4 30
+   00D5 div 
+   00D6 ldarg.0 
+   00D7 ldfld SpringNode::dragForce
+   00DC mul 
+   00DD ldloc.3 
+   00DE div 
+   00DF stloc.s V_7
+   00E1 ldloc.s V_6
+   00E3 ldarg.0 
+   00E4 ldfld SpringNode::prevTipPos
+   00E9 ldarg.0 
+   00EA ldfld SpringNode::currTipPos
+   00EF call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   00F4 ldloc.s V_7
+   00F6 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   00FB call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0100 stloc.s V_6
+   0102 ldloc.s V_6
+   0104 ldarg.0 
+   0105 ldfld SpringNode::springForce
+   010A ldloc.3 
+   010B call UnityEngine.Vector3 UnityEngine.Vector3::op_Division(UnityEngine.Vector3,System.Single)
+   0110 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0115 stloc.s V_6
+   0117 ldarg.0 
+   0118 ldfld SpringNode::currTipPos
+   011D stloc.s V_8
+   011F ldarg.0 
+   0120 ldarg.0 
+   0121 ldfld SpringNode::currTipPos
+   0126 ldarg.0 
+   0127 ldfld SpringNode::prevTipPos
+   012C call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0131 ldarg.0 
+   0132 ldfld SpringNode::currTipPos
+   0137 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   013C ldloc.s V_6
+   013E ldloc.3 
+   013F call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0144 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0149 stfld SpringNode::currTipPos
+   014E ldarg.0 
+   014F ldarg.0 
+   0150 ldfld SpringNode::currTipPos
+   0155 ldarg.0 
+   0156 ldfld SpringNode::trs
+   015B callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0160 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0165 stloc.s V_9
+   0167 ldloca.s V_9
+   0169 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   016E ldarg.0 
+   016F ldfld SpringNode::springLength
+   0174 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0179 ldarg.0 
+   017A ldfld SpringNode::trs
+   017F callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0184 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0189 stfld SpringNode::currTipPos
+   018E ldarg.0 
+   018F ldloc.s V_8
+   0191 stfld SpringNode::prevTipPos
+   0196 ldarg.0 
+   0197 ldfld SpringNode::trs
+   019C ldarg.0 
+   019D ldfld SpringNode::boneAxis
+   01A2 callvirt UnityEngine.Vector3 UnityEngine.Transform::TransformDirection(UnityEngine.Vector3)
+   01A7 stloc.s V_10
+   01A9 ldloc.s V_10
+   01AB ldarg.0 
+   01AC ldfld SpringNode::currTipPos
+   01B1 ldarg.0 
+   01B2 ldfld SpringNode::trs
+   01B7 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   01BC call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   01C1 call UnityEngine.Quaternion UnityEngine.Quaternion::FromToRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+   01C6 stloc.s V_11
+   01C8 ldloc.s V_11
+   01CA ldarg.0 
+   01CB ldfld SpringNode::trs
+   01D0 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   01D5 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   01DA stloc.s V_12
+   01DC ldarg.0 
+   01DD ldfld SpringNode::trs
+   01E2 ldarg.0 
+   01E3 ldfld SpringNode::org
+   01E8 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   01ED ldloc.s V_12
+   01EF ldarg.0 
+   01F0 ldfld SpringNode::managerRef
+   01F5 ldfld SpringRoot::dynamicRatio
+   01FA call UnityEngine.Quaternion UnityEngine.Quaternion::Lerp(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   01FF callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0204 br IL_039d: ldarg.0
+   0209 ldarg.0 
+   020A ldfld SpringNode::navParent
+   020F callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0214 call UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+   0219 stloc.s V_13
+   021B ldloc.s V_13
+   021D ldarg.0 
+   021E ldfld SpringNode::trs
+   0223 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0228 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   022D stloc.s V_14
+   022F ldloc.s V_14
+   0231 ldarg.0 
+   0232 ldfld SpringNode::boneAxis
+   0237 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   023C ldloc.s V_5
+   023E call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0243 stloc.s V_15
+   0245 ldloc.s V_4
+   0247 ldc.r4 30
+   024C div 
+   024D ldarg.0 
+   024E ldfld SpringNode::dragForce
+   0253 mul 
+   0254 ldloc.3 
+   0255 div 
+   0256 stloc.s V_16
+   0258 ldloc.s V_15
+   025A ldarg.0 
+   025B ldfld SpringNode::prevTipPos
+   0260 ldarg.0 
+   0261 ldfld SpringNode::currTipPos
+   0266 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   026B ldloc.s V_16
+   026D call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   0272 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0277 stloc.s V_15
+   0279 ldloc.s V_15
+   027B ldarg.0 
+   027C ldfld SpringNode::springForce
+   0281 ldloc.3 
+   0282 call UnityEngine.Vector3 UnityEngine.Vector3::op_Division(UnityEngine.Vector3,System.Single)
+   0287 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   028C stloc.s V_15
+   028E ldarg.0 
+   028F ldfld SpringNode::currTipPos
+   0294 stloc.s V_17
+   0296 ldarg.0 
+   0297 ldarg.0 
+   0298 ldfld SpringNode::currTipPos
+   029D ldarg.0 
+   029E ldfld SpringNode::prevTipPos
+   02A3 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   02A8 ldarg.0 
+   02A9 ldfld SpringNode::currTipPos
+   02AE call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   02B3 ldloc.s V_15
+   02B5 ldloc.3 
+   02B6 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   02BB call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   02C0 stfld SpringNode::currTipPos
+   02C5 ldloc.s V_13
+   02C7 ldarg.0 
+   02C8 ldfld SpringNode::trs
+   02CD callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   02D2 ldarg.0 
+   02D3 ldfld SpringNode::navParent
+   02D8 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   02DD call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   02E2 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   02E7 stloc.s V_18
+   02E9 ldarg.0 
+   02EA ldarg.0 
+   02EB ldfld SpringNode::currTipPos
+   02F0 ldloc.s V_18
+   02F2 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   02F7 stloc.s V_19
+   02F9 ldloca.s V_19
+   02FB call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   0300 ldarg.0 
+   0301 ldfld SpringNode::springLength
+   0306 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(UnityEngine.Vector3,System.Single)
+   030B ldloc.s V_18
+   030D call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0312 stfld SpringNode::currTipPos
+   0317 ldarg.0 
+   0318 ldloc.s V_17
+   031A stfld SpringNode::prevTipPos
+   031F ldarg.0 
+   0320 ldfld SpringNode::trs
+   0325 ldarg.0 
+   0326 ldfld SpringNode::boneAxis
+   032B callvirt UnityEngine.Vector3 UnityEngine.Transform::TransformDirection(UnityEngine.Vector3)
+   0330 stloc.s V_20
+   0332 ldloc.s V_13
+   0334 ldloc.s V_20
+   0336 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   033B stloc.s V_20
+   033D ldloc.s V_20
+   033F ldarg.0 
+   0340 ldfld SpringNode::currTipPos
+   0345 ldloc.s V_18
+   0347 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   034C call UnityEngine.Quaternion UnityEngine.Quaternion::FromToRotation(UnityEngine.Vector3,UnityEngine.Vector3)
+   0351 stloc.s V_21
+   0353 ldloc.s V_21
+   0355 ldloc.s V_14
+   0357 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   035C stloc.s V_22
+   035E ldarg.0 
+   035F ldfld SpringNode::trs
+   0364 ldarg.0 
+   0365 ldfld SpringNode::navParent
+   036A callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   036F ldloc.s V_13
+   0371 ldarg.0 
+   0372 ldfld SpringNode::org
+   0377 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   037C call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   0381 ldloc.s V_22
+   0383 ldarg.0 
+   0384 ldfld SpringNode::managerRef
+   0389 ldfld SpringRoot::dynamicRatio
+   038E call UnityEngine.Quaternion UnityEngine.Quaternion::Lerp(UnityEngine.Quaternion,UnityEngine.Quaternion,System.Single)
+   0393 call UnityEngine.Quaternion UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Quaternion)
+   0398 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   039D ldarg.0 
+   039E ldfld SpringNode::navParent
+   03A3 ldarg.1 
+   03A4 ldfld SpringRoot::navParent
+   03A9 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03AE brfalse IL_0491: ret
+   03B3 ldarg.0 
+   03B4 ldfld SpringNode::navParent
+   03B9 ldnull 
+   03BA call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   03BF brfalse IL_041c: ldarg.0
+   03C4 ldarg.0 
+   03C5 ldarg.0 
+   03C6 ldfld SpringNode::navParent
+   03CB callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   03D0 ldarg.0 
+   03D1 ldfld SpringNode::currTipPos
+   03D6 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   03DB ldarg.0 
+   03DC ldfld SpringNode::navParent
+   03E1 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   03E6 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   03EB stfld SpringNode::currTipPos
+   03F0 ldarg.0 
+   03F1 ldarg.0 
+   03F2 ldfld SpringNode::navParent
+   03F7 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   03FC ldarg.0 
+   03FD ldfld SpringNode::prevTipPos
+   0402 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   0407 ldarg.0 
+   0408 ldfld SpringNode::navParent
+   040D callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0412 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   0417 stfld SpringNode::prevTipPos
+   041C ldarg.0 
+   041D ldarg.1 
+   041E ldfld SpringRoot::navParent
+   0423 stfld SpringNode::navParent
+   0428 ldarg.0 
+   0429 ldfld SpringNode::navParent
+   042E ldnull 
+   042F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0434 brfalse IL_0491: ret
+   0439 ldarg.0 
+   043A ldfld SpringNode::navParent
+   043F callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   0444 call UnityEngine.Quaternion UnityEngine.Quaternion::Inverse(UnityEngine.Quaternion)
+   0449 stloc.s V_23
+   044B ldarg.0 
+   044C ldloc.s V_23
+   044E ldarg.0 
+   044F ldfld SpringNode::currTipPos
+   0454 ldarg.0 
+   0455 ldfld SpringNode::navParent
+   045A callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   045F call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0464 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   0469 stfld SpringNode::currTipPos
+   046E ldarg.0 
+   046F ldloc.s V_23
+   0471 ldarg.0 
+   0472 ldfld SpringNode::prevTipPos
+   0477 ldarg.0 
+   0478 ldfld SpringNode::navParent
+   047D callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0482 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0487 call UnityEngine.Vector3 UnityEngine.Quaternion::op_Multiply(UnityEngine.Quaternion,UnityEngine.Vector3)
+   048C stfld SpringNode::prevTipPos
+   0491 ret 

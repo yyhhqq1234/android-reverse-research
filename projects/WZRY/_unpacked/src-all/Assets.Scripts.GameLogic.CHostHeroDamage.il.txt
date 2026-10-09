@@ -1,0 +1,1481 @@
+// TYPE Assets.Scripts.GameLogic.CHostHeroDamage  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> m_actorHero
+  FIELD System.UInt32 m_uiActorKillerObjID
+  FIELD CoreDef.ActorTypeDef m_actorKillerActorType
+  FIELD System.Int32 DAMAGE_INTERNAL_TIME_DELAY_TIME = 1000
+  FIELD System.Int32 m_iDamageIntervalTimeMax
+  FIELD System.Int32 m_iDamageStatisticsTimeMax
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO> m_listDamageActorValue
+  FIELD System.UInt64 m_ulHeroDeadTime
+  FIELD System.UInt32[] m_arrHurtValue
+  FIELD ListView`1<Assets.Scripts.GameLogic.HOST_DEAD_REPORT_INFO> m_hostDeadReportInfo
+  FIELD CCoroutine m_handle_SaveDeadInfo
+  FIELD System.UInt32[] m_arrObjId
+  FIELD System.Int32[] m_arrHeroTotalDamage
+  FIELD System.UInt32[] m_arrDiffTypeHurtValue
+  FIELD System.Comparison`1<Assets.Scripts.GameLogic.HURT_INFO> <>f__am$cache0
+  FIELD System.Comparison`1<Assets.Scripts.GameLogic.DOUBLE_INT_INFO> <>f__am$cache1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4 10000
+   0006 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageIntervalTimeMax
+   000B ldarg.0 
+   000C ldc.i4 30000
+   0011 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageStatisticsTimeMax
+   0016 ldarg.0 
+   0017 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::.ctor()
+   001C stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0021 ldarg.0 
+   0022 ldc.i4.5 
+   0023 newarr System.UInt32
+   0028 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHurtValue
+   002D ldarg.0 
+   002E newobj System.Void ListView`1<Assets.Scripts.GameLogic.HOST_DEAD_REPORT_INFO>::.ctor()
+   0033 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_hostDeadReportInfo
+   0038 ldarg.0 
+   0039 ldc.i4.2 
+   003A newarr System.UInt32
+   003F stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrObjId
+   0044 ldarg.0 
+   0045 ldc.i4.3 
+   0046 newarr System.Int32
+   004B stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0050 ldarg.0 
+   0051 ldc.i4.5 
+   0052 newarr System.UInt32
+   0057 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrDiffTypeHurtValue
+   005C ldarg.0 
+   005D call System.Void System.Object::.ctor()
+   0062 ret 
+== System.Void Init() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0006 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetHostPlayer()
+   000B ldfld Assets.Scripts.GameLogic.Player::Captain
+   0010 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0015 ldarg.0 
+   0016 ldc.i4 298
+   001B call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   0020 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageIntervalTimeMax
+   0025 ldarg.0 
+   0026 ldc.i4 299
+   002B call System.UInt32 ResData.GameDataMgr::GetGlobeValue(ResData.RES_GLOBAL_CONF_TYPE)
+   0030 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageStatisticsTimeMax
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   003B brfalse IL_004b: ldarg.0
+   0040 ldarg.0 
+   0041 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0046 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::Clear()
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_hostDeadReportInfo
+   0051 brfalse IL_0061: call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_hostDeadReportInfo
+   005C callvirt System.Void ListViewBase::Clear()
+   0061 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   0066 ldc.i4.s 77
+   0068 ldarg.0 
+   0069 ldftn System.Void Assets.Scripts.GameLogic.CHostHeroDamage::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   006F newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0074 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   0079 ldarg.0 
+   007A call System.Void Assets.Scripts.GameLogic.CHostHeroDamage::InitDeadInfoValue()
+   007F ret 
+== System.Void UnInit() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0006 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000B brfalse IL_001b: ldarg.0
+   0010 ldarg.0 
+   0011 ldflda Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0016 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0021 brfalse IL_0031: ldarg.0
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   002C callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::Clear()
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_hostDeadReportInfo
+   0037 brfalse IL_0047: ldarg.0
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_hostDeadReportInfo
+   0042 callvirt System.Void ListViewBase::Clear()
+   0047 ldarg.0 
+   0048 ldc.i4.0 
+   0049 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   004E ldarg.0 
+   004F ldc.i4.s 11
+   0051 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorKillerActorType
+   0056 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   005B ldc.i4.s 77
+   005D ldarg.0 
+   005E ldftn System.Void Assets.Scripts.GameLogic.CHostHeroDamage::OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam&)
+   0064 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.ActorCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0069 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.ActorCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   006E ret 
+== System.Void OnCaptainSwitched(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 call System.Boolean Assets.Scripts.GameLogic.ActorHelper::IsHostActor(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>&)
+   000B brfalse IL_0021: ret
+   0010 ldarg.0 
+   0011 ldarg.1 
+   0012 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0017 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   001C br IL_0021: ret
+   0021 ret 
+== System.Boolean EqulsHero(Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> actorRoot) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0006 ldarg.1 
+   0007 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000C ret 
+== System.UInt32 GetHostHeroObjId() attrs=Public, HideBySig maxstack=1
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0008 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   000D brfalse IL_0023: ldloc.0
+   0012 ldarg.0 
+   0013 ldflda Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   0018 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   001D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0022 stloc.0 
+   0023 ldloc.0 
+   0024 ret 
+== System.Void AddDamageValue(Assets.Scripts.GameLogic.ActorDamageEventParam& prm) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataSlotType
+   000D stloc.1 
+   000E ldarg.1 
+   000F ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hpChanged
+   0014 call System.Int32 System.Math::Abs(System.Int32)
+   0019 stloc.2 
+   001A ldloc.2 
+   001B brtrue IL_0021: ldarg.1
+   0020 ret 
+   0021 ldarg.1 
+   0022 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtType
+   0027 stloc.3 
+   0028 ldarg.1 
+   0029 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataSkillUseFrom
+   002E stloc.s V_4
+   0030 ldloc.s V_4
+   0032 brfalse IL_003f: ldarg.1
+   0037 ldloc.s V_4
+   0039 ldc.i4.3 
+   003A bne.un IL_0046: ldarg.0
+   003F ldarg.1 
+   0040 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataUiFromId
+   0045 stloc.1 
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   004C brfalse IL_046a: ret
+   0051 ldloc.1 
+   0052 ldc.i4.s 16
+   0054 bgt IL_046a: ret
+   0059 ldloc.0 
+   005A call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   005F brfalse IL_046a: ret
+   0064 ldloca.s V_0
+   0066 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   006B callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0070 stloc.s V_5
+   0072 ldarg.0 
+   0073 ldloc.s V_5
+   0075 ldc.i4.0 
+   0076 conv.i8 
+   0077 call System.Void Assets.Scripts.GameLogic.CHostHeroDamage::DeleteTimeoutDamageValue(System.UInt32,System.UInt64)
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0082 ldloc.s V_5
+   0084 ldloca.s V_6
+   0086 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::TryGetValue(!0,!1&)
+   008B brtrue IL_0167: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0090 ldloca.s V_6
+   0092 initobj Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO
+   0098 ldloca.s V_6
+   009A ldloca.s V_0
+   009C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00A1 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   00A6 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   00AB stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorType
+   00B0 ldloca.s V_6
+   00B2 ldloca.s V_0
+   00B4 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00B9 ldflda Assets.Scripts.GameLogic.ActorLinker::TheStaticData
+   00BE ldflda Assets.Scripts.GameLogic.DataCenter.ActorStaticData::TheResInfo
+   00C3 ldfld Assets.Scripts.GameLogic.DataCenter.ActorStaticData/ResInfo::Name
+   00C8 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorName
+   00CD ldloca.s V_6
+   00CF ldloca.s V_0
+   00D1 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00D6 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   00DB ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ConfigId
+   00E0 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::ConfigId
+   00E5 ldloca.s V_6
+   00E7 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorType
+   00EC ldc.i4.1 
+   00ED bne.un IL_011a: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   00F2 ldloca.s V_6
+   00F4 ldloca.s V_0
+   00F6 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00FB ldfld Assets.Scripts.GameLogic.ActorLinker::actorSubType
+   0100 conv.u1 
+   0101 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::bMonsterType
+   0106 ldloca.s V_6
+   0108 ldloca.s V_0
+   010A call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   010F ldfld Assets.Scripts.GameLogic.ActorLinker::extraSubType
+   0114 conv.u1 
+   0115 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorSubType
+   011A call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   011F ldloca.s V_0
+   0121 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0126 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   012B ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::PlayerId
+   0130 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   0135 stloc.s V_7
+   0137 ldloc.s V_7
+   0139 brfalse IL_014c: ldloca.s V_6
+   013E ldloca.s V_6
+   0140 ldloc.s V_7
+   0142 ldfld Assets.Scripts.GameLogic.Player::Name
+   0147 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::playerName
+   014C ldloca.s V_6
+   014E newobj System.Void System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::.ctor()
+   0153 stfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0158 ldarg.0 
+   0159 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   015E ldloc.s V_5
+   0160 ldloc.s V_6
+   0162 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::Add(!0,!1)
+   0167 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   016C ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0171 conv.u8 
+   0172 stloc.s V_9
+   0174 ldloca.s V_6
+   0176 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   017B ldloc.s V_9
+   017D ldloca.s V_8
+   017F callvirt System.Boolean System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::TryGetValue(!0,!1&)
+   0184 brtrue IL_01a2: ldloc.s V_8
+   0189 ldc.i4.s 17
+   018B newarr Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0190 stloc.s V_8
+   0192 ldloca.s V_6
+   0194 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0199 ldloc.s V_9
+   019B ldloc.s V_8
+   019D callvirt System.Void System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::Add(!0,!1)
+   01A2 ldloc.s V_8
+   01A4 ldloc.1 
+   01A5 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01AA ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01AF brtrue IL_01c6: ldloc.s V_8
+   01B4 ldloc.s V_8
+   01B6 ldloc.1 
+   01B7 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01BC newobj System.Void ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::.ctor()
+   01C1 stfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01C6 ldloc.s V_8
+   01C8 ldloc.1 
+   01C9 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01CE ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01D3 brfalse IL_044b: ldloca.s V_6
+   01D8 ldnull 
+   01D9 stloc.s V_10
+   01DB ldnull 
+   01DC stloc.s V_11
+   01DE ldloc.s V_4
+   01E0 brtrue IL_033f: ldloc.s V_4
+   01E5 ldloc.1 
+   01E6 ldc.i4.s 15
+   01E8 bge IL_033a: br IL_03a5
+   01ED ldloca.s V_0
+   01EF call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   01F4 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   01F9 brfalse IL_0296: ldloc.1
+   01FE ldloca.s V_0
+   0200 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0205 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   020A ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   020F brtrue IL_021a: ldloca.s V_0
+   0214 ldloc.1 
+   0215 brfalse IL_0291: br IL_033a
+   021A ldloca.s V_0
+   021C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0221 ldfld Assets.Scripts.GameLogic.ActorLinker::SkillControl
+   0226 ldloc.1 
+   0227 ldloca.s V_12
+   0229 callvirt System.Boolean Assets.Scripts.GameLogic.SkillLinkerComponent::TryGetSkillSlot(CoreDef.SkillSlotType,Assets.Scripts.GameLogic.SkillSlotLinker&)
+   022E brfalse IL_0291: br IL_033a
+   0233 ldloc.s V_12
+   0235 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   023A brfalse IL_0291: br IL_033a
+   023F ldloc.s V_12
+   0241 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0246 callvirt System.String Assets.Scripts.GameLogic.SkillLinker::get_IconName()
+   024B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0250 brtrue IL_0263: ldloc.s V_12
+   0255 ldloc.s V_12
+   0257 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   025C callvirt System.String Assets.Scripts.GameLogic.SkillLinker::get_IconName()
+   0261 stloc.s V_10
+   0263 ldloc.s V_12
+   0265 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   026A ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   026F call System.String ResData.ResSkillCfgInfo::get_szSkillName()
+   0274 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0279 brtrue IL_0291: br IL_033a
+   027E ldloc.s V_12
+   0280 ldfld Assets.Scripts.GameLogic.SkillSlotLinker::SkillObj
+   0285 ldflda Assets.Scripts.GameLogic.SkillLinker::cfgData
+   028A call System.String ResData.ResSkillCfgInfo::get_szSkillName()
+   028F stloc.s V_11
+   0291 br IL_033a: br IL_03a5
+   0296 ldloc.1 
+   0297 brfalse IL_033a: br IL_03a5
+   029C ldloca.s V_0
+   029E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   02A3 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   02A8 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   02AD ldc.i4.1 
+   02AE bne.un IL_033a: br IL_03a5
+   02B3 ldloca.s V_13
+   02B5 ldloca.s V_0
+   02B7 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   02BC callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_ConfigId()
+   02C1 ldloca.s V_0
+   02C3 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   02C8 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   02CD ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::Difficuty
+   02D2 call System.Boolean ResData.GameDataMgr/monsterDatabin::FindByKey(ResData.ResMonsterCfgInfo&,System.Int32,System.Int32)
+   02D7 brfalse IL_033a: br IL_03a5
+   02DC ldloc.1 
+   02DD ldc.i4.s 10
+   02DF bge IL_033a: br IL_03a5
+   02E4 ldloca.s V_13
+   02E6 ldloc.1 
+   02E7 call System.Int32 ResData.ResMonsterCfgInfo::SkillIDs(System.Int32)
+   02EC ldc.i4.0 
+   02ED ble IL_033a: br IL_03a5
+   02F2 ldloca.s V_14
+   02F4 ldloca.s V_13
+   02F6 ldloc.1 
+   02F7 call System.Int32 ResData.ResMonsterCfgInfo::SkillIDs(System.Int32)
+   02FC call System.Boolean ResData.GameDataMgr/skillDatabin::FindByKey(ResData.ResSkillCfgInfo&,System.Int32)
+   0301 brfalse IL_033a: br IL_03a5
+   0306 ldloca.s V_14
+   0308 call System.String ResData.ResSkillCfgInfo::get_szIconPath()
+   030D call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0312 brtrue IL_0320: ldloca.s V_14
+   0317 ldloca.s V_14
+   0319 call System.String ResData.ResSkillCfgInfo::get_szIconPath()
+   031E stloc.s V_10
+   0320 ldloca.s V_14
+   0322 call System.String ResData.ResSkillCfgInfo::get_szSkillName()
+   0327 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   032C brtrue IL_033a: br IL_03a5
+   0331 ldloca.s V_14
+   0333 call System.String ResData.ResSkillCfgInfo::get_szSkillName()
+   0338 stloc.s V_11
+   033A br IL_03a5: ldloc.s V_8
+   033F ldloc.s V_4
+   0341 ldc.i4.1 
+   0342 bne.un IL_0375: ldloc.s V_4
+   0347 ldarg.1 
+   0348 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataUiFromId
+   034D stloc.s V_15
+   034F ldloca.s V_16
+   0351 ldloc.s V_15
+   0353 conv.u2 
+   0354 call System.Boolean ResData.GameDataMgr/m_equipInBattleDatabin::FindByKey(ResData.ResEquipInBattle&,System.UInt16)
+   0359 brfalse IL_0370: br IL_03a5
+   035E ldloca.s V_16
+   0360 call System.String ResData.ResEquipInBattle::get_szIcon()
+   0365 stloc.s V_10
+   0367 ldloca.s V_16
+   0369 call System.String ResData.ResEquipInBattle::get_szName()
+   036E stloc.s V_11
+   0370 br IL_03a5: ldloc.s V_8
+   0375 ldloc.s V_4
+   0377 ldc.i4.2 
+   0378 bne.un IL_03a5: ldloc.s V_8
+   037D ldarg.1 
+   037E ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtDataUiFromId
+   0383 stloc.s V_17
+   0385 ldloca.s V_18
+   0387 ldloc.s V_17
+   0389 call System.Boolean ResData.GameDataMgr/skillCombineDatabin::FindByKey(ResData.ResSkillCombineCfgInfo&,System.Int32)
+   038E brfalse IL_03a5: ldloc.s V_8
+   0393 ldloca.s V_18
+   0395 call System.String ResData.ResSkillCombineCfgInfo::get_szIconPath()
+   039A stloc.s V_10
+   039C ldloca.s V_18
+   039E call System.String ResData.ResSkillCombineCfgInfo::get_szSkillCombineName()
+   03A3 stloc.s V_11
+   03A5 ldloc.s V_8
+   03A7 ldloc.1 
+   03A8 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   03AD ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   03B2 callvirt System.Int32 ListViewBase::get_Count()
+   03B7 stloc.s V_19
+   03B9 ldloc.s V_19
+   03BB stloc.s V_20
+   03BD ldc.i4.0 
+   03BE stloc.s V_20
+   03C0 br IL_0416: ldloc.s V_20
+   03C5 ldloc.s V_8
+   03C7 ldloc.1 
+   03C8 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   03CD ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   03D2 ldloc.s V_20
+   03D4 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   03D9 ldfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   03DE ldloc.s V_10
+   03E0 call System.Boolean System.String::op_Equality(System.String,System.String)
+   03E5 brfalse IL_0410: ldloc.s V_20
+   03EA ldloc.s V_8
+   03EC ldloc.1 
+   03ED ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   03F2 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   03F7 ldloc.s V_20
+   03F9 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   03FE dup 
+   03FF ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   0404 ldloc.2 
+   0405 add 
+   0406 stfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   040B br IL_041f: ldloc.s V_20
+   0410 ldloc.s V_20
+   0412 ldc.i4.1 
+   0413 add 
+   0414 stloc.s V_20
+   0416 ldloc.s V_20
+   0418 ldloc.s V_19
+   041A blt IL_03c5: ldloc.s V_8
+   041F ldloc.s V_20
+   0421 ldloc.s V_19
+   0423 blt IL_044b: ldloca.s V_6
+   0428 ldloc.3 
+   0429 ldloc.s V_10
+   042B ldloc.s V_11
+   042D ldloc.2 
+   042E ldloc.s V_4
+   0430 newobj System.Void Assets.Scripts.GameLogic.HURT_INFO::.ctor(CoreDef.HurtTypeDef,System.String,System.String,System.Int32,CoreDef.SKILL_USE_FROM_TYPE)
+   0435 stloc.s V_21
+   0437 ldloc.s V_8
+   0439 ldloc.1 
+   043A ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   043F ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0444 ldloc.s V_21
+   0446 callvirt System.Void ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::Add(!0)
+   044B ldloca.s V_6
+   044D ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0452 ldloc.s V_9
+   0454 ldloc.s V_8
+   0456 callvirt System.Void System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::set_Item(!0,!1)
+   045B ldarg.0 
+   045C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0461 ldloc.s V_5
+   0463 ldloc.s V_6
+   0465 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::set_Item(!0,!1)
+   046A ret 
+== System.Void DeleteTimeoutDamageValue(System.UInt32 uiObjId, System.UInt64 ulTime) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0006 brfalse IL_00ec: ret
+   000B ldc.i4.0 
+   000C conv.i8 
+   000D stloc.0 
+   000E ldarg.2 
+   000F ldc.i4.0 
+   0010 conv.i8 
+   0011 bne.un IL_0027: ldarg.2
+   0016 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   001B ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   0020 conv.u8 
+   0021 stloc.0 
+   0022 br IL_0029: ldarg.0
+   0027 ldarg.2 
+   0028 stloc.0 
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   002F ldarg.1 
+   0030 ldloca.s V_1
+   0032 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::TryGetValue(!0,!1&)
+   0037 brfalse IL_00ec: ret
+   003C ldloca.s V_1
+   003E ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0043 callvirt System.Int32 System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Count()
+   0048 stloc.2 
+   0049 ldloc.2 
+   004A ldc.i4.0 
+   004B ble IL_00ec: ret
+   0050 ldloca.s V_1
+   0052 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0057 callvirt System.Collections.Generic.IList`1<!0> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Keys()
+   005C ldloc.2 
+   005D ldc.i4.1 
+   005E sub 
+   005F callvirt !0 System.Collections.Generic.IList`1<System.UInt64>::get_Item(System.Int32)
+   0064 stloc.3 
+   0065 ldloc.0 
+   0066 ldloc.3 
+   0067 sub 
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageIntervalTimeMax
+   006E conv.i8 
+   006F ble.un IL_0085: ldloca.s V_1
+   0074 ldloca.s V_1
+   0076 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   007B callvirt System.Void System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::Clear()
+   0080 br IL_00df: ldarg.0
+   0085 ldloca.s V_1
+   0087 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   008C callvirt System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<!0,!1>> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::GetEnumerator()
+   0091 stloc.s V_4
+   0093 br IL_00d3: ldloc.s V_4
+   0098 ldloc.s V_4
+   009A callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   009F stloc.s V_6
+   00A1 ldloca.s V_6
+   00A3 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Key()
+   00A8 stloc.s V_5
+   00AA ldloc.0 
+   00AB ldloc.s V_5
+   00AD sub 
+   00AE ldarg.0 
+   00AF ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageStatisticsTimeMax
+   00B4 conv.i8 
+   00B5 ble.un IL_00ce: br IL_00df
+   00BA ldloca.s V_1
+   00BC ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   00C1 ldloc.s V_5
+   00C3 callvirt System.Boolean System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::Remove(!0)
+   00C8 pop 
+   00C9 br IL_00d3: ldloc.s V_4
+   00CE br IL_00df: ldarg.0
+   00D3 ldloc.s V_4
+   00D5 callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   00DA brtrue IL_0098: ldloc.s V_4
+   00DF ldarg.0 
+   00E0 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   00E5 ldarg.1 
+   00E6 ldloc.1 
+   00E7 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::set_Item(!0,!1)
+   00EC ret 
+== System.Void DeleteDamageValue(System.UInt32 uiObjId) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0006 brfalse IL_0029: ret
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0011 ldarg.1 
+   0012 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::ContainsKey(!0)
+   0017 brfalse IL_0029: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0022 ldarg.1 
+   0023 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::Remove(!0)
+   0028 pop 
+   0029 ret 
+== System.Void OnActorDamage(Assets.Scripts.GameLogic.ActorDamageEventParam& prm) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_src
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brfalse IL_0039: ret
+   0016 ldarg.1 
+   0017 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_hurtType
+   001C ldc.i4.3 
+   001D beq IL_0039: ret
+   0022 ldarg.1 
+   0023 ldfld Assets.Scripts.GameLogic.ActorDamageEventParam::m_attacker
+   0028 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   002D brfalse IL_0039: ret
+   0032 ldarg.0 
+   0033 ldarg.1 
+   0034 call System.Void Assets.Scripts.GameLogic.CHostHeroDamage::AddDamageValue(Assets.Scripts.GameLogic.ActorDamageEventParam&)
+   0039 ret 
+== System.Void OnActorDead(Assets.Scripts.GameLogic.ActorDeadEventParam& prm) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::src
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brfalse IL_00bc: ret
+   0016 ldarg.1 
+   0017 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::bSuicide
+   001C brtrue IL_0072: ldarg.0
+   0021 ldarg.1 
+   0022 ldfld Assets.Scripts.GameLogic.ActorDeadEventParam::logicAtker
+   0027 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   002C brfalse IL_0072: ldarg.0
+   0031 ldarg.1 
+   0032 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::logicAtker
+   0037 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003C brfalse IL_0072: ldarg.0
+   0041 ldarg.0 
+   0042 ldarg.1 
+   0043 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::logicAtker
+   0048 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   004D callvirt System.UInt32 Assets.Scripts.GameLogic.ActorLinker::get_objID()
+   0052 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   0057 ldarg.0 
+   0058 ldarg.1 
+   0059 ldflda Assets.Scripts.GameLogic.ActorDeadEventParam::logicAtker
+   005E call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0063 ldflda Assets.Scripts.GameLogic.ActorLinker::theMeta
+   0068 ldfld Assets.Scripts.GameLogic.DataCenter.ActorMeta::ActorType
+   006D stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorKillerActorType
+   0072 ldarg.0 
+   0073 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0078 ldfld Assets.Scripts.Framework.FrameSynchr::LogicFrameTick
+   007D conv.u8 
+   007E stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   0083 ldarg.0 
+   0084 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_handle_SaveDeadInfo
+   0089 brfalse IL_00a6: ldarg.0
+   008E call !0 Singleton`1<CCoroutineManager>::GetInstance()
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_handle_SaveDeadInfo
+   0099 ldc.i4.1 
+   009A callvirt System.Void CCoroutineManager::StopCoroutine(CCoroutine,System.Boolean)
+   009F ldarg.0 
+   00A0 ldnull 
+   00A1 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_handle_SaveDeadInfo
+   00A6 ldarg.0 
+   00A7 call !0 Singleton`1<CCoroutineManager>::GetInstance()
+   00AC ldarg.0 
+   00AD call System.Collections.IEnumerator Assets.Scripts.GameLogic.CHostHeroDamage::SaveHostDeadInfo()
+   00B2 callvirt CCoroutine CCoroutineManager::StartCoroutine(System.Collections.IEnumerator)
+   00B7 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_handle_SaveDeadInfo
+   00BC ret 
+== System.Void OnActorRevive(Assets.Scripts.GameLogic.ActorCommonEventParam& prm) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameLogic.ActorCommonEventParam::src
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorHero
+   000C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Equality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0011 brfalse IL_003b: ret
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   001C brfalse IL_002c: ldarg.0
+   0021 ldarg.0 
+   0022 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0027 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::Clear()
+   002C ldarg.0 
+   002D ldc.i4.0 
+   002E stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   0033 ldarg.0 
+   0034 ldc.i4.0 
+   0035 conv.i8 
+   0036 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   003B ret 
+== System.Boolean GetActorDamage(System.UInt32 uiObjId, Assets.Scripts.GameLogic.HURT_INFO[]& arrDamageInfo, System.Int32& iActorTotalDamageValue) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.3 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.0 
+   0004 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0009 brfalse IL_038e: ldc.i4.0
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0014 callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Count()
+   0019 ldc.i4.0 
+   001A ble IL_038e: ldc.i4.0
+   001F ldarg.2 
+   0020 ldind.ref 
+   0021 brfalse IL_038e: ldc.i4.0
+   0026 ldarg.2 
+   0027 ldind.ref 
+   0028 ldlen 
+   0029 conv.i4 
+   002A stloc.0 
+   002B ldc.i4.0 
+   002C stloc.1 
+   002D br IL_0040: ldloc.1
+   0032 ldarg.2 
+   0033 ldind.ref 
+   0034 ldloc.1 
+   0035 ldelem.ref 
+   0036 ldc.i4.0 
+   0037 stfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   003C ldloc.1 
+   003D ldc.i4.1 
+   003E add 
+   003F stloc.1 
+   0040 ldloc.1 
+   0041 ldloc.0 
+   0042 blt IL_0032: ldarg.2
+   0047 ldarg.0 
+   0048 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   004D ldarg.1 
+   004E ldloca.s V_2
+   0050 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::TryGetValue(!0,!1&)
+   0055 brfalse IL_038e: ldc.i4.0
+   005A newobj System.Void ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::.ctor()
+   005F stloc.3 
+   0060 ldloca.s V_2
+   0062 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0067 callvirt System.Int32 System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Count()
+   006C stloc.s V_4
+   006E ldloc.s V_4
+   0070 ldc.i4.0 
+   0071 bgt IL_0078: ldarg.0
+   0076 ldc.i4.0 
+   0077 ret 
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   007E ldloca.s V_2
+   0080 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0085 callvirt System.Collections.Generic.IList`1<!0> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Keys()
+   008A ldloc.s V_4
+   008C ldc.i4.1 
+   008D sub 
+   008E callvirt !0 System.Collections.Generic.IList`1<System.UInt64>::get_Item(System.Int32)
+   0093 sub 
+   0094 ldarg.0 
+   0095 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageIntervalTimeMax
+   009A conv.i8 
+   009B ldc.i4 1000
+   00A0 conv.i8 
+   00A1 add 
+   00A2 ble.un IL_00a9: ldloca.s V_2
+   00A7 ldc.i4.0 
+   00A8 ret 
+   00A9 ldloca.s V_2
+   00AB ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   00B0 callvirt System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<!0,!1>> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::GetEnumerator()
+   00B5 stloc.s V_6
+   00B7 br IL_02c0: ldloc.s V_6
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   00C2 ldloc.s V_6
+   00C4 callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   00C9 stloc.s V_7
+   00CB ldloca.s V_7
+   00CD call !0 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Key()
+   00D2 sub 
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageStatisticsTimeMax
+   00D9 conv.i8 
+   00DA ble.un IL_00e4: ldloc.s V_6
+   00DF br IL_02c0: ldloc.s V_6
+   00E4 ldloc.s V_6
+   00E6 callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   00EB stloc.s V_8
+   00ED ldloca.s V_8
+   00EF call !1 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Value()
+   00F4 stloc.s V_5
+   00F6 ldloc.s V_5
+   00F8 brfalse IL_02c0: ldloc.s V_6
+   00FD ldc.i4.0 
+   00FE stloc.s V_9
+   0100 br IL_02b7: ldloc.s V_9
+   0105 ldloc.s V_5
+   0107 ldloc.s V_9
+   0109 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   010E ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0113 brfalse IL_02b1: ldloc.s V_9
+   0118 ldloc.s V_5
+   011A ldloc.s V_9
+   011C ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0121 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0126 callvirt System.Int32 ListViewBase::get_Count()
+   012B stloc.s V_10
+   012D ldc.i4.0 
+   012E stloc.s V_11
+   0130 br IL_02a8: ldloc.s V_11
+   0135 ldloc.3 
+   0136 callvirt System.Int32 ListViewBase::get_Count()
+   013B stloc.s V_12
+   013D ldc.i4.0 
+   013E stloc.s V_13
+   0140 br IL_01e0: ldloc.s V_13
+   0145 ldloc.3 
+   0146 ldloc.s V_13
+   0148 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   014D ldfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   0152 ldloc.s V_5
+   0154 ldloc.s V_9
+   0156 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   015B ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0160 ldloc.s V_11
+   0162 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0167 ldfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   016C call System.Boolean System.String::op_Equality(System.String,System.String)
+   0171 brfalse IL_01da: ldloc.s V_13
+   0176 ldloc.3 
+   0177 ldloc.s V_13
+   0179 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   017E ldfld Assets.Scripts.GameLogic.HURT_INFO::strName
+   0183 ldloc.s V_5
+   0185 ldloc.s V_9
+   0187 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   018C ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0191 ldloc.s V_11
+   0193 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0198 ldfld Assets.Scripts.GameLogic.HURT_INFO::strName
+   019D call System.Boolean System.String::op_Equality(System.String,System.String)
+   01A2 brfalse IL_01da: ldloc.s V_13
+   01A7 ldloc.3 
+   01A8 ldloc.s V_13
+   01AA callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   01AF dup 
+   01B0 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   01B5 ldloc.s V_5
+   01B7 ldloc.s V_9
+   01B9 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01BE ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01C3 ldloc.s V_11
+   01C5 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   01CA ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   01CF add 
+   01D0 stfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   01D5 br IL_01e9: ldloc.s V_13
+   01DA ldloc.s V_13
+   01DC ldc.i4.1 
+   01DD add 
+   01DE stloc.s V_13
+   01E0 ldloc.s V_13
+   01E2 ldloc.s V_12
+   01E4 blt IL_0145: ldloc.3
+   01E9 ldloc.s V_13
+   01EB ldloc.s V_12
+   01ED blt IL_0283: ldarg.3
+   01F2 ldloc.s V_5
+   01F4 ldloc.s V_9
+   01F6 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01FB ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0200 ldloc.s V_11
+   0202 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0207 ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   020C ldloc.s V_5
+   020E ldloc.s V_9
+   0210 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0215 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   021A ldloc.s V_11
+   021C callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0221 ldfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   0226 ldloc.s V_5
+   0228 ldloc.s V_9
+   022A ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   022F ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0234 ldloc.s V_11
+   0236 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   023B ldfld Assets.Scripts.GameLogic.HURT_INFO::strName
+   0240 ldloc.s V_5
+   0242 ldloc.s V_9
+   0244 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0249 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   024E ldloc.s V_11
+   0250 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0255 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   025A ldloc.s V_5
+   025C ldloc.s V_9
+   025E ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0263 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0268 ldloc.s V_11
+   026A callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   026F ldfld Assets.Scripts.GameLogic.HURT_INFO::SkillUseFrom
+   0274 newobj System.Void Assets.Scripts.GameLogic.HURT_INFO::.ctor(CoreDef.HurtTypeDef,System.String,System.String,System.Int32,CoreDef.SKILL_USE_FROM_TYPE)
+   0279 stloc.s V_14
+   027B ldloc.3 
+   027C ldloc.s V_14
+   027E callvirt System.Void ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::Add(!0)
+   0283 ldarg.3 
+   0284 ldarg.3 
+   0285 ldind.i4 
+   0286 ldloc.s V_5
+   0288 ldloc.s V_9
+   028A ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   028F ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0294 ldloc.s V_11
+   0296 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   029B ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   02A0 add 
+   02A1 stind.i4 
+   02A2 ldloc.s V_11
+   02A4 ldc.i4.1 
+   02A5 add 
+   02A6 stloc.s V_11
+   02A8 ldloc.s V_11
+   02AA ldloc.s V_10
+   02AC blt IL_0135: ldloc.3
+   02B1 ldloc.s V_9
+   02B3 ldc.i4.1 
+   02B4 add 
+   02B5 stloc.s V_9
+   02B7 ldloc.s V_9
+   02B9 ldc.i4.s 16
+   02BB ble IL_0105: ldloc.s V_5
+   02C0 ldloc.s V_6
+   02C2 callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   02C7 brtrue IL_00bc: ldarg.0
+   02CC ldloc.3 
+   02CD ldsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache0
+   02D2 brtrue.s IL_02e5: ldsfld System.Comparison`1<Assets.Scripts.GameLogic.HURT_INFO> Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache0
+   02D4 ldnull 
+   02D5 ldftn System.Int32 Assets.Scripts.GameLogic.CHostHeroDamage::<GetActorDamage>m__0(Assets.Scripts.GameLogic.HURT_INFO,Assets.Scripts.GameLogic.HURT_INFO)
+   02DB newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.HURT_INFO>::.ctor(System.Object,System.IntPtr)
+   02E0 stsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache0
+   02E5 ldsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache0
+   02EA callvirt System.Void ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::Sort(System.Comparison`1<!0>)
+   02EF ldloc.3 
+   02F0 callvirt System.Int32 ListViewBase::get_Count()
+   02F5 stloc.s V_15
+   02F7 ldc.i4.0 
+   02F8 stloc.s V_16
+   02FA br IL_0378: ldloc.s V_16
+   02FF ldarg.2 
+   0300 ldind.ref 
+   0301 ldloc.s V_16
+   0303 ldelem.ref 
+   0304 ldloc.3 
+   0305 ldloc.s V_16
+   0307 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   030C ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   0311 stfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   0316 ldarg.2 
+   0317 ldind.ref 
+   0318 ldloc.s V_16
+   031A ldelem.ref 
+   031B ldloc.3 
+   031C ldloc.s V_16
+   031E callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0323 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   0328 stfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   032D ldarg.2 
+   032E ldind.ref 
+   032F ldloc.s V_16
+   0331 ldelem.ref 
+   0332 ldloc.3 
+   0333 ldloc.s V_16
+   0335 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   033A ldfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   033F stfld Assets.Scripts.GameLogic.HURT_INFO::strIconName
+   0344 ldarg.2 
+   0345 ldind.ref 
+   0346 ldloc.s V_16
+   0348 ldelem.ref 
+   0349 ldloc.3 
+   034A ldloc.s V_16
+   034C callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0351 ldfld Assets.Scripts.GameLogic.HURT_INFO::strName
+   0356 stfld Assets.Scripts.GameLogic.HURT_INFO::strName
+   035B ldarg.2 
+   035C ldind.ref 
+   035D ldloc.s V_16
+   035F ldelem.ref 
+   0360 ldloc.3 
+   0361 ldloc.s V_16
+   0363 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0368 ldfld Assets.Scripts.GameLogic.HURT_INFO::SkillUseFrom
+   036D stfld Assets.Scripts.GameLogic.HURT_INFO::SkillUseFrom
+   0372 ldloc.s V_16
+   0374 ldc.i4.1 
+   0375 add 
+   0376 stloc.s V_16
+   0378 ldloc.s V_16
+   037A ldloc.s V_15
+   037C bge IL_038c: ldc.i4.1
+   0381 ldloc.s V_16
+   0383 ldarg.2 
+   0384 ldind.ref 
+   0385 ldlen 
+   0386 conv.i4 
+   0387 blt IL_02ff: ldarg.2
+   038C ldc.i4.1 
+   038D ret 
+   038E ldc.i4.0 
+   038F ret 
+== System.Int32 GetAllActorsTotalDamageAndTopActorId(System.UInt32[]& arrObjId, System.Int32 iTopCount, System.UInt32& uiAllTotalDamage, System.UInt32[]& arrDiffTypeHurtValue) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.3 
+   0003 ldc.i4.0 
+   0004 stind.i4 
+   0005 ldarg.0 
+   0006 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   000B brfalse IL_030e: ldloc.0
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0016 callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Count()
+   001B ldc.i4.0 
+   001C ble IL_030e: ldloc.0
+   0021 ldc.i4.0 
+   0022 stloc.2 
+   0023 ldc.i4.0 
+   0024 stloc.3 
+   0025 ldarg.0 
+   0026 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   002B callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Count()
+   0030 newarr Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   0035 stloc.s V_4
+   0037 ldarg.0 
+   0038 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   003D callvirt System.Collections.Generic.Dictionary`2/Enumerator<!0,!1> System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::GetEnumerator()
+   0042 stloc.s V_5
+   0044 br IL_0271: ldloca.s V_5
+   0049 ldc.i4.0 
+   004A stloc.2 
+   004B ldloca.s V_5
+   004D call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Current()
+   0052 stloc.s V_7
+   0054 ldloca.s V_7
+   0056 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Value()
+   005B stloc.s V_8
+   005D ldloca.s V_8
+   005F ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0064 callvirt System.Int32 System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Count()
+   0069 stloc.s V_6
+   006B ldloc.s V_6
+   006D ldc.i4.0 
+   006E bgt IL_0078: ldarg.0
+   0073 br IL_0271: ldloca.s V_5
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   007E ldloca.s V_5
+   0080 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Current()
+   0085 stloc.s V_9
+   0087 ldloca.s V_9
+   0089 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Value()
+   008E stloc.s V_10
+   0090 ldloca.s V_10
+   0092 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0097 callvirt System.Collections.Generic.IList`1<!0> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Keys()
+   009C ldloc.s V_6
+   009E ldc.i4.1 
+   009F sub 
+   00A0 callvirt !0 System.Collections.Generic.IList`1<System.UInt64>::get_Item(System.Int32)
+   00A5 sub 
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageIntervalTimeMax
+   00AC conv.i8 
+   00AD ldc.i4 1000
+   00B2 conv.i8 
+   00B3 add 
+   00B4 ble.un IL_00be: ldloca.s V_5
+   00B9 br IL_0271: ldloca.s V_5
+   00BE ldloca.s V_5
+   00C0 call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Current()
+   00C5 stloc.s V_12
+   00C7 ldloca.s V_12
+   00C9 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Value()
+   00CE stloc.s V_13
+   00D0 ldloca.s V_13
+   00D2 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   00D7 callvirt System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<!0,!1>> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::GetEnumerator()
+   00DC stloc.s V_11
+   00DE br IL_020e: ldloc.s V_11
+   00E3 ldarg.0 
+   00E4 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   00E9 ldloc.s V_11
+   00EB callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   00F0 stloc.s V_14
+   00F2 ldloca.s V_14
+   00F4 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Key()
+   00F9 sub 
+   00FA ldarg.0 
+   00FB ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_iDamageStatisticsTimeMax
+   0100 conv.i8 
+   0101 ble.un IL_010b: ldloc.s V_11
+   0106 br IL_020e: ldloc.s V_11
+   010B ldloc.s V_11
+   010D callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   0112 stloc.s V_15
+   0114 ldloca.s V_15
+   0116 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Value()
+   011B stloc.1 
+   011C ldloc.1 
+   011D brfalse IL_020e: ldloc.s V_11
+   0122 ldc.i4.0 
+   0123 stloc.s V_16
+   0125 br IL_0205: ldloc.s V_16
+   012A ldloc.1 
+   012B ldloc.s V_16
+   012D ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0132 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0137 brfalse IL_01ff: ldloc.s V_16
+   013C ldloc.1 
+   013D ldloc.s V_16
+   013F ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0144 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0149 callvirt System.Int32 ListViewBase::get_Count()
+   014E stloc.s V_17
+   0150 ldc.i4.0 
+   0151 stloc.s V_18
+   0153 br IL_01f6: ldloc.s V_18
+   0158 ldloc.2 
+   0159 ldloc.1 
+   015A ldloc.s V_16
+   015C ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0161 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0166 ldloc.s V_18
+   0168 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   016D ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   0172 add 
+   0173 stloc.2 
+   0174 ldloc.1 
+   0175 ldloc.s V_16
+   0177 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   017C ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0181 ldloc.s V_18
+   0183 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0188 ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   018D ldc.i4.0 
+   018E blt IL_01f0: ldloc.s V_18
+   0193 ldloc.1 
+   0194 ldloc.s V_16
+   0196 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   019B ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01A0 ldloc.s V_18
+   01A2 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   01A7 ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   01AC ldc.i4.5 
+   01AD bge IL_01f0: ldloc.s V_18
+   01B2 ldarg.s arrDiffTypeHurtValue
+   01B4 ldind.ref 
+   01B5 ldloc.1 
+   01B6 ldloc.s V_16
+   01B8 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01BD ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01C2 ldloc.s V_18
+   01C4 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   01C9 ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   01CE ldelema System.UInt32
+   01D3 dup 
+   01D4 ldind.u4 
+   01D5 ldloc.1 
+   01D6 ldloc.s V_16
+   01D8 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   01DD ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   01E2 ldloc.s V_18
+   01E4 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   01E9 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   01EE add 
+   01EF stind.i4 
+   01F0 ldloc.s V_18
+   01F2 ldc.i4.1 
+   01F3 add 
+   01F4 stloc.s V_18
+   01F6 ldloc.s V_18
+   01F8 ldloc.s V_17
+   01FA blt IL_0158: ldloc.2
+   01FF ldloc.s V_16
+   0201 ldc.i4.1 
+   0202 add 
+   0203 stloc.s V_16
+   0205 ldloc.s V_16
+   0207 ldc.i4.s 16
+   0209 ble IL_012a: ldloc.1
+   020E ldloc.s V_11
+   0210 callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   0215 brtrue IL_00e3: ldarg.0
+   021A ldloc.2 
+   021B ldc.i4.0 
+   021C ble IL_0271: ldloca.s V_5
+   0221 ldarg.3 
+   0222 ldarg.3 
+   0223 ldind.u4 
+   0224 ldloc.2 
+   0225 add 
+   0226 stind.i4 
+   0227 ldarg.0 
+   0228 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   022D ldloca.s V_5
+   022F call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Current()
+   0234 stloc.s V_19
+   0236 ldloca.s V_19
+   0238 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Key()
+   023D beq IL_0271: ldloca.s V_5
+   0242 ldloc.s V_4
+   0244 ldloc.3 
+   0245 ldelema Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   024A ldloca.s V_5
+   024C call System.Collections.Generic.KeyValuePair`2<!0,!1> System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Current()
+   0251 stloc.s V_20
+   0253 ldloca.s V_20
+   0255 call !0 System.Collections.Generic.KeyValuePair`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Key()
+   025A stfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iKey
+   025F ldloc.s V_4
+   0261 ldloc.3 
+   0262 ldelema Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   0267 ldloc.2 
+   0268 stfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iValue
+   026D ldloc.3 
+   026E ldc.i4.1 
+   026F add 
+   0270 stloc.3 
+   0271 ldloca.s V_5
+   0273 call System.Boolean System.Collections.Generic.Dictionary`2/Enumerator<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::MoveNext()
+   0278 brtrue IL_0049: ldc.i4.0
+   027D ldloc.s V_4
+   027F ldsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache1
+   0284 brtrue.s IL_0297: ldsfld System.Comparison`1<Assets.Scripts.GameLogic.DOUBLE_INT_INFO> Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache1
+   0286 ldnull 
+   0287 ldftn System.Int32 Assets.Scripts.GameLogic.CHostHeroDamage::<GetAllActorsTotalDamageAndTopActorId>m__1(Assets.Scripts.GameLogic.DOUBLE_INT_INFO,Assets.Scripts.GameLogic.DOUBLE_INT_INFO)
+   028D newobj System.Void System.Comparison`1<Assets.Scripts.GameLogic.DOUBLE_INT_INFO>::.ctor(System.Object,System.IntPtr)
+   0292 stsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache1
+   0297 ldsfld Assets.Scripts.GameLogic.CHostHeroDamage::<>f__am$cache1
+   029C call System.Void System.Array::Sort<Assets.Scripts.GameLogic.DOUBLE_INT_INFO>(!!0[],System.Comparison`1<!!0>)
+   02A1 ldc.i4.0 
+   02A2 stloc.s V_21
+   02A4 br IL_02fe: ldloc.s V_21
+   02A9 ldloc.s V_4
+   02AB ldloc.s V_21
+   02AD ldelema Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   02B2 ldfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iKey
+   02B7 conv.i8 
+   02B8 ldarg.0 
+   02B9 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   02BE conv.u8 
+   02BF bne.un IL_02c9: ldloc.s V_4
+   02C4 br IL_02f8: ldloc.s V_21
+   02C9 ldloc.s V_4
+   02CB ldloc.s V_21
+   02CD ldelema Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   02D2 ldfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iValue
+   02D7 ldc.i4.0 
+   02D8 bgt IL_02e2: ldarg.1
+   02DD br IL_030e: ldloc.0
+   02E2 ldarg.1 
+   02E3 ldind.ref 
+   02E4 ldloc.0 
+   02E5 ldloc.s V_4
+   02E7 ldloc.s V_21
+   02E9 ldelema Assets.Scripts.GameLogic.DOUBLE_INT_INFO
+   02EE ldfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iKey
+   02F3 stelem.i4 
+   02F4 ldloc.0 
+   02F5 ldc.i4.1 
+   02F6 add 
+   02F7 stloc.0 
+   02F8 ldloc.s V_21
+   02FA ldc.i4.1 
+   02FB add 
+   02FC stloc.s V_21
+   02FE ldloc.s V_21
+   0300 ldarg.2 
+   0301 bge IL_030e: ldloc.0
+   0306 ldloc.s V_21
+   0308 ldloc.3 
+   0309 blt IL_02a9: ldloc.s V_4
+   030E ldloc.0 
+   030F ret 
+== CoreDef.HurtTypeDef GetSkillSlotHurtType(System.UInt32 uiObjId, CoreDef.SkillSlotType slotType) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.2 
+   0001 ldc.i4.0 
+   0002 blt IL_00a4: ldc.i4.5
+   0007 ldarg.2 
+   0008 ldc.i4.s 16
+   000A bgt IL_00a4: ldc.i4.5
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0015 brfalse IL_00a4: ldc.i4.5
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0020 callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Count()
+   0025 ldc.i4.0 
+   0026 ble IL_00a4: ldc.i4.5
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0031 ldarg.1 
+   0032 ldloca.s V_0
+   0034 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::TryGetValue(!0,!1&)
+   0039 brfalse IL_00a4: ldc.i4.5
+   003E ldloca.s V_0
+   0040 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::listDamage
+   0045 callvirt System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<!0,!1>> System.Collections.Generic.SortedList`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::GetEnumerator()
+   004A stloc.2 
+   004B br IL_0099: ldloc.2
+   0050 ldloc.2 
+   0051 callvirt !0 System.Collections.Generic.IEnumerator`1<System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>>::get_Current()
+   0056 stloc.3 
+   0057 ldloca.s V_3
+   0059 call !1 System.Collections.Generic.KeyValuePair`2<System.UInt64,Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO[]>::get_Value()
+   005E stloc.1 
+   005F ldloc.1 
+   0060 brfalse IL_0099: ldloc.2
+   0065 ldloc.1 
+   0066 ldarg.2 
+   0067 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   006C ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   0071 ldc.i4.0 
+   0072 callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0077 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   007C brfalse IL_0099: ldloc.2
+   0081 ldloc.1 
+   0082 ldarg.2 
+   0083 ldelema Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO
+   0088 ldfld Assets.Scripts.GameLogic.SKILL_SLOT_HURT_INFO::listHurtInfo
+   008D ldc.i4.0 
+   008E callvirt !0 ListView`1<Assets.Scripts.GameLogic.HURT_INFO>::get_Item(System.Int32)
+   0093 ldfld Assets.Scripts.GameLogic.HURT_INFO::hurtType
+   0098 ret 
+   0099 ldloc.2 
+   009A callvirt System.Boolean System.Collections.IEnumerator::MoveNext()
+   009F brtrue IL_0050: ldloc.2
+   00A4 ldc.i4.5 
+   00A5 ret 
+== System.Boolean GetKillerObjId(System.UInt32& uiObjId, CoreDef.ActorTypeDef& actorType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_uiActorKillerObjID
+   0007 stind.i4 
+   0008 ldarg.2 
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_actorKillerActorType
+   000F stind.i4 
+   0010 ldc.i4.0 
+   0011 ret 
+== System.UInt64 GetHostHeroDeadTime() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_ulHeroDeadTime
+   0006 ret 
+== System.Boolean GetDamageActorInfo(System.UInt32 uiObjId, System.String& actorName, System.String& playerName, CoreDef.ActorTypeDef& actorType, System.Int32& iConfigId, System.Byte& actorSubType, System.Byte& bMonsterType) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0006 brfalse IL_006b: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0011 callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::get_Count()
+   0016 ldc.i4.0 
+   0017 ble IL_006b: ldc.i4.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_listDamageActorValue
+   0022 ldarg.1 
+   0023 ldloca.s V_0
+   0025 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO>::TryGetValue(!0,!1&)
+   002A brfalse IL_006b: ldc.i4.0
+   002F ldarg.s actorType
+   0031 ldloca.s V_0
+   0033 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorType
+   0038 stind.i4 
+   0039 ldarg.2 
+   003A ldloca.s V_0
+   003C ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorName
+   0041 stind.ref 
+   0042 ldarg.3 
+   0043 ldloca.s V_0
+   0045 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::playerName
+   004A stind.ref 
+   004B ldarg.s iConfigId
+   004D ldloca.s V_0
+   004F ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::ConfigId
+   0054 stind.i4 
+   0055 ldarg.s actorSubType
+   0057 ldloca.s V_0
+   0059 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::actorSubType
+   005E stind.i1 
+   005F ldarg.s bMonsterType
+   0061 ldloca.s V_0
+   0063 ldfld Assets.Scripts.GameLogic.DAMAGE_ACTOR_INFO::bMonsterType
+   0068 stind.i1 
+   0069 ldc.i4.1 
+   006A ret 
+   006B ldc.i4.0 
+   006C ret 
+== System.Void InitDeadInfoValue() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.5 
+   0002 newarr System.UInt32
+   0007 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrDiffTypeHurtValue
+   000C ldarg.0 
+   000D ldc.i4.2 
+   000E newarr System.UInt32
+   0013 stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrObjId
+   0018 ldarg.0 
+   0019 ldc.i4.3 
+   001A newarr System.Int32
+   001F stfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0024 ret 
+== System.Void ReInitDeadInfoValue() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrDiffTypeHurtValue
+   0006 brfalse IL_001f: ldarg.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrDiffTypeHurtValue
+   0011 ldc.i4.0 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrDiffTypeHurtValue
+   0018 ldlen 
+   0019 conv.i4 
+   001A call System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrObjId
+   0025 brfalse IL_003e: ldarg.0
+   002A ldarg.0 
+   002B ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrObjId
+   0030 ldc.i4.0 
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrObjId
+   0037 ldlen 
+   0038 conv.i4 
+   0039 call System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0044 brfalse IL_005d: ldarg.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   004F ldc.i4.0 
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0056 ldlen 
+   0057 conv.i4 
+   0058 call System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0063 brfalse IL_007c: ret
+   0068 ldarg.0 
+   0069 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   006E ldc.i4.0 
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameLogic.CHostHeroDamage::m_arrHeroTotalDamage
+   0075 ldlen 
+   0076 conv.i4 
+   0077 call System.Void System.Array::Clear(System.Array,System.Int32,System.Int32)
+   007C ret 
+== System.Collections.IEnumerator SaveHostDeadInfo() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void Assets.Scripts.GameLogic.CHostHeroDamage/<SaveHostDeadInfo>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld Assets.Scripts.GameLogic.CHostHeroDamage/<SaveHostDeadInfo>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Int32 <GetActorDamage>m__0(Assets.Scripts.GameLogic.HURT_INFO a, Assets.Scripts.GameLogic.HURT_INFO b) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   0006 ldarg.1 
+   0007 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   000C bge IL_0013: ldarg.0
+   0011 ldc.i4.1 
+   0012 ret 
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   0019 ldarg.1 
+   001A ldfld Assets.Scripts.GameLogic.HURT_INFO::iValue
+   001F ble IL_0026: ldc.i4.0
+   0024 ldc.i4.m1 
+   0025 ret 
+   0026 ldc.i4.0 
+   0027 ret 
+== System.Int32 <GetAllActorsTotalDamageAndTopActorId>m__1(Assets.Scripts.GameLogic.DOUBLE_INT_INFO p1, Assets.Scripts.GameLogic.DOUBLE_INT_INFO p2) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarga.s p2
+   0002 ldflda Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iValue
+   0007 ldarga.s p1
+   0009 ldfld Assets.Scripts.GameLogic.DOUBLE_INT_INFO::iValue
+   000E call System.Int32 System.Int32::CompareTo(System.Int32)
+   0013 ret 
+  NESTED Assets.Scripts.GameLogic.CHostHeroDamage/<SaveHostDeadInfo>c__Iterator0

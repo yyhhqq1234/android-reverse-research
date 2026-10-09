@@ -1,0 +1,642 @@
+// TYPE com.tencent.pandora.BulletScreen  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.GameObject _textElement
+  FIELD System.Int32 _fontSize
+  FIELD UnityEngine.Color _textColor
+  FIELD System.Single _elementSpace
+  FIELD System.Int32 _lineMaxElement
+  FIELD System.Int32 _elementsMax
+  FIELD System.Single _refreshTime
+  FIELD System.Single usedPercentOfScreen
+  FIELD System.Single baseSpeed
+  FIELD System.Single accelerateSpeed
+  FIELD System.Single _screenWidth
+  FIELD System.Single _screenHeight
+  FIELD UnityEngine.UI.Text _text
+  FIELD System.Single _elementHeight
+  FIELD System.Collections.Generic.Queue`1<System.String> _elementQueue
+  FIELD System.Single _checkInterval
+  FIELD System.Boolean _isActive
+  FIELD System.Boolean _initializeDone
+  FIELD System.Int32 _lineMax
+  FIELD System.Single _speedMax
+  FIELD com.tencent.pandora.LineInfo[] _lineArray
+  FIELD System.Collections.Generic.List`1<com.tencent.pandora.BulletScreenTextElement>[] _lineElementArray
+  PROP System.Single _usedScreenHeight
+  PROP System.Single _lineHeight
+  PROP System.Boolean IsActive
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.s 30
+   0003 stfld com.tencent.pandora.BulletScreen::_fontSize
+   0008 ldarg.0 
+   0009 call UnityEngine.Color UnityEngine.Color::get_white()
+   000E stfld com.tencent.pandora.BulletScreen::_textColor
+   0013 ldarg.0 
+   0014 ldc.r4 10
+   0019 stfld com.tencent.pandora.BulletScreen::_elementSpace
+   001E ldarg.0 
+   001F ldc.i4.5 
+   0020 stfld com.tencent.pandora.BulletScreen::_lineMaxElement
+   0025 ldarg.0 
+   0026 ldc.i4.s 50
+   0028 stfld com.tencent.pandora.BulletScreen::_elementsMax
+   002D ldarg.0 
+   002E ldc.r4 0.2
+   0033 stfld com.tencent.pandora.BulletScreen::_refreshTime
+   0038 ldarg.0 
+   0039 ldc.r4 1
+   003E stfld com.tencent.pandora.BulletScreen::usedPercentOfScreen
+   0043 ldarg.0 
+   0044 ldc.r4 100
+   0049 stfld com.tencent.pandora.BulletScreen::baseSpeed
+   004E ldarg.0 
+   004F ldc.r4 10
+   0054 stfld com.tencent.pandora.BulletScreen::accelerateSpeed
+   0059 ldarg.0 
+   005A ldc.r4 10000
+   005F stfld com.tencent.pandora.BulletScreen::_speedMax
+   0064 ldarg.0 
+   0065 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   006A ret 
+== System.Single get__usedScreenHeight() attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_screenHeight
+   0006 ldarg.0 
+   0007 ldfld com.tencent.pandora.BulletScreen::usedPercentOfScreen
+   000C mul 
+   000D ret 
+== System.Single get__lineHeight() attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_elementHeight
+   0006 ldarg.0 
+   0007 ldfld com.tencent.pandora.BulletScreen::_elementSpace
+   000C add 
+   000D ret 
+== System.Boolean get_IsActive() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_isActive
+   0006 ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void System.Collections.Generic.Queue`1<System.String>::.ctor()
+   0006 stfld com.tencent.pandora.BulletScreen::_elementQueue
+   000B ldarg.0 
+   000C call System.Void com.tencent.pandora.BulletScreen::GetContainerSize()
+   0011 ldarg.0 
+   0012 call System.Void com.tencent.pandora.BulletScreen::InitBulletScreenTextElement()
+   0017 ret 
+== System.Void GetContainerSize() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call !!0 UnityEngine.Component::GetComponent<UnityEngine.RectTransform>()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldloc.0 
+   0009 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   000E stloc.1 
+   000F ldloca.s V_1
+   0011 call UnityEngine.Vector2 UnityEngine.Rect::get_size()
+   0016 stloc.2 
+   0017 ldloca.s V_2
+   0019 ldfld UnityEngine.Vector2::x
+   001E stfld com.tencent.pandora.BulletScreen::_screenWidth
+   0023 ldarg.0 
+   0024 ldloc.0 
+   0025 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   002A stloc.3 
+   002B ldloca.s V_3
+   002D call UnityEngine.Vector2 UnityEngine.Rect::get_size()
+   0032 stloc.s V_4
+   0034 ldloca.s V_4
+   0036 ldfld UnityEngine.Vector2::y
+   003B stfld com.tencent.pandora.BulletScreen::_screenHeight
+   0040 ret 
+== System.Void InitBulletScreenTextElement() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_textElement
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_001c: ldarg.0
+   0011 ldstr 弹幕元素为空
+   0016 call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   001B ret 
+   001C ldarg.0 
+   001D ldarg.0 
+   001E ldfld com.tencent.pandora.BulletScreen::_textElement
+   0023 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0028 stfld com.tencent.pandora.BulletScreen::_text
+   002D ldarg.0 
+   002E ldfld com.tencent.pandora.BulletScreen::_text
+   0033 ldnull 
+   0034 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0039 brfalse IL_0049: ldarg.0
+   003E ldstr 弹幕元素未添加UILabel组件
+   0043 call System.Void UnityEngine.Debug::LogWarning(System.Object)
+   0048 ret 
+   0049 ldarg.0 
+   004A ldfld com.tencent.pandora.BulletScreen::_text
+   004F ldarg.0 
+   0050 ldfld com.tencent.pandora.BulletScreen::_fontSize
+   0055 callvirt System.Void UnityEngine.UI.Text::set_fontSize(System.Int32)
+   005A ldarg.0 
+   005B ldfld com.tencent.pandora.BulletScreen::_text
+   0060 ldarg.0 
+   0061 ldfld com.tencent.pandora.BulletScreen::_textColor
+   0066 callvirt System.Void UnityEngine.UI.Graphic::set_color(UnityEngine.Color)
+   006B ldarg.0 
+   006C ldfld com.tencent.pandora.BulletScreen::_textElement
+   0071 callvirt !!0 UnityEngine.GameObject::GetComponent<com.tencent.pandora.BulletScreenTextElement>()
+   0076 stloc.0 
+   0077 ldloc.0 
+   0078 ldnull 
+   0079 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   007E brfalse IL_008f: ldarg.0
+   0083 ldarg.0 
+   0084 ldfld com.tencent.pandora.BulletScreen::_textElement
+   0089 callvirt !!0 UnityEngine.GameObject::AddComponent<com.tencent.pandora.BulletScreenTextElement>()
+   008E pop 
+   008F ldarg.0 
+   0090 ldfld com.tencent.pandora.BulletScreen::_textElement
+   0095 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   009A ldarg.0 
+   009B call UnityEngine.Transform UnityEngine.Component::get_transform()
+   00A0 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   00A5 ldarg.0 
+   00A6 ldfld com.tencent.pandora.BulletScreen::_textElement
+   00AB callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B0 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   00B5 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   00BA ldarg.0 
+   00BB ldfld com.tencent.pandora.BulletScreen::_textElement
+   00C0 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C5 ldarg.0 
+   00C6 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   00CB callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   00D0 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   00D5 ldarg.0 
+   00D6 ldarg.0 
+   00D7 call System.Collections.IEnumerator com.tencent.pandora.BulletScreen::GetTextElementHeight()
+   00DC call UnityEngine.Coroutine UnityEngine.MonoBehaviour::StartCoroutine(System.Collections.IEnumerator)
+   00E1 pop 
+   00E2 ret 
+== System.Collections.IEnumerator GetTextElementHeight() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void com.tencent.pandora.BulletScreen/<GetTextElementHeight>c__Iterator0::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld com.tencent.pandora.BulletScreen/<GetTextElementHeight>c__Iterator0::$this
+   000D ldloc.0 
+   000E ret 
+== System.Collections.IEnumerator CreateBulletElements() attrs=Private, HideBySig maxstack=2
+   0000 newobj System.Void com.tencent.pandora.BulletScreen/<CreateBulletElements>c__Iterator1::.ctor()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 stfld com.tencent.pandora.BulletScreen/<CreateBulletElements>c__Iterator1::$this
+   000D ldloc.0 
+   000E ret 
+== System.Void InitLineInfo(com.tencent.pandora.LineInfo line) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 ldfld com.tencent.pandora.BulletScreen::_screenWidth
+   0007 stfld com.tencent.pandora.LineInfo::borderPostion
+   000C ldarg.1 
+   000D ldarg.0 
+   000E ldfld com.tencent.pandora.BulletScreen::_speedMax
+   0013 stfld com.tencent.pandora.LineInfo::lastSpeed
+   0018 ldarg.1 
+   0019 ldc.i4.0 
+   001A stfld com.tencent.pandora.LineInfo::movingCount
+   001F ldarg.1 
+   0020 ldc.i4.0 
+   0021 stfld com.tencent.pandora.LineInfo::informedCount
+   0026 ret 
+== com.tencent.pandora.BulletScreenTextElement AddBulletScreenTextElement(UnityEngine.Vector2 position, System.Int32 lineIndex) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_textElement
+   0006 call !!0 UnityEngine.Object::Instantiate<UnityEngine.GameObject>(!!0)
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0012 ldarg.0 
+   0013 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0018 callvirt System.Void UnityEngine.Transform::SetParent(UnityEngine.Transform)
+   001D ldloc.0 
+   001E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0023 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   0028 callvirt System.Void UnityEngine.Transform::set_localScale(UnityEngine.Vector3)
+   002D ldloc.0 
+   002E ldc.i4.0 
+   002F callvirt System.Void UnityEngine.GameObject::SetActive(System.Boolean)
+   0034 ldloc.0 
+   0035 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   003A stloc.1 
+   003B ldloc.1 
+   003C callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0041 ldarga.s position
+   0043 ldfld UnityEngine.Vector2::x
+   0048 ldarga.s position
+   004A ldfld UnityEngine.Vector2::y
+   004F newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0054 call UnityEngine.Vector3 UnityEngine.Vector2::op_Implicit(UnityEngine.Vector2)
+   0059 callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   005E ldloc.1 
+   005F ldsfld System.String::Empty
+   0064 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0069 ldloc.0 
+   006A callvirt !!0 UnityEngine.GameObject::GetComponent<com.tencent.pandora.BulletScreenTextElement>()
+   006F stloc.2 
+   0070 ldloc.2 
+   0071 ldarg.1 
+   0072 stfld com.tencent.pandora.BulletScreenTextElement::startPos
+   0077 ldloc.2 
+   0078 ldarg.0 
+   0079 ldfld com.tencent.pandora.BulletScreen::_screenWidth
+   007E neg 
+   007F ldc.r4 2
+   0084 div 
+   0085 stfld com.tencent.pandora.BulletScreenTextElement::screenLeftPosX
+   008A ldloc.2 
+   008B ldarg.2 
+   008C stfld com.tencent.pandora.BulletScreenTextElement::lineIndex
+   0091 ldloc.2 
+   0092 ldarg.0 
+   0093 stfld com.tencent.pandora.BulletScreenTextElement::manager
+   0098 ldloc.2 
+   0099 callvirt System.Void com.tencent.pandora.BulletScreenTextElement::Init()
+   009E ldloc.2 
+   009F ret 
+== System.Boolean ArrangePositionsForBulletElement(System.String content) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::baseSpeed
+   0006 ldarg.1 
+   0007 callvirt System.Int32 System.String::get_Length()
+   000C conv.r4 
+   000D ldarg.0 
+   000E ldfld com.tencent.pandora.BulletScreen::accelerateSpeed
+   0013 mul 
+   0014 add 
+   0015 stloc.0 
+   0016 ldc.i4.0 
+   0017 stloc.1 
+   0018 br IL_00e1: ldloc.1
+   001D ldloc.1 
+   001E ldc.i4.1 
+   001F add 
+   0020 conv.r4 
+   0021 ldarg.0 
+   0022 call System.Single com.tencent.pandora.BulletScreen::get__lineHeight()
+   0027 mul 
+   0028 ldarg.0 
+   0029 call System.Single com.tencent.pandora.BulletScreen::get__usedScreenHeight()
+   002E ble.un IL_0038: ldarg.0
+   0033 br IL_00ed: ldc.i4.0
+   0038 ldarg.0 
+   0039 ldfld com.tencent.pandora.BulletScreen::_lineMaxElement
+   003E ldarg.0 
+   003F ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0044 ldloc.1 
+   0045 ldelem.ref 
+   0046 ldfld com.tencent.pandora.LineInfo::movingCount
+   004B sub 
+   004C stloc.2 
+   004D ldarg.0 
+   004E ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0053 ldloc.1 
+   0054 ldelem.ref 
+   0055 ldfld com.tencent.pandora.LineInfo::movingCount
+   005A ldarg.0 
+   005B ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0060 ldloc.1 
+   0061 ldelem.ref 
+   0062 ldfld com.tencent.pandora.LineInfo::informedCount
+   0067 ceq 
+   0069 stloc.3 
+   006A ldloc.3 
+   006B brfalse IL_00dd: ldloc.1
+   0070 ldloc.2 
+   0071 ldc.i4.0 
+   0072 ble IL_00dd: ldloc.1
+   0077 ldarg.0 
+   0078 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   007D ldloc.1 
+   007E ldelem.ref 
+   007F ldfld com.tencent.pandora.LineInfo::lastSpeed
+   0084 ldloc.0 
+   0085 blt.un IL_00dd: ldloc.1
+   008A ldc.i4.0 
+   008B stloc.s V_4
+   008D br IL_00c9: ldloc.s V_4
+   0092 ldarg.0 
+   0093 ldfld com.tencent.pandora.BulletScreen::_lineElementArray
+   0098 ldloc.1 
+   0099 ldelem.ref 
+   009A ldloc.s V_4
+   009C callvirt !0 System.Collections.Generic.List`1<com.tencent.pandora.BulletScreenTextElement>::get_Item(System.Int32)
+   00A1 callvirt System.Boolean com.tencent.pandora.BulletScreenTextElement::get_IsMoving()
+   00A6 brtrue IL_00c3: ldloc.s V_4
+   00AB ldarg.0 
+   00AC ldfld com.tencent.pandora.BulletScreen::_lineElementArray
+   00B1 ldloc.1 
+   00B2 ldelem.ref 
+   00B3 ldloc.s V_4
+   00B5 callvirt !0 System.Collections.Generic.List`1<com.tencent.pandora.BulletScreenTextElement>::get_Item(System.Int32)
+   00BA ldarg.1 
+   00BB ldloc.0 
+   00BC callvirt System.Void com.tencent.pandora.BulletScreenTextElement::SetTextAndMove(System.String,System.Single)
+   00C1 ldc.i4.1 
+   00C2 ret 
+   00C3 ldloc.s V_4
+   00C5 ldc.i4.1 
+   00C6 add 
+   00C7 stloc.s V_4
+   00C9 ldloc.s V_4
+   00CB ldarg.0 
+   00CC ldfld com.tencent.pandora.BulletScreen::_lineElementArray
+   00D1 ldloc.1 
+   00D2 ldelem.ref 
+   00D3 callvirt System.Int32 System.Collections.Generic.List`1<com.tencent.pandora.BulletScreenTextElement>::get_Count()
+   00D8 blt IL_0092: ldarg.0
+   00DD ldloc.1 
+   00DE ldc.i4.1 
+   00DF add 
+   00E0 stloc.1 
+   00E1 ldloc.1 
+   00E2 ldarg.0 
+   00E3 ldfld com.tencent.pandora.BulletScreen::_lineMax
+   00E8 blt IL_001d: ldloc.1
+   00ED ldc.i4.0 
+   00EE ret 
+== System.Void GetAvailablePositions() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   0006 callvirt System.Int32 System.Collections.Generic.Queue`1<System.String>::get_Count()
+   000B ldc.i4.0 
+   000C ble IL_0035: ret
+   0011 ldarg.0 
+   0012 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   0017 callvirt !0 System.Collections.Generic.Queue`1<System.String>::Peek()
+   001C stloc.0 
+   001D ldarg.0 
+   001E ldloc.0 
+   001F call System.Boolean com.tencent.pandora.BulletScreen::ArrangePositionsForBulletElement(System.String)
+   0024 brfalse IL_0035: ret
+   0029 ldarg.0 
+   002A ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   002F callvirt !0 System.Collections.Generic.Queue`1<System.String>::Dequeue()
+   0034 pop 
+   0035 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_isActive
+   0006 brfalse IL_0016: ret
+   000B ldarg.0 
+   000C ldfld com.tencent.pandora.BulletScreen::_initializeDone
+   0011 brtrue IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 dup 
+   0019 ldfld com.tencent.pandora.BulletScreen::_checkInterval
+   001E call System.Single UnityEngine.Time::get_deltaTime()
+   0023 add 
+   0024 stfld com.tencent.pandora.BulletScreen::_checkInterval
+   0029 ldarg.0 
+   002A ldfld com.tencent.pandora.BulletScreen::_checkInterval
+   002F ldarg.0 
+   0030 ldfld com.tencent.pandora.BulletScreen::_refreshTime
+   0035 ble.un IL_004b: ret
+   003A ldarg.0 
+   003B call System.Void com.tencent.pandora.BulletScreen::GetAvailablePositions()
+   0040 ldarg.0 
+   0041 ldc.r4 0
+   0046 stfld com.tencent.pandora.BulletScreen::_checkInterval
+   004B ret 
+== System.Void RefreshElementInfo(com.tencent.pandora.BulletElementInfo info) attrs=Public, HideBySig maxstack=3
+   0000 ldarga.s info
+   0002 ldfld com.tencent.pandora.BulletElementInfo::lineIndex
+   0007 stloc.0 
+   0008 ldarg.0 
+   0009 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   000E ldloc.0 
+   000F ldelem.ref 
+   0010 dup 
+   0011 ldfld com.tencent.pandora.LineInfo::informedCount
+   0016 ldc.i4.1 
+   0017 add 
+   0018 stfld com.tencent.pandora.LineInfo::informedCount
+   001D ldarg.0 
+   001E ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0023 ldloc.0 
+   0024 ldelem.ref 
+   0025 ldarga.s info
+   0027 ldfld com.tencent.pandora.BulletElementInfo::speed
+   002C stfld com.tencent.pandora.LineInfo::lastSpeed
+   0031 ret 
+== System.Void RefreshLineInfo(System.Boolean moveState, System.Int32 lineIndex) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 brfalse IL_0020: ldarg.0
+   0006 ldarg.0 
+   0007 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   000C ldarg.2 
+   000D ldelem.ref 
+   000E dup 
+   000F ldfld com.tencent.pandora.LineInfo::movingCount
+   0014 ldc.i4.1 
+   0015 add 
+   0016 stfld com.tencent.pandora.LineInfo::movingCount
+   001B br IL_006f: ret
+   0020 ldarg.0 
+   0021 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0026 ldarg.2 
+   0027 ldelem.ref 
+   0028 dup 
+   0029 ldfld com.tencent.pandora.LineInfo::movingCount
+   002E ldc.i4.1 
+   002F sub 
+   0030 stfld com.tencent.pandora.LineInfo::movingCount
+   0035 ldarg.0 
+   0036 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   003B ldarg.2 
+   003C ldelem.ref 
+   003D dup 
+   003E ldfld com.tencent.pandora.LineInfo::informedCount
+   0043 ldc.i4.1 
+   0044 sub 
+   0045 stfld com.tencent.pandora.LineInfo::informedCount
+   004A ldarg.0 
+   004B ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0050 ldarg.2 
+   0051 ldelem.ref 
+   0052 ldfld com.tencent.pandora.LineInfo::movingCount
+   0057 brtrue IL_006f: ret
+   005C ldarg.0 
+   005D ldfld com.tencent.pandora.BulletScreen::_lineArray
+   0062 ldarg.2 
+   0063 ldelem.ref 
+   0064 ldarg.0 
+   0065 ldfld com.tencent.pandora.BulletScreen::_speedMax
+   006A stfld com.tencent.pandora.LineInfo::lastSpeed
+   006F ret 
+== System.Void InsertBulletTextElement(System.String[] contents) attrs=Public, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldlen 
+   0002 conv.i4 
+   0003 ldarg.0 
+   0004 ldfld com.tencent.pandora.BulletScreen::_elementsMax
+   0009 ble IL_0019: ldarg.1
+   000E ldarg.0 
+   000F ldfld com.tencent.pandora.BulletScreen::_elementsMax
+   0014 br IL_001c: stloc.0
+   0019 ldarg.1 
+   001A ldlen 
+   001B conv.i4 
+   001C stloc.0 
+   001D ldc.i4.0 
+   001E stloc.1 
+   001F br IL_0058: ldloc.1
+   0024 ldarg.0 
+   0025 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   002A ldarg.1 
+   002B ldloc.1 
+   002C ldelem.ref 
+   002D callvirt System.Void System.Collections.Generic.Queue`1<System.String>::Enqueue(!0)
+   0032 ldarg.0 
+   0033 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   0038 callvirt System.Int32 System.Collections.Generic.Queue`1<System.String>::get_Count()
+   003D ldarg.0 
+   003E ldfld com.tencent.pandora.BulletScreen::_elementsMax
+   0043 ble IL_0054: ldloc.1
+   0048 ldarg.0 
+   0049 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   004E callvirt !0 System.Collections.Generic.Queue`1<System.String>::Dequeue()
+   0053 pop 
+   0054 ldloc.1 
+   0055 ldc.i4.1 
+   0056 add 
+   0057 stloc.1 
+   0058 ldloc.1 
+   0059 ldloc.0 
+   005A blt IL_0024: ldarg.0
+   005F ret 
+== System.Void InsertBulletTextElement(System.String content) attrs=Public, HideBySig maxstack=4
+   0000 ldc.i4.1 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldarg.1 
+   0009 stelem.ref 
+   000A stloc.0 
+   000B ldarg.0 
+   000C ldloc.0 
+   000D call System.Void com.tencent.pandora.BulletScreen::InsertBulletTextElement(System.String[])
+   0012 ret 
+== System.Void StopBulletScreen() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld com.tencent.pandora.BulletScreen::_isActive
+   0007 ldarg.0 
+   0008 ldfld com.tencent.pandora.BulletScreen::_elementQueue
+   000D callvirt System.Void System.Collections.Generic.Queue`1<System.String>::Clear()
+   0012 ldarg.0 
+   0013 ldfld com.tencent.pandora.BulletScreen::_initializeDone
+   0018 brtrue IL_001e: ldarg.0
+   001D ret 
+   001E ldarg.0 
+   001F ldfld com.tencent.pandora.BulletScreen::_lineElementArray
+   0024 stloc.1 
+   0025 ldc.i4.0 
+   0026 stloc.2 
+   0027 br IL_006f: ldloc.2
+   002C ldloc.1 
+   002D ldloc.2 
+   002E ldelem.ref 
+   002F stloc.0 
+   0030 ldloc.0 
+   0031 callvirt System.Collections.Generic.List`1/Enumerator<!0> System.Collections.Generic.List`1<com.tencent.pandora.BulletScreenTextElement>::GetEnumerator()
+   0036 stloc.s V_4
+   0038 br IL_004c: ldloca.s V_4
+   003D ldloca.s V_4
+   003F call !0 System.Collections.Generic.List`1/Enumerator<com.tencent.pandora.BulletScreenTextElement>::get_Current()
+   0044 stloc.3 
+   0045 ldloc.3 
+   0046 ldc.i4.0 
+   0047 callvirt System.Void com.tencent.pandora.BulletScreenTextElement::SetMoveStatus(System.Boolean)
+   004C ldloca.s V_4
+   004E call System.Boolean System.Collections.Generic.List`1/Enumerator<com.tencent.pandora.BulletScreenTextElement>::MoveNext()
+   0053 brtrue IL_003d: ldloca.s V_4
+   0058 leave IL_006b: ldloc.2
+   005D ldloca.s V_4
+   005F constrained. System.Collections.Generic.List`1/Enumerator<com.tencent.pandora.BulletScreenTextElement>
+   0065 callvirt System.Void System.IDisposable::Dispose()
+   006A endfinally 
+   006B ldloc.2 
+   006C ldc.i4.1 
+   006D add 
+   006E stloc.2 
+   006F ldloc.2 
+   0070 ldloc.1 
+   0071 ldlen 
+   0072 conv.i4 
+   0073 blt IL_002c: ldloc.1
+   0078 ldarg.0 
+   0079 ldfld com.tencent.pandora.BulletScreen::_lineArray
+   007E stloc.s V_6
+   0080 ldc.i4.0 
+   0081 stloc.s V_7
+   0083 br IL_009d: ldloc.s V_7
+   0088 ldloc.s V_6
+   008A ldloc.s V_7
+   008C ldelem.ref 
+   008D stloc.s V_5
+   008F ldarg.0 
+   0090 ldloc.s V_5
+   0092 call System.Void com.tencent.pandora.BulletScreen::InitLineInfo(com.tencent.pandora.LineInfo)
+   0097 ldloc.s V_7
+   0099 ldc.i4.1 
+   009A add 
+   009B stloc.s V_7
+   009D ldloc.s V_7
+   009F ldloc.s V_6
+   00A1 ldlen 
+   00A2 conv.i4 
+   00A3 blt IL_0088: ldloc.s V_6
+   00A8 ret 
+== System.Void StartBulletScreen() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld com.tencent.pandora.BulletScreen::_isActive
+   0007 ret 
+== System.Void ReCreateBulletScreen() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld com.tencent.pandora.BulletScreen::_initializeDone
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldc.i4.0 
+   000E stfld com.tencent.pandora.BulletScreen::_initializeDone
+   0013 ldarg.0 
+   0014 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0019 callvirt System.Int32 UnityEngine.Transform::get_childCount()
+   001E ldc.i4.1 
+   001F sub 
+   0020 stloc.0 
+   0021 br IL_0040: ldloc.0
+   0026 ldarg.0 
+   0027 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   002C ldloc.0 
+   002D callvirt UnityEngine.Transform UnityEngine.Transform::GetChild(System.Int32)
+   0032 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0037 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   003C ldloc.0 
+   003D ldc.i4.1 
+   003E sub 
+   003F stloc.0 
+   0040 ldloc.0 
+   0041 ldc.i4.0 
+   0042 bge IL_0026: ldarg.0
+   0047 ldarg.0 
+   0048 call System.Void com.tencent.pandora.BulletScreen::GetContainerSize()
+   004D ldarg.0 
+   004E call System.Void com.tencent.pandora.BulletScreen::InitBulletScreenTextElement()
+   0053 ret 
+  NESTED com.tencent.pandora.BulletScreen/<GetTextElementHeight>c__Iterator0
+  NESTED com.tencent.pandora.BulletScreen/<CreateBulletElements>c__Iterator1

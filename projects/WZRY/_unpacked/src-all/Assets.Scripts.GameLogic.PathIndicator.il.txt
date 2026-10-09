@@ -1,0 +1,450 @@
+// TYPE Assets.Scripts.GameLogic.PathIndicator  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 ParNumMax = 50
+  FIELD System.Single ParSpacing = 1.15
+  FIELD UnityEngine.GameObject SrcObj
+  FIELD UnityEngine.GameObject DestObj
+  FIELD UnityEngine.Vector3 DestPosition
+  FIELD System.Collections.ArrayList m_parCachePool
+  FIELD System.Int32 m_parCacheIndex
+  FIELD System.Boolean m_bWorking
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> SrcActorHandle
+  FIELD Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> DestActorHandle
+  FIELD System.String ResourceName = Prefab_Skill_Effects/tongyong_effects/UI_fx/yidong_ui_blue01.prefab
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 0
+   0006 ldc.r4 0
+   000B ldc.r4 0
+   0010 newobj System.Void UnityEngine.Vector3::.ctor(System.Single,System.Single,System.Single)
+   0015 stfld Assets.Scripts.GameLogic.PathIndicator::DestPosition
+   001A ldarg.0 
+   001B newobj System.Void System.Collections.ArrayList::.ctor()
+   0020 stfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0025 ldarg.0 
+   0026 ldc.i4.m1 
+   0027 stfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   002C ldarg.0 
+   002D call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0032 ret 
+== System.Void Play(UnityEngine.GameObject inSrc, UnityEngine.GameObject inDest, UnityEngine.Vector3& inDestPos) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameLogic.PathIndicator::SrcObj
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameLogic.PathIndicator::DestObj
+   000E ldarg.0 
+   000F ldarg.3 
+   0010 ldobj UnityEngine.Vector3
+   0015 stfld Assets.Scripts.GameLogic.PathIndicator::DestPosition
+   001A ldarg.0 
+   001B ldc.i4.1 
+   001C stfld Assets.Scripts.GameLogic.PathIndicator::m_bWorking
+   0021 ldarg.1 
+   0022 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0027 brfalse IL_005a: ldarg.2
+   002C ldarg.1 
+   002D callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.GameLogic.ActorConfig>()
+   0032 stloc.0 
+   0033 ldloc.0 
+   0034 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0039 brfalse IL_004f: ldarg.0
+   003E ldarg.0 
+   003F ldloc.0 
+   0040 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   0045 stfld Assets.Scripts.GameLogic.PathIndicator::SrcActorHandle
+   004A br IL_005a: ldarg.2
+   004F ldarg.0 
+   0050 ldflda Assets.Scripts.GameLogic.PathIndicator::SrcActorHandle
+   0055 call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   005A ldarg.2 
+   005B call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0060 brfalse IL_0093: ret
+   0065 ldarg.2 
+   0066 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.GameLogic.ActorConfig>()
+   006B stloc.1 
+   006C ldloc.1 
+   006D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0072 brfalse IL_0088: ldarg.0
+   0077 ldarg.0 
+   0078 ldloc.1 
+   0079 callvirt Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker> Assets.Scripts.GameLogic.ActorConfig::get_actorPtr()
+   007E stfld Assets.Scripts.GameLogic.PathIndicator::DestActorHandle
+   0083 br IL_0093: ret
+   0088 ldarg.0 
+   0089 ldflda Assets.Scripts.GameLogic.PathIndicator::DestActorHandle
+   008E call System.Void Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::Release()
+   0093 ret 
+== System.Void Stop() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameLogic.PathIndicator::Clear()
+   0006 ldarg.0 
+   0007 ldc.i4.0 
+   0008 stfld Assets.Scripts.GameLogic.PathIndicator::m_bWorking
+   000D ret 
+== System.Void Clear() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_002e: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   000D ldloc.0 
+   000E callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   0013 isinst CPooledGameObjectScript
+   0018 stloc.1 
+   0019 ldloc.1 
+   001A brfalse IL_002a: ldloc.0
+   001F call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   0024 ldloc.1 
+   0025 callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   002A ldloc.0 
+   002B ldc.i4.1 
+   002C add 
+   002D stloc.0 
+   002E ldloc.0 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0035 callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   003A blt IL_0007: ldarg.0
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0045 callvirt System.Void System.Collections.ArrayList::Clear()
+   004A ldarg.0 
+   004B ldc.i4.m1 
+   004C stfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0051 ret 
+== System.Void GetParFromCache(System.Int32 inNeedNum) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0006 ldarg.1 
+   0007 add 
+   0008 stloc.0 
+   0009 ldloc.0 
+   000A ldarg.0 
+   000B ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0010 callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   0015 bge IL_005c: br IL_00e4
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0020 ldc.i4.1 
+   0021 add 
+   0022 stloc.1 
+   0023 br IL_0050: ldloc.1
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   002E ldloc.1 
+   002F callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   0034 isinst CPooledGameObjectScript
+   0039 stloc.2 
+   003A ldloc.2 
+   003B brfalse IL_004c: ldloc.1
+   0040 ldloc.2 
+   0041 ldfld CPooledGameObjectScript::Go
+   0046 ldc.i4.1 
+   0047 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   004C ldloc.1 
+   004D ldc.i4.1 
+   004E add 
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ldloc.0 
+   0052 ble IL_0028: ldarg.0
+   0057 br IL_00f5: ldarg.0
+   005C br IL_00e4: ldloc.0
+   0061 ldc.i4.0 
+   0062 stloc.3 
+   0063 br IL_00dc: ldloc.3
+   0068 ldc.i4.0 
+   0069 stloc.s V_4
+   006B call !0 MonoSingleton`1<SceneMgr>::GetInstance()
+   0070 ldstr Prefab_Skill_Effects/tongyong_effects/UI_fx/yidong_ui_blue01.prefab
+   0075 ldc.i4.1 
+   0076 ldc.i4.s 11
+   0078 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   007D call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   0082 ldloca.s V_4
+   0084 ldnull 
+   0085 callvirt CPooledGameObjectScript SceneMgr::GetPooledGameObjLOD(System.String,System.Boolean,SceneObjType,UnityEngine.Vector3,UnityEngine.Quaternion,System.Boolean&,System.String)
+   008A stloc.s V_5
+   008C ldloc.s V_5
+   008E brfalse IL_00d8: ldloc.3
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0099 ldloc.s V_5
+   009B callvirt System.Int32 System.Collections.ArrayList::Add(System.Object)
+   00A0 stloc.s V_6
+   00A2 ldloc.s V_6
+   00A4 ldarg.0 
+   00A5 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   00AA ldc.i4.1 
+   00AB add 
+   00AC blt IL_00cb: ldloc.s V_5
+   00B1 ldloc.s V_6
+   00B3 ldloc.0 
+   00B4 bgt IL_00cb: ldloc.s V_5
+   00B9 ldloc.s V_5
+   00BB ldfld CPooledGameObjectScript::Go
+   00C0 ldc.i4.1 
+   00C1 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00C6 br IL_00d8: ldloc.3
+   00CB ldloc.s V_5
+   00CD ldfld CPooledGameObjectScript::Go
+   00D2 ldc.i4.0 
+   00D3 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   00D8 ldloc.3 
+   00D9 ldc.i4.1 
+   00DA add 
+   00DB stloc.3 
+   00DC ldloc.3 
+   00DD ldc.i4.s 50
+   00DF blt IL_0068: ldc.i4.0
+   00E4 ldloc.0 
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   00EB callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   00F0 bge IL_0061: ldc.i4.0
+   00F5 ldarg.0 
+   00F6 ldloc.0 
+   00F7 stfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   00FC ret 
+== System.Void ReturnToParCache(System.Int32 inReturnNum) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0006 ldarg.1 
+   0007 sub 
+   0008 stloc.0 
+   0009 ldloc.0 
+   000A ldc.i4.m1 
+   000B call System.Int32 System.Math::Max(System.Int32,System.Int32)
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldc.i4.1 
+   0013 add 
+   0014 stloc.1 
+   0015 br IL_0042: ldloc.1
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0020 ldloc.1 
+   0021 callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   0026 isinst CPooledGameObjectScript
+   002B stloc.2 
+   002C ldloc.2 
+   002D brfalse IL_003e: ldloc.1
+   0032 ldloc.2 
+   0033 ldfld CPooledGameObjectScript::Go
+   0038 ldc.i4.0 
+   0039 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   003E ldloc.1 
+   003F ldc.i4.1 
+   0040 add 
+   0041 stloc.1 
+   0042 ldloc.1 
+   0043 ldarg.0 
+   0044 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0049 ble IL_001a: ldarg.0
+   004E ldarg.0 
+   004F ldloc.0 
+   0050 stfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   005B callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   0060 ldarg.0 
+   0061 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   0066 sub 
+   0067 stloc.3 
+   0068 ldloc.3 
+   0069 ldc.i4.s 100
+   006B blt IL_00ef: ret
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0076 callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   007B ldc.i4.1 
+   007C sub 
+   007D stloc.s V_4
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   0085 callvirt System.Int32 System.Collections.ArrayList::get_Count()
+   008A ldc.i4.s 100
+   008C sub 
+   008D stloc.s V_5
+   008F ldloc.s V_4
+   0091 stloc.s V_6
+   0093 br IL_00e6: ldloc.s V_6
+   0098 ldarg.0 
+   0099 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   009E ldloc.s V_6
+   00A0 callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   00A5 isinst CPooledGameObjectScript
+   00AA stloc.s V_7
+   00AC ldloc.s V_7
+   00AE brfalse IL_00d3: ldarg.0
+   00B3 ldloc.s V_7
+   00B5 ldfld CPooledGameObjectScript::Go
+   00BA callvirt System.Boolean UnityEngine.GameObject::get_activeInHierarchy()
+   00BF ldc.i4.0 
+   00C0 ceq 
+   00C2 call System.Void DebugHelper::Assert(System.Boolean)
+   00C7 call !0 Singleton`1<CGameObjectPool>::GetInstance()
+   00CC ldloc.s V_7
+   00CE callvirt System.Void CGameObjectPool::RecycleGameObject(CPooledGameObjectScript)
+   00D3 ldarg.0 
+   00D4 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   00D9 ldloc.s V_6
+   00DB callvirt System.Void System.Collections.ArrayList::RemoveAt(System.Int32)
+   00E0 ldloc.s V_6
+   00E2 ldc.i4.1 
+   00E3 sub 
+   00E4 stloc.s V_6
+   00E6 ldloc.s V_6
+   00E8 ldloc.s V_5
+   00EA bgt IL_0098: ldarg.0
+   00EF ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameLogic.PathIndicator::m_bWorking
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.PathIndicator::SrcObj
+   0012 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0017 brtrue IL_001d: call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   001C ret 
+   001D call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   0022 stloc.0 
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameLogic.PathIndicator::SrcActorHandle
+   0029 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   002E brfalse IL_0049: ldarg.0
+   0033 ldarg.0 
+   0034 ldflda Assets.Scripts.GameLogic.PathIndicator::SrcActorHandle
+   0039 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   003E ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0043 stloc.0 
+   0044 br IL_006a: ldarg.0
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameLogic.PathIndicator::SrcObj
+   004F call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0054 brfalse IL_006a: ldarg.0
+   0059 ldarg.0 
+   005A ldfld Assets.Scripts.GameLogic.PathIndicator::SrcObj
+   005F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0064 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   0069 stloc.0 
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameLogic.PathIndicator::DestPosition
+   0070 stloc.1 
+   0071 ldarg.0 
+   0072 ldfld Assets.Scripts.GameLogic.PathIndicator::DestActorHandle
+   0077 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   007C brfalse IL_0097: ldarg.0
+   0081 ldarg.0 
+   0082 ldflda Assets.Scripts.GameLogic.PathIndicator::DestActorHandle
+   0087 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   008C ldfld Assets.Scripts.GameLogic.ActorLinker::position
+   0091 stloc.1 
+   0092 br IL_00b8: ldloc.1
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.GameLogic.PathIndicator::DestObj
+   009D call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00A2 brfalse IL_00b8: ldloc.1
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameLogic.PathIndicator::DestObj
+   00AD callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B2 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00B7 stloc.1 
+   00B8 ldloc.1 
+   00B9 ldloc.0 
+   00BA call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   00BF stloc.3 
+   00C0 ldloca.s V_3
+   00C2 call System.Single UnityEngine.Vector3::get_sqrMagnitude()
+   00C7 call System.Single UnityEngine.Mathf::Sqrt(System.Single)
+   00CC ldc.r4 1.15
+   00D1 div 
+   00D2 conv.i4 
+   00D3 stloc.2 
+   00D4 ldarg.0 
+   00D5 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   00DA ldc.i4.1 
+   00DB add 
+   00DC stloc.s V_4
+   00DE ldloc.2 
+   00DF ldloc.s V_4
+   00E1 ble IL_00f5: ldloc.2
+   00E6 ldarg.0 
+   00E7 ldloc.2 
+   00E8 ldloc.s V_4
+   00EA sub 
+   00EB call System.Void Assets.Scripts.GameLogic.PathIndicator::GetParFromCache(System.Int32)
+   00F0 br IL_0107: ldloc.2
+   00F5 ldloc.2 
+   00F6 ldloc.s V_4
+   00F8 bge IL_0107: ldloc.2
+   00FD ldarg.0 
+   00FE ldloc.s V_4
+   0100 ldloc.2 
+   0101 sub 
+   0102 call System.Void Assets.Scripts.GameLogic.PathIndicator::ReturnToParCache(System.Int32)
+   0107 ldloc.2 
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   010E ldc.i4.1 
+   010F add 
+   0110 ceq 
+   0112 call System.Void DebugHelper::Assert(System.Boolean)
+   0117 ldloc.2 
+   0118 ldc.i4.0 
+   0119 ble IL_01b9: ret
+   011E ldloc.1 
+   011F ldloc.0 
+   0120 call UnityEngine.Vector3 UnityEngine.Vector3::op_Subtraction(UnityEngine.Vector3,UnityEngine.Vector3)
+   0125 stloc.s V_6
+   0127 ldloca.s V_6
+   0129 call UnityEngine.Vector3 UnityEngine.Vector3::get_normalized()
+   012E stloc.s V_5
+   0130 ldc.i4.0 
+   0131 stloc.s V_7
+   0133 br IL_01ac: ldloc.s V_7
+   0138 ldarg.0 
+   0139 ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCachePool
+   013E ldloc.s V_7
+   0140 callvirt System.Object System.Collections.ArrayList::get_Item(System.Int32)
+   0145 isinst CPooledGameObjectScript
+   014A stloc.s V_8
+   014C ldloc.s V_8
+   014E brtrue IL_0158: ldloc.s V_8
+   0153 br IL_01a6: ldloc.s V_7
+   0158 ldloc.s V_8
+   015A ldfld CPooledGameObjectScript::Trans
+   015F ldloc.s V_5
+   0161 callvirt System.Void UnityEngine.Transform::set_forward(UnityEngine.Vector3)
+   0166 call UnityEngine.Vector3 UnityEngine.Vector3::get_one()
+   016B stloc.s V_9
+   016D ldloc.1 
+   016E ldloc.s V_7
+   0170 ldc.i4.1 
+   0171 add 
+   0172 conv.r4 
+   0173 ldc.r4 1.15
+   0178 mul 
+   0179 ldloc.s V_5
+   017B call UnityEngine.Vector3 UnityEngine.Vector3::op_UnaryNegation(UnityEngine.Vector3)
+   0180 call UnityEngine.Vector3 UnityEngine.Vector3::op_Multiply(System.Single,UnityEngine.Vector3)
+   0185 call UnityEngine.Vector3 UnityEngine.Vector3::op_Addition(UnityEngine.Vector3,UnityEngine.Vector3)
+   018A stloc.s V_9
+   018C ldloca.s V_9
+   018E ldc.r4 0.1
+   0193 stfld UnityEngine.Vector3::y
+   0198 ldloc.s V_8
+   019A ldfld CPooledGameObjectScript::Trans
+   019F ldloc.s V_9
+   01A1 callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   01A6 ldloc.s V_7
+   01A8 ldc.i4.1 
+   01A9 add 
+   01AA stloc.s V_7
+   01AC ldloc.s V_7
+   01AE ldarg.0 
+   01AF ldfld Assets.Scripts.GameLogic.PathIndicator::m_parCacheIndex
+   01B4 ble IL_0138: ldarg.0
+   01B9 ret 

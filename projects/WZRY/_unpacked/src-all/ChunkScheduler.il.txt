@@ -1,0 +1,604 @@
+// TYPE ChunkScheduler  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD SceneChunkProxy[0...,0...] chunks
+  FIELD ListView`1<SceneChunkProxy> newChunks
+  FIELD ListView`1<SceneChunkProxy> delChunk
+  FIELD System.Int32 maxLRUCount
+  FIELD ListView`1<SceneChunkProxy> LRUQueue
+  FIELD System.Int32 numChunkDimension
+  FIELD ListView`1<System.String> batchAsynLoadProxyOrder
+  FIELD System.Boolean groundFirst
+  FIELD ListView`1<SceneChunkProxy> permanentChunk
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=2
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<SceneChunkProxy>::.ctor()
+   0006 stfld ChunkScheduler::newChunks
+   000B ldarg.0 
+   000C ldc.i4.4 
+   000D newobj System.Void ListView`1<SceneChunkProxy>::.ctor(System.Int32)
+   0012 stfld ChunkScheduler::delChunk
+   0017 ldarg.0 
+   0018 ldc.i4.s 14
+   001A stfld ChunkScheduler::maxLRUCount
+   001F ldarg.0 
+   0020 ldc.i4.s 14
+   0022 newobj System.Void ListView`1<SceneChunkProxy>::.ctor(System.Int32)
+   0027 stfld ChunkScheduler::LRUQueue
+   002C ldarg.0 
+   002D newobj System.Void ListView`1<System.String>::.ctor()
+   0032 stfld ChunkScheduler::batchAsynLoadProxyOrder
+   0037 ldarg.0 
+   0038 newobj System.Void ListView`1<SceneChunkProxy>::.ctor()
+   003D stfld ChunkScheduler::permanentChunk
+   0042 ldarg.0 
+   0043 call System.Void System.Object::.ctor()
+   0048 ret 
+== System.Void Init(System.Int32 _maxLRUCount, System.Int32 _numChunkDimension) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld ChunkScheduler::maxLRUCount
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld ChunkScheduler::numChunkDimension
+   000E ldarg.0 
+   000F ldarg.0 
+   0010 ldfld ChunkScheduler::numChunkDimension
+   0015 ldarg.0 
+   0016 ldfld ChunkScheduler::numChunkDimension
+   001B newobj System.Void SceneChunkProxy[0...,0...]::.ctor(System.Int32,System.Int32)
+   0020 stfld ChunkScheduler::chunks
+   0025 ret 
+== System.Void AddChunk(SceneChunkProxy chunk) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.Int32 SceneChunkProxy::get_xCoord()
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 callvirt System.Int32 SceneChunkProxy::get_zCoord()
+   000D stloc.1 
+   000E ldloc.0 
+   000F ldc.i4.0 
+   0010 blt IL_0042: ret
+   0015 ldloc.0 
+   0016 ldarg.0 
+   0017 ldfld ChunkScheduler::numChunkDimension
+   001C bge IL_0042: ret
+   0021 ldloc.1 
+   0022 ldc.i4.0 
+   0023 blt IL_0042: ret
+   0028 ldloc.1 
+   0029 ldarg.0 
+   002A ldfld ChunkScheduler::numChunkDimension
+   002F bge IL_0042: ret
+   0034 ldarg.0 
+   0035 ldfld ChunkScheduler::chunks
+   003A ldloc.0 
+   003B ldloc.1 
+   003C ldarg.1 
+   003D call System.Void SceneChunkProxy[0...,0...]::Set(System.Int32,System.Int32,SceneChunkProxy)
+   0042 ret 
+== System.Void RemoveChunk(SceneChunkProxy chunk) attrs=Public, Virtual, HideBySig, VtableLayoutMask maxstack=4
+   0000 ldarg.1 
+   0001 callvirt System.Int32 SceneChunkProxy::get_xCoord()
+   0006 stloc.0 
+   0007 ldarg.1 
+   0008 callvirt System.Int32 SceneChunkProxy::get_zCoord()
+   000D stloc.1 
+   000E ldloc.0 
+   000F ldc.i4.0 
+   0010 blt IL_0042: ret
+   0015 ldloc.0 
+   0016 ldarg.0 
+   0017 ldfld ChunkScheduler::numChunkDimension
+   001C bge IL_0042: ret
+   0021 ldloc.1 
+   0022 ldc.i4.0 
+   0023 blt IL_0042: ret
+   0028 ldloc.1 
+   0029 ldarg.0 
+   002A ldfld ChunkScheduler::numChunkDimension
+   002F bge IL_0042: ret
+   0034 ldarg.0 
+   0035 ldfld ChunkScheduler::chunks
+   003A ldloc.0 
+   003B ldloc.1 
+   003C ldnull 
+   003D call System.Void SceneChunkProxy[0...,0...]::Set(System.Int32,System.Int32,SceneChunkProxy)
+   0042 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld ChunkScheduler::chunks
+   0007 ldarg.0 
+   0008 newobj System.Void ListView`1<SceneChunkProxy>::.ctor()
+   000D stfld ChunkScheduler::newChunks
+   0012 ldarg.0 
+   0013 ldarg.0 
+   0014 ldfld ChunkScheduler::maxLRUCount
+   0019 newobj System.Void ListView`1<SceneChunkProxy>::.ctor(System.Int32)
+   001E stfld ChunkScheduler::LRUQueue
+   0023 ret 
+== System.Void LoadChunk(UnityEngine.Vector3 pos, System.Boolean async, System.Boolean permanent) attrs=Public, HideBySig maxstack=6
+   0000 ldsfld StreamSceneInfo::inst
+   0005 ldnull 
+   0006 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000B brfalse IL_0011: ldarg.3
+   0010 ret 
+   0011 ldarg.3 
+   0012 brfalse IL_0085: ldc.i4.0
+   0017 ldc.i4.0 
+   0018 stloc.0 
+   0019 ldc.i4.0 
+   001A stloc.1 
+   001B ldc.r4 0
+   0020 stloc.2 
+   0021 ldc.r4 0
+   0026 stloc.3 
+   0027 ldsfld StreamSceneInfo::inst
+   002C ldarg.1 
+   002D ldloca.s V_0
+   002F ldloca.s V_1
+   0031 ldloca.s V_2
+   0033 ldloca.s V_3
+   0035 callvirt System.Boolean StreamSceneInfo::GetChunkCoord(UnityEngine.Vector3,System.Int32&,System.Int32&,System.Single&,System.Single&)
+   003A brtrue IL_0040: ldarg.0
+   003F ret 
+   0040 ldarg.0 
+   0041 ldloc.0 
+   0042 ldloc.1 
+   0043 call SceneChunkProxy ChunkScheduler::GetChunkViaCoord(System.Int32,System.Int32)
+   0048 stloc.s V_4
+   004A ldloc.s V_4
+   004C brfalse IL_0080: br IL_00c1
+   0051 ldloc.s V_4
+   0053 ldc.i4.1 
+   0054 stfld SceneChunkProxy::permanentLoad
+   0059 ldarg.2 
+   005A brfalse IL_006c: ldloc.s V_4
+   005F ldloc.s V_4
+   0061 ldc.i4.1 
+   0062 callvirt System.Void SceneChunkProxy::LoadAsync(System.Boolean)
+   0067 br IL_0073: ldarg.0
+   006C ldloc.s V_4
+   006E callvirt System.Void SceneChunkProxy::LoadSync()
+   0073 ldarg.0 
+   0074 ldfld ChunkScheduler::permanentChunk
+   0079 ldloc.s V_4
+   007B callvirt System.Void ListView`1<SceneChunkProxy>::Add(!0)
+   0080 br IL_00c1: ret
+   0085 ldc.i4.0 
+   0086 stloc.s V_5
+   0088 ldc.i4.0 
+   0089 stloc.s V_6
+   008B ldc.r4 0
+   0090 stloc.s V_7
+   0092 ldc.r4 0
+   0097 stloc.s V_8
+   0099 ldsfld StreamSceneInfo::inst
+   009E ldarg.1 
+   009F ldloca.s V_5
+   00A1 ldloca.s V_6
+   00A3 ldloca.s V_7
+   00A5 ldloca.s V_8
+   00A7 callvirt System.Boolean StreamSceneInfo::GetChunkCoord(UnityEngine.Vector3,System.Int32&,System.Int32&,System.Single&,System.Single&)
+   00AC brtrue IL_00b2: ldarg.0
+   00B1 ret 
+   00B2 ldarg.0 
+   00B3 ldloc.s V_5
+   00B5 ldloc.s V_6
+   00B7 ldloc.s V_7
+   00B9 ldloc.s V_8
+   00BB ldarg.2 
+   00BC call System.Void ChunkScheduler::ProcessChunk(System.Int32,System.Int32,System.Single,System.Single,System.Boolean)
+   00C1 ret 
+== SceneChunkProxy GetChunkViaCoord(System.Int32 xCoord, System.Int32 zCoord) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 blt IL_0034: ldnull
+   0007 ldarg.1 
+   0008 ldarg.0 
+   0009 ldfld ChunkScheduler::numChunkDimension
+   000E bge IL_0034: ldnull
+   0013 ldarg.2 
+   0014 ldc.i4.0 
+   0015 blt IL_0034: ldnull
+   001A ldarg.2 
+   001B ldarg.0 
+   001C ldfld ChunkScheduler::numChunkDimension
+   0021 bge IL_0034: ldnull
+   0026 ldarg.0 
+   0027 ldfld ChunkScheduler::chunks
+   002C ldarg.1 
+   002D ldarg.2 
+   002E call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   0033 ret 
+   0034 ldnull 
+   0035 ret 
+== System.Void GetNewChunksViaCoord(System.Int32 xCoord, System.Int32 zCoord, System.Single xDelta, System.Single zDelta) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld ChunkScheduler::newChunks
+   0006 callvirt System.Void ListViewBase::Clear()
+   000B ldsfld StreamSceneInfo::inst
+   0010 ldnull 
+   0011 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0016 brfalse IL_0214: ret
+   001B ldarg.0 
+   001C ldarg.1 
+   001D ldarg.2 
+   001E call SceneChunkProxy ChunkScheduler::GetChunkViaCoord(System.Int32,System.Int32)
+   0023 stloc.0 
+   0024 ldloc.0 
+   0025 brfalse IL_0036: ldc.i4.m1
+   002A ldarg.0 
+   002B ldfld ChunkScheduler::newChunks
+   0030 ldloc.0 
+   0031 callvirt System.Void ListView`1<SceneChunkProxy>::Add(!0)
+   0036 ldc.i4.m1 
+   0037 stloc.1 
+   0038 ldc.i4.1 
+   0039 stloc.2 
+   003A ldc.i4.m1 
+   003B stloc.3 
+   003C ldc.i4.1 
+   003D stloc.s V_4
+   003F ldarg.3 
+   0040 ldc.r4 0
+   0045 bge.un IL_0051: ldc.i4.0
+   004A ldc.i4.0 
+   004B stloc.2 
+   004C br IL_0053: ldarg.s zDelta
+   0051 ldc.i4.0 
+   0052 stloc.1 
+   0053 ldarg.s zDelta
+   0055 ldc.r4 0
+   005A bge.un IL_0067: ldc.i4.0
+   005F ldc.i4.0 
+   0060 stloc.s V_4
+   0062 br IL_0069: ldloc.1
+   0067 ldc.i4.0 
+   0068 stloc.3 
+   0069 ldloc.1 
+   006A stloc.s V_5
+   006C br IL_0124: ldloc.s V_5
+   0071 ldloc.3 
+   0072 stloc.s V_6
+   0074 br IL_0115: ldloc.s V_6
+   0079 ldloc.s V_5
+   007B brtrue IL_008c: ldarg.1
+   0080 ldloc.s V_6
+   0082 brtrue IL_008c: ldarg.1
+   0087 br IL_010f: ldloc.s V_6
+   008C ldarg.1 
+   008D ldloc.s V_5
+   008F add 
+   0090 stloc.s V_7
+   0092 ldarg.2 
+   0093 ldloc.s V_6
+   0095 add 
+   0096 stloc.s V_8
+   0098 ldloc.s V_7
+   009A ldc.i4.0 
+   009B blt IL_010f: ldloc.s V_6
+   00A0 ldloc.s V_7
+   00A2 ldarg.0 
+   00A3 ldfld ChunkScheduler::numChunkDimension
+   00A8 bge IL_010f: ldloc.s V_6
+   00AD ldloc.s V_8
+   00AF ldc.i4.0 
+   00B0 blt IL_010f: ldloc.s V_6
+   00B5 ldloc.s V_8
+   00B7 ldarg.0 
+   00B8 ldfld ChunkScheduler::numChunkDimension
+   00BD bge IL_010f: ldloc.s V_6
+   00C2 ldarg.0 
+   00C3 ldfld ChunkScheduler::chunks
+   00C8 ldloc.s V_7
+   00CA ldloc.s V_8
+   00CC call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   00D1 brfalse IL_010f: ldloc.s V_6
+   00D6 ldarg.0 
+   00D7 ldfld ChunkScheduler::newChunks
+   00DC ldarg.0 
+   00DD ldfld ChunkScheduler::chunks
+   00E2 ldloc.s V_7
+   00E4 ldloc.s V_8
+   00E6 call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   00EB callvirt System.Boolean ListView`1<SceneChunkProxy>::Contains(!0)
+   00F0 brtrue IL_010f: ldloc.s V_6
+   00F5 ldarg.0 
+   00F6 ldfld ChunkScheduler::newChunks
+   00FB ldarg.0 
+   00FC ldfld ChunkScheduler::chunks
+   0101 ldloc.s V_7
+   0103 ldloc.s V_8
+   0105 call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   010A callvirt System.Void ListView`1<SceneChunkProxy>::Add(!0)
+   010F ldloc.s V_6
+   0111 ldc.i4.1 
+   0112 add 
+   0113 stloc.s V_6
+   0115 ldloc.s V_6
+   0117 ldloc.s V_4
+   0119 ble IL_0079: ldloc.s V_5
+   011E ldloc.s V_5
+   0120 ldc.i4.1 
+   0121 add 
+   0122 stloc.s V_5
+   0124 ldloc.s V_5
+   0126 ldloc.2 
+   0127 ble IL_0071: ldloc.3
+   012C ldc.i4.m1 
+   012D stloc.s V_9
+   012F br IL_020c: ldloc.s V_9
+   0134 ldc.i4.m1 
+   0135 stloc.s V_10
+   0137 br IL_01fe: ldloc.s V_10
+   013C ldloc.s V_9
+   013E brtrue IL_014f: ldloc.s V_9
+   0143 ldloc.s V_10
+   0145 brtrue IL_014f: ldloc.s V_9
+   014A br IL_01f8: ldloc.s V_10
+   014F ldloc.s V_9
+   0151 ldloc.1 
+   0152 blt IL_0175: ldarg.1
+   0157 ldloc.s V_9
+   0159 ldloc.2 
+   015A bgt IL_0175: ldarg.1
+   015F ldloc.s V_10
+   0161 ldloc.3 
+   0162 blt IL_0175: ldarg.1
+   0167 ldloc.s V_10
+   0169 ldloc.s V_4
+   016B bgt IL_0175: ldarg.1
+   0170 br IL_01f8: ldloc.s V_10
+   0175 ldarg.1 
+   0176 ldloc.s V_9
+   0178 add 
+   0179 stloc.s V_11
+   017B ldarg.2 
+   017C ldloc.s V_10
+   017E add 
+   017F stloc.s V_12
+   0181 ldloc.s V_11
+   0183 ldc.i4.0 
+   0184 blt IL_01f8: ldloc.s V_10
+   0189 ldloc.s V_11
+   018B ldarg.0 
+   018C ldfld ChunkScheduler::numChunkDimension
+   0191 bge IL_01f8: ldloc.s V_10
+   0196 ldloc.s V_12
+   0198 ldc.i4.0 
+   0199 blt IL_01f8: ldloc.s V_10
+   019E ldloc.s V_12
+   01A0 ldarg.0 
+   01A1 ldfld ChunkScheduler::numChunkDimension
+   01A6 bge IL_01f8: ldloc.s V_10
+   01AB ldarg.0 
+   01AC ldfld ChunkScheduler::chunks
+   01B1 ldloc.s V_11
+   01B3 ldloc.s V_12
+   01B5 call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   01BA brfalse IL_01f8: ldloc.s V_10
+   01BF ldarg.0 
+   01C0 ldfld ChunkScheduler::newChunks
+   01C5 ldarg.0 
+   01C6 ldfld ChunkScheduler::chunks
+   01CB ldloc.s V_11
+   01CD ldloc.s V_12
+   01CF call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   01D4 callvirt System.Boolean ListView`1<SceneChunkProxy>::Contains(!0)
+   01D9 brtrue IL_01f8: ldloc.s V_10
+   01DE ldarg.0 
+   01DF ldfld ChunkScheduler::newChunks
+   01E4 ldarg.0 
+   01E5 ldfld ChunkScheduler::chunks
+   01EA ldloc.s V_11
+   01EC ldloc.s V_12
+   01EE call SceneChunkProxy SceneChunkProxy[0...,0...]::Get(System.Int32,System.Int32)
+   01F3 callvirt System.Void ListView`1<SceneChunkProxy>::Add(!0)
+   01F8 ldloc.s V_10
+   01FA ldc.i4.1 
+   01FB add 
+   01FC stloc.s V_10
+   01FE ldloc.s V_10
+   0200 ldc.i4.1 
+   0201 ble IL_013c: ldloc.s V_9
+   0206 ldloc.s V_9
+   0208 ldc.i4.1 
+   0209 add 
+   020A stloc.s V_9
+   020C ldloc.s V_9
+   020E ldc.i4.1 
+   020F ble IL_0134: ldc.i4.m1
+   0214 ret 
+== System.Void ProcessChunk(System.Int32 xCoord, System.Int32 zCoord, System.Single xDelta, System.Single zDelta, System.Boolean async) attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 ldarg.s zDelta
+   0006 call System.Void ChunkScheduler::GetNewChunksViaCoord(System.Int32,System.Int32,System.Single,System.Single)
+   000B ldarg.0 
+   000C ldfld ChunkScheduler::batchAsynLoadProxyOrder
+   0011 callvirt System.Void ListViewBase::Clear()
+   0016 ldarg.0 
+   0017 ldfld ChunkScheduler::newChunks
+   001C callvirt System.Int32 ListViewBase::get_Count()
+   0021 stloc.0 
+   0022 ldc.i4.0 
+   0023 stloc.1 
+   0024 br IL_0093: ldloc.1
+   0029 ldarg.0 
+   002A ldfld ChunkScheduler::newChunks
+   002F ldloc.1 
+   0030 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0035 brtrue IL_003f: ldarg.s async
+   003A br IL_008f: ldloc.1
+   003F ldarg.s async
+   0041 brfalse IL_007e: ldarg.0
+   0046 ldarg.0 
+   0047 ldfld ChunkScheduler::newChunks
+   004C ldloc.1 
+   004D callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0052 ldarg.0 
+   0053 ldfld ChunkScheduler::groundFirst
+   0058 callvirt System.Void SceneChunkProxy::LoadAsync(System.Boolean)
+   005D ldarg.0 
+   005E ldfld ChunkScheduler::batchAsynLoadProxyOrder
+   0063 ldarg.0 
+   0064 ldfld ChunkScheduler::newChunks
+   0069 ldloc.1 
+   006A callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   006F ldfld SceneChunkProxy::chunkName
+   0074 callvirt System.Void ListView`1<System.String>::Add(!0)
+   0079 br IL_008f: ldloc.1
+   007E ldarg.0 
+   007F ldfld ChunkScheduler::newChunks
+   0084 ldloc.1 
+   0085 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   008A callvirt System.Void SceneChunkProxy::LoadSync()
+   008F ldloc.1 
+   0090 ldc.i4.1 
+   0091 add 
+   0092 stloc.1 
+   0093 ldloc.1 
+   0094 ldloc.0 
+   0095 blt IL_0029: ldarg.0
+   009A ldsfld StreamSceneInfo::inst
+   009F ldarg.0 
+   00A0 ldfld ChunkScheduler::batchAsynLoadProxyOrder
+   00A5 callvirt System.Void StreamSceneInfo::BatchLoadChunkAsync(ListView`1<System.String>)
+   00AA ldarg.0 
+   00AB ldarg.0 
+   00AC ldfld ChunkScheduler::newChunks
+   00B1 call System.Void ChunkScheduler::AddLRUUnload(ListView`1<SceneChunkProxy>)
+   00B6 ret 
+== System.Void UnloadAll(System.Boolean includePermanent) attrs=Public, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_001d: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld ChunkScheduler::LRUQueue
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0013 callvirt System.Boolean SceneChunkProxy::UnLoad()
+   0018 pop 
+   0019 ldloc.0 
+   001A ldc.i4.1 
+   001B add 
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldarg.0 
+   001F ldfld ChunkScheduler::LRUQueue
+   0024 callvirt System.Int32 ListViewBase::get_Count()
+   0029 blt IL_0007: ldarg.0
+   002E ldarg.0 
+   002F ldfld ChunkScheduler::LRUQueue
+   0034 callvirt System.Void ListViewBase::Clear()
+   0039 ldarg.0 
+   003A ldfld ChunkScheduler::permanentChunk
+   003F callvirt System.Int32 ListViewBase::get_Count()
+   0044 stloc.1 
+   0045 ldc.i4.0 
+   0046 stloc.2 
+   0047 br IL_0062: ldloc.2
+   004C ldarg.0 
+   004D ldfld ChunkScheduler::permanentChunk
+   0052 ldloc.2 
+   0053 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0058 callvirt System.Boolean SceneChunkProxy::UnLoad()
+   005D pop 
+   005E ldloc.2 
+   005F ldc.i4.1 
+   0060 add 
+   0061 stloc.2 
+   0062 ldloc.2 
+   0063 ldloc.1 
+   0064 blt IL_004c: ldarg.0
+   0069 ldarg.0 
+   006A ldfld ChunkScheduler::permanentChunk
+   006F callvirt System.Void ListViewBase::Clear()
+   0074 ret 
+== System.Void AddLRUUnload(ListView`1<SceneChunkProxy> chunks) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 callvirt System.Int32 ListViewBase::get_Count()
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 ldc.i4.1 
+   0009 sub 
+   000A stloc.1 
+   000B br IL_0047: ldloc.1
+   0010 ldarg.1 
+   0011 ldloc.1 
+   0012 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0017 stloc.2 
+   0018 ldarg.0 
+   0019 ldfld ChunkScheduler::LRUQueue
+   001E ldloc.2 
+   001F callvirt System.Boolean ListView`1<SceneChunkProxy>::Contains(!0)
+   0024 brfalse IL_0036: ldarg.0
+   0029 ldarg.0 
+   002A ldfld ChunkScheduler::LRUQueue
+   002F ldloc.2 
+   0030 callvirt System.Boolean ListView`1<SceneChunkProxy>::Remove(!0)
+   0035 pop 
+   0036 ldarg.0 
+   0037 ldfld ChunkScheduler::LRUQueue
+   003C ldc.i4.0 
+   003D ldloc.2 
+   003E callvirt System.Void ListView`1<SceneChunkProxy>::Insert(System.Int32,!0)
+   0043 ldloc.1 
+   0044 ldc.i4.1 
+   0045 sub 
+   0046 stloc.1 
+   0047 ldloc.1 
+   0048 ldc.i4.0 
+   0049 bge IL_0010: ldarg.1
+   004E ldarg.0 
+   004F ldfld ChunkScheduler::delChunk
+   0054 callvirt System.Void ListViewBase::Clear()
+   0059 ldarg.0 
+   005A ldfld ChunkScheduler::maxLRUCount
+   005F stloc.3 
+   0060 br IL_0080: ldloc.3
+   0065 ldarg.0 
+   0066 ldfld ChunkScheduler::delChunk
+   006B ldarg.0 
+   006C ldfld ChunkScheduler::LRUQueue
+   0071 ldloc.3 
+   0072 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   0077 callvirt System.Void ListView`1<SceneChunkProxy>::Add(!0)
+   007C ldloc.3 
+   007D ldc.i4.1 
+   007E add 
+   007F stloc.3 
+   0080 ldloc.3 
+   0081 ldarg.0 
+   0082 ldfld ChunkScheduler::LRUQueue
+   0087 callvirt System.Int32 ListViewBase::get_Count()
+   008C blt IL_0065: ldarg.0
+   0091 ldc.i4.0 
+   0092 stloc.s V_4
+   0094 br IL_00cf: ldloc.s V_4
+   0099 ldarg.0 
+   009A ldfld ChunkScheduler::delChunk
+   009F ldloc.s V_4
+   00A1 callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   00A6 callvirt System.Boolean SceneChunkProxy::UnLoad()
+   00AB brfalse IL_00c9: ldloc.s V_4
+   00B0 ldarg.0 
+   00B1 ldfld ChunkScheduler::LRUQueue
+   00B6 ldarg.0 
+   00B7 ldfld ChunkScheduler::delChunk
+   00BC ldloc.s V_4
+   00BE callvirt !0 ListView`1<SceneChunkProxy>::get_Item(System.Int32)
+   00C3 callvirt System.Boolean ListView`1<SceneChunkProxy>::Remove(!0)
+   00C8 pop 
+   00C9 ldloc.s V_4
+   00CB ldc.i4.1 
+   00CC add 
+   00CD stloc.s V_4
+   00CF ldloc.s V_4
+   00D1 ldarg.0 
+   00D2 ldfld ChunkScheduler::delChunk
+   00D7 callvirt System.Int32 ListViewBase::get_Count()
+   00DC blt IL_0099: ldarg.0
+   00E1 ret 

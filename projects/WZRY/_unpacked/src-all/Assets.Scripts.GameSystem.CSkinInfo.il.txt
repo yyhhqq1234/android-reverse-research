@@ -1,0 +1,840 @@
+// TYPE Assets.Scripts.GameSystem.CSkinInfo  base=System.Object  attrs=Public
+  FIELD System.Int32 SkinDigitNum = 2
+  FIELD System.Int32 SkinDigitMask = 100
+  FIELD System.UInt32 m_heroId
+  FIELD System.UInt32 m_wearId
+  FIELD DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>> s_heroSkinDic
+  FIELD System.Collections.Generic.List`1<System.UInt32> s_availableSkin
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Init(System.UInt32 heroId, System.UInt16 skinId) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CSkinInfo::m_heroId
+   0007 ldarg.0 
+   0008 ldarg.2 
+   0009 stfld Assets.Scripts.GameSystem.CSkinInfo::m_wearId
+   000E ret 
+== System.Void InitHeroSkinDicData() attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   0005 callvirt System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::Clear()
+   000A call System.Int32 ResData.GameDataMgr/heroSkinDatabin::Count()
+   000F stloc.0 
+   0010 ldc.i4.0 
+   0011 stloc.1 
+   0012 br.s IL_0081: ldloc.1
+   0014 ldloc.1 
+   0015 call ResData.ResHeroSkin ResData.GameDataMgr/heroSkinDatabin::GetByIndex(System.Int32)
+   001A stloc.2 
+   001B ldloca.s V_3
+   001D ldloc.2 
+   001E ldfld ResData.ResHeroSkin::dwHeroID
+   0023 call System.Boolean ResData.GameDataMgr/heroDatabin::FindByKey(ResData.ResHeroCfgInfo&,System.UInt32)
+   0028 brfalse.s IL_007d: ldloc.1
+   002A ldloc.2 
+   002B ldfld ResData.ResHeroSkin::dwHeroID
+   0030 call System.Boolean Assets.Scripts.GameSystem.CHeroDataFactory::IsOneKeyHideHero(System.UInt32)
+   0035 brtrue.s IL_007d: ldloc.1
+   0037 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   003C ldloc.2 
+   003D ldfld ResData.ResHeroSkin::dwHeroID
+   0042 callvirt System.Boolean DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::ContainsKey(!0)
+   0047 brtrue.s IL_0062: ldsfld DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>> Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   0049 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   004E stloc.s V_4
+   0050 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   0055 ldloc.2 
+   0056 ldfld ResData.ResHeroSkin::dwHeroID
+   005B ldloc.s V_4
+   005D callvirt System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::Add(!0,!1)
+   0062 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   0067 ldloc.2 
+   0068 ldfld ResData.ResHeroSkin::dwHeroID
+   006D callvirt !1 DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::get_Item(!0)
+   0072 ldloc.2 
+   0073 ldfld ResData.ResHeroSkin::dwID
+   0078 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   007D ldloc.1 
+   007E ldc.i4.1 
+   007F add 
+   0080 stloc.1 
+   0081 ldloc.1 
+   0082 ldloc.0 
+   0083 blt.s IL_0014: ldloc.1
+   0085 ret 
+== System.Boolean IsCanBuy(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldloca.s V_0
+   0004 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0009 brtrue.s IL_000d: ldloc.0
+   000B ldc.i4.0 
+   000C ret 
+   000D ldloc.0 
+   000E ldfld ResData.ResHeroSkin::dwID
+   0013 call System.Boolean ResData.GameDataMgr::IsSkinAvailableAtShop(System.UInt32)
+   0018 brtrue.s IL_001c: ldloc.0
+   001A ldc.i4.0 
+   001B ret 
+   001C ldloc.0 
+   001D ldfld ResData.ResHeroSkin::dwID
+   0022 ldloca.s V_1
+   0024 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetSkinPromotion(System.UInt32,ResData.ResSkinPromotion&)
+   0029 brfalse.s IL_0058: ldloc.0
+   002B ldc.i4.0 
+   002C ldc.i4.0 
+   002D ldloc.1 
+   002E ldfld ResData.ResSkinPromotion::bIsBuyCoupons
+   0033 ldc.i4.0 
+   0034 cgt 
+   0036 ldloc.1 
+   0037 ldfld ResData.ResSkinPromotion::dwBuyCoupons
+   003C ldloc.1 
+   003D ldfld ResData.ResSkinPromotion::bIsBuyDiamond
+   0042 ldc.i4.0 
+   0043 cgt 
+   0045 ldloc.1 
+   0046 ldfld ResData.ResSkinPromotion::dwBuyDiamond
+   004B ldc.i4 10000
+   0050 call Assets.Scripts.GameSystem.stPayInfoSet Assets.Scripts.GameSystem.CMallSystem::GetPayInfoSetOfGood(System.Boolean,System.UInt32,System.Boolean,System.UInt32,System.Boolean,System.UInt32,System.UInt32)
+   0055 stloc.2 
+   0056 br.s IL_005f: ldloc.2
+   0058 ldloc.0 
+   0059 call Assets.Scripts.GameSystem.stPayInfoSet Assets.Scripts.GameSystem.CMallSystem::GetPayInfoSetOfGood(ResData.ResHeroSkin)
+   005E stloc.2 
+   005F ldloc.2 
+   0060 ldfld Assets.Scripts.GameSystem.stPayInfoSet::m_payInfoCount
+   0065 ldc.i4.0 
+   0066 cgt 
+   0068 ret 
+== System.Boolean IsCanBuy(System.UInt32 skinCfgId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 ldarg.0 
+   0005 ldloca.s V_0
+   0007 ldloca.s V_1
+   0009 call System.Void Assets.Scripts.GameSystem.CSkinInfo::ResolveHeroSkin(System.UInt32,System.UInt32&,System.UInt32&)
+   000E ldloc.0 
+   000F ldloc.1 
+   0010 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::IsCanBuy(System.UInt32,System.UInt32)
+   0015 ret 
+== Assets.Scripts.GameSystem.stPayInfoSet GetSkinPayInfoSet(System.UInt32 heroId, System.UInt32 skinId, System.Boolean includeRegisterPromotion) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 ldarg.2 
+   0008 call Assets.Scripts.GameSystem.stPayInfoSet Assets.Scripts.GameSystem.CSkinInfo::GetSkinPayInfoSet(System.UInt32,System.Boolean)
+   000D ret 
+== Assets.Scripts.GameSystem.stPayInfoSet GetSkinPayInfoSet(System.UInt32 cfgId, System.Boolean includeRegisterPromotion) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldloca.s V_0
+   0003 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetSkinPromotion(System.UInt32,ResData.ResSkinPromotion&)
+   0008 stloc.1 
+   0009 ldarg.0 
+   000A ldloca.s V_2
+   000C call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,ResData.ResHeroSkin&)
+   0011 pop 
+   0012 ldloca.s V_2
+   0014 ldloca.s V_0
+   0016 ldloc.1 
+   0017 ldarg.1 
+   0018 call Assets.Scripts.GameSystem.stPayInfoSet Assets.Scripts.GameSystem.CMallSystem::GetPayInfoSetOfGood(ResData.ResHeroSkin&,ResData.ResSkinPromotion&,System.Boolean,System.Boolean)
+   001D ret 
+== System.Boolean GetHeroSkin(System.UInt32 heroId, System.UInt32 skinId, ResData.ResHeroSkin& skinCfgInfo) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   0007 ldarg.0 
+   0008 ldloca.s V_0
+   000A callvirt System.Boolean DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::TryGetValue(!0,!1&)
+   000F brfalse.s IL_004d: ldarg.0
+   0011 ldc.i4.0 
+   0012 stloc.1 
+   0013 br.s IL_0044: ldloc.1
+   0015 ldloca.s V_2
+   0017 ldloc.0 
+   0018 ldloc.1 
+   0019 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   001E call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0023 brfalse.s IL_0040: ldloc.1
+   0025 ldloc.2 
+   0026 ldfld ResData.ResHeroSkin::dwHeroID
+   002B ldarg.0 
+   002C bne.un.s IL_0040: ldloc.1
+   002E ldloc.2 
+   002F ldfld ResData.ResHeroSkin::dwSkinID
+   0034 ldarg.1 
+   0035 bne.un.s IL_0040: ldloc.1
+   0037 ldarg.2 
+   0038 ldloc.2 
+   0039 stobj ResData.ResHeroSkin
+   003E ldc.i4.1 
+   003F ret 
+   0040 ldloc.1 
+   0041 ldc.i4.1 
+   0042 add 
+   0043 stloc.1 
+   0044 ldloc.1 
+   0045 ldloc.0 
+   0046 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   004B blt.s IL_0015: ldloca.s V_2
+   004D ldarg.0 
+   004E ldc.i4.s 100
+   0050 mul 
+   0051 ldarg.1 
+   0052 add 
+   0053 ldarg.2 
+   0054 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,ResData.ResHeroSkin&)
+   0059 ret 
+== System.Boolean GetHeroSkin(System.UInt32 uniSkinId, ResData.ResHeroSkin& heroSkin) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldarg.0 
+   0002 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0007 ret 
+== System.String GetHeroSkinPic(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldloca.s V_0
+   0004 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0009 brfalse.s IL_0013: ldstr "SkinPicPathIsNull"
+   000B ldloca.s V_0
+   000D call System.String ResData.ResHeroSkin::get_szSkinPicID()
+   0012 ret 
+   0013 ldstr SkinPicPathIsNull
+   0018 newobj System.Void Assets.Scripts.UI.SpriteLoadException::.ctor(System.String)
+   001D ldc.i4.4 
+   001E newarr System.Object
+   0023 dup 
+   0024 ldc.i4.0 
+   0025 ldstr heroID:
+   002A stelem.ref 
+   002B dup 
+   002C ldc.i4.1 
+   002D ldarg.0 
+   002E box System.UInt32
+   0033 stelem.ref 
+   0034 dup 
+   0035 ldc.i4.2 
+   0036 ldstr  skinID:
+   003B stelem.ref 
+   003C dup 
+   003D ldc.i4.3 
+   003E ldarg.1 
+   003F box System.UInt32
+   0044 stelem.ref 
+   0045 call System.String System.String::Concat(System.Object[])
+   004A call System.Void BuglyAgent::ReportException(System.Exception,System.String)
+   004F ldsfld System.String::Empty
+   0054 ret 
+== System.String GetSkinIconPath(System.UInt32 skinCfgId) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0008 brfalse.s IL_001c: ldsfld System.String System.String::Empty
+   000A ldsfld Assets.Scripts.UI.CUIUtility::s_Sprite_Dynamic_Icon_Dir
+   000F ldloca.s V_0
+   0011 call System.String ResData.ResHeroSkin::get_szSkinPicID()
+   0016 call System.String System.String::Concat(System.String,System.String)
+   001B ret 
+   001C ldsfld System.String::Empty
+   0021 ret 
+== System.Boolean IsAvatarID(System.UInt32 skinCfgId) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0008 brfalse.s IL_0014: ldc.i4.0
+   000A ldloc.0 
+   000B ldfld ResData.ResHeroSkin::bIsSkinPart
+   0010 ldc.i4.0 
+   0011 cgt 
+   0013 ret 
+   0014 ldc.i4.0 
+   0015 ret 
+== System.Void ResolveHeroSkin(System.UInt32 skinCfgId, System.UInt32& heroId, System.UInt32& skinId) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldarg.2 
+   0004 ldc.i4.0 
+   0005 stind.i4 
+   0006 ldloca.s V_0
+   0008 ldarg.0 
+   0009 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   000E brfalse.s IL_0040: ret
+   0010 ldloc.0 
+   0011 ldfld ResData.ResHeroSkin::bIsSkinPart
+   0016 brfalse.s IL_0030: ldarg.1
+   0018 ldarg.0 
+   0019 call System.UInt32 Assets.Scripts.GameSystem.CAvatarInfo::GetHeroSkinId(System.UInt32)
+   001E stloc.1 
+   001F ldarg.1 
+   0020 ldloc.1 
+   0021 call System.UInt32 Assets.Scripts.GameSystem.CAvatarInfo::GetHeroIdByHeroSkinId(System.UInt32)
+   0026 stind.i4 
+   0027 ldarg.2 
+   0028 ldloc.1 
+   0029 call System.UInt32 Assets.Scripts.GameSystem.CAvatarInfo::GetSkinIdByHeroSkinId(System.UInt32)
+   002E stind.i4 
+   002F ret 
+   0030 ldarg.1 
+   0031 ldloc.0 
+   0032 ldfld ResData.ResHeroSkin::dwHeroID
+   0037 stind.i4 
+   0038 ldarg.2 
+   0039 ldloc.0 
+   003A ldfld ResData.ResHeroSkin::dwSkinID
+   003F stind.i4 
+   0040 ret 
+== System.UInt32 GetSkinCfgId(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldloca.s V_0
+   0004 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0009 brfalse.s IL_0012: ldc.i4.0
+   000B ldloc.0 
+   000C ldfld ResData.ResHeroSkin::dwID
+   0011 ret 
+   0012 ldc.i4.0 
+   0013 ret 
+== System.UInt32 GetWearSkinId() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse.s IL_0044: ldarg.0
+   000E ldarg.0 
+   000F ldfld Assets.Scripts.GameSystem.CSkinInfo::m_heroId
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.CSkinInfo::m_wearId
+   001A call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   001F stloc.1 
+   0020 ldloc.0 
+   0021 ldfld Assets.Scripts.GameSystem.CRoleInfo::heroExperienceSkinDic
+   0026 ldloc.1 
+   0027 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt32,System.UInt32>::ContainsKey(!0)
+   002C brfalse.s IL_0044: ldarg.0
+   002E ldloc.0 
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CSkinInfo::m_heroId
+   0035 ldarg.0 
+   0036 ldfld Assets.Scripts.GameSystem.CSkinInfo::m_wearId
+   003B callvirt System.Boolean Assets.Scripts.GameSystem.CRoleInfo::IsValidExperienceSkin(System.UInt32,System.UInt32)
+   0040 brtrue.s IL_0044: ldarg.0
+   0042 ldc.i4.0 
+   0043 ret 
+   0044 ldarg.0 
+   0045 ldfld Assets.Scripts.GameSystem.CSkinInfo::m_wearId
+   004A ret 
+== System.Void SetWearSkinId(System.UInt32 skinId) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CSkinInfo::m_wearId
+   0007 ret 
+== System.Int32 GetHeroSkinCnt(System.UInt32 heroId) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CSkinInfo::GetAvailableSkinByHeroId(System.UInt32)
+   0006 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   000B ret 
+== System.Collections.Generic.List`1<System.UInt32> GetAvailableSkinByHeroId(System.UInt32 heroId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   0005 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   000A ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   000F ldarg.0 
+   0010 callvirt System.Boolean DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::ContainsKey(!0)
+   0015 brfalse.s IL_0045: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   0017 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   001C ldarg.0 
+   001D callvirt !1 DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::get_Item(!0)
+   0022 stloc.0 
+   0023 ldc.i4.0 
+   0024 stloc.1 
+   0025 br.s IL_003c: ldloc.1
+   0027 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   002C ldloc.0 
+   002D ldloc.1 
+   002E callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0033 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0038 ldloc.1 
+   0039 ldc.i4.1 
+   003A add 
+   003B stloc.1 
+   003C ldloc.1 
+   003D ldloc.0 
+   003E callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0043 blt.s IL_0027: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   0045 ldsfld Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   004A ret 
+== System.UInt32 GetSkinIdByIndex(System.UInt32 heroId, System.Int32 index) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CSkinInfo::GetAvailableSkinByHeroId(System.UInt32)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse.s IL_002e: ldc.i4.0
+   000A ldarg.1 
+   000B ldc.i4.0 
+   000C blt.s IL_002e: ldc.i4.0
+   000E ldarg.1 
+   000F ldloc.0 
+   0010 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0015 bge.s IL_002e: ldc.i4.0
+   0017 ldloca.s V_1
+   0019 ldloc.0 
+   001A ldarg.1 
+   001B callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0020 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0025 brfalse.s IL_002e: ldc.i4.0
+   0027 ldloc.1 
+   0028 ldfld ResData.ResHeroSkin::dwSkinID
+   002D ret 
+   002E ldc.i4.0 
+   002F ret 
+== System.Int32 GetIndexBySkinId(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CSkinInfo::GetAvailableSkinByHeroId(System.UInt32)
+   0006 stloc.0 
+   0007 ldloc.0 
+   0008 brfalse.s IL_0036: ldc.i4.m1
+   000A ldc.i4.0 
+   000B stloc.1 
+   000C br.s IL_002d: ldloc.1
+   000E ldloca.s V_2
+   0010 ldloc.0 
+   0011 ldloc.1 
+   0012 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0017 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   001C brfalse.s IL_0029: ldloc.1
+   001E ldloc.2 
+   001F ldfld ResData.ResHeroSkin::dwSkinID
+   0024 ldarg.1 
+   0025 bne.un.s IL_0029: ldloc.1
+   0027 ldloc.1 
+   0028 ret 
+   0029 ldloc.1 
+   002A ldc.i4.1 
+   002B add 
+   002C stloc.1 
+   002D ldloc.1 
+   002E ldloc.0 
+   002F callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0034 blt.s IL_000e: ldloca.s V_2
+   0036 ldc.i4.m1 
+   0037 ret 
+== System.Void GetHeroSkinProp(System.UInt32 cfgId, System.Int32[]& propArr, System.Int32[]& propPctArr, System.String[]& propIconArr) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldc.i4.s 40
+   0002 stloc.0 
+   0003 ldc.i4.0 
+   0004 stloc.2 
+   0005 br.s IL_001e: ldloc.2
+   0007 ldarg.1 
+   0008 ldind.ref 
+   0009 ldloc.2 
+   000A ldc.i4.0 
+   000B stelem.i4 
+   000C ldarg.2 
+   000D ldind.ref 
+   000E ldloc.2 
+   000F ldc.i4.0 
+   0010 stelem.i4 
+   0011 ldarg.3 
+   0012 ldind.ref 
+   0013 ldloc.2 
+   0014 ldsfld System.String::Empty
+   0019 stelem.ref 
+   001A ldloc.2 
+   001B ldc.i4.1 
+   001C add 
+   001D stloc.2 
+   001E ldloc.2 
+   001F ldloc.0 
+   0020 blt.s IL_0007: ldarg.1
+   0022 ldloca.s V_1
+   0024 ldarg.0 
+   0025 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   002A brfalse IL_00b9: ret
+   002F ldc.i4.0 
+   0030 stloc.3 
+   0031 br.s IL_00b1: ldloc.3
+   0033 ldloca.s V_1
+   0035 ldloc.3 
+   0036 call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   003B ldfld ResData.ResDT_FuncEft_Obj::wType
+   0040 brfalse.s IL_00b9: ret
+   0042 ldloca.s V_1
+   0044 ldloc.3 
+   0045 call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   004A ldfld ResData.ResDT_FuncEft_Obj::bValType
+   004F brtrue.s IL_0078: ldloca.s V_1
+   0051 ldarg.1 
+   0052 ldind.ref 
+   0053 ldloca.s V_1
+   0055 ldloc.3 
+   0056 call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   005B ldfld ResData.ResDT_FuncEft_Obj::wType
+   0060 ldelema System.Int32
+   0065 dup 
+   0066 ldind.i4 
+   0067 ldloca.s V_1
+   0069 ldloc.3 
+   006A call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   006F ldfld ResData.ResDT_FuncEft_Obj::iValue
+   0074 add 
+   0075 stind.i4 
+   0076 br.s IL_00ad: ldloc.3
+   0078 ldloca.s V_1
+   007A ldloc.3 
+   007B call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   0080 ldfld ResData.ResDT_FuncEft_Obj::bValType
+   0085 ldc.i4.1 
+   0086 bne.un.s IL_00ad: ldloc.3
+   0088 ldarg.2 
+   0089 ldind.ref 
+   008A ldloca.s V_1
+   008C ldloc.3 
+   008D call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   0092 ldfld ResData.ResDT_FuncEft_Obj::wType
+   0097 ldelema System.Int32
+   009C dup 
+   009D ldind.i4 
+   009E ldloca.s V_1
+   00A0 ldloc.3 
+   00A1 call ResData.ResDT_FuncEft_Obj ResData.ResHeroSkin::astAttr(System.Int32)
+   00A6 ldfld ResData.ResDT_FuncEft_Obj::iValue
+   00AB add 
+   00AC stind.i4 
+   00AD ldloc.3 
+   00AE ldc.i4.1 
+   00AF add 
+   00B0 stloc.3 
+   00B1 ldloc.3 
+   00B2 ldc.i4.s 15
+   00B4 blt IL_0033: ldloca.s V_1
+   00B9 ret 
+== System.Void GetHeroSkinProp(System.UInt32 heroId, System.UInt32 skinId, System.Int32[]& propArr, System.Int32[]& propPctArr, System.String[]& propIconArr) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 ldarg.2 
+   0008 ldarg.3 
+   0009 ldarg.s propIconArr
+   000B call System.Void Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkinProp(System.UInt32,System.Int32[]&,System.Int32[]&,System.String[]&)
+   0010 ret 
+== System.Int32 GetCombatEft(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldloca.s V_0
+   0004 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetHeroSkin(System.UInt32,System.UInt32,ResData.ResHeroSkin&)
+   0009 brfalse.s IL_0012: ldc.i4.0
+   000B ldloc.0 
+   000C ldfld ResData.ResHeroSkin::dwCombatAbility
+   0011 ret 
+   0012 ldc.i4.0 
+   0013 ret 
+== System.Boolean GetSkinPromotion(System.UInt32 uniSkinId, ResData.ResSkinPromotion& skinPromotion) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 call System.Boolean ResData.GameDataMgr/skinShopInfoDatabin::FindByKey(ResData.ResHeroSkinShop&,System.UInt32)
+   0008 brtrue.s IL_0013: ldc.i4.0
+   000A ldarg.1 
+   000B initobj ResData.ResSkinPromotion
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldc.i4.0 
+   0014 stloc.1 
+   0015 br.s IL_0050: ldloc.1
+   0017 ldloca.s V_0
+   0019 ldloc.1 
+   001A call System.UInt32 ResData.ResHeroSkinShop::PromotionID(System.Int32)
+   001F stloc.2 
+   0020 ldloc.2 
+   0021 brfalse.s IL_004c: ldloc.1
+   0023 ldarg.1 
+   0024 ldloc.2 
+   0025 call System.Boolean ResData.GameDataMgr/skinPromotionDatabin::FindByKey(ResData.ResSkinPromotion&,System.UInt32)
+   002A brfalse.s IL_004c: ldloc.1
+   002C ldarg.1 
+   002D ldfld ResData.ResSkinPromotion::dwOnTimeGen
+   0032 conv.u8 
+   0033 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0038 conv.i8 
+   0039 bgt.un.s IL_004c: ldloc.1
+   003B ldarg.1 
+   003C ldfld ResData.ResSkinPromotion::dwOffTimeGen
+   0041 conv.u8 
+   0042 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0047 conv.i8 
+   0048 blt.un.s IL_004c: ldloc.1
+   004A ldc.i4.1 
+   004B ret 
+   004C ldloc.1 
+   004D ldc.i4.1 
+   004E add 
+   004F stloc.1 
+   0050 ldloc.1 
+   0051 ldc.i4.5 
+   0052 blt.s IL_0017: ldloca.s V_0
+   0054 ldarg.1 
+   0055 initobj ResData.ResSkinPromotion
+   005B ldc.i4.0 
+   005C ret 
+== System.Boolean GetSkinPromotion(System.UInt32 heroId, System.UInt32 skinId, ResData.ResSkinPromotion& skinPromotion) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 ldarg.2 
+   0008 call System.Boolean Assets.Scripts.GameSystem.CSkinInfo::GetSkinPromotion(System.UInt32,ResData.ResSkinPromotion&)
+   000D ret 
+== System.String GetSkinName(System.UInt32 heroId, System.UInt32 skinId) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 call System.String Assets.Scripts.GameSystem.CSkinInfo::GetSkinName(System.UInt32)
+   000C ret 
+== System.Boolean IsSupportSkinCommonShare(System.UInt32 heroid, System.UInt32 skinid) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloc.0 
+   000B call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0010 brfalse.s IL_001c: ldc.i4.0
+   0012 ldloc.1 
+   0013 ldfld ResData.ResHeroSkin::bIsCanSkinCommonShare
+   0018 ldc.i4.0 
+   0019 cgt 
+   001B ret 
+   001C ldc.i4.0 
+   001D ret 
+== System.String GetSkinCommonShareText(System.UInt32 heroid, System.UInt32 skinid) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloc.0 
+   000B call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0010 brfalse.s IL_001a: ldsfld System.String System.String::Empty
+   0012 ldloca.s V_1
+   0014 call System.String ResData.ResHeroSkin::get_szSkinCommonShareDesc()
+   0019 ret 
+   001A ldsfld System.String::Empty
+   001F ret 
+== System.String GetSkinAvatarShareText(System.UInt32 heroid, System.UInt32 skinid) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloc.0 
+   000B call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0010 brfalse.s IL_001a: ldsfld System.String System.String::Empty
+   0012 ldloca.s V_1
+   0014 call System.String ResData.ResHeroSkin::get_szSkinPartShare()
+   0019 ret 
+   001A ldsfld System.String::Empty
+   001F ret 
+== System.String GetSkinName(System.UInt32 skinUniId) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   0008 brfalse.s IL_0012: ldsfld System.String System.String::Empty
+   000A ldloca.s V_0
+   000C call System.String ResData.ResHeroSkin::get_szSkinName()
+   0011 ret 
+   0012 ldsfld System.String::Empty
+   0017 ret 
+== System.UInt32 GetHeroSkinCost(System.UInt32 heroId, System.UInt32 skinId, ResData.RES_SHOPBUY_COINTYPE costType) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 stloc.0 
+   0008 ldc.i4.0 
+   0009 stloc.1 
+   000A ldloca.s V_2
+   000C ldloc.0 
+   000D call System.Boolean ResData.GameDataMgr/skinShopInfoDatabin::FindByKey(ResData.ResHeroSkinShop&,System.UInt32)
+   0012 brfalse.s IL_003a: ldloc.1
+   0014 ldarg.2 
+   0015 ldc.i4.2 
+   0016 beq.s IL_0033: ldloc.2
+   0018 ldarg.2 
+   0019 ldc.i4.s 10
+   001B beq.s IL_002a: ldloc.2
+   001D ldarg.2 
+   001E ldc.i4.7 
+   001F bne.un.s IL_003a: ldloc.1
+   0021 ldloc.2 
+   0022 ldfld ResData.ResHeroSkinShop::dwBuySkinCoin
+   0027 stloc.1 
+   0028 br.s IL_003a: ldloc.1
+   002A ldloc.2 
+   002B ldfld ResData.ResHeroSkinShop::dwBuyDiamond
+   0030 stloc.1 
+   0031 br.s IL_003a: ldloc.1
+   0033 ldloc.2 
+   0034 ldfld ResData.ResHeroSkinShop::dwBuyCoupons
+   0039 stloc.1 
+   003A ldloc.1 
+   003B ret 
+== System.Boolean IsBuyForbiddenForRankBigGrade(System.UInt32 heroId, System.UInt32 skinId, ResData.RES_RANK_LIMIT_TYPE& rankLimitType, System.Byte& rankLimitBigGrade, System.UInt64& rankLimitParam, System.Boolean& isHaveRankBigGradeLimit) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.UInt32 Assets.Scripts.GameSystem.CSkinInfo::GetSkinCfgId(System.UInt32,System.UInt32)
+   0007 stloc.0 
+   0008 ldloca.s V_1
+   000A ldloc.0 
+   000B call System.Boolean ResData.GameDataMgr/skinShopInfoDatabin::FindByKey(ResData.ResHeroSkinShop&,System.UInt32)
+   0010 brfalse IL_00e8: ldarg.2
+   0015 ldarg.2 
+   0016 ldloc.1 
+   0017 ldfld ResData.ResHeroSkinShop::bRankLimitType
+   001C stind.i4 
+   001D ldarg.3 
+   001E ldloc.1 
+   001F ldfld ResData.ResHeroSkinShop::bRankLimitGrade
+   0024 stind.i1 
+   0025 ldarg.s rankLimitParam
+   0027 ldloc.1 
+   0028 ldfld ResData.ResHeroSkinShop::ullRankLimitParam
+   002D stind.i8 
+   002E ldarg.2 
+   002F ldind.i4 
+   0030 stloc.2 
+   0031 ldloc.2 
+   0032 ldc.i4.1 
+   0033 sub 
+   0034 switch Mono.Cecil.Cil.Instruction[]
+   0049 br IL_00e8: ldarg.2
+   004E ldarg.s isHaveRankBigGradeLimit
+   0050 ldc.i4.1 
+   0051 stind.i1 
+   0052 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0057 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   005C ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankShowGrade
+   0061 call System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetRankBigGrade(System.Byte)
+   0066 ldarg.3 
+   0067 ldind.u1 
+   0068 clt 
+   006A ret 
+   006B ldarg.s isHaveRankBigGradeLimit
+   006D ldc.i4.1 
+   006E stind.i1 
+   006F call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0074 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0079 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankSeasonHighestShowGrade
+   007E call System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetRankBigGrade(System.Byte)
+   0083 ldarg.3 
+   0084 ldind.u1 
+   0085 clt 
+   0087 ret 
+   0088 ldarg.s isHaveRankBigGradeLimit
+   008A ldc.i4.1 
+   008B stind.i1 
+   008C call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0091 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0096 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankHistoryHighestShowGrade
+   009B call System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetRankBigGrade(System.Byte)
+   00A0 ldarg.3 
+   00A1 ldind.u1 
+   00A2 clt 
+   00A4 ret 
+   00A5 ldarg.s isHaveRankBigGradeLimit
+   00A7 ldc.i4.1 
+   00A8 stind.i1 
+   00A9 call !0 Singleton`1<Assets.Scripts.GameSystem.CLadderSystem>::GetInstance()
+   00AE ldarg.s rankLimitParam
+   00B0 ldind.i8 
+   00B1 callvirt System.Boolean Assets.Scripts.GameSystem.CLadderSystem::IsCurSeason(System.UInt64)
+   00B6 brfalse.s IL_00d1: call !0 Singleton`1<Assets.Scripts.GameSystem.CLadderSystem>::GetInstance()
+   00B8 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   00BD callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   00C2 ldfld Assets.Scripts.GameSystem.CRoleInfo::m_rankShowGrade
+   00C7 call System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetRankBigGrade(System.Byte)
+   00CC ldarg.3 
+   00CD ldind.u1 
+   00CE clt 
+   00D0 ret 
+   00D1 call !0 Singleton`1<Assets.Scripts.GameSystem.CLadderSystem>::GetInstance()
+   00D6 ldarg.s rankLimitParam
+   00D8 ldind.i8 
+   00D9 callvirt System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetHistorySeasonGrade(System.UInt64)
+   00DE call System.Byte Assets.Scripts.GameSystem.CLadderSystem::GetRankBigGrade(System.Byte)
+   00E3 ldarg.3 
+   00E4 ldind.u1 
+   00E5 clt 
+   00E7 ret 
+   00E8 ldarg.2 
+   00E9 ldc.i4.0 
+   00EA stind.i4 
+   00EB ldarg.3 
+   00EC ldc.i4.0 
+   00ED stind.i1 
+   00EE ldarg.s rankLimitParam
+   00F0 ldc.i4.0 
+   00F1 conv.i8 
+   00F2 stind.i8 
+   00F3 ldarg.s isHaveRankBigGradeLimit
+   00F5 ldc.i4.0 
+   00F6 stind.i1 
+   00F7 ldc.i4.0 
+   00F8 ret 
+== System.Boolean GetSkinFeatureCnt(System.UInt32 cfgId, System.Int32& cnt) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 stind.i4 
+   0003 ldloca.s V_0
+   0005 ldarg.0 
+   0006 call System.Boolean ResData.GameDataMgr/heroSkinDatabin::FindByKey(ResData.ResHeroSkin&,System.UInt32)
+   000B brtrue.s IL_000f: ldarg.0
+   000D ldc.i4.0 
+   000E ret 
+   000F ldarg.0 
+   0010 ldloca.s V_1
+   0012 ldloca.s V_2
+   0014 call System.Void Assets.Scripts.GameSystem.CSkinInfo::ResolveHeroSkin(System.UInt32,System.UInt32&,System.UInt32&)
+   0019 ldloc.2 
+   001A brtrue.s IL_0026: ldc.i4.0
+   001C ldloc.0 
+   001D ldfld ResData.ResHeroSkin::bIsSkinPart
+   0022 brtrue.s IL_0026: ldc.i4.0
+   0024 ldc.i4.0 
+   0025 ret 
+   0026 ldc.i4.0 
+   0027 stloc.3 
+   0028 br.s IL_004c: ldloc.3
+   002A ldloca.s V_0
+   002C ldloc.3 
+   002D call ResData.ResDT_SkinFeature ResData.ResHeroSkin::astFeature(System.Int32)
+   0032 stloc.s V_4
+   0034 ldloca.s V_4
+   0036 call System.String ResData.ResDT_SkinFeature::get_szDesc()
+   003B call System.Boolean System.String::IsNullOrEmpty(System.String)
+   0040 brtrue.s IL_0051: ldarg.1
+   0042 ldarg.1 
+   0043 ldarg.1 
+   0044 ldind.i4 
+   0045 ldc.i4.1 
+   0046 add 
+   0047 stind.i4 
+   0048 ldloc.3 
+   0049 ldc.i4.1 
+   004A add 
+   004B stloc.3 
+   004C ldloc.3 
+   004D ldc.i4.s 10
+   004F blt.s IL_002a: ldloca.s V_0
+   0051 ldarg.1 
+   0052 ldind.i4 
+   0053 ldc.i4.0 
+   0054 cgt 
+   0056 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 newobj System.Void DictionaryView`2<System.UInt32,System.Collections.Generic.List`1<System.UInt32>>::.ctor()
+   0005 stsfld Assets.Scripts.GameSystem.CSkinInfo::s_heroSkinDic
+   000A newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   000F stsfld Assets.Scripts.GameSystem.CSkinInfo::s_availableSkin
+   0014 ret 

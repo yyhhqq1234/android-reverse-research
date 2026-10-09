@@ -1,0 +1,555 @@
+// TYPE Assets.Scripts.GameSystem.CRollingSystem  base=Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>  attrs=Public, BeforeFieldInit
+  FIELD System.Int32 PriorityMin = 1
+  FIELD System.Int32 PriorityMax = 1000
+  FIELD System.Int32 PriorityIDIPRatio = 100
+  FIELD System.Int32 PriorityHornRatio = 10
+  FIELD System.Int32 PriorityEventRatio = 1
+  FIELD System.Int32 ResetRollingInfoPriorityPeriod = 300
+  FIELD System.Int32 RollingCDMilliSeconds = 20000
+  FIELD ListView`1<Assets.Scripts.GameSystem.RollingInfo> m_rollingInfos
+  FIELD System.Boolean m_isInRollingCD
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 newobj System.Void ListView`1<Assets.Scripts.GameSystem.RollingInfo>::.ctor()
+   0006 stfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   000B ldarg.0 
+   000C call System.Void Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>::.ctor()
+   0011 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0005 ldc.i4.s 70
+   0007 ldarg.0 
+   0008 ldftn System.Void Assets.Scripts.GameSystem.CRollingSystem::OnAutoScrollerScrollFinish(Assets.Scripts.UI.CUIEvent)
+   000E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0013 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0018 ret 
+== System.Void OnAutoScrollerScrollFinish(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0063: ret
+   001C ldarg.1 
+   001D ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0022 ldloc.0 
+   0023 ldc.i4.4 
+   0024 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0029 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_0063: ret
+   0033 ldarg.0 
+   0034 call System.Void Assets.Scripts.GameSystem.CRollingSystem::HandleOnShowRollingInfo()
+   0039 ldarg.0 
+   003A call System.Void Assets.Scripts.GameSystem.CRollingSystem::ResetRollingInfoPriority()
+   003F ldarg.0 
+   0040 ldc.i4.1 
+   0041 stfld Assets.Scripts.GameSystem.CRollingSystem::m_isInRollingCD
+   0046 call !0 Singleton`1<CTimerManager>::GetInstance()
+   004B ldc.i4 20000
+   0050 ldc.i4.1 
+   0051 ldarg.0 
+   0052 ldftn System.Void Assets.Scripts.GameSystem.CRollingSystem::OnRollingCDOver(System.Int32)
+   0058 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   005D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0062 pop 
+   0063 ret 
+== System.Void OnRollingCDOver(System.Int32 timerSequence) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CRollingSystem::m_isInRollingCD
+   0007 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   000C callvirt System.Boolean Assets.Scripts.GameLogic.LobbyLogic::get_CanShowRolling()
+   0011 brfalse IL_001c: ret
+   0016 ldarg.0 
+   0017 call System.Void Assets.Scripts.GameSystem.CRollingSystem::StartRolling()
+   001C ret 
+== System.Void ResetRollingInfoPriority() attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_004e: ldloc.0
+   0007 ldarg.0 
+   0008 ldarg.0 
+   0009 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   000E ldloc.0 
+   000F callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   0014 call System.Boolean Assets.Scripts.GameSystem.CRollingSystem::IsNeedResetResetPriority(Assets.Scripts.GameSystem.RollingInfo)
+   0019 brfalse IL_004a: ldloc.0
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0024 ldloc.0 
+   0025 callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   002A ldc.i4 1000
+   002F stfld Assets.Scripts.GameSystem.RollingInfo::priority
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   003A ldloc.0 
+   003B callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   0040 call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0045 stfld Assets.Scripts.GameSystem.RollingInfo::resetPriorityTime
+   004A ldloc.0 
+   004B ldc.i4.1 
+   004C add 
+   004D stloc.0 
+   004E ldloc.0 
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0055 callvirt System.Int32 ListViewBase::get_Count()
+   005A blt IL_0007: ldarg.0
+   005F ret 
+== System.Boolean IsNeedResetResetPriority(Assets.Scripts.GameSystem.RollingInfo rollingInfo) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameSystem.RollingInfo::repeatCount
+   0006 ldc.i4.0 
+   0007 ble IL_0021: ldc.i4.0
+   000C call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0011 ldarg.1 
+   0012 ldfld Assets.Scripts.GameSystem.RollingInfo::resetPriorityTime
+   0017 sub 
+   0018 ldc.i4 300
+   001D cgt 
+   001F br.s IL_0022: ret
+   0021 ldc.i4.0 
+   0022 ret 
+== System.Void HandleOnShowRollingInfo() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Int32 Assets.Scripts.GameSystem.CRollingSystem::GetOnShowRollingInfoIndex()
+   0006 stloc.0 
+   0007 ldc.i4.0 
+   0008 ldloc.0 
+   0009 bgt IL_0085: ret
+   000E ldloc.0 
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0015 callvirt System.Int32 ListViewBase::get_Count()
+   001A bge IL_0085: ret
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0025 ldloc.0 
+   0026 callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   002B ldfld Assets.Scripts.GameSystem.RollingInfo::repeatCount
+   0030 ldc.i4.1 
+   0031 ble IL_0079: ldarg.0
+   0036 ldarg.0 
+   0037 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   003C ldloc.0 
+   003D callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   0042 dup 
+   0043 ldfld Assets.Scripts.GameSystem.RollingInfo::repeatCount
+   0048 ldc.i4.1 
+   0049 sub 
+   004A conv.u1 
+   004B stfld Assets.Scripts.GameSystem.RollingInfo::repeatCount
+   0050 ldarg.0 
+   0051 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0056 ldloc.0 
+   0057 callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   005C ldc.i4.1 
+   005D stfld Assets.Scripts.GameSystem.RollingInfo::priority
+   0062 ldarg.0 
+   0063 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0068 ldloc.0 
+   0069 callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   006E ldc.i4.0 
+   006F stfld Assets.Scripts.GameSystem.RollingInfo::isShowing
+   0074 br IL_0085: ret
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   007F ldloc.0 
+   0080 callvirt System.Void ListViewBase::RemoveAt(System.Int32)
+   0085 ret 
+== System.Void StartRolling() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_isInRollingCD
+   0006 brfalse IL_000c: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000B ret 
+   000C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0011 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   0016 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001B stloc.0 
+   001C ldloc.0 
+   001D ldnull 
+   001E call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0023 brfalse IL_0029: ldloc.0
+   0028 ret 
+   0029 ldloc.0 
+   002A ldc.i4.4 
+   002B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0030 stloc.1 
+   0031 ldloc.1 
+   0032 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIAutoScroller>()
+   0037 stloc.2 
+   0038 ldarg.0 
+   0039 ldloc.2 
+   003A call System.Void Assets.Scripts.GameSystem.CRollingSystem::StartRolling(Assets.Scripts.UI.CUIAutoScroller)
+   003F ret 
+== System.Void StopRolling() attrs=Public, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CLobbySystem::LOBBY_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_001d: ldloc.0
+   001C ret 
+   001D ldloc.0 
+   001E ldc.i4.4 
+   001F callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0024 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIAutoScroller>()
+   0029 stloc.1 
+   002A ldloc.1 
+   002B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0030 ldc.i4.0 
+   0031 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0036 ldloc.1 
+   0037 callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::StopAutoScroll()
+   003C ret 
+== System.Void StartRolling(Assets.Scripts.UI.CUIAutoScroller autoScroller) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0031: ret
+   000C ldarg.1 
+   000D callvirt System.Boolean Assets.Scripts.UI.CUIAutoScroller::IsScrollRunning()
+   0012 brtrue IL_0031: ret
+   0017 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   001C callvirt System.Boolean Assets.Scripts.GameLogic.LobbyLogic::get_CanShowRolling()
+   0021 brfalse IL_0031: ret
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_isInRollingCD
+   002C brfalse IL_0032: ldarg.1
+   0031 ret 
+   0032 ldarg.1 
+   0033 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0038 isinst UnityEngine.RectTransform
+   003D stloc.0 
+   003E ldloc.0 
+   003F ldnull 
+   0040 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0045 brfalse IL_0088: ldarg.0
+   004A call !0 Singleton`1<Assets.Scripts.GameSystem.CLoudSpeakerSys>::get_instance()
+   004F callvirt System.Boolean Assets.Scripts.GameSystem.CLoudSpeakerSys::IsLoudSpeakerShowing()
+   0054 brfalse IL_0073: ldloc.0
+   0059 ldloc.0 
+   005A ldc.r4 0.661
+   005F ldc.r4 0.5
+   0064 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0069 callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   006E br IL_0088: ldarg.0
+   0073 ldloc.0 
+   0074 ldc.r4 0.3
+   0079 ldc.r4 0.5
+   007E newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0083 callvirt System.Void UnityEngine.RectTransform::set_anchorMin(UnityEngine.Vector2)
+   0088 ldarg.0 
+   0089 call System.Int32 Assets.Scripts.GameSystem.CRollingSystem::GetNextShowRollingInfoIndex()
+   008E stloc.1 
+   008F ldc.i4.0 
+   0090 ldloc.1 
+   0091 bgt IL_0139: ret
+   0096 ldloc.1 
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   009D callvirt System.Int32 ListViewBase::get_Count()
+   00A2 bge IL_0139: ret
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   00AD ldloc.1 
+   00AE callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   00B3 stloc.2 
+   00B4 ldarg.1 
+   00B5 ldloc.2 
+   00B6 ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   00BB callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::SetText(System.String)
+   00C0 ldarg.1 
+   00C1 ldfld Assets.Scripts.UI.CUIAutoScroller::m_content
+   00C6 ldnull 
+   00C7 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00CC brfalse IL_011f: ldarg.1
+   00D1 ldarg.1 
+   00D2 ldfld Assets.Scripts.UI.CUIAutoScroller::m_content
+   00D7 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.UI.CUIEventScript>()
+   00DC stloc.3 
+   00DD ldloc.3 
+   00DE ldnull 
+   00DF call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00E4 brfalse IL_011f: ldarg.1
+   00E9 ldloc.2 
+   00EA ldfld Assets.Scripts.GameSystem.RollingInfo::url
+   00EF call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00F4 brtrue IL_010f: ldloc.3
+   00F9 ldloc.3 
+   00FA ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   00FF ldloc.2 
+   0100 ldfld Assets.Scripts.GameSystem.RollingInfo::url
+   0105 stfld Assets.Scripts.UI.stUIEventParams::tagStr
+   010A br IL_011f: ldarg.1
+   010F ldloc.3 
+   0110 ldflda Assets.Scripts.UI.CUIEventScript::m_onClickEventParams
+   0115 ldsfld System.String::Empty
+   011A stfld Assets.Scripts.UI.stUIEventParams::tagStr
+   011F ldarg.1 
+   0120 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0125 ldc.i4.1 
+   0126 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   012B ldarg.1 
+   012C ldc.i4.0 
+   012D callvirt System.Void Assets.Scripts.UI.CUIAutoScroller::StartAutoScroll(System.Boolean)
+   0132 ldloc.2 
+   0133 ldc.i4.1 
+   0134 stfld Assets.Scripts.GameSystem.RollingInfo::isShowing
+   0139 ret 
+== System.Int32 CalculatePriority(CSProtocol.COM_ROLLINGMSG_TYPE type, System.Byte innerPriority) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 ldarg.0 
+   0003 brtrue IL_0012: ldarg.0
+   0008 ldc.i4.s 100
+   000A ldarg.1 
+   000B add 
+   000C stloc.0 
+   000D br IL_004d: ldloc.0
+   0012 ldarg.0 
+   0013 ldc.i4.1 
+   0014 bne.un IL_0023: ldarg.0
+   0019 ldc.i4.s 10
+   001B ldarg.1 
+   001C add 
+   001D stloc.0 
+   001E br IL_004d: ldloc.0
+   0023 ldarg.0 
+   0024 ldc.i4.2 
+   0025 bne.un IL_0033: ldc.i4.0
+   002A ldc.i4.1 
+   002B ldarg.1 
+   002C add 
+   002D stloc.0 
+   002E br IL_004d: ldloc.0
+   0033 ldc.i4.0 
+   0034 ldstr CalculatePriority.CalculatePriority(): invalid rolling msg type {0}
+   0039 ldc.i4.1 
+   003A newarr System.Object
+   003F dup 
+   0040 ldc.i4.0 
+   0041 ldarg.0 
+   0042 box CSProtocol.COM_ROLLINGMSG_TYPE
+   0047 stelem.ref 
+   0048 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   004D ldloc.0 
+   004E ret 
+== System.Byte CalculateRepeatCount(System.UInt32 startTime, System.UInt32 endTime, System.UInt16 repeatPeriod) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldarg.0 
+   0004 ble.un IL_0016: ldloc.0
+   0009 ldarg.2 
+   000A brfalse IL_0016: ldloc.0
+   000F ldarg.1 
+   0010 ldarg.0 
+   0011 sub 
+   0012 ldarg.2 
+   0013 div.un 
+   0014 conv.u1 
+   0015 stloc.0 
+   0016 ldloc.0 
+   0017 ret 
+== System.Int32 GetOnShowRollingInfoIndex() attrs=Private, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 br IL_0023: ldloc.0
+   0007 ldarg.0 
+   0008 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   000D ldloc.0 
+   000E callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   0013 ldfld Assets.Scripts.GameSystem.RollingInfo::isShowing
+   0018 brfalse IL_001f: ldloc.0
+   001D ldloc.0 
+   001E ret 
+   001F ldloc.0 
+   0020 ldc.i4.1 
+   0021 add 
+   0022 stloc.0 
+   0023 ldloc.0 
+   0024 ldarg.0 
+   0025 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   002A callvirt System.Int32 ListViewBase::get_Count()
+   002F blt IL_0007: ldarg.0
+   0034 ldc.i4.m1 
+   0035 ret 
+== System.Int32 GetNextShowRollingInfoIndex() attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0006 callvirt System.Int32 ListViewBase::get_Count()
+   000B brtrue IL_0012: ldc.i4.0
+   0010 ldc.i4.m1 
+   0011 ret 
+   0012 ldc.i4.0 
+   0013 stloc.0 
+   0014 ldc.i4.0 
+   0015 stloc.1 
+   0016 br IL_0038: ldloc.1
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   0021 ldloc.1 
+   0022 callvirt !0 ListView`1<Assets.Scripts.GameSystem.RollingInfo>::get_Item(System.Int32)
+   0027 ldfld Assets.Scripts.GameSystem.RollingInfo::priority
+   002C ldloc.0 
+   002D ble IL_0034: ldloc.1
+   0032 ldloc.1 
+   0033 stloc.0 
+   0034 ldloc.1 
+   0035 ldc.i4.1 
+   0036 add 
+   0037 stloc.1 
+   0038 ldloc.1 
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   003F callvirt System.Int32 ListViewBase::get_Count()
+   0044 blt IL_001b: ldarg.0
+   0049 ldloc.0 
+   004A ret 
+== System.Void ReceiveRollingMsgNtf(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_ROLLINGMSG_NTF CSProtocol.CSPkgBody::get_stRollingMsgNtf()
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldfld CSProtocol.SCPKG_ROLLINGMSG_NTF::astRollingMsg
+   0012 callvirt System.Int32 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_ROLLING_MSG>::get_Length()
+   0017 ldloc.0 
+   0018 ldfld CSProtocol.SCPKG_ROLLINGMSG_NTF::bMsgCnt
+   001D call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   0022 stloc.1 
+   0023 ldc.i4.0 
+   0024 stloc.2 
+   0025 br IL_01c7: ldloc.2
+   002A newobj System.Void Assets.Scripts.GameSystem.RollingInfo::.ctor()
+   002F stloc.3 
+   0030 ldloc.0 
+   0031 ldfld CSProtocol.SCPKG_ROLLINGMSG_NTF::astRollingMsg
+   0036 ldloc.2 
+   0037 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.CSDT_ROLLING_MSG>::get_Item(System.Int32)
+   003C stloc.s V_4
+   003E ldloc.3 
+   003F call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0044 stfld Assets.Scripts.GameSystem.RollingInfo::resetPriorityTime
+   0049 ldloc.3 
+   004A ldloc.s V_4
+   004C ldfld CSProtocol.CSDT_ROLLING_MSG::bType
+   0051 ldloc.s V_4
+   0053 ldfld CSProtocol.CSDT_ROLLING_MSG::bPriority
+   0058 call System.Int32 Assets.Scripts.GameSystem.CRollingSystem::CalculatePriority(CSProtocol.COM_ROLLINGMSG_TYPE,System.Byte)
+   005D stfld Assets.Scripts.GameSystem.RollingInfo::priority
+   0062 ldloc.3 
+   0063 ldloc.s V_4
+   0065 ldfld CSProtocol.CSDT_ROLLING_MSG::dwStartTime
+   006A ldloc.s V_4
+   006C ldfld CSProtocol.CSDT_ROLLING_MSG::dwEndTime
+   0071 ldloc.s V_4
+   0073 ldfld CSProtocol.CSDT_ROLLING_MSG::wPeriod
+   0078 call System.Byte Assets.Scripts.GameSystem.CRollingSystem::CalculateRepeatCount(System.UInt32,System.UInt32,System.UInt16)
+   007D stfld Assets.Scripts.GameSystem.RollingInfo::repeatCount
+   0082 ldloc.3 
+   0083 ldloc.s V_4
+   0085 ldfld CSProtocol.CSDT_ROLLING_MSG::szContent
+   008A ldloc.s V_4
+   008C ldfld CSProtocol.CSDT_ROLLING_MSG::wContentLen
+   0091 call System.String Utility::UTF8Convert(System.SByte[],System.Int32)
+   0096 stfld Assets.Scripts.GameSystem.RollingInfo::content
+   009B ldc.i4.0 
+   009C stloc.s V_5
+   009E ldloc.3 
+   009F ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   00A4 ldnull 
+   00A5 call ListView`1<Assets.Scripts.GameSystem.UrlAction> Assets.Scripts.GameSystem.UrlAction::ParseFromText(System.String,System.Char[])
+   00AA stloc.s V_6
+   00AC ldloc.s V_6
+   00AE callvirt System.Int32 ListViewBase::get_Count()
+   00B3 ldc.i4.0 
+   00B4 ble IL_010f: ldloc.s V_4
+   00B9 ldloc.s V_6
+   00BB ldc.i4.0 
+   00BC callvirt !0 ListView`1<Assets.Scripts.GameSystem.UrlAction>::get_Item(System.Int32)
+   00C1 stloc.s V_7
+   00C3 ldloc.s V_7
+   00C5 ldfld Assets.Scripts.GameSystem.UrlAction::target
+   00CA call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00CF brtrue IL_010f: ldloc.s V_4
+   00D4 ldloc.s V_7
+   00D6 ldfld Assets.Scripts.GameSystem.UrlAction::action
+   00DB ldc.i4.1 
+   00DC bne.un IL_010f: ldloc.s V_4
+   00E1 ldloc.s V_7
+   00E3 ldfld Assets.Scripts.GameSystem.UrlAction::url
+   00E8 call System.Boolean System.String::IsNullOrEmpty(System.String)
+   00ED brtrue IL_010f: ldloc.s V_4
+   00F2 ldloc.3 
+   00F3 ldloc.s V_7
+   00F5 ldfld Assets.Scripts.GameSystem.UrlAction::target
+   00FA stfld Assets.Scripts.GameSystem.RollingInfo::content
+   00FF ldloc.3 
+   0100 ldloc.s V_7
+   0102 ldfld Assets.Scripts.GameSystem.UrlAction::url
+   0107 stfld Assets.Scripts.GameSystem.RollingInfo::url
+   010C ldc.i4.1 
+   010D stloc.s V_5
+   010F ldloc.s V_4
+   0111 ldfld CSProtocol.CSDT_ROLLING_MSG::bType
+   0116 brtrue IL_015d: ldloc.s V_4
+   011B ldloc.s V_5
+   011D brfalse IL_0142: ldloc.3
+   0122 ldloc.3 
+   0123 ldstr <color=#fdb900>
+   0128 ldloc.3 
+   0129 ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   012E ldstr </color>
+   0133 call System.String System.String::Concat(System.String,System.String,System.String)
+   0138 stfld Assets.Scripts.GameSystem.RollingInfo::content
+   013D br IL_015d: ldloc.s V_4
+   0142 ldloc.3 
+   0143 ldstr <color=#b5e9ff>
+   0148 ldloc.3 
+   0149 ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   014E ldstr </color>
+   0153 call System.String System.String::Concat(System.String,System.String,System.String)
+   0158 stfld Assets.Scripts.GameSystem.RollingInfo::content
+   015D ldloc.s V_4
+   015F ldfld CSProtocol.CSDT_ROLLING_MSG::bIsChat
+   0164 ldc.i4.1 
+   0165 bne.un IL_0184: ldloc.s V_4
+   016A call !0 Singleton`1<EventRouter>::GetInstance()
+   016F ldsfld EventID::ROLLING_SYSTEM_CHAT_INFO_RECEIVED
+   0174 ldloc.3 
+   0175 ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   017A callvirt System.Void EventRouter::BroadCastEvent<System.String>(System.Int32,!!0)
+   017F br IL_01a6: ldloc.s V_4
+   0184 ldloc.s V_4
+   0186 ldfld CSProtocol.CSDT_ROLLING_MSG::bIsChat
+   018B ldc.i4.4 
+   018C bne.un IL_01a6: ldloc.s V_4
+   0191 call !0 Singleton`1<EventRouter>::GetInstance()
+   0196 ldsfld EventID::BIGEVENT_ROLLING_INFO
+   019B ldloc.3 
+   019C ldfld Assets.Scripts.GameSystem.RollingInfo::content
+   01A1 callvirt System.Void EventRouter::BroadCastEvent<System.String>(System.Int32,!!0)
+   01A6 ldloc.s V_4
+   01A8 ldfld CSProtocol.CSDT_ROLLING_MSG::bIsChat
+   01AD ldc.i4.4 
+   01AE beq IL_01c3: ldloc.2
+   01B3 call !0 Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>::GetInstance()
+   01B8 ldfld Assets.Scripts.GameSystem.CRollingSystem::m_rollingInfos
+   01BD ldloc.3 
+   01BE callvirt System.Void ListView`1<Assets.Scripts.GameSystem.RollingInfo>::Add(!0)
+   01C3 ldloc.2 
+   01C4 ldc.i4.1 
+   01C5 add 
+   01C6 stloc.2 
+   01C7 ldloc.2 
+   01C8 ldloc.1 
+   01C9 blt IL_002a: newobj System.Void Assets.Scripts.GameSystem.RollingInfo::.ctor()
+   01CE call !0 Singleton`1<Assets.Scripts.GameSystem.CRollingSystem>::GetInstance()
+   01D3 callvirt System.Void Assets.Scripts.GameSystem.CRollingSystem::StartRolling()
+   01D8 ret 

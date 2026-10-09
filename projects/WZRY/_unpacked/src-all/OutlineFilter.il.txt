@@ -1,0 +1,845 @@
+// TYPE OutlineFilter  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Material material
+  FIELD UnityEngine.Material clearAlphaMat
+  FIELD System.Int32 filterType
+  FIELD UnityEngine.Camera particlesCam
+  FIELD System.Boolean clearAlpha
+  FIELD System.Single blendFactor
+  FIELD System.Boolean s_isRenderingParticles
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld OutlineFilter::filterType
+   0007 ldarg.0 
+   0008 ldc.r4 0.5
+   000D stfld OutlineFilter::blendFactor
+   0012 ldarg.0 
+   0013 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   0018 ret 
+== System.Void EnableSurfaceShaderOutline(System.Boolean enable) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldstr _SGamelGlobalAlphaModifier
+   0005 ldarg.0 
+   0006 brfalse IL_0015: ldc.r4 1
+   000B ldc.r4 0
+   0010 br IL_001a: call System.Void UnityEngine.Shader::SetGlobalFloat(System.String,System.Single)
+   0015 ldc.r4 1
+   001A call System.Void UnityEngine.Shader::SetGlobalFloat(System.String,System.Single)
+   001F ret 
+== System.Void LoadShaders() attrs=Public, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldfld OutlineFilter::material
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_005d: ldarg.0
+   0010 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0015 ldstr Shaders/Post/OutlineFilter
+   001A ldtoken UnityEngine.Shader
+   001F call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0024 ldc.i4.0 
+   0025 ldc.i4.1 
+   0026 ldc.i4.1 
+   0027 ldc.i4.0 
+   0028 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   002D ldfld CResource::m_content
+   0032 isinst UnityEngine.Shader
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003F brfalse IL_0044: ldarg.0
+   0044 ldarg.0 
+   0045 ldloc.0 
+   0046 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   004B stfld OutlineFilter::material
+   0050 ldarg.0 
+   0051 ldfld OutlineFilter::material
+   0056 ldc.i4.s 61
+   0058 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   005D ldarg.0 
+   005E ldfld OutlineFilter::clearAlphaMat
+   0063 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0068 brtrue IL_00ba: ret
+   006D call !0 Singleton`1<CResourceManager>::GetInstance()
+   0072 ldstr Shaders/Post/ClearAlpha
+   0077 ldtoken UnityEngine.Shader
+   007C call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   0081 ldc.i4.0 
+   0082 ldc.i4.1 
+   0083 ldc.i4.1 
+   0084 ldc.i4.0 
+   0085 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   008A ldfld CResource::m_content
+   008F isinst UnityEngine.Shader
+   0094 stloc.1 
+   0095 ldloc.1 
+   0096 ldnull 
+   0097 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   009C brfalse IL_00a1: ldarg.0
+   00A1 ldarg.0 
+   00A2 ldloc.1 
+   00A3 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   00A8 stfld OutlineFilter::clearAlphaMat
+   00AD ldarg.0 
+   00AE ldfld OutlineFilter::clearAlphaMat
+   00B3 ldc.i4.s 61
+   00B5 callvirt System.Void UnityEngine.Object::set_hideFlags(UnityEngine.HideFlags)
+   00BA ret 
+== System.Void UpdateFilterType(System.Boolean heroShow) attrs=Public, HideBySig maxstack=4
+   0000 call System.Int32 UnityEngine.Screen::get_width()
+   0005 call System.Int32 UnityEngine.Screen::get_height()
+   000A call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   000F stloc.0 
+   0010 call System.Int32 UnityEngine.Screen::get_width()
+   0015 call System.Int32 UnityEngine.Screen::get_height()
+   001A call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   001F stloc.1 
+   0020 ldloc.0 
+   0021 ldc.i4 1600
+   0026 bge IL_0047: ldc.i4.1
+   002B ldloc.1 
+   002C ldc.i4 900
+   0031 bge IL_0047: ldc.i4.1
+   0036 call System.Single UnityEngine.Screen::get_dpi()
+   003B ldc.r4 350
+   0040 clt.un 
+   0042 ldc.i4.0 
+   0043 ceq 
+   0045 br.s IL_0048: stloc.2
+   0047 ldc.i4.1 
+   0048 stloc.2 
+   0049 ldloc.0 
+   004A ldc.i4 1136
+   004F bge IL_0070: ldc.i4.1
+   0054 ldloc.1 
+   0055 ldc.i4 640
+   005A bge IL_0070: ldc.i4.1
+   005F call System.Single UnityEngine.Screen::get_dpi()
+   0064 ldc.r4 300
+   0069 clt.un 
+   006B ldc.i4.0 
+   006C ceq 
+   006E br.s IL_0071: stloc.3
+   0070 ldc.i4.1 
+   0071 stloc.3 
+   0072 call System.Boolean Assets.Scripts.Framework.GameSettings::ShouldReduceResolution()
+   0077 brfalse IL_0080: ldloc.2
+   007C ldc.i4.0 
+   007D stloc.2 
+   007E ldc.i4.1 
+   007F stloc.3 
+   0080 ldloc.2 
+   0081 brfalse IL_009d: ldloc.3
+   0086 ldarg.0 
+   0087 ldc.i4.2 
+   0088 stfld OutlineFilter::filterType
+   008D ldarg.0 
+   008E ldc.r4 0.55
+   0093 stfld OutlineFilter::blendFactor
+   0098 br IL_00cc: ldarg.1
+   009D ldloc.3 
+   009E brfalse IL_00ba: ldarg.0
+   00A3 ldarg.0 
+   00A4 ldc.i4.1 
+   00A5 stfld OutlineFilter::filterType
+   00AA ldarg.0 
+   00AB ldc.r4 0.5
+   00B0 stfld OutlineFilter::blendFactor
+   00B5 br IL_00cc: ldarg.1
+   00BA ldarg.0 
+   00BB ldc.i4.0 
+   00BC stfld OutlineFilter::filterType
+   00C1 ldarg.0 
+   00C2 ldc.r4 0.5
+   00C7 stfld OutlineFilter::blendFactor
+   00CC ldarg.1 
+   00CD brfalse IL_00e0: call System.Boolean Assets.Scripts.Framework.GameSettings::SupportHDMode()
+   00D2 ldarg.0 
+   00D3 dup 
+   00D4 ldfld OutlineFilter::filterType
+   00D9 ldc.i4.1 
+   00DA add 
+   00DB stfld OutlineFilter::filterType
+   00E0 call System.Boolean Assets.Scripts.Framework.GameSettings::SupportHDMode()
+   00E5 brfalse IL_0108: ldarg.0
+   00EA call System.Int32 Assets.Scripts.Framework.GameSettings::get_EnableHDMode()
+   00EF brtrue IL_0108: ldarg.0
+   00F4 ldarg.0 
+   00F5 ldc.i4.0 
+   00F6 ldarg.0 
+   00F7 ldfld OutlineFilter::filterType
+   00FC ldc.i4.1 
+   00FD sub 
+   00FE call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   0103 stfld OutlineFilter::filterType
+   0108 ldarg.0 
+   0109 call System.Void OutlineFilter::LoadShaders()
+   010E ldarg.0 
+   010F call System.Void OutlineFilter::UpdateParameters()
+   0114 ret 
+== System.Void Start() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void OutlineFilter::LoadShaders()
+   0006 ldarg.0 
+   0007 call System.Void OutlineFilter::UpdateParameters()
+   000C ret 
+== System.Void UpdateParameters() attrs=Public, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld OutlineFilter::material
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldc.r4 1
+   0010 ret 
+   0011 ldc.r4 1
+   0016 stloc.0 
+   0017 ldc.r4 1
+   001C stloc.1 
+   001D call !0 MonoSingleton`1<CameraSystem>::GetInstance()
+   0022 callvirt UnityEngine.Camera CameraSystem::get_mainCamera()
+   0027 stloc.2 
+   0028 ldloc.2 
+   0029 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   002E brfalse IL_0048: call System.Int32 UnityEngine.Screen::get_width()
+   0033 ldloc.2 
+   0034 callvirt System.Int32 UnityEngine.Camera::get_pixelWidth()
+   0039 conv.r4 
+   003A stloc.0 
+   003B ldloc.2 
+   003C callvirt System.Int32 UnityEngine.Camera::get_pixelHeight()
+   0041 conv.r4 
+   0042 stloc.1 
+   0043 br IL_006a: ldarg.0
+   0048 call System.Int32 UnityEngine.Screen::get_width()
+   004D call System.Int32 UnityEngine.Screen::get_height()
+   0052 call System.Int32 UnityEngine.Mathf::Max(System.Int32,System.Int32)
+   0057 conv.r4 
+   0058 stloc.0 
+   0059 call System.Int32 UnityEngine.Screen::get_width()
+   005E call System.Int32 UnityEngine.Screen::get_height()
+   0063 call System.Int32 UnityEngine.Mathf::Min(System.Int32,System.Int32)
+   0068 conv.r4 
+   0069 stloc.1 
+   006A ldarg.0 
+   006B ldfld OutlineFilter::material
+   0070 ldstr _BlendFactor
+   0075 ldarg.0 
+   0076 ldfld OutlineFilter::blendFactor
+   007B callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   0080 ldc.r4 1
+   0085 ldloc.0 
+   0086 div 
+   0087 stloc.3 
+   0088 ldc.r4 1
+   008D ldloc.1 
+   008E div 
+   008F stloc.s V_4
+   0091 ldarg.0 
+   0092 ldfld OutlineFilter::filterType
+   0097 brtrue IL_00ff: ldarg.0
+   009C ldloca.s V_5
+   009E ldloc.3 
+   009F neg 
+   00A0 ldc.r4 0
+   00A5 ldloc.3 
+   00A6 ldc.r4 0
+   00AB call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00B0 ldloca.s V_6
+   00B2 ldc.r4 0
+   00B7 ldloc.s V_4
+   00B9 neg 
+   00BA ldc.r4 0
+   00BF ldloc.s V_4
+   00C1 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   00C6 ldarg.0 
+   00C7 ldfld OutlineFilter::material
+   00CC ldstr _TexelOffset0
+   00D1 ldloc.s V_5
+   00D3 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   00D8 ldarg.0 
+   00D9 ldfld OutlineFilter::material
+   00DE ldstr _TexelOffset1
+   00E3 ldloc.s V_6
+   00E5 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   00EA ldarg.0 
+   00EB ldfld OutlineFilter::material
+   00F0 ldstr _HIGHQUALITY_ON
+   00F5 callvirt System.Void UnityEngine.Material::DisableKeyword(System.String)
+   00FA br IL_02f8: ret
+   00FF ldarg.0 
+   0100 ldfld OutlineFilter::filterType
+   0105 ldc.i4.1 
+   0106 bne.un IL_0162: ldarg.0
+   010B ldloca.s V_7
+   010D ldloc.3 
+   010E neg 
+   010F ldloc.s V_4
+   0111 ldloc.3 
+   0112 ldloc.s V_4
+   0114 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0119 ldloca.s V_8
+   011B ldloc.3 
+   011C neg 
+   011D ldloc.s V_4
+   011F neg 
+   0120 ldloc.3 
+   0121 ldloc.s V_4
+   0123 neg 
+   0124 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0129 ldarg.0 
+   012A ldfld OutlineFilter::material
+   012F ldstr _TexelOffset0
+   0134 ldloc.s V_7
+   0136 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   013B ldarg.0 
+   013C ldfld OutlineFilter::material
+   0141 ldstr _TexelOffset1
+   0146 ldloc.s V_8
+   0148 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   014D ldarg.0 
+   014E ldfld OutlineFilter::material
+   0153 ldstr _HIGHQUALITY_ON
+   0158 callvirt System.Void UnityEngine.Material::DisableKeyword(System.String)
+   015D br IL_02f8: ret
+   0162 ldarg.0 
+   0163 ldfld OutlineFilter::filterType
+   0168 ldc.i4.2 
+   0169 bne.un IL_01e3: ldarg.0
+   016E ldloc.3 
+   016F ldc.r4 2
+   0174 mul 
+   0175 stloc.3 
+   0176 ldloc.s V_4
+   0178 ldc.r4 2
+   017D mul 
+   017E stloc.s V_4
+   0180 ldloca.s V_9
+   0182 ldloc.3 
+   0183 neg 
+   0184 ldc.r4 0
+   0189 ldloc.3 
+   018A ldc.r4 0
+   018F call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0194 ldloca.s V_10
+   0196 ldc.r4 0
+   019B ldloc.s V_4
+   019D neg 
+   019E ldc.r4 0
+   01A3 ldloc.s V_4
+   01A5 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   01AA ldarg.0 
+   01AB ldfld OutlineFilter::material
+   01B0 ldstr _TexelOffset0
+   01B5 ldloc.s V_9
+   01B7 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   01BC ldarg.0 
+   01BD ldfld OutlineFilter::material
+   01C2 ldstr _TexelOffset1
+   01C7 ldloc.s V_10
+   01C9 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   01CE ldarg.0 
+   01CF ldfld OutlineFilter::material
+   01D4 ldstr _HIGHQUALITY_ON
+   01D9 callvirt System.Void UnityEngine.Material::DisableKeyword(System.String)
+   01DE br IL_02f8: ret
+   01E3 ldarg.0 
+   01E4 ldfld OutlineFilter::filterType
+   01E9 ldc.i4.3 
+   01EA bne.un IL_0258: ldloca.s V_13
+   01EF ldloc.3 
+   01F0 ldc.r4 2
+   01F5 mul 
+   01F6 stloc.3 
+   01F7 ldloc.s V_4
+   01F9 ldc.r4 2
+   01FE mul 
+   01FF stloc.s V_4
+   0201 ldloca.s V_11
+   0203 ldloc.3 
+   0204 neg 
+   0205 ldloc.s V_4
+   0207 ldloc.3 
+   0208 ldloc.s V_4
+   020A call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   020F ldloca.s V_12
+   0211 ldloc.3 
+   0212 neg 
+   0213 ldloc.s V_4
+   0215 neg 
+   0216 ldloc.3 
+   0217 ldloc.s V_4
+   0219 neg 
+   021A call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   021F ldarg.0 
+   0220 ldfld OutlineFilter::material
+   0225 ldstr _TexelOffset0
+   022A ldloc.s V_11
+   022C callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0231 ldarg.0 
+   0232 ldfld OutlineFilter::material
+   0237 ldstr _TexelOffset1
+   023C ldloc.s V_12
+   023E callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0243 ldarg.0 
+   0244 ldfld OutlineFilter::material
+   0249 ldstr _HIGHQUALITY_ON
+   024E callvirt System.Void UnityEngine.Material::DisableKeyword(System.String)
+   0253 br IL_02f8: ret
+   0258 ldloca.s V_13
+   025A ldloc.3 
+   025B neg 
+   025C ldc.r4 0
+   0261 ldloc.3 
+   0262 ldc.r4 0
+   0267 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   026C ldloca.s V_14
+   026E ldc.r4 0
+   0273 ldloc.s V_4
+   0275 neg 
+   0276 ldc.r4 0
+   027B ldloc.s V_4
+   027D call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0282 ldloca.s V_15
+   0284 ldloc.3 
+   0285 neg 
+   0286 ldloc.s V_4
+   0288 ldloc.3 
+   0289 ldloc.s V_4
+   028B call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   0290 ldloca.s V_16
+   0292 ldloc.3 
+   0293 neg 
+   0294 ldloc.s V_4
+   0296 neg 
+   0297 ldloc.3 
+   0298 ldloc.s V_4
+   029A neg 
+   029B call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   02A0 ldarg.0 
+   02A1 ldfld OutlineFilter::material
+   02A6 ldstr _TexelOffset0
+   02AB ldloc.s V_13
+   02AD callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   02B2 ldarg.0 
+   02B3 ldfld OutlineFilter::material
+   02B8 ldstr _TexelOffset1
+   02BD ldloc.s V_14
+   02BF callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   02C4 ldarg.0 
+   02C5 ldfld OutlineFilter::material
+   02CA ldstr _TexelOffset2
+   02CF ldloc.s V_15
+   02D1 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   02D6 ldarg.0 
+   02D7 ldfld OutlineFilter::material
+   02DC ldstr _TexelOffset3
+   02E1 ldloc.s V_16
+   02E3 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   02E8 ldarg.0 
+   02E9 ldfld OutlineFilter::material
+   02EE ldstr _HIGHQUALITY_ON
+   02F3 callvirt System.Void UnityEngine.Material::EnableKeyword(System.String)
+   02F8 ret 
+== System.Void drawParticles(UnityEngine.RenderTexture colorRT, UnityEngine.RenderTexture depthRT) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld OutlineFilter::particlesCam
+   0006 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   000B brtrue IL_0011: ldarg.0
+   0010 ret 
+   0011 ldarg.0 
+   0012 ldfld OutlineFilter::particlesCam
+   0017 ldc.i4.1 
+   0018 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   001D ldarg.0 
+   001E ldfld OutlineFilter::particlesCam
+   0023 callvirt UnityEngine.RenderTexture UnityEngine.Camera::get_targetTexture()
+   0028 stloc.0 
+   0029 ldarg.0 
+   002A ldfld OutlineFilter::particlesCam
+   002F ldarg.1 
+   0030 callvirt UnityEngine.RenderBuffer UnityEngine.RenderTexture::get_colorBuffer()
+   0035 ldarg.2 
+   0036 callvirt UnityEngine.RenderBuffer UnityEngine.RenderTexture::get_depthBuffer()
+   003B ldc.i4 128
+   0040 callvirt System.Void UnityEngine.Camera::SetTargetBuffers(UnityEngine.RenderBuffer,UnityEngine.RenderBuffer,System.UInt32)
+   0045 ldarg.0 
+   0046 ldfld OutlineFilter::particlesCam
+   004B callvirt System.Void UnityEngine.Camera::Render()
+   0050 ldarg.0 
+   0051 ldfld OutlineFilter::particlesCam
+   0056 ldloc.0 
+   0057 callvirt System.Void UnityEngine.Camera::set_targetTexture(UnityEngine.RenderTexture)
+   005C ldarg.0 
+   005D ldfld OutlineFilter::particlesCam
+   0062 ldc.i4.0 
+   0063 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0068 leave IL_0079: ret
+   006D stloc.1 
+   006E ldloc.1 
+   006F call System.Void UnityEngine.Debug::LogException(System.Exception)
+   0074 leave IL_0079: ret
+   0079 ret 
+== System.Void ClearAlpha() attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld OutlineFilter::clearAlphaMat
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   0018 ldnull 
+   0019 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   001E brfalse IL_0024: call System.Void UnityEngine.GL::PushMatrix()
+   0023 ret 
+   0024 call System.Void UnityEngine.GL::PushMatrix()
+   0029 ldarg.0 
+   002A ldfld OutlineFilter::clearAlphaMat
+   002F ldc.i4.0 
+   0030 callvirt System.Boolean UnityEngine.Material::SetPass(System.Int32)
+   0035 pop 
+   0036 call System.Void UnityEngine.GL::LoadOrtho()
+   003B ldarg.0 
+   003C call !!0 UnityEngine.Component::GetComponent<UnityEngine.Camera>()
+   0041 callvirt UnityEngine.Rect UnityEngine.Camera::get_pixelRect()
+   0046 call System.Void UnityEngine.GL::Viewport(UnityEngine.Rect)
+   004B ldc.i4.7 
+   004C call System.Void UnityEngine.GL::Begin(System.Int32)
+   0051 ldc.r4 0
+   0056 ldc.r4 0
+   005B call System.Void UnityEngine.GL::TexCoord2(System.Single,System.Single)
+   0060 ldc.r4 0
+   0065 ldc.r4 0
+   006A ldc.r4 0
+   006F call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   0074 ldc.r4 0
+   0079 ldc.r4 1
+   007E call System.Void UnityEngine.GL::TexCoord2(System.Single,System.Single)
+   0083 ldc.r4 0
+   0088 ldc.r4 1
+   008D ldc.r4 0
+   0092 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   0097 ldc.r4 1
+   009C ldc.r4 1
+   00A1 call System.Void UnityEngine.GL::TexCoord2(System.Single,System.Single)
+   00A6 ldc.r4 1
+   00AB ldc.r4 1
+   00B0 ldc.r4 0
+   00B5 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   00BA ldc.r4 1
+   00BF ldc.r4 0
+   00C4 call System.Void UnityEngine.GL::TexCoord2(System.Single,System.Single)
+   00C9 ldc.r4 1
+   00CE ldc.r4 0
+   00D3 ldc.r4 0
+   00D8 call System.Void UnityEngine.GL::Vertex3(System.Single,System.Single,System.Single)
+   00DD call System.Void UnityEngine.GL::End()
+   00E2 call System.Void UnityEngine.GL::PopMatrix()
+   00E7 ret 
+== System.Void OnRenderImage(UnityEngine.RenderTexture source, UnityEngine.RenderTexture destination) attrs=Private, HideBySig maxstack=7
+   0000 ldsfld OutlineFilter::s_isRenderingParticles
+   0005 brfalse IL_000b: ldarg.2
+   000A ret 
+   000B ldarg.2 
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_005e: ldarg.1
+   0017 ldarg.1 
+   0018 callvirt System.Int32 UnityEngine.Texture::get_width()
+   001D ldarg.1 
+   001E callvirt System.Int32 UnityEngine.Texture::get_height()
+   0023 ldc.i4.0 
+   0024 call UnityEngine.RenderTexture UnityEngine.RenderTexture::GetTemporary(System.Int32,System.Int32,System.Int32)
+   0029 stloc.0 
+   002A ldarg.1 
+   002B ldc.i4.0 
+   002C callvirt System.Void UnityEngine.Texture::set_filterMode(UnityEngine.FilterMode)
+   0031 ldarg.1 
+   0032 ldloc.0 
+   0033 ldarg.0 
+   0034 ldfld OutlineFilter::material
+   0039 ldc.i4.0 
+   003A call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   003F ldarg.0 
+   0040 ldloc.0 
+   0041 ldarg.1 
+   0042 call System.Void OutlineFilter::drawParticles(UnityEngine.RenderTexture,UnityEngine.RenderTexture)
+   0047 ldloc.0 
+   0048 ldarg.2 
+   0049 ldc.i4.0 
+   004A ldc.i4.1 
+   004B ldc.i4.1 
+   004C ldc.i4.0 
+   004D ldc.i4.1 
+   004E call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   0053 ldloc.0 
+   0054 call System.Void UnityEngine.RenderTexture::ReleaseTemporary(UnityEngine.RenderTexture)
+   0059 br IL_0074: ret
+   005E ldarg.1 
+   005F ldarg.2 
+   0060 ldarg.0 
+   0061 ldfld OutlineFilter::material
+   0066 ldc.i4.0 
+   0067 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material,System.Int32)
+   006C ldarg.0 
+   006D ldarg.2 
+   006E ldarg.1 
+   006F call System.Void OutlineFilter::drawParticles(UnityEngine.RenderTexture,UnityEngine.RenderTexture)
+   0074 ret 
+== System.Void EnableOutlineFilter() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldc.i4.1 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr Scene
+   000D stelem.ref 
+   000E call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   0013 stloc.0 
+   0014 ldc.i4.1 
+   0015 newarr System.String
+   001A dup 
+   001B ldc.i4.0 
+   001C ldstr Particles
+   0021 stelem.ref 
+   0022 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   0027 ldc.i4.1 
+   0028 newarr System.String
+   002D dup 
+   002E ldc.i4.0 
+   002F ldstr Block
+   0034 stelem.ref 
+   0035 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   003A or 
+   003B ldc.i4.1 
+   003C newarr System.String
+   0041 dup 
+   0042 ldc.i4.0 
+   0043 ldstr FastWaterReflectionTransparent
+   0048 stelem.ref 
+   0049 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   004E or 
+   004F stloc.1 
+   0050 call !!0[] UnityEngine.Object::FindObjectsOfType<UnityEngine.Camera>()
+   0055 stloc.2 
+   0056 ldc.i4.0 
+   0057 stloc.3 
+   0058 br IL_01aa: ldloc.3
+   005D ldloc.2 
+   005E ldloc.3 
+   005F ldelem.ref 
+   0060 stloc.s V_4
+   0062 ldloc.s V_4
+   0064 callvirt System.Int32 UnityEngine.Camera::get_cullingMask()
+   0069 ldloc.0 
+   006A and 
+   006B brfalse IL_01a6: ldloc.3
+   0070 ldloc.s V_4
+   0072 ldc.i4.8 
+   0073 callvirt System.Void UnityEngine.Camera::set_activeRTFlags(System.UInt32)
+   0078 ldloc.s V_4
+   007A callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   007F callvirt !!0 UnityEngine.GameObject::AddComponent<OutlineFilter>()
+   0084 stloc.s V_5
+   0086 ldloc.s V_4
+   0088 dup 
+   0089 callvirt System.Int32 UnityEngine.Camera::get_cullingMask()
+   008E ldloc.1 
+   008F not 
+   0090 and 
+   0091 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0096 newobj System.Void UnityEngine.GameObject::.ctor()
+   009B stloc.s V_6
+   009D ldloc.s V_6
+   009F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00A4 ldloc.s V_4
+   00A6 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   00AB callvirt System.Void UnityEngine.Transform::set_parent(UnityEngine.Transform)
+   00B0 ldloc.s V_6
+   00B2 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B7 call UnityEngine.Vector3 UnityEngine.Vector3::get_zero()
+   00BC callvirt System.Void UnityEngine.Transform::set_localPosition(UnityEngine.Vector3)
+   00C1 ldloc.s V_6
+   00C3 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C8 call UnityEngine.Quaternion UnityEngine.Quaternion::get_identity()
+   00CD callvirt System.Void UnityEngine.Transform::set_localRotation(UnityEngine.Quaternion)
+   00D2 ldloc.s V_6
+   00D4 ldloc.s V_4
+   00D6 callvirt System.String UnityEngine.Object::get_name()
+   00DB ldstr  particles
+   00E0 call System.String System.String::Concat(System.String,System.String)
+   00E5 callvirt System.Void UnityEngine.Object::set_name(System.String)
+   00EA ldloc.s V_6
+   00EC callvirt !!0 UnityEngine.GameObject::AddComponent<UnityEngine.Camera>()
+   00F1 stloc.s V_7
+   00F3 ldloc.s V_7
+   00F5 ldloc.s V_4
+   00F7 callvirt System.Single UnityEngine.Camera::get_aspect()
+   00FC callvirt System.Void UnityEngine.Camera::set_aspect(System.Single)
+   0101 ldloc.s V_7
+   0103 ldloc.s V_4
+   0105 callvirt UnityEngine.Color UnityEngine.Camera::get_backgroundColor()
+   010A callvirt System.Void UnityEngine.Camera::set_backgroundColor(UnityEngine.Color)
+   010F ldloc.s V_7
+   0111 ldloc.s V_4
+   0113 callvirt System.Single UnityEngine.Camera::get_nearClipPlane()
+   0118 callvirt System.Void UnityEngine.Camera::set_nearClipPlane(System.Single)
+   011D ldloc.s V_7
+   011F ldloc.s V_4
+   0121 callvirt System.Single UnityEngine.Camera::get_farClipPlane()
+   0126 callvirt System.Void UnityEngine.Camera::set_farClipPlane(System.Single)
+   012B ldloc.s V_7
+   012D ldloc.s V_4
+   012F callvirt System.Single UnityEngine.Camera::get_fieldOfView()
+   0134 callvirt System.Void UnityEngine.Camera::set_fieldOfView(System.Single)
+   0139 ldloc.s V_7
+   013B ldloc.s V_4
+   013D callvirt System.Boolean UnityEngine.Camera::get_orthographic()
+   0142 callvirt System.Void UnityEngine.Camera::set_orthographic(System.Boolean)
+   0147 ldloc.s V_7
+   0149 ldloc.s V_4
+   014B callvirt System.Single UnityEngine.Camera::get_orthographicSize()
+   0150 callvirt System.Void UnityEngine.Camera::set_orthographicSize(System.Single)
+   0155 ldloc.s V_7
+   0157 ldloc.s V_4
+   0159 callvirt UnityEngine.Rect UnityEngine.Camera::get_pixelRect()
+   015E callvirt System.Void UnityEngine.Camera::set_pixelRect(UnityEngine.Rect)
+   0163 ldloc.s V_7
+   0165 ldloc.s V_4
+   0167 callvirt UnityEngine.Rect UnityEngine.Camera::get_rect()
+   016C callvirt System.Void UnityEngine.Camera::set_rect(UnityEngine.Rect)
+   0171 ldloc.s V_7
+   0173 ldc.i4.4 
+   0174 callvirt System.Void UnityEngine.Camera::set_clearFlags(UnityEngine.CameraClearFlags)
+   0179 ldloc.s V_7
+   017B ldloc.1 
+   017C callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0181 ldloc.s V_7
+   0183 ldc.i4.0 
+   0184 callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0189 ldloc.s V_5
+   018B ldloc.s V_7
+   018D stfld OutlineFilter::particlesCam
+   0192 ldloc.s V_5
+   0194 ldc.i4.0 
+   0195 callvirt System.Void OutlineFilter::UpdateFilterType(System.Boolean)
+   019A ldloc.s V_7
+   019C ldc.i4 128
+   01A1 callvirt System.Void UnityEngine.Camera::set_activeRTFlags(System.UInt32)
+   01A6 ldloc.3 
+   01A7 ldc.i4.1 
+   01A8 add 
+   01A9 stloc.3 
+   01AA ldloc.3 
+   01AB ldloc.2 
+   01AC ldlen 
+   01AD conv.i4 
+   01AE blt IL_005d: ldloc.2
+   01B3 call System.Boolean Singleton`1<Assets.Scripts.GameLogic.ActorManager>::HasInstance()
+   01B8 brfalse IL_01c7: ret
+   01BD call !0 Singleton`1<Assets.Scripts.GameLogic.ActorManager>::GetInstance()
+   01C2 callvirt System.Void Assets.Scripts.GameLogic.ActorManager::RefreshLayers()
+   01C7 ret 
+== System.Void DisableOutlineFilter() attrs=Public, Static, HideBySig maxstack=5
+   0000 ldc.i4.1 
+   0001 newarr System.String
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldstr Particles
+   000D stelem.ref 
+   000E call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   0013 ldc.i4.1 
+   0014 newarr System.String
+   0019 dup 
+   001A ldc.i4.0 
+   001B ldstr Block
+   0020 stelem.ref 
+   0021 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   0026 or 
+   0027 ldc.i4.1 
+   0028 newarr System.String
+   002D dup 
+   002E ldc.i4.0 
+   002F ldstr FastWaterReflectionTransparent
+   0034 stelem.ref 
+   0035 call System.Int32 UnityEngine.LayerMask::GetMask(System.String[])
+   003A or 
+   003B stloc.0 
+   003C call !!0[] UnityEngine.Object::FindObjectsOfType<UnityEngine.Camera>()
+   0041 stloc.1 
+   0042 ldc.i4.0 
+   0043 stloc.2 
+   0044 br IL_0112: ldloc.2
+   0049 ldloc.1 
+   004A ldloc.2 
+   004B ldelem.ref 
+   004C stloc.3 
+   004D ldloc.3 
+   004E call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   0053 brtrue IL_005d: ldloc.3
+   0058 br IL_010e: ldloc.2
+   005D ldloc.3 
+   005E callvirt !!0 UnityEngine.Component::GetComponent<OutlineFilter>()
+   0063 stloc.s V_4
+   0065 ldloc.s V_4
+   0067 call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   006C brtrue IL_0076: ldloc.s V_4
+   0071 br IL_010e: ldloc.2
+   0076 ldloc.s V_4
+   0078 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   007D ldloc.3 
+   007E ldc.i4 136
+   0083 callvirt System.Void UnityEngine.Camera::set_activeRTFlags(System.UInt32)
+   0088 ldloc.3 
+   0089 dup 
+   008A callvirt System.Int32 UnityEngine.Camera::get_cullingMask()
+   008F ldloc.0 
+   0090 or 
+   0091 callvirt System.Void UnityEngine.Camera::set_cullingMask(System.Int32)
+   0096 ldloc.3 
+   0097 callvirt !!0[] UnityEngine.Component::GetComponentsInChildren<UnityEngine.Camera>()
+   009C stloc.s V_5
+   009E ldc.i4.0 
+   009F stloc.s V_6
+   00A1 br IL_0103: ldloc.s V_6
+   00A6 ldloc.s V_5
+   00A8 ldloc.s V_6
+   00AA ldelem.ref 
+   00AB stloc.s V_7
+   00AD ldloc.s V_7
+   00AF call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   00B4 brfalse IL_00c6: br IL_00fd
+   00B9 ldloc.s V_7
+   00BB ldloc.3 
+   00BC call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00C1 brfalse IL_00cb: ldloc.s V_7
+   00C6 br IL_00fd: ldloc.s V_6
+   00CB ldloc.s V_7
+   00CD callvirt System.String UnityEngine.Object::get_name()
+   00D2 ldstr ShadowCamera
+   00D7 call System.Boolean System.String::op_Equality(System.String,System.String)
+   00DC brfalse IL_00e6: ldloc.s V_7
+   00E1 br IL_00fd: ldloc.s V_6
+   00E6 ldloc.s V_7
+   00E8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00ED stloc.s V_8
+   00EF ldloc.s V_7
+   00F1 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00F6 ldloc.s V_8
+   00F8 call System.Void UnityEngine.Object::Destroy(UnityEngine.Object)
+   00FD ldloc.s V_6
+   00FF ldc.i4.1 
+   0100 add 
+   0101 stloc.s V_6
+   0103 ldloc.s V_6
+   0105 ldloc.s V_5
+   0107 ldlen 
+   0108 conv.i4 
+   0109 blt IL_00a6: ldloc.s V_5
+   010E ldloc.2 
+   010F ldc.i4.1 
+   0110 add 
+   0111 stloc.2 
+   0112 ldloc.2 
+   0113 ldloc.1 
+   0114 ldlen 
+   0115 conv.i4 
+   0116 blt IL_0049: ldloc.1
+   011B ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ret 

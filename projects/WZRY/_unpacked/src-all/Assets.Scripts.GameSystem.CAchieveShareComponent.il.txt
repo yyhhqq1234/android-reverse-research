@@ -1,0 +1,864 @@
+// TYPE Assets.Scripts.GameSystem.CAchieveShareComponent  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String AchievementShareFormPrefabPath = UGUI/Form/System/Achieve/Form_Achievement_Share.prefab
+  FIELD System.Single TweenTime = 2
+  FIELD Assets.Scripts.UI.CUIFormScript m_shareForm
+  FIELD System.Single m_containerWidth
+  FIELD System.UInt32 m_nextPoint
+  FIELD System.UInt32 m_startPoint
+  FIELD System.UInt32 m_endPoint
+  FIELD System.Single m_achievePointsFrom
+  FIELD System.Single m_achievePointsTo
+  FIELD System.Boolean m_isNewTrophy
+  FIELD Assets.Scripts.GameSystem.CAchieveItem2 m_curAchieveItem
+  FIELD Assets.Scripts.GameSystem.CTrophyRewardInfo m_curTrophyRewardInfo
+  FIELD LTDescr m_trophyPointsProgressLTD
+  FIELD LTDescr m_TrophyPointsAddLTD
+  FIELD LTDescr m_trophyLevelLTD
+  FIELD System.Boolean m_isShowing
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.r4 260
+   0006 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_containerWidth
+   000B ldarg.0 
+   000C ldc.r4 1
+   0011 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   0016 ldarg.0 
+   0017 call System.Void System.Object::.ctor()
+   001C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0021 ldc.i4 15213
+   0026 ldarg.0 
+   0027 ldftn System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::OnContinueProcessDoneAchievements(Assets.Scripts.UI.CUIEvent)
+   002D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0032 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0037 ret 
+== System.Void Process(System.Boolean force) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isShowing
+   0006 brfalse IL_000c: call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   000B ret 
+   000C call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   0018 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   001D brtrue IL_0023: call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0022 ret 
+   0023 call !0 Singleton`1<Assets.Scripts.GameSystem.CLobbySystem>::GetInstance()
+   0028 callvirt System.Boolean Assets.Scripts.GameSystem.CLobbySystem::IsInLobbyForm()
+   002D brfalse IL_006a: ret
+   0032 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0037 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   003C brtrue IL_006a: ret
+   0041 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0046 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   004B brtrue IL_006a: ret
+   0050 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0055 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   005A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   005F ldnull 
+   0060 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0065 brfalse IL_006b: ldarg.1
+   006A ret 
+   006B ldarg.1 
+   006C brtrue IL_00c2: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0071 ldc.i4.2 
+   0072 newarr System.String
+   0077 dup 
+   0078 ldc.i4.0 
+   0079 ldsfld Assets.Scripts.GameSystem.CMallSystem::sMallFormPath
+   007E stelem.ref 
+   007F dup 
+   0080 ldc.i4.1 
+   0081 ldstr Form_NewHeroOrSkin.prefab
+   0086 stelem.ref 
+   0087 stloc.1 
+   0088 ldc.i4.0 
+   0089 stloc.2 
+   008A br IL_00b9: ldloc.2
+   008F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0094 ldloc.1 
+   0095 ldloc.2 
+   0096 ldelem.ref 
+   0097 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   009C stloc.3 
+   009D ldloc.3 
+   009E ldnull 
+   009F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A4 brfalse IL_00b5: ldloc.2
+   00A9 ldloc.3 
+   00AA callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsClosed()
+   00AF brtrue IL_00b5: ldloc.2
+   00B4 ret 
+   00B5 ldloc.2 
+   00B6 ldc.i4.1 
+   00B7 add 
+   00B8 stloc.2 
+   00B9 ldloc.2 
+   00BA ldloc.1 
+   00BB ldlen 
+   00BC conv.i4 
+   00BD blt IL_008f: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C2 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C7 ldstr Form_NobeLevelUp.prefab
+   00CC callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00D1 stloc.s V_4
+   00D3 ldloc.s V_4
+   00D5 ldnull 
+   00D6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00DB brfalse IL_00ed: ldloc.0
+   00E0 ldloc.s V_4
+   00E2 callvirt System.Boolean Assets.Scripts.UI.CUIFormScript::IsClosed()
+   00E7 brtrue IL_00ed: ldloc.0
+   00EC ret 
+   00ED ldloc.0 
+   00EE ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   00F3 ldc.i4.0 
+   00F4 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   00F9 stloc.s V_5
+   00FB ldloc.0 
+   00FC ldfld Assets.Scripts.GameSystem.CAchieveInfo2::m_AchiveItemDic
+   0101 ldloc.s V_5
+   0103 callvirt System.Boolean DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CAchieveItem2>::ContainsKey(!0)
+   0108 brtrue IL_010e: ldarg.0
+   010D ret 
+   010E ldarg.0 
+   010F ldloc.s V_5
+   0111 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::OpenShareForm(System.UInt32)
+   0116 ret 
+== System.Void OpenShareForm(System.UInt32 achievementId) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0006 ldstr UGUI/Form/System/Achieve/Form_Achievement_Share.prefab
+   000B ldc.i4.0 
+   000C ldc.i4.1 
+   000D ldnull 
+   000E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0013 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0018 ldarg.0 
+   0019 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_002a: ldarg.0
+   0029 ret 
+   002A ldarg.0 
+   002B ldc.i4.1 
+   002C stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isShowing
+   0031 ldarg.0 
+   0032 ldarg.1 
+   0033 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::RefreshData(System.UInt32)
+   0038 ldarg.0 
+   0039 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::RefreshShareForm()
+   003E ret 
+== System.Void ResetData() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0007 ldarg.0 
+   0008 ldnull 
+   0009 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_nextPoint
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_startPoint
+   001C ldarg.0 
+   001D ldc.i4.0 
+   001E stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   0023 ldarg.0 
+   0024 ldc.r4 0
+   0029 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   002E ldarg.0 
+   002F ldc.r4 1
+   0034 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   0039 ldarg.0 
+   003A ldc.i4.0 
+   003B stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isNewTrophy
+   0040 ldarg.0 
+   0041 ldnull 
+   0042 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0047 ldarg.0 
+   0048 ldnull 
+   0049 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   004E ret 
+== System.Void RefreshData(System.UInt32 achievementId) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::ResetData()
+   0006 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   000B stloc.0 
+   000C ldarg.0 
+   000D ldloc.0 
+   000E ldfld Assets.Scripts.GameSystem.CAchieveInfo2::m_AchiveItemDic
+   0013 ldarg.1 
+   0014 callvirt !1 DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CAchieveItem2>::get_Item(!0)
+   0019 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   001E ldarg.0 
+   001F ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0024 callvirt Assets.Scripts.GameSystem.CAchieveItem2 Assets.Scripts.GameSystem.CAchieveItem2::GetHead()
+   0029 stloc.1 
+   002A ldloc.1 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0031 bne.un IL_0042: ldarg.0
+   0036 ldarg.0 
+   0037 ldc.i4.1 
+   0038 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isNewTrophy
+   003D br IL_0049: ldc.i4.0
+   0042 ldarg.0 
+   0043 ldc.i4.0 
+   0044 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isNewTrophy
+   0049 ldc.i4.0 
+   004A stloc.2 
+   004B ldloc.0 
+   004C ldloca.s V_2
+   004E ldarg.0 
+   004F ldflda Assets.Scripts.GameSystem.CAchieveShareComponent::m_nextPoint
+   0054 callvirt System.Void Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyProgress(System.UInt32&,System.UInt32&)
+   0059 ldc.i4.0 
+   005A stloc.3 
+   005B ldc.i4.0 
+   005C stloc.s V_4
+   005E br IL_0092: ldloc.s V_4
+   0063 ldloc.0 
+   0064 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::m_AchiveItemDic
+   0069 ldloc.0 
+   006A ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   006F ldloc.s V_4
+   0071 callvirt !0 System.Collections.Generic.List`1<System.UInt32>::get_Item(System.Int32)
+   0076 callvirt !1 DictionaryView`2<System.UInt32,Assets.Scripts.GameSystem.CAchieveItem2>::get_Item(!0)
+   007B stloc.s V_5
+   007D ldloc.3 
+   007E ldloc.s V_5
+   0080 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0085 ldfld ResData.ResAchievement::dwPoint
+   008A add 
+   008B stloc.3 
+   008C ldloc.s V_4
+   008E ldc.i4.1 
+   008F add 
+   0090 stloc.s V_4
+   0092 ldloc.s V_4
+   0094 ldloc.0 
+   0095 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   009A callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   009F blt IL_0063: ldloc.0
+   00A4 ldarg.0 
+   00A5 ldloc.2 
+   00A6 ldloc.3 
+   00A7 sub 
+   00A8 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_startPoint
+   00AD ldarg.0 
+   00AE ldarg.0 
+   00AF ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_startPoint
+   00B4 ldarg.0 
+   00B5 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   00BA ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   00BF ldfld ResData.ResAchievement::dwPoint
+   00C4 add 
+   00C5 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   00CA ldloc.0 
+   00CB ldarg.0 
+   00CC ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_startPoint
+   00D1 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByPoint(System.UInt32)
+   00D6 stloc.s V_6
+   00D8 ldarg.0 
+   00D9 ldloc.0 
+   00DA ldarg.0 
+   00DB ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   00E0 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByPoint(System.UInt32)
+   00E5 dup 
+   00E6 stloc.s V_8
+   00E8 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   00ED ldloc.s V_8
+   00EF stloc.s V_7
+   00F1 ldloc.s V_6
+   00F3 brfalse IL_00ff: ldarg.0
+   00F8 ldloc.s V_7
+   00FA brtrue IL_0116: ldloc.0
+   00FF ldarg.0 
+   0100 ldc.r4 0
+   0105 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   010A ldarg.0 
+   010B ldc.r4 0
+   0110 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   0115 ret 
+   0116 ldloc.0 
+   0117 ldloc.s V_7
+   0119 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::Index
+   011E ldc.i4.1 
+   011F add 
+   0120 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByIndex(System.Int32)
+   0125 stloc.s V_9
+   0127 ldloc.s V_9
+   0129 brtrue IL_0145: ldloc.s V_6
+   012E ldarg.0 
+   012F ldc.r4 0
+   0134 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   0139 ldarg.0 
+   013A ldc.r4 0
+   013F stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   0144 ret 
+   0145 ldloc.s V_6
+   0147 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   014C ldfld ResData.ResTrophyLvl::dwTrophyLvl
+   0151 ldloc.s V_7
+   0153 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   0158 ldfld ResData.ResTrophyLvl::dwTrophyLvl
+   015D bne.un IL_01a7: ldarg.0
+   0162 ldarg.0 
+   0163 ldarg.0 
+   0164 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_startPoint
+   0169 ldloc.s V_9
+   016B ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   0170 sub 
+   0171 ldloc.s V_9
+   0173 callvirt System.UInt32 Assets.Scripts.GameSystem.CTrophyRewardInfo::GetPointStep()
+   0178 call System.Single Utility::Divide(System.UInt32,System.UInt32)
+   017D stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   0182 ldarg.0 
+   0183 ldarg.0 
+   0184 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   0189 ldloc.s V_9
+   018B ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   0190 sub 
+   0191 ldloc.s V_9
+   0193 callvirt System.UInt32 Assets.Scripts.GameSystem.CTrophyRewardInfo::GetPointStep()
+   0198 call System.Single Utility::Divide(System.UInt32,System.UInt32)
+   019D stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   01A2 br IL_01d2: ret
+   01A7 ldarg.0 
+   01A8 ldc.r4 0
+   01AD stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   01B2 ldarg.0 
+   01B3 ldarg.0 
+   01B4 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   01B9 ldloc.s V_9
+   01BB ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   01C0 sub 
+   01C1 ldloc.s V_9
+   01C3 callvirt System.UInt32 Assets.Scripts.GameSystem.CTrophyRewardInfo::GetPointStep()
+   01C8 call System.Single Utility::Divide(System.UInt32,System.UInt32)
+   01CD stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   01D2 ret 
+== System.Void RefreshShareForm() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_0032: ldarg.0
+   001D ldarg.0 
+   001E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0023 ldstr UGUI/Form/System/Achieve/Form_Achievement_Share.prefab
+   0028 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   002D stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0038 ldnull 
+   0039 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   003E brfalse IL_0044: call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0043 ret 
+   0044 call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0049 stloc.0 
+   004A ldloc.0 
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   0051 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::Index
+   0056 ldc.i4.1 
+   0057 add 
+   0058 callvirt Assets.Scripts.GameSystem.CTrophyRewardInfo Assets.Scripts.GameSystem.CAchieveInfo2::GetTrophyRewardInfoByIndex(System.Int32)
+   005D stloc.1 
+   005E ldstr 奖杯升级！
+   0063 stloc.2 
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isNewTrophy
+   006A brfalse IL_0075: ldarg.0
+   006F ldstr 恭喜获得新奖杯
+   0074 stloc.2 
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   007B ldc.i4.0 
+   007C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0081 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0086 stloc.3 
+   0087 ldloc.3 
+   0088 ldarg.0 
+   0089 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   008E ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0093 call System.String ResData.ResAchievement::get_szName()
+   0098 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   00A3 ldc.i4.5 
+   00A4 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00A9 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00AE stloc.s V_4
+   00B0 ldloc.s V_4
+   00B2 ldarg.0 
+   00B3 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   00B8 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementDesc()
+   00BD callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00C2 ldarg.0 
+   00C3 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   00C8 ldc.i4.7 
+   00C9 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00CE callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   00D3 stloc.s V_5
+   00D5 ldloc.s V_5
+   00D7 ldarg.0 
+   00D8 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   00DD callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchievementTips()
+   00E2 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   00E7 ldarg.0 
+   00E8 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   00ED ldc.i4.6 
+   00EE callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   00F3 stloc.s V_6
+   00F5 ldloc.s V_6
+   00F7 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   00FC stloc.s V_7
+   00FE ldloc.s V_7
+   0100 ldarg.0 
+   0101 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0106 callvirt System.String Assets.Scripts.GameSystem.CAchieveItem2::GetAchieveImagePath()
+   010B ldarg.0 
+   010C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0111 ldc.i4.1 
+   0112 ldc.i4.0 
+   0113 ldc.i4.0 
+   0114 ldc.i4.0 
+   0115 ldc.i4.0 
+   0116 call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   011B ldarg.0 
+   011C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0121 ldc.i4.s 18
+   0123 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0128 stloc.s V_8
+   012A ldloc.s V_8
+   012C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0131 ldarg.0 
+   0132 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   013D call System.Void Assets.Scripts.GameSystem.CAchievementSystem::SetAchieveBaseIcon(UnityEngine.Transform,Assets.Scripts.GameSystem.CAchieveItem2,Assets.Scripts.UI.CUIFormScript)
+   0142 ldarg.0 
+   0143 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0148 ldc.i4.s 20
+   014A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   014F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Image>()
+   0154 stloc.s V_9
+   0156 ldarg.0 
+   0157 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   015C ldc.i4.s 12
+   015E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0163 stloc.s V_10
+   0165 ldarg.0 
+   0166 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   016B ldc.i4.s 19
+   016D callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0172 stloc.s V_11
+   0174 ldarg.0 
+   0175 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   017A ldc.i4.s 11
+   017C callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0181 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0186 stloc.s V_12
+   0188 ldloc.s V_10
+   018A callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   018F stloc.s V_13
+   0191 ldarg.0 
+   0192 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0197 ldc.i4.s 16
+   0199 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   019E callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   01A3 stloc.s V_14
+   01A5 ldloc.s V_9
+   01A7 ldarg.0 
+   01A8 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   01AD callvirt System.String Assets.Scripts.GameSystem.CTrophyRewardInfo::GetTrophyImagePath()
+   01B2 ldarg.0 
+   01B3 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   01B8 ldc.i4.1 
+   01B9 ldc.i4.0 
+   01BA ldc.i4.0 
+   01BB ldc.i4.0 
+   01BC ldc.i4.0 
+   01BD call System.Void Assets.Scripts.UI.ImageExtension::SetSprite(UnityEngine.UI.Image,System.String,Assets.Scripts.UI.CUIFormScript,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
+   01C2 ldloc.s V_14
+   01C4 ldstr {0}/{1}
+   01C9 ldarg.0 
+   01CA ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_endPoint
+   01CF ldloc.1 
+   01D0 ldfld Assets.Scripts.GameSystem.CTrophyRewardInfo::MinPoint
+   01D5 sub 
+   01D6 box System.UInt32
+   01DB ldloc.1 
+   01DC callvirt System.UInt32 Assets.Scripts.GameSystem.CTrophyRewardInfo::GetPointStep()
+   01E1 box System.UInt32
+   01E6 call System.String System.String::Format(System.String,System.Object,System.Object)
+   01EB callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   01F0 ldloc.s V_12
+   01F2 ldarg.0 
+   01F3 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curTrophyRewardInfo
+   01F8 ldflda Assets.Scripts.GameSystem.CTrophyRewardInfo::Cfg
+   01FD ldflda ResData.ResTrophyLvl::dwTrophyLvl
+   0202 constrained. System.UInt32
+   0208 callvirt System.String System.Object::ToString()
+   020D callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0212 ldloc.0 
+   0213 callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveInfo2::GetWorldRank()
+   0218 stloc.s V_15
+   021A ldloc.s V_15
+   021C brtrue IL_0236: ldloc.s V_10
+   0221 ldloc.s V_11
+   0223 ldc.i4.1 
+   0224 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0229 ldloc.s V_10
+   022B ldc.i4.0 
+   022C call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0231 br IL_0262: ldarg.0
+   0236 ldloc.s V_10
+   0238 ldc.i4.1 
+   0239 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   023E ldloc.s V_13
+   0240 ldloc.0 
+   0241 callvirt System.UInt32 Assets.Scripts.GameSystem.CAchieveInfo2::GetWorldRank()
+   0246 stloc.s V_16
+   0248 ldloca.s V_16
+   024A constrained. System.UInt32
+   0250 callvirt System.String System.Object::ToString()
+   0255 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   025A ldloc.s V_11
+   025C ldc.i4.0 
+   025D call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   0262 ldarg.0 
+   0263 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::DoTrophyTween()
+   0268 ldarg.0 
+   0269 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   026E ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0273 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0278 ldstr Panel_ShareAchievement_Btn/ShareGroup
+   027D callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0282 stloc.s V_17
+   0284 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   0289 ldarg.0 
+   028A ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   028F ldloc.s V_17
+   0291 ldc.i4.0 
+   0292 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::LoadShareBottomUI(Assets.Scripts.UI.CUIFormScript,UnityEngine.Transform,System.Boolean)
+   0297 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   029C ldc.i4.s 94
+   029E callvirt System.Void Assets.Scripts.GameSystem.ShareSys::SetSaveShareParamType(Assets.Scripts.GameSystem.ShareSys/Share_PARAM_CONST)
+   02A3 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   02A8 ldc.i4.1 
+   02A9 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::BtnSupportPandoraPhotoSave(System.Boolean)
+   02AE call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   02B3 ldc.i4.1 
+   02B4 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::ShowGameLineByStr(System.Boolean)
+   02B9 call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bSocialBlocked()
+   02BE brfalse IL_032f: ret
+   02C3 ldarg.0 
+   02C4 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   02C9 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   02CE callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   02D3 ldstr Panel_ShareAchievement_Btn
+   02D8 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   02DD stloc.s V_18
+   02DF ldloc.s V_18
+   02E1 ldnull 
+   02E2 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   02E7 brfalse IL_02f9: ldarg.0
+   02EC ldloc.s V_18
+   02EE callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   02F3 ldc.i4.0 
+   02F4 call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   02F9 ldarg.0 
+   02FA ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   02FF ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0304 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0309 ldstr Panel_NewAchievement_Btn/Btn_Share
+   030E callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0313 stloc.s V_19
+   0315 ldloc.s V_19
+   0317 ldnull 
+   0318 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   031D brfalse IL_032f: ret
+   0322 ldloc.s V_19
+   0324 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0329 ldc.i4.0 
+   032A call System.Void GameObjectExtension::CustomSetActive(UnityEngine.GameObject,System.Boolean)
+   032F ret 
+== System.Void DoTrophyTween() attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0018 ldc.i4.s 13
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001F stloc.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0026 ldc.i4.s 15
+   0028 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   002D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0032 stloc.1 
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0039 ldc.i4.s 14
+   003B callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0040 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0045 stloc.2 
+   0046 ldarg.0 
+   0047 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   004C ldc.i4.s 17
+   004E callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0053 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0058 stloc.3 
+   0059 ldloc.0 
+   005A callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   005F stloc.s V_4
+   0061 ldloc.s V_4
+   0063 ldnull 
+   0064 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0069 brfalse IL_0084: ldloc.1
+   006E ldarg.0 
+   006F ldloc.s V_4
+   0071 callvirt UnityEngine.Rect UnityEngine.RectTransform::get_rect()
+   0076 stloc.s V_5
+   0078 ldloca.s V_5
+   007A call System.Single UnityEngine.Rect::get_width()
+   007F stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_containerWidth
+   0084 ldloc.1 
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_containerWidth
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   0091 mul 
+   0092 ldloc.1 
+   0093 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0098 stloc.s V_6
+   009A ldloca.s V_6
+   009C ldfld UnityEngine.Vector2::y
+   00A1 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   00A6 callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   00AB ldloc.2 
+   00AC ldnull 
+   00AD call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00B2 brfalse IL_00e4: ldloc.3
+   00B7 ldloc.2 
+   00B8 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00BD ldarg.0 
+   00BE ldftn System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::TrophyPointsProgressTween(System.Single)
+   00C4 newobj System.Void System.Action`1<System.Single>::.ctor(System.Object,System.IntPtr)
+   00C9 ldarg.0 
+   00CA ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsFrom
+   00CF ldarg.0 
+   00D0 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_achievePointsTo
+   00D5 ldc.r4 2
+   00DA call LTDescr LeanTween::value(UnityEngine.GameObject,System.Action`1<System.Single>,System.Single,System.Single,System.Single)
+   00DF stsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_trophyPointsProgressLTD
+   00E4 ldloc.3 
+   00E5 ldnull 
+   00E6 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00EB brfalse IL_0128: ret
+   00F0 ldloc.3 
+   00F1 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00F6 ldarg.0 
+   00F7 ldftn System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::TrophyPointsAddTween(System.Single)
+   00FD newobj System.Void System.Action`1<System.Single>::.ctor(System.Object,System.IntPtr)
+   0102 ldc.r4 0
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   010D ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0112 ldfld ResData.ResAchievement::dwPoint
+   0117 conv.r.un 
+   0118 conv.r4 
+   0119 ldc.r4 2
+   011E call LTDescr LeanTween::value(UnityEngine.GameObject,System.Action`1<System.Single>,System.Single,System.Single,System.Single)
+   0123 stsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_TrophyPointsAddLTD
+   0128 ret 
+== System.Void TrophyPointsProgressTween(System.Single value) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0018 ldc.i4.s 14
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0024 stloc.0 
+   0025 ldloc.0 
+   0026 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   002B ldnull 
+   002C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0031 brfalse IL_0069: ret
+   0036 ldarg.1 
+   0037 ldc.r4 1
+   003C ble.un IL_0048: ldloc.0
+   0041 ldarg.0 
+   0042 ldarg.1 
+   0043 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::DoTrophyPointsProgressTweenEnd(System.Single)
+   0048 ldloc.0 
+   0049 ldarg.1 
+   004A ldarg.0 
+   004B ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_containerWidth
+   0050 mul 
+   0051 ldloc.0 
+   0052 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0057 stloc.1 
+   0058 ldloca.s V_1
+   005A ldfld UnityEngine.Vector2::y
+   005F newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0064 callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   0069 ret 
+== System.Void TrophyPointsAddTween(System.Single value) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0012: ldarg.0
+   0011 ret 
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0018 ldc.i4.s 17
+   001A callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   001F callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0024 stloc.0 
+   0025 ldloc.0 
+   0026 ldnull 
+   0027 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002C brfalse IL_006b: ret
+   0031 ldloc.0 
+   0032 ldstr +{0}
+   0037 ldarga.s value
+   0039 ldstr N0
+   003E call System.String System.Single::ToString(System.String)
+   0043 call System.String System.String::Format(System.String,System.Object)
+   0048 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   004D ldarg.1 
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0054 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   0059 ldfld ResData.ResAchievement::dwPoint
+   005E conv.r.un 
+   005F conv.r4 
+   0060 blt.un IL_006b: ret
+   0065 ldarg.0 
+   0066 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::DoTrophyPointsAddTweenEnd()
+   006B ret 
+== System.Void DoTrophyPointsProgressTweenEnd(System.Single value) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0006 ldc.i4.s 14
+   0008 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   000D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.RectTransform>()
+   0012 stloc.0 
+   0013 ldsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_trophyPointsProgressLTD
+   0018 brfalse IL_005b: ret
+   001D ldloc.0 
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_005b: ret
+   0029 ldloc.0 
+   002A ldarg.1 
+   002B ldarg.0 
+   002C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_containerWidth
+   0031 mul 
+   0032 ldloc.0 
+   0033 callvirt UnityEngine.Vector2 UnityEngine.RectTransform::get_sizeDelta()
+   0038 stloc.1 
+   0039 ldloca.s V_1
+   003B ldfld UnityEngine.Vector2::y
+   0040 newobj System.Void UnityEngine.Vector2::.ctor(System.Single,System.Single)
+   0045 callvirt System.Void UnityEngine.RectTransform::set_sizeDelta(UnityEngine.Vector2)
+   004A ldsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_trophyPointsProgressLTD
+   004F callvirt LTDescr LTDescr::cancel()
+   0054 pop 
+   0055 ldnull 
+   0056 stsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_trophyPointsProgressLTD
+   005B ret 
+== System.Void DoTrophyPointsAddTweenEnd() attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0006 ldc.i4.s 17
+   0008 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   000D callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   0012 stloc.0 
+   0013 ldsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_TrophyPointsAddLTD
+   0018 brfalse IL_0064: ret
+   001D ldloc.0 
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_0064: ret
+   0029 ldloc.0 
+   002A ldstr +{0}
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_curAchieveItem
+   0035 ldflda Assets.Scripts.GameSystem.CAchieveItem2::Cfg
+   003A ldflda ResData.ResAchievement::dwPoint
+   003F ldstr N0
+   0044 call System.String System.UInt32::ToString(System.String)
+   0049 call System.String System.String::Format(System.String,System.Object)
+   004E callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   0053 ldsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_TrophyPointsAddLTD
+   0058 callvirt LTDescr LTDescr::cancel()
+   005D pop 
+   005E ldnull 
+   005F stsfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_TrophyPointsAddLTD
+   0064 ret 
+== System.Void OnContinueProcessDoneAchievements(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   0005 ldc.i4.0 
+   0006 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::set_m_bShowTimeline(System.Boolean)
+   000B call !0 MonoSingleton`1<Assets.Scripts.GameSystem.ShareSys>::GetInstance()
+   0010 callvirt System.Void Assets.Scripts.GameSystem.ShareSys::clearSaveShareParamType()
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 stfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_isShowing
+   001C call Assets.Scripts.GameSystem.CAchieveInfo2 Assets.Scripts.GameSystem.CAchieveInfo2::GetMasterAchieveInfo()
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   0028 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   002D brtrue IL_0033: ldloc.0
+   0032 ret 
+   0033 ldloc.0 
+   0034 ldfld Assets.Scripts.GameSystem.CAchieveInfo2::MostLatelyDoneAchievements
+   0039 ldc.i4.0 
+   003A callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::RemoveAt(System.Int32)
+   003F call System.Boolean LeanTween::IsInitialised()
+   0044 brfalse IL_006d: call !0 Singleton`1<CTimerManager>::GetInstance()
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   004F ldc.i4.s 14
+   0051 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0056 call System.Void LeanTween::cancel(UnityEngine.GameObject)
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.CAchieveShareComponent::m_shareForm
+   0061 ldc.i4.s 17
+   0063 callvirt UnityEngine.GameObject Assets.Scripts.UI.CUIFormScript::GetWidget(System.Int32)
+   0068 call System.Void LeanTween::cancel(UnityEngine.GameObject)
+   006D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0072 ldc.i4 200
+   0077 ldc.i4.1 
+   0078 ldarg.0 
+   0079 ldftn System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::<OnContinueProcessDoneAchievements>m__0(System.Int32)
+   007F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0084 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0089 pop 
+   008A ret 
+== System.Void <OnContinueProcessDoneAchievements>m__0(System.Int32 sequence) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 call System.Void Assets.Scripts.GameSystem.CAchieveShareComponent::Process(System.Boolean)
+   0007 ret 

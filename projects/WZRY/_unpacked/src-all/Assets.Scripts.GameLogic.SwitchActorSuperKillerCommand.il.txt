@@ -1,0 +1,135 @@
+// TYPE Assets.Scripts.GameLogic.SwitchActorSuperKillerCommand  base=Assets.Scripts.Framework.FrameCommand  attrs=Public, BeforeFieldInit
+  FIELD System.SByte IsSuperKiller
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.Framework.FrameCommand::.ctor()
+   0006 ret 
+== Assets.Scripts.Framework.FrameCommand Creator(CSProtocol.FRAME_CMD_PKG& msg) attrs=Public, Static, HideBySig maxstack=2
+   0000 call T Assets.Scripts.Framework.FrameCommandFactory::CreateFrameCommand<Assets.Scripts.GameLogic.SwitchActorSuperKillerCommand>()
+   0005 stloc.0 
+   0006 ldloc.0 
+   0007 ldarg.0 
+   0008 ldind.ref 
+   0009 ldfld CSProtocol.FRAME_CMD_PKG::stCmdInfo
+   000E callvirt CSProtocol.FRAMEPKG_CMD_SWITCH_SUPER_KILLER CSProtocol.FRAME_CMD_INFO::get_stCmdPlayerSwitchSuperKiller()
+   0013 ldfld CSProtocol.FRAMEPKG_CMD_SWITCH_SUPER_KILLER::chIsSuperKiller
+   0018 stfld Assets.Scripts.GameLogic.SwitchActorSuperKillerCommand::IsSuperKiller
+   001D ldloc.0 
+   001E ret 
+== System.Boolean TransProtocol(CSProtocol.FRAME_CMD_PKG msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld CSProtocol.FRAME_CMD_PKG::stCmdInfo
+   0006 callvirt CSProtocol.FRAMEPKG_CMD_SWITCH_SUPER_KILLER CSProtocol.FRAME_CMD_INFO::get_stCmdPlayerSwitchSuperKiller()
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameLogic.SwitchActorSuperKillerCommand::IsSuperKiller
+   0011 stfld CSProtocol.FRAMEPKG_CMD_SWITCH_SUPER_KILLER::chIsSuperKiller
+   0016 ldarg.0 
+   0017 ldarg.1 
+   0018 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.FRAME_CMD_PKG)
+   001D ret 
+== System.Boolean TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO msg) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.Framework.FrameCommand::TransProtocol(CSProtocol.CSDT_GAMING_CSSYNCINFO)
+   0007 ret 
+== System.Void OnReceive(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_frameNum()
+   0006 ldarg.1 
+   0007 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameLogic.SwitchActorSuperKillerCommand::IsSuperKiller
+   0012 call System.Void SGW::PushGMSwitchActorSuperKillerCmd(System.UInt32,System.UInt32,System.SByte)
+   0017 ret 
+== System.Void ExecLocal(Assets.Scripts.Framework.FrameCommand cmd) attrs=Public, Virtual, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0005 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_001c: ldc.i4.0
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsMobaMode()
+   0017 br IL_001d: stloc.1
+   001C ldc.i4.0 
+   001D stloc.1 
+   001E call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0023 ldarg.1 
+   0024 callvirt System.UInt32 Assets.Scripts.Framework.FrameCommand::get_playerID()
+   0029 callvirt Assets.Scripts.GameLogic.Player Assets.Scripts.GameLogic.GamePlayerCenter::GetPlayer(System.UInt32)
+   002E stloc.2 
+   002F ldloc.2 
+   0030 brfalse IL_0129: ret
+   0035 ldloc.1 
+   0036 brfalse IL_0046: ldloc.1
+   003B ldloc.2 
+   003C ldfld Assets.Scripts.GameLogic.Player::isGM
+   0041 brtrue IL_0056: ldloc.2
+   0046 ldloc.1 
+   0047 brtrue IL_0129: ret
+   004C call System.Boolean Assets.Scripts.GameLogic.LobbyMsgHandler::get_isHostGMAcnt()
+   0051 brfalse IL_0129: ret
+   0056 ldloc.2 
+   0057 ldfld Assets.Scripts.GameLogic.Player::Captain
+   005C call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   0061 brfalse IL_0096: ldc.i4.0
+   0066 ldloc.2 
+   0067 ldflda Assets.Scripts.GameLogic.Player::Captain
+   006C call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   0071 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   0076 ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::linkerData
+   007B isinst Assets.Scripts.GameLogic.HeroObjLinkerData
+   0080 stloc.3 
+   0081 ldloc.3 
+   0082 brfalse IL_0096: ldc.i4.0
+   0087 ldloc.3 
+   0088 ldloc.3 
+   0089 ldfld Assets.Scripts.GameLogic.HeroObjLinkerData::bOneKiller
+   008E ldc.i4.0 
+   008F ceq 
+   0091 stfld Assets.Scripts.GameLogic.HeroObjLinkerData::bOneKiller
+   0096 ldc.i4.0 
+   0097 stloc.s V_4
+   0099 br IL_0117: ldloc.s V_4
+   009E ldloc.2 
+   009F ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   00A4 ldloc.s V_4
+   00A6 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   00AB call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Implicit(Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00B0 brfalse IL_0111: ldloc.s V_4
+   00B5 ldloc.2 
+   00B6 ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   00BB ldloc.s V_4
+   00BD callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   00C2 ldloc.2 
+   00C3 ldfld Assets.Scripts.GameLogic.Player::Captain
+   00C8 call System.Boolean Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::op_Inequality(Assets.Scripts.Common.PoolObjHandle`1<!0>,Assets.Scripts.Common.PoolObjHandle`1<!0>)
+   00CD brfalse IL_0111: ldloc.s V_4
+   00D2 ldloc.2 
+   00D3 ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   00D8 ldloc.s V_4
+   00DA callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Item(System.Int32)
+   00DF stloc.s V_6
+   00E1 ldloca.s V_6
+   00E3 call !0 Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>::get_handle()
+   00E8 ldfld Assets.Scripts.GameLogic.ActorLinker::ActorControl
+   00ED ldfld Assets.Scripts.GameLogic.ObjLinkerWrapper::linkerData
+   00F2 isinst Assets.Scripts.GameLogic.HeroObjLinkerData
+   00F7 stloc.s V_5
+   00F9 ldloc.s V_5
+   00FB brfalse IL_0111: ldloc.s V_4
+   0100 ldloc.s V_5
+   0102 ldloc.s V_5
+   0104 ldfld Assets.Scripts.GameLogic.HeroObjLinkerData::bOneKiller
+   0109 ldc.i4.0 
+   010A ceq 
+   010C stfld Assets.Scripts.GameLogic.HeroObjLinkerData::bOneKiller
+   0111 ldloc.s V_4
+   0113 ldc.i4.1 
+   0114 add 
+   0115 stloc.s V_4
+   0117 ldloc.s V_4
+   0119 ldloc.2 
+   011A ldfld Assets.Scripts.GameLogic.Player::heroActorList
+   011F callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.Common.PoolObjHandle`1<Assets.Scripts.GameLogic.ActorLinker>>::get_Count()
+   0124 blt IL_009e: ldloc.2
+   0129 ret 

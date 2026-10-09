@@ -1,0 +1,632 @@
+// TYPE FogOfWar  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean ms_bDrawDebugLineTexts
+  FIELD System.Boolean _enable
+  FIELD System.Int32 _BitmapWidth
+  FIELD System.Int32 _BitmapHeight
+  FIELD System.Byte[] _bitmapData
+  FIELD Assets.Scripts.GameSystem.FieldObj FieldObj_
+  FIELD UnityEngine.Texture2D _bitmapTexture
+  FIELD UnityEngine.RenderTexture[] fowTextures
+  FIELD UnityEngine.Material[] fowMats
+  FIELD System.Int64 commitFrame
+  FIELD System.Byte FOG_DELAY_FRAME
+  FIELD System.Boolean <EnableRender>k__BackingField
+  PROP System.Single GPUInterpolateReciprocal
+  PROP System.Boolean enable
+  PROP System.Boolean EnableRender
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Single get_GPUInterpolateReciprocal() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldc.r4 0.125
+   0005 ret 
+== System.Void CreateMat(UnityEngine.Material& mat, System.String name) attrs=Private, Static, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldind.ref 
+   0002 ldnull 
+   0003 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0008 brfalse IL_000e: call !0 Singleton`1<CResourceManager>::GetInstance()
+   000D ret 
+   000E call !0 Singleton`1<CResourceManager>::GetInstance()
+   0013 ldarg.1 
+   0014 ldtoken UnityEngine.Shader
+   0019 call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
+   001E ldc.i4.0 
+   001F ldc.i4.1 
+   0020 ldc.i4.1 
+   0021 ldc.i4.0 
+   0022 callvirt CResource CResourceManager::GetResource(System.String,System.Type,enResourceType,System.Boolean,System.Boolean,enResourceLoadType)
+   0027 ldfld CResource::m_content
+   002C isinst UnityEngine.Shader
+   0031 stloc.0 
+   0032 ldloc.0 
+   0033 ldnull 
+   0034 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0039 brfalse IL_003e: ldarg.0
+   003E ldarg.0 
+   003F ldloc.0 
+   0040 newobj System.Void UnityEngine.Material::.ctor(UnityEngine.Shader)
+   0045 stind.ref 
+   0046 ret 
+== System.Void Reset(System.Int32 inMapWidth, System.Int32 inMapHeight, System.Int32 inBitmapWidth, System.Int32 inBitmapHeight, System.Int32 sight) attrs=Private, Static, HideBySig maxstack=6
+   0000 ldarg.2 
+   0001 stsfld FogOfWar::_BitmapWidth
+   0006 ldarg.3 
+   0007 stsfld FogOfWar::_BitmapHeight
+   000C ldarg.2 
+   000D brfalse IL_001f: ret
+   0012 ldarg.3 
+   0013 brfalse IL_001f: ret
+   0018 ldarg.s sight
+   001A brtrue IL_0020: call System.Void FogOfWar::Clear()
+   001F ret 
+   0020 call System.Void FogOfWar::Clear()
+   0025 ldsfld FogOfWar::_bitmapTexture
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_0051: ldsfld System.Int32 FogOfWar::_BitmapWidth
+   0035 ldsfld FogOfWar::_bitmapTexture
+   003A ldsfld FogOfWar::_BitmapWidth
+   003F ldsfld FogOfWar::_BitmapHeight
+   0044 ldc.i4.1 
+   0045 ldc.i4.0 
+   0046 callvirt System.Boolean UnityEngine.Texture2D::Resize(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   004B pop 
+   004C br IL_0072: ldc.i4.0
+   0051 ldsfld FogOfWar::_BitmapWidth
+   0056 ldsfld FogOfWar::_BitmapHeight
+   005B ldc.i4.1 
+   005C ldc.i4.0 
+   005D newobj System.Void UnityEngine.Texture2D::.ctor(System.Int32,System.Int32,UnityEngine.TextureFormat,System.Boolean)
+   0062 stsfld FogOfWar::_bitmapTexture
+   0067 ldsfld FogOfWar::_bitmapTexture
+   006C ldc.i4.1 
+   006D callvirt System.Void UnityEngine.Texture::set_wrapMode(UnityEngine.TextureWrapMode)
+   0072 ldc.i4.0 
+   0073 stloc.0 
+   0074 br IL_00e0: ldloc.0
+   0079 ldsfld FogOfWar::fowTextures
+   007E ldloc.0 
+   007F ldelem.ref 
+   0080 ldnull 
+   0081 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0086 brfalse IL_0097: ldsfld System.Int32 FogOfWar::_BitmapWidth
+   008B ldsfld FogOfWar::fowTextures
+   0090 ldloc.0 
+   0091 ldelem.ref 
+   0092 callvirt System.Void UnityEngine.RenderTexture::Release()
+   0097 ldsfld FogOfWar::_BitmapWidth
+   009C ldc.i4.2 
+   009D mul 
+   009E stloc.1 
+   009F ldsfld FogOfWar::_BitmapHeight
+   00A4 ldc.i4.2 
+   00A5 mul 
+   00A6 stloc.2 
+   00A7 call UnityEngine.NPOTSupport UnityEngine.SystemInfo::get_npotSupport()
+   00AC brtrue IL_00bf: ldsfld UnityEngine.RenderTexture[] FogOfWar::fowTextures
+   00B1 ldloc.1 
+   00B2 call System.Int32 IntMath::CeilPowerOfTwo(System.Int32)
+   00B7 stloc.1 
+   00B8 ldloc.2 
+   00B9 call System.Int32 IntMath::CeilPowerOfTwo(System.Int32)
+   00BE stloc.2 
+   00BF ldsfld FogOfWar::fowTextures
+   00C4 ldloc.0 
+   00C5 ldloc.1 
+   00C6 ldloc.2 
+   00C7 ldc.i4.0 
+   00C8 ldc.i4.7 
+   00C9 newobj System.Void UnityEngine.RenderTexture::.ctor(System.Int32,System.Int32,System.Int32,UnityEngine.RenderTextureFormat)
+   00CE stelem.ref 
+   00CF ldsfld FogOfWar::fowTextures
+   00D4 ldloc.0 
+   00D5 ldelem.ref 
+   00D6 ldc.i4.1 
+   00D7 callvirt System.Void UnityEngine.Texture::set_wrapMode(UnityEngine.TextureWrapMode)
+   00DC ldloc.0 
+   00DD ldc.i4.1 
+   00DE add 
+   00DF stloc.0 
+   00E0 ldloc.0 
+   00E1 ldsfld FogOfWar::fowTextures
+   00E6 ldlen 
+   00E7 conv.i4 
+   00E8 blt IL_0079: ldsfld UnityEngine.RenderTexture[] FogOfWar::fowTextures
+   00ED ldsfld FogOfWar::fowMats
+   00F2 ldc.i4.0 
+   00F3 ldelema UnityEngine.Material
+   00F8 ldstr Shaders/Fow/FowBlur
+   00FD call System.Void FogOfWar::CreateMat(UnityEngine.Material&,System.String)
+   0102 ldsfld FogOfWar::fowMats
+   0107 ldc.i4.1 
+   0108 ldelema UnityEngine.Material
+   010D ldstr Shaders/Fow/FowInterpolate
+   0112 call System.Void FogOfWar::CreateMat(UnityEngine.Material&,System.String)
+   0117 ldsfld FogOfWar::fowMats
+   011C ldc.i4.2 
+   011D ldelema UnityEngine.Material
+   0122 ldstr Shaders/Fow/FowLight
+   0127 call System.Void FogOfWar::CreateMat(UnityEngine.Material&,System.String)
+   012C ldarg.0 
+   012D brfalse IL_0138: ret
+   0132 ldarg.1 
+   0133 brtrue IL_0139: ret
+   0138 ret 
+   0139 ret 
+== System.Void Clear() attrs=Private, Static, HideBySig maxstack=2
+   0000 ldstr _FogOfWar
+   0005 ldnull 
+   0006 call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   000B ldnull 
+   000C stsfld FogOfWar::_bitmapTexture
+   0011 ldc.i4.0 
+   0012 stloc.0 
+   0013 br IL_003a: ldloc.0
+   0018 ldsfld FogOfWar::fowTextures
+   001D ldloc.0 
+   001E ldelem.ref 
+   001F ldnull 
+   0020 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0025 brfalse IL_0036: ldloc.0
+   002A ldsfld FogOfWar::fowTextures
+   002F ldloc.0 
+   0030 ldelem.ref 
+   0031 callvirt System.Void UnityEngine.RenderTexture::Release()
+   0036 ldloc.0 
+   0037 ldc.i4.1 
+   0038 add 
+   0039 stloc.0 
+   003A ldloc.0 
+   003B ldsfld FogOfWar::fowTextures
+   0040 ldlen 
+   0041 conv.i4 
+   0042 blt IL_0018: ldsfld UnityEngine.RenderTexture[] FogOfWar::fowTextures
+   0047 ret 
+== System.Void ClearAllFog(System.Boolean bCommit) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld FogOfWar::_bitmapData
+   0005 brtrue IL_000b: ldc.i4.0
+   000A ret 
+   000B ldc.i4.0 
+   000C stloc.0 
+   000D br IL_0022: ldloc.0
+   0012 ldsfld FogOfWar::_bitmapData
+   0017 ldloc.0 
+   0018 ldc.i4 255
+   001D stelem.i1 
+   001E ldloc.0 
+   001F ldc.i4.1 
+   0020 add 
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldsfld FogOfWar::_bitmapData
+   0028 ldlen 
+   0029 conv.i4 
+   002A blt IL_0012: ldsfld System.Byte[] FogOfWar::_bitmapData
+   002F ldarg.0 
+   0030 brfalse IL_003a: ret
+   0035 call System.Void FogOfWar::CommitToMaterials()
+   003A ret 
+== System.Boolean get_enable() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld FogOfWar::_enable
+   0005 ret 
+== System.Void set_enable(System.Boolean value) attrs=Private, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld FogOfWar::_enable
+   0005 ldarg.0 
+   0006 bne.un IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D stsfld FogOfWar::_enable
+   0012 ldsfld FogOfWar::_enable
+   0017 brtrue IL_0022: ret
+   001C ldc.i4.0 
+   001D call System.Void FogOfWar::ClearAllFog(System.Boolean)
+   0022 ret 
+== System.Boolean get_EnableRender() attrs=Public, Static, HideBySig, SpecialName maxstack=8
+   0000 ldsfld FogOfWar::<EnableRender>k__BackingField
+   0005 ret 
+== System.Void set_EnableRender(System.Boolean value) attrs=Private, Static, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 stsfld FogOfWar::<EnableRender>k__BackingField
+   0006 ret 
+== System.Void SetBlurVectors(System.Single sizeX, System.Single sizeY) attrs=Private, Static, HideBySig maxstack=5
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldarg.1 
+   0004 ldarg.0 
+   0005 neg 
+   0006 ldarg.1 
+   0007 neg 
+   0008 call System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   000D ldsfld FogOfWar::fowMats
+   0012 ldc.i4.0 
+   0013 ldelem.ref 
+   0014 ldstr _BlurDir1
+   0019 ldloc.0 
+   001A ldc.r4 0.5
+   001F call UnityEngine.Vector4 UnityEngine.Vector4::op_Multiply(UnityEngine.Vector4,System.Single)
+   0024 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0029 ldsfld FogOfWar::fowMats
+   002E ldc.i4.0 
+   002F ldelem.ref 
+   0030 ldstr _BlurDir2
+   0035 ldloc.0 
+   0036 ldc.r4 1.5
+   003B call UnityEngine.Vector4 UnityEngine.Vector4::op_Multiply(UnityEngine.Vector4,System.Single)
+   0040 callvirt System.Void UnityEngine.Material::SetVector(System.String,UnityEngine.Vector4)
+   0045 ret 
+== System.Void CommitToMaterials() attrs=Public, Static, HideBySig maxstack=4
+   0000 ldsfld FogOfWar::_bitmapData
+   0005 brfalse IL_001a: ret
+   000A ldnull 
+   000B ldsfld FogOfWar::_bitmapTexture
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 brfalse IL_001b: call System.Boolean FogOfWar::get_EnableRender()
+   001A ret 
+   001B call System.Boolean FogOfWar::get_EnableRender()
+   0020 call System.Void DebugHelper::Assert(System.Boolean)
+   0025 ldsfld FogOfWar::_bitmapTexture
+   002A ldsfld FogOfWar::_bitmapData
+   002F callvirt System.Void UnityEngine.Texture2D::LoadRawTextureData(System.Byte[])
+   0034 ldsfld FogOfWar::_bitmapTexture
+   0039 callvirt System.Void UnityEngine.Texture2D::Apply()
+   003E ldsfld FogOfWar::fowTextures
+   0043 ldc.i4.0 
+   0044 ldelem.ref 
+   0045 stloc.0 
+   0046 ldsfld FogOfWar::fowTextures
+   004B ldc.i4.0 
+   004C ldsfld FogOfWar::fowTextures
+   0051 ldc.i4.1 
+   0052 ldelem.ref 
+   0053 stelem.ref 
+   0054 ldsfld FogOfWar::fowTextures
+   0059 ldc.i4.1 
+   005A ldloc.0 
+   005B stelem.ref 
+   005C ldsfld FogOfWar::fowTextures
+   0061 ldc.i4.0 
+   0062 ldelem.ref 
+   0063 callvirt System.Void UnityEngine.RenderTexture::DiscardContents()
+   0068 ldsfld FogOfWar::_bitmapTexture
+   006D ldsfld FogOfWar::fowTextures
+   0072 ldc.i4.0 
+   0073 ldelem.ref 
+   0074 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture)
+   0079 ldc.r4 1
+   007E ldsfld FogOfWar::fowTextures
+   0083 ldc.i4.0 
+   0084 ldelem.ref 
+   0085 callvirt System.Int32 UnityEngine.Texture::get_width()
+   008A conv.r4 
+   008B div 
+   008C ldc.r4 0
+   0091 call System.Void FogOfWar::SetBlurVectors(System.Single,System.Single)
+   0096 ldsfld FogOfWar::fowTextures
+   009B ldc.i4.2 
+   009C ldelem.ref 
+   009D callvirt System.Void UnityEngine.RenderTexture::DiscardContents()
+   00A2 ldsfld FogOfWar::fowTextures
+   00A7 ldc.i4.0 
+   00A8 ldelem.ref 
+   00A9 ldsfld FogOfWar::fowTextures
+   00AE ldc.i4.2 
+   00AF ldelem.ref 
+   00B0 ldsfld FogOfWar::fowMats
+   00B5 ldc.i4.0 
+   00B6 ldelem.ref 
+   00B7 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material)
+   00BC ldc.r4 0
+   00C1 ldc.r4 1
+   00C6 ldsfld FogOfWar::fowTextures
+   00CB ldc.i4.0 
+   00CC ldelem.ref 
+   00CD callvirt System.Int32 UnityEngine.Texture::get_height()
+   00D2 conv.r4 
+   00D3 div 
+   00D4 call System.Void FogOfWar::SetBlurVectors(System.Single,System.Single)
+   00D9 ldsfld FogOfWar::fowTextures
+   00DE ldc.i4.0 
+   00DF ldelem.ref 
+   00E0 callvirt System.Void UnityEngine.RenderTexture::DiscardContents()
+   00E5 ldsfld FogOfWar::fowTextures
+   00EA ldc.i4.2 
+   00EB ldelem.ref 
+   00EC ldsfld FogOfWar::fowTextures
+   00F1 ldc.i4.0 
+   00F2 ldelem.ref 
+   00F3 ldsfld FogOfWar::fowMats
+   00F8 ldc.i4.0 
+   00F9 ldelem.ref 
+   00FA call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material)
+   00FF ldnull 
+   0100 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   0105 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   010A ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   010F conv.u8 
+   0110 stsfld FogOfWar::commitFrame
+   0115 call System.Void FogOfWar::UpdateTextures()
+   011A ret 
+== System.Void UpdateTextures() attrs=Public, Static, HideBySig maxstack=4
+   0000 call System.Boolean FogOfWar::get_EnableRender()
+   0005 brtrue IL_000b: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   000A ret 
+   000B call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::get_instance()
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   0017 conv.u8 
+   0018 ldsfld FogOfWar::commitFrame
+   001D sub 
+   001E conv.r4 
+   001F call System.Single FogOfWar::get_GPUInterpolateReciprocal()
+   0024 mul 
+   0025 stloc.1 
+   0026 call System.Single UnityEngine.Time::get_timeSinceLevelLoad()
+   002B ldloc.0 
+   002C ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameTime
+   0031 sub 
+   0032 stloc.2 
+   0033 ldloc.0 
+   0034 callvirt System.UInt32 Assets.Scripts.Framework.FrameSynchr::get_FrameDelta()
+   0039 conv.r.un 
+   003A conv.r4 
+   003B ldc.r4 0.001
+   0040 mul 
+   0041 stloc.3 
+   0042 ldloc.2 
+   0043 ldc.r4 0
+   0048 ldloc.3 
+   0049 call System.Single UnityEngine.Mathf::Clamp(System.Single,System.Single,System.Single)
+   004E stloc.2 
+   004F ldloc.2 
+   0050 ldloc.3 
+   0051 div 
+   0052 stloc.2 
+   0053 ldloc.1 
+   0054 ldloc.2 
+   0055 conv.r4 
+   0056 call System.Single FogOfWar::get_GPUInterpolateReciprocal()
+   005B mul 
+   005C add 
+   005D stloc.1 
+   005E ldloc.1 
+   005F call System.Single UnityEngine.Mathf::Clamp01(System.Single)
+   0064 stloc.1 
+   0065 ldsfld FogOfWar::fowMats
+   006A ldc.i4.1 
+   006B ldelem.ref 
+   006C ldstr _FowTex0
+   0071 ldsfld FogOfWar::fowTextures
+   0076 ldc.i4.1 
+   0077 ldelem.ref 
+   0078 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   007D ldsfld FogOfWar::fowMats
+   0082 ldc.i4.1 
+   0083 ldelem.ref 
+   0084 ldstr _FowTex1
+   0089 ldsfld FogOfWar::fowTextures
+   008E ldc.i4.0 
+   008F ldelem.ref 
+   0090 callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   0095 ldsfld FogOfWar::fowMats
+   009A ldc.i4.1 
+   009B ldelem.ref 
+   009C ldstr _Factor
+   00A1 ldloc.1 
+   00A2 callvirt System.Void UnityEngine.Material::SetFloat(System.String,System.Single)
+   00A7 ldsfld FogOfWar::fowTextures
+   00AC ldc.i4.2 
+   00AD ldelem.ref 
+   00AE callvirt System.Void UnityEngine.RenderTexture::DiscardContents()
+   00B3 ldnull 
+   00B4 ldsfld FogOfWar::fowTextures
+   00B9 ldc.i4.2 
+   00BA ldelem.ref 
+   00BB ldsfld FogOfWar::fowMats
+   00C0 ldc.i4.1 
+   00C1 ldelem.ref 
+   00C2 call System.Void UnityEngine.Graphics::Blit(UnityEngine.Texture,UnityEngine.RenderTexture,UnityEngine.Material)
+   00C7 ldnull 
+   00C8 call System.Void UnityEngine.RenderTexture::set_active(UnityEngine.RenderTexture)
+   00CD ldsfld FogOfWar::fowMats
+   00D2 ldc.i4.1 
+   00D3 ldelem.ref 
+   00D4 ldstr _FowTex0
+   00D9 ldnull 
+   00DA callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   00DF ldsfld FogOfWar::fowMats
+   00E4 ldc.i4.1 
+   00E5 ldelem.ref 
+   00E6 ldstr _FowTex1
+   00EB ldnull 
+   00EC callvirt System.Void UnityEngine.Material::SetTexture(System.String,UnityEngine.Texture)
+   00F1 ldstr _FogOfWar
+   00F6 ldsfld FogOfWar::fowTextures
+   00FB ldc.i4.2 
+   00FC ldelem.ref 
+   00FD call System.Void UnityEngine.Shader::SetGlobalTexture(System.String,UnityEngine.Texture)
+   0102 ret 
+== System.Void EnableShaderFogFunction() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldstr _FOG_OF_WAR_ON
+   0005 call System.Void UnityEngine.Shader::EnableKeyword(System.String)
+   000A ret 
+== System.Void DisableShaderFogFunction() attrs=Private, Static, HideBySig maxstack=8
+   0000 ldstr _FOG_OF_WAR_ON
+   0005 call System.Void UnityEngine.Shader::DisableKeyword(System.String)
+   000A ret 
+== System.Void PreBeginLevel() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldstr Design/Field
+   0005 call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldnull 
+   000D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0012 brfalse IL_0099: ret
+   0017 ldloc.0 
+   0018 callvirt System.Boolean UnityEngine.GameObject::get_activeInHierarchy()
+   001D brfalse IL_0099: ret
+   0022 ldloc.0 
+   0023 callvirt !!0 UnityEngine.GameObject::GetComponent<Assets.Scripts.GameSystem.FieldObj>()
+   0028 stsfld FogOfWar::FieldObj_
+   002D ldsfld FogOfWar::FieldObj_
+   0032 ldnull 
+   0033 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0038 brfalse IL_007f: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   003D ldsfld FogOfWar::FieldObj_
+   0042 callvirt System.Boolean Assets.Scripts.GameSystem.FieldObj::get_bSynced()
+   0047 brfalse IL_007f: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   004C call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0051 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0056 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsHorizonGridCompute()
+   005B brfalse IL_007f: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0060 ldc.i4.1 
+   0061 call System.Void FogOfWar::set_enable(System.Boolean)
+   0066 call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   006B callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0070 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsHorizonFowRenderEnable()
+   0075 call System.Void FogOfWar::set_EnableRender(System.Boolean)
+   007A br IL_0099: ret
+   007F call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0084 callvirt Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.BattleLogic::GetCurLvelContext()
+   0089 callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsDistanceFow()
+   008E brfalse IL_0099: ret
+   0093 ldc.i4.1 
+   0094 call System.Void FogOfWar::set_enable(System.Boolean)
+   0099 ret 
+== System.Void BeginLevel() attrs=Public, Static, HideBySig maxstack=5
+   0000 call System.Void FogOfWar::DisableShaderFogFunction()
+   0005 call System.Boolean FogOfWar::get_enable()
+   000A brfalse IL_0112: ret
+   000F call System.Void System.GC::Collect()
+   0014 ldstr Design/Field
+   0019 call UnityEngine.GameObject UnityEngine.GameObject::Find(System.String)
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_0112: ret
+   002B ldloc.0 
+   002C callvirt System.Boolean UnityEngine.GameObject::get_activeInHierarchy()
+   0031 brfalse IL_0112: ret
+   0036 ldsfld FogOfWar::FieldObj_
+   003B ldnull 
+   003C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0041 call System.Void DebugHelper::Assert(System.Boolean)
+   0046 ldsfld FogOfWar::FieldObj_
+   004B ldnull 
+   004C call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0051 brfalse IL_0112: ret
+   0056 call System.Boolean FogOfWar::get_EnableRender()
+   005B brfalse IL_0065: ldsfld Assets.Scripts.GameSystem.FieldObj FogOfWar::FieldObj_
+   0060 call System.Void FogOfWar::EnableShaderFogFunction()
+   0065 ldsfld FogOfWar::FieldObj_
+   006A callvirt System.Void Assets.Scripts.GameSystem.FieldObj::InitField()
+   006F call System.Boolean FogOfWar::get_EnableRender()
+   0074 brfalse IL_0112: ret
+   0079 ldsfld FogOfWar::FieldObj_
+   007E callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_FieldX()
+   0083 ldsfld FogOfWar::FieldObj_
+   0088 callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_FieldY()
+   008D ldsfld FogOfWar::FieldObj_
+   0092 callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_NumX()
+   0097 ldsfld FogOfWar::FieldObj_
+   009C callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_NumY()
+   00A1 ldc.i4.s 56
+   00A3 call ResData.ResGlobalInfo ResData.GameDataMgr/globalInfoDatabin::GetByIndex(System.Int32)
+   00A8 stloc.1 
+   00A9 ldloca.s V_1
+   00AB ldfld ResData.ResGlobalInfo::dwConfValue
+   00B0 call System.Void FogOfWar::Reset(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)
+   00B5 ldc.i4.1 
+   00B6 call System.Void FogOfWar::ClearAllFog(System.Boolean)
+   00BB ldsfld FogOfWar::FieldObj_
+   00C0 callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_FieldX()
+   00C5 conv.r4 
+   00C6 ldc.r4 1000
+   00CB div 
+   00CC ldc.r4 1
+   00D1 call System.Single UnityEngine.Mathf::Max(System.Single,System.Single)
+   00D6 stloc.2 
+   00D7 ldsfld FogOfWar::FieldObj_
+   00DC callvirt System.Int32 Assets.Scripts.GameSystem.FieldObj::get_FieldY()
+   00E1 conv.r4 
+   00E2 ldc.r4 1000
+   00E7 div 
+   00E8 ldc.r4 1
+   00ED call System.Single UnityEngine.Mathf::Max(System.Single,System.Single)
+   00F2 stloc.3 
+   00F3 ldstr _InvSceneSize
+   00F8 ldc.r4 1
+   00FD ldloc.2 
+   00FE div 
+   00FF ldc.r4 1
+   0104 ldloc.3 
+   0105 div 
+   0106 ldloc.2 
+   0107 ldloc.3 
+   0108 newobj System.Void UnityEngine.Vector4::.ctor(System.Single,System.Single,System.Single,System.Single)
+   010D call System.Void UnityEngine.Shader::SetGlobalVector(System.String,UnityEngine.Vector4)
+   0112 ret 
+== System.Void EndLevel() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 call System.Void FogOfWar::set_enable(System.Boolean)
+   0006 call System.Void FogOfWar::DisableShaderFogFunction()
+   000B call System.Void FogOfWar::Clear()
+   0010 ldc.i4.0 
+   0011 call System.Void FogOfWar::set_EnableRender(System.Boolean)
+   0016 ldnull 
+   0017 stsfld FogOfWar::FieldObj_
+   001C ldnull 
+   001D stsfld FogOfWar::_bitmapData
+   0022 ret 
+== System.Int32 Power2(System.Int32 value) attrs=Private, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 mul 
+   0003 ret 
+== System.Void CopyBitmap(System.Byte* inBitmapData, System.Int32 length) attrs=Public, Static, HideBySig maxstack=4
+   0000 ldsfld FogOfWar::_bitmapData
+   0005 brtrue IL_0015: ldarg.0
+   000A ldarg.1 
+   000B newarr System.Byte
+   0010 stsfld FogOfWar::_bitmapData
+   0015 ldarg.0 
+   0016 call System.IntPtr System.IntPtr::op_Explicit(System.Void*)
+   001B stloc.0 
+   001C ldloc.0 
+   001D ldsfld System.IntPtr::Zero
+   0022 call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr)
+   0027 brfalse IL_0039: ret
+   002C ldloc.0 
+   002D ldsfld FogOfWar::_bitmapData
+   0032 ldc.i4.0 
+   0033 ldarg.1 
+   0034 call System.Void System.Runtime.InteropServices.Marshal::Copy(System.IntPtr,System.Byte[],System.Int32,System.Int32)
+   0039 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=1
+   0000 ldc.i4.1 
+   0001 stsfld FogOfWar::ms_bDrawDebugLineTexts
+   0006 ldc.i4.0 
+   0007 stsfld FogOfWar::_enable
+   000C ldc.i4 512
+   0011 stsfld FogOfWar::_BitmapWidth
+   0016 ldc.i4 512
+   001B stsfld FogOfWar::_BitmapHeight
+   0020 ldnull 
+   0021 stsfld FogOfWar::_bitmapData
+   0026 ldnull 
+   0027 stsfld FogOfWar::_bitmapTexture
+   002C ldc.i4.3 
+   002D newarr UnityEngine.RenderTexture
+   0032 stsfld FogOfWar::fowTextures
+   0037 ldc.i4.3 
+   0038 newarr UnityEngine.Material
+   003D stsfld FogOfWar::fowMats
+   0042 ldc.i4.0 
+   0043 conv.i8 
+   0044 stsfld FogOfWar::commitFrame
+   0049 ldc.i4.s 90
+   004B stsfld FogOfWar::FOG_DELAY_FRAME
+   0050 ret 

@@ -1,0 +1,4088 @@
+// TYPE Assets.Scripts.GameSystem.CAdventureSys  base=Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>  attrs=BeforeFieldInit
+  FIELD System.String ADVENTURE_SELECT_FORM
+  FIELD System.String ADVENTURE_LEVEL_FORM
+  FIELD System.String ADVENTURE_MOB_FORM
+  FIELD System.String EXLPORE_FORM_PATH
+  FIELD System.Int32 CHAPTER_NUM
+  FIELD System.Int32 LEVEL_PER_CHAPTER
+  FIELD System.Int32 STAR_PER_LEVEL
+  FIELD System.UInt32 MOPUP_TICKET_ID
+  FIELD System.UInt32 MOPUP_TICKET_NUM_PER_LEVEL
+  FIELD System.UInt32 MOPUP_TICKET_PRICE_BY_DIAMOND
+  FIELD System.UInt32 CHALLENGE_BUYTIME_LIMIT
+  FIELD System.Int32 LEVEL_DIFFICULT_OPENED
+  FIELD System.Int32 currentDifficulty
+  FIELD System.Int32 currentChapter
+  FIELD System.Int32 currentLevelId
+  FIELD System.Int32 currentLevelSeq
+  FIELD System.Byte[] m_chapterStatus
+  FIELD System.Byte[] m_difficultyStatus
+  FIELD System.Byte bNewChapterId
+  FIELD System.String s_str_chapter = Sgame_Chapter
+  FIELD System.String s_str_difficulty = Sgame_Difficulty
+  FIELD System.String s_str_Level = Sgame_Level
+  FIELD System.Action <>f__mg$cache0
+  FIELD System.Action <>f__mg$cache1
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::.ctor()
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::Init()
+   0006 call System.Int32 ResData.GameDataMgr/chapterInfoDatabin::Count()
+   000B stsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0010 ldc.i4.s 33
+   0012 call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0017 stsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_ID
+   001C ldc.i4.s 34
+   001E call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0023 stsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_NUM_PER_LEVEL
+   0028 ldloca.s V_0
+   002A ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_ID
+   002F call System.Boolean ResData.GameDataMgr/itemDatabin::FindByKey(ResData.ResPropInfo&,System.UInt32)
+   0034 ldstr Can't find Mopup ticket config -- ID: {0}
+   0039 ldc.i4.1 
+   003A newarr System.Object
+   003F dup 
+   0040 ldc.i4.0 
+   0041 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_ID
+   0046 box System.UInt32
+   004B stelem.ref 
+   004C call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0051 ldloca.s V_0
+   0053 ldfld ResData.ResPropInfo::dwCouponsBuy
+   0058 stsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_PRICE_BY_DIAMOND
+   005D ldc.i4.s 42
+   005F call System.UInt32 ResData.GameDataMgr/globalInfoDatabin::GetConfValue(System.UInt32)
+   0064 stsfld Assets.Scripts.GameSystem.CAdventureSys::CHALLENGE_BUYTIME_LIMIT
+   0069 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   006E ldc.i4 200
+   0073 ldarg.0 
+   0074 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_OpenForm(Assets.Scripts.UI.CUIEvent)
+   007A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   007F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0084 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0089 ldc.i4 216
+   008E ldarg.0 
+   008F ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_CloseForm(Assets.Scripts.UI.CUIEvent)
+   0095 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   009A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   009F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00A4 ldc.i4 231
+   00A9 ldarg.0 
+   00AA ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectLevel(Assets.Scripts.UI.CUIEvent)
+   00B0 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00B5 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00BA call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00BF ldc.i4 232
+   00C4 ldarg.0 
+   00C5 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectDifficult(Assets.Scripts.UI.CUIEvent)
+   00CB newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D0 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00D5 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00DA ldc.i4 201
+   00DF ldarg.0 
+   00E0 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectChapter(Assets.Scripts.UI.CUIEvent)
+   00E6 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00EB callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F0 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00F5 ldc.i4 202
+   00FA ldarg.0 
+   00FB ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnLevelDetail_OpenForm(Assets.Scripts.UI.CUIEvent)
+   0101 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0106 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   010B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0110 ldc.i4 227
+   0115 ldarg.0 
+   0116 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectPreChapter(Assets.Scripts.UI.CUIEvent)
+   011C newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0121 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0126 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   012B ldc.i4 228
+   0130 ldarg.0 
+   0131 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectNextChapter(Assets.Scripts.UI.CUIEvent)
+   0137 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   013C callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0141 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0146 ldc.i4 206
+   014B ldarg.0 
+   014C ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenChooseHero(Assets.Scripts.UI.CUIEvent)
+   0152 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0157 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   015C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0161 ldc.i4 210
+   0166 ldarg.0 
+   0167 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnChooseHeroReady(Assets.Scripts.UI.CUIEvent)
+   016D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0172 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0177 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   017C ldc.i4 207
+   0181 ldarg.0 
+   0182 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnMopup(Assets.Scripts.UI.CUIEvent)
+   0188 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   018D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0192 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0197 ldc.i4 208
+   019C ldarg.0 
+   019D ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnMopupTenTimes(Assets.Scripts.UI.CUIEvent)
+   01A3 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01A8 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01AD call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01B2 ldc.i4 211
+   01B7 ldarg.0 
+   01B8 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnConfirmDiamondMopup(Assets.Scripts.UI.CUIEvent)
+   01BE newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01C3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01C8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01CD ldc.i4 222
+   01D2 ldarg.0 
+   01D3 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OpenChapterRewardPanel(Assets.Scripts.UI.CUIEvent)
+   01D9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01DE callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01E3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01E8 ldc.i4 223
+   01ED ldarg.0 
+   01EE ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::CloseChapterRewardPanel(Assets.Scripts.UI.CUIEvent)
+   01F4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01F9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01FE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0203 ldc.i4 215
+   0208 ldarg.0 
+   0209 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::GetChapterReward(Assets.Scripts.UI.CUIEvent)
+   020F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0214 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0219 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   021E ldc.i4 214
+   0223 ldarg.0 
+   0224 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnBuyPlayTime(Assets.Scripts.UI.CUIEvent)
+   022A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   022F callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0234 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0239 ldc.i4 218
+   023E ldarg.0 
+   023F ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnConfirmBuyPlayTime(Assets.Scripts.UI.CUIEvent)
+   0245 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   024A callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   024F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0254 ldc.i4 219
+   0259 ldarg.0 
+   025A ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmItemFullMopup(Assets.Scripts.UI.CUIEvent)
+   0260 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0265 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   026A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   026F ldc.i4 220
+   0274 ldarg.0 
+   0275 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmItemFullAdv(Assets.Scripts.UI.CUIEvent)
+   027B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0280 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0285 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   028A ldc.i4 224
+   028F ldarg.0 
+   0290 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnCloseSettleForm(Assets.Scripts.UI.CUIEvent)
+   0296 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   029B callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02A0 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02A5 ldc.i4 225
+   02AA ldarg.0 
+   02AB ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamPower(Assets.Scripts.UI.CUIEvent)
+   02B1 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02B6 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02BB call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02C0 ldc.i4 226
+   02C5 ldarg.0 
+   02C6 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamNum(Assets.Scripts.UI.CUIEvent)
+   02CC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02D1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02D6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02DB ldc.i4 233
+   02E0 ldarg.0 
+   02E1 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenVideoUrl(Assets.Scripts.UI.CUIEvent)
+   02E7 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02EC callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02F1 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02F6 ldc.i4 1807
+   02FB ldarg.0 
+   02FC ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenExplore(Assets.Scripts.UI.CUIEvent)
+   0302 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0307 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   030C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0311 ldc.i4 229
+   0316 ldarg.0 
+   0317 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnExploreListScroll(Assets.Scripts.UI.CUIEvent)
+   031D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0322 callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0327 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   032C ldc.i4 230
+   0331 ldarg.0 
+   0332 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnExploreSelect(Assets.Scripts.UI.CUIEvent)
+   0338 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   033D callvirt System.Void Assets.Scripts.UI.CUIEventManager::AddUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0342 call !0 Singleton`1<EventRouter>::get_instance()
+   0347 ldsfld EventID::ShopBuy_LvlChallengeTime
+   034C ldarg.0 
+   034D ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnBuyPlayTimeRsp(CSProtocol.CSPkg)
+   0353 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   0358 callvirt System.Void EventRouter::AddEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   035D call !0 Singleton`1<EventRouter>::get_instance()
+   0362 ldsfld EventID::SINGLEGAME_ERR_FREEHERO
+   0367 ldarg.0 
+   0368 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnFreeHeroChanged()
+   036E newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0373 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   0378 call !0 Singleton`1<EventRouter>::get_instance()
+   037D ldsfld EventID::GLOBAL_REFRESH_TIME
+   0382 ldsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache0
+   0387 brtrue.s IL_039a: ldsfld System.Action Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache0
+   0389 ldnull 
+   038A ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ResetElitePlayNum()
+   0390 newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0395 stsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache0
+   039A ldsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache0
+   039F callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   03A4 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::UnInit()
+   0006 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   000B ldc.i4 200
+   0010 ldarg.0 
+   0011 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_OpenForm(Assets.Scripts.UI.CUIEvent)
+   0017 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   001C callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0021 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0026 ldc.i4 216
+   002B ldarg.0 
+   002C ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_CloseForm(Assets.Scripts.UI.CUIEvent)
+   0032 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0037 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   003C call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0041 ldc.i4 231
+   0046 ldarg.0 
+   0047 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectLevel(Assets.Scripts.UI.CUIEvent)
+   004D newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0052 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0057 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   005C ldc.i4 232
+   0061 ldarg.0 
+   0062 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectDifficult(Assets.Scripts.UI.CUIEvent)
+   0068 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   006D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0072 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0077 ldc.i4 201
+   007C ldarg.0 
+   007D ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectChapter(Assets.Scripts.UI.CUIEvent)
+   0083 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0088 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   008D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0092 ldc.i4 227
+   0097 ldarg.0 
+   0098 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectPreChapter(Assets.Scripts.UI.CUIEvent)
+   009E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00A3 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00A8 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00AD ldc.i4 228
+   00B2 ldarg.0 
+   00B3 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnAdv_SelectNextChapter(Assets.Scripts.UI.CUIEvent)
+   00B9 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00BE callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00C3 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00C8 ldc.i4 202
+   00CD ldarg.0 
+   00CE ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnLevelDetail_OpenForm(Assets.Scripts.UI.CUIEvent)
+   00D4 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00D9 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00DE call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00E3 ldc.i4 206
+   00E8 ldarg.0 
+   00E9 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenChooseHero(Assets.Scripts.UI.CUIEvent)
+   00EF newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   00F4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   00F9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   00FE ldc.i4 210
+   0103 ldarg.0 
+   0104 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnChooseHeroReady(Assets.Scripts.UI.CUIEvent)
+   010A newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   010F callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0114 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0119 ldc.i4 207
+   011E ldarg.0 
+   011F ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnMopup(Assets.Scripts.UI.CUIEvent)
+   0125 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   012A callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0134 ldc.i4 208
+   0139 ldarg.0 
+   013A ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnMopupTenTimes(Assets.Scripts.UI.CUIEvent)
+   0140 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0145 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   014A call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   014F ldc.i4 211
+   0154 ldarg.0 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnConfirmDiamondMopup(Assets.Scripts.UI.CUIEvent)
+   015B newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0160 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0165 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   016A ldc.i4 222
+   016F ldarg.0 
+   0170 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OpenChapterRewardPanel(Assets.Scripts.UI.CUIEvent)
+   0176 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   017B callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0180 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0185 ldc.i4 223
+   018A ldarg.0 
+   018B ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::CloseChapterRewardPanel(Assets.Scripts.UI.CUIEvent)
+   0191 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0196 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   019B call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01A0 ldc.i4 215
+   01A5 ldarg.0 
+   01A6 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::GetChapterReward(Assets.Scripts.UI.CUIEvent)
+   01AC newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01B1 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01B6 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01BB ldc.i4 214
+   01C0 ldarg.0 
+   01C1 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnBuyPlayTime(Assets.Scripts.UI.CUIEvent)
+   01C7 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01CC callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01D1 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01D6 ldc.i4 218
+   01DB ldarg.0 
+   01DC ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnConfirmBuyPlayTime(Assets.Scripts.UI.CUIEvent)
+   01E2 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   01E7 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   01EC call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   01F1 ldc.i4 219
+   01F6 ldarg.0 
+   01F7 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmItemFullMopup(Assets.Scripts.UI.CUIEvent)
+   01FD newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0202 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0207 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   020C ldc.i4 220
+   0211 ldarg.0 
+   0212 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmItemFullAdv(Assets.Scripts.UI.CUIEvent)
+   0218 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   021D callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0222 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0227 ldc.i4 224
+   022C ldarg.0 
+   022D ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnCloseSettleForm(Assets.Scripts.UI.CUIEvent)
+   0233 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0238 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   023D call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0242 ldc.i4 225
+   0247 ldarg.0 
+   0248 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamPower(Assets.Scripts.UI.CUIEvent)
+   024E newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0253 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0258 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   025D ldc.i4 226
+   0262 ldarg.0 
+   0263 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamNum(Assets.Scripts.UI.CUIEvent)
+   0269 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   026E callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   0273 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0278 ldc.i4 233
+   027D ldarg.0 
+   027E ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenVideoUrl(Assets.Scripts.UI.CUIEvent)
+   0284 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   0289 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   028E call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   0293 ldc.i4 1807
+   0298 ldarg.0 
+   0299 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnOpenExplore(Assets.Scripts.UI.CUIEvent)
+   029F newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02A4 callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02A9 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02AE ldc.i4 229
+   02B3 ldarg.0 
+   02B4 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnExploreListScroll(Assets.Scripts.UI.CUIEvent)
+   02BA newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02BF callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02C4 call !0 Singleton`1<Assets.Scripts.UI.CUIEventManager>::GetInstance()
+   02C9 ldc.i4 230
+   02CE ldarg.0 
+   02CF ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnExploreSelect(Assets.Scripts.UI.CUIEvent)
+   02D5 newobj System.Void System.Action`1<Assets.Scripts.UI.CUIEvent>::.ctor(System.Object,System.IntPtr)
+   02DA callvirt System.Void Assets.Scripts.UI.CUIEventManager::RemoveUIEventListener(Assets.Scripts.UI.enUIEventID,System.Action`1<Assets.Scripts.UI.CUIEvent>)
+   02DF call !0 Singleton`1<EventRouter>::get_instance()
+   02E4 ldsfld EventID::ShopBuy_LvlChallengeTime
+   02E9 ldarg.0 
+   02EA ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnBuyPlayTimeRsp(CSProtocol.CSPkg)
+   02F0 newobj System.Void System.Action`1<CSProtocol.CSPkg>::.ctor(System.Object,System.IntPtr)
+   02F5 callvirt System.Void EventRouter::RemoveEventHandler<CSProtocol.CSPkg>(System.Int32,System.Action`1<!!0>)
+   02FA call !0 Singleton`1<EventRouter>::get_instance()
+   02FF ldsfld EventID::SINGLEGAME_ERR_FREEHERO
+   0304 ldarg.0 
+   0305 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::OnFreeHeroChanged()
+   030B newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0310 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0315 call !0 Singleton`1<EventRouter>::get_instance()
+   031A ldsfld EventID::GLOBAL_REFRESH_TIME
+   031F ldsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache1
+   0324 brtrue.s IL_0337: ldsfld System.Action Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache1
+   0326 ldnull 
+   0327 ldftn System.Void Assets.Scripts.GameSystem.CAdventureSys::ResetElitePlayNum()
+   032D newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0332 stsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache1
+   0337 ldsfld Assets.Scripts.GameSystem.CAdventureSys::<>f__mg$cache1
+   033C callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0341 ret 
+== System.Void Clear() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.0 
+   0002 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   000E ldarg.0 
+   000F ldc.i4.0 
+   0010 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0015 ret 
+== System.Void OpenAdvForm(System.Int32 chapterId, System.Int32 LevelNo, System.Int32 difficulty) attrs=Public, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   000A brfalse IL_002c: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   000F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0014 ldstr PVP_Matching
+   0019 ldc.i4.1 
+   001A ldc.r4 1.5
+   001F ldnull 
+   0020 ldc.i4.0 
+   0021 newarr System.Object
+   0026 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   002B ret 
+   002C call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0031 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0036 brfalse IL_0046: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   003B call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   0040 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   0045 ret 
+   0046 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   004B callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   0050 brfalse IL_0060: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0055 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   005A callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   005F ret 
+   0060 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0065 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   006A ldc.i4.1 
+   006B ldc.i4.1 
+   006C ldnull 
+   006D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   0072 stloc.0 
+   0073 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0078 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   007D stloc.1 
+   007E ldloc.1 
+   007F brfalse IL_014b: ret
+   0084 ldarg.0 
+   0085 ldarg.1 
+   0086 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   008B ldarg.0 
+   008C ldarg.3 
+   008D stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0092 ldarg.0 
+   0093 ldarg.2 
+   0094 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0099 ldarg.0 
+   009A ldarg.0 
+   009B ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00A0 ldarg.0 
+   00A1 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00AC call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelVaild(System.Int32,System.Int32,System.Int32)
+   00B1 brtrue IL_00fc: ldarg.0
+   00B6 ldc.i4.0 
+   00B7 ldstr The Level is Invaild , chapterNo[{0}],levelNo[{1}],difficulty[{2}]
+   00BC ldarg.0 
+   00BD ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00C2 box System.Int32
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00CD box System.Int32
+   00D2 ldarg.0 
+   00D3 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00D8 box System.Int32
+   00DD call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   00E2 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   00E7 ldarg.0 
+   00E8 ldc.i4.1 
+   00E9 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00EE ldarg.0 
+   00EF ldc.i4.1 
+   00F0 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00F5 ldarg.0 
+   00F6 ldc.i4.1 
+   00F7 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00FC ldarg.0 
+   00FD ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0102 ldarg.0 
+   0103 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0108 ldarg.0 
+   0109 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   010E ldloca.s V_2
+   0110 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   0115 brtrue IL_011b: ldarg.0
+   011A ret 
+   011B ldarg.0 
+   011C ldloca.s V_2
+   011E ldfld ResData.ResLevelCfgInfo::iCfgID
+   0123 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0128 ldarg.0 
+   0129 call System.Void Assets.Scripts.GameSystem.CAdventureSys::CheckUnlockTips()
+   012E ldloc.0 
+   012F ldarg.0 
+   0130 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0135 ldarg.0 
+   0136 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   013B ldarg.0 
+   013C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0141 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0146 br IL_014b: ret
+   014B ret 
+== System.Void CheckUnlockTips() attrs=Private, HideBySig maxstack=12
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0243: ret
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0017 brfalse IL_0027: ldarg.0
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.CAdventureSys::m_difficultyStatus
+   0022 brtrue IL_00f4: ldc.i4.m1
+   0027 ldarg.0 
+   0028 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   002D newarr System.Byte
+   0032 stfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0037 ldarg.0 
+   0038 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   003D ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   0042 mul 
+   0043 newarr System.Byte
+   0048 stfld Assets.Scripts.GameSystem.CAdventureSys::m_difficultyStatus
+   004D ldc.i4.0 
+   004E stloc.1 
+   004F br IL_0079: ldloc.1
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   005A ldloc.1 
+   005B call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0060 ldloc.1 
+   0061 ldc.i4.1 
+   0062 add 
+   0063 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   0068 brfalse IL_0073: ldc.i4.0
+   006D ldc.i4.1 
+   006E br IL_0074: stelem.i1
+   0073 ldc.i4.0 
+   0074 stelem.i1 
+   0075 ldloc.1 
+   0076 ldc.i4.1 
+   0077 add 
+   0078 stloc.1 
+   0079 ldloc.1 
+   007A ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   007F blt IL_0054: ldarg.0
+   0084 ldc.i4.0 
+   0085 stloc.2 
+   0086 br IL_00e4: ldloc.2
+   008B ldc.i4.0 
+   008C stloc.3 
+   008D br IL_00d5: ldloc.3
+   0092 ldarg.0 
+   0093 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0098 ldloc.3 
+   0099 ldelem.u1 
+   009A ldc.i4.1 
+   009B bne.un IL_00d1: ldloc.3
+   00A0 ldloc.0 
+   00A1 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   00A6 ldloc.2 
+   00A7 ldelem.ref 
+   00A8 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   00AD ldloc.3 
+   00AE ldelem.ref 
+   00AF ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   00B4 ldc.i4.0 
+   00B5 ldelem.ref 
+   00B6 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   00BB brfalse IL_00d1: ldloc.3
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_difficultyStatus
+   00C6 ldloc.2 
+   00C7 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   00CC mul 
+   00CD ldloc.3 
+   00CE add 
+   00CF ldc.i4.1 
+   00D0 stelem.i1 
+   00D1 ldloc.3 
+   00D2 ldc.i4.1 
+   00D3 add 
+   00D4 stloc.3 
+   00D5 ldloc.3 
+   00D6 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   00DB blt IL_0092: ldarg.0
+   00E0 ldloc.2 
+   00E1 ldc.i4.1 
+   00E2 add 
+   00E3 stloc.2 
+   00E4 ldloc.2 
+   00E5 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   00EA blt IL_008b: ldc.i4.0
+   00EF br IL_0243: ret
+   00F4 ldc.i4.m1 
+   00F5 stloc.s V_4
+   00F7 ldc.i4.0 
+   00F8 stloc.s V_5
+   00FA ldc.i4.0 
+   00FB stloc.s V_6
+   00FD br IL_0142: ldloc.s V_6
+   0102 ldarg.0 
+   0103 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0108 ldloc.s V_6
+   010A ldelem.u1 
+   010B brtrue IL_013c: ldloc.s V_6
+   0110 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0115 ldloc.s V_6
+   0117 ldc.i4.1 
+   0118 add 
+   0119 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   011E brfalse IL_013c: ldloc.s V_6
+   0123 ldarg.0 
+   0124 ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0129 ldloc.s V_6
+   012B ldc.i4.1 
+   012C stelem.i1 
+   012D ldloc.s V_6
+   012F stloc.s V_4
+   0131 ldarg.0 
+   0132 ldloc.s V_6
+   0134 ldc.i4.1 
+   0135 add 
+   0136 conv.u1 
+   0137 stfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   013C ldloc.s V_6
+   013E ldc.i4.1 
+   013F add 
+   0140 stloc.s V_6
+   0142 ldloc.s V_6
+   0144 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0149 blt IL_0102: ldarg.0
+   014E ldc.i4.0 
+   014F stloc.s V_7
+   0151 br IL_01d9: ldloc.s V_7
+   0156 ldc.i4.0 
+   0157 stloc.s V_8
+   0159 br IL_01c7: ldloc.s V_8
+   015E ldarg.0 
+   015F ldfld Assets.Scripts.GameSystem.CAdventureSys::m_chapterStatus
+   0164 ldloc.s V_8
+   0166 ldelem.u1 
+   0167 ldc.i4.1 
+   0168 bne.un IL_01c1: ldloc.s V_8
+   016D ldarg.0 
+   016E ldfld Assets.Scripts.GameSystem.CAdventureSys::m_difficultyStatus
+   0173 ldloc.s V_7
+   0175 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   017A mul 
+   017B ldloc.s V_8
+   017D add 
+   017E ldelem.u1 
+   017F brtrue IL_01c1: ldloc.s V_8
+   0184 ldloc.0 
+   0185 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   018A ldloc.s V_7
+   018C ldelem.ref 
+   018D ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0192 ldloc.s V_8
+   0194 ldelem.ref 
+   0195 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   019A ldc.i4.0 
+   019B ldelem.ref 
+   019C ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   01A1 brfalse IL_01c1: ldloc.s V_8
+   01A6 ldloc.s V_7
+   01A8 stloc.s V_5
+   01AA ldloc.s V_8
+   01AC stloc.s V_4
+   01AE ldarg.0 
+   01AF ldfld Assets.Scripts.GameSystem.CAdventureSys::m_difficultyStatus
+   01B4 ldloc.s V_7
+   01B6 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   01BB mul 
+   01BC ldloc.s V_8
+   01BE add 
+   01BF ldc.i4.1 
+   01C0 stelem.i1 
+   01C1 ldloc.s V_8
+   01C3 ldc.i4.1 
+   01C4 add 
+   01C5 stloc.s V_8
+   01C7 ldloc.s V_8
+   01C9 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   01CE blt IL_015e: ldarg.0
+   01D3 ldloc.s V_7
+   01D5 ldc.i4.1 
+   01D6 add 
+   01D7 stloc.s V_7
+   01D9 ldloc.s V_7
+   01DB ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   01E0 blt IL_0156: ldc.i4.0
+   01E5 ldloc.s V_4
+   01E7 ldc.i4.0 
+   01E8 blt IL_0243: ret
+   01ED ldloc.s V_4
+   01EF call ResData.ResChapterInfo ResData.GameDataMgr/chapterInfoDatabin::GetByIndex(System.Int32)
+   01F4 stloc.s V_9
+   01F6 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   01FB ldstr Adventure_Unlock_Tips
+   0200 ldc.i4.1 
+   0201 ldc.r4 1
+   0206 ldnull 
+   0207 ldc.i4.2 
+   0208 newarr System.Object
+   020D dup 
+   020E ldc.i4.0 
+   020F ldloca.s V_9
+   0211 call System.String ResData.ResChapterInfo::get_szChapterName()
+   0216 call System.String Utility::UTF8Convert(System.String)
+   021B stelem.ref 
+   021C dup 
+   021D ldc.i4.1 
+   021E call !0 Singleton`1<CTextManager>::get_instance()
+   0223 ldstr Adventure_Level_{0}
+   0228 ldloc.s V_5
+   022A ldc.i4.1 
+   022B add 
+   022C box System.Int32
+   0231 call System.String System.String::Format(System.String,System.Object)
+   0236 ldc.i4.1 
+   0237 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   023C stelem.ref 
+   023D callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0242 ret 
+   0243 ret 
+== System.Void OnAdv_OpenForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<SCModuleControl>::get_instance()
+   0005 ldc.i4.2 
+   0006 callvirt System.Boolean SCModuleControl::GetActiveModule(CSProtocol.COM_CLIENT_PLAY_TYPE)
+   000B brtrue IL_0026: call !0 Singleton`1<SCModuleControl>::get_instance()
+   0010 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0015 call !0 Singleton`1<SCModuleControl>::get_instance()
+   001A callvirt System.String SCModuleControl::get_PvpAndPvpOffTips()
+   001F ldc.i4.0 
+   0020 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,System.Boolean)
+   0025 ret 
+   0026 call !0 Singleton`1<SCModuleControl>::get_instance()
+   002B ldc.i4.2 
+   002C callvirt System.Void SCModuleControl::HandleShowTipsBeforeActiveModule(CSProtocol.COM_CLIENT_PLAY_TYPE)
+   0031 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0036 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   003B brfalse IL_005d: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0040 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0045 ldstr PVP_Matching
+   004A ldc.i4.1 
+   004B ldc.r4 1.5
+   0050 ldnull 
+   0051 ldc.i4.0 
+   0052 newarr System.Object
+   0057 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   005C ret 
+   005D call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0062 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0067 brfalse IL_0077: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   006C call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   0071 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   0076 ret 
+   0077 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   007C callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   0081 brfalse IL_0091: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0086 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   008B callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   0090 ret 
+   0091 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0096 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   009B ldc.i4.1 
+   009C ldc.i4.1 
+   009D ldnull 
+   009E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   00A3 stloc.0 
+   00A4 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   00A9 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   00AE stloc.1 
+   00AF ldloc.1 
+   00B0 brfalse IL_01ab: ret
+   00B5 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingTrainingSys>::get_instance()
+   00BA ldc.i4.0 
+   00BB stfld Assets.Scripts.GameSystem.CMatchingTrainingSys::bTrainingAdv
+   00C0 ldarg.0 
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00CD ldarg.0 
+   00CE ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00D3 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelVaild(System.Int32,System.Int32,System.Int32)
+   00D8 brtrue IL_00ff: ldarg.0
+   00DD ldarg.0 
+   00DE call System.Byte[] Assets.Scripts.GameSystem.CAdventureSys::GetCacheLevel()
+   00E3 stloc.2 
+   00E4 ldarg.0 
+   00E5 ldloc.2 
+   00E6 ldc.i4.0 
+   00E7 ldelem.u1 
+   00E8 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00ED ldarg.0 
+   00EE ldloc.2 
+   00EF ldc.i4.2 
+   00F0 ldelem.u1 
+   00F1 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00F6 ldarg.0 
+   00F7 ldloc.2 
+   00F8 ldc.i4.1 
+   00F9 ldelem.u1 
+   00FA stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00FF ldarg.0 
+   0100 ldarg.0 
+   0101 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0106 ldarg.0 
+   0107 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   010C ldarg.0 
+   010D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0112 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelVaild(System.Int32,System.Int32,System.Int32)
+   0117 brtrue IL_0131: ldarg.0
+   011C ldarg.0 
+   011D ldc.i4.1 
+   011E stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0123 ldarg.0 
+   0124 ldc.i4.1 
+   0125 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   012A ldarg.0 
+   012B ldc.i4.1 
+   012C stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0131 ldarg.0 
+   0132 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0137 ldarg.0 
+   0138 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   013D ldarg.0 
+   013E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0143 ldloca.s V_3
+   0145 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   014A brtrue IL_0150: ldarg.0
+   014F ret 
+   0150 ldarg.0 
+   0151 ldloca.s V_3
+   0153 ldfld ResData.ResLevelCfgInfo::iCfgID
+   0158 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   015D ldarg.0 
+   015E call System.Void Assets.Scripts.GameSystem.CAdventureSys::CheckUnlockTips()
+   0163 ldloc.0 
+   0164 ldarg.0 
+   0165 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   016A ldarg.0 
+   016B ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0170 ldarg.0 
+   0171 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0176 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   017B ldarg.0 
+   017C ldarg.0 
+   017D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0182 ldarg.0 
+   0183 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0188 ldarg.0 
+   0189 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   018E call Assets.Scripts.GameSystem.EnterAdvError Assets.Scripts.GameSystem.CAdventureSys::CanEnterLevel(System.Int32,System.Int32,System.Int32)
+   0193 brtrue IL_01a6: br IL_01ab
+   0198 ldc.i4.s 12
+   019A ldc.i4.0 
+   019B newarr System.UInt32
+   01A0 call System.Boolean NewbieGuideManager::CheckTriggerTime(NewbieGuideTriggerTimeType,System.UInt32[])
+   01A5 pop 
+   01A6 br IL_01ab: ret
+   01AB ret 
+== System.Void OnAdv_CloseForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F call !0 Singleton`1<CResourceManager>::get_instance()
+   0014 ldc.i4.0 
+   0015 callvirt System.Void CResourceManager::UnloadUnusedAssets(System.Boolean)
+   001A ret 
+== System.Void OnAdv_SelectChapter(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldarg.0 
+   000E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0013 bne.un IL_0019: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0018 ret 
+   0019 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001E ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   0023 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_0108: ldarg.0
+   0035 ldarg.0 
+   0036 ldloc.0 
+   0037 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   003C ldarg.0 
+   003D ldarg.0 
+   003E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0043 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLastDifficulty(System.Int32)
+   0048 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   004D ldarg.0 
+   004E ldarg.0 
+   004F ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   005A call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLastLevel(System.Int32,System.Int32)
+   005F stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0064 ldarg.0 
+   0065 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   006A ldarg.0 
+   006B ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0070 ldarg.0 
+   0071 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0076 ldloca.s V_2
+   0078 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   007D brtrue IL_0083: ldarg.0
+   0082 ret 
+   0083 ldarg.0 
+   0084 ldloca.s V_2
+   0086 ldfld ResData.ResLevelCfgInfo::iCfgID
+   008B stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0096 ldarg.0 
+   0097 ldfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   009C bne.un IL_00a8: ldloc.1
+   00A1 ldarg.0 
+   00A2 ldc.i4.0 
+   00A3 stfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   00A8 ldloc.1 
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00AF ldarg.0 
+   00B0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00B5 ldarg.0 
+   00B6 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00BB call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00C0 ldloc.1 
+   00C1 ldarg.0 
+   00C2 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00CD ldarg.0 
+   00CE ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00D3 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00D8 ldloc.1 
+   00D9 ldarg.0 
+   00DA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00DF ldarg.0 
+   00E0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00E5 ldarg.0 
+   00E6 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00EB call System.Void Assets.Scripts.GameSystem.CAdventureView::InitDifficultList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00F0 ldloc.1 
+   00F1 ldarg.0 
+   00F2 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00F7 ldarg.0 
+   00F8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00FD ldarg.0 
+   00FE ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0103 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0108 ldarg.0 
+   0109 ldarg.0 
+   010A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   010F conv.u1 
+   0110 ldarg.0 
+   0111 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0116 conv.u1 
+   0117 ldarg.0 
+   0118 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   011D conv.u1 
+   011E call System.Void Assets.Scripts.GameSystem.CAdventureSys::SetCacheLevel(System.Byte,System.Byte,System.Byte)
+   0123 ret 
+== System.Void OnAdv_SelectPreChapter(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_00b0: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0022 ldc.i4.1 
+   0023 sub 
+   0024 ldc.i4.0 
+   0025 ble IL_00b0: ret
+   002A ldarg.0 
+   002B dup 
+   002C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0031 ldc.i4.1 
+   0032 sub 
+   0033 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   0044 bne.un IL_0050: ldloc.0
+   0049 ldarg.0 
+   004A ldc.i4.0 
+   004B stfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   0050 ldloc.0 
+   0051 ldarg.0 
+   0052 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0057 ldarg.0 
+   0058 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   005D ldarg.0 
+   005E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0063 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0068 ldloc.0 
+   0069 ldarg.0 
+   006A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   006F ldarg.0 
+   0070 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0075 ldarg.0 
+   0076 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   007B call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0080 ldloc.0 
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0087 ldarg.0 
+   0088 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   008D ldarg.0 
+   008E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0093 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitDifficultList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0098 ldloc.0 
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   009F ldarg.0 
+   00A0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00A5 ldarg.0 
+   00A6 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00AB call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00B0 ret 
+== System.Void OnAdv_SelectNextChapter(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_00b4: ret
+   001C ldarg.0 
+   001D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0022 ldc.i4.1 
+   0023 add 
+   0024 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0029 bgt IL_00b4: ret
+   002E ldarg.0 
+   002F dup 
+   0030 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0035 ldc.i4.1 
+   0036 add 
+   0037 stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   003C ldarg.0 
+   003D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0042 ldarg.0 
+   0043 ldfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   0048 bne.un IL_0054: ldloc.0
+   004D ldarg.0 
+   004E ldc.i4.0 
+   004F stfld Assets.Scripts.GameSystem.CAdventureSys::bNewChapterId
+   0054 ldloc.0 
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   005B ldarg.0 
+   005C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0067 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   006C ldloc.0 
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0073 ldarg.0 
+   0074 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   007F call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0084 ldloc.0 
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   008B ldarg.0 
+   008C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0097 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitDifficultList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   009C ldloc.0 
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00A3 ldarg.0 
+   00A4 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00A9 ldarg.0 
+   00AA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00AF call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00B4 ret 
+== System.Void OnAdv_SelectLevel(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0006 ldarg.1 
+   0007 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000C ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0011 bne.un IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldarg.1 
+   0019 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001E ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0023 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   002E ldarg.0 
+   002F ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   003A ldloca.s V_0
+   003C call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   0041 brtrue IL_0047: ldarg.0
+   0046 ret 
+   0047 ldarg.0 
+   0048 ldloca.s V_0
+   004A ldfld ResData.ResLevelCfgInfo::iCfgID
+   004F stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0054 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0059 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   005E callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0063 stloc.1 
+   0064 ldloc.1 
+   0065 ldnull 
+   0066 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   006B brfalse IL_00b8: ldarg.0
+   0070 ldloc.1 
+   0071 ldarg.0 
+   0072 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0077 ldarg.0 
+   0078 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   007D ldarg.0 
+   007E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0083 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0088 ldloc.1 
+   0089 ldarg.0 
+   008A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   008F ldarg.0 
+   0090 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0095 ldarg.0 
+   0096 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   009B call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00A0 ldloc.1 
+   00A1 ldarg.0 
+   00A2 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00A7 ldarg.0 
+   00A8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00AD ldarg.0 
+   00AE ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00B3 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00B8 ldarg.0 
+   00B9 ldarg.0 
+   00BA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00BF conv.u1 
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00C6 conv.u1 
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00CD conv.u1 
+   00CE call System.Void Assets.Scripts.GameSystem.CAdventureSys::SetCacheLevel(System.Byte,System.Byte,System.Byte)
+   00D3 ret 
+== System.Void OnAdv_SelectDifficult(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0006 ldarg.1 
+   0007 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000C ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0011 bne.un IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 ldarg.1 
+   0019 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   001E ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0023 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0028 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002D ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   0032 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0037 stloc.0 
+   0038 ldloc.0 
+   0039 ldnull 
+   003A call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003F brfalse IL_00da: ldarg.0
+   0044 ldarg.0 
+   0045 ldarg.0 
+   0046 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   004B ldarg.0 
+   004C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0051 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLastLevel(System.Int32,System.Int32)
+   0056 ldarg.0 
+   0057 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   005C call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   0061 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0066 ldarg.0 
+   0067 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   006C ldarg.0 
+   006D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0072 ldarg.0 
+   0073 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0078 ldloca.s V_1
+   007A call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   007F brtrue IL_0085: ldarg.0
+   0084 ret 
+   0085 ldarg.0 
+   0086 ldloca.s V_1
+   0088 ldfld ResData.ResLevelCfgInfo::iCfgID
+   008D stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0092 ldloc.0 
+   0093 ldarg.0 
+   0094 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0099 ldarg.0 
+   009A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   009F ldarg.0 
+   00A0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00A5 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00AA ldloc.0 
+   00AB ldarg.0 
+   00AC ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00B1 ldarg.0 
+   00B2 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00B7 ldarg.0 
+   00B8 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00BD call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00C2 ldloc.0 
+   00C3 ldarg.0 
+   00C4 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00C9 ldarg.0 
+   00CA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00CF ldarg.0 
+   00D0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00D5 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00DA ldarg.0 
+   00DB ldarg.0 
+   00DC ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00E1 conv.u1 
+   00E2 ldarg.0 
+   00E3 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00E8 conv.u1 
+   00E9 ldarg.0 
+   00EA ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00EF conv.u1 
+   00F0 call System.Void Assets.Scripts.GameSystem.CAdventureSys::SetCacheLevel(System.Byte,System.Byte,System.Byte)
+   00F5 ret 
+== System.Void OnLevelDetail_OpenForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0012 ldloca.s V_0
+   0014 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::GetLevelCfg(System.Int32,System.Int32,System.Int32,ResData.ResLevelCfgInfo&)
+   0019 brtrue IL_001f: ldarg.0
+   001E ret 
+   001F ldarg.0 
+   0020 ldarg.0 
+   0021 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0026 ldarg.0 
+   0027 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   002C ldarg.0 
+   002D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0032 call Assets.Scripts.GameSystem.EnterAdvError Assets.Scripts.GameSystem.CAdventureSys::CanEnterLevel(System.Int32,System.Int32,System.Int32)
+   0037 stloc.1 
+   0038 ldloc.1 
+   0039 ldc.i4.1 
+   003A bne.un IL_008d: ldloc.1
+   003F ldarg.0 
+   0040 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0045 ldc.i4.1 
+   0046 bne.un IL_006c: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   004B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0050 ldstr Level_Error_Tips_1
+   0055 ldc.i4.1 
+   0056 ldc.r4 1.5
+   005B ldnull 
+   005C ldc.i4.0 
+   005D newarr System.Object
+   0062 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0067 br IL_0088: br IL_00e6
+   006C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0071 ldstr Level_Error_Tips_3
+   0076 ldc.i4.1 
+   0077 ldc.r4 1.5
+   007C ldnull 
+   007D ldc.i4.0 
+   007E newarr System.Object
+   0083 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0088 br IL_00e6: ret
+   008D ldloc.1 
+   008E ldc.i4.2 
+   008F bne.un IL_00b5: ldloc.1
+   0094 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0099 ldstr Level_Error_Tips_2
+   009E ldc.i4.1 
+   009F ldc.r4 1.5
+   00A4 ldnull 
+   00A5 ldc.i4.0 
+   00A6 newarr System.Object
+   00AB callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   00B0 br IL_00e6: ret
+   00B5 ldloc.1 
+   00B6 brtrue IL_00e6: ret
+   00BB call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C0 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_LEVEL_FORM
+   00C5 ldc.i4.0 
+   00C6 ldc.i4.1 
+   00C7 ldnull 
+   00C8 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   00CD stloc.2 
+   00CE ldloc.2 
+   00CF ldarg.0 
+   00D0 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   00D5 ldarg.0 
+   00D6 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   00DB ldarg.0 
+   00DC ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00E1 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00E6 ret 
+== System.Void OnCloseSettleForm(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call System.Void Assets.Scripts.GameSystem.CAdventureView::CheckMopupLevelUp()
+   0005 ret 
+== System.Void OnOpenChooseHero(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt System.Boolean UnityEngine.UI.Selectable::get_interactable()
+   0012 brfalse IL_0142: ret
+   0017 ldloca.s V_1
+   0019 ldarg.0 
+   001A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   001F call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0024 ldstr Can't find level config -- ID: {0}
+   0029 ldc.i4.1 
+   002A newarr System.Object
+   002F dup 
+   0030 ldc.i4.0 
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0037 box System.Int32
+   003C stelem.ref 
+   003D call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0042 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0047 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   004C stloc.2 
+   004D ldloc.2 
+   004E ldnull 
+   004F ceq 
+   0051 ldc.i4.0 
+   0052 ceq 
+   0054 ldstr Master role info is NULL!
+   0059 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   005E call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0063 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   0068 brfalse IL_008a: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   006D call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0072 ldstr PVP_Matching
+   0077 ldc.i4.1 
+   0078 ldc.r4 1.5
+   007D ldnull 
+   007E ldc.i4.0 
+   007F newarr System.Object
+   0084 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0089 ret 
+   008A call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   008F callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   0094 brfalse IL_00a4: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0099 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   009E callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   00A3 ret 
+   00A4 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00A9 callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   00AE brfalse IL_00be: ldloca.s V_3
+   00B3 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00B8 callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   00BD ret 
+   00BE ldloca.s V_3
+   00C0 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::GetInstance()
+   00C5 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   00CA call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   00CF pop 
+   00D0 newobj System.Void CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::.ctor()
+   00D5 stloc.s V_4
+   00D7 ldloc.s V_4
+   00D9 ldloca.s V_3
+   00DB ldfld ResData.ResLevelCfgInfo::iCfgID
+   00E0 stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::iLevelID
+   00E5 ldloc.s V_4
+   00E7 ldloca.s V_3
+   00E9 ldfld ResData.ResLevelCfgInfo::iChapterId
+   00EE conv.u1 
+   00EF stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bChapterNo
+   00F4 ldloc.s V_4
+   00F6 ldloca.s V_3
+   00F8 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   00FD stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bLevelNo
+   0102 ldloc.s V_4
+   0104 ldarg.0 
+   0105 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   010A conv.u1 
+   010B stfld CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE::bDifficultType
+   0110 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0115 ldloca.s V_3
+   0117 ldfld ResData.ResLevelCfgInfo::dwBattleListID
+   011C ldloc.s V_4
+   011E ldloca.s V_3
+   0120 call System.String ResData.ResLevelCfgInfo::get_szName()
+   0125 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::SetPVEDataWithAdventure(System.UInt32,CSProtocol.CSDT_SINGLE_GAME_OF_ADVENTURE,System.String)
+   012A call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   012F ldc.i4.0 
+   0130 ldloca.s V_3
+   0132 ldfld ResData.ResLevelCfgInfo::iHeroNum
+   0137 conv.u1 
+   0138 ldc.i4.0 
+   0139 ldc.i4.0 
+   013A ldc.i4.0 
+   013B ldnull 
+   013C ldc.i4.0 
+   013D callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::OpenForm(Assets.Scripts.GameSystem.enSelectGameType,System.Byte,System.UInt32,System.Byte,System.Int32,CSProtocol.CSDT_VOTE_HERO_DETAIL,System.UInt32)
+   0142 ret 
+== System.Void OnChooseHeroReady(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt System.Boolean UnityEngine.UI.Selectable::get_interactable()
+   0012 brfalse IL_00da: ret
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   001D ldc.i4.0 
+   001E ceq 
+   0020 ldc.i4.0 
+   0021 ceq 
+   0023 call System.Void DebugHelper::Assert(System.Boolean)
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   002E ldc.i4.0 
+   002F ceq 
+   0031 ldc.i4.0 
+   0032 ceq 
+   0034 call System.Void DebugHelper::Assert(System.Boolean)
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   003F ldc.i4.0 
+   0040 ceq 
+   0042 ldc.i4.0 
+   0043 ceq 
+   0045 call System.Void DebugHelper::Assert(System.Boolean)
+   004A ldloca.s V_1
+   004C ldarg.0 
+   004D ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0052 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0057 call System.Void DebugHelper::Assert(System.Boolean)
+   005C call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0061 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0066 stloc.2 
+   0067 ldloc.2 
+   0068 ldnull 
+   0069 ceq 
+   006B ldc.i4.0 
+   006C ceq 
+   006E call System.Void DebugHelper::Assert(System.Boolean)
+   0073 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0078 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatching()
+   007D brfalse IL_009f: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0082 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0087 ldstr PVP_Matching
+   008C ldc.i4.1 
+   008D ldc.r4 1.5
+   0092 ldnull 
+   0093 ldc.i4.0 
+   0094 newarr System.Object
+   0099 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   009E ret 
+   009F call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   00A4 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   00A9 brfalse IL_00b9: call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00AE call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::get_instance()
+   00B3 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::CheckAndAlreadyInTeam()
+   00B8 ret 
+   00B9 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00BE callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   00C3 brfalse IL_00d3: ldarg.0
+   00C8 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   00CD callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   00D2 ret 
+   00D3 ldarg.0 
+   00D4 ldnull 
+   00D5 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamPower(Assets.Scripts.UI.CUIEvent)
+   00DA ret 
+== System.Void ConfirmCheckTeamPower(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0006 ldc.i4.1 
+   0007 ble IL_0039: ldarg.0
+   000C ldarg.0 
+   000D call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckTeamNum()
+   0012 brtrue IL_0039: ldarg.0
+   0017 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001C call !0 Singleton`1<CTextManager>::GetInstance()
+   0021 ldstr Adv_TeamNum_Confirm
+   0026 ldc.i4.1 
+   0027 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   002C ldc.i4 226
+   0031 ldc.i4.0 
+   0032 ldc.i4.0 
+   0033 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   0038 ret 
+   0039 ldarg.0 
+   003A ldnull 
+   003B call System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmCheckTeamNum(Assets.Scripts.UI.CUIEvent)
+   0040 ret 
+== System.Void ConfirmCheckTeamNum(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=7
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 ldloca.s V_0
+   0009 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckFullItem(System.String&)
+   000E brtrue IL_003e: ldarg.0
+   0013 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0018 call !0 Singleton`1<CTextManager>::GetInstance()
+   001D ldstr PVE_Level_Package_Item_Max_Tip_Level
+   0022 ldc.i4.1 
+   0023 newarr System.String
+   0028 dup 
+   0029 ldc.i4.0 
+   002A ldloc.0 
+   002B stelem.ref 
+   002C callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0031 ldc.i4 220
+   0036 ldc.i4.0 
+   0037 ldc.i4.0 
+   0038 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   003D ret 
+   003E ldarg.0 
+   003F ldnull 
+   0040 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ConfirmItemFullAdv(Assets.Scripts.UI.CUIEvent)
+   0045 ret 
+== System.Void OnOpenVideoUrl(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<CTextManager>::get_instance()
+   0005 ldstr Matching_Vedio_Url
+   000A ldc.i4.1 
+   000B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 call System.String Assets.Scripts.GameSystem.CLobbySystem::GetAppendUrlParam(System.String)
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ldc.i4.1 
+   001A ldc.i4.0 
+   001B call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenUrl(System.String,System.Boolean,System.Int32)
+   0020 ldc.i4.s 79
+   0022 call System.Void Assets.Scripts.GameSystem.CMiShuSystem::SendUIClickToServer(Assets.Scripts.GameSystem.enUIClickReprotID)
+   0027 ret 
+== System.Void ConfirmItemFullAdv(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0006 ldarg.0 
+   0007 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   000C call System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::SendSingleGameStartMsgSkipHeroSelect(System.Int32,System.Int32)
+   0011 ret 
+== System.Void OnMopup(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0005 ldc.i4.7 
+   0006 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::FucIsUnlock(ResData.RES_SPECIALFUNCUNLOCK_TYPE)
+   000B brfalse IL_0060: ldloca.s V_1
+   0010 ldarg.1 
+   0011 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0016 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   001B stloc.0 
+   001C ldloc.0 
+   001D callvirt System.Boolean UnityEngine.UI.Selectable::get_interactable()
+   0022 brfalse IL_003f: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0027 ldarg.0 
+   0028 ldc.i4.1 
+   0029 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckMopUpCondition(System.Int32)
+   002E brfalse IL_003a: br IL_005b
+   0033 ldarg.0 
+   0034 ldc.i4.1 
+   0035 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqMopup(System.Byte)
+   003A br IL_005b: br IL_008c
+   003F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0044 ldstr Mopup_Condition
+   0049 ldc.i4.1 
+   004A ldc.r4 1.5
+   004F ldnull 
+   0050 ldc.i4.0 
+   0051 newarr System.Object
+   0056 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   005B br IL_008c: ret
+   0060 ldloca.s V_1
+   0062 ldc.i4.7 
+   0063 call System.Boolean ResData.GameDataMgr/specialFunUnlockDatabin::FindByKey(ResData.ResSpecialFucUnlock&,System.UInt32)
+   0068 pop 
+   0069 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   006E ldloca.s V_1
+   0070 call System.String ResData.ResSpecialFucUnlock::get_szLockedTip()
+   0075 call System.String Utility::UTF8Convert(System.String)
+   007A ldc.i4.0 
+   007B ldc.r4 1.5
+   0080 ldnull 
+   0081 ldc.i4.0 
+   0082 newarr System.Object
+   0087 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   008C ret 
+== System.Void OnMopupTenTimes(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0005 ldc.i4.7 
+   0006 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::FucIsUnlock(ResData.RES_SPECIALFUNCUNLOCK_TYPE)
+   000B brfalse IL_006d: ldloca.s V_2
+   0010 ldarg.1 
+   0011 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0016 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   001B stloc.0 
+   001C ldloc.0 
+   001D callvirt System.Boolean UnityEngine.UI.Selectable::get_interactable()
+   0022 brfalse IL_004c: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0027 ldarg.1 
+   0028 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   002D ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0032 conv.u1 
+   0033 stloc.1 
+   0034 ldarg.0 
+   0035 ldloc.1 
+   0036 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckMopUpCondition(System.Int32)
+   003B brfalse IL_0047: br IL_0068
+   0040 ldarg.0 
+   0041 ldloc.1 
+   0042 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqMopup(System.Byte)
+   0047 br IL_0068: br IL_0099
+   004C call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0051 ldstr Mopup10_Condition
+   0056 ldc.i4.1 
+   0057 ldc.r4 1.5
+   005C ldnull 
+   005D ldc.i4.0 
+   005E newarr System.Object
+   0063 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0068 br IL_0099: ret
+   006D ldloca.s V_2
+   006F ldc.i4.7 
+   0070 call System.Boolean ResData.GameDataMgr/specialFunUnlockDatabin::FindByKey(ResData.ResSpecialFucUnlock&,System.UInt32)
+   0075 pop 
+   0076 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   007B ldloca.s V_2
+   007D call System.String ResData.ResSpecialFucUnlock::get_szLockedTip()
+   0082 call System.String Utility::UTF8Convert(System.String)
+   0087 ldc.i4.0 
+   0088 ldc.r4 1.5
+   008D ldnull 
+   008E ldc.i4.0 
+   008F newarr System.Object
+   0094 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0099 ret 
+== System.Void ConfirmItemFullMopup(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.1 
+   0001 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0006 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   000B conv.u1 
+   000C stloc.0 
+   000D ldarg.0 
+   000E ldloc.0 
+   000F call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqMopup(System.Byte)
+   0014 ret 
+== System.Void OnConfirmDiamondMopup(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=7
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldarg.1 
+   0007 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   000C ldfld Assets.Scripts.UI.stUIEventParams::tag
+   0011 conv.u1 
+   0012 stloc.1 
+   0013 ldarg.0 
+   0014 ldloca.s V_0
+   0016 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckFullItem(System.String&)
+   001B brtrue IL_0061: ldarg.0
+   0020 ldloca.s V_2
+   0022 initobj Assets.Scripts.UI.stUIEventParams
+   0028 ldloca.s V_2
+   002A ldloc.1 
+   002B stfld Assets.Scripts.UI.stUIEventParams::tag
+   0030 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0035 call !0 Singleton`1<CTextManager>::GetInstance()
+   003A ldstr PVE_Level_Package_Item_Max_Tip_Sweep
+   003F ldc.i4.1 
+   0040 newarr System.String
+   0045 dup 
+   0046 ldc.i4.0 
+   0047 ldloc.0 
+   0048 stelem.ref 
+   0049 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   004E ldc.i4 219
+   0053 ldc.i4.0 
+   0054 ldloc.2 
+   0055 ldc.i4.0 
+   0056 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.Boolean)
+   005B pop 
+   005C br IL_0068: ret
+   0061 ldarg.0 
+   0062 ldloc.1 
+   0063 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqMopup(System.Byte)
+   0068 ret 
+== System.Void OpenChapterRewardPanel(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldflda Assets.Scripts.UI.CUIEvent::m_eventParams
+   0008 ldfld Assets.Scripts.UI.stUIEventParams::tag
+   000D stloc.1 
+   000E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0013 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   0018 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001D stloc.2 
+   001E ldloc.2 
+   001F ldnull 
+   0020 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0025 brfalse IL_00ca: ret
+   002A ldarg.0 
+   002B ldloc.1 
+   002C stfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0031 ldarg.0 
+   0032 ldarg.0 
+   0033 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0038 ldarg.0 
+   0039 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   003E call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLastLevel(System.Int32,System.Int32)
+   0043 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0048 ldloc.2 
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   004F ldarg.0 
+   0050 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   005B call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0060 ldloc.2 
+   0061 ldarg.0 
+   0062 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0067 ldarg.0 
+   0068 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   006D ldarg.0 
+   006E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0073 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0078 ldloc.2 
+   0079 ldarg.0 
+   007A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   007F ldarg.0 
+   0080 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0085 ldarg.0 
+   0086 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   008B call System.Void Assets.Scripts.GameSystem.CAdventureView::InitDifficultList(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0090 ldloc.2 
+   0091 ldarg.0 
+   0092 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0097 ldarg.0 
+   0098 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   009D ldarg.0 
+   009E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00A3 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterElement(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00A8 ldarg.0 
+   00A9 ldloca.s V_0
+   00AB ldloc.1 
+   00AC call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckOpenChapterRewardCondition(System.Boolean&,System.Int32)
+   00B1 brfalse IL_00ca: ret
+   00B6 ldloc.2 
+   00B7 ldloc.2 
+   00B8 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   00BD ldloc.1 
+   00BE ldarg.0 
+   00BF ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00C4 ldloc.0 
+   00C5 call System.Void Assets.Scripts.GameSystem.CAdventureView::OpenChapterRewardPanel(Assets.Scripts.UI.CUIFormScript,UnityEngine.GameObject,System.Int32,System.Int32,System.Boolean)
+   00CA ret 
+== System.Void CloseChapterRewardPanel(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0027: ret
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0022 call System.Void Assets.Scripts.GameSystem.CAdventureView::CloseChapterRewardPanel(UnityEngine.GameObject)
+   0027 ret 
+== System.Void GetChapterReward(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=1
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.UI.CUIEvent::m_srcWidget
+   0006 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Button>()
+   000B stloc.0 
+   000C ldloc.0 
+   000D callvirt System.Boolean UnityEngine.UI.Selectable::get_interactable()
+   0012 brfalse IL_0028: ret
+   0017 ldarg.0 
+   0018 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckChapterRewardCondition()
+   001D brfalse IL_0028: ret
+   0022 ldarg.0 
+   0023 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqGetChapterReward()
+   0028 ret 
+== System.Void OnBuyPlayTime(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0015 ldc.i4.1 
+   0016 sub 
+   0017 ldelem.ref 
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0025 ldc.i4.1 
+   0026 sub 
+   0027 ldelem.ref 
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0035 ldc.i4.1 
+   0036 sub 
+   0037 ldelem.ref 
+   0038 stloc.2 
+   0039 ldc.i4.0 
+   003A stloc.3 
+   003B ldc.i4.0 
+   003C stloc.s V_4
+   003E ldsfld System.String::Empty
+   0043 stloc.s V_5
+   0045 ldarg.0 
+   0046 ldloc.2 
+   0047 ldloca.s V_3
+   0049 ldloca.s V_4
+   004B ldloca.s V_5
+   004D call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::CanBuyPlayTime(Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO,System.Byte&,System.UInt32&,System.String&)
+   0052 stloc.s V_6
+   0054 ldloc.s V_6
+   0056 brtrue IL_00d8: ldloc.s V_6
+   005B ldloc.3 
+   005C ldc.i4.2 
+   005D bne.un IL_0077: call !0 Singleton`1<CTextManager>::GetInstance()
+   0062 call !0 Singleton`1<CTextManager>::GetInstance()
+   0067 ldstr Money_Type_DianQuan
+   006C ldc.i4.1 
+   006D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0072 br IL_0087: stloc.s V_7
+   0077 call !0 Singleton`1<CTextManager>::GetInstance()
+   007C ldstr Money_Type_GoldCoin
+   0081 ldc.i4.1 
+   0082 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0087 stloc.s V_7
+   0089 call !0 Singleton`1<CTextManager>::GetInstance()
+   008E ldstr PVE_Level_Level_Refresh_Confirm
+   0093 ldc.i4.2 
+   0094 newarr System.String
+   0099 dup 
+   009A ldc.i4.0 
+   009B ldloca.s V_4
+   009D constrained. System.UInt32
+   00A3 callvirt System.String System.Object::ToString()
+   00A8 stelem.ref 
+   00A9 dup 
+   00AA ldc.i4.1 
+   00AB ldloc.s V_7
+   00AD stelem.ref 
+   00AE callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00B3 ldc.i4.0 
+   00B4 newarr System.Object
+   00B9 call System.String System.String::Format(System.String,System.Object[])
+   00BE stloc.s V_8
+   00C0 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00C5 ldloc.s V_8
+   00C7 ldc.i4 218
+   00CC ldc.i4.0 
+   00CD ldc.i4.0 
+   00CE callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,System.Boolean)
+   00D3 br IL_012b: ret
+   00D8 ldloc.s V_6
+   00DA ldc.i4.m1 
+   00DB bne.un IL_00ea: ldloc.s V_6
+   00E0 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenDianQuanNotEnoughTip()
+   00E5 br IL_012b: ret
+   00EA ldloc.s V_6
+   00EC ldc.i4.s -2
+   00EE bne.un IL_00fd: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00F3 call System.Void Assets.Scripts.GameSystem.CUICommonSystem::OpenGoldCoinNotEnoughTip()
+   00F8 br IL_012b: ret
+   00FD call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0102 call !0 Singleton`1<CTextManager>::GetInstance()
+   0107 ldstr PVE_Level_Can_Not_Refresh_Level
+   010C ldc.i4.1 
+   010D callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0112 ldloc.s V_5
+   0114 call System.String System.String::Concat(System.String,System.String)
+   0119 ldc.i4.0 
+   011A ldc.r4 1.5
+   011F ldnull 
+   0120 ldc.i4.0 
+   0121 newarr System.Object
+   0126 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   012B ret 
+== System.Void OnConfirmBuyPlayTime(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0015 ldc.i4.1 
+   0016 sub 
+   0017 ldelem.ref 
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   001F ldarg.0 
+   0020 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0025 ldc.i4.1 
+   0026 sub 
+   0027 ldelem.ref 
+   0028 stloc.1 
+   0029 ldloc.1 
+   002A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0035 ldc.i4.1 
+   0036 sub 
+   0037 ldelem.ref 
+   0038 stloc.2 
+   0039 ldarg.0 
+   003A ldloc.2 
+   003B ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayLimit
+   0040 ldc.i4.1 
+   0041 add 
+   0042 call System.Void Assets.Scripts.GameSystem.CAdventureSys::ReqBuyPlayTime(System.Int32)
+   0047 ret 
+== System.Void OnFreeHeroChanged() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_LEVEL_FORM
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0034: ret
+   001C ldloc.0 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   002F call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0034 ret 
+== System.Boolean CheckChapterRewardCondition() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F ldarg.0 
+   0010 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0015 ldc.i4.1 
+   0016 sub 
+   0017 ldelem.ref 
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A brtrue IL_0021: ldloc.0
+   001F ldc.i4.0 
+   0020 ret 
+   0021 ldloc.0 
+   0022 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0027 ldarg.0 
+   0028 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   002D ldc.i4.1 
+   002E sub 
+   002F ldelem.ref 
+   0030 stloc.1 
+   0031 ldloc.1 
+   0032 brtrue IL_0039: ldloc.1
+   0037 ldc.i4.0 
+   0038 ret 
+   0039 ldloc.1 
+   003A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::bIsGetBonus
+   003F brtrue IL_005c: ldc.i4.0
+   0044 ldloc.1 
+   0045 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetChapterTotalStar(Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO)
+   004A ldsfld Assets.Scripts.GameSystem.CAdventureSys::STAR_PER_LEVEL
+   004F ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   0054 mul 
+   0055 bne.un IL_005c: ldc.i4.0
+   005A ldc.i4.1 
+   005B ret 
+   005C ldc.i4.0 
+   005D ret 
+== System.Boolean CheckOpenChapterRewardCondition(System.Boolean& bCanGetReward, System.Int32 chapterId) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.1 
+   0001 ldc.i4.0 
+   0002 stind.i1 
+   0003 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0008 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000D ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0012 ldarg.0 
+   0013 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0018 ldc.i4.1 
+   0019 sub 
+   001A ldelem.ref 
+   001B stloc.0 
+   001C ldloc.0 
+   001D brtrue IL_0024: ldloc.0
+   0022 ldc.i4.1 
+   0023 ret 
+   0024 ldloc.0 
+   0025 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   002A ldarg.2 
+   002B ldc.i4.1 
+   002C sub 
+   002D ldelem.ref 
+   002E stloc.1 
+   002F ldloc.1 
+   0030 brtrue IL_0037: ldloc.1
+   0035 ldc.i4.1 
+   0036 ret 
+   0037 ldloc.1 
+   0038 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::bIsGetBonus
+   003D brtrue IL_005d: ldc.i4.0
+   0042 ldloc.1 
+   0043 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetChapterTotalStar(Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO)
+   0048 ldsfld Assets.Scripts.GameSystem.CAdventureSys::STAR_PER_LEVEL
+   004D ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   0052 mul 
+   0053 bne.un IL_005b: ldc.i4.1
+   0058 ldarg.1 
+   0059 ldc.i4.1 
+   005A stind.i1 
+   005B ldc.i4.1 
+   005C ret 
+   005D ldc.i4.0 
+   005E ret 
+== System.Boolean CheckMopUpCondition(System.Int32 time) attrs=Private, HideBySig maxstack=7
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::HasEnoughMopupTicket(System.Int32)
+   0007 brtrue IL_0081: ldsfld System.String System.String::Empty
+   000C ldarg.0 
+   000D ldarg.1 
+   000E ldloca.s V_0
+   0010 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::HasEnoughDiamondForTicket(System.Int32,System.Int32&)
+   0015 brfalse IL_0064: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001A ldloca.s V_1
+   001C initobj Assets.Scripts.UI.stUIEventParams
+   0022 ldloca.s V_1
+   0024 ldarg.1 
+   0025 stfld Assets.Scripts.UI.stUIEventParams::tag
+   002A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002F call !0 Singleton`1<CTextManager>::GetInstance()
+   0034 ldstr PVE_Level_Buy_Sweep_Ticket_Confirm
+   0039 ldc.i4.1 
+   003A newarr System.String
+   003F dup 
+   0040 ldc.i4.0 
+   0041 ldloca.s V_0
+   0043 constrained. System.Int32
+   0049 callvirt System.String System.Object::ToString()
+   004E stelem.ref 
+   004F callvirt System.String CTextManager::GetText(System.String,System.String[])
+   0054 ldc.i4 211
+   0059 ldc.i4.0 
+   005A ldloc.1 
+   005B ldc.i4.0 
+   005C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.Boolean)
+   0061 pop 
+   0062 ldc.i4.0 
+   0063 ret 
+   0064 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0069 call !0 Singleton`1<CTextManager>::GetInstance()
+   006E ldstr PVE_Level_Not_Enough_Sweep_Ticket
+   0073 ldc.i4.1 
+   0074 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0079 ldc.i4.0 
+   007A callvirt System.Void Assets.Scripts.UI.CUIManager::OpenMessageBox(System.String,System.Boolean)
+   007F ldc.i4.0 
+   0080 ret 
+   0081 ldsfld System.String::Empty
+   0086 stloc.2 
+   0087 ldarg.0 
+   0088 ldloca.s V_2
+   008A call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::CheckFullItem(System.String&)
+   008F brtrue IL_00d7: ldc.i4.1
+   0094 ldloca.s V_3
+   0096 initobj Assets.Scripts.UI.stUIEventParams
+   009C ldloca.s V_3
+   009E ldarg.1 
+   009F stfld Assets.Scripts.UI.stUIEventParams::tag
+   00A4 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00A9 call !0 Singleton`1<CTextManager>::GetInstance()
+   00AE ldstr PVE_Level_Package_Item_Max_Tip_Sweep
+   00B3 ldc.i4.1 
+   00B4 newarr System.String
+   00B9 dup 
+   00BA ldc.i4.0 
+   00BB ldloc.2 
+   00BC callvirt System.String System.Object::ToString()
+   00C1 stelem.ref 
+   00C2 callvirt System.String CTextManager::GetText(System.String,System.String[])
+   00C7 ldc.i4 219
+   00CC ldc.i4.0 
+   00CD ldloc.3 
+   00CE ldc.i4.0 
+   00CF callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenMessageBoxWithCancel(System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.Boolean)
+   00D4 pop 
+   00D5 ldc.i4.0 
+   00D6 ret 
+   00D7 ldc.i4.1 
+   00D8 ret 
+== System.Void ReqMopup(System.Byte SweepCount) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4 1054
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_SINGLEGAMESWEEPREQ CSProtocol.CSPkgBody::get_stSweepSingleGameReq()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   001C stfld CSProtocol.CSPKG_SINGLEGAMESWEEPREQ::iLevelID
+   0021 ldloc.0 
+   0022 ldfld CSProtocol.CSPkg::stPkgData
+   0027 callvirt CSProtocol.CSPKG_SINGLEGAMESWEEPREQ CSProtocol.CSPkgBody::get_stSweepSingleGameReq()
+   002C ldc.i4.0 
+   002D stfld CSProtocol.CSPKG_SINGLEGAMESWEEPREQ::bGameType
+   0032 ldloc.0 
+   0033 ldfld CSProtocol.CSPkg::stPkgData
+   0038 callvirt CSProtocol.CSPKG_SINGLEGAMESWEEPREQ CSProtocol.CSPkgBody::get_stSweepSingleGameReq()
+   003D ldarg.1 
+   003E stfld CSProtocol.CSPKG_SINGLEGAMESWEEPREQ::dwSweepCnt
+   0043 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0048 ldloca.s V_0
+   004A ldc.i4.1 
+   004B callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0050 pop 
+   0051 ret 
+== System.Void ReqGetChapterReward() attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4 1056
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_GET_CHAPTER_REWARD_REQ CSProtocol.CSPkgBody::get_stGetChapterRewardReq()
+   0016 ldarg.0 
+   0017 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   001C conv.u1 
+   001D stfld CSProtocol.CSPKG_GET_CHAPTER_REWARD_REQ::bChapterNo
+   0022 ldloc.0 
+   0023 ldfld CSProtocol.CSPkg::stPkgData
+   0028 callvirt CSProtocol.CSPKG_GET_CHAPTER_REWARD_REQ CSProtocol.CSPkgBody::get_stGetChapterRewardReq()
+   002D ldarg.0 
+   002E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0033 conv.u1 
+   0034 stfld CSProtocol.CSPKG_GET_CHAPTER_REWARD_REQ::bDifficultType
+   0039 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   003E ldloca.s V_0
+   0040 ldc.i4.1 
+   0041 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0046 pop 
+   0047 ret 
+== System.Void ReqBuyPlayTime(System.Int32 BuyTime) attrs=Private, HideBySig maxstack=3
+   0000 ldc.i4 1113
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyReq()
+   0016 ldfld CSProtocol.CSPKG_CMD_SHOPBUY::stExtraInfo
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0021 stfld CSProtocol.COMDT_SHOPBUY_EXTRA::dwLevelID
+   0026 ldloc.0 
+   0027 ldfld CSProtocol.CSPkg::stPkgData
+   002C callvirt CSProtocol.CSPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyReq()
+   0031 ldc.i4.6 
+   0032 stfld CSProtocol.CSPKG_CMD_SHOPBUY::iBuyType
+   0037 ldloc.0 
+   0038 ldfld CSProtocol.CSPkg::stPkgData
+   003D callvirt CSProtocol.CSPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyReq()
+   0042 ldarg.1 
+   0043 stfld CSProtocol.CSPKG_CMD_SHOPBUY::iBuySubType
+   0048 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   004D ldloca.s V_0
+   004F ldc.i4.1 
+   0050 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0055 pop 
+   0056 ret 
+== System.Void OnGetChapterReward(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=13
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldarg.0 
+   000B ldfld CSProtocol.CSPkg::stPkgData
+   0010 callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0015 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::iErrorCode
+   001A brtrue IL_012f: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   001F call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0024 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0029 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   002E ldarg.0 
+   002F ldfld CSProtocol.CSPkg::stPkgData
+   0034 callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0039 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::bDifficultType
+   003E ldc.i4.1 
+   003F sub 
+   0040 ldelem.ref 
+   0041 stloc.0 
+   0042 ldloc.0 
+   0043 ldnull 
+   0044 ceq 
+   0046 ldc.i4.0 
+   0047 ceq 
+   0049 ldstr PVE info is NULL!!! -- Difficulty
+   004E ldc.i4.1 
+   004F newarr System.Object
+   0054 dup 
+   0055 ldc.i4.0 
+   0056 ldarg.0 
+   0057 ldfld CSProtocol.CSPkg::stPkgData
+   005C callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0061 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::bDifficultType
+   0066 box System.Byte
+   006B stelem.ref 
+   006C call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0071 ldloc.0 
+   0072 brfalse IL_0096: ldarg.0
+   0077 ldloc.0 
+   0078 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   007D ldarg.0 
+   007E ldfld CSProtocol.CSPkg::stPkgData
+   0083 callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0088 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::bChapterNo
+   008D ldc.i4.1 
+   008E sub 
+   008F ldelem.ref 
+   0090 ldc.i4.1 
+   0091 stfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::bIsGetBonus
+   0096 ldarg.0 
+   0097 ldfld CSProtocol.CSPkg::stPkgData
+   009C callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   00A1 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::stRewardDetail
+   00A6 call ListView`1<Assets.Scripts.GameSystem.CUseable> Assets.Scripts.GameSystem.CUseableManager::GetUseableListFromReward(CSProtocol.COMDT_REWARD_DETAIL)
+   00AB stloc.1 
+   00AC call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00B1 ldloc.1 
+   00B2 call !!0[] LinqS::ToArray<Assets.Scripts.GameSystem.CUseable>(ListView`1<!!0>)
+   00B7 ldnull 
+   00B8 ldc.i4.0 
+   00B9 ldc.i4.0 
+   00BA ldc.i4.0 
+   00BB ldc.i4.0 
+   00BC ldstr Form_Award
+   00C1 ldnull 
+   00C2 ldnull 
+   00C3 ldc.i4.0 
+   00C4 ldloca.s V_2
+   00C6 initobj Assets.Scripts.UI.stUIEventParams
+   00CC ldloc.2 
+   00CD ldnull 
+   00CE callvirt System.Void Assets.Scripts.UI.CUIManager::OpenAwardTip(Assets.Scripts.GameSystem.CUseable[],System.String,System.Boolean,Assets.Scripts.UI.enUIEventID,System.Boolean,System.Boolean,System.String,System.String,System.String,Assets.Scripts.UI.enUIEventID,Assets.Scripts.UI.stUIEventParams,System.String)
+   00D3 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00D8 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   00DD callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00E2 stloc.3 
+   00E3 ldloc.3 
+   00E4 ldnull 
+   00E5 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00EA brfalse IL_012a: br IL_0175
+   00EF ldloc.3 
+   00F0 ldarg.0 
+   00F1 ldfld CSProtocol.CSPkg::stPkgData
+   00F6 callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   00FB ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::bChapterNo
+   0100 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::get_instance()
+   0105 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   010A ldarg.0 
+   010B ldfld CSProtocol.CSPkg::stPkgData
+   0110 callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0115 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::bDifficultType
+   011A call System.Void Assets.Scripts.GameSystem.CAdventureView::InitChapterForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   011F ldloc.3 
+   0120 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0125 call System.Void Assets.Scripts.GameSystem.CAdventureView::CloseChapterRewardPanel(UnityEngine.GameObject)
+   012A br IL_0175: ret
+   012F call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0134 call !0 Singleton`1<CTextManager>::GetInstance()
+   0139 ldstr PVE_Level_All_Chapter_Starts_Error
+   013E ldc.i4.1 
+   013F callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0144 ldc.i4 1057
+   0149 ldarg.0 
+   014A ldfld CSProtocol.CSPkg::stPkgData
+   014F callvirt CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP CSProtocol.CSPkgBody::get_stGetChapterRewardRsp()
+   0154 ldfld CSProtocol.SCPKG_GET_CHAPTER_REWARD_RSP::iErrorCode
+   0159 call System.String Utility::ProtErrCodeToStr(System.Int32,System.Int32)
+   015E call System.String System.String::Concat(System.String,System.String)
+   0163 ldc.i4.0 
+   0164 ldc.r4 1.5
+   0169 ldnull 
+   016A ldc.i4.0 
+   016B newarr System.Object
+   0170 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0175 ret 
+== System.Void OnBuyPlayTimeRsp(CSProtocol.CSPkg msg) attrs=Public, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseSendMsgAlert()
+   000A ldloca.s V_0
+   000C ldarg.1 
+   000D ldfld CSProtocol.CSPkg::stPkgData
+   0012 callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   0017 ldfld CSProtocol.SCPKG_CMD_SHOPBUY::stExtraInfo
+   001C ldfld CSProtocol.COMDT_SHOPBUY_EXTRA::dwLevelID
+   0021 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0026 call System.Void DebugHelper::Assert(System.Boolean)
+   002B call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0030 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0035 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   003A call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::GetInstance()
+   003F ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0044 ldc.i4.1 
+   0045 sub 
+   0046 ldelem.ref 
+   0047 stloc.1 
+   0048 ldloc.1 
+   0049 brtrue IL_0055: ldloc.1
+   004E ldc.i4.0 
+   004F call System.Void DebugHelper::Assert(System.Boolean)
+   0054 ret 
+   0055 ldloc.1 
+   0056 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   005B ldloca.s V_0
+   005D ldfld ResData.ResLevelCfgInfo::iChapterId
+   0062 ldc.i4.1 
+   0063 sub 
+   0064 ldelem.ref 
+   0065 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   006A ldloca.s V_0
+   006C ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0071 ldc.i4.1 
+   0072 sub 
+   0073 ldelem.ref 
+   0074 stloc.2 
+   0075 ldloc.2 
+   0076 ldarg.1 
+   0077 ldfld CSProtocol.CSPkg::stPkgData
+   007C callvirt CSProtocol.SCPKG_CMD_SHOPBUY CSProtocol.CSPkgBody::get_stShopBuyRsp()
+   0081 ldfld CSProtocol.SCPKG_CMD_SHOPBUY::iBuySubType
+   0086 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayLimit
+   008B ldloc.2 
+   008C ldc.i4.0 
+   008D stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   0092 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0097 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_LEVEL_FORM
+   009C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00A1 stloc.3 
+   00A2 ldloc.3 
+   00A3 ldnull 
+   00A4 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   00A9 brfalse IL_00c8: call !0 Singleton`1<EventRouter>::get_instance()
+   00AE ldloc.3 
+   00AF ldloca.s V_0
+   00B1 ldfld ResData.ResLevelCfgInfo::iChapterId
+   00B6 ldloca.s V_0
+   00B8 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   00BD ldarg.0 
+   00BE ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   00C3 call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   00C8 call !0 Singleton`1<EventRouter>::get_instance()
+   00CD ldsfld EventID::PVE_LEVEL_DETAIL_CHANGED
+   00D2 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00D7 ret 
+== System.Void ResetElitePlayNum() attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F ldc.i4.1 
+   0010 ldelem.ref 
+   0011 stloc.0 
+   0012 ldloc.0 
+   0013 brtrue IL_0019: ldc.i4.0
+   0018 ret 
+   0019 ldc.i4.0 
+   001A stloc.1 
+   001B br IL_007a: ldloc.1
+   0020 ldloc.0 
+   0021 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0026 ldloc.1 
+   0027 ldelem.ref 
+   0028 brfalse IL_0076: ldloc.1
+   002D ldloc.0 
+   002E ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0033 ldloc.1 
+   0034 ldelem.ref 
+   0035 stloc.2 
+   0036 ldc.i4.0 
+   0037 stloc.3 
+   0038 br IL_0068: ldloc.3
+   003D ldloc.2 
+   003E ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0043 ldloc.3 
+   0044 ldelem.ref 
+   0045 brfalse IL_0064: ldloc.3
+   004A ldloc.2 
+   004B ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0050 ldloc.3 
+   0051 ldelem.ref 
+   0052 stloc.s V_4
+   0054 ldloc.s V_4
+   0056 ldc.i4.0 
+   0057 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   005C ldloc.s V_4
+   005E ldc.i4.0 
+   005F stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayLimit
+   0064 ldloc.3 
+   0065 ldc.i4.1 
+   0066 add 
+   0067 stloc.3 
+   0068 ldloc.3 
+   0069 ldloc.2 
+   006A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   006F ldlen 
+   0070 conv.i4 
+   0071 blt IL_003d: ldloc.2
+   0076 ldloc.1 
+   0077 ldc.i4.1 
+   0078 add 
+   0079 stloc.1 
+   007A ldloc.1 
+   007B ldloc.0 
+   007C ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0081 ldlen 
+   0082 conv.i4 
+   0083 blt IL_0020: ldloc.0
+   0088 call !0 Singleton`1<Assets.Scripts.GameSystem.CAdventureSys>::GetInstance()
+   008D callvirt System.Void Assets.Scripts.GameSystem.CAdventureSys::RefreshLevelForm()
+   0092 call !0 Singleton`1<EventRouter>::get_instance()
+   0097 ldsfld EventID::PVE_LEVEL_DETAIL_CHANGED
+   009C callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00A1 ret 
+== System.Void RefreshLevelForm() attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_LEVEL_FORM
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0034: ret
+   001C ldloc.0 
+   001D ldarg.0 
+   001E ldfld Assets.Scripts.GameSystem.CAdventureSys::currentChapter
+   0023 ldarg.0 
+   0024 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   002F call System.Void Assets.Scripts.GameSystem.CAdventureView::InitLevelForm(Assets.Scripts.UI.CUIFormScript,System.Int32,System.Int32,System.Int32)
+   0034 ret 
+== System.Boolean UpdateAdvProgress(System.Boolean bWin) attrs=Public, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldarg.0 
+   0012 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0017 ldc.i4.1 
+   0018 sub 
+   0019 ldelem.ref 
+   001A stloc.1 
+   001B call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0020 stloc.2 
+   0021 ldloc.2 
+   0022 brfalse IL_0204: ldc.i4.0
+   0027 ldloc.2 
+   0028 ldfld Assets.Scripts.GameLogic.CLevelContext::m_chapterNo
+   002D stloc.3 
+   002E ldloc.2 
+   002F ldfld Assets.Scripts.GameLogic.CLevelContext::m_levelNo
+   0034 stloc.s V_4
+   0036 ldc.i4.0 
+   0037 stloc.s V_5
+   0039 ldarg.1 
+   003A brfalse IL_01f2: call !0 Singleton`1<EventRouter>::get_instance()
+   003F ldarg.0 
+   0040 ldloc.1 
+   0041 ldloc.3 
+   0042 ldloc.s V_4
+   0044 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelFinished(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO,System.Int32,System.Int32)
+   0049 brfalse IL_00e4: ldc.i4.1
+   004E ldloc.1 
+   004F ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0054 ldloc.3 
+   0055 ldc.i4.1 
+   0056 sub 
+   0057 ldelem.ref 
+   0058 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   005D ldloc.s V_4
+   005F ldc.i4.1 
+   0060 sub 
+   0061 ldelem.ref 
+   0062 ldc.i4.2 
+   0063 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0068 ldloc.1 
+   0069 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   006E ldloc.3 
+   006F ldc.i4.1 
+   0070 sub 
+   0071 ldelem.ref 
+   0072 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0077 ldloc.s V_4
+   0079 ldc.i4.1 
+   007A sub 
+   007B ldelem.ref 
+   007C dup 
+   007D ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   0082 ldc.i4.1 
+   0083 add 
+   0084 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   0089 call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::GetInstance()
+   008E callvirt SGW/stPlayerSettlementKDAInfoList Assets.Scripts.GameLogic.CSettleDataManager::GetAllSettlementInfo()
+   0093 stloc.s V_7
+   0095 ldloca.s V_7
+   0097 ldfld SGW/stPlayerSettlementKDAInfoList::StarSysBits
+   009C stloc.s V_6
+   009E ldarg.0 
+   009F ldloc.s V_6
+   00A1 ldloc.1 
+   00A2 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   00A7 ldloc.3 
+   00A8 ldc.i4.1 
+   00A9 sub 
+   00AA ldelem.ref 
+   00AB ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   00B0 ldloc.s V_4
+   00B2 ldc.i4.1 
+   00B3 sub 
+   00B4 ldelem.ref 
+   00B5 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::bStarBits
+   00BA call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::HasMoreStar(System.Byte,System.Byte)
+   00BF brfalse IL_00df: br IL_01f2
+   00C4 ldloc.1 
+   00C5 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   00CA ldloc.3 
+   00CB ldc.i4.1 
+   00CC sub 
+   00CD ldelem.ref 
+   00CE ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   00D3 ldloc.s V_4
+   00D5 ldc.i4.1 
+   00D6 sub 
+   00D7 ldelem.ref 
+   00D8 ldloc.s V_6
+   00DA stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::bStarBits
+   00DF br IL_01f2: call !0 Singleton`1<EventRouter>::get_instance()
+   00E4 ldc.i4.1 
+   00E5 stloc.s V_5
+   00E7 ldloc.1 
+   00E8 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   00ED ldloc.3 
+   00EE ldc.i4.1 
+   00EF sub 
+   00F0 ldelem.ref 
+   00F1 brfalse IL_015d: ldloc.s V_4
+   00F6 ldloc.1 
+   00F7 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   00FC ldloc.3 
+   00FD ldc.i4.1 
+   00FE sub 
+   00FF ldelem.ref 
+   0100 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0105 ldloc.s V_4
+   0107 ldc.i4.1 
+   0108 sub 
+   0109 ldelem.ref 
+   010A ldc.i4.2 
+   010B stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0110 ldloc.1 
+   0111 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0116 ldloc.3 
+   0117 ldc.i4.1 
+   0118 sub 
+   0119 ldelem.ref 
+   011A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   011F ldloc.s V_4
+   0121 ldc.i4.1 
+   0122 sub 
+   0123 ldelem.ref 
+   0124 dup 
+   0125 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   012A ldc.i4.1 
+   012B add 
+   012C stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayNum
+   0131 ldloc.1 
+   0132 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0137 ldloc.3 
+   0138 ldc.i4.1 
+   0139 sub 
+   013A ldelem.ref 
+   013B ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0140 ldloc.s V_4
+   0142 ldc.i4.1 
+   0143 sub 
+   0144 ldelem.ref 
+   0145 call !0 Singleton`1<Assets.Scripts.GameLogic.CSettleDataManager>::GetInstance()
+   014A callvirt SGW/stPlayerSettlementKDAInfoList Assets.Scripts.GameLogic.CSettleDataManager::GetAllSettlementInfo()
+   014F stloc.s V_8
+   0151 ldloca.s V_8
+   0153 ldfld SGW/stPlayerSettlementKDAInfoList::StarSysBits
+   0158 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::bStarBits
+   015D ldloc.s V_4
+   015F ldc.i4.4 
+   0160 bge IL_019b: ldarg.0
+   0165 ldloc.1 
+   0166 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   016B ldloc.3 
+   016C ldc.i4.1 
+   016D sub 
+   016E ldelem.ref 
+   016F brfalse IL_0196: br IL_01f2
+   0174 ldloc.1 
+   0175 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   017A ldloc.3 
+   017B ldc.i4.1 
+   017C sub 
+   017D ldelem.ref 
+   017E ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0183 ldloc.s V_4
+   0185 ldelem.ref 
+   0186 ldc.i4.1 
+   0187 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   018C ldarg.0 
+   018D ldloc.s V_4
+   018F ldc.i4.1 
+   0190 add 
+   0191 stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   0196 br IL_01f2: call !0 Singleton`1<EventRouter>::get_instance()
+   019B ldarg.0 
+   019C ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   01A1 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   01A6 bge IL_01f2: call !0 Singleton`1<EventRouter>::get_instance()
+   01AB ldloc.0 
+   01AC ldarg.0 
+   01AD ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   01B2 ldelem.ref 
+   01B3 stloc.s V_9
+   01B5 ldloc.s V_9
+   01B7 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   01BC ldloc.3 
+   01BD ldc.i4.1 
+   01BE sub 
+   01BF ldelem.ref 
+   01C0 brfalse IL_01f2: call !0 Singleton`1<EventRouter>::get_instance()
+   01C5 ldloc.s V_9
+   01C7 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   01CC ldloc.3 
+   01CD ldc.i4.1 
+   01CE sub 
+   01CF ldelem.ref 
+   01D0 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   01D5 ldc.i4.0 
+   01D6 ldelem.ref 
+   01D7 ldc.i4.1 
+   01D8 stfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   01DD ldarg.0 
+   01DE ldarg.0 
+   01DF ldfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   01E4 ldc.i4.1 
+   01E5 add 
+   01E6 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   01EB ldarg.0 
+   01EC ldc.i4.1 
+   01ED stfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelSeq
+   01F2 call !0 Singleton`1<EventRouter>::get_instance()
+   01F7 ldsfld EventID::PVE_LEVEL_DETAIL_CHANGED
+   01FC callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   0201 ldloc.s V_5
+   0203 ret 
+   0204 ldc.i4.0 
+   0205 ret 
+== System.Boolean GetLevelCfg(System.Int32 ChapterId, System.Int32 Seq, System.Int32 Difficulty, ResData.ResLevelCfgInfo& resLevelCfgInfo) attrs=Public, Static, HideBySig maxstack=2
+   0000 call System.Int32 ResData.GameDataMgr/levelDatabin::Count()
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 br IL_003b: ldloc.1
+   000D ldloc.1 
+   000E call ResData.ResLevelCfgInfo ResData.GameDataMgr/levelDatabin::GetByIndex(System.Int32)
+   0013 stloc.2 
+   0014 ldloca.s V_2
+   0016 ldfld ResData.ResLevelCfgInfo::iChapterId
+   001B ldarg.0 
+   001C bne.un IL_0037: ldloc.1
+   0021 ldloca.s V_2
+   0023 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0028 ldarg.1 
+   0029 bne.un IL_0037: ldloc.1
+   002E ldarg.3 
+   002F ldloc.2 
+   0030 stobj ResData.ResLevelCfgInfo
+   0035 ldc.i4.1 
+   0036 ret 
+   0037 ldloc.1 
+   0038 ldc.i4.1 
+   0039 add 
+   003A stloc.1 
+   003B ldloc.1 
+   003C ldloc.0 
+   003D blt IL_000d: ldloc.1
+   0042 ldarg.3 
+   0043 initobj ResData.ResLevelCfgInfo
+   0049 ldc.i4.0 
+   004A ret 
+== System.Int32 GetLevelId(System.Int32 ChapterId, System.Int32 Seq, System.Int32 Difficulty) attrs=Public, Static, HideBySig maxstack=2
+   0000 call System.Int32 ResData.GameDataMgr/levelDatabin::Count()
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 br IL_0047: ldloc.1
+   000D ldloc.1 
+   000E call ResData.ResLevelCfgInfo ResData.GameDataMgr/levelDatabin::GetByIndex(System.Int32)
+   0013 stloc.2 
+   0014 ldloca.s V_2
+   0016 ldfld ResData.ResLevelCfgInfo::iChapterId
+   001B ldarg.0 
+   001C bne.un IL_0043: ldloc.1
+   0021 ldloca.s V_2
+   0023 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0028 ldarg.1 
+   0029 bne.un IL_0043: ldloc.1
+   002E ldloca.s V_2
+   0030 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   0035 ldarg.2 
+   0036 bne.un IL_0043: ldloc.1
+   003B ldloca.s V_2
+   003D ldfld ResData.ResLevelCfgInfo::iCfgID
+   0042 ret 
+   0043 ldloc.1 
+   0044 ldc.i4.1 
+   0045 add 
+   0046 stloc.1 
+   0047 ldloc.1 
+   0048 ldloc.0 
+   0049 blt IL_000d: ldloc.1
+   004E ldc.i4.0 
+   004F ret 
+== System.Int32 GetNextLevelId(System.Int32 ChapterId, System.Int32 Seq, System.Int32 Difficulty) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   0008 bge IL_0020: ldarg.0
+   000D ldarg.0 
+   000E ldarg.1 
+   000F ldc.i4.1 
+   0010 add 
+   0011 dup 
+   0012 starg.s Seq
+   0014 ldarg.2 
+   0015 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLevelId(System.Int32,System.Int32,System.Int32)
+   001A stloc.0 
+   001B br IL_002e: ldloc.0
+   0020 ldarg.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 dup 
+   0024 starg.s ChapterId
+   0026 ldc.i4.1 
+   0027 ldarg.2 
+   0028 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetLevelId(System.Int32,System.Int32,System.Int32)
+   002D stloc.0 
+   002E ldloc.0 
+   002F ret 
+== System.Int32 GetNextChapterId(System.Int32 ChapterId, System.Int32 Seq) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldarg.1 
+   0003 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   0008 bge IL_0014: ldarg.0
+   000D ldarg.0 
+   000E stloc.0 
+   000F br IL_0018: ldloc.0
+   0014 ldarg.0 
+   0015 ldc.i4.1 
+   0016 add 
+   0017 stloc.0 
+   0018 ldloc.0 
+   0019 ret 
+== System.Int32 GetStarNum(System.Byte starMask) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 and 
+   0003 ldc.i4.0 
+   0004 ble IL_000f: ldc.i4.0
+   0009 ldc.i4.1 
+   000A br IL_0010: ldarg.0
+   000F ldc.i4.0 
+   0010 ldarg.0 
+   0011 ldc.i4.2 
+   0012 and 
+   0013 ldc.i4.0 
+   0014 ble IL_001f: ldc.i4.0
+   0019 ldc.i4.1 
+   001A br IL_0020: add
+   001F ldc.i4.0 
+   0020 add 
+   0021 ldarg.0 
+   0022 ldc.i4.4 
+   0023 and 
+   0024 ldc.i4.0 
+   0025 ble IL_0030: ldc.i4.0
+   002A ldc.i4.1 
+   002B br IL_0031: add
+   0030 ldc.i4.0 
+   0031 add 
+   0032 ret 
+== System.Boolean IsStarGained(System.Byte starMask, System.Int32 Pos) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.r8 2
+   0009 ldarg.1 
+   000A ldc.i4.1 
+   000B sub 
+   000C conv.r8 
+   000D call System.Double System.Math::Pow(System.Double,System.Double)
+   0012 conv.i4 
+   0013 stloc.0 
+   0014 ldarg.0 
+   0015 ldloc.0 
+   0016 and 
+   0017 ldc.i4.0 
+   0018 cgt 
+   001A ret 
+== System.Boolean IsLevelFullStar(System.Int32 levelId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0008 call System.Void DebugHelper::Assert(System.Boolean)
+   000D ldloca.s V_0
+   000F ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   0014 ldc.i4.0 
+   0015 cgt 
+   0017 ldstr LevelDifficulty must > 0
+   001C call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0021 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0026 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   002B ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0030 ldloca.s V_0
+   0032 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   0037 ldc.i4.1 
+   0038 sub 
+   0039 ldelem.ref 
+   003A stloc.1 
+   003B ldloc.1 
+   003C brtrue IL_0043: ldloc.1
+   0041 ldc.i4.0 
+   0042 ret 
+   0043 ldloc.1 
+   0044 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0049 ldloca.s V_0
+   004B ldfld ResData.ResLevelCfgInfo::iChapterId
+   0050 ldc.i4.1 
+   0051 sub 
+   0052 ldelem.ref 
+   0053 stloc.2 
+   0054 ldloc.2 
+   0055 brtrue IL_005c: ldloc.2
+   005A ldc.i4.0 
+   005B ret 
+   005C ldloc.2 
+   005D ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0062 ldloca.s V_0
+   0064 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0069 ldc.i4.1 
+   006A sub 
+   006B ldelem.ref 
+   006C stloc.3 
+   006D ldloc.3 
+   006E brtrue IL_0075: ldloc.3
+   0073 ldc.i4.0 
+   0074 ret 
+   0075 ldloc.3 
+   0076 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::bStarBits
+   007B call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetStarNum(System.Byte)
+   0080 ldsfld Assets.Scripts.GameSystem.CAdventureSys::STAR_PER_LEVEL
+   0085 ceq 
+   0087 ret 
+== System.Boolean IsChapterFullStar(System.Int32 chapterNum, System.Int32 difficulty) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   000F ldarg.1 
+   0010 ldc.i4.1 
+   0011 sub 
+   0012 ldelem.ref 
+   0013 stloc.0 
+   0014 ldloc.0 
+   0015 brtrue IL_001c: ldloc.0
+   001A ldc.i4.0 
+   001B ret 
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0022 ldarg.0 
+   0023 ldc.i4.1 
+   0024 sub 
+   0025 ldelem.ref 
+   0026 stloc.1 
+   0027 ldloc.1 
+   0028 brtrue IL_002f: ldloc.1
+   002D ldc.i4.0 
+   002E ret 
+   002F ldloc.1 
+   0030 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetChapterTotalStar(Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO)
+   0035 ldsfld Assets.Scripts.GameSystem.CAdventureSys::STAR_PER_LEVEL
+   003A ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   003F mul 
+   0040 bne.un IL_0047: ldc.i4.0
+   0045 ldc.i4.1 
+   0046 ret 
+   0047 ldc.i4.0 
+   0048 ret 
+== System.Int32 GetChapterTotalStar(Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO chapterInfo) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_002f: ldloc.1
+   0009 ldarg.0 
+   000A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   000F ldloc.1 
+   0010 ldelem.ref 
+   0011 brfalse IL_002b: ldloc.1
+   0016 ldloc.0 
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   001D ldloc.1 
+   001E ldelem.ref 
+   001F ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::bStarBits
+   0024 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetStarNum(System.Byte)
+   0029 add 
+   002A stloc.0 
+   002B ldloc.1 
+   002C ldc.i4.1 
+   002D add 
+   002E stloc.1 
+   002F ldloc.1 
+   0030 ldarg.0 
+   0031 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0036 ldlen 
+   0037 conv.i4 
+   0038 blt IL_0009: ldarg.0
+   003D ldloc.0 
+   003E ret 
+== System.Boolean IsLevelOpen(System.Int32 LevelId) attrs=Public, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.1 
+   0003 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0008 ldstr Can't find level config with ID: {0}
+   000D ldc.i4.1 
+   000E newarr System.Object
+   0013 dup 
+   0014 ldc.i4.0 
+   0015 ldarg.1 
+   0016 box System.Int32
+   001B stelem.ref 
+   001C call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0021 ldloca.s V_0
+   0023 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   0028 ldc.i4.0 
+   0029 cgt 
+   002B ldstr LevelDifficulty must > 0
+   0030 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0035 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   003A callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   003F ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0044 ldloca.s V_0
+   0046 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   004B ldc.i4.1 
+   004C sub 
+   004D ldelem.ref 
+   004E stloc.1 
+   004F ldloc.1 
+   0050 brtrue IL_0057: call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::GetInstance()
+   0055 ldc.i4.0 
+   0056 ret 
+   0057 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::GetInstance()
+   005C ldloca.s V_0
+   005E ldfld ResData.ResLevelCfgInfo::iChapterId
+   0063 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   0068 brtrue IL_006f: ldarg.0
+   006D ldc.i4.0 
+   006E ret 
+   006F ldarg.0 
+   0070 ldloc.1 
+   0071 ldloca.s V_0
+   0073 ldfld ResData.ResLevelCfgInfo::iChapterId
+   0078 ldloca.s V_0
+   007A ldfld ResData.ResLevelCfgInfo::bLevelNo
+   007F call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelOpened(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO,System.Int32,System.Int32)
+   0084 ret 
+== System.Boolean IsLevelOpened(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO pveInfo, System.Int32 ChapterNum, System.Int32 LevelSeq) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0006 ldarg.2 
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 ldelem.ref 
+   000A ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   000F ldarg.3 
+   0010 ldc.i4.1 
+   0011 sub 
+   0012 ldelem.ref 
+   0013 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0018 ldc.i4.0 
+   0019 ceq 
+   001B ldc.i4.0 
+   001C ceq 
+   001E ret 
+== System.Boolean IsLevelFinished(System.Int32 inLevelId) attrs=Public, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.1 
+   0003 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   0008 ldstr Can't find level config with ID: {0}
+   000D ldc.i4.1 
+   000E newarr System.Object
+   0013 dup 
+   0014 ldc.i4.0 
+   0015 ldarg.1 
+   0016 box System.Int32
+   001B stelem.ref 
+   001C call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   0021 ldloca.s V_0
+   0023 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   0028 ldc.i4.0 
+   0029 cgt 
+   002B ldstr LevelDifficulty must > 0
+   0030 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0035 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   003A callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   003F ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0044 ldloca.s V_0
+   0046 ldfld ResData.ResLevelCfgInfo::bLevelDifficulty
+   004B ldc.i4.1 
+   004C sub 
+   004D ldelem.ref 
+   004E stloc.1 
+   004F ldloc.1 
+   0050 brtrue IL_0057: ldarg.0
+   0055 ldc.i4.0 
+   0056 ret 
+   0057 ldarg.0 
+   0058 ldloc.1 
+   0059 ldloca.s V_0
+   005B ldfld ResData.ResLevelCfgInfo::iChapterId
+   0060 ldloca.s V_0
+   0062 ldfld ResData.ResLevelCfgInfo::bLevelNo
+   0067 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelFinished(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO,System.Int32,System.Int32)
+   006C ret 
+== System.Boolean IsLevelFinished(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO pveInfo, System.Int32 ChapterNum, System.Int32 LevelSeq) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.2 
+   0003 ldarg.3 
+   0004 call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsLevelOpened(Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO,System.Int32,System.Int32)
+   0009 brfalse IL_002a: ldc.i4.0
+   000E ldarg.1 
+   000F ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0014 ldarg.2 
+   0015 ldc.i4.1 
+   0016 sub 
+   0017 ldelem.ref 
+   0018 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   001D ldarg.3 
+   001E ldc.i4.1 
+   001F sub 
+   0020 ldelem.ref 
+   0021 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0026 ldc.i4.2 
+   0027 ceq 
+   0029 ret 
+   002A ldc.i4.0 
+   002B ret 
+== System.Boolean HasMoreStar(System.Byte newBits, System.Byte oldBits) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetStarNum(System.Byte)
+   0006 ldarg.2 
+   0007 call System.Int32 Assets.Scripts.GameSystem.CAdventureSys::GetStarNum(System.Byte)
+   000C clt 
+   000E ldc.i4.0 
+   000F ceq 
+   0011 ret 
+== System.Boolean HasEnoughMopupTicket(System.Int32 count) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldc.i4.1 
+   000D callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 ldc.i4.2 
+   0015 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_ID
+   001A callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   001F stloc.2 
+   0020 ldloc.2 
+   0021 conv.i8 
+   0022 ldarg.1 
+   0023 conv.i8 
+   0024 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_NUM_PER_LEVEL
+   0029 conv.u8 
+   002A mul 
+   002B clt 
+   002D ldc.i4.0 
+   002E ceq 
+   0030 ret 
+== System.Boolean HasEnoughDiamondForTicket(System.Int32 count, System.Int32& ReqDiamondNum) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldc.i4.1 
+   000D callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   0012 stloc.1 
+   0013 ldloc.1 
+   0014 ldc.i4.2 
+   0015 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_ID
+   001A callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   001F stloc.2 
+   0020 ldloc.2 
+   0021 conv.i8 
+   0022 ldarg.1 
+   0023 conv.i8 
+   0024 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_NUM_PER_LEVEL
+   0029 conv.u8 
+   002A mul 
+   002B clt 
+   002D call System.Void DebugHelper::Assert(System.Boolean)
+   0032 ldarg.2 
+   0033 ldarg.1 
+   0034 conv.i8 
+   0035 ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_NUM_PER_LEVEL
+   003A conv.u8 
+   003B mul 
+   003C ldloc.2 
+   003D conv.i8 
+   003E sub 
+   003F ldsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_PRICE_BY_DIAMOND
+   0044 conv.u8 
+   0045 mul 
+   0046 conv.i4 
+   0047 stind.i4 
+   0048 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   004D callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0052 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_DianQuan()
+   0057 ldarg.2 
+   0058 ldind.i4 
+   0059 conv.i8 
+   005A clt.un 
+   005C ldc.i4.0 
+   005D ceq 
+   005F ret 
+== System.Int32 CanBuyPlayTime(Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO levelInfo, System.Byte& CoinType, System.UInt32& Price, System.String& reason) attrs=Private, HideBySig maxstack=6
+   0000 ldarg.s reason
+   0002 ldsfld System.String::Empty
+   0007 stind.ref 
+   0008 ldarg.1 
+   0009 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::PlayLimit
+   000E ldc.i4.1 
+   000F add 
+   0010 stloc.0 
+   0011 ldloc.0 
+   0012 conv.i8 
+   0013 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHALLENGE_BUYTIME_LIMIT
+   0018 conv.u8 
+   0019 bgt IL_013b: ldarg.2
+   001E call System.Int32 ResData.GameDataMgr/resShopInfoDatabin::Count()
+   0023 stloc.1 
+   0024 ldc.i4.0 
+   0025 stloc.2 
+   0026 br IL_0118: ldloc.2
+   002B ldloc.2 
+   002C call ResData.ResShopInfo ResData.GameDataMgr/resShopInfoDatabin::GetByIndex(System.Int32)
+   0031 stloc.3 
+   0032 ldloca.s V_3
+   0034 ldfld ResData.ResShopInfo::iType
+   0039 ldc.i4.6 
+   003A bne.un IL_0114: ldloc.2
+   003F ldloca.s V_3
+   0041 ldfld ResData.ResShopInfo::iSubType
+   0046 ldloc.0 
+   0047 bne.un IL_0114: ldloc.2
+   004C ldarg.2 
+   004D ldloca.s V_3
+   004F ldfld ResData.ResShopInfo::bCoinType
+   0054 stind.i1 
+   0055 ldarg.3 
+   0056 ldloca.s V_3
+   0058 ldfld ResData.ResShopInfo::dwCoinPrice
+   005D stind.i4 
+   005E ldloca.s V_3
+   0060 ldfld ResData.ResShopInfo::bCoinType
+   0065 ldc.i4.2 
+   0066 bne.un IL_009e: ldloca.s V_3
+   006B call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0070 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0075 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_DianQuan()
+   007A ldloca.s V_3
+   007C ldfld ResData.ResShopInfo::dwCoinPrice
+   0081 conv.u8 
+   0082 blt.un IL_0089: ldarg.s reason
+   0087 ldc.i4.0 
+   0088 ret 
+   0089 ldarg.s reason
+   008B call !0 Singleton`1<CTextManager>::GetInstance()
+   0090 ldstr Common_DianQuan_Not_Enough
+   0095 ldc.i4.1 
+   0096 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   009B stind.ref 
+   009C ldc.i4.m1 
+   009D ret 
+   009E ldloca.s V_3
+   00A0 ldfld ResData.ResShopInfo::bCoinType
+   00A5 ldc.i4.4 
+   00A6 bne.un IL_00de: ldc.i4.0
+   00AB call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   00B0 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   00B5 callvirt System.UInt32 Assets.Scripts.GameSystem.CRoleInfo::get_GoldCoin()
+   00BA ldloca.s V_3
+   00BC ldfld ResData.ResShopInfo::dwCoinPrice
+   00C1 blt.un IL_00c8: ldarg.s reason
+   00C6 ldc.i4.0 
+   00C7 ret 
+   00C8 ldarg.s reason
+   00CA call !0 Singleton`1<CTextManager>::GetInstance()
+   00CF ldstr Common_GoldCoin_Not_Enough
+   00D4 ldc.i4.1 
+   00D5 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   00DA stind.ref 
+   00DB ldc.i4.s -2
+   00DD ret 
+   00DE ldc.i4.0 
+   00DF ldstr Invalid coin type: {0}
+   00E4 ldc.i4.1 
+   00E5 newarr System.Object
+   00EA dup 
+   00EB ldc.i4.0 
+   00EC ldloca.s V_3
+   00EE ldfld ResData.ResShopInfo::bCoinType
+   00F3 box System.Byte
+   00F8 stelem.ref 
+   00F9 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   00FE ldarg.s reason
+   0100 call !0 Singleton`1<CTextManager>::GetInstance()
+   0105 ldstr PVE_Level_Money_Type_Error
+   010A ldc.i4.1 
+   010B callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0110 stind.ref 
+   0111 ldc.i4.s -3
+   0113 ret 
+   0114 ldloc.2 
+   0115 ldc.i4.1 
+   0116 add 
+   0117 stloc.2 
+   0118 ldloc.2 
+   0119 ldloc.1 
+   011A blt IL_002b: ldloc.2
+   011F ldarg.2 
+   0120 ldc.i4.0 
+   0121 stind.i1 
+   0122 ldarg.3 
+   0123 ldc.i4.0 
+   0124 stind.i4 
+   0125 ldarg.s reason
+   0127 call !0 Singleton`1<CTextManager>::GetInstance()
+   012C ldstr PVE_Level_Can_Not_Find_Config
+   0131 ldc.i4.1 
+   0132 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0137 stind.ref 
+   0138 ldc.i4.s -4
+   013A ret 
+   013B ldarg.2 
+   013C ldc.i4.0 
+   013D stind.i1 
+   013E ldarg.3 
+   013F ldc.i4.0 
+   0140 stind.i4 
+   0141 ldarg.s reason
+   0143 call !0 Singleton`1<CTextManager>::GetInstance()
+   0148 ldstr PVE_Level_Level_Refresh_Max
+   014D ldc.i4.1 
+   014E callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   0153 stind.ref 
+   0154 ldc.i4.s -5
+   0156 ret 
+== System.Boolean CheckFullItem(System.String& itemName) attrs=Private, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0008 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   000D ldstr level config is null with level ID: {0}
+   0012 ldc.i4.1 
+   0013 newarr System.Object
+   0018 dup 
+   0019 ldc.i4.0 
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0020 box System.Int32
+   0025 stelem.ref 
+   0026 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   002B ldarg.1 
+   002C ldsfld System.String::Empty
+   0031 stind.ref 
+   0032 ldc.i4.0 
+   0033 stloc.1 
+   0034 br IL_013b: ldloc.1
+   0039 ldloca.s V_0
+   003B ldloc.1 
+   003C call ResData.ResDT_PveRewardShowInfo ResData.ResLevelCfgInfo::astRewardShowDetail(System.Int32)
+   0041 stloc.2 
+   0042 ldloca.s V_2
+   0044 ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   0049 brtrue IL_0053: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   004E br IL_0137: ldloc.1
+   0053 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0058 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   005D stloc.3 
+   005E ldloc.3 
+   005F ldc.i4.1 
+   0060 callvirt Assets.Scripts.GameSystem.CUseableContainer Assets.Scripts.GameSystem.CRoleInfo::GetUseableContainer(Assets.Scripts.GameSystem.enCONTAINER_TYPE)
+   0065 stloc.s V_4
+   0067 ldc.i4.0 
+   0068 stloc.s V_5
+   006A ldloca.s V_2
+   006C ldfld ResData.ResDT_PveRewardShowInfo::bRewardType
+   0071 ldc.i4.2 
+   0072 bne.un IL_00d3: ldloca.s V_2
+   0077 ldloc.s V_4
+   0079 ldc.i4.2 
+   007A ldloca.s V_2
+   007C ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   0081 callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   0086 stloc.s V_5
+   0088 ldloca.s V_6
+   008A ldloca.s V_2
+   008C ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   0091 call System.Boolean ResData.GameDataMgr/itemDatabin::FindByKey(ResData.ResPropInfo&,System.UInt32)
+   0096 ldstr item is null with ID: {0}
+   009B ldc.i4.1 
+   009C newarr System.Object
+   00A1 dup 
+   00A2 ldc.i4.0 
+   00A3 ldloca.s V_2
+   00A5 ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   00AA box System.UInt32
+   00AF stelem.ref 
+   00B0 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   00B5 ldarg.1 
+   00B6 ldloca.s V_6
+   00B8 call System.String ResData.ResPropInfo::get_szName()
+   00BD stind.ref 
+   00BE ldloc.s V_5
+   00C0 ldloca.s V_6
+   00C2 ldfld ResData.ResPropInfo::iOverLimit
+   00C7 bne.un IL_00ce: br IL_0137
+   00CC ldc.i4.0 
+   00CD ret 
+   00CE br IL_0137: ldloc.1
+   00D3 ldloca.s V_2
+   00D5 ldfld ResData.ResDT_PveRewardShowInfo::bRewardType
+   00DA ldc.i4.3 
+   00DB bne.un IL_0137: ldloc.1
+   00E0 ldloc.s V_4
+   00E2 ldc.i4.3 
+   00E3 ldloca.s V_2
+   00E5 ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   00EA callvirt System.Int32 Assets.Scripts.GameSystem.CUseableContainer::GetUseableStackCount(CSProtocol.COM_ITEM_TYPE,System.UInt32)
+   00EF stloc.s V_5
+   00F1 ldloca.s V_7
+   00F3 ldloca.s V_2
+   00F5 ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   00FA call System.Boolean ResData.GameDataMgr/equipInfoDatabin::FindByKey(ResData.ResEquipInfo&,System.UInt32)
+   00FF ldstr equip is null with ID: {0}
+   0104 ldc.i4.1 
+   0105 newarr System.Object
+   010A dup 
+   010B ldc.i4.0 
+   010C ldloca.s V_2
+   010E ldfld ResData.ResDT_PveRewardShowInfo::dwRewardID
+   0113 box System.UInt32
+   0118 stelem.ref 
+   0119 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   011E ldarg.1 
+   011F ldloca.s V_7
+   0121 call System.String ResData.ResEquipInfo::get_szName()
+   0126 stind.ref 
+   0127 ldloc.s V_5
+   0129 ldloca.s V_7
+   012B ldfld ResData.ResEquipInfo::iOverLimit
+   0130 bne.un IL_0137: ldloc.1
+   0135 ldc.i4.0 
+   0136 ret 
+   0137 ldloc.1 
+   0138 ldc.i4.1 
+   0139 add 
+   013A stloc.1 
+   013B ldloc.1 
+   013C ldc.i4.5 
+   013D blt IL_0039: ldloca.s V_0
+   0142 ldc.i4.1 
+   0143 ret 
+== System.Boolean CheckTeamNum() attrs=Private, HideBySig maxstack=6
+   0000 ldloca.s V_0
+   0002 ldarg.0 
+   0003 ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   0008 call System.Boolean ResData.GameDataMgr/levelDatabin::FindByKey(ResData.ResLevelCfgInfo&,System.Int32)
+   000D brfalse IL_00de: ldc.i4.0
+   0012 ldsfld Assets.Scripts.GameSystem.CHeroSelectBaseSystem::s_defaultBattleListInfo
+   0017 stloc.1 
+   0018 ldc.i4.0 
+   0019 stloc.2 
+   001A ldloc.1 
+   001B brfalse IL_002b: ldc.i4.0
+   0020 ldloc.1 
+   0021 ldfld CSProtocol.COMDT_BATTLELIST_LIST::dwListNum
+   0026 brtrue IL_002d: ldc.i4.0
+   002B ldc.i4.0 
+   002C ret 
+   002D ldc.i4.0 
+   002E stloc.3 
+   002F br IL_00c5: ldloc.3
+   0034 ldloc.1 
+   0035 ldfld CSProtocol.COMDT_BATTLELIST_LIST::astBattleList
+   003A ldloc.3 
+   003B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_BATTLELIST>::get_Item(System.Int32)
+   0040 ldfld CSProtocol.COMDT_BATTLELIST::dwBattleListID
+   0045 ldloca.s V_0
+   0047 ldfld ResData.ResLevelCfgInfo::dwBattleListID
+   004C bne.un IL_00c1: ldloc.3
+   0051 ldloc.1 
+   0052 ldfld CSProtocol.COMDT_BATTLELIST_LIST::astBattleList
+   0057 ldloc.3 
+   0058 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_BATTLELIST>::get_Item(System.Int32)
+   005D ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   0062 ldfld CSProtocol.COMDT_BATTLEHERO::wHeroCnt
+   0067 brtrue IL_006e: ldc.i4.0
+   006C ldc.i4.0 
+   006D ret 
+   006E ldc.i4.0 
+   006F stloc.s V_4
+   0071 br IL_009f: ldloc.s V_4
+   0076 ldloc.1 
+   0077 ldfld CSProtocol.COMDT_BATTLELIST_LIST::astBattleList
+   007C ldloc.3 
+   007D callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_BATTLELIST>::get_Item(System.Int32)
+   0082 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   0087 ldfld CSProtocol.COMDT_BATTLEHERO::BattleHeroList
+   008C ldloc.s V_4
+   008E ldelem.u4 
+   008F ldc.i4.0 
+   0090 ble.un IL_0099: ldloc.s V_4
+   0095 ldloc.2 
+   0096 ldc.i4.1 
+   0097 add 
+   0098 stloc.2 
+   0099 ldloc.s V_4
+   009B ldc.i4.1 
+   009C add 
+   009D stloc.s V_4
+   009F ldloc.s V_4
+   00A1 ldloc.1 
+   00A2 ldfld CSProtocol.COMDT_BATTLELIST_LIST::astBattleList
+   00A7 ldloc.3 
+   00A8 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_BATTLELIST>::get_Item(System.Int32)
+   00AD ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00B2 ldfld CSProtocol.COMDT_BATTLEHERO::wHeroCnt
+   00B7 blt IL_0076: ldloc.1
+   00BC br IL_00d3: ldloc.2
+   00C1 ldloc.3 
+   00C2 ldc.i4.1 
+   00C3 add 
+   00C4 stloc.3 
+   00C5 ldloc.3 
+   00C6 conv.i8 
+   00C7 ldloc.1 
+   00C8 ldfld CSProtocol.COMDT_BATTLELIST_LIST::dwListNum
+   00CD conv.u8 
+   00CE blt IL_0034: ldloc.1
+   00D3 ldloc.2 
+   00D4 ldloca.s V_0
+   00D6 ldfld ResData.ResLevelCfgInfo::iHeroNum
+   00DB ceq 
+   00DD ret 
+   00DE ldc.i4.0 
+   00DF ldstr Can't find Level Config -- LevelID: 
+   00E4 ldc.i4.1 
+   00E5 newarr System.Object
+   00EA dup 
+   00EB ldc.i4.0 
+   00EC ldarg.0 
+   00ED ldfld Assets.Scripts.GameSystem.CAdventureSys::currentLevelId
+   00F2 box System.Int32
+   00F7 stelem.ref 
+   00F8 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   00FD ldc.i4.0 
+   00FE ret 
+== System.Void setDifficult(System.Int32 indata) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.CAdventureSys::currentDifficulty
+   0007 ret 
+== System.Void OnOpenExplore(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=5
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CCSCoreSys::IsBanPvp()
+   000A brfalse IL_001a: call System.Void Assets.Scripts.GameSystem.CUICommonSystem::ResetLobbyFormFadeRecover()
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.CCSCoreSys>::get_instance()
+   0014 callvirt System.Void Assets.Scripts.GameSystem.CCSCoreSys::ShowBanPvpTips()
+   0019 ret 
+   001A call System.Void Assets.Scripts.GameSystem.CUICommonSystem::ResetLobbyFormFadeRecover()
+   001F call System.Boolean Assets.Scripts.GameSystem.CUICommonSystem::IsInMatchingWithAlert()
+   0024 brfalse IL_002a: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0029 ret 
+   002A call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   002F ldsfld Assets.Scripts.GameSystem.CAdventureSys::EXLPORE_FORM_PATH
+   0034 ldc.i4.1 
+   0035 ldc.i4.1 
+   0036 ldnull 
+   0037 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::OpenForm(System.String,System.Boolean,System.Boolean,System.String)
+   003C stloc.0 
+   003D ldloc.0 
+   003E ldnull 
+   003F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0044 brfalse IL_0074: ret
+   0049 ldloc.0 
+   004A call System.Void Assets.Scripts.GameSystem.CExploreView::InitExloreList(Assets.Scripts.UI.CUIFormScript)
+   004F call System.Boolean Assets.Scripts.GameSystem.CSysDynamicBlock::get_bLobbyEntryBlocked()
+   0054 brfalse IL_0074: ret
+   0059 ldloc.0 
+   005A ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   005F callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0064 ldstr TopCommon/Video
+   0069 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   006E ldc.i4.0 
+   006F call System.Void Assets.Scripts.GameSystem.CUICommonSystem::SetObjActive(UnityEngine.Transform,System.Boolean)
+   0074 ret 
+== System.Void OnCloseExplore(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::EXLPORE_FORM_PATH
+   000A callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(System.String)
+   000F ret 
+== System.Void OnDragStart(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0005 ldstr UI_Add_Button
+   000A ldnull 
+   000B callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0010 pop 
+   0011 ret 
+== System.Void OnExploreSelect(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.Sound.CSoundManager>::get_instance()
+   0005 ldstr UI_Add_Button
+   000A ldnull 
+   000B callvirt System.UInt32 Assets.Scripts.Sound.CSoundManager::PostEvent(System.String,UnityEngine.GameObject)
+   0010 pop 
+   0011 ret 
+== System.Void OnExploreListScroll(Assets.Scripts.UI.CUIEvent uiEvent) attrs=Private, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::get_instance()
+   0005 ldsfld Assets.Scripts.GameSystem.CAdventureSys::EXLPORE_FORM_PATH
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_0027: ret
+   001C ldloc.0 
+   001D ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0022 call System.Void Assets.Scripts.GameSystem.CExploreView::OnExploreListScroll(UnityEngine.GameObject)
+   0027 ret 
+== Assets.Scripts.GameSystem.EnterAdvError CanEnterLevel(System.Int32 chapterId, System.Int32 levelSeq, System.Int32 difficulty) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldloca.s V_1
+   0011 ldc.i4.2 
+   0012 ret 
+   0013 ldloca.s V_1
+   0015 ldarg.1 
+   0016 call System.Boolean ResData.GameDataMgr/chapterInfoDatabin::FindByKey(ResData.ResChapterInfo&,System.UInt32)
+   001B brtrue IL_0038: call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0020 ldc.i4.0 
+   0021 ldstr chapterId[{0}]
+   0026 ldarg.1 
+   0027 box System.Int32
+   002C call System.String System.String::Format(System.String,System.Object)
+   0031 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0036 ldc.i4.2 
+   0037 ret 
+   0038 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   003D ldloca.s V_1
+   003F ldfld ResData.ResChapterInfo::dwChapterId
+   0044 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   0049 stloc.2 
+   004A ldloc.0 
+   004B ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0050 ldarg.3 
+   0051 ldc.i4.1 
+   0052 sub 
+   0053 ldelem.ref 
+   0054 stloc.3 
+   0055 ldloc.3 
+   0056 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   005B ldarg.1 
+   005C ldc.i4.1 
+   005D sub 
+   005E ldelem.ref 
+   005F stloc.s V_4
+   0061 ldloc.s V_4
+   0063 ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0068 stloc.s V_5
+   006A ldloc.s V_5
+   006C ldarg.2 
+   006D ldc.i4.1 
+   006E sub 
+   006F ldelem.ref 
+   0070 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0075 brfalse IL_0080: ldc.i4.1
+   007A ldloc.2 
+   007B brtrue IL_0082: ldc.i4.0
+   0080 ldc.i4.1 
+   0081 ret 
+   0082 ldc.i4.0 
+   0083 ret 
+== System.Boolean IsLevelVaild(System.Int32 chapterId, System.Int32 levelSeq, System.Int32 difficulty) attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brtrue IL_0013: ldarg.1
+   0011 ldc.i4.0 
+   0012 ret 
+   0013 ldarg.1 
+   0014 ldc.i4.0 
+   0015 ble IL_0028: ldc.i4.0
+   001A ldarg.2 
+   001B ldc.i4.0 
+   001C ble IL_0028: ldc.i4.0
+   0021 ldarg.3 
+   0022 ldc.i4.0 
+   0023 bgt IL_002a: ldsfld System.Int32 Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   0028 ldc.i4.0 
+   0029 ret 
+   002A ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   002F ldarg.3 
+   0030 blt IL_0044: ldc.i4.0
+   0035 ldloc.0 
+   0036 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   003B ldarg.3 
+   003C ldc.i4.1 
+   003D sub 
+   003E ldelem.ref 
+   003F brtrue IL_0046: ldsfld System.Int32 Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0044 ldc.i4.0 
+   0045 ret 
+   0046 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   004B ldarg.1 
+   004C blt IL_0069: ldc.i4.0
+   0051 ldloc.0 
+   0052 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0057 ldarg.3 
+   0058 ldc.i4.1 
+   0059 sub 
+   005A ldelem.ref 
+   005B ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0060 ldarg.1 
+   0061 ldc.i4.1 
+   0062 sub 
+   0063 ldelem.ref 
+   0064 brtrue IL_006b: ldloc.0
+   0069 ldc.i4.0 
+   006A ret 
+   006B ldloc.0 
+   006C ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0071 ldarg.3 
+   0072 ldc.i4.1 
+   0073 sub 
+   0074 ldelem.ref 
+   0075 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   007A ldarg.2 
+   007B ldc.i4.1 
+   007C sub 
+   007D ldelem.ref 
+   007E ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0083 ldlen 
+   0084 conv.i4 
+   0085 ldarg.2 
+   0086 blt IL_00ac: ldc.i4.0
+   008B ldloc.0 
+   008C ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0091 ldarg.3 
+   0092 ldc.i4.1 
+   0093 sub 
+   0094 ldelem.ref 
+   0095 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   009A ldarg.1 
+   009B ldc.i4.1 
+   009C sub 
+   009D ldelem.ref 
+   009E ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   00A3 ldarg.2 
+   00A4 ldc.i4.1 
+   00A5 sub 
+   00A6 ldelem.ref 
+   00A7 brtrue IL_00ae: ldc.i4.1
+   00AC ldc.i4.0 
+   00AD ret 
+   00AE ldc.i4.1 
+   00AF ret 
+== System.Int32 GetLastLevel(System.Int32 chapterId, System.Int32 difficulty) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0007 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000C stloc.1 
+   000D ldloc.1 
+   000E brtrue IL_0015: ldarg.0
+   0013 ldloc.0 
+   0014 ret 
+   0015 ldarg.0 
+   0016 ldc.i4.0 
+   0017 ble IL_0023: ldloc.0
+   001C ldarg.1 
+   001D ldc.i4.0 
+   001E bgt IL_0025: ldsfld System.Int32 Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   0023 ldloc.0 
+   0024 ret 
+   0025 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   002A ldarg.1 
+   002B blt IL_003f: ldloc.0
+   0030 ldloc.1 
+   0031 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0036 ldarg.1 
+   0037 ldc.i4.1 
+   0038 sub 
+   0039 ldelem.ref 
+   003A brtrue IL_0041: ldsfld System.Int32 Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   003F ldloc.0 
+   0040 ret 
+   0041 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0046 ldarg.0 
+   0047 blt IL_0064: ldloc.0
+   004C ldloc.1 
+   004D ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   0052 ldarg.1 
+   0053 ldc.i4.1 
+   0054 sub 
+   0055 ldelem.ref 
+   0056 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   005B ldarg.0 
+   005C ldc.i4.1 
+   005D sub 
+   005E ldelem.ref 
+   005F brtrue IL_0066: ldloc.1
+   0064 ldloc.0 
+   0065 ret 
+   0066 ldloc.1 
+   0067 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   006C ldarg.1 
+   006D ldc.i4.1 
+   006E sub 
+   006F ldelem.ref 
+   0070 stloc.2 
+   0071 ldloc.2 
+   0072 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0077 ldarg.0 
+   0078 ldc.i4.1 
+   0079 sub 
+   007A ldelem.ref 
+   007B stloc.3 
+   007C ldloc.3 
+   007D ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0082 stloc.s V_4
+   0084 ldc.i4.0 
+   0085 stloc.s V_5
+   0087 br IL_00a6: ldloc.s V_5
+   008C ldloc.s V_4
+   008E ldloc.s V_5
+   0090 ldelem.ref 
+   0091 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   0096 brfalse IL_00a0: ldloc.s V_5
+   009B ldloc.s V_5
+   009D ldc.i4.1 
+   009E add 
+   009F stloc.0 
+   00A0 ldloc.s V_5
+   00A2 ldc.i4.1 
+   00A3 add 
+   00A4 stloc.s V_5
+   00A6 ldloc.s V_5
+   00A8 ldloc.s V_4
+   00AA ldlen 
+   00AB conv.i4 
+   00AC blt IL_008c: ldloc.s V_4
+   00B1 ldloc.0 
+   00B2 ret 
+== System.Int32 GetLastChapter(System.Int32 difficulty) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0007 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000C stloc.1 
+   000D ldloc.1 
+   000E brtrue IL_0015: ldc.i4.0
+   0013 ldloc.0 
+   0014 ret 
+   0015 ldc.i4.0 
+   0016 stloc.2 
+   0017 br IL_0040: ldloc.2
+   001C call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0021 ldloc.2 
+   0022 ldc.i4.1 
+   0023 add 
+   0024 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   0029 brfalse IL_0037: br IL_004b
+   002E ldloc.2 
+   002F ldc.i4.1 
+   0030 add 
+   0031 stloc.0 
+   0032 br IL_003c: ldloc.2
+   0037 br IL_004b: ldloc.0
+   003C ldloc.2 
+   003D ldc.i4.1 
+   003E add 
+   003F stloc.2 
+   0040 ldloc.2 
+   0041 ldsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   0046 blt IL_001c: call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   004B ldloc.0 
+   004C ret 
+== System.Int32 GetLastDifficulty(System.Int32 chapterId) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4.1 
+   0001 stloc.0 
+   0002 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0007 ldarg.0 
+   0008 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   000D stloc.1 
+   000E ldloc.1 
+   000F brtrue IL_0016: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0014 ldloc.0 
+   0015 ret 
+   0016 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   001B callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0020 stloc.2 
+   0021 ldloc.2 
+   0022 brtrue IL_0029: ldsfld System.Int32 Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   0027 ldloc.0 
+   0028 ret 
+   0029 ldsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   002E stloc.3 
+   002F ldc.i4.0 
+   0030 stloc.s V_4
+   0032 br IL_0051: ldloc.s V_4
+   0037 ldarg.0 
+   0038 ldloc.s V_4
+   003A ldc.i4.1 
+   003B add 
+   003C call System.Boolean Assets.Scripts.GameSystem.CAdventureSys::IsDifOpen(System.Int32,System.Int32)
+   0041 brfalse IL_004b: ldloc.s V_4
+   0046 ldloc.s V_4
+   0048 ldc.i4.1 
+   0049 add 
+   004A stloc.0 
+   004B ldloc.s V_4
+   004D ldc.i4.1 
+   004E add 
+   004F stloc.s V_4
+   0051 ldloc.s V_4
+   0053 ldloc.3 
+   0054 blt IL_0037: ldarg.0
+   0059 ldloc.0 
+   005A ret 
+== System.Boolean IsDifOpen(System.Int32 chapterId, System.Int32 difficulty) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CFunctionUnlockSys>::get_instance()
+   0005 ldarg.0 
+   0006 callvirt System.Boolean Assets.Scripts.GameSystem.CFunctionUnlockSys::ChapterIsUnlock(System.UInt32)
+   000B stloc.0 
+   000C ldloc.0 
+   000D brtrue IL_0014: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0012 ldc.i4.0 
+   0013 ret 
+   0014 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0019 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   001E stloc.1 
+   001F ldloc.1 
+   0020 brtrue IL_0027: ldloc.1
+   0025 ldc.i4.0 
+   0026 ret 
+   0027 ldloc.1 
+   0028 ldfld Assets.Scripts.GameSystem.CRoleInfo::pveLevelDetail
+   002D ldarg.1 
+   002E ldc.i4.1 
+   002F sub 
+   0030 ldelem.ref 
+   0031 stloc.2 
+   0032 ldloc.2 
+   0033 ldfld Assets.Scripts.GameSystem.PVE_ADV_COMPLETE_INFO::ChapterDetailList
+   0038 ldarg.0 
+   0039 ldc.i4.1 
+   003A sub 
+   003B ldelem.ref 
+   003C stloc.3 
+   003D ldloc.3 
+   003E ldfld Assets.Scripts.GameSystem.PVE_CHAPTER_COMPLETE_INFO::LevelDetailList
+   0043 stloc.s V_4
+   0045 ldloc.s V_4
+   0047 ldc.i4.0 
+   0048 ldelem.ref 
+   0049 ldfld Assets.Scripts.GameSystem.PVE_LEVEL_COMPLETE_INFO::levelStatus
+   004E brfalse IL_0055: ldc.i4.0
+   0053 ldc.i4.1 
+   0054 ret 
+   0055 ldc.i4.0 
+   0056 ret 
+== System.Byte[] GetCacheLevel() attrs=Private, HideBySig maxstack=6
+   0000 ldc.i4.3 
+   0001 newarr System.Byte
+   0006 stloc.0 
+   0007 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   000C callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0011 stloc.1 
+   0012 ldloc.1 
+   0013 brfalse IL_00a2: ldloc.0
+   0018 ldloc.0 
+   0019 ldc.i4.0 
+   001A ldstr {0}_{1}_{2}
+   001F ldstr Sgame_Chapter
+   0024 ldloc.1 
+   0025 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   002A box System.UInt64
+   002F ldloc.1 
+   0030 callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0035 box System.Int32
+   003A call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   003F call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   0044 conv.u1 
+   0045 stelem.i1 
+   0046 ldloc.0 
+   0047 ldc.i4.1 
+   0048 ldstr {0}_{1}_{2}
+   004D ldstr Sgame_Level
+   0052 ldloc.1 
+   0053 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0058 box System.UInt64
+   005D ldloc.1 
+   005E callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0063 box System.Int32
+   0068 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   006D call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   0072 conv.u1 
+   0073 stelem.i1 
+   0074 ldloc.0 
+   0075 ldc.i4.2 
+   0076 ldstr {0}_{1}_{2}
+   007B ldstr Sgame_Difficulty
+   0080 ldloc.1 
+   0081 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0086 box System.UInt64
+   008B ldloc.1 
+   008C callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0091 box System.Int32
+   0096 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   009B call System.Int32 UnityEngine.PlayerPrefs::GetInt(System.String)
+   00A0 conv.u1 
+   00A1 stelem.i1 
+   00A2 ldloc.0 
+   00A3 ret 
+== System.Void SetCacheLevel(System.Byte chapterNo, System.Byte levelNo, System.Byte difficultyNo) attrs=Private, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::get_instance()
+   0005 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   000A stloc.0 
+   000B ldloc.0 
+   000C brfalse IL_0092: ret
+   0011 ldstr {0}_{1}_{2}
+   0016 ldstr Sgame_Chapter
+   001B ldloc.0 
+   001C callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0021 box System.UInt64
+   0026 ldloc.0 
+   0027 callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   002C box System.Int32
+   0031 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0036 ldarg.1 
+   0037 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   003C ldstr {0}_{1}_{2}
+   0041 ldstr Sgame_Level
+   0046 ldloc.0 
+   0047 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   004C box System.UInt64
+   0051 ldloc.0 
+   0052 callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0057 box System.Int32
+   005C call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   0061 ldarg.2 
+   0062 call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0067 ldstr {0}_{1}_{2}
+   006C ldstr Sgame_Difficulty
+   0071 ldloc.0 
+   0072 callvirt System.UInt64 Assets.Scripts.GameSystem.CRoleInfo::get_playerUllUID()
+   0077 box System.UInt64
+   007C ldloc.0 
+   007D callvirt System.Int32 Assets.Scripts.GameSystem.CRoleInfo::get_logicWorldID()
+   0082 box System.Int32
+   0087 call System.String System.String::Format(System.String,System.Object,System.Object,System.Object)
+   008C ldarg.3 
+   008D call System.Void UnityEngine.PlayerPrefs::SetInt(System.String,System.Int32)
+   0092 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=1
+   0000 ldstr UGUI/Form/System/PvE/Adv/Form_Adv_Select.prefab
+   0005 stsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_SELECT_FORM
+   000A ldstr UGUI/Form/System/PvE/Adv/Form_Adv_Level.prefab
+   000F stsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_LEVEL_FORM
+   0014 ldstr UGUI/Form/System/PvE/Adv/Form_Mopup.prefab
+   0019 stsfld Assets.Scripts.GameSystem.CAdventureSys::ADVENTURE_MOB_FORM
+   001E ldstr UGUI/Form/System/PvE/Adv/Form_Explore_Select.prefab
+   0023 stsfld Assets.Scripts.GameSystem.CAdventureSys::EXLPORE_FORM_PATH
+   0028 ldc.i4.s 10
+   002A stsfld Assets.Scripts.GameSystem.CAdventureSys::CHAPTER_NUM
+   002F ldc.i4.4 
+   0030 stsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_PER_CHAPTER
+   0035 ldc.i4.3 
+   0036 stsfld Assets.Scripts.GameSystem.CAdventureSys::STAR_PER_LEVEL
+   003B ldc.i4.1 
+   003C stsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_NUM_PER_LEVEL
+   0041 ldc.i4.1 
+   0042 stsfld Assets.Scripts.GameSystem.CAdventureSys::MOPUP_TICKET_PRICE_BY_DIAMOND
+   0047 ldc.i4.1 
+   0048 stsfld Assets.Scripts.GameSystem.CAdventureSys::CHALLENGE_BUYTIME_LIMIT
+   004D ldc.i4.4 
+   004E stsfld Assets.Scripts.GameSystem.CAdventureSys::LEVEL_DIFFICULT_OPENED
+   0053 ret 

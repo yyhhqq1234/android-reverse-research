@@ -1,0 +1,1157 @@
+// TYPE Assets.Scripts.GameSystem.WatchController  base=Singleton`1<Assets.Scripts.GameSystem.WatchController>  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean m_bUseArWatch
+  FIELD Assets.Scripts.GameSystem.WatchController/WorkMode _workMode
+  FIELD System.Boolean _isRunning
+  FIELD System.Byte _speedRate
+  FIELD System.Single _overTime
+  FIELD System.Boolean <FightOverJust>k__BackingField
+  FIELD CSProtocol.COMDT_TGWINFO _tgw
+  FIELD System.UInt32 _observeDelayFrames
+  FIELD System.Single OVER_WAIT_TIME = 10
+  FIELD System.Int32 RECV_BUFF_SIZE = 409600
+  FIELD System.Int32 MAX_PUSH_FRAME_LEN = 60
+  FIELD System.Int32 STOP_SPEED_BUFFERLIMIT = 120
+  FIELD System.UInt32 _maxFrameNo
+  FIELD System.Boolean _isStreamEnd
+  FIELD System.Byte[] _recvBuff
+  FIELD System.UInt32 _buffRecvSize
+  FIELD System.UInt32 _totalRecvSize
+  FIELD System.Collections.Generic.Queue`1<System.Object> _pkgQueue
+  FIELD System.UInt32 _thisTick
+  FIELD System.UInt32 _lastRequestTick
+  FIELD System.UInt32 _requestTickSpan
+  FIELD System.Boolean m_isInCheat4Comp
+  FIELD System.UInt64 TargetUID
+  FIELD System.Byte <ObPosOfCamp>k__BackingField
+  FIELD Assets.Scripts.GameSystem.ILevelPanel _deadWatchForm
+  FIELD System.UInt32 frameDelta = 66
+  FIELD CSProtocol.COM_PLAYERCAMP observeCamp_
+  PROP System.Boolean FightOverJust
+  PROP System.Byte ObPosOfCamp
+  PROP System.Boolean IsMainOb
+  PROP Assets.Scripts.GameSystem.WatchController/WorkMode workMode
+  PROP CSProtocol.COM_PLAYERCAMP HorizonCamp
+  PROP System.Boolean IsWatching
+  PROP System.Boolean IsNormalWatching
+  PROP System.Boolean IsDeadWatching
+  PROP System.Boolean IsObserving
+  PROP System.Boolean IsReplaying
+  PROP System.Boolean IsLiveCast
+  PROP System.Boolean IsRelayCast
+  PROP System.Boolean IsRunning
+  PROP System.Byte SpeedRateMin
+  PROP System.Byte SpeedRateMax
+  PROP System.Byte SpeedRate
+  PROP System.UInt32 CurFrameNo
+  PROP System.UInt32 EndFrameNo
+  PROP System.UInt32 FrameDelta
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.GameSystem.WatchController::_speedRate
+   0007 ldarg.0 
+   0008 ldc.i4 900
+   000D stfld Assets.Scripts.GameSystem.WatchController::_observeDelayFrames
+   0012 ldarg.0 
+   0013 ldc.i4.s 80
+   0015 stfld Assets.Scripts.GameSystem.WatchController::_requestTickSpan
+   001A ldarg.0 
+   001B ldc.i4.s 41
+   001D stfld Assets.Scripts.GameSystem.WatchController::observeCamp_
+   0022 ldarg.0 
+   0023 call System.Void Singleton`1<Assets.Scripts.GameSystem.WatchController>::.ctor()
+   0028 ret 
+== System.Boolean get_FightOverJust() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::<FightOverJust>k__BackingField
+   0006 ret 
+== System.Void set_FightOverJust(System.Boolean value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.WatchController::<FightOverJust>k__BackingField
+   0007 ret 
+== System.Byte get_ObPosOfCamp() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::<ObPosOfCamp>k__BackingField
+   0006 ret 
+== System.Void set_ObPosOfCamp(System.Byte value) attrs=Private, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.WatchController::<ObPosOfCamp>k__BackingField
+   0007 ret 
+== System.Boolean get_IsMainOb() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Byte Assets.Scripts.GameSystem.WatchController::get_ObPosOfCamp()
+   0006 ldc.i4.0 
+   0007 ceq 
+   0009 ret 
+== Assets.Scripts.GameSystem.WatchController/WorkMode get_workMode() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ret 
+== System.Void Init() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.WatchController>::Init()
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   000B ldc.i4.s 81
+   000D ldarg.0 
+   000E ldftn System.Void Assets.Scripts.GameSystem.WatchController::OnAllPlayerReady(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0014 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0019 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::AddEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   001E call !0 Singleton`1<EventRouter>::GetInstance()
+   0023 ldsfld EventID::ENTER_DEAD_WATCH
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.GameSystem.WatchController::OnEnterDeadWatch()
+   002F newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Void EventRouter::AddEventHandler(System.Int32,System.Action)
+   0039 ret 
+== System.Void UnInit() attrs=Public, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Singleton`1<Assets.Scripts.GameSystem.WatchController>::UnInit()
+   0006 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::GetInstance()
+   000B ldc.i4.s 81
+   000D ldarg.0 
+   000E ldftn System.Void Assets.Scripts.GameSystem.WatchController::OnAllPlayerReady(Assets.Scripts.GameLogic.GameCommonEventParam&)
+   0014 newobj System.Void System.RefAction`1<Assets.Scripts.GameLogic.GameCommonEventParam>::.ctor(System.Object,System.IntPtr)
+   0019 callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::RmvEventHandler<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,System.RefAction`1<ParamType>)
+   001E call !0 Singleton`1<EventRouter>::GetInstance()
+   0023 ldsfld EventID::ENTER_DEAD_WATCH
+   0028 ldarg.0 
+   0029 ldftn System.Void Assets.Scripts.GameSystem.WatchController::OnEnterDeadWatch()
+   002F newobj System.Void System.Action::.ctor(System.Object,System.IntPtr)
+   0034 callvirt System.Void EventRouter::RemoveEventHandler(System.Int32,System.Action)
+   0039 ret 
+== System.Void OnAllPlayerReady(Assets.Scripts.GameLogic.GameCommonEventParam& prm) attrs=Private, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   000A brtrue IL_0019: ret
+   000F call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::get_instance()
+   0014 callvirt System.Void Assets.Scripts.GameSystem.WatchController::InitHostCamp()
+   0019 ret 
+== System.Void OnEnterDeadWatch() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void Assets.Scripts.GameSystem.WatchController::StartDeadWatch()
+   0006 ret 
+== System.Boolean StartObserve(CSProtocol.COMDT_TGWINFO inTGW) attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_001a: ldc.i4.0
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0015 brfalse IL_001c: ldarg.0
+   001A ldc.i4.0 
+   001B ret 
+   001C ldarg.0 
+   001D ldc.i4.1 
+   001E stfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0023 ldarg.0 
+   0024 ldc.r4 0
+   0029 stfld Assets.Scripts.GameSystem.WatchController::_overTime
+   002E ldarg.0 
+   002F ldc.i4.0 
+   0030 call System.Void Assets.Scripts.GameSystem.WatchController::set_FightOverJust(System.Boolean)
+   0035 ldarg.0 
+   0036 ldc.i4.1 
+   0037 call System.Void Assets.Scripts.GameSystem.WatchController::set_IsRunning(System.Boolean)
+   003C ldarg.0 
+   003D ldc.i4.1 
+   003E call System.Void Assets.Scripts.GameSystem.WatchController::set_SpeedRate(System.Byte)
+   0043 ldarg.0 
+   0044 ldc.i4 409600
+   0049 newarr System.Byte
+   004E stfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   0053 ldarg.0 
+   0054 ldc.i4.0 
+   0055 stfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   005A ldarg.0 
+   005B ldc.i4.0 
+   005C stfld Assets.Scripts.GameSystem.WatchController::_totalRecvSize
+   0061 ldarg.0 
+   0062 ldc.i4 1000
+   0067 newobj System.Void System.Collections.Generic.Queue`1<System.Object>::.ctor(System.Int32)
+   006C stfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0071 ldarg.0 
+   0072 ldc.i4.0 
+   0073 stfld Assets.Scripts.GameSystem.WatchController::_maxFrameNo
+   0078 ldarg.0 
+   0079 ldc.i4.0 
+   007A stfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   007F ldarg.0 
+   0080 ldc.i4.0 
+   0081 stfld Assets.Scripts.GameSystem.WatchController::_thisTick
+   0086 ldarg.0 
+   0087 ldc.i4.0 
+   0088 stfld Assets.Scripts.GameSystem.WatchController::_lastRequestTick
+   008D ldloca.s V_0
+   008F ldc.i4.s 10
+   0091 call System.Boolean ResData.GameDataMgr/svr2CltCfgDatabin::FindByKey(ResData.ResGlobalInfo&,System.UInt32)
+   0096 brfalse IL_00c9: ldarg.0
+   009B ldarg.0 
+   009C ldloca.s V_0
+   009E ldfld ResData.ResGlobalInfo::dwConfValue
+   00A3 ldc.i4 1000
+   00A8 mul 
+   00A9 conv.i8 
+   00AA ldc.i4.s 66
+   00AC conv.i8 
+   00AD div 
+   00AE conv.r4 
+   00AF ldc.r4 0
+   00B4 ldc.r4 4500
+   00B9 call System.Single UnityEngine.Mathf::Clamp(System.Single,System.Single,System.Single)
+   00BE conv.u4 
+   00BF stfld Assets.Scripts.GameSystem.WatchController::_observeDelayFrames
+   00C4 br IL_00d4: ldarg.0
+   00C9 ldarg.0 
+   00CA ldc.i4 900
+   00CF stfld Assets.Scripts.GameSystem.WatchController::_observeDelayFrames
+   00D4 ldarg.0 
+   00D5 ldarg.1 
+   00D6 stfld Assets.Scripts.GameSystem.WatchController::_tgw
+   00DB ldarg.0 
+   00DC ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   00E1 brfalse IL_00f1: ldarg.0
+   00E6 ldarg.0 
+   00E7 ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   00EC call System.Void Assets.Scripts.Framework.NetworkModule::InitRelayConnnecting(CSProtocol.COMDT_TGWINFO)
+   00F1 ldarg.0 
+   00F2 ldc.i4.1 
+   00F3 call System.Void Assets.Scripts.GameSystem.WatchController::RequestVideoPiece(System.Boolean)
+   00F8 ldc.i4.1 
+   00F9 ret 
+== System.Void StartReplay(System.String replayPath, System.Boolean checkVersion) attrs=Public, HideBySig maxstack=6
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_001a: ret
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0015 brfalse IL_001b: call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   001A ret 
+   001B call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0020 ldarg.1 
+   0021 ldarg.2 
+   0022 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::BeginReplay(System.String,System.Boolean)
+   0027 brfalse IL_0058: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   002C ldarg.0 
+   002D ldc.i4.2 
+   002E stfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0033 ldarg.0 
+   0034 ldc.r4 0
+   0039 stfld Assets.Scripts.GameSystem.WatchController::_overTime
+   003E ldarg.0 
+   003F ldc.i4.0 
+   0040 call System.Void Assets.Scripts.GameSystem.WatchController::set_FightOverJust(System.Boolean)
+   0045 ldarg.0 
+   0046 ldc.i4.1 
+   0047 call System.Void Assets.Scripts.GameSystem.WatchController::set_IsRunning(System.Boolean)
+   004C ldarg.0 
+   004D ldc.i4.1 
+   004E call System.Void Assets.Scripts.GameSystem.WatchController::set_SpeedRate(System.Byte)
+   0053 br IL_007a: ldarg.0
+   0058 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   005D ldstr Can not play file: 
+   0062 ldarg.1 
+   0063 call System.String System.String::Concat(System.String,System.String)
+   0068 ldc.i4.0 
+   0069 ldc.r4 2
+   006E ldnull 
+   006F ldc.i4.0 
+   0070 newarr System.Object
+   0075 callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   007A ldarg.0 
+   007B ldnull 
+   007C stfld Assets.Scripts.GameSystem.WatchController::_tgw
+   0081 ret 
+== System.Void StartJudge(CSProtocol.COMDT_TGWINFO inTGW, System.Byte posOfCamp) attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_001a: ret
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0015 brfalse IL_001b: ldarg.0
+   001A ret 
+   001B ldarg.0 
+   001C ldarg.2 
+   001D call System.Void Assets.Scripts.GameSystem.WatchController::set_ObPosOfCamp(System.Byte)
+   0022 ldarg.0 
+   0023 ldc.i4.3 
+   0024 stfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0029 ldarg.0 
+   002A ldc.i4.1 
+   002B call System.Void Assets.Scripts.GameSystem.WatchController::set_IsRunning(System.Boolean)
+   0030 ldarg.0 
+   0031 ldc.i4.0 
+   0032 call System.Void Assets.Scripts.GameSystem.WatchController::set_FightOverJust(System.Boolean)
+   0037 ldarg.0 
+   0038 ldarg.1 
+   0039 stfld Assets.Scripts.GameSystem.WatchController::_tgw
+   003E ldarg.0 
+   003F ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   0044 brfalse IL_0054: ret
+   0049 ldarg.0 
+   004A ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   004F call System.Void Assets.Scripts.Framework.NetworkModule::InitRelayConnnecting(CSProtocol.COMDT_TGWINFO)
+   0054 ret 
+== System.Void StartDeadWatch() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_001a: ret
+   000B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldfld Assets.Scripts.GameLogic.BattleLogic::isRuning
+   0015 brtrue IL_001b: call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   001A ret 
+   001B call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0020 brfalse IL_005f: ldarg.0
+   0025 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   002A callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   002F brfalse IL_005f: ldarg.0
+   0034 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0039 callvirt Assets.Scripts.GameSystem.FightForm Assets.Scripts.GameSystem.CBattleSystem::get_FightForm()
+   003E callvirt Assets.Scripts.GameSystem.SignalPanel Assets.Scripts.GameSystem.FightForm::GetSignalPanel()
+   0043 stloc.0 
+   0044 ldloc.0 
+   0045 brfalse IL_005f: ldarg.0
+   004A ldloca.s V_1
+   004C ldc.i4.0 
+   004D ldc.i4.0 
+   004E ldc.i4.0 
+   004F call System.Void VInt3::.ctor(System.Int32,System.Int32,System.Int32)
+   0054 ldloc.0 
+   0055 ldc.i4.s 101
+   0057 ldloc.1 
+   0058 ldc.i4.s 9
+   005A callvirt System.Void Assets.Scripts.GameSystem.SignalPanel::SendCommand_SignalMiniMap_Position(System.Byte,VInt3,Assets.Scripts.GameSystem.MinimapSys/ElementType)
+   005F ldarg.0 
+   0060 ldc.i4.4 
+   0061 stfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0066 ldarg.0 
+   0067 ldc.i4.1 
+   0068 call System.Void Assets.Scripts.GameSystem.WatchController::set_IsRunning(System.Boolean)
+   006D ldarg.0 
+   006E ldc.i4.0 
+   006F call System.Void Assets.Scripts.GameSystem.WatchController::set_FightOverJust(System.Boolean)
+   0074 ldarg.0 
+   0075 call System.Void Assets.Scripts.GameSystem.WatchController::InitHostCamp()
+   007A ldarg.0 
+   007B ldfld Assets.Scripts.GameSystem.WatchController::_deadWatchForm
+   0080 brtrue IL_0090: ldarg.0
+   0085 ldarg.0 
+   0086 newobj System.Void Assets.Scripts.GameSystem.DeadWatchForm::.ctor()
+   008B stfld Assets.Scripts.GameSystem.WatchController::_deadWatchForm
+   0090 ldarg.0 
+   0091 ldfld Assets.Scripts.GameSystem.WatchController::_deadWatchForm
+   0096 callvirt System.Void Assets.Scripts.GameSystem.ILevelPanel::OpenForm()
+   009B ldloca.s V_2
+   009D initobj Assets.Scripts.GameLogic.GameCommonEventParam
+   00A3 call !0 Singleton`1<Assets.Scripts.GameLogic.CGameEventManager>::get_instance()
+   00A8 ldc.i4.s 109
+   00AA ldloca.s V_2
+   00AC callvirt System.Void Assets.Scripts.GameLogic.CGameEventManager::SendEvent<Assets.Scripts.GameLogic.GameCommonEventParam>(Assets.Scripts.GameLogic.enGameEvent,ParamType&)
+   00B1 ret 
+== System.Void Stop() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.2 
+   0007 bne.un IL_0016: ldarg.0
+   000C call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0011 callvirt System.Void Assets.Scripts.Framework.GameReplayModule::StopReplay()
+   0016 ldarg.0 
+   0017 ldc.i4.1 
+   0018 call System.Void Assets.Scripts.GameSystem.WatchController::set_SpeedRate(System.Byte)
+   001D ldarg.0 
+   001E ldc.i4.0 
+   001F stfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   0024 ldarg.0 
+   0025 ldnull 
+   0026 stfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   002B ldarg.0 
+   002C ldnull 
+   002D stfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0032 ldarg.0 
+   0033 ldc.r4 0
+   0038 stfld Assets.Scripts.GameSystem.WatchController::_overTime
+   003D ldarg.0 
+   003E ldc.i4.0 
+   003F conv.i8 
+   0040 stfld Assets.Scripts.GameSystem.WatchController::TargetUID
+   0045 ldarg.0 
+   0046 ldc.i4.0 
+   0047 call System.Void Assets.Scripts.GameSystem.WatchController::set_ObPosOfCamp(System.Byte)
+   004C ldarg.0 
+   004D ldc.i4.s 41
+   004F stfld Assets.Scripts.GameSystem.WatchController::observeCamp_
+   0054 ldarg.0 
+   0055 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   005A brfalse IL_007c: ldarg.0
+   005F ldarg.0 
+   0060 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0065 ldc.i4.4 
+   0066 beq IL_0075: ldarg.0
+   006B call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0070 callvirt System.Void Assets.Scripts.GameLogic.BattleLogic::WatchModeQuitGame()
+   0075 ldarg.0 
+   0076 ldc.i4.0 
+   0077 stfld Assets.Scripts.GameSystem.WatchController::_workMode
+   007C ldarg.0 
+   007D call System.Void Assets.Scripts.GameSystem.WatchController::CloseConnect()
+   0082 ret 
+== CSProtocol.COM_PLAYERCAMP get_HorizonCamp() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::observeCamp_
+   0006 ret 
+== System.Void set_HorizonCamp(CSProtocol.COM_PLAYERCAMP value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.WatchController::observeCamp_
+   0007 ldarg.0 
+   0008 call System.Void Assets.Scripts.GameSystem.WatchController::FlushContextToCore()
+   000D ret 
+== System.Void SwitchObserveCamp(CSProtocol.COM_PLAYERCAMP inObserveCamp) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brfalse IL_0012: ret
+   000B ldarg.0 
+   000C ldarg.1 
+   000D call System.Void Assets.Scripts.GameSystem.WatchController::set_HorizonCamp(CSProtocol.COM_PLAYERCAMP)
+   0012 ret 
+== System.Void InitHostCamp() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::get_instance()
+   0006 callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameLogic.GamePlayerCenter::get_hostPlayerCamp()
+   000B call System.Void Assets.Scripts.GameSystem.WatchController::set_HorizonCamp(CSProtocol.COM_PLAYERCAMP)
+   0010 ret 
+== System.Boolean get_IsWatching() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.0 
+   0007 ceq 
+   0009 ldc.i4.0 
+   000A ceq 
+   000C ret 
+== System.Boolean get_IsNormalWatching() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 brfalse IL_0019: ldc.i4.0
+   000B ldarg.0 
+   000C ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0011 ldc.i4.4 
+   0012 ceq 
+   0014 ldc.i4.0 
+   0015 ceq 
+   0017 br.s IL_001a: ret
+   0019 ldc.i4.0 
+   001A ret 
+== System.Boolean get_IsDeadWatching() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.4 
+   0007 ceq 
+   0009 ret 
+== System.Boolean CanShowActorIRPosMap() attrs=Public, HideBySig maxstack=8
+   0000 call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   0005 brfalse IL_001b: ldarg.0
+   000A call Assets.Scripts.GameLogic.CLevelContext Assets.Scripts.GameLogic.CGameDataManager::GetLevelContext()
+   000F callvirt System.Boolean Assets.Scripts.GameLogic.CLevelContext::IsTaoShaPlayMode()
+   0014 brfalse IL_001b: ldarg.0
+   0019 ldc.i4.0 
+   001A ret 
+   001B ldarg.0 
+   001C ldfld Assets.Scripts.GameSystem.WatchController::m_isInCheat4Comp
+   0021 brfalse IL_0028: ldc.i4.0
+   0026 ldc.i4.1 
+   0027 ret 
+   0028 ldc.i4.0 
+   0029 ret 
+== System.Boolean get_IsObserving() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 ceq 
+   0009 ret 
+== System.Boolean get_IsReplaying() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.2 
+   0007 ceq 
+   0009 ret 
+== System.Boolean get_IsLiveCast() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.3 
+   0007 ceq 
+   0009 ret 
+== System.Boolean get_IsRelayCast() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 beq IL_0017: ldc.i4.1
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0012 ldc.i4.2 
+   0013 ceq 
+   0015 br.s IL_0018: ret
+   0017 ldc.i4.1 
+   0018 ret 
+== System.Boolean get_IsRunning() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   0006 ret 
+== System.Void set_IsRunning(System.Boolean value) attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brfalse IL_0022: ret
+   000B ldarg.0 
+   000C ldarg.1 
+   000D stfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   0012 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   001D callvirt System.Void Assets.Scripts.Framework.FrameSynchr::SetSynchrRunning(System.Boolean)
+   0022 ret 
+== System.Void MarkRunning(System.Boolean val) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   0007 ret 
+== System.Byte get_SpeedRateMin() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldc.i4.1 
+   0001 ret 
+== System.Byte get_SpeedRateMax() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldc.i4.8 
+   0001 ret 
+== System.Byte get_SpeedRate() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_speedRate
+   0006 ret 
+== System.Void set_SpeedRate(System.Byte value) attrs=Public, HideBySig, SpecialName maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 ldarg.0 
+   0003 call System.Byte Assets.Scripts.GameSystem.WatchController::get_SpeedRateMin()
+   0008 ldarg.0 
+   0009 call System.Byte Assets.Scripts.GameSystem.WatchController::get_SpeedRateMax()
+   000E call System.Int32 UnityEngine.Mathf::Clamp(System.Int32,System.Int32,System.Int32)
+   0013 conv.u1 
+   0014 stfld Assets.Scripts.GameSystem.WatchController::_speedRate
+   0019 ldarg.0 
+   001A call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   001F brfalse IL_0040: ret
+   0024 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0029 ldarg.0 
+   002A ldfld Assets.Scripts.GameSystem.WatchController::_speedRate
+   002F callvirt System.Void Assets.Scripts.Framework.FrameSynchr::SetFrameSpeed(System.Int32)
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.WatchController::_speedRate
+   003A conv.r4 
+   003B call System.Void UnityEngine.Time::set_timeScale(System.Single)
+   0040 ret 
+== System.UInt32 get_CurFrameNo() attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0005 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   000A stloc.0 
+   000B ldarg.0 
+   000C call System.UInt32 Assets.Scripts.GameSystem.WatchController::get_EndFrameNo()
+   0011 stloc.1 
+   0012 ldloc.0 
+   0013 ldloc.1 
+   0014 bge.un IL_001f: ldloc.1
+   0019 ldloc.0 
+   001A br IL_0020: ret
+   001F ldloc.1 
+   0020 ret 
+== System.UInt32 get_EndFrameNo() attrs=Public, HideBySig, SpecialName maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 bne.un IL_0047: call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   0012 brfalse IL_0022: ldarg.0
+   0017 ldarg.0 
+   0018 ldfld Assets.Scripts.GameSystem.WatchController::_maxFrameNo
+   001D br IL_0046: ret
+   0022 ldarg.0 
+   0023 ldfld Assets.Scripts.GameSystem.WatchController::_maxFrameNo
+   0028 ldarg.0 
+   0029 ldfld Assets.Scripts.GameSystem.WatchController::_observeDelayFrames
+   002E ble.un IL_0045: ldc.i4.0
+   0033 ldarg.0 
+   0034 ldfld Assets.Scripts.GameSystem.WatchController::_maxFrameNo
+   0039 ldarg.0 
+   003A ldfld Assets.Scripts.GameSystem.WatchController::_observeDelayFrames
+   003F sub 
+   0040 br IL_0046: ret
+   0045 ldc.i4.0 
+   0046 ret 
+   0047 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   004C ldfld Assets.Scripts.Framework.FrameSynchr::EndFrameNum
+   0051 ret 
+== System.UInt32 get_FrameDelta() attrs=Public, HideBySig, SpecialName maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0005 callvirt System.UInt32 Assets.Scripts.Framework.FrameSynchr::get_SvrFrameDelta()
+   000A ret 
+== System.Void SendPackage(CSProtocol.CSPkg pkg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   0006 brfalse IL_001e: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 ldarga.s pkg
+   0012 ldc.i4.0 
+   0013 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0018 pop 
+   0019 br IL_002c: ret
+   001E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0023 ldarga.s pkg
+   0025 ldc.i4.0 
+   0026 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   002B pop 
+   002C ret 
+== System.Void CloseConnect() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_tgw
+   0006 brfalse IL_0026: ret
+   000B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0010 callvirt System.Void Assets.Scripts.Framework.NetworkModule::CloseGameServerConnect()
+   0015 call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   001A callvirt System.Void Assets.Scripts.Framework.FrameWindow::Reset()
+   001F ldarg.0 
+   0020 ldnull 
+   0021 stfld Assets.Scripts.GameSystem.WatchController::_tgw
+   0026 ret 
+== System.Void RequestVideoPiece(System.Boolean isNewPiece) attrs=Private, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 bne.un IL_0017: ret
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   0012 brfalse IL_0018: ldc.i4 5228
+   0017 ret 
+   0018 ldc.i4 5228
+   001D call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0022 stloc.0 
+   0023 ldarg.1 
+   0024 brfalse IL_0055: ldloc.0
+   0029 ldloc.0 
+   002A ldfld CSProtocol.CSPkg::stPkgData
+   002F callvirt CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ CSProtocol.CSPkgBody::get_stGetVideoFrapsReq()
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.GameSystem.WatchController::_totalRecvSize
+   003A stfld CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ::dwOffset
+   003F ldloc.0 
+   0040 ldfld CSProtocol.CSPkg::stPkgData
+   0045 callvirt CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ CSProtocol.CSPkgBody::get_stGetVideoFrapsReq()
+   004A ldc.i4.1 
+   004B stfld CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ::bNew
+   0050 br IL_0066: ldarg.0
+   0055 ldloc.0 
+   0056 ldfld CSProtocol.CSPkg::stPkgData
+   005B callvirt CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ CSProtocol.CSPkgBody::get_stGetVideoFrapsReq()
+   0060 ldc.i4.0 
+   0061 stfld CSProtocol.CSPKG_GET_VIDEOFRAPS_REQ::bNew
+   0066 ldarg.0 
+   0067 ldloc.0 
+   0068 call System.Void Assets.Scripts.GameSystem.WatchController::SendPackage(CSProtocol.CSPkg)
+   006D ldarg.0 
+   006E ldarg.0 
+   006F ldfld Assets.Scripts.GameSystem.WatchController::_thisTick
+   0074 stfld Assets.Scripts.GameSystem.WatchController::_lastRequestTick
+   0079 ret 
+== System.Void HandleVideoPiece(CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP pkg) attrs=Private, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 beq IL_000d: ldarg.1
+   000C ret 
+   000D ldarg.1 
+   000E ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::dwOffset
+   0013 ldarg.0 
+   0014 ldfld Assets.Scripts.GameSystem.WatchController::_totalRecvSize
+   0019 beq IL_001f: ldarg.1
+   001E ret 
+   001F ldarg.1 
+   0020 ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::bAllOver
+   0025 ldc.i4.1 
+   0026 bne.un IL_0038: ldarg.1
+   002B ldarg.0 
+   002C ldc.i4.1 
+   002D stfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   0032 ldarg.0 
+   0033 call System.Void Assets.Scripts.GameSystem.WatchController::CloseConnect()
+   0038 ldarg.1 
+   0039 ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::dwTotalNum
+   003E ldc.i4.0 
+   003F ble.un IL_00d2: ret
+   0044 ldarg.1 
+   0045 ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::dwBufLen
+   004A stloc.0 
+   004B ldloc.0 
+   004C ldc.i4.0 
+   004D ble.un IL_00cd: br IL_00d2
+   0052 ldarg.0 
+   0053 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   0058 ldloc.0 
+   0059 add 
+   005A stloc.1 
+   005B ldloc.1 
+   005C ldarg.0 
+   005D ldfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   0062 ldlen 
+   0063 conv.i4 
+   0064 ble IL_0075: ldarg.1
+   0069 ldarg.0 
+   006A ldflda Assets.Scripts.GameSystem.WatchController::_recvBuff
+   006F ldloc.1 
+   0070 call System.Void System.Array::Resize<System.Byte>(!!0[]&,System.Int32)
+   0075 ldarg.1 
+   0076 ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::szBuf
+   007B ldc.i4.0 
+   007C ldarg.0 
+   007D ldfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   0082 ldarg.0 
+   0083 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   0088 ldloc.0 
+   0089 call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   008E ldarg.0 
+   008F ldloc.1 
+   0090 stfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   0095 ldarg.0 
+   0096 dup 
+   0097 ldfld Assets.Scripts.GameSystem.WatchController::_totalRecvSize
+   009C ldloc.0 
+   009D add 
+   009E stfld Assets.Scripts.GameSystem.WatchController::_totalRecvSize
+   00A3 ldarg.1 
+   00A4 ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::dwThisPos
+   00A9 ldc.i4.1 
+   00AA add 
+   00AB ldarg.1 
+   00AC ldfld CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP::dwTotalNum
+   00B1 bge.un IL_00c2: ldarg.0
+   00B6 ldarg.0 
+   00B7 ldc.i4.0 
+   00B8 call System.Void Assets.Scripts.GameSystem.WatchController::RequestVideoPiece(System.Boolean)
+   00BD br IL_00c8: br IL_00cd
+   00C2 ldarg.0 
+   00C3 call System.Void Assets.Scripts.GameSystem.WatchController::ParseVideoPackage()
+   00C8 br IL_00cd: br IL_00d2
+   00CD br IL_00d2: ret
+   00D2 ret 
+== System.Void ParseVideoPackage() attrs=Private, HideBySig maxstack=5
+   0000 br IL_00e3: ldarg.0
+   0005 ldc.i4.0 
+   0006 stloc.0 
+   0007 call CSProtocol.CSPkg CSProtocol.CSPkg::New()
+   000C stloc.1 
+   000D ldloc.1 
+   000E ldarg.0 
+   000F ldflda Assets.Scripts.GameSystem.WatchController::_recvBuff
+   0014 ldarg.0 
+   0015 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   001A ldloca.s V_0
+   001C ldc.i4.0 
+   001D callvirt tsf4g_tdr_csharp.TdrError/ErrorType Assets.Scripts.Common.ProtocolObject::unpack(System.Byte[]&,System.Int32,System.Int32&,System.UInt32)
+   0022 stloc.2 
+   0023 ldloc.2 
+   0024 brtrue IL_00de: br IL_00ef
+   0029 ldloc.0 
+   002A ldc.i4.0 
+   002B ble IL_00de: br IL_00ef
+   0030 ldloc.0 
+   0031 ldarg.0 
+   0032 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   0037 bgt IL_00de: br IL_00ef
+   003C ldloc.1 
+   003D ldfld CSProtocol.CSPkg::stPkgHead
+   0042 ldfld CSProtocol.CSPkgHead::dwMsgID
+   0047 ldc.i4 1035
+   004C bne.un IL_00a6: ldarg.0
+   0051 ldloc.1 
+   0052 ldfld CSProtocol.CSPkg::stPkgData
+   0057 callvirt CSProtocol.SCPKG_FRAPBOOTINFO CSProtocol.CSPkgBody::get_stFrapBootInfo()
+   005C stloc.3 
+   005D ldc.i4.0 
+   005E stloc.s V_4
+   0060 br IL_0094: ldloc.s V_4
+   0065 ldloc.3 
+   0066 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::astSpareFrap
+   006B ldloc.s V_4
+   006D callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.SCPKG_FRAPBOOT_SINGLE>::get_Item(System.Int32)
+   0072 stloc.s V_5
+   0074 ldarg.0 
+   0075 ldloc.s V_5
+   0077 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   007C stfld Assets.Scripts.GameSystem.WatchController::_maxFrameNo
+   0081 ldarg.0 
+   0082 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0087 ldloc.s V_5
+   0089 callvirt System.Void System.Collections.Generic.Queue`1<System.Object>::Enqueue(!0)
+   008E ldloc.s V_4
+   0090 ldc.i4.1 
+   0091 add 
+   0092 stloc.s V_4
+   0094 ldloc.s V_4
+   0096 ldloc.3 
+   0097 ldfld CSProtocol.SCPKG_FRAPBOOTINFO::bSpareNum
+   009C blt IL_0065: ldloc.3
+   00A1 br IL_00b2: ldarg.0
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   00AC ldloc.1 
+   00AD callvirt System.Void System.Collections.Generic.Queue`1<System.Object>::Enqueue(!0)
+   00B2 ldarg.0 
+   00B3 dup 
+   00B4 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   00B9 ldloc.0 
+   00BA sub 
+   00BB stfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   00C0 ldarg.0 
+   00C1 ldfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   00C6 ldloc.0 
+   00C7 ldarg.0 
+   00C8 ldfld Assets.Scripts.GameSystem.WatchController::_recvBuff
+   00CD ldc.i4.0 
+   00CE ldarg.0 
+   00CF ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   00D4 call System.Void System.Buffer::BlockCopy(System.Array,System.Int32,System.Array,System.Int32,System.Int32)
+   00D9 br IL_00e3: ldarg.0
+   00DE br IL_00ef: ret
+   00E3 ldarg.0 
+   00E4 ldfld Assets.Scripts.GameSystem.WatchController::_buffRecvSize
+   00E9 ldc.i4.0 
+   00EA bgt.un IL_0005: ldc.i4.0
+   00EF ret 
+== System.Void UpdateFrame() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D dup 
+   000E ldfld Assets.Scripts.GameSystem.WatchController::_thisTick
+   0013 ldc.i4.1 
+   0014 add 
+   0015 stfld Assets.Scripts.GameSystem.WatchController::_thisTick
+   001A ldarg.0 
+   001B ldfld Assets.Scripts.GameSystem.WatchController::_overTime
+   0020 ldc.r4 0
+   0025 ble.un IL_0076: ldc.i4.0
+   002A call System.Single UnityEngine.Time::get_time()
+   002F ldarg.0 
+   0030 ldfld Assets.Scripts.GameSystem.WatchController::_overTime
+   0035 ldc.r4 10
+   003A add 
+   003B ble.un IL_0071: br IL_00e4
+   0040 ldc.i4 5230
+   0045 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   004A stloc.0 
+   004B ldloc.0 
+   004C ldfld CSProtocol.CSPkg::stPkgData
+   0051 callvirt CSProtocol.CSPKG_QUITOBSERVE_REQ CSProtocol.CSPkgBody::get_stQuitObserveReq()
+   0056 ldc.i4.2 
+   0057 stfld CSProtocol.CSPKG_QUITOBSERVE_REQ::bQuitType
+   005C call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0061 ldloca.s V_0
+   0063 ldc.i4.0 
+   0064 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0069 pop 
+   006A ldarg.0 
+   006B call System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   0070 ret 
+   0071 br IL_00e4: ldarg.0
+   0076 ldc.i4.0 
+   0077 stloc.1 
+   0078 ldarg.0 
+   0079 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   007E ldc.i4.1 
+   007F bne.un IL_00a6: ldarg.0
+   0084 ldarg.0 
+   0085 ldfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   008A brfalse IL_009f: ldc.i4.0
+   008F ldarg.0 
+   0090 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0095 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Object>::get_Count()
+   009A ldc.i4.0 
+   009B ceq 
+   009D br.s IL_00a0: stloc.1
+   009F ldc.i4.0 
+   00A0 stloc.1 
+   00A1 br IL_00bd: ldloc.1
+   00A6 ldarg.0 
+   00A7 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   00AC ldc.i4.2 
+   00AD bne.un IL_00bd: ldloc.1
+   00B2 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   00B7 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsStreamEnd()
+   00BC stloc.1 
+   00BD ldloc.1 
+   00BE brfalse IL_00e4: ldarg.0
+   00C3 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00C8 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   00CD call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   00D2 ldfld Assets.Scripts.Framework.FrameSynchr::EndFrameNum
+   00D7 blt.un IL_00e4: ldarg.0
+   00DC ldarg.0 
+   00DD ldc.i4.0 
+   00DE call System.Void Assets.Scripts.GameSystem.WatchController::MarkOver(System.Boolean)
+   00E3 ret 
+   00E4 ldarg.0 
+   00E5 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   00EA ldc.i4.1 
+   00EB bne.un IL_0141: ldarg.0
+   00F0 ldarg.0 
+   00F1 ldfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   00F6 brtrue IL_011a: ldarg.0
+   00FB ldarg.0 
+   00FC ldfld Assets.Scripts.GameSystem.WatchController::_thisTick
+   0101 ldarg.0 
+   0102 ldfld Assets.Scripts.GameSystem.WatchController::_lastRequestTick
+   0107 ldarg.0 
+   0108 ldfld Assets.Scripts.GameSystem.WatchController::_requestTickSpan
+   010D add 
+   010E ble.un IL_011a: ldarg.0
+   0113 ldarg.0 
+   0114 ldc.i4.1 
+   0115 call System.Void Assets.Scripts.GameSystem.WatchController::RequestVideoPiece(System.Boolean)
+   011A ldarg.0 
+   011B ldfld Assets.Scripts.GameSystem.WatchController::_isRunning
+   0120 brfalse IL_013c: br IL_018d
+   0125 ldarg.0 
+   0126 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   012B callvirt System.Int32 System.Collections.Generic.Queue`1<System.Object>::get_Count()
+   0130 ldc.i4.0 
+   0131 ble IL_013c: br IL_018d
+   0136 ldarg.0 
+   0137 call System.Void Assets.Scripts.GameSystem.WatchController::HandlePackage()
+   013C br IL_018d: ret
+   0141 ldarg.0 
+   0142 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0147 ldc.i4.2 
+   0148 bne.un IL_018d: ret
+   014D ldarg.0 
+   014E call System.Byte Assets.Scripts.GameSystem.WatchController::get_SpeedRate()
+   0153 ldc.i4.1 
+   0154 ble IL_0188: br IL_018d
+   0159 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   015E ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   0163 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0168 ldfld Assets.Scripts.Framework.FrameSynchr::EndFrameNum
+   016D blt.un IL_0188: br IL_018d
+   0172 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0177 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsStreamEnd()
+   017C brfalse IL_0188: br IL_018d
+   0181 ldarg.0 
+   0182 ldc.i4.1 
+   0183 call System.Void Assets.Scripts.GameSystem.WatchController::set_SpeedRate(System.Byte)
+   0188 br IL_018d: ret
+   018D ret 
+== System.Void Quit() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0006 ldc.i4.1 
+   0007 bne.un IL_007b: ldarg.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.GameSystem.WatchController::_isStreamEnd
+   0012 brfalse IL_004c: ldc.i4 5230
+   0017 ldc.i4 5230
+   001C call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0021 stloc.0 
+   0022 ldloc.0 
+   0023 ldfld CSProtocol.CSPkg::stPkgData
+   0028 callvirt CSProtocol.CSPKG_QUITOBSERVE_REQ CSProtocol.CSPkgBody::get_stQuitObserveReq()
+   002D ldc.i4.2 
+   002E stfld CSProtocol.CSPKG_QUITOBSERVE_REQ::bQuitType
+   0033 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0038 ldloca.s V_0
+   003A ldc.i4.0 
+   003B callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0040 pop 
+   0041 ldarg.0 
+   0042 call System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   0047 br IL_0076: br IL_00bc
+   004C ldc.i4 5230
+   0051 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0056 stloc.1 
+   0057 ldloc.1 
+   0058 ldfld CSProtocol.CSPkg::stPkgData
+   005D callvirt CSProtocol.CSPKG_QUITOBSERVE_REQ CSProtocol.CSPkgBody::get_stQuitObserveReq()
+   0062 ldc.i4.1 
+   0063 stfld CSProtocol.CSPKG_QUITOBSERVE_REQ::bQuitType
+   0068 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   006D ldloca.s V_1
+   006F ldc.i4.0 
+   0070 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   0075 pop 
+   0076 br IL_00bc: ret
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameSystem.WatchController::_workMode
+   0081 ldc.i4.3 
+   0082 bne.un IL_00b6: ldarg.0
+   0087 ldc.i4 5230
+   008C call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   0091 stloc.2 
+   0092 ldloc.2 
+   0093 ldfld CSProtocol.CSPkg::stPkgData
+   0098 callvirt CSProtocol.CSPKG_QUITOBSERVE_REQ CSProtocol.CSPkgBody::get_stQuitObserveReq()
+   009D ldc.i4.1 
+   009E stfld CSProtocol.CSPKG_QUITOBSERVE_REQ::bQuitType
+   00A3 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00A8 ldloca.s V_2
+   00AA ldc.i4.0 
+   00AB callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   00B0 pop 
+   00B1 br IL_00bc: ret
+   00B6 ldarg.0 
+   00B7 call System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   00BC ret 
+== System.Void HandleQuitResponse(CSProtocol.SCPKG_QUITOBSERVE_RSP pkg) attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brtrue IL_000c: ldarg.0
+   000B ret 
+   000C ldarg.0 
+   000D call System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   0012 ret 
+== System.Void HandlePackage() attrs=Private, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.FrameSynchr>::GetInstance()
+   0005 ldfld Assets.Scripts.Framework.FrameSynchr::CurFrameNum
+   000A stloc.0 
+   000B br IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   0010 ldarg.0 
+   0011 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0016 callvirt !0 System.Collections.Generic.Queue`1<System.Object>::Peek()
+   001B stloc.1 
+   001C ldloc.1 
+   001D isinst CSProtocol.SCPKG_FRAPBOOT_SINGLE
+   0022 stloc.2 
+   0023 ldloc.2 
+   0024 brfalse IL_007b: ldarg.0
+   0029 ldloc.2 
+   002A ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   002F ldarg.0 
+   0030 call System.UInt32 Assets.Scripts.GameSystem.WatchController::get_EndFrameNo()
+   0035 bgt.un IL_0071: br IL_00eb
+   003A ldloc.2 
+   003B ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   0040 ldloc.0 
+   0041 ble.un IL_0071: br IL_00eb
+   0046 ldloc.2 
+   0047 ldfld CSProtocol.SCPKG_FRAPBOOT_SINGLE::dwKFrapsNo
+   004C ldloc.0 
+   004D ldc.i4.s 60
+   004F add 
+   0050 bgt.un IL_0071: br IL_00eb
+   0055 ldarg.0 
+   0056 ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   005B callvirt !0 System.Collections.Generic.Queue`1<System.Object>::Dequeue()
+   0060 pop 
+   0061 call !0 Singleton`1<Assets.Scripts.Framework.FrameWindow>::GetInstance()
+   0066 ldloc.2 
+   0067 callvirt System.Void Assets.Scripts.Framework.FrameWindow::HandleFraqBootInfo(CSProtocol.SCPKG_FRAPBOOT_SINGLE)
+   006C br IL_0076: br IL_00cb
+   0071 br IL_00eb: ldarg.0
+   0076 br IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   007B ldarg.0 
+   007C ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   0081 callvirt !0 System.Collections.Generic.Queue`1<System.Object>::Dequeue()
+   0086 pop 
+   0087 ldloc.1 
+   0088 isinst CSProtocol.CSPkg
+   008D stloc.3 
+   008E call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0093 ldloc.3 
+   0094 ldfld CSProtocol.CSPkg::stPkgHead
+   0099 ldfld CSProtocol.CSPkgHead::dwMsgID
+   009E callvirt Assets.Scripts.Framework.NetMsgDelegate Assets.Scripts.Framework.NetworkModule::GetMsgHandler(System.UInt32)
+   00A3 stloc.s V_4
+   00A5 ldloc.s V_4
+   00A7 brfalse IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00AC call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::get_instance()
+   00B1 ldloc.3 
+   00B2 callvirt System.Void Assets.Scripts.Framework.GameReplayModule::CacheRecord(System.Object)
+   00B7 ldloc.s V_4
+   00B9 ldloc.3 
+   00BA callvirt System.Void Assets.Scripts.Framework.NetMsgDelegate::Invoke(CSProtocol.CSPkg)
+   00BF leave IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00C4 stloc.s V_5
+   00C6 leave IL_00cb: call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00CB call !0 Singleton`1<Assets.Scripts.GameLogic.BattleLogic>::get_instance()
+   00D0 ldfld Assets.Scripts.GameLogic.BattleLogic::isLoading
+   00D5 brtrue IL_00eb: ldarg.0
+   00DA ldarg.0 
+   00DB ldfld Assets.Scripts.GameSystem.WatchController::_pkgQueue
+   00E0 callvirt System.Int32 System.Collections.Generic.Queue`1<System.Object>::get_Count()
+   00E5 ldc.i4.0 
+   00E6 bgt IL_0010: ldarg.0
+   00EB ldarg.0 
+   00EC call System.Byte Assets.Scripts.GameSystem.WatchController::get_SpeedRate()
+   00F1 ldc.i4.1 
+   00F2 ble IL_010d: ret
+   00F7 ldarg.0 
+   00F8 call System.UInt32 Assets.Scripts.GameSystem.WatchController::get_EndFrameNo()
+   00FD ldloc.0 
+   00FE ldc.i4.s 120
+   0100 add 
+   0101 bge.un IL_010d: ret
+   0106 ldarg.0 
+   0107 ldc.i4.1 
+   0108 call System.Void Assets.Scripts.GameSystem.WatchController::set_SpeedRate(System.Byte)
+   010D ret 
+== System.Void MarkOver(System.Boolean fightOver) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsWatching()
+   0006 brfalse IL_001d: ret
+   000B ldarg.0 
+   000C call System.Single UnityEngine.Time::get_time()
+   0011 stfld Assets.Scripts.GameSystem.WatchController::_overTime
+   0016 ldarg.0 
+   0017 ldarg.1 
+   0018 call System.Void Assets.Scripts.GameSystem.WatchController::set_FightOverJust(System.Boolean)
+   001D ret 
+== System.Void OnGetVideoFraqRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP CSProtocol.CSPkgBody::get_stGetVideoFrapsRsp()
+   0010 callvirt System.Void Assets.Scripts.GameSystem.WatchController::HandleVideoPiece(CSProtocol.SCPKG_GET_VIDEOFRAPS_RSP)
+   0015 ret 
+== System.Void OnQuitObserveRsp(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0005 ldarg.0 
+   0006 ldfld CSProtocol.CSPkg::stPkgData
+   000B callvirt CSProtocol.SCPKG_QUITOBSERVE_RSP CSProtocol.CSPkgBody::get_stQuitObserveRsp()
+   0010 callvirt System.Void Assets.Scripts.GameSystem.WatchController::HandleQuitResponse(CSProtocol.SCPKG_QUITOBSERVE_RSP)
+   0015 ret 
+== System.Void FlushContextToCore() attrs=Public, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.Framework.GameReplayModule>::GetInstance()
+   0005 stloc.0 
+   0006 ldarg.0 
+   0007 call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsNormalWatching()
+   000C brtrue IL_0019: ldc.i4.1
+   0011 ldloc.0 
+   0012 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   0017 br.s IL_001a: stloc.1
+   0019 ldc.i4.1 
+   001A stloc.1 
+   001B ldarg.0 
+   001C call System.Boolean Assets.Scripts.GameSystem.WatchController::get_IsRelayCast()
+   0021 brtrue IL_002e: ldc.i4.1
+   0026 ldloc.0 
+   0027 callvirt System.Boolean Assets.Scripts.Framework.GameReplayModule::get_IsReplaying()
+   002C br.s IL_002f: stloc.2
+   002E ldc.i4.1 
+   002F stloc.2 
+   0030 ldloc.0 
+   0031 ldfld Assets.Scripts.Framework.GameReplayModule::FakeReplaying
+   0036 brfalse IL_003f: ldloc.1
+   003B ldc.i4.0 
+   003C stloc.1 
+   003D ldc.i4.1 
+   003E stloc.2 
+   003F ldloc.1 
+   0040 ldloc.2 
+   0041 ldarg.0 
+   0042 call CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameSystem.WatchController::get_HorizonCamp()
+   0047 call System.Void SGW::SetWatchContex(System.Boolean,System.Boolean,System.Int32)
+   004C ret 
+  NESTED Assets.Scripts.GameSystem.WatchController/WorkMode

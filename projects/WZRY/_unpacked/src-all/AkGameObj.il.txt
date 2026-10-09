@@ -1,0 +1,178 @@
+// TYPE AkGameObj  base=UnityEngine.MonoBehaviour  attrs=Public, BeforeFieldInit
+  FIELD UnityEngine.Vector3 m_forward
+  FIELD UnityEngine.Vector3 m_position
+  FIELD UnityEngine.Vector3 m_up
+  FIELD UnityEngine.Transform _trans
+  FIELD System.UInt32 _id
+  FIELD System.Boolean isRegistered
+  FIELD System.Int32 AK_NUM_LISTENERS = 8
+  FIELD System.Int32 listenerMask
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld AkGameObj::listenerMask
+   0007 ldarg.0 
+   0008 call System.Void UnityEngine.MonoBehaviour::.ctor()
+   000D ret 
+== AKRESULT Register() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld AkGameObj::isRegistered
+   0006 brfalse IL_000d: ldarg.0
+   000B ldc.i4.1 
+   000C ret 
+   000D ldarg.0 
+   000E ldc.i4.1 
+   000F stfld AkGameObj::isRegistered
+   0014 ldarg.0 
+   0015 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   001A ldarg.0 
+   001B call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0020 callvirt System.String UnityEngine.Object::get_name()
+   0025 call AKRESULT AkSoundEngine::RegisterGameObj(UnityEngine.GameObject,System.String)
+   002A ret 
+== System.Void Awake() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 call UnityEngine.Transform UnityEngine.Component::get_transform()
+   0007 stfld AkGameObj::_trans
+   000C ldarg.0 
+   000D ldarg.0 
+   000E call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0013 callvirt System.Int32 UnityEngine.Object::GetInstanceID()
+   0018 stfld AkGameObj::_id
+   001D ldarg.0 
+   001E call AKRESULT AkGameObj::Register()
+   0023 ldc.i4.1 
+   0024 bne.un IL_002f: ret
+   0029 ldarg.0 
+   002A callvirt System.Void AkGameObj::InitObjectPosition()
+   002F ret 
+== System.Void InitObjectPosition() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=10
+   0000 ldarg.0 
+   0001 call UnityEngine.Vector3 AkGameObj::GetPosition()
+   0006 stloc.0 
+   0007 ldarg.0 
+   0008 ldfld AkGameObj::_trans
+   000D callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   0012 stloc.1 
+   0013 ldarg.0 
+   0014 ldfld AkGameObj::_trans
+   0019 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_up()
+   001E stloc.2 
+   001F ldarg.0 
+   0020 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0025 ldloca.s V_0
+   0027 ldfld UnityEngine.Vector3::x
+   002C ldloca.s V_0
+   002E ldfld UnityEngine.Vector3::y
+   0033 ldloca.s V_0
+   0035 ldfld UnityEngine.Vector3::z
+   003A ldloca.s V_1
+   003C ldfld UnityEngine.Vector3::x
+   0041 ldloca.s V_1
+   0043 ldfld UnityEngine.Vector3::y
+   0048 ldloca.s V_1
+   004A ldfld UnityEngine.Vector3::z
+   004F ldloca.s V_2
+   0051 ldfld UnityEngine.Vector3::x
+   0056 ldloca.s V_2
+   0058 ldfld UnityEngine.Vector3::y
+   005D ldloca.s V_2
+   005F ldfld UnityEngine.Vector3::z
+   0064 call AKRESULT AkSoundEngine::SetObjectPosition(UnityEngine.GameObject,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+   0069 pop 
+   006A ret 
+== System.Void OnDestroy() attrs=Private, HideBySig maxstack=8
+   0000 call System.Boolean AkSoundEngine::IsInitialized()
+   0005 brfalse IL_0016: ret
+   000A ldarg.0 
+   000B call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0010 call AKRESULT AkSoundEngine::UnregisterGameObj(UnityEngine.GameObject)
+   0015 pop 
+   0016 ret 
+== System.Void Update() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 callvirt System.Void AkGameObj::UpdateLocation()
+   0006 ret 
+== System.Void UpdateLocation() attrs=Family, Virtual, HideBySig, VtableLayoutMask maxstack=10
+   0000 ldarg.0 
+   0001 ldfld AkGameObj::_id
+   0006 ldc.i4.3 
+   0007 rem.un 
+   0008 conv.u8 
+   0009 call System.Int32 UnityEngine.Time::get_frameCount()
+   000E ldc.i4.3 
+   000F rem 
+   0010 conv.i8 
+   0011 beq IL_0017: ldarg.0
+   0016 ret 
+   0017 ldarg.0 
+   0018 call UnityEngine.Vector3 AkGameObj::GetPosition()
+   001D stloc.0 
+   001E ldarg.0 
+   001F ldfld AkGameObj::_trans
+   0024 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_forward()
+   0029 stloc.1 
+   002A ldarg.0 
+   002B ldfld AkGameObj::_trans
+   0030 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_up()
+   0035 stloc.2 
+   0036 ldarg.0 
+   0037 ldfld AkGameObj::m_position
+   003C ldloc.0 
+   003D call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0042 brfalse IL_006a: ldarg.0
+   0047 ldarg.0 
+   0048 ldfld AkGameObj::m_forward
+   004D ldloc.1 
+   004E call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0053 brfalse IL_006a: ldarg.0
+   0058 ldarg.0 
+   0059 ldfld AkGameObj::m_up
+   005E ldloc.2 
+   005F call System.Boolean UnityEngine.Vector3::op_Equality(UnityEngine.Vector3,UnityEngine.Vector3)
+   0064 brfalse IL_006a: ldarg.0
+   0069 ret 
+   006A ldarg.0 
+   006B ldloc.0 
+   006C stfld AkGameObj::m_position
+   0071 ldarg.0 
+   0072 ldloc.1 
+   0073 stfld AkGameObj::m_forward
+   0078 ldarg.0 
+   0079 ldloc.2 
+   007A stfld AkGameObj::m_up
+   007F ldarg.0 
+   0080 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0085 ldloca.s V_0
+   0087 ldfld UnityEngine.Vector3::x
+   008C ldloca.s V_0
+   008E ldfld UnityEngine.Vector3::y
+   0093 ldloca.s V_0
+   0095 ldfld UnityEngine.Vector3::z
+   009A ldarg.0 
+   009B ldflda AkGameObj::m_forward
+   00A0 ldfld UnityEngine.Vector3::x
+   00A5 ldarg.0 
+   00A6 ldflda AkGameObj::m_forward
+   00AB ldfld UnityEngine.Vector3::y
+   00B0 ldarg.0 
+   00B1 ldflda AkGameObj::m_forward
+   00B6 ldfld UnityEngine.Vector3::z
+   00BB ldarg.0 
+   00BC ldflda AkGameObj::m_up
+   00C1 ldfld UnityEngine.Vector3::x
+   00C6 ldarg.0 
+   00C7 ldflda AkGameObj::m_up
+   00CC ldfld UnityEngine.Vector3::y
+   00D1 ldarg.0 
+   00D2 ldflda AkGameObj::m_up
+   00D7 ldfld UnityEngine.Vector3::z
+   00DC call AKRESULT AkSoundEngine::SetObjectPosition(UnityEngine.GameObject,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+   00E1 pop 
+   00E2 ret 
+== UnityEngine.Vector3 GetPosition() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld AkGameObj::_trans
+   0006 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   000B ret 

@@ -1,0 +1,67 @@
+// TYPE Assets.Scripts.GameSystem.VoiceStateNetCore  base=System.Object  attrs=Public, BeforeFieldInit
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void Send_Acnt_VoiceState(System.Byte type, CSProtocol.CS_TVOIPROOM_TYPE roomType) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldc.i4 4850
+   0005 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld CSProtocol.CSPkg::stPkgData
+   0011 callvirt CSProtocol.CSPKG_ACNT_VOICESTATE CSProtocol.CSPkgBody::get_stAcntVoiceState()
+   0016 ldarg.0 
+   0017 stfld CSProtocol.CSPKG_ACNT_VOICESTATE::bVoiceState
+   001C ldloc.0 
+   001D ldfld CSProtocol.CSPkg::stPkgData
+   0022 callvirt CSProtocol.CSPKG_ACNT_VOICESTATE CSProtocol.CSPkgBody::get_stAcntVoiceState()
+   0027 ldarg.1 
+   0028 conv.u1 
+   0029 stfld CSProtocol.CSPKG_ACNT_VOICESTATE::bTvoipRoomType
+   002E ldarg.1 
+   002F ldc.i4.1 
+   0030 bne.un IL_005c: ldloc.0
+   0035 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   003A ldfld Assets.Scripts.Framework.NetworkModule::gameSvr
+   003F ldfld Assets.Scripts.Framework.BaseConnector::connected
+   0044 brfalse IL_005c: ldloc.0
+   0049 call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   004E ldloca.s V_0
+   0050 ldc.i4.0 
+   0051 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendGameMsg(CSProtocol.CSPkg&,System.UInt32)
+   0056 pop 
+   0057 br IL_007b: ret
+   005C ldloc.0 
+   005D ldfld CSProtocol.CSPkg::stPkgData
+   0062 callvirt CSProtocol.CSPKG_ACNT_VOICESTATE CSProtocol.CSPkgBody::get_stAcntVoiceState()
+   0067 ldc.i4.2 
+   0068 stfld CSProtocol.CSPKG_ACNT_VOICESTATE::bTvoipRoomType
+   006D call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   0072 ldloca.s V_0
+   0074 ldc.i4.0 
+   0075 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   007A pop 
+   007B ret 
+== System.Void On_NTF_VOICESTATE(CSProtocol.CSPkg msg) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld CSProtocol.CSPkg::stPkgData
+   0006 callvirt CSProtocol.SCPKG_NTF_VOICESTATE CSProtocol.CSPkgBody::get_stNtfVoiceState()
+   000B stloc.0 
+   000C call !0 MonoSingleton`1<Assets.Scripts.GameSystem.VoiceSys>::get_instance()
+   0011 ldloc.0 
+   0012 ldfld CSProtocol.SCPKG_NTF_VOICESTATE::ullAcntUid
+   0017 ldloc.0 
+   0018 ldfld CSProtocol.SCPKG_NTF_VOICESTATE::bVoiceState
+   001D callvirt System.Void Assets.Scripts.GameSystem.VoiceSys::SetVoiceState(System.UInt64,System.Int32)
+   0022 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0027 callvirt Assets.Scripts.GameSystem.BattleStatView Assets.Scripts.GameSystem.CBattleSystem::get_BattleStatView()
+   002C brfalse IL_0040: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0031 call !0 Singleton`1<Assets.Scripts.GameSystem.CBattleSystem>::get_instance()
+   0036 callvirt Assets.Scripts.GameSystem.BattleStatView Assets.Scripts.GameSystem.CBattleSystem::get_BattleStatView()
+   003B callvirt System.Void Assets.Scripts.GameSystem.BattleStatView::RefreshVoiceStateIfNess()
+   0040 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0045 callvirt System.Boolean Assets.Scripts.GameSystem.CMatchingSystem::get_IsInMatchingTeam()
+   004A brfalse IL_0059: ret
+   004F call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0054 callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::UpdateTeamMemberVoiceState()
+   0059 ret 

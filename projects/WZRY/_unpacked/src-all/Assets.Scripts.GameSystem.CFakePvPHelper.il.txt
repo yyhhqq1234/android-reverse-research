@@ -1,0 +1,2272 @@
+// TYPE Assets.Scripts.GameSystem.CFakePvPHelper  base=System.Object  attrs=BeforeFieldInit
+  FIELD System.Int32[] FAKE_CONFIRM_MAP_3V3
+  FIELD System.Int32[] FAKE_CONFIRM_MAP_5V5
+  FIELD System.Int32 MapPlayerNum
+  FIELD System.Int32 RealPlayerConfirmNum
+  FIELD System.Int32 FakePlayerConfirmNum
+  FIELD System.Int32 MAX_CONFIRM_TIME = 20
+  FIELD System.Int32 CONFIRM_TIMEOUT = 30
+  FIELD System.Int32 CurrentSelectTime
+  FIELD System.Int32 ConfirmedFakePlayerNum
+  FIELD ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> FakePlayerList
+  FIELD System.Boolean bInFakeConfirm
+  FIELD System.Int32 nextFakeUpdateIndex
+  FIELD System.Int32 SELECT_HERO_TIMER_COUNT = 60
+  FIELD System.Int32 MAX_CHANGE_HERO_TIME = 3
+  FIELD System.Int32 MAX_LUANDOU_CHANGE_HERO_TIME = 2
+  FIELD System.Int32 MAX_ROOKIE_LEVEL = 6
+  FIELD System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> ChosenHeroes
+  FIELD System.Collections.Generic.List`1<System.UInt32> EnemyChosenHeroes
+  FIELD System.Int32 HeroConfirmedPlayerNum
+  FIELD ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect> FakeHeroSelectList
+  FIELD System.Boolean bInFakeSelect
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache0
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache1
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache2
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache3
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache4
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache5
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache6
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache7
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache8
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache9
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheA
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheB
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheC
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheD
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheE
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cacheF
+  FIELD CTimer/OnTimeUpHandler <>f__mg$cache10
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ret 
+== System.Void DatabinCheck() attrs=Private, Static, HideBySig maxstack=3
+   0000 call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   0005 ldc.i4.5 
+   0006 cgt 
+   0008 ldstr Not Enough Hero
+   000D call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0012 call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   0017 ldc.i4.5 
+   0018 cgt 
+   001A ldstr Not Enough Hero
+   001F call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0024 call System.Int32 ResData.GameDataMgr/robotPlayerSkillDatabin::Count()
+   0029 stloc.0 
+   002A ldc.i4.0 
+   002B stloc.1 
+   002C br IL_006f: ldloc.1
+   0031 ldloc.1 
+   0032 call ResData.ResFakeAcntSkill ResData.GameDataMgr/robotPlayerSkillDatabin::GetByIndex(System.Int32)
+   0037 stloc.2 
+   0038 ldc.i4.0 
+   0039 stloc.3 
+   003A ldc.i4.0 
+   003B stloc.s V_4
+   003D br IL_0054: ldloc.s V_4
+   0042 ldloc.3 
+   0043 ldloca.s V_2
+   0045 ldloc.s V_4
+   0047 call System.UInt32 ResData.ResFakeAcntSkill::SkillId(System.Int32)
+   004C add 
+   004D stloc.3 
+   004E ldloc.s V_4
+   0050 ldc.i4.1 
+   0051 add 
+   0052 stloc.s V_4
+   0054 ldloc.s V_4
+   0056 ldc.i4.s 10
+   0058 blt IL_0042: ldloc.3
+   005D ldloc.3 
+   005E ldc.i4.0 
+   005F cgt.un 
+   0061 ldstr Invalid PlayerSkill Databin
+   0066 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   006B ldloc.1 
+   006C ldc.i4.1 
+   006D add 
+   006E stloc.1 
+   006F ldloc.1 
+   0070 ldloc.0 
+   0071 blt IL_0031: ldloc.1
+   0076 ret 
+== System.Void RemoveAllFakeTimer() attrs=Private, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache0
+   000A brtrue.s IL_001d: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache0
+   000C ldnull 
+   000D ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::FakeConfirmLater(System.Int32)
+   0013 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0018 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache0
+   001D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache0
+   0022 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   0027 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002C ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache1
+   0031 brtrue.s IL_0044: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache1
+   0033 ldnull 
+   0034 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeConfirm(System.Int32)
+   003A newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   003F stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache1
+   0044 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache1
+   0049 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   004E call !0 Singleton`1<CTimerManager>::GetInstance()
+   0053 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache2
+   0058 brtrue.s IL_006b: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache2
+   005A ldnull 
+   005B ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnConfirmTimout(System.Int32)
+   0061 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0066 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache2
+   006B ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache2
+   0070 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   0075 call !0 Singleton`1<CTimerManager>::GetInstance()
+   007A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache3
+   007F brtrue.s IL_0092: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache3
+   0081 ldnull 
+   0082 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeSelectHero(System.Int32)
+   0088 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   008D stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache3
+   0092 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache3
+   0097 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   009C call !0 Singleton`1<CTimerManager>::GetInstance()
+   00A1 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache4
+   00A6 brtrue.s IL_00b9: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache4
+   00A8 ldnull 
+   00A9 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnSelectHeroTimeout(System.Int32)
+   00AF newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00B4 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache4
+   00B9 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache4
+   00BE callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   00C3 ret 
+== System.Boolean IsTaoShaMode() attrs=Private, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0005 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0011 ldfld Assets.Scripts.GameSystem.RoomAttrib::bMapType
+   0016 ldloc.0 
+   0017 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   001C ldfld Assets.Scripts.GameSystem.RoomAttrib::dwMapId
+   0021 call System.Boolean Assets.Scripts.GameSystem.CLevelCfgLogicManager::IsTaoShaMode(System.UInt32,System.UInt32)
+   0026 ret 
+== System.Void SetConfirmFakeData() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::RemoveAllFakeTimer()
+   0005 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::DatabinCheck()
+   000A ldc.i4.0 
+   000B stsfld Assets.Scripts.GameSystem.CFakePvPHelper::RealPlayerConfirmNum
+   0010 ldc.i4.0 
+   0011 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0016 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   001B callvirt System.Void ListViewBase::Clear()
+   0020 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0025 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   002A stloc.0 
+   002B ldloc.0 
+   002C ldnull 
+   002D ceq 
+   002F ldc.i4.0 
+   0030 ceq 
+   0032 call System.Void DebugHelper::Assert(System.Boolean)
+   0037 ldloc.0 
+   0038 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   003D ldfld Assets.Scripts.GameSystem.RoomAttrib::bWarmBattle
+   0042 call System.Void DebugHelper::Assert(System.Boolean)
+   0047 ldc.i4.1 
+   0048 stloc.1 
+   0049 br IL_00b7: ldloc.1
+   004E ldloc.0 
+   004F ldloc.1 
+   0050 callvirt ListView`1<Assets.Scripts.GameSystem.MemberInfo> Assets.Scripts.GameSystem.RoomInfo::get_Item(CSProtocol.COM_PLAYERCAMP)
+   0055 stloc.2 
+   0056 ldc.i4.0 
+   0057 stloc.3 
+   0058 br IL_00a7: ldloc.3
+   005D ldloc.2 
+   005E ldloc.3 
+   005F callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   0064 stloc.s V_4
+   0066 ldloc.s V_4
+   0068 ldfld Assets.Scripts.GameSystem.MemberInfo::RoomMemberType
+   006D ldc.i4.2 
+   006E bne.un IL_00a3: ldloc.3
+   0073 newobj System.Void Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::.ctor()
+   0078 stloc.s V_5
+   007A ldloc.s V_5
+   007C ldloc.s V_4
+   007E ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   0083 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::FakePlayer
+   0088 ldloc.s V_5
+   008A ldc.i4.2 
+   008B ldc.i4.s 11
+   008D call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0092 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::confirmWaitTime
+   0097 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   009C ldloc.s V_5
+   009E callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::Add(!0)
+   00A3 ldloc.3 
+   00A4 ldc.i4.1 
+   00A5 add 
+   00A6 stloc.3 
+   00A7 ldloc.3 
+   00A8 ldloc.2 
+   00A9 callvirt System.Int32 ListViewBase::get_Count()
+   00AE blt IL_005d: ldloc.2
+   00B3 ldloc.1 
+   00B4 ldc.i4.1 
+   00B5 add 
+   00B6 stloc.1 
+   00B7 ldloc.1 
+   00B8 ldc.i4.s 41
+   00BA blt IL_004e: ldloc.0
+   00BF ret 
+== System.Void StartFakeConfirm() attrs=Public, Static, HideBySig maxstack=5
+   0000 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   0005 brfalse IL_0014: ldc.i4.1
+   000A call System.Void Assets.Scripts.GameSystem.CFakeTaoShaHelper::StartFakeConfirm()
+   000F br IL_0083: ret
+   0014 ldc.i4.1 
+   0015 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeConfirm
+   001A ldc.i4.0 
+   001B stsfld Assets.Scripts.GameSystem.CFakePvPHelper::CurrentSelectTime
+   0020 ldc.i4.0 
+   0021 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::ConfirmedFakePlayerNum
+   0026 call !0 Singleton`1<CTimerManager>::GetInstance()
+   002B ldc.i4 1000
+   0030 ldc.i4.s 20
+   0032 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache5
+   0037 brtrue.s IL_004a: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache5
+   0039 ldnull 
+   003A ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeConfirm(System.Int32)
+   0040 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0045 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache5
+   004A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache5
+   004F callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0054 pop 
+   0055 call !0 Singleton`1<CTimerManager>::GetInstance()
+   005A ldc.i4 30000
+   005F ldc.i4.1 
+   0060 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache6
+   0065 brtrue.s IL_0078: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache6
+   0067 ldnull 
+   0068 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnConfirmTimout(System.Int32)
+   006E newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0073 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache6
+   0078 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache6
+   007D callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0082 pop 
+   0083 ret 
+== System.Void OnConfirmTimout(System.Int32 seq) attrs=Public, Static, HideBySig maxstack=6
+   0000 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   0005 brfalse IL_0014: ldc.i4.0
+   000A call System.Void Assets.Scripts.GameSystem.CFakeTaoShaHelper::OnConfirmTimout()
+   000F br IL_00a9: ret
+   0014 ldc.i4.0 
+   0015 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeConfirm
+   001A call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   001F ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0024 stloc.0 
+   0025 ldloc.0 
+   0026 brfalse IL_0037: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   002B ldloc.0 
+   002C ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0031 ldc.i4.0 
+   0032 stfld Assets.Scripts.GameSystem.RoomAttrib::bWarmBattle
+   0037 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   003C ldc.i4.0 
+   003D callvirt System.Void Assets.Scripts.GameSystem.CMatchingSystem::set_IsInMatchingTeam(System.Boolean)
+   0042 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0047 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   004C callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0051 stloc.1 
+   0052 ldloc.1 
+   0053 ldnull 
+   0054 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0059 brfalse IL_00a9: ret
+   005E call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0063 ldloc.1 
+   0064 callvirt System.Void Assets.Scripts.UI.CUIManager::CloseForm(Assets.Scripts.UI.CUIFormScript)
+   0069 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   006E call !0 Singleton`1<CTextManager>::GetInstance()
+   0073 ldstr Err_NM_Cancel
+   0078 ldc.i4.1 
+   0079 callvirt System.String CTextManager::GetText(System.String,System.Boolean)
+   007E ldc.i4.0 
+   007F ldc.r4 1.5
+   0084 ldnull 
+   0085 ldc.i4.0 
+   0086 newarr System.Object
+   008B callvirt System.Void Assets.Scripts.UI.CUIManager::OpenTips(System.String,System.Boolean,System.Single,UnityEngine.GameObject,System.Object[])
+   0090 ldc.i4 1058
+   0095 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   009A stloc.2 
+   009B call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   00A0 ldloca.s V_2
+   00A2 ldc.i4.0 
+   00A3 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   00A8 pop 
+   00A9 ret 
+== ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> SelectConfirmPlayer(System.Int32 time) attrs=Private, Static, HideBySig maxstack=3
+   0000 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::.ctor()
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 br IL_0052: ldloc.1
+   000D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0012 ldloc.1 
+   0013 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   0018 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   001D brfalse IL_0027: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0022 br IL_004e: ldloc.1
+   0027 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   002C ldloc.1 
+   002D callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   0032 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::confirmWaitTime
+   0037 ldarg.0 
+   0038 bne.un IL_004e: ldloc.1
+   003D ldloc.0 
+   003E ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0043 ldloc.1 
+   0044 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   0049 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::Add(!0)
+   004E ldloc.1 
+   004F ldc.i4.1 
+   0050 add 
+   0051 stloc.1 
+   0052 ldloc.1 
+   0053 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0058 callvirt System.Int32 ListViewBase::get_Count()
+   005D blt IL_000d: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0062 ldloc.0 
+   0063 ret 
+== System.Void UpdateFakeConfirm(System.Int32 seq) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::CurrentSelectTime
+   0005 dup 
+   0006 ldc.i4.1 
+   0007 add 
+   0008 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::CurrentSelectTime
+   000D call ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> Assets.Scripts.GameSystem.CFakePvPHelper::SelectConfirmPlayer(System.Int32)
+   0012 stloc.0 
+   0013 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0018 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   001D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0022 stloc.1 
+   0023 ldloc.1 
+   0024 ldnull 
+   0025 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002A brfalse IL_00e7: ret
+   002F ldc.i4.0 
+   0030 stloc.2 
+   0031 br IL_00d6: ldloc.2
+   0036 ldloc.0 
+   0037 ldloc.2 
+   0038 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   003D stloc.3 
+   003E ldloc.3 
+   003F ldc.i4.1 
+   0040 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0045 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ConfirmedFakePlayerNum
+   004A ldc.i4.1 
+   004B add 
+   004C stsfld Assets.Scripts.GameSystem.CFakePvPHelper::ConfirmedFakePlayerNum
+   0051 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0056 dup 
+   0057 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   005C ldc.i4.1 
+   005D add 
+   005E stfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0063 ldloc.1 
+   0064 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0069 ldloc.3 
+   006A ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::FakePlayer
+   006F ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   0074 call System.Void Assets.Scripts.GameSystem.CMatchingView::UpdateConfirmBox(UnityEngine.GameObject,System.UInt64)
+   0079 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ConfirmedFakePlayerNum
+   007E ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0083 callvirt System.Int32 ListViewBase::get_Count()
+   0088 bne.un IL_00b4: call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   008D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0092 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache7
+   0097 brtrue.s IL_00aa: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache7
+   0099 ldnull 
+   009A ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeConfirm(System.Int32)
+   00A0 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00A5 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache7
+   00AA ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache7
+   00AF callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   00B4 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   00B9 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   00BE call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   00C3 callvirt System.Int32 Assets.Scripts.GameSystem.CMatchingSystem::get_currentMapPlayerNum()
+   00C8 bne.un IL_00d2: ldloc.2
+   00CD call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::GotoHeroSelectPage()
+   00D2 ldloc.2 
+   00D3 ldc.i4.1 
+   00D4 add 
+   00D5 stloc.2 
+   00D6 ldloc.2 
+   00D7 ldloc.0 
+   00D8 callvirt System.Int32 ListViewBase::get_Count()
+   00DD blt IL_0036: ldloc.0
+   00E2 br IL_00e7: ret
+   00E7 ret 
+== System.Void OnSelfConfirmed(UnityEngine.GameObject root, System.Int32 PlayerNum) attrs=Public, Static, HideBySig maxstack=3
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0005 dup 
+   0006 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   000B ldc.i4.1 
+   000C add 
+   000D stfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0012 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0017 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldnull 
+   001F ceq 
+   0021 ldc.i4.0 
+   0022 ceq 
+   0024 call System.Void DebugHelper::Assert(System.Boolean)
+   0029 ldloc.0 
+   002A brfalse IL_005e: ret
+   002F ldarg.0 
+   0030 ldloc.0 
+   0031 ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0036 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::ullUid
+   003B call System.Void Assets.Scripts.GameSystem.CMatchingView::UpdateConfirmBox(UnityEngine.GameObject,System.UInt64)
+   0040 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0045 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   004A call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   004F callvirt System.Int32 Assets.Scripts.GameSystem.CMatchingSystem::get_currentMapPlayerNum()
+   0054 bne.un IL_005e: ret
+   0059 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::GotoHeroSelectPage()
+   005E ret 
+== System.Void GotoHeroSelectPage() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeConfirm
+   0006 ldc.i4.0 
+   0007 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::RealPlayerConfirmNum
+   000C ldc.i4.0 
+   000D stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0012 call !0 Singleton`1<Assets.Scripts.GameLogic.LobbyLogic>::GetInstance()
+   0017 ldc.i4.0 
+   0018 stfld Assets.Scripts.GameLogic.LobbyLogic::inMultiRoom
+   001D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0022 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0027 stloc.0 
+   0028 ldloc.0 
+   0029 brtrue IL_002f: ldloc.0
+   002E ret 
+   002F ldloc.0 
+   0030 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0035 ldfld Assets.Scripts.GameSystem.RoomAttrib::bMapType
+   003A ldloc.0 
+   003B ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0040 ldfld Assets.Scripts.GameSystem.RoomAttrib::dwMapId
+   0045 ldloca.s V_1
+   0047 call System.Boolean Assets.Scripts.GameSystem.CLevelCfgLogicManager::GetPvpMapCommonInfo(System.Byte,System.UInt32,ResData.ResDT_LevelCommonInfo&)
+   004C pop 
+   004D call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0052 ldc.i4.1 
+   0053 ldloca.s V_1
+   0055 ldfld ResData.ResDT_LevelCommonInfo::bHeroNum
+   005A ldloc.0 
+   005B ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0060 ldfld Assets.Scripts.GameSystem.RoomAttrib::dwMapId
+   0065 ldloc.0 
+   0066 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   006B ldfld Assets.Scripts.GameSystem.RoomAttrib::bMapType
+   0070 ldloca.s V_1
+   0072 ldfld ResData.ResDT_LevelCommonInfo::bIsAllowHeroDup
+   0077 ldnull 
+   0078 ldc.i4.0 
+   0079 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectBaseSystem::OpenForm(Assets.Scripts.GameSystem.enSelectGameType,System.Byte,System.UInt32,System.Byte,System.Int32,CSProtocol.CSDT_VOTE_HERO_DETAIL,System.UInt32)
+   007E call !0 Singleton`1<CTimerManager>::GetInstance()
+   0083 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache8
+   0088 brtrue.s IL_009b: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache8
+   008A ldnull 
+   008B ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnConfirmTimout(System.Int32)
+   0091 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0096 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache8
+   009B ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache8
+   00A0 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   00A5 ret 
+== System.Void NewUpdateFakePlayerConfirm() attrs=Public, Static, HideBySig maxstack=8
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   0006 call !0 Singleton`1<CTimerManager>::GetInstance()
+   000B ldc.i4.5 
+   000C ldc.i4.1 
+   000D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache9
+   0012 brtrue.s IL_0025: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache9
+   0014 ldnull 
+   0015 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::NewFakeConfirmTimerUpdate(System.Int32)
+   001B newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0020 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache9
+   0025 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache9
+   002A callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   002F pop 
+   0030 ret 
+== System.Void NewFakeConfirmTimerUpdate(System.Int32 seq) attrs=Private, Static, HideBySig maxstack=5
+   0000 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0005 ldarg.0 
+   0006 callvirt System.Void CTimerManager::RemoveTimer(System.Int32)
+   000B call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0010 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   0015 callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   001A stloc.0 
+   001B ldloc.0 
+   001C ldnull 
+   001D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0022 brfalse IL_00f0: ret
+   0027 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   002C stloc.1 
+   002D br IL_00e0: ldloc.1
+   0032 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0037 ldloc.1 
+   0038 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   003D stloc.2 
+   003E ldloc.2 
+   003F ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0044 brfalse IL_004e: ldloc.2
+   0049 br IL_00dc: ldloc.1
+   004E ldloc.2 
+   004F ldc.i4.1 
+   0050 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0055 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   005A dup 
+   005B ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0060 ldc.i4.1 
+   0061 add 
+   0062 stfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0067 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   006C ldc.i4.1 
+   006D add 
+   006E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   0073 ldloc.0 
+   0074 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0079 ldloc.2 
+   007A ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::FakePlayer
+   007F ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   0084 call System.Void Assets.Scripts.GameSystem.CMatchingView::UpdateConfirmBox(UnityEngine.GameObject,System.UInt64)
+   0089 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   008E ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0093 callvirt System.Int32 ListViewBase::get_Count()
+   0098 bge IL_00d7: br IL_00f0
+   009D ldc.i4 200
+   00A2 ldc.i4 1000
+   00A7 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00AC stloc.3 
+   00AD call !0 Singleton`1<CTimerManager>::GetInstance()
+   00B2 ldloc.3 
+   00B3 ldc.i4.1 
+   00B4 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheA
+   00B9 brtrue.s IL_00cc: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheA
+   00BB ldnull 
+   00BC ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::NewFakeConfirmTimerUpdate(System.Int32)
+   00C2 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00C7 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheA
+   00CC ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheA
+   00D1 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   00D6 pop 
+   00D7 br IL_00f0: ret
+   00DC ldloc.1 
+   00DD ldc.i4.1 
+   00DE add 
+   00DF stloc.1 
+   00E0 ldloc.1 
+   00E1 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   00E6 callvirt System.Int32 ListViewBase::get_Count()
+   00EB blt IL_0032: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   00F0 ret 
+== System.Void UpdateConfirmBox(UnityEngine.GameObject root, System.Int32 PlayerNum) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0005 callvirt System.Int32 ListViewBase::get_Count()
+   000A ldc.i4.5 
+   000B cgt 
+   000D ldc.i4.0 
+   000E ceq 
+   0010 ldstr FakePlayerList Count Error!! Count: {0}
+   0015 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   001A callvirt System.Int32 ListViewBase::get_Count()
+   001F box System.Int32
+   0024 call System.String System.String::Format(System.String,System.Object)
+   0029 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   002E ldarg.1 
+   002F stsfld Assets.Scripts.GameSystem.CFakePvPHelper::MapPlayerNum
+   0034 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::RealPlayerConfirmNum
+   0039 ldc.i4.1 
+   003A add 
+   003B stsfld Assets.Scripts.GameSystem.CFakePvPHelper::RealPlayerConfirmNum
+   0040 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::RealPlayerConfirmNum
+   0045 ldarg.1 
+   0046 ldc.i4.2 
+   0047 div 
+   0048 bne.un IL_00e6: call !0 Singleton`1<CTimerManager>::GetInstance()
+   004D ldc.i4.0 
+   004E stloc.0 
+   004F br IL_00aa: ldloc.0
+   0054 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0059 ldloc.0 
+   005A callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   005F stloc.1 
+   0060 ldloc.1 
+   0061 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0066 brfalse IL_0070: ldloc.1
+   006B br IL_00a6: ldloc.0
+   0070 ldloc.1 
+   0071 ldc.i4.1 
+   0072 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0077 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   007C ldc.i4.1 
+   007D add 
+   007E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0083 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0088 dup 
+   0089 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   008E ldc.i4.1 
+   008F add 
+   0090 stfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0095 ldarg.0 
+   0096 ldloc.1 
+   0097 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::FakePlayer
+   009C ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   00A1 call System.Void Assets.Scripts.GameSystem.CMatchingView::UpdateConfirmBox(UnityEngine.GameObject,System.UInt64)
+   00A6 ldloc.0 
+   00A7 ldc.i4.1 
+   00A8 add 
+   00A9 stloc.0 
+   00AA ldloc.0 
+   00AB ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   00B0 callvirt System.Int32 ListViewBase::get_Count()
+   00B5 blt IL_0054: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm> Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   00BA call !0 Singleton`1<CTimerManager>::GetInstance()
+   00BF ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheB
+   00C4 brtrue.s IL_00d7: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheB
+   00C6 ldnull 
+   00C7 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::FakeConfirmLater(System.Int32)
+   00CD newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00D2 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheB
+   00D7 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheB
+   00DC callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   00E1 br IL_0114: ret
+   00E6 call !0 Singleton`1<CTimerManager>::GetInstance()
+   00EB ldc.i4 1000
+   00F0 ldc.i4.1 
+   00F1 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheC
+   00F6 brtrue.s IL_0109: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheC
+   00F8 ldnull 
+   00F9 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::FakeConfirmLater(System.Int32)
+   00FF newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0104 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheC
+   0109 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheC
+   010E callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   0113 pop 
+   0114 ret 
+== System.Void FakeConfirmLater(System.Int32 seq) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0005 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::MapPlayerNum
+   000A ldc.i4.2 
+   000B div 
+   000C bge IL_0095: ret
+   0011 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::MapPlayerNum
+   0016 ldc.i4.6 
+   0017 bne.un IL_0026: ldsfld System.Int32[] Assets.Scripts.GameSystem.CFakePvPHelper::FAKE_CONFIRM_MAP_5V5
+   001C ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FAKE_CONFIRM_MAP_3V3
+   0021 br IL_002b: stloc.0
+   0026 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FAKE_CONFIRM_MAP_5V5
+   002B stloc.0 
+   002C ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0031 ldloc.0 
+   0032 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0037 ldelem.i4 
+   0038 callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::get_Item(System.Int32)
+   003D stloc.1 
+   003E ldloc.1 
+   003F ldc.i4.1 
+   0040 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::bConfirmed
+   0045 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   004A ldc.i4.1 
+   004B add 
+   004C stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerConfirmNum
+   0051 call !0 Singleton`1<Assets.Scripts.GameSystem.CMatchingSystem>::GetInstance()
+   0056 dup 
+   0057 ldfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   005C ldc.i4.1 
+   005D add 
+   005E stfld Assets.Scripts.GameSystem.CMatchingSystem::confirmPlayerNum
+   0063 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0068 ldsfld Assets.Scripts.GameSystem.CMatchingSystem::PATH_MATCHING_CONFIRMBOX
+   006D callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   0072 stloc.2 
+   0073 ldloc.2 
+   0074 ldnull 
+   0075 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   007A brfalse IL_0095: ret
+   007F ldloc.2 
+   0080 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0085 ldloc.1 
+   0086 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm::FakePlayer
+   008B ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   0090 call System.Void Assets.Scripts.GameSystem.CMatchingView::UpdateConfirmBox(UnityEngine.GameObject,System.UInt64)
+   0095 ret 
+== System.Boolean IsInSelectHero() attrs=Private, Static, HideBySig maxstack=8
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CHeroSelectNormalSystem::s_heroSelectFormPath
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0015 brfalse IL_0020: ldc.i4.1
+   001A ldc.i4.0 
+   001B br IL_0021: ret
+   0020 ldc.i4.1 
+   0021 ret 
+== System.Void BeginFakeSelectHero() attrs=Public, Static, HideBySig maxstack=5
+   0000 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   0005 brfalse IL_0014: ldc.i4.0
+   000A call System.Void Assets.Scripts.GameSystem.CFakeTaoShaHelper::BeginFakeSelectHero()
+   000F br IL_0170: ret
+   0014 ldc.i4.0 
+   0015 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   001A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   001F callvirt System.Void ListViewBase::Clear()
+   0024 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0029 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::Clear()
+   002E ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   0033 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Clear()
+   0038 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   003D ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0042 stloc.0 
+   0043 ldloc.0 
+   0044 brfalse IL_0059: ret
+   0049 ldloc.0 
+   004A ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   004F ldfld Assets.Scripts.GameSystem.RoomAttrib::bWarmBattle
+   0054 brtrue IL_005a: ldloc.0
+   0059 ret 
+   005A ldloc.0 
+   005B callvirt CSProtocol.COM_PLAYERCAMP Assets.Scripts.GameSystem.RoomInfo::GetSelfCamp()
+   0060 stloc.1 
+   0061 ldloc.0 
+   0062 ldloc.1 
+   0063 callvirt ListView`1<Assets.Scripts.GameSystem.MemberInfo> Assets.Scripts.GameSystem.RoomInfo::get_Item(CSProtocol.COM_PLAYERCAMP)
+   0068 stloc.2 
+   0069 ldc.i4.0 
+   006A stloc.3 
+   006B br IL_00f1: ldloc.3
+   0070 ldloc.2 
+   0071 ldloc.3 
+   0072 callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   0077 stloc.s V_4
+   0079 ldloc.s V_4
+   007B ldfld Assets.Scripts.GameSystem.MemberInfo::RoomMemberType
+   0080 ldc.i4.2 
+   0081 bne.un IL_00ed: ldloc.3
+   0086 newobj System.Void Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::.ctor()
+   008B stloc.s V_5
+   008D ldloc.s V_5
+   008F ldloc.s V_4
+   0091 ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   0096 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   009B call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   00A0 callvirt Assets.Scripts.GameSystem.enSelectType Assets.Scripts.GameSystem.CHeroSelectBaseSystem::get_selectType()
+   00A5 ldc.i4.1 
+   00A6 bne.un IL_00c5: ldloc.s V_5
+   00AB ldloc.s V_5
+   00AD ldc.i4.0 
+   00AE ldc.i4.2 
+   00AF call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00B4 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::maxChangeHeroCount
+   00B9 ldloca.s V_5
+   00BB call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::DoSelectAction(Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect&)
+   00C0 br IL_00d3: ldloc.s V_5
+   00C5 ldloc.s V_5
+   00C7 ldc.i4.1 
+   00C8 ldc.i4.4 
+   00C9 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00CE stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::maxChangeHeroCount
+   00D3 ldloc.s V_5
+   00D5 ldc.i4.3 
+   00D6 ldc.i4.6 
+   00D7 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00DC stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::nextActionSec
+   00E1 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   00E6 ldloc.s V_5
+   00E8 callvirt System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect>::Add(!0)
+   00ED ldloc.3 
+   00EE ldc.i4.1 
+   00EF add 
+   00F0 stloc.3 
+   00F1 ldloc.3 
+   00F2 ldloc.2 
+   00F3 callvirt System.Int32 ListViewBase::get_Count()
+   00F8 blt IL_0070: ldloc.2
+   00FD ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0102 callvirt System.Int32 ListViewBase::get_Count()
+   0107 ldc.i4.0 
+   0108 ble IL_0142: call !0 Singleton`1<CTimerManager>::GetInstance()
+   010D call !0 Singleton`1<CTimerManager>::GetInstance()
+   0112 ldc.i4 1000
+   0117 ldc.i4.s 60
+   0119 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheD
+   011E brtrue.s IL_0131: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheD
+   0120 ldnull 
+   0121 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeSelectHero(System.Int32)
+   0127 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   012C stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheD
+   0131 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheD
+   0136 callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   013B pop 
+   013C ldc.i4.1 
+   013D stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeSelect
+   0142 call !0 Singleton`1<CTimerManager>::GetInstance()
+   0147 ldc.i4 60000
+   014C ldc.i4.1 
+   014D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheE
+   0152 brtrue.s IL_0165: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheE
+   0154 ldnull 
+   0155 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnSelectHeroTimeout(System.Int32)
+   015B newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   0160 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheE
+   0165 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheE
+   016A callvirt System.Int32 CTimerManager::AddTimer(System.Int32,System.Int32,CTimer/OnTimeUpHandler)
+   016F pop 
+   0170 ret 
+== System.Void UpdateFakeSelectHero(System.Int32 seq) attrs=Private, Static, HideBySig maxstack=3
+   0000 ldc.i4.0 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_006c: ldloc.1
+   0009 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   000E ldloc.1 
+   000F callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect>::get_Item(System.Int32)
+   0014 stloc.2 
+   0015 ldloc.2 
+   0016 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::bConfirmed
+   001B brfalse IL_0029: ldloc.2
+   0020 ldloc.0 
+   0021 ldc.i4.1 
+   0022 add 
+   0023 stloc.0 
+   0024 br IL_0068: ldloc.1
+   0029 ldloc.2 
+   002A ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::idleSec
+   002F ldloc.2 
+   0030 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::nextActionSec
+   0035 bne.un IL_005a: ldloc.2
+   003A ldloca.s V_2
+   003C call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::DoSelectAction(Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect&)
+   0041 ldloc.2 
+   0042 ldc.i4.0 
+   0043 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::idleSec
+   0048 ldloc.2 
+   0049 ldc.i4.1 
+   004A ldc.i4.2 
+   004B call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0050 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::nextActionSec
+   0055 br IL_0068: ldloc.1
+   005A ldloc.2 
+   005B dup 
+   005C ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::idleSec
+   0061 ldc.i4.1 
+   0062 add 
+   0063 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::idleSec
+   0068 ldloc.1 
+   0069 ldc.i4.1 
+   006A add 
+   006B stloc.1 
+   006C ldloc.1 
+   006D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0072 callvirt System.Int32 ListViewBase::get_Count()
+   0077 blt IL_0009: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect> Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   007C ldloc.0 
+   007D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0082 callvirt System.Int32 ListViewBase::get_Count()
+   0087 bne.un IL_00b3: ret
+   008C call !0 Singleton`1<CTimerManager>::GetInstance()
+   0091 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheF
+   0096 brtrue.s IL_00a9: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheF
+   0098 ldnull 
+   0099 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::UpdateFakeSelectHero(System.Int32)
+   009F newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   00A4 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheF
+   00A9 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cacheF
+   00AE callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   00B3 ret 
+== System.Void DoSelectAction(Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect& fakeSelect) attrs=Private, Static, HideBySig maxstack=3
+   0000 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsInSelectHero()
+   0005 brtrue IL_000b: ldarg.0
+   000A ret 
+   000B ldarg.0 
+   000C ldind.ref 
+   000D ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::changeHeroCount
+   0012 ldarg.0 
+   0013 ldind.ref 
+   0014 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::maxChangeHeroCount
+   0019 bge IL_01e3: ldarg.0
+   001E ldc.i4.0 
+   001F stloc.0 
+   0020 ldc.i4.0 
+   0021 stloc.1 
+   0022 ldarg.0 
+   0023 ldind.ref 
+   0024 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0029 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwAcntPvpLevel
+   002E ldc.i4.6 
+   002F bgt.un IL_008a: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   0034 ldc.i4.0 
+   0035 call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   003A call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   003F stloc.0 
+   0040 ldloc.0 
+   0041 call ResData.ResFakeAcntHero ResData.GameDataMgr/robotRookieHeroSkinDatabin::GetByIndex(System.Int32)
+   0046 stloc.2 
+   0047 ldloca.s V_2
+   0049 ldfld ResData.ResFakeAcntHero::dwHeroID
+   004E stloc.1 
+   004F br IL_006f: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0054 ldc.i4.0 
+   0055 call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   005A call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   005F stloc.0 
+   0060 ldloc.0 
+   0061 call ResData.ResFakeAcntHero ResData.GameDataMgr/robotRookieHeroSkinDatabin::GetByIndex(System.Int32)
+   0066 stloc.2 
+   0067 ldloca.s V_2
+   0069 ldfld ResData.ResFakeAcntHero::dwHeroID
+   006E stloc.1 
+   006F ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0074 ldloca.s V_2
+   0076 ldfld ResData.ResFakeAcntHero::dwHeroID
+   007B callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::ContainsValue(!1)
+   0080 brtrue IL_0054: ldc.i4.0
+   0085 br IL_014d: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   008A call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   008F callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   0094 stloc.3 
+   0095 call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   009A stloc.s V_4
+   009C ldloc.s V_4
+   009E ldloc.3 
+   009F brfalse IL_00b4: ldc.i4.0
+   00A4 ldloc.3 
+   00A5 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   00AA callvirt System.Int32 ListViewBase::get_Count()
+   00AF br IL_00b5: add
+   00B4 ldc.i4.0 
+   00B5 add 
+   00B6 stloc.s V_5
+   00B8 ldc.i4.0 
+   00B9 ldloc.s V_5
+   00BB call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00C0 stloc.0 
+   00C1 ldloc.0 
+   00C2 ldloc.s V_4
+   00C4 bge IL_00dd: ldloc.3
+   00C9 ldloc.0 
+   00CA call ResData.ResFakeAcntHero ResData.GameDataMgr/robotVeteranHeroSkinDatabin::GetByIndex(System.Int32)
+   00CF stloc.2 
+   00D0 ldloca.s V_2
+   00D2 ldfld ResData.ResFakeAcntHero::dwHeroID
+   00D7 stloc.1 
+   00D8 br IL_00f8: br IL_013d
+   00DD ldloc.3 
+   00DE brfalse IL_00f8: br IL_013d
+   00E3 ldloc.3 
+   00E4 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   00E9 ldloc.0 
+   00EA ldloc.s V_4
+   00EC sub 
+   00ED callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   00F2 ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   00F7 stloc.1 
+   00F8 br IL_013d: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   00FD ldc.i4.0 
+   00FE ldloc.s V_5
+   0100 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0105 stloc.0 
+   0106 ldloc.0 
+   0107 ldloc.s V_4
+   0109 bge IL_0122: ldloc.3
+   010E ldloc.0 
+   010F call ResData.ResFakeAcntHero ResData.GameDataMgr/robotVeteranHeroSkinDatabin::GetByIndex(System.Int32)
+   0114 stloc.2 
+   0115 ldloca.s V_2
+   0117 ldfld ResData.ResFakeAcntHero::dwHeroID
+   011C stloc.1 
+   011D br IL_013d: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0122 ldloc.3 
+   0123 brfalse IL_013d: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0128 ldloc.3 
+   0129 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   012E ldloc.0 
+   012F ldloc.s V_4
+   0131 sub 
+   0132 callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   0137 ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   013C stloc.1 
+   013D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0142 ldloc.1 
+   0143 callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::ContainsValue(!1)
+   0148 brtrue IL_00fd: ldc.i4.0
+   014D ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0152 ldarg.0 
+   0153 ldind.ref 
+   0154 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0159 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   015E ldloc.1 
+   015F callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::set_Item(!0,!1)
+   0164 ldarg.0 
+   0165 ldind.ref 
+   0166 ldloc.1 
+   0167 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedHero
+   016C ldarg.0 
+   016D ldind.ref 
+   016E dup 
+   016F ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::changeHeroCount
+   0174 ldc.i4.1 
+   0175 add 
+   0176 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::changeHeroCount
+   017B call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0180 callvirt Assets.Scripts.GameSystem.RoomInfo Assets.Scripts.GameSystem.CHeroSelectBaseSystem::get_roomInfo()
+   0185 stloc.s V_6
+   0187 ldloc.s V_6
+   0189 brtrue IL_018f: ldloc.s V_6
+   018E ret 
+   018F ldloc.s V_6
+   0191 ldarg.0 
+   0192 ldind.ref 
+   0193 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0198 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   019D callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMemberInfo(System.UInt64)
+   01A2 stloc.s V_7
+   01A4 ldloc.s V_7
+   01A6 brfalse IL_01de: br IL_0385
+   01AB ldloc.s V_7
+   01AD ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   01B2 ldc.i4.0 
+   01B3 ldelem.ref 
+   01B4 brfalse IL_01de: br IL_0385
+   01B9 ldloc.s V_7
+   01BB ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   01C0 ldc.i4.0 
+   01C1 ldelem.ref 
+   01C2 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   01C7 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   01CC ldloc.1 
+   01CD stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   01D2 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectNormalSystem>::GetInstance()
+   01D7 ldc.i4.0 
+   01D8 ldc.i4.1 
+   01D9 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectNormalSystem::RefreshHeroPanel(System.Boolean,System.Boolean)
+   01DE br IL_0385: ret
+   01E3 ldarg.0 
+   01E4 ldind.ref 
+   01E5 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   01EA ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwAcntPvpLevel
+   01EF ldc.i4.6 
+   01F0 bgt.un IL_0247: ldloca.s V_10
+   01F5 ldloca.s V_8
+   01F7 ldarg.0 
+   01F8 ldind.ref 
+   01F9 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedHero
+   01FE conv.u2 
+   01FF call System.Boolean ResData.GameDataMgr/robotRookieHeroSkinDatabin::FindByKey(ResData.ResFakeAcntHero&,System.UInt16)
+   0204 brfalse IL_0242: br IL_0294
+   0209 ldloca.s V_8
+   020B ldc.i4.0 
+   020C call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   0211 brfalse IL_0242: br IL_0294
+   0216 ldc.i4.0 
+   0217 ldc.i4 10000
+   021C call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0221 stloc.s V_9
+   0223 ldloc.s V_9
+   0225 conv.i8 
+   0226 ldloca.s V_8
+   0228 ldfld ResData.ResFakeAcntHero::dwSkinRate
+   022D conv.u8 
+   022E bge IL_0242: br IL_0294
+   0233 ldarg.0 
+   0234 ldind.ref 
+   0235 ldloca.s V_8
+   0237 ldc.i4.0 
+   0238 call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   023D stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedSkin
+   0242 br IL_0294: ldloca.s V_12
+   0247 ldloca.s V_10
+   0249 ldarg.0 
+   024A ldind.ref 
+   024B ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedHero
+   0250 conv.u2 
+   0251 call System.Boolean ResData.GameDataMgr/robotVeteranHeroSkinDatabin::FindByKey(ResData.ResFakeAcntHero&,System.UInt16)
+   0256 brfalse IL_0294: ldloca.s V_12
+   025B ldloca.s V_10
+   025D ldc.i4.0 
+   025E call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   0263 brfalse IL_0294: ldloca.s V_12
+   0268 ldc.i4.0 
+   0269 ldc.i4 10000
+   026E call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0273 stloc.s V_11
+   0275 ldloc.s V_11
+   0277 conv.i8 
+   0278 ldloca.s V_10
+   027A ldfld ResData.ResFakeAcntHero::dwSkinRate
+   027F conv.u8 
+   0280 bge IL_0294: ldloca.s V_12
+   0285 ldarg.0 
+   0286 ldind.ref 
+   0287 ldloca.s V_10
+   0289 ldc.i4.0 
+   028A call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   028F stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedSkin
+   0294 ldloca.s V_12
+   0296 ldarg.0 
+   0297 ldind.ref 
+   0298 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   029D ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwAcntPvpLevel
+   02A2 conv.u2 
+   02A3 call System.Boolean ResData.GameDataMgr/robotPlayerSkillDatabin::FindByKey(ResData.ResFakeAcntSkill&,System.UInt16)
+   02A8 brfalse IL_02e8: ldarg.0
+   02AD ldc.i4.0 
+   02AE ldc.i4.s 10
+   02B0 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   02B5 stloc.s V_13
+   02B7 br IL_02c6: ldloca.s V_12
+   02BC ldc.i4.0 
+   02BD ldc.i4.s 10
+   02BF call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   02C4 stloc.s V_13
+   02C6 ldloca.s V_12
+   02C8 ldloc.s V_13
+   02CA call System.UInt32 ResData.ResFakeAcntSkill::SkillId(System.Int32)
+   02CF brfalse IL_02bc: ldc.i4.0
+   02D4 ldloca.s V_12
+   02D6 ldloc.s V_13
+   02D8 call System.UInt32 ResData.ResFakeAcntSkill::SkillId(System.Int32)
+   02DD stloc.s V_14
+   02DF ldarg.0 
+   02E0 ldind.ref 
+   02E1 ldloc.s V_14
+   02E3 stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedPlayerSkill
+   02E8 ldarg.0 
+   02E9 ldind.ref 
+   02EA ldc.i4.1 
+   02EB stfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::bConfirmed
+   02F0 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   02F5 ldc.i4.1 
+   02F6 add 
+   02F7 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   02FC call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0301 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0306 stloc.s V_15
+   0308 ldloc.s V_15
+   030A ldarg.0 
+   030B ldind.ref 
+   030C ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0311 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   0316 callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMemberInfo(System.UInt64)
+   031B stloc.s V_16
+   031D ldloc.s V_16
+   031F brfalse IL_036a: ldsfld System.Int32 Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   0324 ldloc.s V_16
+   0326 ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   032B ldc.i4.0 
+   032C ldelem.ref 
+   032D brfalse IL_036a: ldsfld System.Int32 Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   0332 ldloc.s V_16
+   0334 ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   0339 ldc.i4.0 
+   033A ldelem.ref 
+   033B ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0340 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0345 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   034A ldarg.0 
+   034B ldind.ref 
+   034C ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedPlayerSkill
+   0351 stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   0356 ldloc.s V_16
+   0358 ldc.i4.1 
+   0359 stfld Assets.Scripts.GameSystem.MemberInfo::isPrepare
+   035E call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectNormalSystem>::GetInstance()
+   0363 ldc.i4.0 
+   0364 ldc.i4.1 
+   0365 callvirt System.Void Assets.Scripts.GameSystem.CHeroSelectNormalSystem::RefreshHeroPanel(System.Boolean,System.Boolean)
+   036A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   036F ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0374 callvirt System.Int32 ListViewBase::get_Count()
+   0379 ldc.i4.1 
+   037A add 
+   037B bne.un IL_0385: ret
+   0380 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::ReqStartSingleWarmBattle()
+   0385 ret 
+== System.Void OnSelfSelectHero(System.UInt64 selfUid, System.UInt32 heroID) attrs=Public, Static, HideBySig maxstack=8
+   0000 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0005 ldarg.0 
+   0006 ldarg.1 
+   0007 callvirt System.Void System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::set_Item(!0,!1)
+   000C ret 
+== System.Void OnSelfHeroConfirmed() attrs=Public, Static, HideBySig maxstack=3
+   0000 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   0005 brfalse IL_0014: ldsfld System.Int32 Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   000A call System.Void Assets.Scripts.GameSystem.CFakeTaoShaHelper::OnSelfHeroConfirmed()
+   000F br IL_006d: ret
+   0014 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   0019 ldc.i4.1 
+   001A add 
+   001B stsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   0020 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0025 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   002A stloc.0 
+   002B ldloc.0 
+   002C brtrue IL_0032: ldloc.0
+   0031 ret 
+   0032 ldloc.0 
+   0033 ldloc.0 
+   0034 ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0039 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::ullUid
+   003E callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMemberInfo(System.UInt64)
+   0043 stloc.1 
+   0044 ldloc.1 
+   0045 brtrue IL_004b: ldloc.1
+   004A ret 
+   004B ldloc.1 
+   004C ldc.i4.1 
+   004D stfld Assets.Scripts.GameSystem.MemberInfo::isPrepare
+   0052 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::HeroConfirmedPlayerNum
+   0057 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   005C callvirt System.Int32 ListViewBase::get_Count()
+   0061 ldc.i4.1 
+   0062 add 
+   0063 bne.un IL_006d: ret
+   0068 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::ReqStartSingleWarmBattle()
+   006D ret 
+== System.Void ReqStartSingleWarmBattle() attrs=Public, Static, HideBySig maxstack=4
+   0000 ldc.i4.0 
+   0001 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::bInFakeSelect
+   0006 call !0 Singleton`1<CTimerManager>::GetInstance()
+   000B ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache10
+   0010 brtrue.s IL_0023: ldsfld CTimer/OnTimeUpHandler Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache10
+   0012 ldnull 
+   0013 ldftn System.Void Assets.Scripts.GameSystem.CFakePvPHelper::OnSelectHeroTimeout(System.Int32)
+   0019 newobj System.Void CTimer/OnTimeUpHandler::.ctor(System.Object,System.IntPtr)
+   001E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache10
+   0023 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::<>f__mg$cache10
+   0028 callvirt System.Void CTimerManager::RemoveTimer(CTimer/OnTimeUpHandler)
+   002D call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::RemoveAllFakeTimer()
+   0032 ldc.i4 1050
+   0037 call CSProtocol.CSPkg Assets.Scripts.Framework.NetworkModule::CreateDefaultCSPKG(System.UInt32)
+   003C stloc.0 
+   003D call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0042 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0047 stloc.1 
+   0048 ldloc.1 
+   0049 brtrue IL_0060: ldloc.1
+   004E ldloc.1 
+   004F ldnull 
+   0050 ceq 
+   0052 ldc.i4.0 
+   0053 ceq 
+   0055 ldstr RoomInfo Should not be NULL!!!
+   005A call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   005F ret 
+   0060 ldloc.1 
+   0061 brfalse IL_0605: ret
+   0066 ldloc.0 
+   0067 ldfld CSProtocol.CSPkg::stPkgData
+   006C callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   0071 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   0076 ldc.i4.1 
+   0077 stfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::bGameType
+   007C ldloc.0 
+   007D ldfld CSProtocol.CSPkg::stPkgData
+   0082 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   0087 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   008C ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   0091 call !0 Singleton`1<Assets.Scripts.GameSystem.CHeroSelectBaseSystem>::get_instance()
+   0096 ldfld Assets.Scripts.GameSystem.CHeroSelectBaseSystem::m_stGameOfCombat
+   009B callvirt System.Void CSProtocol.CSDT_SINGLE_GAME_DETAIL::set_stGameOfCombat(CSProtocol.CSDT_SINGLE_GAME_OF_COMBAT)
+   00A0 ldloc.0 
+   00A1 ldfld CSProtocol.CSPkg::stPkgData
+   00A6 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00AB ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   00B0 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00B5 ldc.i4.1 
+   00B6 stfld CSProtocol.COMDT_BATTLEHERO::wHeroCnt
+   00BB ldloc.0 
+   00BC ldfld CSProtocol.CSPkg::stPkgData
+   00C1 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00C6 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleParam
+   00CB ldfld CSProtocol.CSDT_START_SINGLE_GAME_PARAM::stGameDetail
+   00D0 callvirt CSProtocol.CSDT_SINGLE_GAME_OF_COMBAT CSProtocol.CSDT_SINGLE_GAME_DETAIL::get_stGameOfCombat()
+   00D5 brtrue IL_00db: ldloc.1
+   00DA ret 
+   00DB ldloc.1 
+   00DC callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMasterMemberInfo()
+   00E1 stloc.2 
+   00E2 ldloc.2 
+   00E3 brfalse IL_0120: ldloc.1
+   00E8 ldloc.0 
+   00E9 ldfld CSProtocol.CSPkg::stPkgData
+   00EE callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   00F3 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattleList
+   00F8 ldfld CSProtocol.COMDT_BATTLELIST::stBattleList
+   00FD ldfld CSProtocol.COMDT_BATTLEHERO::BattleHeroList
+   0102 ldc.i4.0 
+   0103 ldloc.2 
+   0104 ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   0109 ldc.i4.0 
+   010A ldelem.ref 
+   010B ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0110 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0115 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   011A stelem.i4 
+   011B br IL_0132: ldloc.1
+   0120 ldloc.1 
+   0121 ldnull 
+   0122 ceq 
+   0124 ldc.i4.0 
+   0125 ceq 
+   0127 ldstr selfInfo Should not be NULL!!!
+   012C call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   0131 ret 
+   0132 ldloc.1 
+   0133 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0138 ldfld Assets.Scripts.GameSystem.RoomAttrib::bMapType
+   013D ldloc.1 
+   013E ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   0143 ldfld Assets.Scripts.GameSystem.RoomAttrib::dwMapId
+   0148 ldloca.s V_3
+   014A call System.Boolean Assets.Scripts.GameSystem.CLevelCfgLogicManager::GetPvpMapCommonInfo(System.Byte,System.UInt32,ResData.ResDT_LevelCommonInfo&)
+   014F brfalse IL_0605: ret
+   0154 ldc.i4.1 
+   0155 stloc.s V_4
+   0157 ldc.i4.0 
+   0158 stloc.s V_5
+   015A ldc.i4.1 
+   015B stloc.s V_6
+   015D br IL_01e2: ldloc.s V_6
+   0162 ldloc.1 
+   0163 ldloc.s V_6
+   0165 callvirt ListView`1<Assets.Scripts.GameSystem.MemberInfo> Assets.Scripts.GameSystem.RoomInfo::get_Item(CSProtocol.COM_PLAYERCAMP)
+   016A stloc.s V_7
+   016C ldc.i4.0 
+   016D stloc.s V_8
+   016F br IL_01ce: ldloc.s V_8
+   0174 ldloc.s V_7
+   0176 ldloc.s V_8
+   0178 callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   017D ldfld Assets.Scripts.GameSystem.MemberInfo::ullUid
+   0182 ldloc.1 
+   0183 ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0188 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::ullUid
+   018D bne.un IL_01c8: ldloc.s V_8
+   0192 ldloc.s V_7
+   0194 ldloc.s V_8
+   0196 callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   019B ldfld Assets.Scripts.GameSystem.MemberInfo::camp
+   01A0 stloc.s V_4
+   01A2 ldloc.s V_7
+   01A4 ldloc.s V_8
+   01A6 callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   01AB ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   01B0 ldc.i4.0 
+   01B1 ldelem.ref 
+   01B2 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   01B7 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   01BC ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   01C1 stloc.s V_5
+   01C3 br IL_01dc: ldloc.s V_6
+   01C8 ldloc.s V_8
+   01CA ldc.i4.1 
+   01CB add 
+   01CC stloc.s V_8
+   01CE ldloc.s V_8
+   01D0 ldloc.s V_7
+   01D2 callvirt System.Int32 ListViewBase::get_Count()
+   01D7 blt IL_0174: ldloc.s V_7
+   01DC ldloc.s V_6
+   01DE ldc.i4.1 
+   01DF add 
+   01E0 stloc.s V_6
+   01E2 ldloc.s V_6
+   01E4 ldc.i4.s 41
+   01E6 blt IL_0162: ldloc.1
+   01EB ldloc.0 
+   01EC ldfld CSProtocol.CSPkg::stPkgData
+   01F1 callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   01F6 ldfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stBattlePlayer
+   01FB stloc.s V_9
+   01FD ldc.i4.0 
+   01FE stloc.s V_10
+   0200 ldc.i4.1 
+   0201 stloc.s V_11
+   0203 br IL_05a2: ldloc.s V_11
+   0208 ldloc.1 
+   0209 ldloc.s V_11
+   020B callvirt ListView`1<Assets.Scripts.GameSystem.MemberInfo> Assets.Scripts.GameSystem.RoomInfo::get_Item(CSProtocol.COM_PLAYERCAMP)
+   0210 stloc.s V_12
+   0212 ldc.i4.0 
+   0213 stloc.s V_13
+   0215 br IL_058e: ldloc.s V_13
+   021A ldloc.s V_12
+   021C ldloc.s V_13
+   021E callvirt !0 ListView`1<Assets.Scripts.GameSystem.MemberInfo>::get_Item(System.Int32)
+   0223 stloc.s V_14
+   0225 ldloc.s V_14
+   0227 brfalse IL_0588: ldloc.s V_13
+   022C ldloc.s V_14
+   022E ldfld Assets.Scripts.GameSystem.MemberInfo::RoomMemberType
+   0233 ldc.i4.2 
+   0234 bne.un IL_04ee: ldloc.s V_14
+   0239 ldloc.s V_9
+   023B ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0240 ldloc.s V_10
+   0242 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0247 ldc.i4.2 
+   0248 stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   024D ldloc.s V_9
+   024F ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0254 ldloc.s V_10
+   0256 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   025B ldloc.s V_13
+   025D conv.u1 
+   025E stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   0263 ldloc.s V_9
+   0265 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   026A ldloc.s V_10
+   026C callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0271 ldloc.s V_11
+   0273 conv.u1 
+   0274 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   0279 ldloc.s V_9
+   027B ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0280 ldloc.s V_10
+   0282 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0287 ldloc.s V_14
+   0289 ldfld Assets.Scripts.GameSystem.MemberInfo::dwMemberPvpLevel
+   028E stfld CSProtocol.COMDT_PLAYERINFO::dwLevel
+   0293 ldloc.s V_14
+   0295 ldfld Assets.Scripts.GameSystem.MemberInfo::ullUid
+   029A call Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect Assets.Scripts.GameSystem.CFakePvPHelper::GetFakeHeroSelect(System.UInt64)
+   029F stloc.s V_15
+   02A1 ldloc.s V_15
+   02A3 brfalse IL_03f7: ldloc.s V_9
+   02A8 ldloc.s V_9
+   02AA ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   02AF ldloc.s V_10
+   02B1 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   02B6 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   02BB ldc.i4.0 
+   02BC callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   02C1 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   02C6 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   02CB ldloc.s V_15
+   02CD ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedHero
+   02D2 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   02D7 ldloc.s V_9
+   02D9 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   02DE ldloc.s V_10
+   02E0 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   02E5 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   02EA ldc.i4.0 
+   02EB callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   02F0 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   02F5 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   02FA ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   02FF ldloc.s V_15
+   0301 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedPlayerSkill
+   0306 stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   030B ldloc.s V_9
+   030D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0312 ldloc.s V_10
+   0314 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0319 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   031E ldc.i4.0 
+   031F callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0324 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0329 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   032E ldloc.s V_15
+   0330 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::selectedSkin
+   0335 conv.u2 
+   0336 stfld CSProtocol.COMDT_HERO_COMMON_INFO::wSkinID
+   033B ldloc.s V_9
+   033D ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0342 ldloc.s V_10
+   0344 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0349 ldloc.s V_15
+   034B ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0350 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::szUserName
+   0355 stfld CSProtocol.COMDT_PLAYERINFO::szName
+   035A ldloc.s V_9
+   035C ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0361 ldloc.s V_10
+   0363 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0368 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   036D newobj System.Void CSProtocol.COMDT_PLAYERINFO_OF_NPC::.ctor()
+   0372 callvirt System.Void CSProtocol.COMDT_PLAYERINFO_DETAIL::set_stPlayerOfNpc(CSProtocol.COMDT_PLAYERINFO_OF_NPC)
+   0377 ldloc.s V_9
+   0379 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   037E ldloc.s V_10
+   0380 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0385 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   038A callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   038F ldloc.s V_15
+   0391 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0396 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   039B stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::ullFakeUid
+   03A0 ldloc.s V_9
+   03A2 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   03A7 ldloc.s V_10
+   03A9 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   03AE ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   03B3 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   03B8 ldloc.s V_15
+   03BA ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   03BF ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwAcntPvpLevel
+   03C4 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakePvpLevel
+   03C9 ldloc.s V_9
+   03CB ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   03D0 ldloc.s V_10
+   03D2 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   03D7 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   03DC callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   03E1 ldloc.s V_15
+   03E3 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   03E8 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwLogicWorldId
+   03ED stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakeLogicWorldID
+   03F2 br IL_04e9: br IL_0582
+   03F7 ldloc.s V_9
+   03F9 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   03FE ldloc.s V_10
+   0400 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0405 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   040A ldc.i4.0 
+   040B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   0410 ldflda CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0415 ldloc.s V_9
+   0417 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   041C ldloc.s V_10
+   041E callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0423 ldfld CSProtocol.COMDT_PLAYERINFO::dwLevel
+   0428 call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   042D call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::SelectHeroForEnemyPlayer(CSProtocol.COMDT_HEROINFO&,System.UInt32,System.Boolean)
+   0432 ldloc.s V_9
+   0434 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0439 ldloc.s V_10
+   043B callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0440 ldloc.s V_14
+   0442 ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   0447 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::szUserName
+   044C stfld CSProtocol.COMDT_PLAYERINFO::szName
+   0451 ldloc.s V_9
+   0453 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0458 ldloc.s V_10
+   045A callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   045F ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0464 newobj System.Void CSProtocol.COMDT_PLAYERINFO_OF_NPC::.ctor()
+   0469 callvirt System.Void CSProtocol.COMDT_PLAYERINFO_DETAIL::set_stPlayerOfNpc(CSProtocol.COMDT_PLAYERINFO_OF_NPC)
+   046E ldloc.s V_9
+   0470 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0475 ldloc.s V_10
+   0477 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   047C ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   0481 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   0486 ldloc.s V_14
+   0488 ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   048D ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   0492 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::ullFakeUid
+   0497 ldloc.s V_9
+   0499 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   049E ldloc.s V_10
+   04A0 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   04A5 ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   04AA callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   04AF ldloc.s V_14
+   04B1 ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   04B6 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwAcntPvpLevel
+   04BB stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakePvpLevel
+   04C0 ldloc.s V_9
+   04C2 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   04C7 ldloc.s V_10
+   04C9 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   04CE ldfld CSProtocol.COMDT_PLAYERINFO::stDetail
+   04D3 callvirt CSProtocol.COMDT_PLAYERINFO_OF_NPC CSProtocol.COMDT_PLAYERINFO_DETAIL::get_stPlayerOfNpc()
+   04D8 ldloc.s V_14
+   04DA ldfld Assets.Scripts.GameSystem.MemberInfo::WarmNpc
+   04DF ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::dwLogicWorldId
+   04E4 stfld CSProtocol.COMDT_PLAYERINFO_OF_NPC::dwFakeLogicWorldID
+   04E9 br IL_0582: ldloc.s V_10
+   04EE ldloc.s V_14
+   04F0 ldfld Assets.Scripts.GameSystem.MemberInfo::RoomMemberType
+   04F5 ldc.i4.1 
+   04F6 bne.un IL_0582: ldloc.s V_10
+   04FB ldloc.s V_9
+   04FD ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0502 ldloc.s V_10
+   0504 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0509 ldc.i4.1 
+   050A stfld CSProtocol.COMDT_PLAYERINFO::bObjType
+   050F ldloc.s V_9
+   0511 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   0516 ldloc.s V_10
+   0518 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   051D ldloc.s V_13
+   051F conv.u1 
+   0520 stfld CSProtocol.COMDT_PLAYERINFO::bPosOfCamp
+   0525 ldloc.s V_9
+   0527 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   052C ldloc.s V_10
+   052E callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0533 ldloc.s V_4
+   0535 conv.u1 
+   0536 stfld CSProtocol.COMDT_PLAYERINFO::bObjCamp
+   053B ldc.i4.0 
+   053C stloc.s V_16
+   053E br IL_0574: ldloc.s V_16
+   0543 ldloc.s V_9
+   0545 ldfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::astFighter
+   054A ldloc.s V_10
+   054C callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_PLAYERINFO>::get_Item(System.Int32)
+   0551 ldfld CSProtocol.COMDT_PLAYERINFO::astChoiceHero
+   0556 ldloc.s V_16
+   0558 callvirt !0 Assets.Scripts.Common.SB_TDR_ARRAY`1<CSProtocol.COMDT_CHOICEHERO>::get_Item(System.Int32)
+   055D ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   0562 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0567 ldloc.s V_5
+   0569 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   056E ldloc.s V_16
+   0570 ldc.i4.1 
+   0571 add 
+   0572 stloc.s V_16
+   0574 ldloc.s V_16
+   0576 ldloca.s V_3
+   0578 ldfld ResData.ResDT_LevelCommonInfo::bHeroNum
+   057D blt IL_0543: ldloc.s V_9
+   0582 ldloc.s V_10
+   0584 ldc.i4.1 
+   0585 add 
+   0586 stloc.s V_10
+   0588 ldloc.s V_13
+   058A ldc.i4.1 
+   058B add 
+   058C stloc.s V_13
+   058E ldloc.s V_13
+   0590 ldloc.s V_12
+   0592 callvirt System.Int32 ListViewBase::get_Count()
+   0597 blt IL_021a: ldloc.s V_12
+   059C ldloc.s V_11
+   059E ldc.i4.1 
+   059F add 
+   05A0 stloc.s V_11
+   05A2 ldloc.s V_11
+   05A4 ldc.i4.s 41
+   05A6 blt IL_0208: ldloc.1
+   05AB ldloc.s V_9
+   05AD ldloc.s V_10
+   05AF conv.u1 
+   05B0 stfld CSProtocol.CSDT_BATTLE_PLAYER_BRIEF::bNum
+   05B5 ldloc.1 
+   05B6 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   05BB ldc.i4.0 
+   05BC stfld Assets.Scripts.GameSystem.RoomAttrib::bWarmBattle
+   05C1 ldloc.1 
+   05C2 ldfld Assets.Scripts.GameSystem.RoomInfo::roomAttrib
+   05C7 ldc.i4.2 
+   05C8 stfld Assets.Scripts.GameSystem.RoomAttrib::npcAILevel
+   05CD call System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper::IsTaoShaMode()
+   05D2 brfalse IL_05ed: call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   05D7 ldloc.0 
+   05D8 ldfld CSProtocol.CSPkg::stPkgData
+   05DD callvirt CSProtocol.CSPKG_STARTSINGLEGAMEREQ CSProtocol.CSPkgBody::get_stStartSingleGameReq()
+   05E2 ldloc.1 
+   05E3 ldfld Assets.Scripts.GameSystem.RoomInfo::reuseNpcInfo
+   05E8 stfld CSProtocol.CSPKG_STARTSINGLEGAMEREQ::stReuseNpcInfo
+   05ED call !0 Singleton`1<Assets.Scripts.Framework.NetworkModule>::GetInstance()
+   05F2 ldloca.s V_0
+   05F4 ldc.i4.1 
+   05F5 callvirt System.Boolean Assets.Scripts.Framework.NetworkModule::SendLobbyMsg(CSProtocol.CSPkg&,System.Boolean)
+   05FA pop 
+   05FB call !0 Singleton`1<Assets.Scripts.GameSystem.WatchController>::GetInstance()
+   0600 callvirt System.Void Assets.Scripts.GameSystem.WatchController::Stop()
+   0605 ret 
+== System.Void SelectHeroForEnemyPlayer(CSProtocol.COMDT_HEROINFO& heroInfo, System.UInt32 playerLevel, System.Boolean canHeroRepeat) attrs=Public, Static, HideBySig maxstack=4
+   0000 newobj System.Void Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::.ctor()
+   0005 stloc.0 
+   0006 ldc.i4.0 
+   0007 stloc.1 
+   0008 ldloc.0 
+   0009 ldc.i4.0 
+   000A stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   000F ldc.i4.0 
+   0010 stloc.2 
+   0011 ldc.i4.0 
+   0012 stloc.3 
+   0013 ldarg.1 
+   0014 ldc.i4.6 
+   0015 bgt.un IL_00cf: call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   001A ldc.i4.0 
+   001B call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   0020 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0025 stloc.1 
+   0026 ldloc.1 
+   0027 call ResData.ResFakeAcntHero ResData.GameDataMgr/robotRookieHeroSkinDatabin::GetByIndex(System.Int32)
+   002C stloc.s V_4
+   002E ldloc.0 
+   002F ldloca.s V_4
+   0031 ldfld ResData.ResFakeAcntHero::dwHeroID
+   0036 stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   003B br IL_007a: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   0040 ldc.i4.0 
+   0041 call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   0046 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   004B stloc.1 
+   004C ldloc.1 
+   004D call ResData.ResFakeAcntHero ResData.GameDataMgr/robotRookieHeroSkinDatabin::GetByIndex(System.Int32)
+   0052 stloc.s V_4
+   0054 ldloc.0 
+   0055 ldloca.s V_4
+   0057 ldfld ResData.ResFakeAcntHero::dwHeroID
+   005C stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   0061 call System.Int32 ResData.GameDataMgr/robotRookieHeroSkinDatabin::Count()
+   0066 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   006B callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   0070 bgt IL_007a: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   0075 br IL_0096: ldloca.s V_4
+   007A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   007F ldloc.0 
+   0080 ldftn System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::<>m__0(System.UInt32)
+   0086 newobj System.Void System.Predicate`1<System.UInt32>::.ctor(System.Object,System.IntPtr)
+   008B callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::FindIndex(System.Predicate`1<!0>)
+   0090 ldc.i4.m1 
+   0091 bne.un IL_0040: ldc.i4.0
+   0096 ldloca.s V_4
+   0098 ldc.i4.0 
+   0099 call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   009E brfalse IL_00ca: br IL_01c1
+   00A3 ldc.i4.0 
+   00A4 ldc.i4 10000
+   00A9 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00AE stloc.s V_5
+   00B0 ldloc.s V_5
+   00B2 conv.i8 
+   00B3 ldloca.s V_4
+   00B5 ldfld ResData.ResFakeAcntHero::dwSkinRate
+   00BA conv.u8 
+   00BB bge IL_00ca: br IL_01c1
+   00C0 ldloca.s V_4
+   00C2 ldc.i4.0 
+   00C3 call System.UInt32 ResData.ResFakeAcntHero::SkinID(System.Int32)
+   00C8 conv.u2 
+   00C9 stloc.2 
+   00CA br IL_01c1: ldloca.s V_9
+   00CF call !0 Singleton`1<Assets.Scripts.GameSystem.CRoleInfoManager>::GetInstance()
+   00D4 callvirt Assets.Scripts.GameSystem.CRoleInfo Assets.Scripts.GameSystem.CRoleInfoManager::GetMasterRoleInfo()
+   00D9 stloc.s V_6
+   00DB ldloc.s V_6
+   00DD brtrue IL_00e3: call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   00E2 ret 
+   00E3 call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   00E8 stloc.s V_7
+   00EA ldloc.s V_7
+   00EC ldloc.s V_6
+   00EE ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   00F3 callvirt System.Int32 ListViewBase::get_Count()
+   00F8 add 
+   00F9 stloc.s V_8
+   00FB ldc.i4.0 
+   00FC ldloc.s V_8
+   00FE call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0103 stloc.1 
+   0104 ldloc.1 
+   0105 ldloc.s V_7
+   0107 bge IL_0126: ldloc.0
+   010C ldloc.1 
+   010D call ResData.ResFakeAcntHero ResData.GameDataMgr/robotVeteranHeroSkinDatabin::GetByIndex(System.Int32)
+   0112 stloc.s V_4
+   0114 ldloc.0 
+   0115 ldloca.s V_4
+   0117 ldfld ResData.ResFakeAcntHero::dwHeroID
+   011C stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   0121 br IL_0141: br IL_01a5
+   0126 ldloc.0 
+   0127 ldloc.s V_6
+   0129 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   012E ldloc.1 
+   012F ldloc.s V_7
+   0131 sub 
+   0132 callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   0137 ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   013C stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   0141 br IL_01a5: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   0146 ldc.i4.0 
+   0147 ldloc.s V_8
+   0149 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   014E stloc.1 
+   014F ldloc.1 
+   0150 ldloc.s V_7
+   0152 bge IL_0171: ldloc.0
+   0157 ldloc.1 
+   0158 call ResData.ResFakeAcntHero ResData.GameDataMgr/robotVeteranHeroSkinDatabin::GetByIndex(System.Int32)
+   015D stloc.s V_4
+   015F ldloc.0 
+   0160 ldloca.s V_4
+   0162 ldfld ResData.ResFakeAcntHero::dwHeroID
+   0167 stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   016C br IL_018c: call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   0171 ldloc.0 
+   0172 ldloc.s V_6
+   0174 ldfld Assets.Scripts.GameSystem.CRoleInfo::freeHeroList
+   0179 ldloc.1 
+   017A ldloc.s V_7
+   017C sub 
+   017D callvirt !0 ListView`1<CSProtocol.COMDT_FREEHERO_DETAIL>::get_Item(System.Int32)
+   0182 ldfld CSProtocol.COMDT_FREEHERO_DETAIL::dwFreeHeroID
+   0187 stfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   018C call System.Int32 ResData.GameDataMgr/robotVeteranHeroSkinDatabin::Count()
+   0191 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   0196 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::get_Count()
+   019B bgt IL_01a5: ldsfld System.Collections.Generic.List`1<System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   01A0 br IL_01c1: ldloca.s V_9
+   01A5 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   01AA ldloc.0 
+   01AB ldftn System.Boolean Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::<>m__1(System.UInt32)
+   01B1 newobj System.Void System.Predicate`1<System.UInt32>::.ctor(System.Object,System.IntPtr)
+   01B6 callvirt System.Int32 System.Collections.Generic.List`1<System.UInt32>::FindIndex(System.Predicate`1<!0>)
+   01BB ldc.i4.m1 
+   01BC bne.un IL_0146: ldc.i4.0
+   01C1 ldloca.s V_9
+   01C3 ldarg.1 
+   01C4 conv.u2 
+   01C5 call System.Boolean ResData.GameDataMgr/robotPlayerSkillDatabin::FindByKey(ResData.ResFakeAcntSkill&,System.UInt16)
+   01CA brfalse IL_0200: ldarg.2
+   01CF ldc.i4.0 
+   01D0 ldc.i4.s 10
+   01D2 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   01D7 stloc.s V_10
+   01D9 br IL_01e8: ldloca.s V_9
+   01DE ldc.i4.0 
+   01DF ldc.i4.s 10
+   01E1 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   01E6 stloc.s V_10
+   01E8 ldloca.s V_9
+   01EA ldloc.s V_10
+   01EC call System.UInt32 ResData.ResFakeAcntSkill::SkillId(System.Int32)
+   01F1 brfalse IL_01de: ldc.i4.0
+   01F6 ldloca.s V_9
+   01F8 ldloc.s V_10
+   01FA call System.UInt32 ResData.ResFakeAcntSkill::SkillId(System.Int32)
+   01FF stloc.3 
+   0200 ldarg.2 
+   0201 brtrue IL_0216: ldarg.0
+   0206 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   020B ldloc.0 
+   020C ldfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   0211 callvirt System.Void System.Collections.Generic.List`1<System.UInt32>::Add(!0)
+   0216 ldarg.0 
+   0217 ldind.ref 
+   0218 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   021D ldloc.0 
+   021E ldfld Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0::heroID
+   0223 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0228 ldarg.0 
+   0229 ldind.ref 
+   022A ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   022F ldfld CSProtocol.COMDT_HERO_COMMON_INFO::stSkill
+   0234 ldloc.3 
+   0235 stfld CSProtocol.COMDT_SKILLARRAY::dwSelSkillID
+   023A ldarg.0 
+   023B ldind.ref 
+   023C ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0241 ldloc.2 
+   0242 stfld CSProtocol.COMDT_HERO_COMMON_INFO::wSkinID
+   0247 ret 
+== Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect GetFakeHeroSelect(System.UInt64 playerUid) attrs=Private, Static, HideBySig maxstack=2
+   0000 ldnull 
+   0001 stloc.0 
+   0002 ldc.i4.0 
+   0003 stloc.1 
+   0004 br IL_0039: ldloc.1
+   0009 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   000E ldloc.1 
+   000F callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect>::get_Item(System.Int32)
+   0014 ldfld Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect::FakePlayer
+   0019 ldfld CSProtocol.COMDT_FAKEACNT_DETAIL::ullUid
+   001E ldarg.0 
+   001F bne.un IL_0035: ldloc.1
+   0024 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0029 ldloc.1 
+   002A callvirt !0 ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect>::get_Item(System.Int32)
+   002F stloc.0 
+   0030 br IL_0049: ldloc.0
+   0035 ldloc.1 
+   0036 ldc.i4.1 
+   0037 add 
+   0038 stloc.1 
+   0039 ldloc.1 
+   003A ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   003F callvirt System.Int32 ListViewBase::get_Count()
+   0044 blt IL_0009: ldsfld ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect> Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0049 ldloc.0 
+   004A ret 
+== System.Void OnSelectHeroTimeout(System.Int32 seq) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   0005 ldsfld Assets.Scripts.GameSystem.CHeroSelectNormalSystem::s_heroSelectFormPath
+   000A callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   000F stloc.0 
+   0010 ldloc.0 
+   0011 ldnull 
+   0012 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0017 brfalse IL_00ec: ret
+   001C call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0021 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   0026 stloc.1 
+   0027 ldloc.1 
+   0028 brfalse IL_00ec: ret
+   002D ldloc.1 
+   002E callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMasterMemberInfo()
+   0033 brfalse IL_00ec: ret
+   0038 ldloc.1 
+   0039 callvirt Assets.Scripts.GameSystem.MemberInfo Assets.Scripts.GameSystem.RoomInfo::GetMasterMemberInfo()
+   003E stloc.2 
+   003F ldloc.2 
+   0040 ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   0045 ldc.i4.0 
+   0046 ldelem.ref 
+   0047 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   004C ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   0051 ldfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   0056 brtrue IL_00e7: call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::ReqStartSingleWarmBattle()
+   005B ldc.i4.1 
+   005C call ListView`1<Assets.Scripts.GameSystem.IHeroData> Assets.Scripts.GameSystem.CHeroDataFactory::GetPvPHeroList(Assets.Scripts.GameSystem.CMallSortHelper/HeroViewSortType)
+   0061 stloc.3 
+   0062 ldloc.3 
+   0063 callvirt System.Int32 ListViewBase::get_Count()
+   0068 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   006D callvirt System.Int32 System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::get_Count()
+   0072 cgt 
+   0074 ldstr May have not enough Candidate Heroes!!!
+   0079 call System.Void DebugHelper::Assert(System.Boolean,System.String)
+   007E ldc.i4.0 
+   007F ldloc.3 
+   0080 callvirt System.Int32 ListViewBase::get_Count()
+   0085 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   008A stloc.s V_4
+   008C ldloc.3 
+   008D ldloc.s V_4
+   008F callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   0094 stloc.s V_5
+   0096 br IL_00b3: ldsfld System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32> Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   009B ldc.i4.0 
+   009C ldloc.3 
+   009D callvirt System.Int32 ListViewBase::get_Count()
+   00A2 call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   00A7 stloc.s V_4
+   00A9 ldloc.3 
+   00AA ldloc.s V_4
+   00AC callvirt !0 ListView`1<Assets.Scripts.GameSystem.IHeroData>::get_Item(System.Int32)
+   00B1 stloc.s V_5
+   00B3 ldsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   00B8 ldloc.s V_5
+   00BA callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   00BF callvirt System.Boolean System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::ContainsValue(!1)
+   00C4 brtrue IL_009b: ldc.i4.0
+   00C9 ldloc.2 
+   00CA ldfld Assets.Scripts.GameSystem.MemberInfo::ChoiceHero
+   00CF ldc.i4.0 
+   00D0 ldelem.ref 
+   00D1 ldfld CSProtocol.COMDT_CHOICEHERO::stBaseInfo
+   00D6 ldfld CSProtocol.COMDT_HEROINFO::stCommonInfo
+   00DB ldloc.s V_5
+   00DD callvirt System.UInt32 Assets.Scripts.GameSystem.IHeroData::get_cfgID()
+   00E2 stfld CSProtocol.COMDT_HERO_COMMON_INFO::dwHeroID
+   00E7 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::ReqStartSingleWarmBattle()
+   00EC ret 
+== System.Void FakeSendChat(System.String content) attrs=Public, Static, HideBySig maxstack=6
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CRoomSystem>::GetInstance()
+   0005 ldfld Assets.Scripts.GameSystem.CRoomSystem::roomInfo
+   000A stloc.0 
+   000B ldloc.0 
+   000C ldnull 
+   000D ceq 
+   000F ldc.i4.0 
+   0010 ceq 
+   0012 call System.Void DebugHelper::Assert(System.Boolean)
+   0017 call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   001C callvirt Assets.Scripts.GameSystem.CChatEntity Assets.Scripts.GameSystem.NewChatSystem::GenerateEmptyEntity()
+   0021 stloc.1 
+   0022 ldloc.1 
+   0023 ldnull 
+   0024 callvirt System.Void Assets.Scripts.GameSystem.CChatEntity::AddVoiceInfo(CSProtocol.COMDT_VOICE_MSG)
+   0029 ldloc.1 
+   002A ldloc.0 
+   002B ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0030 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::ullUid
+   0035 stfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   003A ldloc.1 
+   003B ldloc.0 
+   003C ldfld Assets.Scripts.GameSystem.RoomInfo::selfInfo
+   0041 ldfld Assets.Scripts.GameSystem.PlayerUniqueID::iLogicWorldId
+   0046 stfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   004B ldloc.1 
+   004C call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   0051 ldloc.1 
+   0052 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderUid
+   0057 ldloc.1 
+   0058 ldfld Assets.Scripts.GameSystem.CChatEntity::SenderWorldId
+   005D ldc.i4.0 
+   005E callvirt Assets.Scripts.GameSystem.ChaterBasicInfo Assets.Scripts.GameSystem.NewChatSystem::GetChaterPlayerInfo(System.UInt64,System.UInt32,System.Boolean)
+   0063 stfld Assets.Scripts.GameSystem.CChatEntity::SenderInfo
+   0068 ldloc.1 
+   0069 ldc.i4.7 
+   006A stfld Assets.Scripts.GameSystem.CChatEntity::BelongedChannelType
+   006F ldloc.1 
+   0070 ldarg.0 
+   0071 stfld Assets.Scripts.GameSystem.CChatEntity::text
+   0076 ldloc.1 
+   0077 ldc.i4.0 
+   0078 stfld Assets.Scripts.GameSystem.CChatEntity::type
+   007D ldloc.1 
+   007E call System.Int32 Assets.Scripts.GameSystem.CRoleInfo::GetCurrentUTCTime()
+   0083 stfld Assets.Scripts.GameSystem.CChatEntity::time
+   0088 call !0 Singleton`1<Assets.Scripts.GameSystem.NewChatSystem>::get_instance()
+   008D ldc.i4.7 
+   008E ldloc.1 
+   008F ldc.i4.0 
+   0090 ldc.i4.1 
+   0091 callvirt System.Void Assets.Scripts.GameSystem.NewChatSystem::AddChatEntity(Assets.Scripts.GameSystem.EChatChannel,Assets.Scripts.GameSystem.CChatEntity,System.Boolean,System.Boolean)
+   0096 call !0 Singleton`1<EventRouter>::get_instance()
+   009B ldsfld Assets.Scripts.GameSystem.CChatController/Chat_Model_EventID::Chat_HeorSelectChatData_Change
+   00A0 callvirt System.Void EventRouter::BroadCastEvent(System.Int32)
+   00A5 leave IL_00ca: ret
+   00AA stloc.2 
+   00AB ldc.i4.0 
+   00AC ldstr Fake Send Chat, {0}
+   00B1 ldc.i4.1 
+   00B2 newarr System.Object
+   00B7 dup 
+   00B8 ldc.i4.0 
+   00B9 ldloc.2 
+   00BA callvirt System.String System.Exception::get_Message()
+   00BF stelem.ref 
+   00C0 call System.Void DebugHelper::Assert(System.Boolean,System.String,System.Object[])
+   00C5 leave IL_00ca: ret
+   00CA ret 
+== System.Void FakeSendChatTemplate(System.Int32 index) attrs=Public, Static, HideBySig maxstack=2
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CChatController>::get_instance()
+   0005 ldfld Assets.Scripts.GameSystem.CChatController::SelectHeroModule
+   000A ldarg.0 
+   000B callvirt Assets.Scripts.GameSystem.CChatModel/HeroChatTemplateInfo Assets.Scripts.GameSystem.CSelectHeroChatModule::Get_HeroSelect_ChatTemplate(System.Int32)
+   0010 stloc.0 
+   0011 ldloca.s V_0
+   0013 call System.String Assets.Scripts.GameSystem.CChatModel/HeroChatTemplateInfo::GetTemplateString()
+   0018 call System.Void Assets.Scripts.GameSystem.CFakePvPHelper::FakeSendChat(System.String)
+   001D ret 
+== System.Void FakeLoadProcess(System.Single progress) attrs=Public, Static, HideBySig maxstack=4
+   0000 call !0 Singleton`1<Assets.Scripts.GameSystem.CUILoadingSystem>::get_instance()
+   0005 callvirt System.Boolean Assets.Scripts.GameSystem.CUILoadingSystem::IsUseFiveArmyLoading()
+   000A brfalse IL_00b4: call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   000F call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   0014 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllPlayers()
+   0019 callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.GameLogic.Player>::GetEnumerator()
+   001E stloc.0 
+   001F newobj System.Void System.Collections.Generic.List`1<Assets.Scripts.GameLogic.Player>::.ctor()
+   0024 stloc.1 
+   0025 br IL_0048: ldloca.s V_0
+   002A ldloca.s V_0
+   002C call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::get_Current()
+   0031 ldfld Assets.Scripts.GameLogic.Player::isComputer
+   0036 brfalse IL_0048: ldloca.s V_0
+   003B ldloc.1 
+   003C ldloca.s V_0
+   003E call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::get_Current()
+   0043 callvirt System.Void System.Collections.Generic.List`1<Assets.Scripts.GameLogic.Player>::Add(!0)
+   0048 ldloca.s V_0
+   004A call System.Boolean ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::MoveNext()
+   004F brtrue IL_002a: ldloca.s V_0
+   0054 ldc.i4.0 
+   0055 stloc.2 
+   0056 br IL_00a3: ldloc.2
+   005B ldc.i4.1 
+   005C ldc.i4.s 30
+   005E call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0063 stloc.3 
+   0064 ldc.i4.s 100
+   0066 ldarg.0 
+   0067 ldc.r4 100
+   006C mul 
+   006D ldc.i4.0 
+   006E ldloc.3 
+   006F call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   0074 conv.r4 
+   0075 add 
+   0076 call System.Int32 System.Convert::ToInt32(System.Single)
+   007B call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   0080 stloc.s V_4
+   0082 ldloc.1 
+   0083 ldloc.2 
+   0084 callvirt !0 System.Collections.Generic.List`1<Assets.Scripts.GameLogic.Player>::get_Item(System.Int32)
+   0089 ldfld Assets.Scripts.GameLogic.Player::PlayerId
+   008E stloc.s V_5
+   0090 call !0 Singleton`1<Assets.Scripts.GameSystem.CUILoadingSystem>::get_instance()
+   0095 ldloc.s V_5
+   0097 ldloc.s V_4
+   0099 ldc.i4.1 
+   009A callvirt System.Void Assets.Scripts.GameSystem.CUILoadingSystem::UpdateFiveArmyLoadingPlayer(System.UInt32,System.Int32,System.Boolean)
+   009F ldloc.2 
+   00A0 ldc.i4.1 
+   00A1 add 
+   00A2 stloc.2 
+   00A3 ldloc.2 
+   00A4 ldloc.1 
+   00A5 callvirt System.Int32 System.Collections.Generic.List`1<Assets.Scripts.GameLogic.Player>::get_Count()
+   00AA blt IL_005b: ldc.i4.1
+   00AF br IL_0248: ret
+   00B4 call !0 Singleton`1<Assets.Scripts.UI.CUIManager>::GetInstance()
+   00B9 ldsfld Assets.Scripts.GameSystem.CUILoadingSystem::PVP_PATH_LOADING
+   00BE callvirt Assets.Scripts.UI.CUIFormScript Assets.Scripts.UI.CUIManager::GetForm(System.String)
+   00C3 stloc.s V_6
+   00C5 ldloc.s V_6
+   00C7 ldnull 
+   00C8 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   00CD brfalse IL_00d3: call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   00D2 ret 
+   00D3 call !0 Singleton`1<Assets.Scripts.GameLogic.GamePlayerCenter>::GetInstance()
+   00D8 callvirt ListView`1<Assets.Scripts.GameLogic.Player> Assets.Scripts.GameLogic.GamePlayerCenter::GetAllPlayers()
+   00DD callvirt ListView`1/Enumerator<!0> ListView`1<Assets.Scripts.GameLogic.Player>::GetEnumerator()
+   00E2 stloc.s V_7
+   00E4 br IL_023c: ldloca.s V_7
+   00E9 ldloca.s V_7
+   00EB call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::get_Current()
+   00F0 ldfld Assets.Scripts.GameLogic.Player::isComputer
+   00F5 brfalse IL_023c: ldloca.s V_7
+   00FA ldloca.s V_7
+   00FC call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::get_Current()
+   0101 ldfld Assets.Scripts.GameLogic.Player::campPos
+   0106 ldc.i4.1 
+   0107 add 
+   0108 stloc.s V_8
+   010A ldnull 
+   010B stloc.s V_9
+   010D ldloca.s V_7
+   010F call !0 ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::get_Current()
+   0114 ldfld Assets.Scripts.GameLogic.Player::playerCamp
+   0119 ldc.i4.1 
+   011A bne.un IL_0155: ldloc.s V_6
+   011F ldloc.s V_6
+   0121 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   0126 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   012B ldstr UpPanel
+   0130 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0135 ldstr Up_Player{0}
+   013A ldloc.s V_8
+   013C box System.Int32
+   0141 call System.String System.String::Format(System.String,System.Object)
+   0146 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   014B callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0150 br IL_0186: stloc.s V_9
+   0155 ldloc.s V_6
+   0157 ldfld Assets.Scripts.UI.CUIFormScript::m_root
+   015C callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0161 ldstr DownPanel
+   0166 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   016B ldstr Down_Player{0}
+   0170 ldloc.s V_8
+   0172 box System.Int32
+   0177 call System.String System.String::Format(System.String,System.Object)
+   017C callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   0181 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0186 stloc.s V_9
+   0188 ldloc.s V_9
+   018A ldnull 
+   018B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0190 brfalse IL_023c: ldloca.s V_7
+   0195 ldloc.s V_9
+   0197 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   019C ldstr Txt_LoadingPct
+   01A1 callvirt UnityEngine.Transform UnityEngine.Transform::Find(System.String)
+   01A6 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   01AB stloc.s V_10
+   01AD ldloc.s V_10
+   01AF call System.Boolean UnityEngine.Object::op_Implicit(UnityEngine.Object)
+   01B4 brfalse IL_023c: ldloca.s V_7
+   01B9 ldc.i4.1 
+   01BA ldc.i4.s 30
+   01BC call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   01C1 stloc.s V_11
+   01C3 ldc.i4.s 100
+   01C5 ldarg.0 
+   01C6 ldc.r4 100
+   01CB mul 
+   01CC ldc.i4.0 
+   01CD ldloc.s V_11
+   01CF call System.Int32 UnityEngine.Random::Range(System.Int32,System.Int32)
+   01D4 conv.r4 
+   01D5 add 
+   01D6 call System.Int32 System.Convert::ToInt32(System.Single)
+   01DB call System.Int32 System.Math::Min(System.Int32,System.Int32)
+   01E0 stloc.s V_12
+   01E2 ldloc.s V_10
+   01E4 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.UI.Text>()
+   01E9 stloc.s V_13
+   01EB ldloc.s V_13
+   01ED callvirt System.String UnityEngine.UI.Text::get_text()
+   01F2 stloc.s V_14
+   01F4 ldloc.s V_14
+   01F6 ldstr 100%
+   01FB call System.Boolean System.String::op_Equality(System.String,System.String)
+   0200 brfalse IL_020a: ldloc.s V_14
+   0205 br IL_023c: ldloca.s V_7
+   020A ldloc.s V_14
+   020C ldc.i4.0 
+   020D ldc.i4.2 
+   020E callvirt System.String System.String::Substring(System.Int32,System.Int32)
+   0213 ldloca.s V_15
+   0215 call System.Boolean System.Int32::TryParse(System.String,System.Int32&)
+   021A pop 
+   021B ldloc.s V_12
+   021D ldloc.s V_15
+   021F ble IL_023c: ldloca.s V_7
+   0224 ldloc.s V_13
+   0226 ldstr {0}%
+   022B ldloc.s V_12
+   022D box System.Int32
+   0232 call System.String System.String::Format(System.String,System.Object)
+   0237 callvirt System.Void UnityEngine.UI.Text::set_text(System.String)
+   023C ldloca.s V_7
+   023E call System.Boolean ListView`1/Enumerator<Assets.Scripts.GameLogic.Player>::MoveNext()
+   0243 brtrue IL_00e9: ldloca.s V_7
+   0248 ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=4
+   0000 ldc.i4.3 
+   0001 newarr System.Int32
+   0006 dup 
+   0007 ldc.i4.0 
+   0008 ldc.i4.2 
+   0009 stelem.i4 
+   000A dup 
+   000B ldc.i4.2 
+   000C ldc.i4.1 
+   000D stelem.i4 
+   000E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FAKE_CONFIRM_MAP_3V3
+   0013 ldc.i4.5 
+   0014 newarr System.Int32
+   0019 dup 
+   001A ldtoken <PrivateImplementationDetails>::$field-2651642D8A1B7A8E617B4BC928EB6E86D64E9CA8
+   001F call System.Void System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray(System.Array,System.RuntimeFieldHandle)
+   0024 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FAKE_CONFIRM_MAP_5V5
+   0029 newobj System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm>::.ctor()
+   002E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakePlayerList
+   0033 ldc.i4.0 
+   0034 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::nextFakeUpdateIndex
+   0039 newobj System.Void System.Collections.Generic.Dictionary`2<System.UInt64,System.UInt32>::.ctor()
+   003E stsfld Assets.Scripts.GameSystem.CFakePvPHelper::ChosenHeroes
+   0043 newobj System.Void System.Collections.Generic.List`1<System.UInt32>::.ctor()
+   0048 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::EnemyChosenHeroes
+   004D newobj System.Void ListView`1<Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect>::.ctor()
+   0052 stsfld Assets.Scripts.GameSystem.CFakePvPHelper::FakeHeroSelectList
+   0057 ret 
+  NESTED Assets.Scripts.GameSystem.CFakePvPHelper/FakePlayerConfirm
+  NESTED Assets.Scripts.GameSystem.CFakePvPHelper/FakeHeroSelect
+  NESTED Assets.Scripts.GameSystem.CFakePvPHelper/<SelectHeroForEnemyPlayer>c__AnonStorey0

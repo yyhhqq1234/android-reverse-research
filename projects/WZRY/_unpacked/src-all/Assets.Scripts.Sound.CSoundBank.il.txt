@@ -1,0 +1,208 @@
+// TYPE Assets.Scripts.Sound.CSoundBank  base=System.Object  attrs=Public, BeforeFieldInit
+  FIELD System.String m_bankName
+  FIELD Assets.Scripts.Sound.enBankType m_bankType
+  FIELD System.Int32 m_refCount
+  FIELD System.UInt32 m_bankID
+  FIELD System.UInt32 m_bankSize
+  FIELD System.Int32 m_requestUnLoadDelayFrame
+  FIELD System.Int32 c_requestUnLoadDelaySeconds = 3
+== System.Void .ctor(System.String bankName, Assets.Scripts.Sound.enBankType bankType) attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void System.Object::.ctor()
+   0006 ldarg.0 
+   0007 ldarg.1 
+   0008 stfld Assets.Scripts.Sound.CSoundBank::m_bankName
+   000D ldarg.0 
+   000E ldarg.2 
+   000F stfld Assets.Scripts.Sound.CSoundBank::m_bankType
+   0014 ldarg.0 
+   0015 ldc.i4.1 
+   0016 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   001B ldarg.0 
+   001C ldc.i4.0 
+   001D stfld Assets.Scripts.Sound.CSoundBank::m_bankID
+   0022 ldarg.0 
+   0023 ldc.i4.0 
+   0024 stfld Assets.Scripts.Sound.CSoundBank::m_bankSize
+   0029 ldarg.0 
+   002A ldc.i4.0 
+   002B stfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   0030 ret 
+== System.Void IncRef() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   0007 ldc.i4.1 
+   0008 add 
+   0009 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   000E ret 
+== System.Void DecRef() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   000E ret 
+== System.Void SetType(Assets.Scripts.Sound.enBankType bankType) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldarg.1 
+   0002 stfld Assets.Scripts.Sound.CSoundBank::m_bankType
+   0007 ret 
+== System.Void Load() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldarg.0 
+   0002 ldfld Assets.Scripts.Sound.CSoundBank::m_bankName
+   0007 call System.String Assets.Scripts.Sound.CSoundBank::GetSoundBankPathInResources(System.String)
+   000C stloc.0 
+   000D call System.Byte[] CFileManager::LockFileBuffer()
+   0012 stloc.1 
+   0013 call !0 Singleton`1<CResourceManager>::GetInstance()
+   0018 ldloc.0 
+   0019 ldloc.1 
+   001A ldloc.1 
+   001B ldlen 
+   001C conv.i4 
+   001D callvirt System.UInt32 CResourceManager::LoadResourceData(System.String,System.Byte[],System.UInt32)
+   0022 stloc.2 
+   0023 ldloc.2 
+   0024 ldc.i4.0 
+   0025 ble.un IL_008f: leave IL_009a
+   002A ldarg.0 
+   002B ldloc.2 
+   002C stfld Assets.Scripts.Sound.CSoundBank::m_bankSize
+   0031 ldloc.1 
+   0032 brfalse IL_003f: ldc.i4.0
+   0037 ldloc.1 
+   0038 ldlen 
+   0039 conv.i4 
+   003A brtrue IL_0046: ldloc.1
+   003F ldc.i4.0 
+   0040 conv.u 
+   0041 br IL_004d: stloc.3
+   0046 ldloc.1 
+   0047 ldc.i4.0 
+   0048 ldelema System.Byte
+   004D stloc.3 
+   004E ldloca.s V_4
+   0050 ldloc.3 
+   0051 call System.Void System.IntPtr::.ctor(System.Void*)
+   0056 ldloc.s V_4
+   0058 ldsfld System.IntPtr::Zero
+   005D call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr)
+   0062 brfalse IL_0087: ldc.i4.0
+   0067 ldloc.s V_4
+   0069 ldloc.2 
+   006A ldc.i4.m1 
+   006B ldarg.0 
+   006C ldflda Assets.Scripts.Sound.CSoundBank::m_bankID
+   0071 call AKRESULT AkSoundEngine::LoadBank(System.IntPtr,System.UInt32,System.Int32,System.UInt32&)
+   0076 stloc.s V_5
+   0078 ldloc.s V_5
+   007A ldc.i4.1 
+   007B beq IL_0087: ldc.i4.0
+   0080 ldarg.0 
+   0081 ldc.i4.0 
+   0082 stfld Assets.Scripts.Sound.CSoundBank::m_bankID
+   0087 ldc.i4.0 
+   0088 conv.u 
+   0089 stloc.3 
+   008A br IL_008f: leave IL_009a
+   008F leave IL_009a: ret
+   0094 call System.Void CFileManager::UnLockFileBuffer()
+   0099 endfinally 
+   009A ret 
+== System.Void UnLoad(System.Boolean unloadImmediately) attrs=Public, HideBySig maxstack=8
+   0000 ldarg.1 
+   0001 brfalse IL_0011: ldarg.0
+   0006 ldarg.0 
+   0007 call System.Void Assets.Scripts.Sound.CSoundBank::ExecuteUnLoad()
+   000C br IL_0025: ret
+   0011 ldarg.0 
+   0012 ldc.i4.0 
+   0013 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   0018 ldarg.0 
+   0019 ldc.i4.3 
+   001A ldsfld Assets.Scripts.Framework.GameFramework::c_renderFPS
+   001F mul 
+   0020 stfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   0025 ret 
+== System.Boolean IsUnLoadTimeUp() attrs=Public, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 dup 
+   0002 ldfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   0007 ldc.i4.1 
+   0008 sub 
+   0009 dup 
+   000A stloc.0 
+   000B stfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   0010 ldloc.0 
+   0011 ldc.i4.0 
+   0012 cgt 
+   0014 ldc.i4.0 
+   0015 ceq 
+   0017 ret 
+== System.Void ReUse() attrs=Public, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   0007 ldarg.0 
+   0008 ldc.i4.0 
+   0009 stfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   000E ret 
+== System.Void ExecuteUnLoad() attrs=Public, HideBySig maxstack=4
+   0000 ldarg.0 
+   0001 ldfld Assets.Scripts.Sound.CSoundBank::m_bankID
+   0006 ldc.i4.0 
+   0007 ble.un IL_0065: ldarg.0
+   000C ldarg.0 
+   000D ldfld Assets.Scripts.Sound.CSoundBank::m_bankID
+   0012 ldsfld System.IntPtr::Zero
+   0017 call AKRESULT AkSoundEngine::UnloadBank(System.UInt32,System.IntPtr)
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldc.i4.1 
+   001F beq IL_0065: ldarg.0
+   0024 ldc.i4.5 
+   0025 newarr System.String
+   002A dup 
+   002B ldc.i4.0 
+   002C ldstr Wwise: Bank 
+   0031 stelem.ref 
+   0032 dup 
+   0033 ldc.i4.1 
+   0034 ldarg.0 
+   0035 ldfld Assets.Scripts.Sound.CSoundBank::m_bankName
+   003A stelem.ref 
+   003B dup 
+   003C ldc.i4.2 
+   003D ldstr  failed to unload (
+   0042 stelem.ref 
+   0043 dup 
+   0044 ldc.i4.3 
+   0045 ldloca.s V_0
+   0047 constrained. AKRESULT
+   004D callvirt System.String System.Object::ToString()
+   0052 stelem.ref 
+   0053 dup 
+   0054 ldc.i4.4 
+   0055 ldstr )
+   005A stelem.ref 
+   005B call System.String System.String::Concat(System.String[])
+   0060 call System.Void UnityEngine.Debug::LogError(System.Object)
+   0065 ldarg.0 
+   0066 ldc.i4.0 
+   0067 stfld Assets.Scripts.Sound.CSoundBank::m_refCount
+   006C ldarg.0 
+   006D ldc.i4.0 
+   006E stfld Assets.Scripts.Sound.CSoundBank::m_requestUnLoadDelayFrame
+   0073 ret 
+== System.String GetSoundBankPathInResources(System.String bankName) attrs=Private, HideBySig maxstack=2
+   0000 ldsfld System.String::Empty
+   0005 stloc.0 
+   0006 ldstr Sound/Android/
+   000B stloc.0 
+   000C ldloc.0 
+   000D ldarg.1 
+   000E call System.String CFileManager::CombinePath(System.String,System.String)
+   0013 ret 

@@ -1,0 +1,481 @@
+// TYPE CameraController  base=PbrBaseProxy  attrs=Public, BeforeFieldInit
+  FIELD System.Boolean s_EnableShowCamera
+  FIELD ListView`1<CameraController> s_curControllers
+  FIELD UnityEngine.Camera m_heroShowCamera
+  FIELD UnityEngine.Vector2 m_lastPivotScreenPosition
+  FIELD System.Boolean m_stable
+  FIELD UnityEngine.Vector3 m_stablePos
+  FIELD UnityEngine.Quaternion m_stableRotation
+== System.Void .ctor() attrs=Public, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void PbrBaseProxy::.ctor()
+   0006 ret 
+== System.Void Start() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void PbrBaseProxy::Start()
+   0006 ldarg.0 
+   0007 callvirt System.Void PbrBaseProxy::Reload()
+   000C ldsfld CameraController::s_curControllers
+   0011 ldarg.0 
+   0012 callvirt System.Boolean ListView`1<CameraController>::Contains(!0)
+   0017 brtrue IL_0027: ret
+   001C ldsfld CameraController::s_curControllers
+   0021 ldarg.0 
+   0022 callvirt System.Void ListView`1<CameraController>::Add(!0)
+   0027 ret 
+== System.Void Reload() attrs=Family, Virtual, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 call System.Void PbrBaseProxy::Reload()
+   0006 ldarg.0 
+   0007 ldarg.0 
+   0008 call !!0 UnityEngine.Component::GetComponentInChildren<UnityEngine.Camera>()
+   000D stfld CameraController::m_heroShowCamera
+   0012 ldarg.0 
+   0013 call System.Boolean CameraController::NeedToPerformCameraAnim()
+   0018 brfalse IL_0029: ldarg.0
+   001D ldarg.0 
+   001E ldc.i4.0 
+   001F call System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   0024 br IL_0030: ldarg.0
+   0029 ldarg.0 
+   002A ldc.i4.1 
+   002B call System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   0030 ldarg.0 
+   0031 call System.Boolean CameraController::NeedToChangeCameraRotation()
+   0036 brfalse IL_006e: ldarg.0
+   003B ldarg.0 
+   003C ldfld CameraController::m_heroShowCamera
+   0041 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0046 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localEulerAngles()
+   004B stloc.0 
+   004C ldloca.s V_0
+   004E ldc.r4 180
+   0053 stfld UnityEngine.Vector3::y
+   0058 ldarg.0 
+   0059 ldfld CameraController::m_heroShowCamera
+   005E callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0063 ldloc.0 
+   0064 callvirt System.Void UnityEngine.Transform::set_localEulerAngles(UnityEngine.Vector3)
+   0069 br IL_009c: ldarg.0
+   006E ldarg.0 
+   006F ldfld CameraController::m_heroShowCamera
+   0074 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0079 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_localEulerAngles()
+   007E stloc.1 
+   007F ldloca.s V_1
+   0081 ldc.r4 186
+   0086 stfld UnityEngine.Vector3::y
+   008B ldarg.0 
+   008C ldfld CameraController::m_heroShowCamera
+   0091 callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0096 ldloc.1 
+   0097 callvirt System.Void UnityEngine.Transform::set_localEulerAngles(UnityEngine.Vector3)
+   009C ldarg.0 
+   009D ldc.i4.0 
+   009E stfld CameraController::m_stable
+   00A3 ret 
+== System.Boolean NeedToPerformCameraAnim() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean PbrBaseProxy::IsShowMode()
+   0006 brfalse IL_0017: ldarg.0
+   000B ldsfld CameraController::s_EnableShowCamera
+   0010 brtrue IL_0017: ldarg.0
+   0015 ldc.i4.0 
+   0016 ret 
+   0017 ldarg.0 
+   0018 call System.Boolean PbrBaseProxy::IsShowMode()
+   001D brtrue IL_0035: ldc.i4.1
+   0022 ldarg.0 
+   0023 call System.Boolean PbrBaseProxy::IsNewHeroMode()
+   0028 brtrue IL_0035: ldc.i4.1
+   002D ldarg.0 
+   002E call System.Boolean PbrBaseProxy::IsOfflineMode()
+   0033 br.s IL_0036: ret
+   0035 ldc.i4.1 
+   0036 ret 
+== System.Boolean NeedToChangeCameraRotation() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Boolean PbrBaseProxy::IsNewHeroMode()
+   0006 ret 
+== System.Void OnDisable() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void PbrBaseProxy::OnDisable()
+   0006 ldarg.0 
+   0007 ldc.i4.1 
+   0008 call System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   000D ret 
+== System.Void Change3DImageCameraState(System.Boolean enable) attrs=Private, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldfld PbrBaseProxy::m_3DImageGO
+   0006 ldnull 
+   0007 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   000C brfalse IL_0030: ldarg.0
+   0011 ldarg.0 
+   0012 ldfld PbrBaseProxy::m_3DImageGO
+   0017 callvirt !!0 UnityEngine.GameObject::GetComponent<UnityEngine.Camera>()
+   001C stloc.0 
+   001D ldloc.0 
+   001E ldnull 
+   001F call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0024 brfalse IL_0030: ldarg.0
+   0029 ldloc.0 
+   002A ldarg.1 
+   002B callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0030 ldarg.0 
+   0031 ldfld CameraController::m_heroShowCamera
+   0036 ldnull 
+   0037 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003C brfalse IL_005c: ret
+   0041 ldarg.0 
+   0042 ldfld CameraController::m_heroShowCamera
+   0047 ldarg.1 
+   0048 ldc.i4.0 
+   0049 ceq 
+   004B callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0050 ldarg.0 
+   0051 ldfld CameraController::m_heroShowCamera
+   0056 ldc.i4.0 
+   0057 callvirt System.Void UnityEngine.Camera::set_allowHDR(System.Boolean)
+   005C ret 
+== System.Void OnCamerAnimEnd() attrs=Public, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldc.i4.1 
+   0002 call System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   0007 ldarg.0 
+   0008 call !!0 UnityEngine.Component::GetComponentInChildren<UnityEngine.Camera>()
+   000D stloc.0 
+   000E ldloc.0 
+   000F ldnull 
+   0010 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0015 brfalse IL_0021: ret
+   001A ldloc.0 
+   001B ldc.i4.0 
+   001C callvirt System.Void UnityEngine.Behaviour::set_enabled(System.Boolean)
+   0021 ret 
+== System.Void OnDestroy() attrs=Family, Virtual, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 call System.Void PbrBaseProxy::OnDestroy()
+   0006 ldsfld CameraController::s_curControllers
+   000B ldarg.0 
+   000C callvirt System.Boolean ListView`1<CameraController>::Contains(!0)
+   0011 brfalse IL_0022: ret
+   0016 ldsfld CameraController::s_curControllers
+   001B ldarg.0 
+   001C callvirt System.Boolean ListView`1<CameraController>::Remove(!0)
+   0021 pop 
+   0022 ret 
+== System.Void LateUpdate() attrs=Private, HideBySig maxstack=8
+   0000 ldarg.0 
+   0001 ldfld CameraController::m_stable
+   0006 brfalse IL_0037: ret
+   000B ldarg.0 
+   000C call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0011 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0016 ldarg.0 
+   0017 ldfld CameraController::m_stablePos
+   001C callvirt System.Void UnityEngine.Transform::set_position(UnityEngine.Vector3)
+   0021 ldarg.0 
+   0022 call UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0027 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   002C ldarg.0 
+   002D ldfld CameraController::m_stableRotation
+   0032 callvirt System.Void UnityEngine.Transform::set_rotation(UnityEngine.Quaternion)
+   0037 ret 
+== System.Void EnableHeroShowCameraAnim() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld CameraController::s_EnableShowCamera
+   0005 brfalse IL_000b: ldc.i4.1
+   000A ret 
+   000B ldc.i4.1 
+   000C stsfld CameraController::s_EnableShowCamera
+   0011 ldsfld CameraController::s_curControllers
+   0016 callvirt ListView`1/Enumerator<!0> ListView`1<CameraController>::GetEnumerator()
+   001B stloc.1 
+   001C br IL_0047: ldloca.s V_1
+   0021 ldloca.s V_1
+   0023 call !0 ListView`1/Enumerator<CameraController>::get_Current()
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_0047: ldloca.s V_1
+   0035 ldloc.0 
+   0036 callvirt System.Boolean CameraController::NeedToPerformCameraAnim()
+   003B brfalse IL_0047: ldloca.s V_1
+   0040 ldloc.0 
+   0041 ldc.i4.0 
+   0042 callvirt System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   0047 ldloca.s V_1
+   0049 call System.Boolean ListView`1/Enumerator<CameraController>::MoveNext()
+   004E brtrue IL_0021: ldloca.s V_1
+   0053 leave IL_0066: ret
+   0058 ldloca.s V_1
+   005A constrained. ListView`1/Enumerator<CameraController>
+   0060 callvirt System.Void System.IDisposable::Dispose()
+   0065 endfinally 
+   0066 ret 
+== System.Void DisableHeroShowCameraAnim() attrs=Public, Static, HideBySig maxstack=2
+   0000 ldsfld CameraController::s_EnableShowCamera
+   0005 brtrue IL_000b: ldc.i4.0
+   000A ret 
+   000B ldc.i4.0 
+   000C stsfld CameraController::s_EnableShowCamera
+   0011 ldsfld CameraController::s_curControllers
+   0016 callvirt ListView`1/Enumerator<!0> ListView`1<CameraController>::GetEnumerator()
+   001B stloc.1 
+   001C br IL_0047: ldloca.s V_1
+   0021 ldloca.s V_1
+   0023 call !0 ListView`1/Enumerator<CameraController>::get_Current()
+   0028 stloc.0 
+   0029 ldloc.0 
+   002A ldnull 
+   002B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0030 brfalse IL_0047: ldloca.s V_1
+   0035 ldloc.0 
+   0036 callvirt System.Boolean PbrBaseProxy::IsShowMode()
+   003B brfalse IL_0047: ldloca.s V_1
+   0040 ldloc.0 
+   0041 ldc.i4.1 
+   0042 callvirt System.Void CameraController::Change3DImageCameraState(System.Boolean)
+   0047 ldloca.s V_1
+   0049 call System.Boolean ListView`1/Enumerator<CameraController>::MoveNext()
+   004E brtrue IL_0021: ldloca.s V_1
+   0053 leave IL_0066: ret
+   0058 ldloca.s V_1
+   005A constrained. ListView`1/Enumerator<CameraController>
+   0060 callvirt System.Void System.IDisposable::Dispose()
+   0065 endfinally 
+   0066 ret 
+== System.Boolean IsCameraAnimEnabled(UnityEngine.GameObject heroGO) attrs=Public, Static, HideBySig maxstack=3
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_0050: ldc.i4.0
+   000C ldarg.0 
+   000D ldstr Camera_Root
+   0012 ldc.i4.0 
+   0013 call UnityEngine.GameObject UnityExtension::FindChildBFS(UnityEngine.GameObject,System.String,System.Boolean)
+   0018 stloc.0 
+   0019 ldloc.0 
+   001A ldnull 
+   001B call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0020 brfalse IL_0050: ldc.i4.0
+   0025 ldloc.0 
+   0026 callvirt System.Boolean UnityEngine.GameObject::get_activeInHierarchy()
+   002B brfalse IL_0050: ldc.i4.0
+   0030 ldloc.0 
+   0031 callvirt !!0 UnityEngine.GameObject::GetComponent<CameraController>()
+   0036 stloc.1 
+   0037 ldloc.1 
+   0038 ldnull 
+   0039 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   003E brfalse IL_0050: ldc.i4.0
+   0043 ldloc.1 
+   0044 callvirt System.Boolean UnityEngine.Behaviour::get_isActiveAndEnabled()
+   0049 brfalse IL_0050: ldc.i4.0
+   004E ldc.i4.1 
+   004F ret 
+   0050 ldc.i4.0 
+   0051 ret 
+== System.Boolean HeroRotationAllowed(UnityEngine.GameObject heroGO) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brtrue IL_0016: ldc.i4.1
+   000C ldsfld CameraController::s_EnableShowCamera
+   0011 brtrue IL_0018: ldarg.0
+   0016 ldc.i4.1 
+   0017 ret 
+   0018 ldarg.0 
+   0019 callvirt !!0 UnityEngine.GameObject::GetComponentInChildren<CameraController>()
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_00d3: ldc.i4.1
+   002B ldloc.0 
+   002C callvirt System.Boolean CameraController::NeedToPerformCameraAnim()
+   0031 brfalse IL_00d3: ldc.i4.1
+   0036 ldloc.0 
+   0037 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   003C callvirt !!0 UnityEngine.GameObject::GetComponentInChildren<UnityEngine.Camera>()
+   0041 stloc.1 
+   0042 ldloc.1 
+   0043 ldnull 
+   0044 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0049 brfalse IL_0095: ldloc.0
+   004E ldloc.0 
+   004F callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0054 callvirt !!0[] UnityEngine.GameObject::GetComponents<UnityEngine.Animation>()
+   0059 stloc.2 
+   005A ldloc.2 
+   005B stloc.s V_4
+   005D ldc.i4.0 
+   005E stloc.s V_5
+   0060 br IL_008a: ldloc.s V_5
+   0065 ldloc.s V_4
+   0067 ldloc.s V_5
+   0069 ldelem.ref 
+   006A stloc.3 
+   006B ldloc.3 
+   006C ldnull 
+   006D call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0072 brfalse IL_0084: ldloc.s V_5
+   0077 ldloc.3 
+   0078 callvirt System.Boolean UnityEngine.Animation::get_isPlaying()
+   007D brfalse IL_0084: ldloc.s V_5
+   0082 ldc.i4.0 
+   0083 ret 
+   0084 ldloc.s V_5
+   0086 ldc.i4.1 
+   0087 add 
+   0088 stloc.s V_5
+   008A ldloc.s V_5
+   008C ldloc.s V_4
+   008E ldlen 
+   008F conv.i4 
+   0090 blt IL_0065: ldloc.s V_4
+   0095 ldloc.0 
+   0096 ldfld CameraController::m_stable
+   009B brtrue IL_00d3: ldc.i4.1
+   00A0 ldloc.0 
+   00A1 ldc.i4.1 
+   00A2 stfld CameraController::m_stable
+   00A7 ldloc.0 
+   00A8 ldloc.0 
+   00A9 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00AE callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00B3 callvirt UnityEngine.Vector3 UnityEngine.Transform::get_position()
+   00B8 stfld CameraController::m_stablePos
+   00BD ldloc.0 
+   00BE ldloc.0 
+   00BF callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   00C4 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   00C9 callvirt UnityEngine.Quaternion UnityEngine.Transform::get_rotation()
+   00CE stfld CameraController::m_stableRotation
+   00D3 ldc.i4.1 
+   00D4 ret 
+== System.Void RotateHero(UnityEngine.GameObject heroGO, Assets.Scripts.UI.CUIEvent uiEvent) attrs=Public, Static, HideBySig maxstack=5
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_00c2: ret
+   000C ldarg.0 
+   000D callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0012 ldnull 
+   0013 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0018 brfalse IL_00c2: ret
+   001D ldarg.0 
+   001E callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0023 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   0028 ldnull 
+   0029 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   002E brfalse IL_00c2: ret
+   0033 ldarg.0 
+   0034 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0039 callvirt UnityEngine.Transform UnityEngine.Transform::get_parent()
+   003E ldc.r4 0
+   0043 ldarg.1 
+   0044 ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   0049 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_delta()
+   004E stloc.0 
+   004F ldloca.s V_0
+   0051 ldfld UnityEngine.Vector2::x
+   0056 neg 
+   0057 ldc.r4 0
+   005C ldc.i4.1 
+   005D callvirt System.Void UnityEngine.Transform::Rotate(System.Single,System.Single,System.Single,UnityEngine.Space)
+   0062 ldarg.0 
+   0063 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   0068 ldstr 3DImage
+   006D call UnityEngine.GameObject PbrBaseProxy::FindAncestorGameObject(UnityEngine.Transform,System.String)
+   0072 stloc.1 
+   0073 ldloc.1 
+   0074 ldnull 
+   0075 call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   007A brfalse IL_00c2: ret
+   007F ldloc.1 
+   0080 ldstr DZ_root
+   0085 ldc.i4.1 
+   0086 call UnityEngine.GameObject UnityExtension::FindChildBFS(UnityEngine.GameObject,System.String,System.Boolean)
+   008B stloc.2 
+   008C ldloc.2 
+   008D ldnull 
+   008E call System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
+   0093 brfalse IL_00c2: ret
+   0098 ldloc.2 
+   0099 callvirt UnityEngine.Transform UnityEngine.GameObject::get_transform()
+   009E ldc.r4 0
+   00A3 ldarg.1 
+   00A4 ldfld Assets.Scripts.UI.CUIEvent::m_pointerEventData
+   00A9 callvirt UnityEngine.Vector2 UnityEngine.EventSystems.PointerEventData::get_delta()
+   00AE stloc.3 
+   00AF ldloca.s V_3
+   00B1 ldfld UnityEngine.Vector2::x
+   00B6 neg 
+   00B7 ldc.r4 0
+   00BC ldc.i4.1 
+   00BD callvirt System.Void UnityEngine.Transform::Rotate(System.Single,System.Single,System.Single,UnityEngine.Space)
+   00C2 ret 
+== System.Boolean NeedToAppear(UnityEngine.Camera camera) attrs=Public, Static, HideBySig maxstack=2
+   0000 ldarg.0 
+   0001 ldnull 
+   0002 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0007 brfalse IL_000e: ldarg.0
+   000C ldc.i4.1 
+   000D ret 
+   000E ldarg.0 
+   000F callvirt UnityEngine.Transform UnityEngine.Component::get_transform()
+   0014 ldstr Form_
+   0019 call UnityEngine.GameObject PbrBaseProxy::FindAncestorGameObject(UnityEngine.Transform,System.String)
+   001E stloc.0 
+   001F ldloc.0 
+   0020 ldnull 
+   0021 call System.Boolean UnityEngine.Object::op_Equality(UnityEngine.Object,UnityEngine.Object)
+   0026 brfalse IL_002d: ldc.i4.0
+   002B ldc.i4.1 
+   002C ret 
+   002D ldc.i4.0 
+   002E stloc.1 
+   002F ldloc.0 
+   0030 callvirt System.String UnityEngine.Object::get_name()
+   0035 ldstr Form_HeroInfo2
+   003A call System.Boolean System.String::op_Equality(System.String,System.String)
+   003F brfalse IL_0055: ldloc.0
+   0044 ldsfld CameraController::s_EnableShowCamera
+   0049 brtrue IL_0055: ldloc.0
+   004E ldc.i4.0 
+   004F stloc.1 
+   0050 br IL_0093: ldarg.0
+   0055 ldloc.0 
+   0056 callvirt System.String UnityEngine.Object::get_name()
+   005B ldstr Form_HeroInfo2
+   0060 call System.Boolean System.String::op_Equality(System.String,System.String)
+   0065 brtrue IL_0091: ldc.i4.1
+   006A ldloc.0 
+   006B callvirt System.String UnityEngine.Object::get_name()
+   0070 ldstr Form_NewHeroOrSkin
+   0075 call System.Boolean System.String::op_Equality(System.String,System.String)
+   007A brtrue IL_0091: ldc.i4.1
+   007F ldloc.0 
+   0080 callvirt System.String UnityEngine.Object::get_name()
+   0085 ldstr Form_HeroTest_OFFLine
+   008A call System.Boolean System.String::op_Equality(System.String,System.String)
+   008F br.s IL_0092: stloc.1
+   0091 ldc.i4.1 
+   0092 stloc.1 
+   0093 ldarg.0 
+   0094 callvirt UnityEngine.GameObject UnityEngine.Component::get_gameObject()
+   0099 call System.Boolean CameraController::IsCameraAnimEnabled(UnityEngine.GameObject)
+   009E brfalse IL_00a6: ldc.i4.0
+   00A3 ldloc.1 
+   00A4 br.s IL_00a7: ldc.i4.0
+   00A6 ldc.i4.0 
+   00A7 ldc.i4.0 
+   00A8 ceq 
+   00AA ret 
+== System.Void .cctor() attrs=Private, Static, HideBySig, SpecialName, RTSpecialName maxstack=8
+   0000 ldc.i4.1 
+   0001 stsfld CameraController::s_EnableShowCamera
+   0006 newobj System.Void ListView`1<CameraController>::.ctor()
+   000B stsfld CameraController::s_curControllers
+   0010 ret 
