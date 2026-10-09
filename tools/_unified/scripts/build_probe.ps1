@@ -80,7 +80,8 @@ $Aligned = Join-Path $Work 'probe-aligned.apk'
 if ($LASTEXITCODE -ne 0) { throw 'zipalign 失败' }
 $Final = Join-Path $Out 'probe-overlay.apk'
 if (Test-Path $Final) { Remove-Item -LiteralPath $Final -Force }
-& $Apksigner sign --ks $Keystore --ks-pass 'pass:fjdirect' --key-pass 'pass:fjdirect' `
+if (-not $env:FJD_KEYSTORE_PASS) { throw 'set FJD_KEYSTORE_PASS before signing (local keystore pass; not stored in repo)' }
+& $Apksigner sign --ks $Keystore --ks-pass ("pass:" + $env:FJD_KEYSTORE_PASS) --key-pass ("pass:" + $env:FJD_KEYSTORE_PASS) `
     --ks-key-alias fjdirect --v1-signing-enabled true --v2-signing-enabled true `
     --v3-signing-enabled false --min-sdk-version 21 --max-sdk-version 36 --out $Final $Aligned
 if ($LASTEXITCODE -ne 0) { throw 'apksigner 失败' }
