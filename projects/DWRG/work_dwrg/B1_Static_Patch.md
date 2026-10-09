@@ -15,7 +15,7 @@
   - L7 `ntHasPlatform(Ljava/lang/String;)Z` :3938 → 回真
 - 回编：apktool b Smaling成功 → `b_static/mini5_out/build/apk/classes.dex` 4594884B；jadx复核 `PluginUniSDK_patched.java` L1-L7全部 `return true`
 - 重打包：python zip替换 `classes5.dex`（deflated，保持compress=8）→ `dwrg_B1_unaligned.apk` 2012815228B SHA256 `302f9b2a28b8f098b7db55da45522f35ab80b8b34aa8c598b877f18865cf09fc`
-- 对齐签名：`zipalign -f 4` → `dwrg_B1_aligned.apk` 2012818299B（`zipalign -c -p 4`通过，无输出即绿）；`apksigner sign --ks BREM/debug.jks (androiddebugkey, pass:android)` v1+v2 → `dwrg_B1_signed.apk` 2012815017B；`apksigner verify --verbose`：v1 true / v2 true / v3 true；`aapt dump badging`包名版本与原包一致
+- 对齐签名：`zipalign -f 4` → `dwrg_B1_aligned.apk` 2012818299B（`zipalign -c -p 4`通过，无输出即绿）；`apksigner sign --ks BREM/debug.jks (androiddebugkey, 口令走环境变量 `DWRG_KEYSTORE_PASS`)` v1+v2 → `dwrg_B1_signed.apk` 2012815017B；`apksigner verify --verbose`：v1 true / v2 true / v3 true；`aapt dump badging`包名版本与原包一致
 - 装机logcat验：
   - 设备 `127.0.0.1:16384` SDK32在线；已装 `com.netease.dwrg` 262401653与基线一致（dumpsys实测）
   - logcat现网基线：`ProtocolLauncher START` + `init_unisdk mode=1` + `OrbitSDK 3.10.0` + `UniSDK NeteaseDouyinLink`，确认PluginUniSDK/UniSDK链活着（见本轮取证）
