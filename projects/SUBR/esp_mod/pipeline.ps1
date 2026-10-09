@@ -25,8 +25,9 @@ Write-Output '=== [4/6] zipalign -p 4 ==='
 
 Write-Output '=== [5/6] apksigner v2/v3 ==='
 if (Test-Path "$ROOT\SUBR_esp.apk") { Remove-Item "$ROOT\SUBR_esp.apk" -Force }
+if (-not $env:SUBR_KEYSTORE_PASS) { throw 'set SUBR_KEYSTORE_PASS before signing (local keystore pass; not stored in repo)' }
 java -jar "$BT\lib\apksigner.jar" sign --ks "$ROOT\tools\debug.keystore" `
-     --ks-pass pass:android --key-pass pass:android `
+     --ks-pass "pass:$env:SUBR_KEYSTORE_PASS" --key-pass "pass:$env:SUBR_KEYSTORE_PASS" `
      --out "$ROOT\SUBR_esp.apk" "$ROOT\SUBR_esp_aligned.apk" 2>&1 | Select-Object -First 2
 java -jar "$BT\lib\apksigner.jar" verify "$ROOT\SUBR_esp.apk" 2>&1 | Select-String -Pattern 'Verifies|DOES NOT'
 

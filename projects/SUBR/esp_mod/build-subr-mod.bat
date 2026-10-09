@@ -21,13 +21,18 @@ call C:\Users\Administrator\Tools\apktool\apktool.bat b "%ROOT%\apktool_out" -o 
 if errorlevel 1 exit /b 1
 
 echo [4/4] sign with debug keystore (jarsigner, v1)...
+REM local keystore pass comes from the environment; never hardcode it in the repo
+if not defined SUBR_KEYSTORE_PASS (
+  echo [ERR] set SUBR_KEYSTORE_PASS before signing
+  exit /b 1
+)
 if not exist "%ROOT%\tools\debug.keystore" (
-  keytool -genkeypair -keystore "%ROOT%\tools\debug.keystore" -storepass android -keypass android ^
+  keytool -genkeypair -keystore "%ROOT%\tools\debug.keystore" -storepass "%SUBR_KEYSTORE_PASS%" -keypass "%SUBR_KEYSTORE_PASS%" ^
     -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10950 ^
     -dname "CN=Android Debug,O=Android,C=US"
 )
 copy /Y "%ROOT%\SUBR_esp_unsigned.apk" "%ROOT%\SUBR_esp.apk"
-jarsigner -keystore "%ROOT%\tools\debug.keystore" -storepass android -keypass android ^
+jarsigner -keystore "%ROOT%\tools\debug.keystore" -storepass "%SUBR_KEYSTORE_PASS%" -keypass "%SUBR_KEYSTORE_PASS%" ^
   "%ROOT%\SUBR_esp.apk" androiddebugkey
 if errorlevel 1 exit /b 1
 

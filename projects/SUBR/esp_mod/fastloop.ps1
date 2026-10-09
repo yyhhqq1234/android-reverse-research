@@ -20,8 +20,9 @@ python "$ROOT\esp_mod\make_mod_apk.py"
 
 Write-Output '[3/4] sign'
 if (Test-Path "$ROOT\SUBR_esp.apk") { Remove-Item "$ROOT\SUBR_esp.apk" -Force }
+if (-not $env:SUBR_KEYSTORE_PASS) { throw 'set SUBR_KEYSTORE_PASS before signing (local keystore pass; not stored in repo)' }
 java -jar "$BT\lib\apksigner.jar" sign --ks "$ROOT\tools\debug.keystore" `
-     --ks-pass pass:android --key-pass pass:android `
+     --ks-pass "pass:$env:SUBR_KEYSTORE_PASS" --key-pass "pass:$env:SUBR_KEYSTORE_PASS" `
      --out "$ROOT\SUBR_esp.apk" "$ROOT\SUBR_esp_aligned.apk" 2>&1 | Select-Object -First 2
 java -jar "$BT\lib\apksigner.jar" verify "$ROOT\SUBR_esp.apk" 2>&1 | Select-String -Pattern 'Verifies|DOES NOT'
 
