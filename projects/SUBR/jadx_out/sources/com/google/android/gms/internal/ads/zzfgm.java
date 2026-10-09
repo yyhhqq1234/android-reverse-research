@@ -1,0 +1,55 @@
+package com.google.android.gms.internal.ads;
+
+import java.util.Set;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@23.6.0 */
+/* JADX INFO: loaded from: classes2.dex */
+final class zzfgm extends zzdbj implements zzfgg {
+    zzfgm(Set set) {
+        super(set);
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzfgg
+    public final void zza(final zzfft zzfftVar) {
+        zzq(new zzdbi() { // from class: com.google.android.gms.internal.ads.zzfgk
+            @Override // com.google.android.gms.internal.ads.zzdbi
+            public final void zza(Object obj) {
+                zzfft zzfftVar2 = zzfftVar;
+                ((zzfgo) obj).zzdA((zzfgh) zzfftVar2.zza(), zzfftVar2.zzb());
+            }
+        });
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzfgg
+    public final void zzb(final zzfft zzfftVar, final Throwable th) {
+        zzq(new zzdbi() { // from class: com.google.android.gms.internal.ads.zzfgi
+            @Override // com.google.android.gms.internal.ads.zzdbi
+            public final void zza(Object obj) {
+                zzfft zzfftVar2 = zzfftVar;
+                ((zzfgo) obj).zzdB((zzfgh) zzfftVar2.zza(), zzfftVar2.zzb(), th);
+            }
+        });
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzfgg
+    public final void zzc(final zzfft zzfftVar) {
+        zzq(new zzdbi() { // from class: com.google.android.gms.internal.ads.zzfgl
+            @Override // com.google.android.gms.internal.ads.zzdbi
+            public final void zza(Object obj) {
+                zzfft zzfftVar2 = zzfftVar;
+                ((zzfgo) obj).zzdC((zzfgh) zzfftVar2.zza(), zzfftVar2.zzb());
+            }
+        });
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzfgg
+    public final void zzd(final zzfft zzfftVar) {
+        zzq(new zzdbi() { // from class: com.google.android.gms.internal.ads.zzfgj
+            @Override // com.google.android.gms.internal.ads.zzdbi
+            public final void zza(Object obj) {
+                zzfft zzfftVar2 = zzfftVar;
+                ((zzfgo) obj).zzd((zzfgh) zzfftVar2.zza(), zzfftVar2.zzb());
+            }
+        });
+    }
+}

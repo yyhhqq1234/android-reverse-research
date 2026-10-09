@@ -1,0 +1,25 @@
+package com.google.android.gms.internal.ads;
+
+import android.os.IBinder;
+import android.os.Parcel;
+import android.os.RemoteException;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads-lite@@23.6.0 */
+/* JADX INFO: loaded from: classes2.dex */
+public final class zzbkp extends zzaya implements zzbkr {
+    zzbkp(IBinder iBinder) {
+        super(iBinder, "com.google.android.gms.ads.internal.h5.client.IH5AdsManager");
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzbkr
+    public final void zze() throws RemoteException {
+        zzda(2, zza());
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzbkr
+    public final void zzf(String str) throws RemoteException {
+        Parcel parcelZza = zza();
+        parcelZza.writeString(str);
+        zzda(1, parcelZza);
+    }
+}

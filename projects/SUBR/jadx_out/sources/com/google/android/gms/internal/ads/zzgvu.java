@@ -1,0 +1,10 @@
+package com.google.android.gms.internal.ads;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads-lite@@23.6.0 */
+/* JADX INFO: loaded from: classes2.dex */
+public class zzgvu implements zzgzk {
+    static {
+        int i = zzgxb.zzb;
+        int i2 = zzgzm.zza;
+    }
+}

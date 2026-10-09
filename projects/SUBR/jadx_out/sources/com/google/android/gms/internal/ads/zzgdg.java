@@ -1,0 +1,43 @@
+package com.google.android.gms.internal.ads;
+
+import com.google.common.util.concurrent.ListenableFuture;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads-lite@@23.6.0 */
+/* JADX INFO: loaded from: classes2.dex */
+final class zzgdg extends zzgcp {
+    final /* synthetic */ zzgdi zza;
+    private final zzgbn zzb;
+
+    zzgdg(zzgdi zzgdiVar, zzgbn zzgbnVar) {
+        this.zza = zzgdiVar;
+        this.zzb = zzgbnVar;
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzgcp
+    final /* bridge */ /* synthetic */ Object zza() throws Exception {
+        zzgbn zzgbnVar = this.zzb;
+        ListenableFuture listenableFutureZza = zzgbnVar.zza();
+        zzfun.zzd(listenableFutureZza, "AsyncCallable.call returned null instead of a Future. Did you mean to return immediateFuture(null)? %s", zzgbnVar);
+        return listenableFutureZza;
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzgcp
+    final String zzb() {
+        return this.zzb.toString();
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzgcp
+    final void zzd(Throwable th) {
+        this.zza.zzd(th);
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzgcp
+    final /* synthetic */ void zze(Object obj) {
+        this.zza.zzs((ListenableFuture) obj);
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzgcp
+    final boolean zzg() {
+        return this.zza.isDone();
+    }
+}

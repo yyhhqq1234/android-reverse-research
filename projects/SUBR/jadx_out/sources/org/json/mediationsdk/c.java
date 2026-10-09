@@ -1,0 +1,498 @@
+package org.json.mediationsdk;
+
+import android.text.TextUtils;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.json.JSONObject;
+import org.json.environment.StringUtils;
+import org.json.im;
+import org.json.l9;
+import org.json.li;
+import org.json.mediationsdk.adunit.adapter.AdapterDebugInterface;
+import org.json.mediationsdk.adunit.adapter.BaseAdapter;
+import org.json.mediationsdk.adunit.adapter.internal.AdapterAPSDataInterface;
+import org.json.mediationsdk.adunit.adapter.internal.AdapterBaseInterface;
+import org.json.mediationsdk.adunit.adapter.internal.AdapterBaseWrapper;
+import org.json.mediationsdk.adunit.adapter.internal.AdapterMetaDataInterface;
+import org.json.mediationsdk.adunit.adapter.internal.BaseAdAdapter;
+import org.json.mediationsdk.logger.IronLog;
+import org.json.mediationsdk.logger.IronSourceLogger;
+import org.json.mediationsdk.logger.IronSourceLoggerManager;
+import org.json.mediationsdk.model.NetworkSettings;
+import org.json.mediationsdk.utils.IronSourceConstants;
+import org.json.mediationsdk.utils.IronSourceUtils;
+import org.json.ob;
+import org.json.w8;
+
+/* JADX INFO: loaded from: classes3.dex */
+public class c {
+    private static final String k = "IronSource";
+    private static final String l = "com.ironsource.adapters";
+    private static final String m = "aps";
+    private static final c n = new c();
+    private static final Object o = new Object();
+    private String c;
+    private String d;
+    private Boolean e;
+    private final AtomicBoolean h = new AtomicBoolean(false);
+    private w8 i = new w8();
+    private final im j = new im();
+    private final ConcurrentHashMap<String, AbstractAdapter> a = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AdapterBaseWrapper> b = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<String>> f = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<IronSource.AD_UNIT, JSONObject> g = new ConcurrentHashMap<>();
+
+    static /* synthetic */ class a {
+        static final /* synthetic */ int[] a;
+
+        static {
+            int[] iArr = new int[IronSource.AD_UNIT.values().length];
+            a = iArr;
+            try {
+                iArr[IronSource.AD_UNIT.REWARDED_VIDEO.ordinal()] = 1;
+            } catch (NoSuchFieldError unused) {
+            }
+            try {
+                a[IronSource.AD_UNIT.INTERSTITIAL.ordinal()] = 2;
+            } catch (NoSuchFieldError unused2) {
+            }
+            try {
+                a[IronSource.AD_UNIT.BANNER.ordinal()] = 3;
+            } catch (NoSuchFieldError unused3) {
+            }
+            try {
+                a[IronSource.AD_UNIT.NATIVE_AD.ordinal()] = 4;
+            } catch (NoSuchFieldError unused4) {
+            }
+        }
+    }
+
+    private AbstractAdapter a(String str, String str2) {
+        try {
+            Class<?> cls = Class.forName("com.ironsource.adapters." + StringUtils.toLowerCase(str2) + "." + str2 + "Adapter");
+            return (AbstractAdapter) cls.getMethod(IronSourceConstants.START_ADAPTER, String.class).invoke(cls, str);
+        } catch (Exception e) {
+            String str3 = "Error while loading adapter - exception = " + e.getLocalizedMessage();
+            a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str3);
+            a(str3);
+            return null;
+        }
+    }
+
+    private AdapterBaseInterface a(String str, String str2, NetworkSettings networkSettings) {
+        if (networkSettings.isCustomNetwork() && TextUtils.isEmpty(networkSettings.getCustomNetworkPackage())) {
+            IronLog.INTERNAL.error("missing package definition for " + str);
+            return null;
+        }
+        String str3 = (networkSettings.isCustomNetwork() ? networkSettings.getCustomNetworkPackage() : l) + "." + str2;
+        try {
+            BaseAdapter baseAdapter = (BaseAdapter) Class.forName(str3).newInstance();
+            IronLog.INTERNAL.info(str3 + " was allocated (adapter version: " + baseAdapter.getAdapterVersion() + ", sdk version: " + baseAdapter.getNetworkSDKVersion() + ")");
+            a(baseAdapter);
+            this.i.a(baseAdapter, networkSettings);
+            this.b.put(str, new AdapterBaseWrapper(baseAdapter, networkSettings));
+            return baseAdapter;
+        } catch (Exception unused) {
+            if (networkSettings.isCustomNetwork()) {
+                String str4 = "failed to load " + str3;
+                IronLog.INTERNAL.error(str4);
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str4);
+            }
+            return null;
+        }
+    }
+
+    private BaseAdAdapter<?, ?> a(NetworkSettings networkSettings, IronSource.AD_UNIT ad_unit) {
+        if (networkSettings.isCustomNetwork() && TextUtils.isEmpty(networkSettings.getCustomNetworkPackage())) {
+            IronLog.INTERNAL.error("missing package definition for " + networkSettings.getProviderTypeForReflection());
+            return null;
+        }
+        String str = (networkSettings.isCustomNetwork() ? networkSettings.getCustomNetworkPackage() : l) + "." + (networkSettings.isCustomNetwork() ? networkSettings.getCustomNetworkAdapterName(ad_unit) : networkSettings.getProviderTypeForReflection());
+        try {
+            return (BaseAdAdapter) Class.forName(str).getConstructor(NetworkSettings.class).newInstance(networkSettings);
+        } catch (Exception unused) {
+            if (networkSettings.isCustomNetwork()) {
+                String str2 = "failed to load " + str;
+                IronLog.INTERNAL.error(str2);
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str2);
+            }
+            return null;
+        }
+    }
+
+    private String a(IronSource.AD_UNIT ad_unit) {
+        if (ad_unit == null || TextUtils.isEmpty(ad_unit.toString())) {
+            return "";
+        }
+        return ad_unit.toString().substring(0, 1).toUpperCase(Locale.getDefault()) + ad_unit.toString().substring(1);
+    }
+
+    private void a(int i, String str) {
+        try {
+            JSONObject jSONObject = new JSONObject();
+            if (!TextUtils.isEmpty(str)) {
+                jSONObject.put("reason", str);
+            }
+            li.i().a(new ob(i, jSONObject));
+        } catch (Exception e) {
+            l9.d().a(e);
+            IronLog.INTERNAL.error(e.toString());
+        }
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private void a(AbstractAdapter abstractAdapter) {
+        if (!StringUtils.toLowerCase(abstractAdapter.getProviderName()).equals(m) || this.g.size() == 0) {
+            return;
+        }
+        for (IronSource.AD_UNIT ad_unit : this.g.keySet()) {
+            try {
+                JSONObject jSONObject = this.g.get(ad_unit);
+                if (jSONObject != null && jSONObject.length() > 0 && (abstractAdapter instanceof SetAPSInterface)) {
+                    ((SetAPSInterface) abstractAdapter).setAPSData(ad_unit, jSONObject);
+                }
+            } catch (Exception e) {
+                l9.d().a(e);
+                String str = "error while setting aps data: " + e.getLocalizedMessage();
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_SET_NETWORK_DATA_INTERNAL_ERROR, str);
+                b(str);
+            }
+        }
+        this.g.clear();
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private void a(IronSource.AD_UNIT ad_unit, JSONObject jSONObject) {
+        if (jSONObject == null || jSONObject.length() == 0) {
+            a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_SET_NETWORK_DATA_INTERNAL_ERROR, "APSData is empty");
+            a("APSData is empty");
+            return;
+        }
+        try {
+            JSONObject jSONObject2 = new JSONObject(jSONObject.toString());
+            if (!this.a.isEmpty()) {
+                for (AbstractAdapter abstractAdapter : this.a.values()) {
+                    if (StringUtils.toLowerCase(abstractAdapter.getProviderName()).equals(m) && (abstractAdapter instanceof SetAPSInterface)) {
+                        ((SetAPSInterface) abstractAdapter).setAPSData(ad_unit, jSONObject2);
+                        return;
+                    }
+                }
+            }
+            for (AdapterBaseWrapper adapterBaseWrapper : this.b.values()) {
+                if (StringUtils.toLowerCase(adapterBaseWrapper.getSettings().getProviderTypeForReflection()).equals(m)) {
+                    AdapterBaseInterface adapterBaseInterface = adapterBaseWrapper.getAdapterBaseInterface();
+                    if (adapterBaseInterface != null) {
+                        ((AdapterAPSDataInterface) adapterBaseInterface).setAPSData(ad_unit, jSONObject2);
+                        return;
+                    }
+                    return;
+                }
+            }
+            synchronized (o) {
+                this.g.put(ad_unit, jSONObject2);
+            }
+        } catch (Exception e) {
+            l9.d().a(e);
+            String str = "error while setting APSData: " + e.getLocalizedMessage();
+            a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_SET_NETWORK_DATA_INTERNAL_ERROR, str);
+            a(str);
+        }
+    }
+
+    private void a(AdapterBaseInterface adapterBaseInterface) {
+        Boolean bool = this.e;
+        if (bool == null || !(adapterBaseInterface instanceof AdapterDebugInterface)) {
+            return;
+        }
+        try {
+            ((AdapterDebugInterface) adapterBaseInterface).setAdapterDebug(bool.booleanValue());
+        } catch (Exception e) {
+            l9.d().a(e);
+            String str = "error while setting adapterDebug of " + adapterBaseInterface.getClass().getSimpleName() + ": " + e.getLocalizedMessage();
+            a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str);
+            b(str);
+        }
+    }
+
+    private void a(String str) {
+        IronSourceLoggerManager.getLogger().log(IronSourceLogger.IronSourceTag.INTERNAL, "AdapterRepository: " + str, 3);
+    }
+
+    private void a(JSONObject jSONObject) {
+        Iterator<String> itKeys = jSONObject.keys();
+        while (itKeys.hasNext()) {
+            String next = itKeys.next();
+            JSONObject jSONObjectOptJSONObject = jSONObject.optJSONObject(next);
+            IronSource.AD_UNIT ad_unit = IronSource.AD_UNIT.BANNER;
+            if (!next.equalsIgnoreCase(ad_unit.toString())) {
+                ad_unit = IronSource.AD_UNIT.INTERSTITIAL;
+                if (!next.equalsIgnoreCase(ad_unit.toString())) {
+                    ad_unit = IronSource.AD_UNIT.REWARDED_VIDEO;
+                    if (next.equalsIgnoreCase(ad_unit.toString())) {
+                    }
+                }
+            }
+            a(ad_unit, jSONObjectOptJSONObject);
+        }
+    }
+
+    private void a(JSONObject jSONObject, AbstractAdapter abstractAdapter, String str) {
+        if (str.equalsIgnoreCase("IronSource") && this.h.compareAndSet(false, true)) {
+            b("SDK5 earlyInit  <" + str + ">");
+            try {
+                abstractAdapter.earlyInit(this.c, this.d, jSONObject);
+            } catch (Exception e) {
+                l9.d().a(e);
+                String str2 = "error while calling early init for " + abstractAdapter.getProviderName() + ": " + e.getLocalizedMessage();
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str2);
+                IronLog.INTERNAL.error(str2);
+            }
+        }
+    }
+
+    public static boolean a(String str, AbstractAdapter abstractAdapter) {
+        return (abstractAdapter == null || abstractAdapter.getProviderNetworkKey() == null || !abstractAdapter.getProviderNetworkKey().equalsIgnoreCase(str)) ? false : true;
+    }
+
+    public static boolean a(String str, AdapterBaseWrapper adapterBaseWrapper) {
+        return (adapterBaseWrapper == null || adapterBaseWrapper.getSettings().getProviderNetworkKey() == null || !adapterBaseWrapper.getSettings().getProviderNetworkKey().equalsIgnoreCase(str)) ? false : true;
+    }
+
+    public static c b() {
+        return n;
+    }
+
+    private String b(NetworkSettings networkSettings) {
+        return networkSettings.isMultipleInstances() ? networkSettings.getProviderDefaultInstance() : networkSettings.getProviderName();
+    }
+
+    private void b(AbstractAdapter abstractAdapter) {
+        Boolean bool = this.e;
+        if (bool != null) {
+            try {
+                abstractAdapter.setAdapterDebug(bool);
+            } catch (Throwable th) {
+                l9.d().a(th);
+                String str = "error while setting adapterDebug of " + abstractAdapter.getProviderName() + ": " + th.getLocalizedMessage();
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str);
+                b(str);
+            }
+        }
+    }
+
+    private void b(String str) {
+        IronSourceLoggerManager.getLogger().log(IronSourceLogger.IronSourceTag.INTERNAL, "AdapterRepository: " + str, 0);
+    }
+
+    private String c(NetworkSettings networkSettings, IronSource.AD_UNIT ad_unit, UUID uuid) {
+        return ((uuid == null || ad_unit != IronSource.AD_UNIT.NATIVE_AD) ? "" : uuid.toString()) + "-" + ad_unit.toString() + "-" + networkSettings.getProviderName();
+    }
+
+    private void c(AbstractAdapter abstractAdapter) {
+        for (String str : this.f.keySet()) {
+            try {
+                List<String> list = this.f.get(str);
+                IronSourceUtils.sendAutomationLog(abstractAdapter.getProviderName() + "Adapter setMetaData key = " + str + ", values = " + list);
+                if (list != null) {
+                    abstractAdapter.setMetaData(str, list);
+                }
+            } catch (Throwable th) {
+                l9.d().a(th);
+                String str2 = "error while setting metadata of " + abstractAdapter.getProviderName() + ": " + th.getLocalizedMessage();
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str2);
+                b(str2);
+            }
+        }
+    }
+
+    public AbstractAdapter a(NetworkSettings networkSettings) {
+        return a(b(networkSettings), networkSettings.getProviderTypeForReflection());
+    }
+
+    public AbstractAdapter a(NetworkSettings networkSettings, JSONObject jSONObject, boolean z) {
+        String coreSDKVersion;
+        String strB = b(networkSettings);
+        String providerTypeForReflection = z ? "IronSource" : networkSettings.getProviderTypeForReflection();
+        synchronized (o) {
+            if (this.a.containsKey(strB)) {
+                return this.a.get(strB);
+            }
+            AbstractAdapter abstractAdapterA = a(strB, providerTypeForReflection);
+            if (abstractAdapterA == null) {
+                a(strB + " adapter was not loaded");
+                return null;
+            }
+            abstractAdapterA.setProviderNetworkKey(networkSettings.getProviderNetworkKey());
+            try {
+                coreSDKVersion = abstractAdapterA.getCoreSDKVersion();
+            } catch (Throwable th) {
+                l9.d().a(th);
+                String str = "error while retrieving coreSDKVersion " + abstractAdapterA.getProviderName() + ": " + th.getLocalizedMessage();
+                a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str);
+                IronLog.INTERNAL.error(str);
+                coreSDKVersion = "Unknown";
+            }
+            b(strB + " was allocated (adapter version: " + abstractAdapterA.getVersion() + ", sdk version: " + coreSDKVersion + ")");
+            c(abstractAdapterA);
+            this.j.a(abstractAdapterA);
+            a(abstractAdapterA);
+            this.i.a(abstractAdapterA, networkSettings);
+            b(abstractAdapterA);
+            a(jSONObject, abstractAdapterA, providerTypeForReflection);
+            this.a.put(strB, abstractAdapterA);
+            return abstractAdapterA;
+        }
+    }
+
+    public BaseAdAdapter<?, ?> a(NetworkSettings networkSettings, IronSource.AD_UNIT ad_unit, UUID uuid) {
+        BaseAdAdapter<?, ?> baseAdAdapterA = a(networkSettings, ad_unit);
+        if (baseAdAdapterA != null || networkSettings.isCustomNetwork()) {
+            return baseAdAdapterA;
+        }
+        AbstractAdapter abstractAdapterA = a(networkSettings);
+        if (abstractAdapterA != null) {
+            return org.json.mediationsdk.a.a(abstractAdapterA, networkSettings, ad_unit, uuid);
+        }
+        String str = "error creating ad adapter " + networkSettings.getProviderName();
+        a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str);
+        IronLog.INTERNAL.error(str);
+        return null;
+    }
+
+    public ConcurrentHashMap<String, AbstractAdapter> a() {
+        return this.a;
+    }
+
+    public void a(v vVar) {
+        String str;
+        if (vVar.getNetworkData().length() == 0) {
+            str = "empty network data";
+        } else {
+            if (!TextUtils.isEmpty(vVar.getNetworkName())) {
+                this.j.a(vVar);
+                vVar.a(this.a.values(), this.b.values());
+                vVar.b();
+                if (StringUtils.toLowerCase(vVar.getNetworkName()).equals(m)) {
+                    a(vVar.getNetworkData());
+                    return;
+                }
+                return;
+            }
+            str = "empty network key";
+        }
+        a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_SET_NETWORK_DATA_INTERNAL_ERROR, str);
+        a(str);
+    }
+
+    /* JADX WARN: Code duplicated, block: B:17:0x0086 A[Catch: all -> 0x00db, TryCatch #2 {, blocks: (B:4:0x0005, B:6:0x0015, B:7:0x0036, B:9:0x003c, B:13:0x0047, B:14:0x0076, B:15:0x0080, B:17:0x0086, B:19:0x009a, B:21:0x009e, B:24:0x00a6, B:25:0x00d9, B:10:0x0042), top: B:34:0x0005, inners: #0, #1 }] */
+    public void a(String str, List<String> list) {
+        synchronized (o) {
+            this.f.put(str, list);
+            if (this.a.isEmpty()) {
+                for (AdapterBaseWrapper adapterBaseWrapper : this.b.values()) {
+                    AdapterBaseInterface adapterBaseInterface = adapterBaseWrapper.getAdapterBaseInterface();
+                    if (adapterBaseWrapper.getSettings().isCustomNetwork()) {
+                    }
+                }
+            } else {
+                IronSourceUtils.sendAutomationLog("setMetaData key = " + str + ", values = " + list);
+                for (AbstractAdapter abstractAdapter : this.a.values()) {
+                    try {
+                        abstractAdapter.setMetaData(str, list);
+                    } catch (Throwable th) {
+                        l9.d().a(th);
+                        String str2 = "error while setting metadata of " + abstractAdapter.getProviderName() + ": " + th.getLocalizedMessage();
+                        a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str2);
+                        b(str2);
+                    }
+                }
+                while (r0.hasNext()) {
+                    AdapterBaseInterface adapterBaseInterface2 = adapterBaseWrapper.getAdapterBaseInterface();
+                    if (adapterBaseWrapper.getSettings().isCustomNetwork() && (adapterBaseInterface2 instanceof AdapterMetaDataInterface)) {
+                        try {
+                            ((AdapterMetaDataInterface) adapterBaseInterface2).setMetaData(str, list);
+                        } catch (Exception e) {
+                            l9.d().a(e);
+                            String str3 = "error while setting metadata of " + adapterBaseInterface2.getClass().getSimpleName() + ": " + e.getLocalizedMessage();
+                            a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str3);
+                            b(str3);
+                        }
+                    }
+                }
+            }
+            throw th;
+        }
+    }
+
+    public void a(boolean z) {
+        synchronized (o) {
+            this.e = Boolean.valueOf(z);
+            Iterator<AbstractAdapter> it = this.a.values().iterator();
+            while (it.hasNext()) {
+                b(it.next());
+            }
+        }
+    }
+
+    public AdapterBaseInterface b(NetworkSettings networkSettings, IronSource.AD_UNIT ad_unit, UUID uuid) {
+        JSONObject rewardedVideoSettings;
+        String strB = networkSettings.isCustomNetwork() ? b(networkSettings) : c(networkSettings, ad_unit, uuid);
+        if (this.b.containsKey(strB)) {
+            return this.b.get(strB).getAdapterBaseInterface();
+        }
+        AdapterBaseInterface adapterBaseInterfaceA = a(strB, networkSettings.isCustomNetwork() ? networkSettings.getCustomNetworkAdapterName(null) : networkSettings.getProviderTypeForReflection(), networkSettings);
+        if (adapterBaseInterfaceA != null || networkSettings.isCustomNetwork()) {
+            this.j.a(this.b.put(strB, new AdapterBaseWrapper(adapterBaseInterfaceA, networkSettings)));
+            return adapterBaseInterfaceA;
+        }
+        int i = a.a[ad_unit.ordinal()];
+        if (i == 1) {
+            rewardedVideoSettings = networkSettings.getRewardedVideoSettings();
+        } else if (i == 2) {
+            rewardedVideoSettings = networkSettings.getInterstitialSettings();
+        } else if (i != 3) {
+            rewardedVideoSettings = i != 4 ? null : networkSettings.getNativeAdSettings();
+        } else {
+            rewardedVideoSettings = networkSettings.getBannerSettings();
+        }
+        AbstractAdapter abstractAdapterA = a(networkSettings, rewardedVideoSettings, false);
+        if (abstractAdapterA != null) {
+            u uVar = new u(abstractAdapterA);
+            this.b.put(strB, new AdapterBaseWrapper(uVar, networkSettings));
+            return uVar;
+        }
+        String str = "error creating network adapter " + networkSettings.getProviderName();
+        a(IronSourceConstants.TROUBLESHOOTING_ADAPTER_REPOSITORY_INTERNAL_ERROR, str);
+        IronLog.INTERNAL.error(str);
+        return null;
+    }
+
+    public void b(String str, String str2) {
+        this.c = str;
+        this.d = str2;
+    }
+
+    public void b(boolean z) {
+        synchronized (o) {
+            this.i.a(z);
+            this.i.a(this.a, this.b);
+        }
+    }
+
+    public ConcurrentHashMap<String, List<String>> c() {
+        return this.f;
+    }
+
+    public ConcurrentHashMap<String, AdapterBaseWrapper> d() {
+        return this.b;
+    }
+
+    public void e() {
+        this.a.clear();
+        this.b.clear();
+    }
+}

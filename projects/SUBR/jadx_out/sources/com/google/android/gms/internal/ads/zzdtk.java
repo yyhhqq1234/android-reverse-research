@@ -1,0 +1,16 @@
+package com.google.android.gms.internal.ads;
+
+import android.content.Context;
+
+/* JADX INFO: compiled from: com.google.android.gms:play-services-ads@@23.6.0 */
+/* JADX INFO: loaded from: classes2.dex */
+public final class zzdtk implements zzher {
+    public static zzdtj zza(long j, Context context, zzdtc zzdtcVar, zzcgx zzcgxVar, String str) {
+        return new zzdtj(j, context, zzdtcVar, zzcgxVar, str);
+    }
+
+    @Override // com.google.android.gms.internal.ads.zzhfj, com.google.android.gms.internal.ads.zzhfi
+    public final /* bridge */ /* synthetic */ Object zzb() {
+        throw null;
+    }
+}
