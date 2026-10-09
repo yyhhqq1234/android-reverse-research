@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """t1 full offline build — copy+inject(stubs+bundle)+zipalign+v1v2sign+verify.
 All writes under work_dwrg/offline_assemble/ ; formal APK read-only.
-Key: reuse local BREM debug.jks (android-debug, pass via DWRG_KEYSTORE_PASS default android).
+Key: reuse local BREM debug.jks (android-debug, pass via env DWRG_KEYSTORE_PASS).
 """
 import hashlib, json, os, shutil, subprocess, sys, zipfile
 from pathlib import Path
@@ -18,7 +18,7 @@ RAW = OA / "offline_dwrg_raw.apk"
 ALIGNED = OA / "offline_dwrg_aligned.apk"
 EVID = OA / "t1_evidence.json"
 
-KSPASS = os.environ.get("DWRG_KEYSTORE_PASS", "android")
+KSPASS = os.environ.get("DWRG_KEYSTORE_PASS", "")  # local debug-key pass comes from env; never hardcode
 
 def sha256(p, n=1<<20):
     h = hashlib.sha256()
@@ -80,8 +80,8 @@ def main():
              "--v1-signing-enabled", "true", "--v2-signing-enabled", "true", ALIGNED], timeout=600)
     # path record: --ks-pass:xxx inline-colon form unsupported in this build-tools rev; use --ks-pass pass:xxx
     if r.returncode != 0:
-        print("env-pass sign failed, fallback literal android (local debug key only)", flush=True)
-        r = run([BT / "apksigner.bat", "sign", "--ks", KS, "--ks-pass", "pass:android", "--key-pass", "pass:android",
+        print("env-pass sign failed, retry with CHANGE_ME placeholder", flush=True)
+        r = run([BT / "apksigner.bat", "sign", "--ks", KS, "--ks-pass", "pass:" + (KSPASS or "CHANGE_ME"), "--key-pass", "pass:" + (KSPASS or "CHANGE_ME"),
                  "--ks-key-alias", "androiddebugkey",
                  "--v1-signing-enabled", "true", "--v2-signing-enabled", "true", ALIGNED], timeout=600)
     assert r.returncode == 0, "apksigner sign failed"

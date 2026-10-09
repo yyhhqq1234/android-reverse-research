@@ -91,7 +91,8 @@ if (-not (Test-Path $SrcApk))     { throw "缺少原始 APK：$SrcApk" }
 
 $Keystore = Join-Path $Root 'libs\direct.keystore'
 $KsAlias  = 'fjdirect'
-$KsPass   = 'fjdirect'
+$KsPass   = $env:FJD_KEYSTORE_PASS
+if (-not $KsPass) { throw 'set FJD_KEYSTORE_PASS before building (local keystore pass; not stored in repo)' }
 
 if (-not $OutName) {
     $OutName = if ($OriginalPackage) { "第五人格-直装版-2026.0828.1653.apk" }
