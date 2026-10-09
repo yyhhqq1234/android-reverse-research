@@ -1,0 +1,16 @@
+import re, sys
+src = sys.argv[1] if len(sys.argv) > 1 else 'D:/APK-Reverse/projects/DWRG/work_dwrg/op_hall_full.txt'
+t = open(src, encoding='utf-16', errors='replace').read()
+print('logcat-bytes', len(t))
+files = sorted(set(re.findall(r'File "([^"]+\.py)"', t)))
+old = set(open('D:/APK-Reverse/projects/DWRG/work_dwrg/op_script_tree.txt').read().split())
+new = sorted(set(files) | old)
+open('D:/APK-Reverse/projects/DWRG/work_dwrg/op_script_tree.txt', 'w').write('\n'.join(new))
+print('tree-files', len(new))
+uis = sorted(set(re.findall(r'\b(UI[A-Z][A-Za-z0-9_]{2,40})\b', t)))
+mods = sorted(set(re.findall(r'\b((?:worlds|entities|nets|lib|ui|game|battle|hall|login|match|room|sdk|pay|chat|voice|video|audio|ads|anti|crash|log|data|res|file|net|script|quest|task|rank|shop|mail|friend|guild|team|mode|map|hero|skill|item|buff|effect|anim|snd|voice)[A-Za-z0-9_/]*\.py)\b', t)))
+wms = sorted(set(re.findall(r'\b(World[A-Z][A-Za-z0-9_]{2,40}|Avatar|Soul[A-Z][A-Za-z0-9_]*|NetService|ServerProxyGroup|AsioUdpGate[A-Za-z]*|IoService|ClientEntity|rpcdecorator)\b', t)))
+open('D:/APK-Reverse/projects/DWRG/work_dwrg/op_ui_classes.txt', 'w').write('\n'.join(uis))
+open('D:/APK-Reverse/projects/DWRG/work_dwrg/op_mod_refs.txt', 'w').write('\n'.join(mods))
+open('D:/APK-Reverse/projects/DWRG/work_dwrg/op_world_names.txt', 'w').write('\n'.join(wms))
+print('ui-classes', len(uis), 'mod-refs', len(mods), 'world-names', len(wms))
