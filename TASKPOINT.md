@@ -84,6 +84,11 @@ WZRY 任务（本活跃线）：
 - [x] 接法A联调通过：脚本 v3 已搬 `tools/connect-ceserver.ps1` 全局化（不归属 NECR）+ `tools/installers/ceserver75/`（CE7.5 全套，`ceserver_x86_64` ELF 魔数 `7F454C46` 已验，扩展/Mono .so 已同推 `/data/local/tmp/`），[1/6]→[6/6] 全绿，PC 连 `127.0.0.1:52734` 即用；雷区×2：adb 成功信息走 stderr，`$ErrorActionPreference=Stop` 下会误杀（v3 函数内降级只认退出码）；push 回显红字为妆饰性噪音
 
 ## 7. 进行中 / 下一步（新对话先干这个）
+- **★ 项目状态收口（2026-10-09）—— SUBR / NECR 标记为已完结**
+  - SUBR：静态审计 + 改包链（native → zip surgery → zipalign → apksigner → 装机）闭环 → **已完结封存**，只做复现/验证，复用 `esp_mod/`，不开新改包线。
+  - NECR：`release_stable` v19 在用 → **已完结封存**，只做复现/验证，不开新改包。
+  - 状态总览：已完结 = BREM / NECR / SUBR / DWRG；活跃 = **WZRY**（唯一在开新线的项目）。
+  - 文档同步（提交 `5084f4cb3`）：`README.md`（状态表 + 逐项目小节 + 完结状态段）、`AGENTS.md`（§1 表补 WZRY/SUBR 行、新增 §2.3 SUBR、新增 §2.4 已完成项目一览、§4 路由补 SUBR/WZRY）、`CLAUDE.md`（§1 项目表状态 + §5 流程补 3b）。
 - **★ 第二轮全量入库（2026-10-09 深夜）—— 本地"能上传的都上传"**
   - 提交链：`d9797b0e` A（WZRY 解包树 11302）→ `251d39f3f` B（SUBR 树 28831）→ `3bb014c72` C（DWRG 树 7371）→ `aa0723ed3` E（NECR 余量 75）→ `cb6cef21f` F（自研脚本 268）→ `3aeb937f3`+`2621f2627` 口令清理。
   - 判据统一为**"文本 + 单文件 ≤ 2 MB"**：远程 HEAD `75,076` 文件，`git ls-files -o --exclude-standard` = **0**（本地无遗留可上传文件）；`git ls-tree -r -l HEAD` 无 >2MB、无禁型。
