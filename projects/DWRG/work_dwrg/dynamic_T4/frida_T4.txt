@@ -1,0 +1,20 @@
+# Frida T4 hook实录（PID 3365, 2206122SC, frida 17.18.0, server x86_64）
+# hook: projects/DWRG/work_dwrg/hook_login.js（T4加固版，Channel.login/NativeOnLogin/GMBridge）
+# 方式：frida -U -p 3365 -l hook_login.js（attach已运行进程，非spawn）
+
+[hook] java.perform start pkg=com.identityv.shrek156
+[NativeInterface] decl NativeOnGMBridgeTokenOverdue sig=public static native void com.netease.neox.NativeInterface.NativeOnGMBridgeTokenOverdue()
+[NativeInterface] decl NativeOnInitSdk sig=public static native void com.netease.neox.NativeInterface.NativeOnInitSdk(int)
+[NativeInterface] decl NativeOnLogin sig=public static native void com.netease.neox.NativeInterface.NativeOnLogin(int)
+[NativeInterface] decl NativeOnWebViewCallback sig=public static native void com.netease.neox.NativeInterface.NativeOnWebViewCallback(java.lang.String,java.lang.String)
+[Client] decl java.lang.String com.netease.dwrg.Client.getPushToken()
+[Client] decl void com.netease.dwrg.Client.openGMWebView(java.lang.String)
+[Client] decl void com.netease.dwrg.Client.setGMBridgeToken(java.lang.String)
+[Client] decl void com.netease.dwrg.Client.showGMFloatButton(java.lang.String,java.lang.String)
+[SdkMgr err] hasLogin/getPropStr overload mismatch（记录：NtSdk SdkMgr签名与预期不同，待T5精化；Channel/GMBridge链已确认）
+[hook] ready Channel.login/NativeOnLogin-decl/GMBridge-client
+
+# 路径记录：
+# - showGMFloatButton实际签名(String,String)，初版单String hook纠正（hook_login.js已修复）
+# - SdkMgr.hasLogin直接implementation失败，改为guard+overload探测（已修复，未二次挂接验证，留T5）
+# - Channel.login/loginDone/gameLoginSuccess已布点；本次attach时login早已触发（initialize@Channel.java:73见logcat），故无调用回包，decl枚举+ready即判据

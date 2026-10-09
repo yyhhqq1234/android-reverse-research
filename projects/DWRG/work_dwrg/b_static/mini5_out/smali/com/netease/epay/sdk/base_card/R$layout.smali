@@ -1,0 +1,225 @@
+.class public final Lcom/netease/epay/sdk/base_card/R$layout;
+.super Ljava/lang/Object;
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingClass;
+    value = Lcom/netease/epay/sdk/base_card/R;
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x19
+    name = "layout"
+.end annotation
+
+
+# static fields
+.field public static final abc_action_bar_title_item:I = 0x7f0b00f5
+
+.field public static final abc_action_bar_up_container:I = 0x7f0b00f6
+
+.field public static final abc_action_menu_item_layout:I = 0x7f0b00f7
+
+.field public static final abc_action_menu_layout:I = 0x7f0b00f8
+
+.field public static final abc_action_mode_bar:I = 0x7f0b00f9
+
+.field public static final abc_action_mode_close_item_material:I = 0x7f0b00fa
+
+.field public static final abc_activity_chooser_view:I = 0x7f0b00fb
+
+.field public static final abc_activity_chooser_view_list_item:I = 0x7f0b00fc
+
+.field public static final abc_alert_dialog_button_bar_material:I = 0x7f0b00fd
+
+.field public static final abc_alert_dialog_material:I = 0x7f0b00fe
+
+.field public static final abc_alert_dialog_title_material:I = 0x7f0b00ff
+
+.field public static final abc_cascading_menu_item_layout:I = 0x7f0b0100
+
+.field public static final abc_dialog_title_material:I = 0x7f0b0101
+
+.field public static final abc_expanded_menu_layout:I = 0x7f0b0102
+
+.field public static final abc_list_menu_item_checkbox:I = 0x7f0b0103
+
+.field public static final abc_list_menu_item_icon:I = 0x7f0b0104
+
+.field public static final abc_list_menu_item_layout:I = 0x7f0b0105
+
+.field public static final abc_list_menu_item_radio:I = 0x7f0b0106
+
+.field public static final abc_popup_menu_header_item_layout:I = 0x7f0b0107
+
+.field public static final abc_popup_menu_item_layout:I = 0x7f0b0108
+
+.field public static final abc_screen_content_include:I = 0x7f0b0109
+
+.field public static final abc_screen_simple:I = 0x7f0b010a
+
+.field public static final abc_screen_simple_overlay_action_mode:I = 0x7f0b010b
+
+.field public static final abc_screen_toolbar:I = 0x7f0b010c
+
+.field public static final abc_search_dropdown_item_icons_2line:I = 0x7f0b010d
+
+.field public static final abc_search_view:I = 0x7f0b010e
+
+.field public static final abc_select_dialog_material:I = 0x7f0b010f
+
+.field public static final abc_tooltip:I = 0x7f0b0110
+
+.field public static final custom_dialog:I = 0x7f0b0002
+
+.field public static final epaysdk_actv_addcard_second:I = 0x7f0b0221
+
+.field public static final epaysdk_actv_addcard_sms:I = 0x7f0b0222
+
+.field public static final epaysdk_actv_full_fragment:I = 0x7f0b022e
+
+.field public static final epaysdk_actv_full_fragment_dialog:I = 0x7f0b022f
+
+.field public static final epaysdk_actv_progress:I = 0x7f0b0234
+
+.field public static final epaysdk_actv_serve_pact:I = 0x7f0b0236
+
+.field public static final epaysdk_actv_transparent:I = 0x7f0b0237
+
+.field public static final epaysdk_addcard_detail:I = 0x7f0b023e
+
+.field public static final epaysdk_frag_addcard:I = 0x7f0b023f
+
+.field public static final epaysdk_frag_addcard1:I = 0x7f0b0240
+
+.field public static final epaysdk_frag_card_bank_list:I = 0x7f0b0241
+
+.field public static final epaysdk_frag_card_retain:I = 0x7f0b0242
+
+.field public static final epaysdk_frag_card_type:I = 0x7f0b0243
+
+.field public static final epaysdk_frag_choose_card_bank:I = 0x7f0b0244
+
+.field public static final epaysdk_frag_img_msg:I = 0x7f0b024f
+
+.field public static final epaysdk_frag_listview_header:I = 0x7f0b0251
+
+.field public static final epaysdk_frag_listview_inside_fixed_bar:I = 0x7f0b0252
+
+.field public static final epaysdk_frag_no_sms:I = 0x7f0b0253
+
+.field public static final epaysdk_frag_pwd_error_tip:I = 0x7f0b0268
+
+.field public static final epaysdk_frag_recommend_card_bank_list:I = 0x7f0b0269
+
+.field public static final epaysdk_frag_suggestaction:I = 0x7f0b0273
+
+.field public static final epaysdk_frag_title_bar:I = 0x7f0b0274
+
+.field public static final epaysdk_frag_title_msg:I = 0x7f0b0275
+
+.field public static final epaysdk_frag_titlemsg2btn:I = 0x7f0b0276
+
+.field public static final epaysdk_frag_titlemsg2btn_vertical:I = 0x7f0b0277
+
+.field public static final epaysdk_frag_toastresult:I = 0x7f0b0278
+
+.field public static final epaysdk_frag_webview:I = 0x7f0b027d
+
+.field public static final epaysdk_fragdialog_credit_datepick:I = 0x7f0b027f
+
+.field public static final epaysdk_fragdialog_webview:I = 0x7f0b0280
+
+.field public static final epaysdk_fragment_base_mid_window:I = 0x7f0b0281
+
+.field public static final epaysdk_item_bank:I = 0x7f0b0286
+
+.field public static final epaysdk_item_bank_card:I = 0x7f0b0287
+
+.field public static final epaysdk_item_bank_card_one_click:I = 0x7f0b0289
+
+.field public static final epaysdk_item_bank_card_type:I = 0x7f0b028a
+
+.field public static final epaysdk_item_bank_header:I = 0x7f0b028b
+
+.field public static final epaysdk_item_card_retain:I = 0x7f0b028d
+
+.field public static final epaysdk_item_card_type:I = 0x7f0b028e
+
+.field public static final epaysdk_item_choose_bank:I = 0x7f0b028f
+
+.field public static final epaysdk_item_common:I = 0x7f0b0290
+
+.field public static final epaysdk_item_paymensts:I = 0x7f0b0294
+
+.field public static final epaysdk_item_service:I = 0x7f0b0295
+
+.field public static final epaysdk_layout_addcard_recomend_header:I = 0x7f0b0299
+
+.field public static final epaysdk_llayout_datepick:I = 0x7f0b029c
+
+.field public static final epaysdk_textview_dw_amount:I = 0x7f0b02aa
+
+.field public static final epaysdk_view_addcard:I = 0x7f0b02ad
+
+.field public static final epaysdk_view_advertisement:I = 0x7f0b02ae
+
+.field public static final epaysdk_view_agreement:I = 0x7f0b02af
+
+.field public static final epaysdk_view_card_item:I = 0x7f0b02b2
+
+.field public static final epaysdk_view_divider:I = 0x7f0b02b5
+
+.field public static final epaysdk_view_fingerprint:I = 0x7f0b02b7
+
+.field public static final epaysdk_view_gpv_divider:I = 0x7f0b02b8
+
+.field public static final epaysdk_view_gpv_textview:I = 0x7f0b02b9
+
+.field public static final epaysdk_view_keyboard_row:I = 0x7f0b02ba
+
+.field public static final epaysdk_view_left_divider:I = 0x7f0b02bb
+
+.field public static final epaysdk_view_one_click_add_card_bank:I = 0x7f0b02bc
+
+.field public static final epaysdk_view_screenshot:I = 0x7f0b02c5
+
+.field public static final epaysdk_view_sendsms:I = 0x7f0b02c6
+
+.field public static final epaysdk_view_sendsms_with_label:I = 0x7f0b02c7
+
+.field public static final epaysdk_view_service_sheet:I = 0x7f0b02c8
+
+.field public static final epaysdk_view_titlebar:I = 0x7f0b02c9
+
+.field public static final epaysdk_webview_error:I = 0x7f0b02ca
+
+.field public static final notification_action:I = 0x7f0b0008
+
+.field public static final notification_action_tombstone:I = 0x7f0b0009
+
+.field public static final notification_template_custom_big:I = 0x7f0b000a
+
+.field public static final notification_template_icon_group:I = 0x7f0b000b
+
+.field public static final notification_template_part_chronometer:I = 0x7f0b000c
+
+.field public static final notification_template_part_time:I = 0x7f0b000d
+
+.field public static final select_dialog_item_material:I = 0x7f0b0139
+
+.field public static final select_dialog_multichoice_material:I = 0x7f0b013a
+
+.field public static final select_dialog_singlechoice_material:I = 0x7f0b013b
+
+.field public static final support_simple_spinner_dropdown_item:I = 0x7f0b013c
+
+
+# direct methods
+.method private constructor <init>()V
+    .locals 0
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method

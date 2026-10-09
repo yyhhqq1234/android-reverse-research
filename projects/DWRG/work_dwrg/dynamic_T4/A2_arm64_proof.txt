@@ -1,0 +1,33 @@
+# A2 arm64证伪 — 落盘证据 (2026-09-26, dynamic-ops)
+
+结论前置：本机=现有x86_64链可用；原生arm64 Java桥需换ARM64镜像或ARM真机。
+但证伪项未按预期失败：arm64二进制可执行（无Exec format error），--version正常，
+daemon单测不稳，27042既有通道健康。
+
+## 1. 本地arm64解压
+- src: projects/NECR/work_necr/tools/frida-server-arm64.xz (17887328 B)
+- dst: projects/DWRG/work_dwrg/dynamic_T4/frida-server-arm64 (58856048 B)
+- 方法: python lzma.open解压（工作区内）
+
+## 2. 推16384+chmod+执行取错码（预期Exec format error）
+- push: DWRG/work_dwrg/dynamic_T4/frida-server-arm64 -> /data/local/tmp/frida-server-arm64 (60.8 MB/s, 0.923s)
+- chmod 755 OK；ls -l 58856048 root root
+- file: ELF shared object, 64-bit LSB arm64, dynamic (/system/bin/linker64), for Android 21, NDK r29
+- /data/local/tmp/frida-server-arm64 --version => 17.18.0（EXIT True）
+- 判定：证伪失败——可执行，houdini透明转译成立；预期Exec format error未出现。
+
+## 3. daemon对照
+- 27042既有占用：/data/local/tmp/frida-server-arm64 -l 127.0.0.1:27042 => Address already in use
+- 27042健康：frida-ps -H 127.0.0.1:27042 => 79行，枚举Files/Settings/adbd等正常（Java桥/列进程通道通）
+- 27043现起arm64：nohup -l 127.0.0.1:27043，frida-ps -H 127.0.0.1:27043 => Failed to enumerate processes: connection closed（单测不稳）
+- /proc/net/tcp：0100007F:69A2(27042) st=0A LISTEN确认
+- 已清理：pkill -9 frida-server-arm64（27043测试daemon），27042既有通道保留
+
+## 4. offline_bypass L1-L7（未重跑x86_64 bypass，按A2收敛口径）
+- offline_bypass.js含[OFFLINE-BYPASS] start/armed/SKIP标记，L1(loginDone/logoutDone/finishInit)/L2(Verify)/L3(OrderConsume)等齐全
+- OFFLINE-BYPASS计数：本轮未重跑；沿用既有实锤 OFFLINE-BYPASS=0（两次）
+- O2_bypass_table.md + stub_server.py + verify_o2.py见offline_bypass/目录
+
+## 5. 给下游
+- Java桥验证走27042既有x86_64通道即可复用；arm64单文件虽可--version但daemon掉线，不可作注入链。
+- 要原生arm64注入：换ARM64镜像或ARM真机，否则Java桥无解（维持原结论）。

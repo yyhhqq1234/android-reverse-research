@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PlatformConfig>
+	<!-- Config 节点 的 name可以是自定义的字符串，也可以是neox.xml中的配置开关路径 -->
+	<!-- Config 节点 可指定 value 和 default_value，只能是整数 -->
+	<!--int类型的谓词有"=="、"!="、">"、"<"、">="、"<="-->
+	<!--string类型的谓词有"=="、"!="、"startwith"、"endwith"、"contain"、"not startwith"、"not endwith"、"not contain"、"match"-->
+	<!--其中match类型是正则表达式匹配，object是正则表达式字符串 -->
+	<!--string类型的宾语大小写不敏感-->
+	<!--ConditionGroup类型只有"and" "or" "not" 注意，not类型的仅可有一个子节点-->
+	<!-- 该文件下大部分Config的name是neox.xml中的配置项的路径 -->
+	<!-- 对于自定义的Config的name，可在C++代码中使用ntk::ApkUtils::Instance().GetNeoXConfig 和 GetNeoXConfigs 获取配置 -->
+	<Variables>
+		<Variable name="SDK_INT" type="int"/>
+		<!--CPU的核数-->
+		<Variable name="CORE_NUM" type="int"/>
+		<!--设备制造商+模型 Build.MANUFACTURER + " " + Build.MODEL -->
+		<Variable name="FULL_MODEL" type="string"/>
+		<!--设备模型 Build.MODEL -->
+		<Variable name="MODEL" type="string"/>
+		<!--设备制造商-->
+		<Variable name="MANUFACTURER" type="string"/>
+		<!--CPU信息，如qcom, kirin980, mt6877等-->
+		<Variable name="HARDWARE" type="string"/>
+		<!--GPU型号-->
+		<Variable name="GL_RENDERER" type="string"/>
+		<!--GPU厂商-->
+		<Variable name="GL_VENDOR" type="string"/>
+		<!--OpenGL ES最高版本-->
+		<Variable name="GL_VERSION" type="string"/>
+		<!--OpenGL ES扩展-->
+		<Variable name="GL_EXTENSIONS" type="string"/>
+	</Variables>
+	
+	<!-- 渲染相关的兼容性Begin -->
+
+	<!--是否启用多线程渲染-->
+	<Config name="render/EnableRenderThread">
+		<ConditionGroup type="and">
+			<Condition subject="SDK_INT" predicate=">=" object="14"/>
+			<Condition subject="CORE_NUM" predicate=">=" object="2"/>
+			<Condition subject="MODEL" predicate="!=" object="LT26i"/>
+			<Condition subject="MODEL" predicate="!=" object="Nokia_X"/>
+			<Condition subject="MODEL" predicate="not contain" object="HUAWEI Y320"/>
+			<Condition subject="MODEL" predicate="not contain" object="X909"/>
+			<Condition subject="MODEL" predicate="not contain" object="GN8002S"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 220"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 20"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GC1000"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GC2000"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Immersion.16"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="NVIDIA"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GeForce"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Radeon"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否shadowmap depth tex和屏幕分辨率一样 -->
+	<Config name="render/ShadowMapDepthSameWithScreen">
+		<ConditionGroup type="or">
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR SGX 544MP"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否在加载线程中创建GPU资源-->
+	<Config name="device/EnableThreadedGPURes">
+		<ConditionGroup type="and">
+			<Condition subject="SDK_INT" predicate=">=" object="14"/>
+			<Condition subject="CORE_NUM" predicate=">=" object="2"/>
+			<Condition subject="MODEL" predicate="not contain" object="SM-G930F"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 220"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 20"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GC1000"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GC2000"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Immersion.16"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Tegra"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="NVIDIA"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GeForce"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Radeon"/>
+		</ConditionGroup>
+	</Config>
+	<!--顶点格式发生变化的时候是否需要重设program-->
+	<Config name="compatibility/NeedResetProgramWhenVBChange">
+		<ConditionGroup type="and">
+			<Condition subject="GL_RENDERER" predicate="contain" object="Adreno"/>
+			<ConditionGroup type="or">
+				<Condition subject="GL_RENDERER" predicate="contain" object="200"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="203"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="205"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="220"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="225"/>
+			</ConditionGroup>
+		</ConditionGroup>
+	</Config>
+	<!--是否强关BinaryShader(部分设备虽然从glExtension中读取支持，但驱动实现有问题)-->
+	<Config name="compatibility/ForceDisableBinaryShader">
+		<ConditionGroup type="or">
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC1000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC2000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="Immersion"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否强关批量渲染-->
+	<Config name="compatibility/ForceDisableBatching">
+		<ConditionGroup type="or">
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC1000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC2000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="Immersion"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否强关glMapBuffer(部分设备驱动实现有问题)-->
+	<Config name="compatibility/ForceDisableGLMap">
+		<ConditionGroup type="or">
+			<Condition subject="SDK_INT" predicate="&lt;" object="14"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="tegra"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="Immersion"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC1000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC2000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC3000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="GC4000"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue G6200"/>            
+		</ConditionGroup>
+	</Config>
+	<!--是否支持internal format为BGRA-->
+	<Config name="compatibility/SupportInternalBGRA">
+		<ConditionGroup type="and">
+			<Condition subject="GL_RENDERER" predicate="not contain" object="GC1000"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否在Unlock Buffer之后调用glFinish-->
+	<Config name="compatibility/ForceFinishAfterUnlock">
+		<ConditionGroup type="or">
+			<Condition subject="MODEL" predicate="contain" object="MI-ONE"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否需要glFlush当使用depth buffer时 -->
+	<Config name="compatibility/NeedFlushForDepthBuffer">
+		<ConditionGroup type="and">
+			<Condition subject="GL_RENDERER" predicate="contain" object="Adreno (TM) 330"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/AlphaTestDelay">
+		<ConditionGroup type="or">
+			<!-- GE8320 must perform discard operation at the end of ps_main. -->
+			<!-- see: compatibility issues about GE8320 in https://km.netease.com/team/km_neox/article/342342 -->
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisablePCF">
+		<ConditionGroup type="or">
+			<!-- Shadow和Array同时存在时，就会采样失败，综合考虑选择关闭硬件PCF -->
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisableUBO">
+		<ConditionGroup type="or">
+			<!-- Adreno 3xx series pow operation with ubo value may be crashed. -->
+			<Condition subject="GL_RENDERER" predicate="match" object="Adreno \(TM\) 3[0-9]{2}"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/NeedLimitMaxUboSize">
+		<ConditionGroup type="or">
+			<!-- PowerVR GE8320 使用UBO的大小没有按照规范的16KB -->
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisableFramebufferFetch">
+		<ConditionGroup type="or">
+			<!-- PowerVR GE8320 FramebufferFetch功能存在问题 -->
+			<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisableGPUSkin">
+		<ConditionGroup type="or">
+			<!-- Android 8.1(APILEVEL_27) + 联发科Helio P22组合下，vs阶段uniform最多1024 bytes 使用GPU Skinning时大概只支持最多80个骨骼，暂时禁用 -->
+			<ConditionGroup type="and">
+				<Condition subject="SDK_INT" predicate="&lt;=" object="27"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+			</ConditionGroup>
+			<!-- 小米6 Android 7系统 GPU Skin闪烁，升级系统就好了，屏蔽该版本的系统 -->
+			<ConditionGroup type="and">
+				<Condition subject="SDK_INT" predicate="&lt;=" object="25"/>
+				<Condition subject="FULL_MODEL" predicate="==" object="Xiaomi MI 6"/>
+			</ConditionGroup>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisableMSAA">
+		<!-- 高通Adreno 5xx系列GPU对开启MSAA的Depth RT进行Blit会出现异常，暂时屏蔽 -->
+		<ConditionGroup type="or">
+			<Condition subject="GL_RENDERER" predicate="match" object="Adreno \(TM\) 5[0-9]{2}"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="render/UseVulkan">
+		<ConditionGroup type="not">
+			<!-- 满足下面条件的，则不允许使用vulkan -->
+			<ConditionGroup type="or">
+				<!-- vulkan support is from android 7.0(APILEVEL_24), but many device have bugs, so we just baned it. -->
+				<Condition subject="SDK_INT" predicate="&lt;" object="26"/>
+				<!-- vivo Y97 don't support blit depth or color(without MSAA), but this is a base function of vulkan. -->
+				<Condition subject="FULL_MODEL" predicate="==" object="vivo V1813A"/>
+				<!-- vivo Y5s don't support vulkan texture's channel swizzle, it will not support A8 format. but A8 is a widely used format. -->
+				<Condition subject="FULL_MODEL" predicate="==" object="vivo V1934A"/>
+				<!-- 华为 畅享9Plus 深度写入有问题，跟官方沟通过，他们拿了同CPU机器, Android 10的版本没问题，但是他们放弃了这台手机的维护 -->
+				<Condition subject="FULL_MODEL" predicate="==" object="HUAWEI JKM-AL00a"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR Rogue GE8320"/>
+				<!-- vivo Y77 在绑定了多张RT时，每张RT都需要写入，否则会出现随机值 -->
+				<Condition subject="FULL_MODEL" predicate="==" object="vivo Y77"/>
+				<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR B-Series BXM-8-256"/>
+			</ConditionGroup>
+		</ConditionGroup>
+	</Config>
+	<Config name="compatibility/SwapchainAlignSize" value="4">
+		<ConditionGroup type="or">
+			<!-- 部分GPU的swapchain的宽度和高度必须4字节对齐，否则显示会花屏 -->
+			<Condition subject="GL_RENDERER" predicate="match" object="Adreno \(TM\) 5[0-9]{2}"/>
+		</ConditionGroup>
+	</Config>
+
+	<Config name="compatibility/ForceDisableGLInvalidateFramebuffer">
+		<!-- 华为设备Mali GPU下glInvalidateBuffer目标是Depth/Stencil时表现异常，前面的drawcall进行depth test可能会出问题 -->
+		<ConditionGroup type="and">
+			<Condition subject="FULL_MODEL" predicate="contain" object="HUAWEI"/>
+			<Condition subject="HARDWARE" predicate="contain" object="kirin"/>
+			<Condition subject="GL_RENDERER" predicate="contain" object="Mali"/>
+		</ConditionGroup>
+	</Config>
+	<!-- 渲染相关的兼容性End -->
+
+	<!--是否修改fmodDSPBuffer-->
+	<Config name="compatibility/ModifyFmodDspBuffer">
+		<ConditionGroup type="or">
+			<Condition subject="FULL_MODEL" predicate="==" object="OnePlus A3000"/>
+			<Condition subject="FULL_MODEL" predicate="==" object="vivo vivo Y17T"/>
+			<Condition subject="FULL_MODEL" predicate="==" object="ZTE ZTE U817"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否支持浮点纹理-->
+	<Config name="SupportFloatTexture">
+		<ConditionGroup type="and">
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 330"/>
+			<Condition subject="MODEL" predicate="!=" object="MI 3W"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否使用Shader cache-->
+	<Config name="render/UseShaderCache">
+		<ConditionGroup type="or">
+          		<Condition subject="GL_RENDERER" predicate="contain" object="PowerVR SGX 544MP"/>
+          		<Condition subject="GL_RENDERER" predicate="contain" object="Adreno (TM) 320"/>         
+		</ConditionGroup>
+	</Config>
+	<!--是否在Unlock Buffer之后调用glFinish-->
+	<Config name="device/ForceFinishAfterUnlock">
+		<ConditionGroup type="or">
+          		<Condition subject="MODEL" predicate="contain" object="MI-ONE"/>
+		</ConditionGroup>
+	</Config>
+	<!--是否开启shadowmap -->
+	<Config name="render/EnableShadowMap">
+		<ConditionGroup type="and">
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 220"/>
+			<Condition subject="GL_RENDERER" predicate="not contain" object="Adreno (TM) 20"/>
+		</ConditionGroup>
+	</Config>
+</PlatformConfig>

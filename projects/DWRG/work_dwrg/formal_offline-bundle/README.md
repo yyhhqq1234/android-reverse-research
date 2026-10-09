@@ -1,0 +1,21 @@
+# formal_offline-bundle（O1 远端预置落地）
+
+- 对象：`projects/DWRG/第五人格（官服正式版）.apk` 只读（2012889355B / SHA256 `0683dd40388bb6fb1d58d4111f80909dc5a2d7a0af07a703f0de73e7e271a5c3`，本轮实测与T2/F1一致）；测试版 `687172784B / d1b3f51f…` 共存未动。
+- 落地策略：大载荷不复刻（15wpk 1.75G stays in APK + cloud 3.7G stays remote），bundle落地=清单+CRC/哈希+小文件全量拷贝+按需提取脚本。原包无任何写操作（仅zipfile.read/stat/hash）。
+- 目录：
+  - `MANIFEST.json` 机器清单（wpk15/thd81+104/preload双48/pkgmapping14+17/script双版/cloud3.7G全量）
+  - `config/` APK4件（preload/pkgmapping/cloud/neox3，直读APK）+ 设备3件（preload_device/pkgmapping_device/cloud_device，Documents pull）+ apk_*对照
+  - `thd/` 设备端81文件全拷贝 51289828B（APK内104文件41234168B为另一基准，见MANIFEST）
+  - `script/` 双版全拷贝：script1_apk 201326608（SHA256 d5662a3d…/CRC db868a51）+ script1_device 137363472（SHA256 4ec82076…/md5 89ffc145…）+ script_device.idx 252900
+  - `VERIFY.py` 一键校验（APK哈希+wpk清单+thd81+双48/14+17+双版+cloud元数据）
+  - `extract_wpk.py` 按需从APK流式提取15wpk（默认只列清单，需--extract才写盘）
+  - `CHECKSUMS.sha256` thd81+config+script.idx小文件哈希（大wpk以CRC+APK哈希为凭证）
+- 口径说明（实测为准，与任务标签差异如实记录）：
+  - 15wpk=1756889328B：ui2/nxparticle_cache2各402653200 + ui3 252706832 + scene2 205520912 + script1 201326608 + fx2 127926288 + chr_prop2 73400336 + chr_guanjia2 60817424 + shader2 12582928 + common2 6291472 + nxparticle_cache3 5242896 + release_2026_04212 3145744 + shaderlib2/inroot2各1048592 + script0 524304（stored零压缩，见MANIFEST CRC）。
+  - cloud3.7G=3775833841B=3600.92MB：logcat `[cloud] preload tbs: ['res','script','release_2026_0421_nfxo','release_2026_0421_shadercache_essl'], size: 3775833841B` + `[P1P2] package_size 3775833841 display 2.104.125221.3034860 download_id 6ab78c0b421aa910f99a2b77 method cloud thread 6`（t1_logcat_hits 894行）；pcap SNI h55.gsf/update/drpf/g0.gsf + dport 443/56402云分流（t2_pcap_sll）；base_url双版一致 `h55.gsf…/nx3_release_ios_ad/`，version_url漂移（APK `h55.update…/pl/…` vs 设备 `listsvr.x:6678/patch_list/h55/…`）。
+  - thd81=51289828B：设备Documents/thd 81文件（.thh/.thy成对+thg增量，最大chr_player 1.7/7.8M、scene 1.5/6.7M、fx 0.9/4.4M）；APK内104文件41234168B为首包基准，不混用。
+  - preload名义50实测双48：APK48 vs 设备48，差集各6（APK独有 local_shader/nfxo/rhythm_game/shadercache_essl/msl/video_nbs_dev；设备独有 chr_common/release_2026_0421(+nfxo+essl+msl)/section），全[[0,15],[0,15]]统一预载。
+  - pkgmapping名义14：APK14对（chr_*9 + release_2025_1217 2 + script 3）为任务口径；设备端已漂移17对（chr_*10 + release_2026_0421 3 + script 4，含chr_common/msl_2/script_ext），双版对照见MANIFEST。
+  - script1双版：APK 201M（stored/CRC db868a51）→ 设备137M（瘦身64M，md5 89ffc145…），script.idx 252900，script云目录空（待下发，loader已建）；另script.npk 1952B NXS3引导（F3）。
+- 上游：F4_Remote_Verify + formal_remote_* + formal_core_wpk/t2 + formal_core_动态/t1；下游：t3脚本自洽（script双版+thd+preload/mapping）+ t4离线组装可直接读本bundle。
+- 回滚：删本目录即回滚；原包/raw/jadx未动；formal_core_wpk/动态保留为源。
